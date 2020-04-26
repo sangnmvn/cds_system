@@ -1,0 +1,8 @@
+<% if @status == true %>
+  success();
+  $('.modal-form-add-user').each(function(){
+  this.reset();
+  });
+<% else %>
+  fails();
+<% end%>

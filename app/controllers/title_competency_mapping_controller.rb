@@ -1,0 +1,2 @@
+class TitleCompetencyMappingController < ApplicationController
+end

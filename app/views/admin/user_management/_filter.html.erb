@@ -1,0 +1,44 @@
+<div class="filter-page-user">
+  <form>
+    <div class="form-group">
+      <label>Company</label>
+      <%# company %>
+      <select class="form-control" id="filter-company">
+        <option value='all'>All</option>
+        <% companies.each do |c| %>
+          <option value="<%= c.id%>"><%= c.name%></option>
+        <% end%>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Project</label>
+      <%# project %>
+      <select class="form-control" id="filter-project">
+        <option value='all'>All</option>
+        <% projects.each do |p| %>
+          <option value="<%= p.id%>"><%= p.desc%></option>
+        <% end%>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Role</label>
+      <%# project %>
+      <select class="form-control" id="filter-role">
+        <option>All</option>
+        <% roles.each do |r| %>
+          <option value="<%= r.id%>"><%= r.name%></option>
+        <% end%>
+      </select>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-3">
+          <button type="submit" class="btn btn-primary">Go</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="alert-success" class="alert alert-success" data-alert="alert">Add Successed !</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert">Add Failed !</div>
+

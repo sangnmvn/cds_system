@@ -208,13 +208,21 @@ ActiveAdmin.setup do |config|
   # and feel.
   #
   # To load a stylesheet:
-  #   config.register_stylesheet 'my_stylesheet.css'
+  config.register_stylesheet "bootstrapw3.min.css"
+  config.register_stylesheet "bootstrap.min.css"
+  config.register_stylesheet "bootstrap-theme.min.css"
+  config.register_stylesheet "tokenize2.min.css"
+  config.register_stylesheet "user_management.css"
   #
   # You can provide an options hash for more control, which is passed along to stylesheet_link_tag():
   #   config.register_stylesheet 'my_print_stylesheet.css', media: :print
   #
   # To load a javascript file:
-  #   config.register_javascript 'my_javascript.js'
+  config.register_javascript "jquery-3.5.0.min.js"
+  config.register_javascript "tokenize2.min.js"
+  config.register_javascript "user_management.js"
+  config.register_javascript "d3.v4.js"
+  config.register_javascript "bootstrap.min.js"
 
   # == CSV options
   #
@@ -317,7 +325,7 @@ ActiveAdmin.setup do |config|
   # By default, the footer shows the current Active Admin version. You can
   # override the content of the footer here.
   #
-  # config.footer = 'my custom footer text'
+  config.footer = false
 
   # == Sorting
   #

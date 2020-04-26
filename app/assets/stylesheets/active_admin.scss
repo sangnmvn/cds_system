@@ -1,3 +1,4 @@
+@import 'activeadmin_addons/all';
 // SASS variable overrides must be declared before loading up Active Admin's styles.
 //
 // To view the variables that Active Admin provides, take a look at
@@ -15,3 +16,18 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+.action_icon > img
+{
+  width: 18px;
+  height: 18px;
+}
+
+.next_page_icon{
+  width: 16px;
+  height: 12px;
+}
+
+.prev_page_icon{
+  width: 16px;
+  height: 12px;
+}

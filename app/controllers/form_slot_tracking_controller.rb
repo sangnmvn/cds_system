@@ -1,0 +1,2 @@
+class FormSlotTrackingController < ApplicationController
+end

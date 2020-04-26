@@ -1,0 +1,2 @@
+class FormHistoryController < ApplicationController
+end

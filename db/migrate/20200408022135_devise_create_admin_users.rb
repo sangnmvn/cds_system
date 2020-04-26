@@ -13,10 +13,12 @@ class DeviseCreateAdminUsers < ActiveRecord::Migration[6.0]
       t.string :first_name
       t.string :last_name
       t.string :account
-      t.integer :project_id
-      t.integer :company_id
-      t.integer :approver_id
-      t.integer :role_id
+
+      t.belongs_to :company, foreign_key: true
+      t.belongs_to :role, foreign_key: true
+
+      #t.integer :company_id
+      #t.integer :role_id
 
       ## Rememberable
       t.datetime :remember_created_at
@@ -44,6 +46,7 @@ class DeviseCreateAdminUsers < ActiveRecord::Migration[6.0]
     end
 
     add_index :admin_users, :email,                unique: true
+
     add_index :admin_users, :reset_password_token, unique: true
     # add_index :admin_users, :confirmation_token,   unique: true
     # add_index :admin_users, :unlock_token,         unique: true
