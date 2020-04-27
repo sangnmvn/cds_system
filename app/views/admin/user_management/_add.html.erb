@@ -14,14 +14,73 @@
         
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="row">
-            <div class="col-sm-6">
-              
+          
+          
+            <div class="row">
+            <%= form_with(url: "/admin/user_management/add/", method: "post",class: "modal-form-add-user") do  |f|%>
+              <div class="col-sm-6">
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      First Name
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.text_field( :first, class: '',placeholder: "First Name", required: true )%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Last Name
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.text_field( :last, class: 'form-control',placeholder: "Last Name", required: true )%>
+                    </div>
+                </div> 
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Email
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.email_field( :email, class: 'form-control',placeholder: "Email", required: true )%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Account
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.text_field( :account, class: 'form-control',placeholder: "Account", required: true )%>
+                    </div>
+                </div>      
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Role
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.select( :role, options_from_collection_for_select(roles, "id", "name", ""),{:include_blank => "Select a role"}, {:class => "form-control"} )%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Company
+                    </div>
+                    <div class="col-sm-9">
+                      <%= f.select( :company, options_from_collection_for_select(companies, "id", "name", ""),{:include_blank => "Select a company"}, {:class => "form-control"} )%>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                      Project
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag 'project', options_from_collection_for_select(project_name, "id", "desc", ""), class: "tokenize-project", multiple: true %>
+                    </div>
+                </div>
+              </div>
             </div>
-            <div class="col-sm-6">
-            
-            </div>
-          </div>
+            <% end %>
+          </form>
         </div>
         
         <!-- Modal footer -->

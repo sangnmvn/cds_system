@@ -31,3 +31,110 @@
   width: 16px;
   height: 12px;
 }
+
+body {
+  color: #FFFFFF;
+}
+#header h1{
+   color: #4472C4;
+   font-size: 4em;
+   font-weight: bold;
+}
+#header {
+   background-color: #FFFFFF;
+   background-image: none;
+}
+#header ul.tabs > li:hover > a {
+   background: #8DA9DB;
+   color: #fff;
+}
+#header ul.tabs > li.current > a {
+   background: #8DA9DB;
+   color: #fff;
+}
+#header ul.tabs > li > a {
+   background: #4472C4;
+   color: #fff;
+}
+#header ul.tabs > li a {
+   text-decoration: none;
+   padding: 6px 10px 4px 10px;
+   position: relative;
+   border-radius: 0px;
+}
+
+#header #utility_nav li a {
+   background: #FFFFFF;
+   color: #8DA9DB;
+}
+#title_bar {
+   background-color: #8DA9DB;
+   background-image: none;
+   color: #FFFFFF;
+}
+h2 {
+   font-weight: normal;
+   color: #FFFFFF;
+}
+.breadcrumb a:visited, .breadcrumb a:active {
+   color: #FFFFFF;
+   text-decoration: none;
+}
+table.index_table th {
+   background-color: #4472C4;
+   background-image: none;
+   color: #FFFFFF;
+}
+table.index_table th.sorted-asc, table.index_table th.sorted-desc {
+   background-color: #4472C4;
+   background-image: none;
+   color: #FFFFFF;
+}
+table.index_table th.sorted-asc a {
+   background-position: 0 -27px;
+   color: #FFFFFF;
+}
+
+table.index_table th.sortable a {
+  color: #FFFFFF;
+}
+table tr td {
+  color: #000000;
+}
+.sidebar_section {
+   background: #8DA9DB;
+}
+.sidebar_section > h3 {
+   background-color: #4472C4;
+   background-image: none;
+   color: #FFFFFF;
+}
+.sidebar_section label {
+   color: #FFFFFF;
+}
+.breadcrumb {
+ background-color: #000000;
+}
+.breadcrumb a:visited, .breadcrumb a:active {
+ color: #000000;
+}
+#header ul.tabs > li.has_nested > a {
+ background: #4472C4 url(data:image/png;base64,R0lGODlhBwAEAKIAAG1tbWxsbElJSVBQUP///0JCQgAAAAAAACH5BAEAAAUALAAAAAAHAAQAAAMLWLol80MoF5mQKgEAOw==) no-repeat calc(100% - 7px) 50%;;
+ padding-right: 20px;
+}
+#header ul.tabs > li ul {
+ background: #4472C4;
+}
+#header ul.tabs > li.has_nested:hover > a {
+
+ border-bottom: 5px solid #8DA9DB ;
+ background: #8DA9DB url(data:image/png;base64,R0lGODlhBwAEAKIAAG1tbWxsbElJSVBQUP///0JCQgAAAAAAACH5BAEAAAUALAAAAAAHAAQAAAMLWLol80MoF5mQKgEAOw==) no-repeat calc(100% - 7px) 50%;
+}
+body.logged_out h2{
+  background: #4472C4;
+  background-image: none;
+}
+form input[type=submit], form input[type=button], form button {
+  background: #4472C4;
+  background-image: none;
+}

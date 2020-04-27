@@ -22,10 +22,17 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  // $("#btn-search-user-management").click(function() {
-  //   search = $("#search-user-management").val();
-  //   alert(search);
-  // });
+  $("#btn-filter").click(function() {
+    company = $("#filter-company").val();
+    project = $("#filter-project").val();
+    role = $("#filter-role").val();
+    $.ajax({
+      url: "/admin/user_management/submit_filter/",
+      type: "POST",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      data: { company: company, project: project, role: role },
+    });
+  });
 });
 
 function success(){

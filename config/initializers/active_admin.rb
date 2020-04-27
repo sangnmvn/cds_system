@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Competency System"
+  config.site_title = "CDS"
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -208,8 +208,8 @@ ActiveAdmin.setup do |config|
   # and feel.
   #
   # To load a stylesheet:
-  config.register_stylesheet "bootstrapw3.min.css"
-  # config.register_stylesheet "bootstrap.min.css"
+  # config.register_stylesheet "bootstrapw3.min.css"
+  config.register_stylesheet "bootstrap.min.css"
   config.register_stylesheet "bootstrap-theme.min.css"
   config.register_stylesheet "tokenize2.min.css"
   config.register_stylesheet "user_management.css"
@@ -222,8 +222,8 @@ ActiveAdmin.setup do |config|
   config.register_javascript "tokenize2.min.js"
   config.register_javascript "user_management.js"
   config.register_javascript "d3.v4.js"
-  # config.register_javascript "bootstrap.min.js"
-  config.register_javascript "bootstrapw3.min.js"
+  config.register_javascript "bootstrap.min.js"
+  # config.register_javascript "bootstrapw3.min.js"
 
   # == CSV options
   #
