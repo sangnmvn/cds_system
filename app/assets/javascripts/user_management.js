@@ -27,8 +27,8 @@ $(document).ready(function () {
     project = $("#filter-project").val();
     role = $("#filter-role").val();
     $.ajax({
-      url: "/admin/user_management/submit_filter/",
-      type: "POST",
+      url: "/admin/user_management/submit/",
+      type: "GET",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       data: { company: company, project: project, role: role },
     });

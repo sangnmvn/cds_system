@@ -83,11 +83,10 @@ ActiveAdmin.register_page "User Management" do
       elsif  params[:company] != "all" && params[:project] == "all"
         @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('company_id = ?',params[:company])
       elsif params[:company] == "all" && params[:project] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('role_id = ?',params[:role])
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('role_id = ?',params[:project])
       elsif params[:company] != "all" && params[:project] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('company_id = ? and role_id = ?',params[:company],params[:role])
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('company_id = ? and role_id = ?',params[:company],params[:project])
       end
-      # binding.pry
       respond_to do |format|
         format.js
       end
