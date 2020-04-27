@@ -1,5 +1,5 @@
 ActiveAdmin.register_page "User Management" do
-  # menu false
+  menu false
   controller do
     def filter_users_management
       @company = params[:company]
