@@ -209,7 +209,7 @@ ActiveAdmin.setup do |config|
   #
   # To load a stylesheet:
   config.register_stylesheet "bootstrapw3.min.css"
-  config.register_stylesheet "bootstrap.min.css"
+  # config.register_stylesheet "bootstrap.min.css"
   config.register_stylesheet "bootstrap-theme.min.css"
   config.register_stylesheet "tokenize2.min.css"
   config.register_stylesheet "user_management.css"
@@ -222,7 +222,8 @@ ActiveAdmin.setup do |config|
   config.register_javascript "tokenize2.min.js"
   config.register_javascript "user_management.js"
   config.register_javascript "d3.v4.js"
-  config.register_javascript "bootstrap.min.js"
+  # config.register_javascript "bootstrap.min.js"
+  config.register_javascript "bootstrapw3.min.js"
 
   # == CSV options
   #

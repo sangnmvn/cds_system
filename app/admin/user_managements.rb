@@ -62,7 +62,7 @@ ActiveAdmin.register_page "User Management" do
       @project_members = ProjectMember.all
       @companies = Company.all
       @admin_users = AdminUser.offset((current_page - 1) * 20).limit(10).where("email = 'admin@example.com'")
-      binding.pry
+      # binding.pry
       respond_to do |format|
         format.js { }
       end
@@ -79,7 +79,7 @@ ActiveAdmin.register_page "User Management" do
         roles = Role.all
         companies = Company.all
         project_name = Project.select("projects.id,projects.desc").all
-        render partial: "action", locals: { roles: roles, companies: companies, project_name: project_name }
+        render partial: "add", locals: { roles: roles, companies: companies, project_name: project_name }
       end
     end
     columns do
