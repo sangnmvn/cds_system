@@ -57,19 +57,19 @@ ActiveAdmin.register_page "User Management" do
       q = params[:q]
       @current_page = params[:page] || "1"
       @current_page = @current_page.to_i
-      @total_page = (AdminUser.where("email LIKE ? OR account LIKE ?","%#{q}%","%#{q}%").count / 20.to_f).ceil
+      @total_page = (AdminUser.where("email LIKE ? OR account LIKE ?", "%#{q}%", "%#{q}%").count / 20.to_f).ceil
       @roles = Role.all
       @projects = Project.all
       @project_members = ProjectMember.all
       @companies = Company.all
-      @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("email LIKE ? OR account LIKE ?","%#{q}%","%#{q}%")
+      @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("email LIKE ? OR account LIKE ?", "%#{q}%", "%#{q}%")
       respond_to do |format|
         format.js { }
       end
     end
 
+    # submit
     def submit_filter_users_management
-      
       @current_page = params[:page] || "1"
       @current_page = @current_page.to_i
       @total_page = (AdminUser.count / 20.to_f).ceil
@@ -77,21 +77,29 @@ ActiveAdmin.register_page "User Management" do
       @projects = Project.all
       @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
       @companies = Company.all
-      
-      if params[:company] == "all" && params[:project] == "all"
+
+      if params[:company] == "all" && params[:role] == "all"
         @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10)
-      elsif  params[:company] != "all" && params[:project] == "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('company_id = ?',params[:company])
-      elsif params[:company] == "all" && params[:project] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('role_id = ?',params[:project])
-      elsif params[:company] != "all" && params[:project] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where('company_id = ? and role_id = ?',params[:company],params[:project])
+      elsif params[:company] != "all" && params[:role] == "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ?", params[:company])
+      elsif params[:company] == "all" && params[:role] != "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("role_id = ?", params[:role])
+      elsif params[:company] != "all" && params[:role] != "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ? and role_id = ?", params[:company], params[:role])
       end
       respond_to do |format|
         format.js
       end
     end
 
+    # modal company
+    def get_project_modal_users_management
+      # binding.pry
+      @projects = Project.where(company_id: params[:company])
+      respond_to do |format|
+        format.js
+      end
+    end
   end
 
   content do
@@ -106,7 +114,6 @@ ActiveAdmin.register_page "User Management" do
       column span: 8 do
         render partial: "search"
       end
-      
     end
     columns do
       # filter
@@ -138,7 +145,6 @@ ActiveAdmin.register_page "User Management" do
           end
         end
       end
-      
     end
   end
 end
