@@ -1,5 +1,6 @@
 ActiveAdmin.register_page "User Management" do
   # menu false
+  
   controller do
     def filter_users_management
       @company = params[:company]
@@ -26,6 +27,15 @@ ActiveAdmin.register_page "User Management" do
       end
     end
 
+    # new
+    def destroy_user
+      user_id = params["id"]
+      binding.pry
+      AdminUser.where(:id => user_id).destroy_all
+      respond_to do |format|
+        format.js {render layout: false} # Add this line to you respond_to block
+      end
+    end
     # add
     def add_users_management
       password_default = "password"
@@ -80,6 +90,7 @@ ActiveAdmin.register_page "User Management" do
         companies = Company.all
         project_name = Project.select("projects.id,projects.desc").all
         render partial: "action", locals: { roles: roles, companies: companies, project_name: project_name }
+        render partial: "delete_user_confirmation"
       end
     end
     columns do
@@ -95,7 +106,7 @@ ActiveAdmin.register_page "User Management" do
         companies = Company
         panel "Projects" do
           div class: "table-user-management" do
-            render partial: "admin_users", locals: { admin_users: admin_users, roles: roles, projects: projects, project_members: project_members, companies: companies }
+            render partial: "admin_users", locals: { current_page: current_page, admin_users: admin_users, roles: roles, projects: projects, project_members: project_members, companies: companies }
           end
           render partial: "paging", locals: { current_page: current_page, total_page: total_page }
         end
