@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <div class="container-fluid">
+    <!-- Control the column width, and how they should appear on different devices -->
+    <div class="row">
+      <div class="col-sm-2">
+      <%= render 'add', companies: @companies, projects: @projects, roles: @roles  %>
+      </div>
+      <div class="col-sm-10">
+        <%= render 'search' %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">
+      Filter
+      <%= render 'filter', companies: @companies, projects: @projects, roles: @roles %>
+      </div>
+      <div class="col-sm-10">
+      </div>
+    </div>
+  </div>
+</div>

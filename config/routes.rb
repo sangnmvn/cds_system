@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :schedules
-  root to: "schedules#index"
+  devise_for :admin_users
+  # resources :admin_users
+  root to: "admin_user#index"
   post "admin/dashboard" => "admin/dashboard#ajax_call"
   post "admin/user_management/filter" => "admin/user_management#filter_users_management"
   post "admin/user_management/add" => "admin/user_management#add_users_management"
@@ -8,6 +9,5 @@ Rails.application.routes.draw do
   get "/admin/user_management/submit" => "admin/user_management#submit_filter_users_management"
   get "admin/user_management/search" => "admin/user_management#search_users_management"
   get "/admin/user_management/modal/company" => "admin/user_management#get_project_modal_users_management"
-  # devise_for :admin_users, ActiveAdmin::Devise.config
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

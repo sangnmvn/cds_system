@@ -74,7 +74,7 @@
                       Project
                     </div>
                     <div class="col-sm-9">
-                      <%= select_tag 'project', options_from_collection_for_select(project_name, "id", "desc", ""), class: "tokenize-project", multiple: true %>
+                      <%= select_tag 'project', options_from_collection_for_select(projects, "id", "desc", ""), class: "tokenize-project", multiple: true %>
                     </div>
                 </div>
               </div>
