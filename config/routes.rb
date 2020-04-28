@@ -6,7 +6,6 @@ Rails.application.routes.draw do
   get "/admin/user_management/submit" => "admin/user_management#submit_filter_users_management"
   get "admin/user_management/search" => "admin/user_management#search_users_management"
   get "/admin/user_management/modal/company" => "admin/user_management#get_project_modal_users_management"
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
+  # devise_for :admin_users, ActiveAdmin::Devise.config
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

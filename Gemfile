@@ -29,13 +29,13 @@ gem "jbuilder", "~> 2.7"
 gem "bootsnap", ">= 1.4.2", require: false
 
 ##### Additional gems##############
-gem "activeadmin"
+# gem "activeadmin"
 gem "devise"
 gem "cancancan"
 gem "pry"
 gem "jquery-rails"
 gem "chartkick"
-gem "activeadmin_addons"
+# gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################
 group :development, :test do
