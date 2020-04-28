@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :schedules
+  root to: "schedules#index"
   post "admin/dashboard" => "admin/dashboard#ajax_call"
   post "admin/user_management/filter" => "admin/user_management#filter_users_management"
   post "admin/user_management/add" => "admin/user_management#add_users_management"
