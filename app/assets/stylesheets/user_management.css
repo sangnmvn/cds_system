@@ -1,3 +1,7 @@
+.error {
+    color: red;
+}
+
 #alert-success, #alert-danger {
     position: absolute;
     z-index: 3400;
@@ -7,36 +11,3 @@
     text-align: center;
     display: none;
 }
-<<<<<<< HEAD
-
-
-.panel_contents table tr.odd > th {
-    font-size: 14px;
-    background: #009EE0;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
-}
-
-.panel_contents table th td{
-    border: 1px solid #fff;
-}
-
-.panel_contents table tr.even > td {
-    font-size: 12px;
-    background: rgb(0, 198, 224);
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
-}
-
-.panel_contents table tr.odd > td {
-    font-size: 12px;
-    background: #009ED0;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
-}
-
-=======
-.error{
-    color: red;
- }
->>>>>>> bcb6b05599c93ab5aa9de6320c0d1771198baeef

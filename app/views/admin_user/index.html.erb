@@ -12,10 +12,11 @@
 
     <div class="row">
       <div class="col-sm-2">
-      Filter
+      <div class="bg-secondary" style="font-size: 18px;color: #fff;text-align:center">Filter</div>
       <%= render 'filter', companies: @companies, projects: @projects, roles: @roles %>
       </div>
       <div class="col-sm-10">
+        <%= render 'edit', companies: @companies, projects: @projects, roles: @roles, user: @user  %>
       </div>
     </div>
   </div>

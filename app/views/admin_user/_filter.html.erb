@@ -40,29 +40,3 @@
 </div>
 <div id="alert-success" class="alert alert-success" data-alert="alert">Add Successed !</div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert">Add Failed !</div>
-
-<style>
-  #alert-success, #alert-danger {
-    position: absolute;
-    z-index: 3400;
-    top: 7%;
-    left: 1%;
-    margin: 0px auto;
-    text-align: center;
-    display: none;
-}
-</style>
-<script>
-  $(document).ready(function () {
-    $("#filter-company,#filter-project").change(function () {
-      company = $("#filter-company").val();
-      project = $("#filter-project").val();
-      $.ajax({
-        url: "/admin/user_management/filter/",
-        type: "POST",
-        headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-        data: { company: company, project: project },
-      });
-    });
-  });
-</script>
