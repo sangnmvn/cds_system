@@ -4,22 +4,18 @@ ActiveAdmin.register_page "User Management" do
     def filter_users_management
       @company = params[:company]
       @project = params[:project]
-      if params[:company] == "all" && params[:project] == "all"
-        @projects = Project.all
-        @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
-      elsif params[:company] != "all" && params[:project] == "all"
-        @projects = Project.all.where("company_id = ?", params[:company])
-        @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
-          .where("projects.company_id = ?", params[:company])
-      elsif params[:company] == "all" && params[:project] != "all"
-        @projects = Project.all
-        @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
-          .where("projects.id = ?", params[:project])
-      elsif params[:company] != "all" && params[:project] != "all"
-        @projects = Project.all.where("company_id = ?", params[:company])
-        @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
-          .where("projects.id = ? and projects.company_id = ?", params[:project], params[:company])
+      @projects = Project.all
+      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+
+      if params[:company] != "all"
+        @projects = @projects.where("company_id = ?", params[:company])
+        @roles = @roles.where("projects.company_id = ?", params[:company])
       end
+      if params[:project] != "all"
+        @projects = @projects.where("id = ?", params[:project])
+        @roles = @roles.where("projects.id = ?", params[:project])      
+      end
+
       # binding.pry
       respond_to do |format|
         format.js { }
@@ -29,7 +25,6 @@ ActiveAdmin.register_page "User Management" do
     # new
     def destroy_user
       user_id = params["id"]
-      binding.pry
       AdminUser.where(:id => user_id).destroy_all
       respond_to do |format|
         format.js {render layout: false} # Add this line to you respond_to block
@@ -86,16 +81,18 @@ ActiveAdmin.register_page "User Management" do
       @projects = Project.all
       @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
       @companies = Company.all
-
-      if params[:company] == "all" && params[:role] == "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10)
-      elsif params[:company] != "all" && params[:role] == "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ?", params[:company])
-      elsif params[:company] == "all" && params[:role] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("role_id = ?", params[:role])
-      elsif params[:company] != "all" && params[:role] != "all"
-        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ? and role_id = ?", params[:company], params[:role])
+      @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(20)
+      if params[:company] != "all"
+        @admin_users = @admin_users.where("company_id = ?", params[:company])
       end
+      if params[:role] != "all"
+        @admin_users = @admin_users.where("role_id = ?", params[:role])              
+      end
+      if params[:project] != "all"
+        valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id=?", params[:project]).pluck("admin_users.id")
+        @admin_users = @admin_users.where("id in (?)", valid_user_ids)
+      end
+      
       respond_to do |format|
         format.js
       end
