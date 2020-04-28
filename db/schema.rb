@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_175540) do
+ActiveRecord::Schema.define(version: 2020_04_28_012527) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "namespace"
@@ -160,6 +160,18 @@ ActiveRecord::Schema.define(version: 2020_04_09_175540) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "admin_user_id", null: false
+    t.bigint "project_id", null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string "notify_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
+    t.index ["project_id"], name: "index_schedules_on_project_id"
+  end
+
   create_table "slots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "desc"
@@ -208,6 +220,8 @@ ActiveRecord::Schema.define(version: 2020_04_09_175540) do
   add_foreign_key "forms", "admin_users"
   add_foreign_key "periods", "forms"
   add_foreign_key "projects", "companies"
+  add_foreign_key "schedules", "admin_users"
+  add_foreign_key "schedules", "projects"
   add_foreign_key "slots", "competencies"
   add_foreign_key "templates", "roles"
   add_foreign_key "title_competency_mappings", "competencies"
