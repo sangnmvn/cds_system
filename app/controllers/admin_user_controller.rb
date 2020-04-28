@@ -1,11 +1,13 @@
 class AdminUserController < ApplicationController
   layout "system_layout"
+
   def index
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
-    @user = AdminUser.where(id: '2')
-    @project_user = ProjectMember.joins(:admin_user).where(id: '2')
+    params[:user] = "105"
+    @user = AdminUser.where(id: params[:user])
+    @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user])
   end
 
   def filter_users_management
@@ -20,7 +22,7 @@ class AdminUserController < ApplicationController
     end
     if params[:project] != "all"
       @projects = @projects.where("id = ?", params[:project])
-      @roles = @roles.where("projects.id = ?", params[:project])      
+      @roles = @roles.where("projects.id = ?", params[:project])
     end
 
     # binding.pry
@@ -28,13 +30,14 @@ class AdminUserController < ApplicationController
       format.js { }
     end
   end
+
   # add
   def add_users_management
     password_default = "password"
     management_default = 0
     @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
-    last_name: params[:last], account: params[:account],
-    company_id: params[:company], role_id: params[:role])
+                             last_name: params[:last], account: params[:account],
+                             company_id: params[:company], role_id: params[:role])
     respond_to do |format|
       if @use_new.save
         unless params[:project].nil?
@@ -50,6 +53,7 @@ class AdminUserController < ApplicationController
       end
     end
   end
+
   # modal company
   def get_project_modal_users_management
     @projects = Project.where(company_id: params[:company])
@@ -57,6 +61,7 @@ class AdminUserController < ApplicationController
       format.js
     end
   end
+
   # submit
   def submit_filter_users_management
     @current_page = params[:page] || "1"
@@ -71,14 +76,14 @@ class AdminUserController < ApplicationController
       @admin_users = @admin_users.where("company_id = ?", params[:company])
     end
     if params[:role] != "all"
-      @admin_users = @admin_users.where("role_id = ?", params[:role])              
+      @admin_users = @admin_users.where("role_id = ?", params[:role])
     end
     if params[:project] != "all"
       valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id=?", params[:project]).pluck("admin_users.id")
       @admin_users = @admin_users.where("id in (?)", valid_user_ids)
     end
     # binding.pry
-    
+
     respond_to do |format|
       # format.js
     end

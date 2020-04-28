@@ -38,46 +38,70 @@ $(document).ready(function () {
     $(".error").remove();
     if (first_name.length < 1) {
       $("#first").after(
-        '<span class="error">Please enter a valid first name</span>'
+        '<p class="error">Please enter First Name</p>'
       );
+      
       temp = false;
+    }else{
+      if (first_name.length < 2 || first_name.length > 20) {
+        $("#first").after(
+          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        );
+        temp = false;
+      }
     }
+    
     if (last_name.length < 1) {
+      
       $("#last").after(
-        '<span class="error">Please enter a valid last name</span>'
+        '<p class="error">Please enter Last Name</p>'
       );
       temp = false;
+    }else{
+      if (last_name.length < 2 || last_name.length > 20) {
+        $("#last").after(
+          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        );
+        temp = false;
+      }
     }
     
     if (email.length < 1) {
-      $("#email").after('<span class="error">Please enter a valid email</span>');
+      $("#email").after('<p class="error">Please enter Email Address</p>');
+      temp = false;
     } else {
-      var regEx = /^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/;
+      var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
       var validEmail = regEx.test(email);
       if (!validEmail) {
-        $("#email").after('<span class="error">Enter a valid email</span>');
-      }else {
+        $("#email").after('<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>');
         temp = false;
       }
     }
     if (account.length < 1) {
       $("#account").after(
-        '<span class="error">Please enter a valid account</span>'
+        '<p class="error">Please enter Account</p>'
       );
       temp = false;
+    }else{
+      if (account.length < 2 || account.length > 20) {
+        $("#account").after(
+          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        );
+        temp = false;
+      }
     }
-    ("");
+
+
     if (role == "") {
-      $("#role").after('<span class="error">Please enter a valid role</span>');
+      $("#role").after('<p class="error">Please select a Role</p>');
       temp = false;
     }
     if (company == "") {
       $("#company").after(
-        '<span class="error">Please enter a valid company</span>'
+        '<p class="error">Please select a Company</p>'
       );
       temp = false;
     }
-    // alert(company);
     if (temp == true) {
       $.ajax({
         url: "/admin/user_management/add/",
@@ -124,3 +148,4 @@ $(document).ready(function () {
     });
   });
 });
+ 
