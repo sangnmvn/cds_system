@@ -40,7 +40,7 @@
             <%=
             begin
                 project_namelist = []
-                project_member_of_user = project_members.where(admin_user: user)
+                project_member_of_user = project_members.where(user: user)
 
                 project_member_of_user.each { |project_member|
                 project_name = projects.find(project_member.project_id).desc
