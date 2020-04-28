@@ -7,6 +7,7 @@
     text-align: center;
     display: none;
 }
+<<<<<<< HEAD
 
 
 .panel_contents table tr.odd > th {
@@ -34,3 +35,8 @@
     color: #fff;
 }
 
+=======
+.error{
+    color: red;
+ }
+>>>>>>> bcb6b05599c93ab5aa9de6320c0d1771198baeef

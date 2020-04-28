@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Competency System"
+  config.site_title = "CDS"
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -134,7 +134,7 @@ ActiveAdmin.setup do |config|
   # config.comments_order = 'created_at ASC'
   #
   # You can disable the menu item for the comments index page:
-  # config.comments_menu = false
+  config.comments_menu = false
   #
   # You can customize the comment menu:
   # config.comments_menu = { parent: 'Admin', priority: 1 }
@@ -208,7 +208,7 @@ ActiveAdmin.setup do |config|
   # and feel.
   #
   # To load a stylesheet:
-  config.register_stylesheet "bootstrapw3.min.css"
+  # config.register_stylesheet "bootstrapw3.min.css"
   config.register_stylesheet "bootstrap.min.css"
   config.register_stylesheet "bootstrap-theme.min.css"
   config.register_stylesheet "tokenize2.min.css"
@@ -223,6 +223,7 @@ ActiveAdmin.setup do |config|
   config.register_javascript "user_management.js"
   config.register_javascript "d3.v4.js"
   config.register_javascript "bootstrap.min.js"
+  # config.register_javascript "bootstrapw3.min.js"
 
   # == CSV options
   #
@@ -247,11 +248,26 @@ ActiveAdmin.setup do |config|
   #
   # If you wanted to add a static menu item to the default menu provided:
   #
-  #   config.namespace :admin do |admin|
-  #     admin.build_menu :default do |menu|
-  #       menu.add label: "My Great Website", url: "http://www.mygreatwebsite.com", html_options: { target: :blank }
-  #     end
-  #   end
+    config.namespace :admin do |admin|
+      admin.build_menu :default do |menu|
+        menu.add label: "Dashboard", url: "/admin/dashboard", priority: 1
+        menu.add label: "CDS/CDP", priority: 2 do |sites|
+          sites.add label: "Template Management", url: "/admin"
+          sites.add label: "Level Mapping Management", url: "/admin"
+          sites.add label: "CDS Accessment", url: "/admin"
+          sites.add label: "CDP Accessment", url: "/admin"
+          sites.add label: "CDS - CDP Review", url: "/admin"
+        end
+        menu.add label: "Administration", priority: 3 do |sites|
+          sites.add label: "User Management", url: :admin_user_management_path
+          sites.add label: "User Group Management", url: "/admin"
+          sites.add label: "CDP Accessment", url: "/admin"
+          sites.add label: "Project Management", url: "/admin"
+          sites.add label: "Company Management", url: "/admin"
+        end
+        menu.add label: "Help", url: "/admin/dashboard", priority: 4
+      end
+    end
 
   # == Download Links
   #

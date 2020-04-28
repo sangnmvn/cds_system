@@ -1,6 +1,5 @@
 ActiveAdmin.register_page "User Management" do
-  # menu false
-  
+  menu false
   controller do
     def filter_users_management
       @company = params[:company]
@@ -44,7 +43,6 @@ ActiveAdmin.register_page "User Management" do
       @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
                                last_name: params[:last], account: params[:account],
                                company_id: params[:company], role_id: params[:role])
-
       respond_to do |format|
         if @use_new.save
           unless params[:project].nil?
@@ -66,25 +64,55 @@ ActiveAdmin.register_page "User Management" do
     def search_users_management
       # binding.pry
       q = params[:q]
-      current_page = 1
+      @current_page = params[:page] || "1"
+      @current_page = @current_page.to_i
+      @total_page = (AdminUser.where("email LIKE ? OR account LIKE ?", "%#{q}%", "%#{q}%").count / 20.to_f).ceil
       @roles = Role.all
       @projects = Project.all
       @project_members = ProjectMember.all
       @companies = Company.all
-      @admin_users = AdminUser.offset((current_page - 1) * 20).limit(10).where("email = 'admin@example.com'")
-      binding.pry
+      @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("email LIKE ? OR account LIKE ?", "%#{q}%", "%#{q}%")
       respond_to do |format|
         format.js { }
+      end
+    end
+
+    # submit
+    def submit_filter_users_management
+      @current_page = params[:page] || "1"
+      @current_page = @current_page.to_i
+      @total_page = (AdminUser.count / 20.to_f).ceil
+      @roles = Role.all
+      @projects = Project.all
+      @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
+      @companies = Company.all
+
+      if params[:company] == "all" && params[:role] == "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10)
+      elsif params[:company] != "all" && params[:role] == "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ?", params[:company])
+      elsif params[:company] == "all" && params[:role] != "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("role_id = ?", params[:role])
+      elsif params[:company] != "all" && params[:role] != "all"
+        @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(10).where("company_id = ? and role_id = ?", params[:company], params[:role])
+      end
+      respond_to do |format|
+        format.js
+      end
+    end
+
+    # modal company
+    def get_project_modal_users_management
+      # binding.pry
+      @projects = Project.where(company_id: params[:company])
+      respond_to do |format|
+        format.js
       end
     end
   end
 
   content do
     columns do
-      # search
-      column span: 8 do
-        render partial: "search"
-      end
       column span: 2 do
         roles = Role.all
         companies = Company.all
@@ -92,8 +120,22 @@ ActiveAdmin.register_page "User Management" do
         render partial: "action", locals: { roles: roles, companies: companies, project_name: project_name }
         render partial: "delete_user_confirmation"
       end
+      # search
+      column span: 8 do
+        render partial: "search"
+      end
     end
     columns do
+      # filter
+      column span: 2 do
+        panel "Filter" do
+          # binding.pry
+          projects = Project.all
+          companies = Company.all
+          roles = Role.all
+          render partial: "filter", locals: { projects: projects, companies: companies, roles: roles }
+        end
+      end
       # table
       column span: 8 do
         current_page = params[:page] || "1"
@@ -108,17 +150,9 @@ ActiveAdmin.register_page "User Management" do
           div class: "table-user-management" do
             render partial: "admin_users", locals: { current_page: current_page, admin_users: admin_users, roles: roles, projects: projects, project_members: project_members, companies: companies }
           end
-          render partial: "paging", locals: { current_page: current_page, total_page: total_page }
-        end
-      end
-      # filter
-      column span: 2 do
-        panel "Filter" do
-          # binding.pry
-          projects = Project.all
-          companies = Company.all
-          roles = Role.all
-          render partial: "filter", locals: { projects: projects, companies: companies, roles: roles }
+          div class: "paging-user-management" do
+            render partial: "paging", locals: { current_page: current_page, total_page: total_page }
+          end
         end
       end
     end
