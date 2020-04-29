@@ -167,18 +167,20 @@ function delete_dataTable() {
   //var table = $('#example').DataTable();
   user_dataTable.fnClearTable();
 }
+/*
+processing: true,
+      serverSide: true,
+  */    
 function setup_dataTable() {
   $("#table_user_management").ready(function () {
-    user_dataTable = $("#table_user_management").dataTable({
-      processing: true,
-      serverSide: true,
-      bDestroy: true,
+    $("#table_user_management").dataTable({
+      destroy: true,
       ajax: {
         url: $("#table_user_management").data("source"),
       },
-      stripeClasses: [],
+      stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
-      iDisplayLength: 20,
+      pageLength: 20,
       columns: [
         { data: "id" },
         { data: "first_name" },
@@ -190,6 +192,9 @@ function setup_dataTable() {
       // Check dataTables documentation to learn more about
       // available options.
     });
+    
+
+
   });
 }
 
@@ -211,3 +216,5 @@ $(".collection_selection[type=checkbox]").click(function () {
     $(".toggle_all").prop("checked", true);
   }
 });
+
+setup_dataTable();

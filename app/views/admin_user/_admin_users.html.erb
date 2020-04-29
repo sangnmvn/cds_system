@@ -20,6 +20,7 @@
       <th scope="col" class="company">Company</th>
       <th scope="col" class="action">Action</th>
     </tr>
+     </thead>
     <tbody>
       <% admin_users.each_with_index do |user, index| %>        
         <% even_odd_classname = "" %>
@@ -66,5 +67,5 @@
           </tr>
         <% end %>
         </tbody>
-        </thead>
+       
 </table>

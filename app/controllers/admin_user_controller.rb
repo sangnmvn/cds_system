@@ -18,7 +18,7 @@ class AdminUserController < ApplicationController
   end
 
   def destroy
-    binding.pry
+    #binding.pry
     user_id = params[:id]
     AdminUser.destroy(user_id)
 
@@ -88,7 +88,7 @@ class AdminUserController < ApplicationController
 
   # submit
   def submit_filter_users_management
-    binding.pry
+    #binding.pry
     @current_page = params[:page] || "1"
     @current_page = @current_page.to_i
     @total_page = (AdminUser.count / 20.to_f).ceil
@@ -116,7 +116,7 @@ class AdminUserController < ApplicationController
 
   # modal edit
   def get_modal_edit_users_management
-    binding.pry
+    #binding.pry
   end
 
   private
