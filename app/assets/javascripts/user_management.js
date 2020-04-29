@@ -221,14 +221,12 @@ $(".collection_selection[type=checkbox]").click(function () {
 
 setup_dataTable();
 
-$(document).ready(function () {
-  $(".edit_icon").click(function () {
-    user_id = $(this).data("user_id");
-    $.ajax({
-      url: "user_management/edit",
-      type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { user_id: user_id },
-    });
+$(document).on("click", ".edit_icon", function () {
+  user_id = $(this).data("user_id");
+  $.ajax({
+    url: "user_management/edit",
+    type: "GET",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { user_id: user_id },
   });
 });
