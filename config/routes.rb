@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  resources :user_groups do
+    collection do
+      get "test"
+    end
+  end
+  resources :groups
+  resources :group_privileges
+  resources :privileges
+  resources :title_privileges
+  resources :schedules
   devise_for :admin_users
   devise_scope :admin_user do
     get "/admin_users/sign_out" => "devise/sessions#destroy"

@@ -7,4 +7,5 @@ class AdminUser < ApplicationRecord
   has_many :project_members
   belongs_to :company
   has_many :forms
+  has_many :user_group
 end

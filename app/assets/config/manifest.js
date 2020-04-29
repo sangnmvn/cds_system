@@ -7,3 +7,6 @@
 //= link user_management.js
 //= link user_management.css
 //= link jquery.dataTables.min.js
+//= link jquery.dataTables.min.css
+//= link user_group.js
+//= link user_group.css

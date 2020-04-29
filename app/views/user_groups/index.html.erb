@@ -1,0 +1,82 @@
+<!-- The Modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="open_modal" value="1">
+  Open modal
+</button>
+<div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+          <h4 class="modal-title" style="color: white">Assign Users to Group</h4>
+          <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+				<div class="row">
+				<div class="col-6">
+            <h4>Available Users</h4>
+              <table class="table table-primary table-mytable table-responsive-sm" id="table_left">
+                <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td><input type="checkbox" id="check_all_choose" value="all" class="mycontrol"/></td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Email Address</td>
+                  </tr>
+                </thead>
+                <tbody>
+                <% @user.each do |user| %> 
+                  <tr id="<% user.id %>"> 
+                    <td>1</td> 
+                    <td><input type="checkbox" class="mycontrol"/></td> 
+                    <td><%= user.first_name %></td> 
+                    <td><%= user.last_name %></td> 
+                    <td><%= user.email %></td> 
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+				</div>
+							<div class="col-1 button-center">
+              <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right.png", border: 1) %></button>
+              <p></p>
+              <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left.png", border: 1) %></button>
+        </div>
+							<div class="col-5">
+							<h4>Selected Users</h4>
+                <table class="table table-primary table-mytable table-responsive-sm" id="table_right">
+                  <thead>
+                    <tr>
+                      <td>No.</td>
+                      <td><input type="checkbox" id="check_all_remove" value="all" class="mycontrol"/></td>
+                      <td>First Name</td>
+                      <td>Last Name</td>
+                      <td>Email Address</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr id="1"> 
+                      <td>1</td> 
+                      <td><input type="checkbox" class="mycontrol"/></td> 
+                      <td>User 1</td> 
+                      <td>Name</td> 
+                      <td>User@example.com</td> 
+                    </tr>
+                  </tbody>
+                </table>
+								</div>
+								</div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-12 p-3 text-center">
+          <button id="save" type="button" class="btn btn-secondary" disabled="disabled">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  <%= render "myajax.js" %>
+</script>

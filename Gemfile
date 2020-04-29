@@ -2,7 +2,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "2.7.1"
-gem 'ajax-datatables-rails'
+gem "ajax-datatables-rails"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.2", ">= 6.0.2.2"
 # Use mysql as the database for Active Record
@@ -21,9 +21,9 @@ gem "jbuilder", "~> 2.7"
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'bootstrap', '~> 4.4.1'
-gem 'jquery-rails'
-gem 'popper_js', '~> 1.14.5'
+gem "bootstrap", "~> 4.4.1"
+gem "jquery-rails"
+gem "popper_js", "~> 1.14.5"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
