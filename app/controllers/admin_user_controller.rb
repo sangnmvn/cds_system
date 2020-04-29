@@ -5,9 +5,33 @@ class AdminUserController < ApplicationController
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
-    params[:user] = "103"
-    @user = AdminUser.where(id: params[:user])
-    @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user])
+    # params[:user] = "103"
+    # @user = AdminUser.where(id: params[:user])
+    # @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user])
+    @admin_users = AdminUser.all
+    @project_members = ProjectMember.all
+
+    respond_to do |format|
+      format.html
+      format.json { render json: AdminUserDatatable.new(params) }
+    end
+  end
+
+  def destroy
+    binding.pry
+    user_id = params[:id]
+    AdminUser.destroy(user_id)
+
+    @companies = Company.all
+    @projects = Project.all
+    @roles = Role.all
+    @admin_users = AdminUser.all
+    @admin_users.reload
+    @project_members = ProjectMember.all
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def filter_users_management
@@ -89,8 +113,15 @@ class AdminUserController < ApplicationController
       # format.js
     end
   end
-  # modal edit 
+
+  # modal edit
   def get_modal_edit_users_management
     binding.pry
+  end
+
+  private
+
+  def admin_user_params
+    params.require(:admin_user).permit(:id)
   end
 end

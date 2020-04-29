@@ -6,3 +6,4 @@
 //= link jquery-3.5.0.min.js
 //= link user_management.js
 //= link user_management.css
+//= link jquery.dataTables.min.js

@@ -1,8 +1,8 @@
-<table class="table ">
+<table class="table" id="table_user_management" data-source="<%= admin_users_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>        
     <tr class="<%= even_odd_classname %>">
-      <th class="selectable">
+      <th>
         <div class="resource_selection_toggle_cell">
           <label>
             <input type="checkbox" id="collection_selection_toggle_all" name="collection_selection_toggle_all" class="toggle_all">
@@ -22,7 +22,7 @@
     </tr>
     <tbody>
       <% admin_users.each_with_index do |user, index| %>        
-        <% even_odd_classname = cycle("odd", "even") %>
+        <% even_odd_classname = "" %>
         <tr id= "<%= "admin_user_#{user.id}" %>"  class="<%= even_odd_classname %>">
           <td class="selectable">
             <div class="resource_selection_cell">
@@ -57,14 +57,14 @@
               <%= 
                 links = []
 
-                links << link_to(image_tag("edit.png", border: 0), edit_admin_staff_path(user.id), { class: "action_icon" })
-                links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon", :"data-toggle" => "modal", :"data-target" => "#delete-user-modal", :"data-user_id" => user.id})
+                links << link_to(image_tag("edit.png", border: 0), edit_admin_user_path(user.id), { class: "action_icon" })
+                links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id})
                 links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon" })
                 links.join(" ").html_safe      
             %>
             </td>
           </tr>
         <% end %>
-        <tbody>
+        </tbody>
         </thead>
-      </table>
+</table>

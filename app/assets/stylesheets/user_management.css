@@ -11,3 +11,85 @@
     text-align: center;
     display: none;
 }
+#table_user_management tr.odd > th {
+    font-size: 14px;
+    background: #009EE0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+#table_user_management > tbody[role="alert"] > tr > td{
+    border: 1px solid #fff;
+}
+
+#table_user_management tr.even > td {
+    font-size: 12px;
+    background: rgb(0, 198, 224);
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+#table_user_management tr.odd > td {
+    font-size: 12px;
+    background: #009ED0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.action_icon > img
+{
+  width: 18px;
+  height: 18px;
+}
+
+.next_page_icon{
+  width: 16px;
+  height: 12px;
+}
+
+.prev_page_icon{
+  width: 16px;
+  height: 12px;
+}
+
+
+#table_user_management_info{
+    color: black;
+}
+
+#table_user_management_paginate{
+    color: black;
+}
+
+#table_user_management_next{
+    color: black;
+}
+
+#table_user_management_previous{
+    color: black;
+}
+
+.panel_contents table tr.odd > th {
+    font-size: 14px;
+    background: #009EE0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.panel_contents table th td{
+    border: 1px solid #fff;
+}
+
+.panel_contents table tr.even > td {
+    font-size: 12px;
+    background: rgb(0, 198, 224);
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.panel_contents table tr.odd > td {
+    font-size: 12px;
+    background: #009ED0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
