@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   devise_for :admin_users
+  devise_scope :admin_user do
+    get '/admin_users/sign_out' => 'devise/sessions#destroy'
+  end
   # resources :admin_users
   root to: "admin_user#index"
   post "admin/dashboard" => "admin/dashboard#ajax_call"
