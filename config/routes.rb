@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   end
   resources :admin_users
   root to: "admin_user#index"
+  get "user_management/edit" => "admin_user#get_data_edit"
   post "admin/dashboard" => "admin/dashboard#ajax_call"
   post "admin/user_management/filter" => "admin_user#filter_users_management"
   post "admin/user_management/add" => "admin_user#add_users_management"
@@ -14,6 +15,6 @@ Rails.application.routes.draw do
   get "user_group" => "user_group#index"
   delete "admin/user_management/:id" => "admin_user#destroy", as: :destroy_user_management
 
-  get "admin/user_management/search" => "admin/user_management#search_users_management"
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  # resources :groups
+  # get "groups" => "groups#index"
 end

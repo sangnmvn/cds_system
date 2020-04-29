@@ -78,6 +78,23 @@ class AdminUserController < ApplicationController
     end
   end
 
+  # get data modal edit
+  def get_data_edit
+    # binding.pry
+    @companies = Company.all
+    @projects = Project.all
+    @roles = Role.all
+    @user = AdminUser.where(id: params[:user_id])
+    @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user_id])
+    # binding.pry
+    respond_to do |format|
+      format.js
+    end
+    # respond_to do |format|
+    #   format.json { render :json => @user }
+    # end
+  end
+
   # modal company
   def get_project_modal_users_management
     @projects = Project.where(company_id: params[:company])

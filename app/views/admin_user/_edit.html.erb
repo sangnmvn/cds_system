@@ -9,7 +9,8 @@
         <div class="modal-header">
           <h4 class="modal-title" style="text-align: center">Edit User Infomation</h4>
         </div>
-        <% user.each do |u|%>
+        <% unless @user.nil? %>
+        <% @user.each do |u|%>
         <!-- Modal body -->
         <div class="modal-body">
           <div class="container-fluid">
@@ -68,7 +69,7 @@
                     <label>Role (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= select_tag "role", options_from_collection_for_select(roles, "id", "name",u.role_id), class: 'form-control edit-role', include_blank: "Select a role" %>
+                    <%= select_tag "role", options_from_collection_for_select(@roles, "id", "name",u.role_id), class: 'form-control edit-role', include_blank: "Select a role" %>
                   </div>
                 </div>
                 <br>
@@ -78,7 +79,7 @@
                     <label>Company (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= select_tag "company", options_from_collection_for_select(companies, "id", "name",u.company_id), class: 'form-control modal-edit-user-management',  include_blank: "Select a company" %>
+                    <%= select_tag "company", options_from_collection_for_select(@companies, "id", "name",u.company_id), class: 'form-control modal-edit-user-management',  include_blank: "Select a company" %>
                   </div>
                 </div>
                 <br>
@@ -111,6 +112,7 @@
             
         </div>
         <% end %>
+      <% end %>
         <!-- Modal footer -->
         <div class="modal-footer">
           
