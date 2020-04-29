@@ -1,4 +1,5 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd">Add</button>
+
   <!-- The Modal -->
   <div class="modal fade modal-form-add-user" id="modalAdd">
     <div class="modal-dialog modal-lg">
@@ -6,7 +7,7 @@
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title" style="text-align: center">Add A New User Group </h4>
+          <h4 class="modal-title" style="text-align: center">Add A New Group Name</h4>
         </div>
         
         <!-- Modal body -->
@@ -17,54 +18,52 @@
                 <p style="color:red">Note: * indicates required fileld</p>
               </div>
               <div class="col-sm-12">
+              <%= form_with(model: @group, local: true) do |form| %>
               <%# group name %>
                 <div class="row">
                   <div class="col-sm-3">
                     <label>Group Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_field_tag 'last', nil, class: 'form-control', placeholder: 'Please enter name group' %>
-                    
+                    <%= text_field_tag 'Name', nil, class: 'form-control', placeholder: 'Please enter group name' %>
                   </div>
                 </div>
                 <br>
-              <%# status %>
+              <%# last name %>
                 <div class="row">
                   <div class="col-sm-3">
                     <label>Status (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <span><%= radio_button_tag 'status', 'Enable' %> Enable</span>
+                    <span><%= radio_button_tag 'status', "Enable", false, class: "status" %> Enable<span>
                     &emsp;
-                    <span><%= radio_button_tag 'status', 'Disable' %> Disable</span>
-                    
+                    <span><%= radio_button_tag 'status', "Disable", false, class: "status" %> Disable<span>
+                    <div id="error-status"></div>
                   </div>
                 </div>
                 <br>
-              <%# Description %>
+              <%# email %>
                 <div class="row">
                   <div class="col-sm-3">
                     <label>Description</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_area_tag 'body', nil, rows: 5, cols: 25, style: 'width:100%;' %>
+                    <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
                   </div>
                 </div>
                 <br>
-              <div class="row">
-                <div class="col-sm-5"></div>
-                <div class="col-sm-4">
-                  <button type="button" class="btn btn-primary" id="btn-modal-add-user">Submit</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
+              
               </div>
-              <br>
               
               
             </div>
 
             
-          </div>
+              <div style="text-align: center">
+                <button type="submit" class="btn btn-primary" id="btn-modal-add-user">Submit</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+            <% end %>
           <%# end container  %>
           
             

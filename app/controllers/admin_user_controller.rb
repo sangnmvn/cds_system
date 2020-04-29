@@ -21,14 +21,13 @@ class AdminUserController < ApplicationController
     #binding.pry
     user_id = params[:id]
     AdminUser.destroy(user_id)
-
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
     @admin_users = AdminUser.all
     @admin_users.reload
     @project_members = ProjectMember.all
-
+    
     respond_to do |format|
       format.js
     end
