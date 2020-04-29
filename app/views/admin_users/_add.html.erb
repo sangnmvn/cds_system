@@ -1,15 +1,15 @@
-
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd">Add</button>
+<button type="button" class="btn btn-primary" >Delete</button>
   <!-- The Modal -->
-  <div class="modal fade modal-form-add-user" id="modalEdit">
+  <div class="modal fade modal-form-add-user" id="modalAdd">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title" style="text-align: center">Edit User Infomation</h4>
+          <h4 class="modal-title" style="text-align: center">Add User Infomation</h4>
         </div>
-        <% unless @user.nil? %>
-        <% @user.each do |u|%>
+        
         <!-- Modal body -->
         <div class="modal-body">
           <div class="container-fluid">
@@ -24,7 +24,7 @@
                     <label>First Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_field_tag 'first', u.first_name , class: 'form-control edit-first', placeholder: 'Please enter first name' %>
+                    <%= text_field_tag 'first', nil, class: 'form-control', placeholder: 'Please enter first name' %>
                   </div>
                 </div>
                 <br>
@@ -34,7 +34,7 @@
                     <label>Last Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_field_tag 'last', u.last_name, class: 'form-control edit-last', placeholder: 'Please enter last name' %>
+                    <%= text_field_tag 'last', nil, class: 'form-control', placeholder: 'Please enter last name' %>
                   </div>
                 </div>
                 <br>
@@ -44,7 +44,7 @@
                     <label>Email (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_field_tag 'email', u.email, class: 'form-control edit-email', placeholder: 'Please enter email' %>
+                    <%= text_field_tag 'email', nil, class: 'form-control', placeholder: 'Please enter email' %>
                   </div>
                 </div>
                 <br>
@@ -54,7 +54,7 @@
                     <label>Account (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= text_field_tag 'account', u.account, class: 'form-control edit-account', placeholder: 'Please enter account' %>
+                    <%= text_field_tag 'account', nil, class: 'form-control', placeholder: 'Please enter account' %>
                   </div>
                 </div>
                 <br>
@@ -68,7 +68,7 @@
                     <label>Role (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= select_tag "role", options_from_collection_for_select(@roles, "id", "name",u.role_id), class: 'form-control edit-role', include_blank: "Select a role" %>
+                    <%= select_tag "role", options_from_collection_for_select(roles, "id", "name"), class: 'form-control', include_blank: "Select a role" %>
                   </div>
                 </div>
                 <br>
@@ -78,7 +78,7 @@
                     <label>Company (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <%= select_tag "company", options_from_collection_for_select(@companies, "id", "name",u.company_id), class: 'form-control modal-edit-user-management edit-company',  include_blank: "Select a company" %>
+                    <%= select_tag "company", options_from_collection_for_select(companies, "id", "name"), class: 'form-control modal-add-user-management',  include_blank: "Select a company" %>
                   </div>
                 </div>
                 <br>
@@ -88,9 +88,7 @@
                     <label>Project</label>
                   </div>
                   <div class="col-sm-9">
-                    <% arr_id_project = [] %>
-                    <% @project_user.each {|x| arr_id_project << x.id } %>
-                    <%= select_tag 'project', options_from_collection_for_select(@project_user, "id", "desc",arr_id_project), class: "tokenize-project edit-project", multiple: true %>
+                    <%= select_tag 'project', raw("<option></option>"), class: "tokenize-project", multiple: true %>
                   </div>
                 </div>
                 <br>
@@ -101,7 +99,7 @@
             <div class="row">
             <div class="col-sm-5"></div>
               <div class="col-sm-2">
-                <button type="button" class="btn btn-primary" id="btn-modal-edit-user">Save</button>
+                <button type="button" class="btn btn-primary" id="btn-modal-add-user">Submit</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
               </div>
             </div>
@@ -110,8 +108,7 @@
           
             
         </div>
-        <% end %>
-      <% end %>
+        
         <!-- Modal footer -->
         <div class="modal-footer">
           
