@@ -1,0 +1,277 @@
+
+<div class="modal fade bs-example-modal-xl"  id="addReviewerModal">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">      
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+          <h4 class="modal-title" style="color: white">Assign Users to Group</h4>
+          <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">        
+				<div class="row">
+				<div class="col-6">          
+            <h4>Available Users</h4>
+              <!-- Table header màu đậm hơn -->
+              <table class="table table-primary table-mytable table-responsive-lg" id="table_left">
+                <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Email Address</td>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% admin_users.each_with_index do |user, index| %>        
+                    <tr id="<%= user.id %>">
+                      <td class="add_reviewer_index" style="text-align: right"><%= index + 1%></td>
+                      <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>"</td>
+                      <td class="add_reviewer_name"><%= "#{user.first_name} #{user.last_name}" %> </td>
+                      <td class="add_reviewer_account"><%= user.account %></td>
+                      <td class="add_reviewer_email"><%= user.email %></td>
+                    </tr>
+                  <% end %>
+									
+                </tbody>
+              </table>
+				</div>
+							<div class="col-1 button-center">
+              <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right.png", class: "arrow_icon", border: 1) %></button>
+              <p></p>
+              <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left.png", class: "arrow_icon", border: 1) %></button>
+        </div>
+							<div class="col-5">
+							<h4>Selected Users</h4>
+              <!-- Table header màu đậm hơn -->
+                <table class="table table-primary table-mytable table-responsive-lg" id="table_right">
+                  <thead>
+                    <tr>
+                      <td>No.</td>
+                      <td><input type="checkbox" id="check_all_choose_right" value="all" class="mycontrol"></td>
+                      <td>First Name</td>
+                      <td>Last Name</td>
+                      <td>Email Address</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Reviewer there !-->
+                  </tbody>
+                </table>
+								</div>
+								</div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-12 p-3 text-center">
+          <button id="save" type="button" class="btn btn-secondary">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var global_data_table_left;
+  var global_data_table_right;
+
+  function set_data_event()
+  {
+    $("#table_left .mycontrol").each( function(index, value)
+    {
+      $(this).click(function()
+      {
+        if ($("#table_left td > .mycontrol").is(':checked'))
+        {
+            $('#to_right').attr("disabled", false);          
+        }
+      });
+
+    });
+
+    $("#table_right .mycontrol").each( function(index, value)
+    {
+      $(this).click(function()
+      {
+        if ($("#table_right td > .mycontrol").is(':checked'))
+        {
+            $('#to_left').attr("disabled", false);                    
+        }
+      });
+
+    });
+
+                
+    document.getElementById("check_all_choose_left").onclick = function () 
+              {
+                // Lấy danh sách checkbox
+                var checkboxes = $("#table_left tbody").find('input:checkbox');                            
+
+                if($("#check_all_choose_left").is(':checked'))
+                {
+                  // Lặp và thiết lập checked
+                  for (var i = 0; i < checkboxes.length; i++){
+                      checkboxes[i].checked = true;
+                      checkboxes[i].closest('tr').style.color = "#990000";
+                      $('#to_right').attr("disabled",false);
+                  }
+                }
+                else
+                {
+                    for (var i = 0; i < checkboxes.length; i++){
+                      checkboxes[i].checked = false;
+                      checkboxes[i].closest('tr').style.color = "black";
+                      $('#to_right').attr("disabled",true);
+                  }
+                }
+              };
+    document.getElementById("check_all_choose_right").onclick = function () 
+              {
+                // Lấy danh sách checkbox
+                var checkboxes = $("#table_right tbody").find('input:checkbox');
+                if($("#check_all_choose_right").is(':checked'))
+                {
+                  // Lặp và thiết lập checked
+                  for (var i = 0; i < checkboxes.length; i++){
+                      checkboxes[i].checked = true;
+                      checkboxes[i].closest('tr').style.color = "#990000";
+                      $('#to_left').attr("disabled",false);
+                  }
+                }
+                else
+                {
+                    for (var i = 0; i < checkboxes.length; i++){
+                      checkboxes[i].checked = false;
+                      checkboxes[i].closest('tr').style.color = "black";
+                        $('#to_left').attr("disabled",true);
+                  }
+                }
+              };
+    $('input:checkbox').change(function(){
+      $this = $(this);
+      if($this.val() != "all")
+      {
+        if($this.is(':checked'))
+        {
+          $this.closest('tr').css('color',"#990000");
+        }
+        else
+        {
+          $this.closest('tr').css('color',"black");
+        }
+      }
+    });
+    $('#to_right').click(function() {
+      var checkboxes = $("#table_left tbody").find('input:checkbox');
+      for (var i = 0; i < checkboxes.length; i++){
+        if(checkboxes[i].checked == true){
+            checkboxes[i].checked = false;
+            var tr = checkboxes[i].closest("tr");
+            tr.style.color = "black";
+            
+            
+            var addRow = global_data_table_left.fnGetData(tr);
+            global_data_table_right.fnAddData(addRow);          
+            global_data_table_left.fnDeleteRow(tr);        
+            
+            set_data_event();  
+        }
+      }
+      $('#to_right').attr("disabled",true);
+      $('#save').attr("disabled",false);
+    });
+    $('#to_left').click(function() {
+      var checkboxes = $("#table_right tbody").find('input:checkbox');
+      for (var i = 0; i < checkboxes.length; i++){
+        if(checkboxes[i].checked == true){
+            checkboxes[i].checked = false;
+            var tr = checkboxes[i].closest("tr");
+            tr.style.color = "black";
+            
+            var addRow = global_data_table_right.fnGetData(tr);
+            global_data_table_left.fnAddData(addRow);          
+            global_data_table_right.fnDeleteRow(tr);          
+            set_data_event();  
+        }
+      }
+      $('#to_left').attr("disabled",true);
+      $('#save').attr("disabled",false)	
+    });  
+  }
+
+  $(document).ready(function() {
+  // Cấu hình các nhãn phân trang
+  global_data_table_left = $('#table_left').dataTable( {
+      "language": {
+      "sProcessing":   "Đang xử lý...",
+      "sLengthMenu":   "Xem _MENU_ mục",
+      "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
+      "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+      "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+      "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+      "sInfoPostFix":  "",
+      "sSearch":       "Tìm:",
+      "sUrl":          "",
+      "oPaginate": {
+          "sFirst":    "Đầu",
+          "sPrevious": "Trước",
+          "sNext":     "Tiếp",
+          "sLast":     "Cuối"
+          }
+      },
+      "processing": true, // tiền xử lý trước
+      "iDisplayLength": 10,
+      "order": [[ 1, 'asc' ]], //sắp xếp giảm dần theo cột thứ 1
+
+      "aoColumns": [
+        { sClass: "add_reviewer_index" },
+          null,
+        { sClass: "add_reviewer_name"} ,
+        { sClass: "add_reviewer_account"} ,
+        { sClass: "add_reviewer_email"}]
+	});
+	global_data_table_right =$('#table_right').dataTable( {
+      "language": {
+      "sProcessing":   "Đang xử lý...",
+      "sLengthMenu":   "Xem _MENU_ mục",
+      "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
+      "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+      "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+      "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+      "sInfoPostFix":  "",
+      "sSearch":       "Tìm:",
+      "sUrl":          "",
+      "oPaginate": {
+          "sFirst":    "Đầu",
+          "sPrevious": "Trước",
+          "sNext":     "Tiếp",
+          "sLast":     "Cuối"
+          }
+      },
+      "processing": true, // tiền xử lý trước
+      "aLengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]], // danh sách số trang trên 1 lần hiển thị bảng
+      "iDisplayLength": 10,
+      "order": [[ 1, 'asc' ]] ,//sắp xếp giảm dần theo cột thứ 1
+      "aoColumns": [
+        { sClass: "add_reviewer_index" },
+          null,
+        { sClass: "add_reviewer_name"} ,
+        { sClass: "add_reviewer_account"} ,
+        { sClass: "add_reviewer_email"}]
+
+  });
+  set_data_event();
+});
+
+function check_checkbox(name) {
+	var count = 0;
+	var checkboxes = document.getElementsByName(name);
+	for (var i = 0; i < checkboxes.length; i++){
+		if(checkboxes[i].checked == true)
+			count++ ;
+	}
+	return count;
+}
+</script>

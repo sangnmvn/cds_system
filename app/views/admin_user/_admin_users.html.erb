@@ -30,7 +30,7 @@
               <input type="checkbox" id=<%= "batch_action_item_#{user.id}"%> value="0" class="collection_selection" name="collection_selection[]">
             </div>
           </td>
-          <td class="id"><%= "#{user.id}" %></td>
+          <td class="id"><%= "#{index + 1}" %></td>
           <td class="first_name"><%= "#{user.first_name}" %></td>
           <td class="last_name"><%= "#{user.last_name}" %></td>
           <td class="email"><%= "#{user.email}" %></td>
@@ -60,7 +60,7 @@
 
                 links << link_to(image_tag("edit.png", border: 0), edit_admin_user_path(user.id), { class: "action_icon" })
                 links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id})
-                links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon" })
+                links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon add_previewer_icon", :"data-toggle" => "modal", :"data-target" => "#addReviewerModal", :"data-user_id" => user.id})
                 links.join(" ").html_safe      
             %>
             </td>

@@ -180,7 +180,7 @@ function setup_dataTable() {
       },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
-      pageLength: 20,
+      iDisplayLength: 20,
       columns: [
         { data: "id" },
         { data: "first_name" },
@@ -188,6 +188,8 @@ function setup_dataTable() {
         { data: "email" },
         { data: "account" },
       ],
+
+      "order": [[ 1, 'asc' ]] //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.

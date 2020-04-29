@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_012527) do
+ActiveRecord::Schema.define(version: 2020_04_28_012528) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -35,7 +35,9 @@ ActiveRecord::Schema.define(version: 2020_04_28_012527) do
     t.bigint "admin_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "approver_id"
     t.index ["admin_user_id"], name: "index_approvers_on_admin_user_id"
+    t.index ["approver_id"], name: "fk_rails_bfdd408f43"
   end
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -193,6 +195,7 @@ ActiveRecord::Schema.define(version: 2020_04_28_012527) do
   add_foreign_key "admin_users", "companies"
   add_foreign_key "admin_users", "roles"
   add_foreign_key "approvers", "admin_users"
+  add_foreign_key "approvers", "admin_users", column: "approver_id"
   add_foreign_key "comments", "form_slots"
   add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"

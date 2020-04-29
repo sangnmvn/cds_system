@@ -16,7 +16,7 @@ AdminUser.delete_all
 Role.delete_all
 Project.delete_all
 Company.delete_all
-
+Approver.delete_all
 # Create role
 role_create = [
   { id: 1, name: "QC", desc: "Quality Assurance" },
@@ -1068,3 +1068,8 @@ slot_create = [
 slot_create.each do |s|
   Slot.create!(name: s[:name], desc: s[:desc], level: s[:level], competency_id: s[:competency_id])
 end
+
+Approver.create!(:approver_id => 0, :user_id => 1)
+Approver.create!(:approver_id => 0, :user_id => 2)
+Approver.create!(:approver_id => 3, :user_id => 4)
+Approver.create!(:approver_id => 3, :user_id => 5)
