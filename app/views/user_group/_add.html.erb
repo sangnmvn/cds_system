@@ -1,0 +1,80 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd">Add</button>
+  <!-- The Modal -->
+  <div class="modal fade modal-form-add-user" id="modalAdd">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align: center">Add A New User Group </h4>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <p style="color:red">Note: * indicates required fileld</p>
+              </div>
+              <div class="col-sm-12">
+              <%# group name %>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Group Name (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <%= text_field_tag 'last', nil, class: 'form-control', placeholder: 'Please enter name group' %>
+                    
+                  </div>
+                </div>
+                <br>
+              <%# status %>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Status (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <span><%= radio_button_tag 'status', 'Enable' %> Enable</span>
+                    &emsp;
+                    <span><%= radio_button_tag 'status', 'Disable' %> Disable</span>
+                    
+                  </div>
+                </div>
+                <br>
+              <%# Description %>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Description</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <%= text_area_tag 'body', nil, rows: 5, cols: 25, style: 'width:100%;' %>
+                  </div>
+                </div>
+                <br>
+              <div class="row">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-4">
+                  <button type="button" class="btn btn-primary" id="btn-modal-add-user">Submit</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+              <br>
+              
+              
+            </div>
+
+            
+          </div>
+          <%# end container  %>
+          
+            
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>

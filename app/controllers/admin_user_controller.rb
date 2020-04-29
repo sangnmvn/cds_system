@@ -5,7 +5,7 @@ class AdminUserController < ApplicationController
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
-    params[:user] = "105"
+    params[:user] = "103"
     @user = AdminUser.where(id: params[:user])
     @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user])
   end
@@ -64,6 +64,7 @@ class AdminUserController < ApplicationController
 
   # submit
   def submit_filter_users_management
+    binding.pry
     @current_page = params[:page] || "1"
     @current_page = @current_page.to_i
     @total_page = (AdminUser.count / 20.to_f).ceil
@@ -87,5 +88,9 @@ class AdminUserController < ApplicationController
     respond_to do |format|
       # format.js
     end
+  end
+  # modal edit 
+  def get_modal_edit_users_management
+    binding.pry
   end
 end

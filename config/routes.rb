@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post "admin/user_management/add" => "admin_user#add_users_management"
   get "/admin/user_management/modal/company" => "admin_user#get_project_modal_users_management"
   post "/admin/user_management/submit/filter" => "admin_user#submit_filter_users_management"
+  post "/admin/user_management/:id/edit" => "admin_user#get_modal_edit_users_management", as: :edit_user_management
+  get "user_group" => "user_group#index"
 
   delete "admin/user_management/:id" => "admin/user_management#destroy_user", as: :destroy_user_management
   get "admin/user_management/search" => "admin/user_management#search_users_management"
