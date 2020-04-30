@@ -1,3 +1,3 @@
-
-$('.table-user-management').html("<%= j (render partial: "admin_users", locals: { admin_users: @admin_users, roles: @roles, projects: @projects, project_members: @project_members, companies: @companies } )%>");
-$('.paging-user-management').html("<%= j (render partial: "paging", locals: { current_page: @current_page, total_page: @total_page })%>");
+$('#table_user_management').remove();
+$('#table_user_management_wrapper').html("<%= j (render partial: "admin_users", locals: { admin_users: @admin_users, roles: @roles, projects: @projects, project_members: @project_members, companies: @companies } )%>");
+setup_dataTable();

@@ -106,28 +106,26 @@ class AdminUsersController < ApplicationController
   # submit
   def submit_filter_users_management
     #binding.pry
-    @current_page = params[:page] || "1"
-    @current_page = @current_page.to_i
-    @total_page = (AdminUser.count / 20.to_f).ceil
     @roles = Role.all
     @projects = Project.all
-    @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
     @companies = Company.all
-    @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(20)
+    @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
+    @admin_users = AdminUser.all
+    # binding.pry
     if params[:company] != "all"
       @admin_users = @admin_users.where("company_id = ?", params[:company])
+    end
+    if params[:project] != "all"
+      # binding.pry
+      valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id = ?", params[:project]).pluck("admin_users.id")
+      @admin_users = @admin_users.where("id in (?)", valid_user_ids)
     end
     if params[:role] != "all"
       @admin_users = @admin_users.where("role_id = ?", params[:role])
     end
-    if params[:project] != "all"
-      valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id=?", params[:project]).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id in (?)", valid_user_ids)
-    end
-    # binding.pry
 
     respond_to do |format|
-      # format.js
+      format.js
     end
   end
 
