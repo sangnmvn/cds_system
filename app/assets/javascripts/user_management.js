@@ -7,10 +7,55 @@ $(document).ready(function () {
       type: "POST",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       data: { company: company, project: project },
+      dataType: "json",
+      success: function (response) {
+        $(response).each(function (i, e) {
+          console.log(e.project_current);
+          $("#filter-project").html("");
+          if (Array.isArray(e.projects) && e.projects.length) {
+            $('<option value="all">All</option>').appendTo("#filter-project");
+          }
+
+          $.each(e.projects, function (k, v) {
+            if (v.id == e.project_current && e.company_current != 'all') {
+              $('<option value="' + v.id + '" selected>' + v.desc + '</option>').appendTo(
+                "#filter-project"
+              );
+            } else {
+              $('<option value="' + v.id + '">' + v.desc + '</option>').appendTo(
+                "#filter-project"
+              );
+            }
+          });
+          $("#filter-role").html("");
+          if (Array.isArray(e.roles) && e.roles.length) {
+            $('<option value="all">All</option>').appendTo("#filter-role");
+          }
+          $.each(e.roles, function (k, v) {
+            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
+              "#filter-role"
+            );
+          });
+
+          // $('#filter-role').html(projects);
+          // $('#filter-role').html('');
+          //duyet mang doi tuong
+          // var tr = $("<tr id=" + e.id + "/>");
+          // $("<td style='text-align: right'/>").html("1").appendTo(tr);
+          // $("<td/>")
+          //   .html("<input type='checkbox' class='mycontrol'/>")
+          //   .appendTo(tr);
+          // $("<td/>").html(e.first_name).appendTo(tr);
+          // $("<td/>").html(e.last_name).appendTo(tr);
+          // $("<td/>").html(e.email).appendTo(tr);
+          // tr.appendTo("#table_right tbody");
+        });
+      },
     });
   });
 });
-
+// $('#filter-project').html('<option value="all">All</option><% @projects.each {|x| %><option value="<%= x.id%>" <%= "selected" if @project.to_i == x.id%> ><%= x.desc %></option><%}%>');
+// $('#filter-role').html('<option value="all">All</option><% @roles.each {|x| %><option value="<%= x.id%>"><%= x.name %></option><%}%>');
 function success() {
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
