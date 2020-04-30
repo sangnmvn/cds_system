@@ -13,7 +13,11 @@ Rails.application.routes.draw do
   devise_scope :admin_user do
     get "/admin_users/sign_out" => "devise/sessions#destroy"
   end
-  resources :admin_users
+  resources :admin_users do
+    collection do
+      get "check_emai_account"
+    end
+  end
   resources :group
   root to: "admin_users#index"
   get "user_management/edit" => "admin_users#get_data_edit"

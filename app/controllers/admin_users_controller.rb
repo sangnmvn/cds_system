@@ -67,6 +67,12 @@ class AdminUsersController < ApplicationController
             ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
           end
         end
+        @companies = Company.all
+        @projects = Project.all
+        @roles = Role.all
+        @admin_users = AdminUser.all
+        @admin_users.reload
+        @project_members = ProjectMember.all
         @status = true
         format.js { }
       else
@@ -119,6 +125,13 @@ class AdminUsersController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def check_emai_account
+    # binding.pry
+    email = AdminUser.where(email: params[:email]).present?
+    account = AdminUser.where(account: params[:account]).present?
+    render :json => { email: email, account: account }
   end
 
   private

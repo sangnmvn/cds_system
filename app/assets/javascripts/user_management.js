@@ -10,21 +10,20 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
-          console.log(e.project_current);
           $("#filter-project").html("");
           if (Array.isArray(e.projects) && e.projects.length) {
             $('<option value="all">All</option>').appendTo("#filter-project");
           }
 
           $.each(e.projects, function (k, v) {
-            if (v.id == e.project_current && e.company_current != 'all') {
-              $('<option value="' + v.id + '" selected>' + v.desc + '</option>').appendTo(
-                "#filter-project"
-              );
+            if (v.id == e.project_current && e.company_current != "all") {
+              $(
+                '<option value="' + v.id + '" selected>' + v.desc + "</option>"
+              ).appendTo("#filter-project");
             } else {
-              $('<option value="' + v.id + '">' + v.desc + '</option>').appendTo(
-                "#filter-project"
-              );
+              $(
+                '<option value="' + v.id + '">' + v.desc + "</option>"
+              ).appendTo("#filter-project");
             }
           });
           $("#filter-role").html("");
@@ -36,26 +35,11 @@ $(document).ready(function () {
               "#filter-role"
             );
           });
-
-          // $('#filter-role').html(projects);
-          // $('#filter-role').html('');
-          //duyet mang doi tuong
-          // var tr = $("<tr id=" + e.id + "/>");
-          // $("<td style='text-align: right'/>").html("1").appendTo(tr);
-          // $("<td/>")
-          //   .html("<input type='checkbox' class='mycontrol'/>")
-          //   .appendTo(tr);
-          // $("<td/>").html(e.first_name).appendTo(tr);
-          // $("<td/>").html(e.last_name).appendTo(tr);
-          // $("<td/>").html(e.email).appendTo(tr);
-          // tr.appendTo("#table_right tbody");
         });
       },
     });
   });
 });
-// $('#filter-project').html('<option value="all">All</option><% @projects.each {|x| %><option value="<%= x.id%>" <%= "selected" if @project.to_i == x.id%> ><%= x.desc %></option><%}%>');
-// $('#filter-role').html('<option value="all">All</option><% @roles.each {|x| %><option value="<%= x.id%>"><%= x.name %></option><%}%>');
 function success() {
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
@@ -117,6 +101,8 @@ $(document).ready(function () {
           '<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>'
         );
         temp = false;
+      }else {
+        check_email = true
       }
     }
     if (account.length < 1) {
@@ -128,6 +114,8 @@ $(document).ready(function () {
           '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
         );
         temp = false;
+      }else {
+        check_account = true
       }
     }
 
@@ -139,7 +127,27 @@ $(document).ready(function () {
       $("#company").after('<p class="error">Please select a Company</p>');
       temp = false;
     }
-    if (temp == true) {
+    if (check_account == true || check_email == true) {
+      $.ajax({
+        url: "/admin_users/check_emai_account",
+        type: "GET",
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: { email: email, account: account },
+        dataType: "json",
+        success: function (response) {
+          if (response.email == true && check_email == true) {
+            $("#email").after('<p class="error">Email already exists</p>');
+          }
+          if (response.account == true && check_account == true) {
+            $("#account").after('<p class="error">Account already exists</p>');
+          }
+        },
+      });
+    }
+    
+    if ($(".error").length == 0) {
       $.ajax({
         url: "/admin/user_management/add/",
         type: "POST",
