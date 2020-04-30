@@ -16,9 +16,9 @@ Rails.application.routes.draw do
   resources :admin_users do
     collection do
       get "check_emai_account"
+      post "add"
     end
   end
-  resources :group
   root to: "admin_users#index"
   get "user_management/edit" => "admin_users#get_data_edit"
   post "admin/user_management/filter" => "admin_users#filter_users_management"

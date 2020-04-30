@@ -16,7 +16,7 @@ $(document).ready(function () {
           }
 
           $.each(e.projects, function (k, v) {
-            if (v.id == e.project_current && e.company_current != "all") {
+            if (v.id == e.project_current) {
               $(
                 '<option value="' + v.id + '" selected>' + v.desc + "</option>"
               ).appendTo("#filter-project");
@@ -65,6 +65,8 @@ $(document).ready(function () {
     project = $("#project").val();
     temp = true;
     $(".error").remove();
+    check_email = false;
+    check_account = false;
     if (first_name.length < 1) {
       $("#first").after('<p class="error">Please enter First Name</p>');
 
@@ -101,8 +103,8 @@ $(document).ready(function () {
           '<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>'
         );
         temp = false;
-      }else {
-        check_email = true
+      } else {
+        check_email = true;
       }
     }
     if (account.length < 1) {
@@ -114,8 +116,8 @@ $(document).ready(function () {
           '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
         );
         temp = false;
-      }else {
-        check_account = true
+      } else {
+        check_account = true;
       }
     }
 
@@ -146,10 +148,9 @@ $(document).ready(function () {
         },
       });
     }
-    
     if ($(".error").length == 0) {
       $.ajax({
-        url: "/admin/user_management/add/",
+        url: "admin_users/add",
         type: "POST",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -291,10 +292,11 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   company = $(".edit-company").val();
   project = $(".edit-project").val();
   temp = true;
+  check_email = false;
+  check_account = false;
   $(".error").remove();
   if (first_name.length < 1) {
     $(".edit-first").after('<p class="error">Please enter First Name</p>');
-
     temp = false;
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
@@ -327,6 +329,8 @@ $(document).on("click", "#btn-modal-edit-user", function () {
         '<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>'
       );
       temp = false;
+    } else {
+      check_email = true;
     }
   }
   if (account.length < 1) {
@@ -338,6 +342,8 @@ $(document).on("click", "#btn-modal-edit-user", function () {
         '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
       );
       temp = false;
+    } else {
+      check_account = true;
     }
   }
   if (role == "") {
@@ -347,6 +353,25 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   if (company == "") {
     $(".edit-company").after('<p class="error">Please select a Company</p>');
     temp = false;
+  }
+  if (check_account == true || check_email == true) {
+    $.ajax({
+      url: "/admin_users/check_emai_account",
+      type: "GET",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: { email: email, account: account },
+      dataType: "json",
+      success: function (response) {
+        if (response.email == true && check_email == true) {
+          $(".edit-email").after('<p class="error">Email already exists</p>');
+        }
+        if (response.account == true && check_account == true) {
+          $(".edit-account").after('<p class="error">Account already exists</p>');
+        }
+      },
+    });
   }
   // if (temp == true) {
   //   $.ajax({

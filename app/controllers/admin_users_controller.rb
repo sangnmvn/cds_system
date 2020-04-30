@@ -32,9 +32,6 @@ class AdminUsersController < ApplicationController
   def filter_users_management
     @projects = Project.all
     @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
-    # binding.pry
-
-    # binding.pry
     if params[:company] != "all"
       @projects = @projects.where("company_id = ?", params[:company])
       @roles = @roles.where("projects.company_id = ?", params[:company])
@@ -43,17 +40,17 @@ class AdminUsersController < ApplicationController
       # @projects = @projects.where("company_id = ?", params[:company])
       @roles = @roles.where("projects.id = ?", params[:project])
     end
-    # binding.pry
     # respond_to do |format|
     #   format.js { }
     # end
     respond_to do |format|
-      format.json { render :json => { :projects => @projects, :roles => @roles, :project_current => params[:project], :company_current => params[:company] } }
+      format.json { render :json => { :projects => @projects, :roles => @roles, :project_current => params[:project] } }
     end
   end
 
   # add
-  def add_users_management
+  def add
+    binding.pry
     password_default = "password"
     management_default = 0
     @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
@@ -128,7 +125,6 @@ class AdminUsersController < ApplicationController
   end
 
   def check_emai_account
-    # binding.pry
     email = AdminUser.where(email: params[:email]).present?
     account = AdminUser.where(account: params[:account]).present?
     render :json => { email: email, account: account }
