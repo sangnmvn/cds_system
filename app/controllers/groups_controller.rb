@@ -42,6 +42,7 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
+    binding.pry
     respond_to do |format|
       if @group.update(group_params)
         format.html { redirect_to @group, notice: "Group was successfully updated." }
@@ -61,6 +62,12 @@ class GroupsController < ApplicationController
       format.html { redirect_to groups_url, notice: "Group was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def get_data
+    # binding.pry
+    group = Group.where(id: params[:id])
+    render :json => { group: group }
   end
 
   private

@@ -4,7 +4,6 @@ Rails.application.routes.draw do
       get "test"
     end
   end
-  resources :groups
   resources :group_privileges
   resources :privileges
   resources :title_privileges
@@ -17,6 +16,12 @@ Rails.application.routes.draw do
     collection do
       get "check_emai_account"
       post "add"
+    end
+  end
+  resources :groups do
+    collection do
+      get "get_data"
+      post "update"
     end
   end
   root to: "admin_users#index"
