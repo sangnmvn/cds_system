@@ -25,16 +25,16 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.json
   def create
-    binding.pry
+    params[:Status] = params[:Status] == "Enable" ? 1 : 0
     @group = Group.new(group_params)
-
-    respond_to do |format|
+    # binding.pry
+    if Group.where(Name: params[:Name]).present?
+      render :json => { :status => "exist" }
+    else
       if @group.save
-        format.html { redirect_to @group, notice: "Group was successfully created." }
-        format.json { render :show, status: :created, location: @group }
+        render :json => { :status => "success" }
       else
-        format.html { render :new }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
+        render :json => { :status => "fail" }
       end
     end
   end
@@ -72,6 +72,6 @@ class GroupsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.require(:group).permit(:Name, :Status, :Description)
+    params.permit(:Name, :Status, :Description)
   end
 end

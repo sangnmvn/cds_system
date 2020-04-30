@@ -5,40 +5,41 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'tokenize2.min', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'user_group', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'user_group', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'group', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
     <script src="https://d3js.org/d3.v4.js"></script>
-   <style>
-  .navbar-light .navbar-nav .nav-link {
-      background: #4472C4;;
-   color: #fff;
-   margin-right: 10px;
-}
-  .navbar-light .navbar-nav .nav-link:hover {
+    <style>
+      .navbar-light .navbar-nav .nav-link {
+          background: #4472C4;;
+       color: #fff;
+       margin-right: 10px;
+      }
+      .navbar-light .navbar-nav .nav-link:hover {
+           background: #8DA9DB;
+       color: #fff;
+       margin-right: 10px;
+      }
+      .navbar-light .navbar-nav .nav-link:focus {
        background: #8DA9DB;
-   color: #fff;
-   margin-right: 10px;
-}
-  .navbar-light .navbar-nav .nav-link:focus {
-   background: #8DA9DB;
-   color: #fff;
-   margin-right: 10px;
-}
-  .dropdown-item:focus {
-   background: #8DA9DB;
-   color: #fff;
-  }
-  .btn {
-    color: #fff;
-}
-
-  </style>
+       color: #fff;
+       margin-right: 10px;
+      }
+      .dropdown-item:focus {
+       background: #8DA9DB;
+       color: #fff;
+      }
+      .btn {
+        color: #fff;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar_menu">
@@ -76,33 +77,30 @@
             </div>
           </li>
           <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
+            <a class="nav-link" href="#">Link</a>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          
-            <p class="navbar-text float-right">
-          <% if admin_user_signed_in? %>
-  
-  <%= link_to  current_admin_user.email , edit_admin_user_registration_path, :class => 'navbar-link' %> |
-<%= link_to "Logout", destroy_admin_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
-<% else %>
-  <%= link_to "Login", new_admin_user_session_path, :class => 'btn btn-secondary'%>
-<% end %>
-</p>
+          <p class="navbar-text float-right">
+            <% if admin_user_signed_in? %>
+              <%= link_to  current_admin_user.email , edit_admin_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Logout", destroy_admin_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
+            <% else %>
+              <%= link_to "Login", new_admin_user_session_path, :class => 'btn btn-secondary'%>
+            <% end %>
+          </p>
         </form>
       </div>
     </nav>
     <%= yield %>
   </body>
 </html>
-
 <script>
-function getfocus() {
-  document.getElementById("myAnchor").focus();
-}
-
-function losefocus() {
-  document.getElementById("myAnchor").blur();
-}
+  function getfocus() {
+    document.getElementById("myAnchor").focus();
+  }
+  
+  function losefocus() {
+    document.getElementById("myAnchor").blur();
+  }
 </script>

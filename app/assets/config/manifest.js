@@ -10,3 +10,5 @@
 //= link jquery.dataTables.min.css
 //= link user_group.js
 //= link user_group.css
+//= link group.js
+//= link group.css

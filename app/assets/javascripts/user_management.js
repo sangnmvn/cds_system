@@ -68,39 +68,39 @@ $(document).ready(function () {
     check_email = false;
     check_account = false;
     if (first_name.length < 1) {
-      $("#first").after('<p class="error">Please enter First Name</p>');
+      $("#first").after('<span class="error">Please enter First Name</span>');
 
       temp = false;
     } else {
       if (first_name.length < 2 || first_name.length > 20) {
         $("#first").after(
-          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
         temp = false;
       }
     }
 
     if (last_name.length < 1) {
-      $("#last").after('<p class="error">Please enter Last Name</p>');
+      $("#last").after('<span class="error">Please enter Last Name</span>');
       temp = false;
     } else {
       if (last_name.length < 2 || last_name.length > 20) {
         $("#last").after(
-          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
         temp = false;
       }
     }
 
     if (email.length < 1) {
-      $("#email").after('<p class="error">Please enter Email Address</p>');
+      $("#email").after('<span class="error">Please enter Email Address</span>');
       temp = false;
     } else {
       var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
       var validEmail = regEx.test(email);
       if (!validEmail) {
         $("#email").after(
-          '<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>'
+          '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
         );
         temp = false;
       } else {
@@ -108,12 +108,12 @@ $(document).ready(function () {
       }
     }
     if (account.length < 1) {
-      $("#account").after('<p class="error">Please enter Account</p>');
+      $("#account").after('<span class="error">Please enter Account</span>');
       temp = false;
     } else {
       if (account.length < 2 || account.length > 20) {
         $("#account").after(
-          '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
         temp = false;
       } else {
@@ -122,11 +122,11 @@ $(document).ready(function () {
     }
 
     if (role == "") {
-      $("#role").after('<p class="error">Please select a Role</p>');
+      $("#role").after('<span class="error">Please select a Role</span>');
       temp = false;
     }
     if (company == "") {
-      $("#company").after('<p class="error">Please select a Company</p>');
+      $("#company").after('<span class="error">Please select a Company</span>');
       temp = false;
     }
     if (check_account == true || check_email == true) {
@@ -140,10 +140,10 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.email == true && check_email == true) {
-            $("#email").after('<p class="error">Email already exists</p>');
+            $("#email").after('<span class="error">Email already exists</span>');
           }
           if (response.account == true && check_account == true) {
-            $("#account").after('<p class="error">Account already exists</p>');
+            $("#account").after('<span class="error">Account already exists</span>');
           }
         },
       });
@@ -296,37 +296,37 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   check_account = false;
   $(".error").remove();
   if (first_name.length < 1) {
-    $(".edit-first").after('<p class="error">Please enter First Name</p>');
+    $(".edit-first").after('<span class="error">Please enter First Name</span>');
     temp = false;
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
       $(".edit-first").after(
-        '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
     }
   }
   if (last_name.length < 1) {
-    $(".edit-last").after('<p class="error">Please enter Last Name</p>');
+    $(".edit-last").after('<span class="error">Please enter Last Name</span>');
     temp = false;
   } else {
     if (last_name.length < 2 || last_name.length > 20) {
       $(".edit-last").after(
-        '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
     }
   }
 
   if (email.length < 1) {
-    $(".edit-email").after('<p class="error">Please enter Email Address</p>');
+    $(".edit-email").after('<span class="error">Please enter Email Address</span>');
     temp = false;
   } else {
     var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
     var validEmail = regEx.test(email);
     if (!validEmail) {
       $(".edit-email").after(
-        '<p class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</p>'
+        '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
       );
       temp = false;
     } else {
@@ -334,12 +334,12 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     }
   }
   if (account.length < 1) {
-    $(".edit-account").after('<p class="error">Please enter Account</p>');
+    $(".edit-account").after('<span class="error">Please enter Account</span>');
     temp = false;
   } else {
     if (account.length < 2 || account.length > 20) {
       $(".edit-account").after(
-        '<p class="error">Please enter a value between {2} and {20} characters long.</p>'
+        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
     } else {
@@ -347,11 +347,11 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     }
   }
   if (role == "") {
-    $(".edit-role").after('<p class="error">Please select a Role</p>');
+    $(".edit-role").after('<span class="error">Please select a Role</span>');
     temp = false;
   }
   if (company == "") {
-    $(".edit-company").after('<p class="error">Please select a Company</p>');
+    $(".edit-company").after('<span class="error">Please select a Company</span>');
     temp = false;
   }
   if (check_account == true || check_email == true) {
@@ -365,10 +365,10 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       dataType: "json",
       success: function (response) {
         if (response.email == true && check_email == true) {
-          $(".edit-email").after('<p class="error">Email already exists</p>');
+          $(".edit-email").after('<span class="error">Email already exists</span>');
         }
         if (response.account == true && check_account == true) {
-          $(".edit-account").after('<p class="error">Account already exists</p>');
+          $(".edit-account").after('<span class="error">Account already exists</span>');
         }
       },
     });
