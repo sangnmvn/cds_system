@@ -10,57 +10,7 @@
 
       <div class="col-sm-10 table_group_wrapper">
         <!-- table -->
-
-        
-        <table class="table" id="table_group" data-source="<%= groups_path(format: :json) %>">
-  <thead>
-    <% even_odd_classname = cycle("odd", "even") %>        
-    <tr class="<%= even_odd_classname %>">
-      <th>
-        <div class="resource_selection_toggle_cell">
-          <label>
-            <input type="checkbox" id="collection_selection_toggle_all" name="collection_selection_toggle_all" class="toggle_all">
-          </label>
-        </div>
-      </th>
-      <th scope="col" class="id">ID</th>
-      <th scope="col" class="name">Name</th>
-      <th scope="col" class="status">Status</th>
-      <th scope="col" class="description">Description</th>
-      <th scope="col" class="action">Action</th>
-    </tr>
-     </thead>
-    <tbody>
-      <% @groups.each_with_index do |group, index| %>        
-        <% even_odd_classname = "" %>
-        <tr id= "<%= "group_#{group.id}" %>"  class="<%= even_odd_classname %>">
-          <td class="selectable">
-            <div class="resource_selection_cell">
-              <input type="checkbox" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection_selection" name="collection_selection[]">
-            </div>
-          </td>
-          <td class="id"><%= "#{index + 1}" %></td>
-          <td class="name"><%= "#{group.name}" %></td>
-          <td class="status">
-            <% if group.status %>
-              Enable
-            <% else %>
-              Disable
-            <% end %>
-          </td>
-          <td class="description"><%= "#{group.description}" %></td>
-          <td class="action">
-              <%= 
-                links = []
-
-                links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon", :"data-group_id" => group.id })
-                links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-group_id" => group.id})                
-                links.join(" ").html_safe      
-            %>
-            </td>
-          </tr>
-        <% end %>
-
+        <%= render 'groups' , groups: @groups %>
       </div>
     </div>
     <div class="row">

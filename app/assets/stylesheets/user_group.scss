@@ -38,3 +38,29 @@
 	height: 1.15rem;
 
 }
+
+#table_group tr.odd > th {
+	font-size: 14px;
+	background: #009EE0;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+}
+
+#table_group > tbody[role="alert"] > tr > td{
+	border: 1px solid #fff;
+}
+
+#table_group tr.even > td {
+	font-size: 12px;
+	background: rgb(0, 198, 224);
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+}
+
+#table_group tr.odd > td {
+	font-size: 12px;
+	background: #009ED0;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+}
+	

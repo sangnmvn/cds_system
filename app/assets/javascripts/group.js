@@ -124,3 +124,62 @@ $(document).ready(function () {
     }
   });
 });
+
+var group_dataTable;
+function delete_dataTable() {
+  //var table = $('#example').DataTable();
+  group_dataTable.fnClearTable();
+}
+/*
+processing: true,
+      serverSide: true,
+  */
+
+function setup_dataTable() {
+  $("#table_group").ready(function () {
+    $("#table_group").dataTable({
+      destroy: true,
+      ajax: {
+        url: $("#table_group").data("source"),
+      },
+      stripeClasses: ["even", "odd"],
+      pagingType: "full_numbers",
+      iDisplayLength: 20,
+      columns: [
+        { data: "id" },
+        { data: "first_name" },
+        { data: "last_name" },
+        { data: "email" },
+        { data: "account" },
+      ],
+
+      order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
+      // pagingType is optional, if you want full pagination controls.
+      // Check dataTables documentation to learn more about
+      // available options.
+    });
+
+    $("#table_group_length").remove();
+
+    $(".toggle_all").click(function () {  
+      $(".collection_selection[type=checkbox]").prop(
+        "checked",
+        $(this).prop("checked")    
+      );
+    });
+
+    $(".collection_selection[type=checkbox]").click(function () {
+      var nboxes = $("#table_group tbody :checkbox:not(:checked)");
+      if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
+        $(".toggle_all").prop("checked", false);
+      }
+      if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
+        $(".toggle_all").prop("checked", true);
+      }
+    });
+
+  });
+  
+}
+
+setup_dataTable();
