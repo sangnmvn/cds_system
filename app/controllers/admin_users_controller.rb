@@ -5,6 +5,9 @@ class AdminUsersController < ApplicationController
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
+    # params[:user] = "103"
+    # @user = AdminUser.where(id: params[:user])
+    # @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user])
     @admin_users = AdminUser.all
     @project_members = ProjectMember.all
 
@@ -14,7 +17,31 @@ class AdminUsersController < ApplicationController
     end
   end
 
+  def add_previewer
+    user_id = params[:id]
+    @existing_previewers   = AdminUser.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
+    @available_admin_users = AdminUser.where.not(id: @existing_previewers.pluck(:id))
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def add_previewer_to_database
+    approver_ids = params["approver_ids"].split(",").map(&:to_i)
+    user_id = params["id"].to_i
+
+    # delete approver not in list
+    (Approver.where(admin_user_id: user_id)).where.not(approver_id: approver_ids).destroy_all
+    # add approver in list
+    approver_ids.each{|approver_id|
+      Approver.create!(admin_user_id: user_id, approver_id: approver_id)
+    }
+
+  end
+
   def destroy
+    #binding.pry
     user_id = params[:id]
     AdminUser.destroy(user_id)
     @companies = Company.all
@@ -23,34 +50,35 @@ class AdminUsersController < ApplicationController
     @admin_users = AdminUser.all
     @admin_users.reload
     @project_members = ProjectMember.all
-
+    
     respond_to do |format|
       format.js
     end
   end
 
   def filter_users_management
+    @company = params[:company]
+    @project = params[:project]
     @projects = Project.all
     @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+
     if params[:company] != "all"
       @projects = @projects.where("company_id = ?", params[:company])
       @roles = @roles.where("projects.company_id = ?", params[:company])
     end
-    if params[:project] != "all" && params[:project] != ""
-      # @projects = @projects.where("company_id = ?", params[:company])
+    if params[:project] != "all"
+      @projects = @projects.where("id = ?", params[:project])
       @roles = @roles.where("projects.id = ?", params[:project])
     end
-    # respond_to do |format|
-    #   format.js { }
-    # end
+
+    # binding.pry
     respond_to do |format|
-      format.json { render :json => { :projects => @projects, :roles => @roles, :project_current => params[:project] } }
+      format.js { }
     end
   end
 
   # add
-  def add
-    binding.pry
+  def add_users_management
     password_default = "password"
     management_default = 0
     @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
@@ -64,12 +92,6 @@ class AdminUsersController < ApplicationController
             ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
           end
         end
-        @companies = Company.all
-        @projects = Project.all
-        @roles = Role.all
-        @admin_users = AdminUser.all
-        @admin_users.reload
-        @project_members = ProjectMember.all
         @status = true
         format.js { }
       else
@@ -80,11 +102,13 @@ class AdminUsersController < ApplicationController
 
   # get data modal edit
   def get_data_edit
+    # binding.pry
     @companies = Company.all
     @projects = Project.all
     @roles = Role.all
     @user = AdminUser.where(id: params[:user_id])
     @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user_id])
+    # binding.pry
     respond_to do |format|
       format.js
     end
@@ -103,31 +127,35 @@ class AdminUsersController < ApplicationController
 
   # submit
   def submit_filter_users_management
+    #binding.pry
+    @current_page = params[:page] || "1"
+    @current_page = @current_page.to_i
+    @total_page = (AdminUser.count / 20.to_f).ceil
     @roles = Role.all
     @projects = Project.all
-    @companies = Company.all
     @project_members = params[:project] == "all" ? ProjectMember.all : ProjectMember.all.where("project_id = ?", params[:project])
-    @admin_users = AdminUser.all
+    @companies = Company.all
+    @admin_users = AdminUser.offset((@current_page - 1) * 20).limit(20)
     if params[:company] != "all"
       @admin_users = @admin_users.where("company_id = ?", params[:company])
-    end
-    if params[:project] != "all"
-      valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id = ?", params[:project]).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id in (?)", valid_user_ids)
     end
     if params[:role] != "all"
       @admin_users = @admin_users.where("role_id = ?", params[:role])
     end
+    if params[:project] != "all"
+      valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id=?", params[:project]).pluck("admin_users.id")
+      @admin_users = @admin_users.where("id in (?)", valid_user_ids)
+    end
+    # binding.pry
 
     respond_to do |format|
-      format.js
+      # format.js
     end
   end
 
-  def check_emai_account
-    email = AdminUser.where(email: params[:email]).present?
-    account = AdminUser.where(account: params[:account]).present?
-    render :json => { email: email, account: account }
+  # modal edit
+  def get_modal_edit_users_management
+    #binding.pry
   end
 
   private

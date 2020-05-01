@@ -13,30 +13,10 @@
 				<div class="col-6">          
             <h4>Available Users</h4>
               <!-- Table header màu đậm hơn -->
-              <table class="table table-primary table-mytable table-responsive-lg" id="table_left">
-                <thead>
-                  <tr>
-                    <td>No.</td>
-                    <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
-                    <td>First Name</td>
-                    <td>Last Name</td>
-                    <td>Email Address</td>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% admin_users.each_with_index do |user, index| %>        
-                    <tr id="<%= user.id %>">
-                      <td class="add_reviewer_index" style="text-align: right"><%= index + 1%></td>
-                      <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>"</td>
-                      <td class="add_reviewer_name"><%= "#{user.first_name} #{user.last_name}" %> </td>
-                      <td class="add_reviewer_account"><%= user.account %></td>
-                      <td class="add_reviewer_email"><%= user.email %></td>
-                    </tr>
-                  <% end %>
-									
-                </tbody>
-              </table>
+              <div id="table_left_wrapper">
+                <% render "admin_users_previewer_list"%>
+              </div>
+              
 				</div>
 							<div class="col-1 button-center">
               <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right.png", class: "arrow_icon", border: 1) %></button>
@@ -46,39 +26,53 @@
 							<div class="col-5">
 							<h4>Selected Users</h4>
               <!-- Table header màu đậm hơn -->
-                <table class="table table-primary table-mytable table-responsive-lg" id="table_right">
-                  <thead>
-                    <tr>
-                      <td>No.</td>
-                      <td><input type="checkbox" id="check_all_choose_right" value="all" class="mycontrol"></td>
-                      <td>First Name</td>
-                      <td>Last Name</td>
-                      <td>Email Address</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Reviewer there !-->
-                  </tbody>
-                </table>
-								</div>
-								</div>
+                <div id="table_right_wrapper">
+                  <% render "admin_users_selected_previewer"%>
+                </div>
+              </div>                      
       </div>
       <div class="modal-footer">
         <div class="col-12 p-3 text-center">
-          <button id="save" type="button" class="btn btn-secondary">Save</button>
+          <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- hidden input to contains id-->
+  <input type="text" style="display:none;" class="add_previewer_id"></input>
 </div>
 
 <script>
   var global_data_table_left;
   var global_data_table_right;
-
+  
+  
   function set_data_event()
   {
+    $('#save').click(function ()
+      {
+          var user_id = $('.add_previewer_id').val();
+          var reviewer_ids = [];
+
+          $('#table_right .add_reviewer_id').each(
+            function (index, value) 
+            {
+              // skip header
+              if (index > 0)
+              {
+                reviewer_ids.push($(this).text()); 
+              }
+            } );
+
+          $.ajax({
+          url: "/admin/user_management/add_previewer/" + user_id + '/' + reviewer_ids.join(","),
+          type: "POST",
+          headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },          
+          });
+      });
+
     $("#table_left .mycontrol").each( function(index, value)
     {
       $(this).click(function()
@@ -198,9 +192,12 @@
       }
       $('#to_left').attr("disabled",true);
       $('#save').attr("disabled",false)	
+          
+
     });  
   }
-
+function set_up_data_table_previewer()
+{
   $(document).ready(function() {
   // Cấu hình các nhãn phân trang
   global_data_table_left = $('#table_left').dataTable( {
@@ -230,8 +227,12 @@
           null,
         { sClass: "add_reviewer_name"} ,
         { sClass: "add_reviewer_account"} ,
-        { sClass: "add_reviewer_email"}]
-	});
+        { sClass: "add_reviewer_email"},
+        { sClass: "add_reviewer_id d-none"}]
+  });
+  
+  
+
 	global_data_table_right =$('#table_right').dataTable( {
       "language": {
       "sProcessing":   "Đang xử lý...",
@@ -259,11 +260,13 @@
           null,
         { sClass: "add_reviewer_name"} ,
         { sClass: "add_reviewer_account"} ,
-        { sClass: "add_reviewer_email"}]
+        { sClass: "add_reviewer_email"},
+        { sClass: "add_reviewer_id d-none"}]
 
   });
   set_data_event();
 });
+}
 
 function check_checkbox(name) {
 	var count = 0;

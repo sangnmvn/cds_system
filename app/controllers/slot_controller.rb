@@ -1,2 +1,0 @@
-class SlotController < ApplicationController
-end

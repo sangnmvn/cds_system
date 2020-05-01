@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_012528) do
+ActiveRecord::Schema.define(version: 2020_04_29_021122) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -111,6 +111,23 @@ ActiveRecord::Schema.define(version: 2020_04_28_012528) do
     t.index ["template_id"], name: "index_forms_on_template_id"
   end
 
+  create_table "group_privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "privilege_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_privileges_on_group_id"
+    t.index ["privilege_id"], name: "index_group_privileges_on_privilege_id"
+  end
+
+  create_table "groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "Name"
+    t.boolean "Status"
+    t.text "Description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.datetime "from_date"
     t.datetime "to_date"
@@ -119,6 +136,14 @@ ActiveRecord::Schema.define(version: 2020_04_28_012528) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["form_id"], name: "index_periods_on_form_id"
+  end
+
+  create_table "privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "Name"
+    t.bigint "title_privilege_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["title_privilege_id"], name: "index_privileges_on_title_privilege_id"
   end
 
   create_table "project_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -185,11 +210,26 @@ ActiveRecord::Schema.define(version: 2020_04_28_012528) do
     t.index ["title_id"], name: "index_title_competency_mappings_on_title_id"
   end
 
+  create_table "title_privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "Name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "titles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "desc"
     t.bigint "role_id"
     t.index ["role_id"], name: "index_titles_on_role_id"
+  end
+
+  create_table "user_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "admin_user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_user_id"], name: "index_user_groups_on_admin_user_id"
+    t.index ["group_id"], name: "index_user_groups_on_group_id"
   end
 
   add_foreign_key "admin_users", "companies"
@@ -205,7 +245,10 @@ ActiveRecord::Schema.define(version: 2020_04_28_012528) do
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
   add_foreign_key "forms", "admin_users"
+  add_foreign_key "group_privileges", "groups"
+  add_foreign_key "group_privileges", "privileges"
   add_foreign_key "periods", "forms"
+  add_foreign_key "privileges", "title_privileges"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "admin_users"
   add_foreign_key "schedules", "projects"
@@ -214,4 +257,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_012528) do
   add_foreign_key "title_competency_mappings", "competencies"
   add_foreign_key "title_competency_mappings", "titles"
   add_foreign_key "titles", "roles"
+  add_foreign_key "user_groups", "admin_users"
+  add_foreign_key "user_groups", "groups"
 end

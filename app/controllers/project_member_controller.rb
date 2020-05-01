@@ -1,2 +1,0 @@
-class ProjectMemberController < ApplicationController
-end

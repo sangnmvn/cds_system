@@ -58,7 +58,7 @@
 }
 
 .add_reviewer_index{
-    text-align: center;
+    text-align: center !important;
 }
 
 #table_user_management_info{

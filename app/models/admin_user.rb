@@ -8,4 +8,7 @@ class AdminUser < ApplicationRecord
   belongs_to :company
   has_many :forms
   has_many :user_group
+
+  has_many :approvers, :class_name => 'Approver', :foreign_key => "approver_id", :dependent => :destroy
+  has_many :approvees, :class_name => 'Approver', :foreign_key => "admin_user_id", :dependent => :destroy
 end

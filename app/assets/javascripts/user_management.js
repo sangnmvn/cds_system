@@ -195,6 +195,7 @@ $(document).ready(function () {
   });
 });
 
+
 function delete_user() {
   var user_id = $(".delete_id").val();
 
@@ -208,6 +209,22 @@ function delete_user() {
     },
   });
 }
+
+function add_previewer_user()
+{
+  var user_id = $(".add_previewer_id").val();
+
+  //alert( 'admin/user_management/'  + user_id + '/')
+  $.ajax({
+    url: "/admin/user_management/add_previewer/" + user_id,
+    method: "post",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    success: function (result) {
+      // Do something with the result
+    },
+  });
+} 
+
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
   $(".delete_id").val(user_id);
@@ -215,6 +232,17 @@ $(document).on("click", ".delete_icon", function () {
   // it is unnecessary to have to manually call the modal.
   // $('#addBookDialog').modal('show');
 });
+
+$(document).on("click", ".add_previewer_icon", function () {
+  var user_id = $(this).data("user_id");
+  $(".add_previewer_id").val(user_id);
+  // As pointed out in comments,
+  // it is unnecessary to have to manually call the modal.
+  // $('#addBookDialog').modal('show');
+  add_previewer_user();
+});
+
+
 
 var user_dataTable;
 function delete_dataTable() {

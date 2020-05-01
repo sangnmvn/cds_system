@@ -12,11 +12,12 @@ Slot.delete_all
 Competency.delete_all
 Template.delete_all
 Title.delete_all
+Approver.delete_all
 AdminUser.delete_all
 Role.delete_all
 Project.delete_all
 Company.delete_all
-Approver.delete_all
+
 # Create role
 role_create = [
   { id: 1, name: "QC", desc: "Quality Assurance" },
@@ -42,13 +43,15 @@ Project.create!(id: 2, desc: "Project Test 1", company_id: "3")
 Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
-AdminUser.create!(email: "admin@example.com", password: "password", password_confirmation: "password", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
+AdminUser.create!(id:1, email: "admin@example.com", password: "password", password_confirmation: "password", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
 
 NB_USERS = 100
+
 NB_USERS.times do |n|
   AdminUser.create! do |u|
     # u.username = Faker::Internet.user_name + n.to_s
     # u.email = Faker::Internet.email.gsub("@", "#{n}@")
+    u.id = 2 + n
     u.email = "user_#{n}@example.com"
     u.first_name = "Test"
     u.last_name = "User #{n}"
@@ -59,8 +62,18 @@ NB_USERS.times do |n|
   end
 end
 
+
+Approver.create!(admin_user_id: 1, approver_id: 2)
+Approver.create!(admin_user_id: 3, approver_id: 2)
+Approver.create!(admin_user_id: 4, approver_id: 5)
+Approver.create!(admin_user_id: 6, approver_id: 1)
 # Create Project Memember
 50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(2).to_i, is_managent: "0") }
+
+Approver.create!(approver_id: 1, admin_user_id: 6)
+Approver.create!(approver_id: 1, admin_user_id: 2)
+Approver.create!(approver_id: 2, admin_user_id: 4)
+Approver.create!(approver_id: 3, admin_user_id: 5)
 
 # Create Title
 # QC
@@ -1069,7 +1082,3 @@ slot_create.each do |s|
   Slot.create!(name: s[:name], desc: s[:desc], level: s[:level], competency_id: s[:competency_id])
 end
 
-Approver.create!(:approver_id => 0, :user_id => 1)
-Approver.create!(:approver_id => 0, :user_id => 2)
-Approver.create!(:approver_id => 3, :user_id => 4)
-Approver.create!(:approver_id => 3, :user_id => 5)

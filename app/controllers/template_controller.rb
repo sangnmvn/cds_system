@@ -1,2 +1,0 @@
-class TemplateController < ApplicationController
-end
