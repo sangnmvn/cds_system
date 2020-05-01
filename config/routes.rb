@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :groups do
     collection do
       get "get_data"
-      post "update"
+      # post "update_data"
     end
   end
   root to: "admin_users#index"

@@ -8,9 +8,9 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
     $("#name").after('<span class="error">Please enter Group Name</span>');
     temp = false;
   } else {
-    if (name.length < 2 || name.length > 20) {
+    if (name.length < 2 || name.length > 100) {
       $("#name").after(
-        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
       );
       temp = false;
     }
@@ -88,17 +88,17 @@ $(document).ready(function () {
       );
       temp = false;
     } else {
-      if (name.length < 2 || name.length > 20) {
+      if (name.length < 2 || name.length > 100) {
         $("#modalEdit #name").after(
-          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+          '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
         );
         temp = false;
       }
     }
     if (temp == true) {
       $.ajax({
-        url: "groups/update",
-        type: "POST",
+        url: "groups/" + id,
+        type: "PUT",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
         },
@@ -106,10 +106,20 @@ $(document).ready(function () {
           Name: name,
           Status: status,
           Description: desc,
-          id: id
+          id: id,
         },
         dataType: "json",
-        success: function (response) {},
+        success: function (response) {
+          if (response.status == "success") {
+            $("#modalEdit").modal("hide");
+            success();
+          } else if (response.status == "exist") {
+            $(".error").remove();
+            $("#modalEdit #name").after('<span class="error">Name already exsit</span>');
+          } else if (response.status == "fail") {
+            fails();
+          }
+        },
       });
     }
   });
