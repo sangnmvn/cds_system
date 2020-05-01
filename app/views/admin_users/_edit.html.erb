@@ -95,7 +95,9 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-5"></div>
+                <div class="col-sm-5">
+                  <%= hidden_field(:admin_user, :id, :value => u.id) %>
+                </div>
                 <div class="col-sm-2">
                   <button type="button" class="btn btn-primary" id="btn-modal-edit-user">Save</button>
                   <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

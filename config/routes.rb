@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     collection do
       get "check_emai_account"
       post "add"
+      post "update"
       get "get_filter_company"
       get "get_filter_project"
     end

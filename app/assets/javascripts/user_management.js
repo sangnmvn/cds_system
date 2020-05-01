@@ -226,7 +226,6 @@ $(document).ready(function () {
   });
 });
 
-
 function delete_user() {
   var user_id = $(".delete_id").val();
 
@@ -241,8 +240,7 @@ function delete_user() {
   });
 }
 
-function add_previewer_user()
-{
+function add_previewer_user() {
   var user_id = $(".add_previewer_id").val();
 
   //alert( 'admin/user_management/'  + user_id + '/')
@@ -254,7 +252,7 @@ function add_previewer_user()
       // Do something with the result
     },
   });
-} 
+}
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
@@ -272,8 +270,6 @@ $(document).on("click", ".add_previewer_icon", function () {
   // $('#addBookDialog').modal('show');
   add_previewer_user();
 });
-
-
 
 var user_dataTable;
 function delete_dataTable() {
@@ -343,36 +339,39 @@ $(document).on("click", ".edit_icon", function () {
 });
 
 $(document).on("click", "#btn-modal-edit-user", function () {
-  first_name = $(".edit-first").val();
-  last_name = $(".edit-last").val();
-  email = $(".edit-email").val();
-  account = $(".edit-account").val();
-  role = $(".edit-role").val();
-  company = $(".edit-company").val();
-  project = $(".edit-project").val();
+  first_name = $("#modalEdit #first").val();
+  last_name = $("#modalEdit #last").val();
+  email = $("#modalEdit #email").val();
+  account = $("#modalEdit #account").val();
+  role = $("#modalEdit #role").val();
+  company = $("#modalEdit #company").val();
+  project = $("#modalEdit #project").val();
+  id = $("#modalEdit #admin_user_id").val();
   temp = true;
   check_email = false;
   check_account = false;
   $(".error").remove();
   if (first_name.length < 1) {
-    $(".edit-first").after(
+    $("#modalEdit #first").after(
       '<span class="error">Please enter First Name</span>'
     );
     temp = false;
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
-      $(".edit-first").after(
+      $("#modalEdit #first").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
     }
   }
   if (last_name.length < 1) {
-    $(".edit-last").after('<span class="error">Please enter Last Name</span>');
+    $("#modalEdit #last").after(
+      '<span class="error">Please enter Last Name</span>'
+    );
     temp = false;
   } else {
     if (last_name.length < 2 || last_name.length > 20) {
-      $(".edit-last").after(
+      $("#modalEdit #last").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
@@ -380,7 +379,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   }
 
   if (email.length < 1) {
-    $(".edit-email").after(
+    $("#modalEdit #email").after(
       '<span class="error">Please enter Email Address</span>'
     );
     temp = false;
@@ -388,7 +387,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
     var validEmail = regEx.test(email);
     if (!validEmail) {
-      $(".edit-email").after(
+      $("#modalEdit #email").after(
         '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
       );
       temp = false;
@@ -397,11 +396,13 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     }
   }
   if (account.length < 1) {
-    $(".edit-account").after('<span class="error">Please enter Account</span>');
+    $("#modalEdit #account").after(
+      '<span class="error">Please enter Account</span>'
+    );
     temp = false;
   } else {
     if (account.length < 2 || account.length > 20) {
-      $(".edit-account").after(
+      $("#modalEdit #account").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
       temp = false;
@@ -410,54 +411,78 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     }
   }
   if (role == "") {
-    $(".edit-role").after('<span class="error">Please select a Role</span>');
+    $("#modalEdit #role").after(
+      '<span class="error">Please select a Role</span>'
+    );
     temp = false;
   }
   if (company == "") {
-    $(".edit-company").after(
+    $("#modalEdit #company").after(
       '<span class="error">Please select a Company</span>'
     );
     temp = false;
   }
-  if (check_account == true || check_email == true) {
+  // if (check_account == true || check_email == true) {
+  //   $.ajax({
+  //     url: "/admin_users/check_emai_account",
+  //     type: "GET",
+  //     headers: {
+  //       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+  //     },
+  //     data: { email: email, account: account },
+  //     dataType: "json",
+  //     success: function (response) {
+  //       if (response.email == true && check_email == true) {
+  //         $("#modalEdit #email").after(
+  //           '<span class="error">Email already exists</span>'
+  //         );
+  //       }
+  //       if (response.account == true && check_account == true) {
+  //         $("#modalEdit #account").after(
+  //           '<span class="error">Account already exists</span>'
+  //         );
+  //       }
+  //     },
+  //   });
+  // }
+  if ($(".error").length == 0) {
     $.ajax({
-      url: "/admin_users/check_emai_account",
-      type: "GET",
+      url: "/admin_users/" + id,
+      type: "PUT",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
       },
-      data: { email: email, account: account },
+      data: {
+        company_id: company,
+        project: project,
+        role_id: role,
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        account: account,
+        id: id,
+      },
       dataType: "json",
       success: function (response) {
-        if (response.email == true && check_email == true) {
-          $(".edit-email").after(
-            '<span class="error">Email already exists</span>'
-          );
-        }
-        if (response.account == true && check_account == true) {
-          $(".edit-account").after(
-            '<span class="error">Account already exists</span>'
-          );
+        if (response.status == "success") {
+          $("#modalEdit").modal("hide");
+          success();
+        } else if (response.status == "exist") {
+          $(".error").remove();
+          if (response.email_exist) {
+            $("#modalEdit #email").after(
+              '<span class="error">Email already exists</span>'
+            );
+          }
+          if (response.account_exist ) {
+            $("#modalEdit #account").after(
+              '<span class="error">Account already exists</span>'
+            );
+          }
+        } else if (response.status == "fail") {
+          fails();
         }
       },
     });
   }
-  // if (temp == true) {
-  //   $.ajax({
-  //     url: "/admin/user_management/add/",
-  //     type: "POST",
-  //     headers: {
-  //       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-  //     },
-  //     data: {
-  //       company: company,
-  //       project: project,
-  //       role: role,
-  //       first: first_name,
-  //       last: last_name,
-  //       email: email,
-  //       account: account,
-  //     },
-  //   });
-  // }
 });
