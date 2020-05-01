@@ -15,10 +15,12 @@ Rails.application.routes.draw do
   resources :admin_users do
     collection do
       get "check_emai_account"
+      get "edit"
       post "add"
       post "update"
       get "get_filter_company"
       get "get_filter_project"
+      get "get_modal_project"
     end
   end
   resources :groups do
@@ -28,9 +30,8 @@ Rails.application.routes.draw do
     end
   end
   root to: "admin_users#index"
-  get "user_management/edit" => "admin_users#get_data_edit"
+  # get "user_management/edit" => "admin_users#get_data_edit"
   post "admin/user_management/add" => "admin_users#add_users_management"
-  get "/admin/user_management/modal/company" => "admin_users#get_project_modal_users_management"
   post "/admin/user_management/submit/filter" => "admin_users#submit_filter_users_management"
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
   get "user_group" => "user_group#index"

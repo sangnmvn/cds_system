@@ -13,17 +13,10 @@ $(document).ready(function () {
           if (Array.isArray(e.projects) && e.projects.length > 1) {
             $('<option value="all">All</option>').appendTo("#filter-project");
           }
-
           $.each(e.projects, function (k, v) {
-            if (v.id == e.project_current) {
-              $(
-                '<option value="' + v.id + '" selected>' + v.desc + "</option>"
-              ).appendTo("#filter-project");
-            } else {
-              $(
-                '<option value="' + v.id + '">' + v.desc + "</option>"
-              ).appendTo("#filter-project");
-            }
+            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
+              "#filter-project"
+            );
           });
           $("#filter-role").html("");
           if (Array.isArray(e.roles) && e.roles.length > 1) {
@@ -88,32 +81,26 @@ $(document).ready(function () {
     role = $("#role").val();
     company = $("#company").val();
     project = $("#project").val();
-    temp = true;
     $(".error").remove();
     check_email = false;
     check_account = false;
     if (first_name.length < 1) {
       $("#first").after('<span class="error">Please enter First Name</span>');
-
-      temp = false;
     } else {
       if (first_name.length < 2 || first_name.length > 20) {
         $("#first").after(
           '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
-        temp = false;
       }
     }
 
     if (last_name.length < 1) {
       $("#last").after('<span class="error">Please enter Last Name</span>');
-      temp = false;
     } else {
       if (last_name.length < 2 || last_name.length > 20) {
         $("#last").after(
           '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
-        temp = false;
       }
     }
 
@@ -121,7 +108,6 @@ $(document).ready(function () {
       $("#email").after(
         '<span class="error">Please enter Email Address</span>'
       );
-      temp = false;
     } else {
       var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
       var validEmail = regEx.test(email);
@@ -129,20 +115,17 @@ $(document).ready(function () {
         $("#email").after(
           '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
         );
-        temp = false;
       } else {
         check_email = true;
       }
     }
     if (account.length < 1) {
       $("#account").after('<span class="error">Please enter Account</span>');
-      temp = false;
     } else {
       if (account.length < 2 || account.length > 20) {
         $("#account").after(
           '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
         );
-        temp = false;
       } else {
         check_account = true;
       }
@@ -150,11 +133,9 @@ $(document).ready(function () {
 
     if (role == "") {
       $("#role").after('<span class="error">Please select a Role</span>');
-      temp = false;
     }
     if (company == "") {
       $("#company").after('<span class="error">Please select a Company</span>');
-      temp = false;
     }
     if (check_account == true || check_email == true) {
       $.ajax({
@@ -204,10 +185,22 @@ $(document).ready(function () {
   $(".modal-add-user-management").change(function () {
     company = $(".modal-add-user-management").val();
     $.ajax({
-      url: "/admin/user_management/modal/company/",
+      url: "/admin_users/get_modal_project",
       type: "GET",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       data: { company: company },
+      dataType: "json",
+      success: function (response) {
+        $(".tokens-container .token").remove();
+        $("#project option").remove();
+        $(response).each(function (i, e) {
+          $.each(e.projects, function (k, v) {
+            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
+              ".tokenize-project"
+            );
+          });
+        });
+      },
     });
   });
 });
@@ -331,10 +324,71 @@ setup_dataTable();
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
   $.ajax({
-    url: "user_management/edit",
+    url: "admin_users/" + user_id + "/edit",
     type: "GET",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { user_id: user_id },
+    data: { id: user_id },
+    dataType: "json",
+    success: function (response) {
+      $("#modalEdit").modal("show");
+      $(".error").remove();
+      $(response).each(function (i, e) {
+        $.each(e.user, function (k, v) {
+          $("#modalEdit #first").val(v.first_name);
+          $("#modalEdit #last").val(v.last_name);
+          $("#modalEdit #email").val(v.email);
+          $("#modalEdit #account").val(v.account);
+          $("#modalEdit #admin_user_id").val(v.id);
+
+          $.each(e.roles, function (k, x) {
+            if (v.role_id == x.id) {
+              $(
+                '<option value="' + x.id + '" selected>' + x.name + "</option>"
+              ).appendTo("#modalEdit #role");
+            } else {
+              $(
+                '<option value="' + x.id + '">' + x.name + "</option>"
+              ).appendTo("#modalEdit #role");
+            }
+          });
+          $.each(e.companies, function (k, y) {
+            if (v.company_id == y.id) {
+              $(
+                '<option value="' + y.id + '" selected>' + y.name + "</option>"
+              ).appendTo("#modalEdit #company");
+            } else {
+              $(
+                '<option value="' + y.id + '">' + y.name + "</option>"
+              ).appendTo("#modalEdit #company");
+            }
+          });
+          $(".tokens-container .token").remove();
+          $("#project option").remove();
+          $.each(e.projects, function (k, p) {
+            $.each(e.project_user, function (k, pu) {
+              if (p.id == pu.id) {
+                $('<option value="' +p.id +'" selected="selected">' +p.desc +"</option>").appendTo("#modalEdit #project");
+                $('<li class="token" data-value="' +p.id +'"><a class="dismiss"></a><span>'+p.desc+'</span></li>').appendTo(".tokens-container");
+              } else {
+                $('<option value="' +p.id +'">' +p.desc +"</option>").appendTo("#modalEdit #project");
+              }
+            });
+          });
+        });
+      });
+    },
+  });
+});
+
+$(document).ready(function () {
+  $(".modal-edit-user-management").change(function () {
+    company = $(".modal-edit-user-management").val();
+    $.ajax({
+      url: "/admin/user_management/modal/company/",
+      type: "GET",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      data: { company: company },
+    });
   });
 });
 
@@ -347,7 +401,6 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   company = $("#modalEdit #company").val();
   project = $("#modalEdit #project").val();
   id = $("#modalEdit #admin_user_id").val();
-  temp = true;
   check_email = false;
   check_account = false;
   $(".error").remove();
@@ -355,26 +408,22 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     $("#modalEdit #first").after(
       '<span class="error">Please enter First Name</span>'
     );
-    temp = false;
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
       $("#modalEdit #first").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
-      temp = false;
     }
   }
   if (last_name.length < 1) {
     $("#modalEdit #last").after(
       '<span class="error">Please enter Last Name</span>'
     );
-    temp = false;
   } else {
     if (last_name.length < 2 || last_name.length > 20) {
       $("#modalEdit #last").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
-      temp = false;
     }
   }
 
@@ -382,7 +431,6 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     $("#modalEdit #email").after(
       '<span class="error">Please enter Email Address</span>'
     );
-    temp = false;
   } else {
     var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
     var validEmail = regEx.test(email);
@@ -390,7 +438,6 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       $("#modalEdit #email").after(
         '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
       );
-      temp = false;
     } else {
       check_email = true;
     }
@@ -399,13 +446,11 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     $("#modalEdit #account").after(
       '<span class="error">Please enter Account</span>'
     );
-    temp = false;
   } else {
     if (account.length < 2 || account.length > 20) {
       $("#modalEdit #account").after(
         '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
       );
-      temp = false;
     } else {
       check_account = true;
     }
@@ -414,37 +459,12 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     $("#modalEdit #role").after(
       '<span class="error">Please select a Role</span>'
     );
-    temp = false;
   }
   if (company == "") {
     $("#modalEdit #company").after(
       '<span class="error">Please select a Company</span>'
     );
-    temp = false;
   }
-  // if (check_account == true || check_email == true) {
-  //   $.ajax({
-  //     url: "/admin_users/check_emai_account",
-  //     type: "GET",
-  //     headers: {
-  //       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-  //     },
-  //     data: { email: email, account: account },
-  //     dataType: "json",
-  //     success: function (response) {
-  //       if (response.email == true && check_email == true) {
-  //         $("#modalEdit #email").after(
-  //           '<span class="error">Email already exists</span>'
-  //         );
-  //       }
-  //       if (response.account == true && check_account == true) {
-  //         $("#modalEdit #account").after(
-  //           '<span class="error">Account already exists</span>'
-  //         );
-  //       }
-  //     },
-  //   });
-  // }
   if ($(".error").length == 0) {
     $.ajax({
       url: "/admin_users/" + id,
@@ -474,7 +494,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
               '<span class="error">Email already exists</span>'
             );
           }
-          if (response.account_exist ) {
+          if (response.account_exist) {
             $("#modalEdit #account").after(
               '<span class="error">Account already exists</span>'
             );

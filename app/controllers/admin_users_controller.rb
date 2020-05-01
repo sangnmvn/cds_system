@@ -19,7 +19,7 @@ class AdminUsersController < ApplicationController
     user_id = params[:id]
     all_user_id_except_self = AdminUser.where.not(id: user_id)
 
-    @existing_previewers   = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
+    @existing_previewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
     @available_admin_users = all_user_id_except_self.where.not(id: @existing_previewers.pluck(:id))
 
     respond_to do |format|
@@ -63,7 +63,7 @@ class AdminUsersController < ApplicationController
       @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).where("projects.company_id = ?", params[:company])
     end
     respond_to do |format|
-      format.json { render :json => { :projects => @projects, :roles => @roles, :project_current => params[:project] } }
+      format.json { render :json => { :projects => @projects, :roles => @roles } }
     end
   end
 
@@ -115,25 +115,24 @@ class AdminUsersController < ApplicationController
   end
 
   # get data modal edit
-  def get_data_edit
-    @companies = Company.all
-    @projects = Project.all
-    @roles = Role.all
-    @user = AdminUser.where(id: params[:user_id])
-    @project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:user_id])
+  def edit
+    user = AdminUser.where(id: params[:id])
+    companies = Company.all
+    projects = Project.where(company_id: user[0]["company_id"])
+    roles = Role.all
+    project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:id])
+    # binding.pry
     respond_to do |format|
-      format.js
+      format.json { render :json => { companies: companies, projects: projects, roles: roles, user: user, project_user: project_user } }
     end
-    # respond_to do |format|
-    #   format.json { render :json => @user }
-    # end
   end
 
   # modal company
-  def get_project_modal_users_management
+  def get_modal_project
+    # binding.pry
     @projects = Project.where(company_id: params[:company])
     respond_to do |format|
-      format.js
+      format.json { render :json => { :projects => @projects } }
     end
   end
 

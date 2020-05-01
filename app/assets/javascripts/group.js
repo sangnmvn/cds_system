@@ -35,6 +35,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       },
       dataType: "json",
       success: function (response) {
+        // data group 
         if (response.status == "success") {
           $("#modalAdd").modal("hide");
           success();

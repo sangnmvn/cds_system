@@ -1,85 +1,116 @@
-<button type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button>
-<button type="button" class="btn btn-danger btn-lg">Delete</button>
 <!-- The Modal -->
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="mymodal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade modal-form-add-user" id="modalEdit">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <!-- Modal Header -->
-      <div class="modal-header">
-        <p class="modal-title" style="text-align:center;font-size:18px">Add User Infomation</p>
-        <p style="color:red">Note: * indicates required fileld</p>
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Edit User Infomation</h4>
       </div>
-      <!-- Modal body -->
-      <div class="modal-body">
-        <div class="container-fluid">
-          <div class="row">
-            <%= form_with(url: "/admin/user_management/add/", method: "post",class: "modal-form-add-user") do  |f|%>
-              <div class="col-md-6">
-                <%# First Name %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">First Name (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.text_field( :first, class: 'first form-control',placeholder: "First Name")%>
-                  </div>
-                  <%# <div class="col-sm-12">aaaa</div> %>
+      <% unless @user.nil? %>
+        <% @user.each do |u|%>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-12">
+                  <p style="color:red">Note: * indicates required fileld</p>
                 </div>
-                <%# Last Name %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Last Name (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.text_field( :last, class: 'form-control',placeholder: "Last Name"
-                    )%>
+                <div class="col-sm-6">
+                  <%# first name %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>First Name (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'first', u.first_name , class: 'form-control', placeholder: 'Please enter first name' %>
+                    </div>
                   </div>
+                  <br>
+                  <%# last name %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Last Name (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'last', u.last_name, class: 'form-control', placeholder: 'Please enter last name' %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# email %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Email (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'email', u.email, class: 'form-control', placeholder: 'Please enter email' %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# account %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Account (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'account', u.account, class: 'form-control', placeholder: 'Please enter account' %>
+                    </div>
+                  </div>
+                  <br>
                 </div>
-                <%# Email %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Email (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.email_field( :email, class: 'form-control',placeholder: "Email" )%>
+                <%# right  %>
+                <div class="col-sm-6">
+                  <%# role %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Role (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag "role", options_from_collection_for_select(@roles, "id", "name",u.role_id), class: 'form-control', include_blank: "Select a role" %>
+                    </div>
                   </div>
-                </div>
-                <%# Account %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Account (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.text_field( :account, class: 'form-control',placeholder: "Account")%>
+                  <br>
+                  <%# company %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Company (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag "company", options_from_collection_for_select(@companies, "id", "name",u.company_id), class: 'form-control modal-edit-user-management ',  include_blank: "Select a company" %>
+                    </div>
                   </div>
+                  <br>
+                  <%# project %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Project</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <% arr_id_project = [] %>
+                      <% @project_user.each {|x| arr_id_project << x.id } %>
+                      <%= select_tag 'project', options_from_collection_for_select(@project_user, "id", "desc",arr_id_project), class: "tokenize-project", multiple: true %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# end  %>
                 </div>
               </div>
-              <%# right %>
-              <div class="col-md-6">
-                <%# role %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Role (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.select( :role, options_from_collection_for_select(roles, "id", "name", ""),{:include_blank => "Select a role"}, {:class => "form-control"} )%>
-                  </div>
+              <div class="row">
+                <div class="col-sm-5">
+                  <%= hidden_field(:admin_user, :id, :value => u.id) %>
                 </div>
-                <%# company %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Company (*)</label>
-                  <div class="col-sm-9">
-                    <%= f.select( :company, options_from_collection_for_select(companies, "id", "name", ""),{:include_blank => "Select a company"}, {:class => "modal-add-user-management form-control"} )%>
-                  </div>
-                </div>
-                <%# project %>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Project</label>
-                  <div class="col-sm-9">
-                    <%= select_tag 'project', raw("<option>1</option>"), class: "tokenize-project", multiple: true %>
-                  </div>
+                <div class="col-sm-2">
+                  <button type="button" class="btn btn-primary" id="btn-modal-edit-user">Save</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
+            <%# end container  %>
           </div>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer" style="text-align:center">
-          <button type="submit" class="btn btn-primary" id="btn-modal-add-user">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
+        <% end %>
       <% end %>
-      <%# end form %>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      </div>
     </div>
   </div>
 </div>
