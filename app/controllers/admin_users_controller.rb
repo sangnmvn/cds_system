@@ -1,5 +1,6 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
+  before_action :set_admin_user, only: [:update]
 
   def index
     @companies = Company.all
@@ -163,9 +164,31 @@ class AdminUsersController < ApplicationController
     render :json => { email: email, account: account }
   end
 
+  def update
+    email_exist = AdminUser.where.not(id: params[:id]).where(email: params[:email]).present? ? true : false
+    account_exist = AdminUser.where.not(id: params[:id]).where(account: params[:account]).present? ? true : false
+    # binding.pry
+
+    respond_to do |format|
+      if email_exist || account_exist
+        format.json { render :json => { :status => "exist", :email_exist => email_exist, :account_exist => account_exist } }
+      else
+        if @admin_user.update(admin_user_params)
+          format.json { render :json => { :status => "success" } }
+        else
+          format.json { render :json => { :status => "fail" } }
+        end
+      end
+    end
+  end
+
   private
 
+  def set_admin_user
+    @admin_user = AdminUser.find(params[:id])
+  end
+
   def admin_user_params
-    params.require(:admin_user).permit(:id)
+    params.permit(:first_name, :last_name, :email, :account, :company_id, :role_id)
   end
 end
