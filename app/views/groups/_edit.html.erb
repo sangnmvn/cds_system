@@ -1,6 +1,6 @@
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd">Add</button>
+<button type="button" class="btn btn-primary btn-edit-group" data-id="27">Edit</button>
 <!-- The Modal -->
-<div class="modal fade modal-form-add-user" id="modalAdd">
+<div class="modal fade modal-form-edit-user" id="modalEdit">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- Modal Header -->
@@ -21,7 +21,7 @@
                   <label>Group Name (*)</label>
                 </div>
                 <div class="col-sm-9">
-                  <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter group name' %>
+                  <%= text_field_tag 'name', nil, class: 'form-control edit-group', placeholder: 'Please enter group name' %>
                 </div>
               </div>
               <br>
@@ -31,9 +31,9 @@
                   <label>Status (*)</label>
                 </div>
                 <div class="col-sm-9">
-                  <span><%= radio_button_tag 'status', "Enable", false, class: "status" %> Enable<span>
+                  <span><%= radio_button_tag 'status', "Enable", false, class: "status-edit" %> Enable<span>
                       &emsp;
-                      <span><%= radio_button_tag 'status', "Disable", false, class: "status" %> Disable<span>
+                      <span><%= radio_button_tag 'status', "Disable", false, class: "status-edit" %> Disable<span>
                           <div id="error-status"></div>
                         </div>
                       </div>
@@ -44,14 +44,15 @@
                           <label>Description</label>
                         </div>
                         <div class="col-sm-9">
-                          <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
+                          <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'edit-desc' %>
                         </div>
                       </div>
                       <br>
                     </div>
                   </div>
                   <div style="text-align: center">
-                    <button type="submit" class="btn btn-primary" id="btn-submit-add-user-group">Submit</button>
+                    <%= hidden_field(:group, :id) %>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-edit-user-group">Save</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                   </div>
                   <%# end container  %>

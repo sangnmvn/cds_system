@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_user_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
 
   # GET /groups
@@ -42,13 +42,17 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
+    # binding.pry
     respond_to do |format|
-      if @group.update(group_params)
-        format.html { redirect_to @group, notice: "Group was successfully updated." }
-        format.json { render :show, status: :ok, location: @group }
+      if Group.where.not(id: params[:id]).where(Name: params[:Name]).present?
+        format.json { render :json => { :status => "exist" } }
       else
-        format.html { render :edit }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
+        params[:Status] = params[:Status] == "Enable" ? 1 : 0
+        if @group.update(group_params)
+          format.json { render :json => { :status => "success" } }
+        else
+          format.json { render :json => { :status => "fail" } }
+        end
       end
     end
   end
@@ -61,6 +65,16 @@ class GroupsController < ApplicationController
       format.html { redirect_to groups_url, notice: "Group was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def get_data
+    # binding.pry
+    group = Group.where(id: params[:id])
+    render :json => { group: group }
+  end
+
+  def update_data
+    binding.pry
   end
 
   private
