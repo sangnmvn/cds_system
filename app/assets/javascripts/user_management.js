@@ -1,17 +1,16 @@
 $(document).ready(function () {
-  $("#filter-company,#filter-project").change(function () {
+  $("#filter-company").change(function () {
     company = $("#filter-company").val();
-    project = $("#filter-project").val();
     $.ajax({
-      url: "/admin/user_management/filter/",
-      type: "POST",
+      url: "/admin_users/get_filter_company",
+      type: "GET",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company, project: project },
+      data: { company: company },
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
           $("#filter-project").html("");
-          if (Array.isArray(e.projects) && e.projects.length) {
+          if (Array.isArray(e.projects) && e.projects.length > 1) {
             $('<option value="all">All</option>').appendTo("#filter-project");
           }
 
@@ -27,7 +26,33 @@ $(document).ready(function () {
             }
           });
           $("#filter-role").html("");
-          if (Array.isArray(e.roles) && e.roles.length) {
+          if (Array.isArray(e.roles) && e.roles.length > 1) {
+            $('<option value="all">All</option>').appendTo("#filter-role");
+          }
+          $.each(e.roles, function (k, v) {
+            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
+              "#filter-role"
+            );
+          });
+        });
+      },
+    });
+  });
+});
+$(document).ready(function () {
+  $("#filter-project").change(function () {
+    company = $("#filter-company").val();
+    project = $("#filter-project").val();
+    $.ajax({
+      url: "/admin_users/get_filter_project",
+      type: "GET",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      data: { company: company, project: project },
+      dataType: "json",
+      success: function (response) {
+        $(response).each(function (i, e) {
+          $("#filter-role").html("");
+          if (Array.isArray(e.roles) && e.roles.length > 1) {
             $('<option value="all">All</option>').appendTo("#filter-role");
           }
           $.each(e.roles, function (k, v) {
@@ -93,7 +118,9 @@ $(document).ready(function () {
     }
 
     if (email.length < 1) {
-      $("#email").after('<span class="error">Please enter Email Address</span>');
+      $("#email").after(
+        '<span class="error">Please enter Email Address</span>'
+      );
       temp = false;
     } else {
       var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -140,10 +167,14 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.email == true && check_email == true) {
-            $("#email").after('<span class="error">Email already exists</span>');
+            $("#email").after(
+              '<span class="error">Email already exists</span>'
+            );
           }
           if (response.account == true && check_account == true) {
-            $("#account").after('<span class="error">Account already exists</span>');
+            $("#account").after(
+              '<span class="error">Account already exists</span>'
+            );
           }
         },
       });
@@ -324,7 +355,9 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   check_account = false;
   $(".error").remove();
   if (first_name.length < 1) {
-    $(".edit-first").after('<span class="error">Please enter First Name</span>');
+    $(".edit-first").after(
+      '<span class="error">Please enter First Name</span>'
+    );
     temp = false;
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
@@ -347,7 +380,9 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   }
 
   if (email.length < 1) {
-    $(".edit-email").after('<span class="error">Please enter Email Address</span>');
+    $(".edit-email").after(
+      '<span class="error">Please enter Email Address</span>'
+    );
     temp = false;
   } else {
     var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -379,7 +414,9 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     temp = false;
   }
   if (company == "") {
-    $(".edit-company").after('<span class="error">Please select a Company</span>');
+    $(".edit-company").after(
+      '<span class="error">Please select a Company</span>'
+    );
     temp = false;
   }
   if (check_account == true || check_email == true) {
@@ -393,10 +430,14 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       dataType: "json",
       success: function (response) {
         if (response.email == true && check_email == true) {
-          $(".edit-email").after('<span class="error">Email already exists</span>');
+          $(".edit-email").after(
+            '<span class="error">Email already exists</span>'
+          );
         }
         if (response.account == true && check_account == true) {
-          $(".edit-account").after('<span class="error">Account already exists</span>');
+          $(".edit-account").after(
+            '<span class="error">Account already exists</span>'
+          );
         }
       },
     });
