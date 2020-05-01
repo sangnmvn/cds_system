@@ -17,6 +17,7 @@ AdminUser.delete_all
 Role.delete_all
 Project.delete_all
 Company.delete_all
+Group.delete_all
 
 # Create role
 role_create = [
@@ -60,6 +61,23 @@ NB_USERS.times do |n|
     u.company_id = 1 + rand(4).to_i
     u.role_id = 1 + rand(6).to_i
   end
+end
+
+NB_GROUPS = 30
+
+NB_GROUPS.times do |n|
+  Group.create! do |u|
+    # u.username = Faker::Internet.user_name + n.to_s
+    # u.email = Faker::Internet.email.gsub("@", "#{n}@")
+    u.id = 1 + n
+    u.name = "Group #{n}"
+    u.description = "Description of group #{n}"
+    u.status = (n % 2 == 0) ? true : false
+    rescue => exception
+      
+    else
+      
+    end
 end
 
 

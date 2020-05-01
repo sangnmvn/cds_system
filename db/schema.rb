@@ -121,9 +121,9 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   end
 
   create_table "groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "Name"
-    t.boolean "Status"
-    t.text "Description"
+    t.string "name"
+    t.boolean "status"
+    t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   end
 
   create_table "privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "Name"
+    t.string "name"
     t.bigint "title_privilege_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -211,7 +211,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   end
 
   create_table "title_privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "Name"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

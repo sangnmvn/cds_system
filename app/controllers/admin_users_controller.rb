@@ -16,8 +16,10 @@ class AdminUsersController < ApplicationController
 
   def add_previewer
     user_id = params[:id]
-    @existing_previewers = AdminUser.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
-    @available_admin_users = AdminUser.where.not(id: @existing_previewers.pluck(:id))
+    all_user_id_except_self = AdminUser.where.not(id: user_id)
+
+    @existing_previewers   = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
+    @available_admin_users = all_user_id_except_self.where.not(id: @existing_previewers.pluck(:id))
 
     respond_to do |format|
       format.js

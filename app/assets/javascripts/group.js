@@ -29,9 +29,9 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
       },
       data: {
-        Name: name,
-        Status: status,
-        Description: desc,
+        name: name,
+        status: status,
+        description: desc,
       },
       dataType: "json",
       success: function (response) {
@@ -64,8 +64,8 @@ $(document).ready(function () {
 
         $.each(response.group, function (k, v) {
           $("#group_id").val(v.id);
-          $(".edit-group").val(v.Name);
-          $(".edit-desc").val(v.Description);
+          $(".edit-group").val(v.name);
+          $(".edit-desc").val(v.description);
           if (v.Status) {
             $("input:radio[id=status_Enable]").prop("checked", true);
           } else {
@@ -103,9 +103,9 @@ $(document).ready(function () {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
         },
         data: {
-          Name: name,
-          Status: status,
-          Description: desc,
+          name: name,
+          status: status,
+          description: desc,
           id: id,
         },
         dataType: "json",

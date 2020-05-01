@@ -25,10 +25,10 @@ class GroupsController < ApplicationController
   # POST /groups
   # POST /groups.json
   def create
-    params[:Status] = params[:Status] == "Enable" ? 1 : 0
+    params[:status] = params[:status] == "Enable" ? 1 : 0
     @group = Group.new(group_params)
     # binding.pry
-    if Group.where(Name: params[:Name]).present?
+    if Group.where(name: params[:name]).present?
       render :json => { :status => "exist" }
     else
       if @group.save
@@ -44,10 +44,10 @@ class GroupsController < ApplicationController
   def update
     # binding.pry
     respond_to do |format|
-      if Group.where.not(id: params[:id]).where(Name: params[:Name]).present?
+      if Group.where.not(id: params[:id]).where(name: params[:name]).present?
         format.json { render :json => { :status => "exist" } }
       else
-        params[:Status] = params[:Status] == "Enable" ? 1 : 0
+        params[:status] = params[:status] == "Enable" ? 1 : 0
         if @group.update(group_params)
           format.json { render :json => { :status => "success" } }
         else
@@ -86,6 +86,6 @@ class GroupsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.permit(:Name, :Status, :Description)
+    params.permit(:name, :status, :description)
   end
 end
