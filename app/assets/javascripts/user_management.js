@@ -256,6 +256,12 @@ $(document).ready(function () {
   });
 });
 
+function delete_datatable_row(data_table, row_id)
+{
+    // delete the row from table by id
+    var row = data_table.find('tr').eq(row_id);
+    data_table.fnDeleteRow(row[0]);
+}
 function delete_user() {
   var user_id = $(".delete_id").val();
 
@@ -264,10 +270,33 @@ function delete_user() {
     url: "/admin/user_management/" + user_id,
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    success: function (result) {
-      // Do something with the result
-    },
+    dataType: "json",
+    success: function (response) {
+      $(response).each(
+          function (i, e) { //duyet mang doi tuong
+            var deleted_id = e["deleted_id"];            
+            var data_table = $("#table_user_management").dataTable();
+            var all_data_list = data_table.fnGetData();
+            
+            for (var i=0; i< all_data_list.length; i++)
+            {
+              // parse string manually because data is HTML tag string :((
+              var current_user_id = all_data_list[i][0].split('batch_action_item_')[1].split('\"')[0];
+              current_user_id = parseInt(current_user_id);
+              if (current_user_id == deleted_id)
+              {
+                var row_id = i;
+                delete_datatable_row(data_table, row_id);
+                break
+              }
+              
+            }
+          }
+      );
+    }
   });
+
+
 }
 
 function add_previewer_user() {
@@ -334,33 +363,40 @@ function setup_dataTable() {
       order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
-      // available options.
+      // available options.      
     });
+
+    $(".toggle_all").click(function () {  
+      $(".collection_selection[type=checkbox]").prop(
+        "checked",
+        $(this).prop("checked")
+      );
+    });
+
+    $(".collection_selection[type=checkbox]").click(function () {
+      var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
+      if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
+        $("#table_user_management .toggle_all").prop("checked", false);
+      }
+      if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
+        $("#table_user_management .toggle_all").prop("checked", true);
+      }
+    });
+        
+
   });
+
+    
 }
 
 $("#table_user_management_length").remove();
 
-$(".toggle_all").click(function () {
-  $(".collection_selection[type=checkbox]").prop(
-    "checked",
-    $(this).prop("checked")
-  );
-});
 
-$(".collection_selection[type=checkbox]").click(function () {
-  var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
-  if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
-    $(".toggle_all").prop("checked", false);
-  }
-  if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
-    $(".toggle_all").prop("checked", true);
-  }
-});
 
 setup_dataTable();
 
 // get modal edit user
+
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
   $.ajax({

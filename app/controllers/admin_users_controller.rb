@@ -19,7 +19,7 @@ class AdminUsersController < ApplicationController
     user_id = params[:id]
     all_user_id_except_self = AdminUser.where.not(id: user_id)
 
-    @existing_previewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).pluck(:approver_id))
+    @existing_previewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
     @available_admin_users = all_user_id_except_self.where.not(id: @existing_previewers.pluck(:id))
 
     respond_to do |format|
@@ -28,10 +28,17 @@ class AdminUsersController < ApplicationController
   end
 
   def add_previewer_to_database
-    approver_ids = params["approver_ids"].split(",").map(&:to_i)
+    if params["approver_ids"] == "none"
+      approver_ids = []
+    else
+      approver_ids = params["approver_ids"].split(",").map(&:to_i)
+    end
+    
     user_id = params["id"].to_i
 
+    
     # delete approver not in list
+    
     (Approver.where(admin_user_id: user_id)).where.not(approver_id: approver_ids).destroy_all
     # add approver in list
     approver_ids.each { |approver_id|
@@ -42,15 +49,16 @@ class AdminUsersController < ApplicationController
   def destroy
     user_id = params[:id]
     AdminUser.destroy(user_id)
-    @companies = Company.all
-    @projects = Project.all
-    @roles = Role.all
-    @admin_users = AdminUser.all
-    @admin_users.reload
-    @project_members = ProjectMember.all
+    #@companies = Company.all
+    #@projects = Project.all
+    #@roles = Role.all
+    #@admin_users = AdminUser.all
+    #@admin_users.reload
+    #@project_members = ProjectMember.all
+
 
     respond_to do |format|
-      format.js
+      format.json {render :json => {:deleted_id => user_id } }
     end
   end
 
@@ -61,7 +69,7 @@ class AdminUsersController < ApplicationController
     else
       projects = Project.all.where("company_id = ?", params[:company])
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).where("projects.company_id = ?", params[:company])
-      binding.pry
+      
     end
     respond_to do |format|
       format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
@@ -154,8 +162,7 @@ class AdminUsersController < ApplicationController
       @admin_users = @admin_users.where("id in (?)", valid_user_ids)
     elsif params[:project] == "none"
       # binding.pry
-      valid_user_ids = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id not in (?)", valid_user_ids) unless valid_user_ids.empty?
+      @admin_users = AdminUser.joins("LEFT OUTER JOIN project_members ON project_members.admin_user_id = admin_users.id").where("project_members.admin_user_id is NULL")
     end
     if params[:role] != "all" && params[:role] != "" && params[:role] != "none"
       @admin_users = @admin_users.where("role_id = ?", params[:role])

@@ -165,7 +165,7 @@ function setup_dataTable() {
     $(".toggle_all").click(function () {  
       $(".collection_selection[type=checkbox]").prop(
         "checked",
-        $(this).prop("checked")    
+        $(this).prop("checked")
       );
     });
 

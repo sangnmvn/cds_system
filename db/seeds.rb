@@ -13,11 +13,13 @@ Competency.delete_all
 Template.delete_all
 Title.delete_all
 Approver.delete_all
+UserGroup.delete_all
 AdminUser.delete_all
 Role.delete_all
 Project.delete_all
 Company.delete_all
 Group.delete_all
+
 
 # Create role
 role_create = [
@@ -80,6 +82,23 @@ NB_GROUPS.times do |n|
     end
 end
 
+NB_USER_GROUPS = 30
+user_id = 1
+NB_USER_GROUPS.times do |n|
+  
+  begin
+    chances = [3,2,3,3,5,3,3,3,3,3,2]
+
+    chances.each{ |chance|
+      if rand(10) % chance == 0
+        UserGroup.create!(group_id: 1 + n, admin_user_id: user_id)
+        user_id += 1
+      end      
+    }
+  rescue
+    next
+  end
+end
 
 Approver.create!(admin_user_id: 1, approver_id: 2)
 Approver.create!(admin_user_id: 3, approver_id: 2)

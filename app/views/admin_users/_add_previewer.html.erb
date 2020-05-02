@@ -50,29 +50,7 @@
   
   
   function set_data_event()
-  {
-    $('#save').click(function ()
-      {
-          var user_id = $('.add_previewer_id').val();
-          var reviewer_ids = [];
-
-          $('#table_right .add_reviewer_id').each(
-            function (index, value) 
-            {
-              // skip header
-              if (index > 0)
-              {
-                reviewer_ids.push($(this).text()); 
-              }
-            } );
-
-          $.ajax({
-          url: "/admin/user_management/add_previewer/" + user_id + '/' + reviewer_ids.join(","),
-          type: "POST",
-          headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },          
-          });
-      });
-
+  {    
     $("#table_left .mycontrol").each( function(index, value)
     {
       $(this).click(function()
@@ -193,6 +171,26 @@
       $('#to_left').attr("disabled",true);
       $('#save').attr("disabled",false)	
           
+      $("#table_left tbody .mycontrol[type=checkbox]").click(function () {
+        var nboxes = $("#table_left tbody :checkbox:not(:checked)");
+        alert(nboxes);
+        if (nboxes.length > 0 && $("#check_all_choose_left").is(":checked") == true) {
+          $("#check_all_choose_left").prop("checked", false);          
+        }
+        if (nboxes.length == 0 && $("#check_all_choose_left").is(":checked") == false) {
+          $("#check_all_choose_left").prop("checked", false);
+        }
+      });
+
+      $("#table_right tbody .mycontrol[type=checkbox]").click(function () {
+        var nboxes = $("#table_right tbody :checkbox:not(:checked)");
+        if (nboxes.length > 0 && $("#check_all_choose_right").is(":checked") == true) {
+          $("#check_all_choose_right").prop("checked", false);
+        }
+        if (nboxes.length == 0 && $("#check_all_choose_right").is(":checked") == false) {
+          $("#check_all_choose_right").prop("checked", false);
+        }
+      });
 
     });  
   }
@@ -221,7 +219,7 @@ function set_up_data_table_previewer()
       "processing": true, // tiền xử lý trước
       "iDisplayLength": 10,
       "order": [[ 1, 'asc' ]], //sắp xếp giảm dần theo cột thứ 1
-
+      "bDestroy": true,
       "aoColumns": [
         { sClass: "add_reviewer_index" },
           null,
@@ -251,6 +249,7 @@ function set_up_data_table_previewer()
           "sLast":     "Cuối"
           }
       },
+      "bDestroy": true,
       "processing": true, // tiền xử lý trước
       "aLengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]], // danh sách số trang trên 1 lần hiển thị bảng
       "iDisplayLength": 10,
@@ -277,4 +276,36 @@ function check_checkbox(name) {
 	}
 	return count;
 }
+
+// run once
+$('#save').click(function ()
+{
+    var user_id = $('.add_previewer_id').val();
+    var reviewer_ids = [];
+
+    var reviewer_id_rows = global_data_table_right.fnGetData();
+    
+    for (var i=0; i<reviewer_id_rows.length; i++)
+    {
+      current_approver_id = reviewer_id_rows[i][5];
+      reviewer_ids.push(current_approver_id);
+    }
+
+    // convert to string
+    if (reviewer_ids.length == 0)
+    {
+      reviewer_ids = "none";
+    }
+    else
+    {
+      reviewer_ids = reviewer_ids.join(",");
+    }
+
+    
+    $.ajax({
+    url: "/admin/user_management/add_previewer/" + user_id + '/' + reviewer_ids,
+    type: "POST",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },          
+    });
+});
 </script>
