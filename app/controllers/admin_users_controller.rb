@@ -59,9 +59,9 @@ class AdminUsersController < ApplicationController
       projects = Project.all
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
     else
-      # binding.pry
       projects = Project.all.where("company_id = ?", params[:company])
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).where("projects.company_id = ?", params[:company])
+      binding.pry
     end
     respond_to do |format|
       format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
@@ -76,9 +76,9 @@ class AdminUsersController < ApplicationController
     if params[:project] != "all" && params[:project] != "none"
       @roles = @roles.where("projects.id = ?", params[:project])
     end
-    # if params[:project] == "none"
-    #   @roles = @roles.where("projects.company_id = ?", params[:company])
-    # end
+    if params[:project] == "none"
+      @roles = @roles.where("projects.company_id = ?", params[:company])
+    end
     respond_to do |format|
       format.json { render :json => { :roles => @roles.order(:name) } }
     end
@@ -153,9 +153,9 @@ class AdminUsersController < ApplicationController
       valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id = ?", params[:project]).pluck("admin_users.id")
       @admin_users = @admin_users.where("id in (?)", valid_user_ids)
     elsif params[:project] == "none"
-      binding.pry
+      # binding.pry
       valid_user_ids = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id not in (?)", valid_user_ids)
+      @admin_users = @admin_users.where("id not in (?)", valid_user_ids) unless valid_user_ids.empty?
     end
     if params[:role] != "all" && params[:role] != "" && params[:role] != "none"
       @admin_users = @admin_users.where("role_id = ?", params[:role])
