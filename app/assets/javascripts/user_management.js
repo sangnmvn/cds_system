@@ -1,3 +1,4 @@
+// filter select company
 $(document).ready(function () {
   $("#filter-company").change(function () {
     company = $("#filter-company").val();
@@ -10,6 +11,7 @@ $(document).ready(function () {
       success: function (response) {
         $(response).each(function (i, e) {
           $("#filter-project").html("");
+
           if (Array.isArray(e.projects) && e.projects.length > 1) {
             $('<option value="all">All</option>').appendTo("#filter-project");
           }
@@ -18,6 +20,7 @@ $(document).ready(function () {
               "#filter-project"
             );
           });
+          $('<option value="none">None</option>').appendTo("#filter-project");
           $("#filter-role").html("");
           if (Array.isArray(e.roles) && e.roles.length > 1) {
             $('<option value="all">All</option>').appendTo("#filter-role");
@@ -32,6 +35,7 @@ $(document).ready(function () {
     });
   });
 });
+// filter select project
 $(document).ready(function () {
   $("#filter-project").change(function () {
     company = $("#filter-company").val();
@@ -58,21 +62,26 @@ $(document).ready(function () {
     });
   });
 });
+// alert success
 function success() {
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
     $("#alert-success").fadeOut(1000);
   }, 5000);
 }
+// alert fails
 function fails() {
   $("#alert-danger").fadeIn();
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
   }, 5000);
 }
-
+// select project modal add, edit
 $(document).ready(function () {
   $(".tokenize-project").tokenize2();
+});
+// submit add user
+$(document).ready(function () {
   $("#btn-modal-add-user").click(function () {
     first_name = $("#first").val();
     last_name = $("#last").val();
@@ -180,7 +189,7 @@ $(document).ready(function () {
     }
   });
 });
-
+// get project by company - modal add user
 $(document).ready(function () {
   $(".modal-add-user-management").change(function () {
     company = $(".modal-add-user-management").val();
@@ -204,11 +213,10 @@ $(document).ready(function () {
     });
   });
 });
-
+// get project by company - modal edit user
 $(document).ready(function () {
   $(".modal-edit-user-management").change(function () {
     company = $(".modal-edit-user-management").val();
-    // alert(company);
     $.ajax({
       url: "/admin_users/get_modal_project",
       type: "GET",
@@ -242,7 +250,7 @@ $(document).ready(function () {
       data: { company: company, project: project, role: role },
       // dataType: "json",
       // success: function (response) {
-        
+
       // },
     });
   });
@@ -320,7 +328,7 @@ function setup_dataTable() {
         { data: "email" },
         { data: "account" },
       ],
-      dom: 'Bfrtip',
+      dom: "Bfrtip",
       buttons: ["copy", "csv", "excel", "pdf", "print"],
 
       order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
@@ -352,6 +360,7 @@ $(".collection_selection[type=checkbox]").click(function () {
 
 setup_dataTable();
 
+// get modal edit user
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
   $.ajax({
@@ -421,6 +430,7 @@ $(document).on("click", ".edit_icon", function () {
   });
 });
 
+// submit edit user
 $(document).on("click", "#btn-modal-edit-user", function () {
   first_name = $("#modalEdit #first").val();
   last_name = $("#modalEdit #last").val();
@@ -538,7 +548,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-  $('#modalDeleteManyUsers').modal('show');
+  $("#modalDeleteManyUsers").modal("show");
   number = $("#table_user_management tbody :checkbox(:checked)").length;
-  $('#number-user-del').html(number+' users');
+  $("#number-user-del").html(number + " users");
 });
