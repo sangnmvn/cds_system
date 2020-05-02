@@ -120,8 +120,7 @@ class AdminUsersController < ApplicationController
     companies = Company.all
     projects = Project.where(company_id: user[0]["company_id"])
     roles = Role.all
-    project_user = ProjectMember.joins(:admin_user, :project).select("projects.id,projects.desc").where(admin_user_id: params[:id])
-    # binding.pry
+    project_user = ProjectMember.joins(:admin_user, :project).select("projects.id").where(admin_user_id: params[:id]).map(&:id)
     respond_to do |format|
       format.json { render :json => { companies: companies, projects: projects, roles: roles, user: user, project_user: project_user } }
     end
@@ -129,7 +128,6 @@ class AdminUsersController < ApplicationController
 
   # modal company
   def get_modal_project
-    # binding.pry
     @projects = Project.where(company_id: params[:company])
     respond_to do |format|
       format.json { render :json => { :projects => @projects } }
@@ -168,13 +166,40 @@ class AdminUsersController < ApplicationController
   def update
     email_exist = AdminUser.where.not(id: params[:id]).where(email: params[:email]).present? ? true : false
     account_exist = AdminUser.where.not(id: params[:id]).where(account: params[:account]).present? ? true : false
-    # binding.pry
-
     respond_to do |format|
       if email_exist || account_exist
         format.json { render :json => { :status => "exist", :email_exist => email_exist, :account_exist => account_exist } }
       else
         if @admin_user.update(admin_user_params)
+          project_user = ProjectMember.joins(:admin_user, :project).select("project_members.id,projects.id")
+            .where(admin_user_id: params[:id]).map(&:id)
+          password_default = "password"
+          management_default = 0
+          if params[:project].nil?
+            ProjectMember.find_by(admin_user_id: params[:id]).destroy
+            # delete all
+          elsif project_user.empty? && !params[:project].nil?
+            # insert all params[:project]
+            params[:project].each do |pro|
+              ProjectMember.create!(admin_user_id: params[:id], project_id: pro.to_i, is_managent: management_default)
+            end
+          elsif !project_user.empty? && !params[:project].nil?
+            params[:project].each do |pro|
+              if pro.to_i.in?(project_user)
+                project_user.delete(pro.to_i)
+              else
+                # insert
+                ProjectMember.create!(admin_user_id: params[:id], project_id: pro.to_i, is_managent: management_default)
+              end
+            end
+            unless project_user.empty?
+              # del
+              project_user.each do |old|
+                ProjectMember.find_by(admin_user_id: params[:id], project_id: old).delete
+              end
+            end
+          end
+
           format.json { render :json => { :status => "success" } }
         else
           format.json { render :json => { :status => "fail" } }

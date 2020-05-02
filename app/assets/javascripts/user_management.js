@@ -362,18 +362,20 @@ $(document).on("click", ".edit_icon", function () {
               ).appendTo("#modalEdit #company");
             }
           });
-          $(".tokens-container .token").remove();
-          $("#project option").remove();
+          $(".edit-projects").html(
+            '<select class="tokenize-project edit-project" id="project" multiple></select>'
+          );
+          console.log(e.project_user);
           $.each(e.projects, function (k, p) {
-            $.each(e.project_user, function (k, pu) {
-              if (p.id == pu.id) {
-                $('<option value="' +p.id +'" selected="selected">' +p.desc +"</option>").appendTo("#modalEdit #project");
-                $('<li class="token" data-value="' +p.id +'"><a class="dismiss"></a><span>'+p.desc+'</span></li>').appendTo(".tokens-container");
-              } else {
-                $('<option value="' +p.id +'">' +p.desc +"</option>").appendTo("#modalEdit #project");
-              }
-            });
+            if (e.project_user.indexOf(p.id) > -1) {
+              $('<option value="' +p.id +'" selected="selected">' +p.desc +"</option>"
+              ).appendTo("#modalEdit .edit-projects .edit-project");
+              // $('<li class="token" data-value="' +p.id +'"><a class="dismiss"></a><span>'+p.desc+'</span></li>').appendTo(".tokens-container");
+            } else {
+              $('<option value="' + p.id + '">' + p.desc + "</option>").appendTo("#modalEdit .edit-projects .edit-project");
+            }
           });
+          $(".tokenize-project").tokenize2();
         });
       });
     },
@@ -383,6 +385,7 @@ $(document).on("click", ".edit_icon", function () {
 $(document).ready(function () {
   $(".modal-edit-user-management").change(function () {
     company = $(".modal-edit-user-management").val();
+    // alert(company);
     $.ajax({
       url: "/admin/user_management/modal/company/",
       type: "GET",
