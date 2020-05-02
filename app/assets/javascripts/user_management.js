@@ -191,12 +191,37 @@ $(document).ready(function () {
       data: { company: company },
       dataType: "json",
       success: function (response) {
-        $(".tokens-container .token").remove();
-        $("#project option").remove();
+        $("#modalAdd .tokens-container .token").remove();
+        $("#modalAdd #project option").remove();
         $(response).each(function (i, e) {
           $.each(e.projects, function (k, v) {
             $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
-              ".tokenize-project"
+              "#modalAdd .tokenize-project"
+            );
+          });
+        });
+      },
+    });
+  });
+});
+
+$(document).ready(function () {
+  $(".modal-edit-user-management").change(function () {
+    company = $(".modal-edit-user-management").val();
+    // alert(company);
+    $.ajax({
+      url: "/admin_users/get_modal_project",
+      type: "GET",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      data: { company: company },
+      dataType: "json",
+      success: function (response) {
+        $("#modalEdit .tokens-container .token").remove();
+        $("#modalEdit #project option").remove();
+        $(response).each(function (i, e) {
+          $.each(e.projects, function (k, v) {
+            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
+              "#modalEdit .tokenize-project"
             );
           });
         });
@@ -339,8 +364,10 @@ $(document).on("click", ".edit_icon", function () {
           $("#modalEdit #email").val(v.email);
           $("#modalEdit #account").val(v.account);
           $("#modalEdit #admin_user_id").val(v.id);
-
+          $("#modalEdit #role").html('');
+          $("#modalEdit #company").html('');
           $.each(e.roles, function (k, x) {
+            
             if (v.role_id == x.id) {
               $(
                 '<option value="' + x.id + '" selected>' + x.name + "</option>"
@@ -368,30 +395,24 @@ $(document).on("click", ".edit_icon", function () {
           console.log(e.project_user);
           $.each(e.projects, function (k, p) {
             if (e.project_user.indexOf(p.id) > -1) {
-              $('<option value="' +p.id +'" selected="selected">' +p.desc +"</option>"
+              $(
+                '<option value="' +
+                  p.id +
+                  '" selected="selected">' +
+                  p.desc +
+                  "</option>"
               ).appendTo("#modalEdit .edit-projects .edit-project");
               // $('<li class="token" data-value="' +p.id +'"><a class="dismiss"></a><span>'+p.desc+'</span></li>').appendTo(".tokens-container");
             } else {
-              $('<option value="' + p.id + '">' + p.desc + "</option>").appendTo("#modalEdit .edit-projects .edit-project");
+              $(
+                '<option value="' + p.id + '">' + p.desc + "</option>"
+              ).appendTo("#modalEdit .edit-projects .edit-project");
             }
           });
           $(".tokenize-project").tokenize2();
         });
       });
     },
-  });
-});
-
-$(document).ready(function () {
-  $(".modal-edit-user-management").change(function () {
-    company = $(".modal-edit-user-management").val();
-    // alert(company);
-    $.ajax({
-      url: "/admin/user_management/modal/company/",
-      type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company },
-    });
   });
 });
 
