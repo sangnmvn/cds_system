@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get "get_filter_company"
       get "get_filter_project"
       get "get_modal_project"
+      post "submit_filter"
     end
   end
   resources :groups do
@@ -30,9 +31,6 @@ Rails.application.routes.draw do
     end
   end
   root to: "admin_users#index"
-  # get "user_management/edit" => "admin_users#get_data_edit"
-  post "admin/user_management/add" => "admin_users#add_users_management"
-  post "/admin/user_management/submit/filter" => "admin_users#submit_filter_users_management"
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
   get "user_group" => "user_group#index"
   delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management

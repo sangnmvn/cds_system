@@ -236,10 +236,14 @@ $(document).ready(function () {
     project = $("#filter-project").val();
     role = $("#filter-role").val();
     $.ajax({
-      url: "/admin/user_management/submit/filter/",
+      url: "/admin_users/submit_filter",
       type: "POST",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       data: { company: company, project: project, role: role },
+      // dataType: "json",
+      // success: function (response) {
+        
+      // },
     });
   });
 });
@@ -316,6 +320,8 @@ function setup_dataTable() {
         { data: "email" },
         { data: "account" },
       ],
+      dom: 'Bfrtip',
+      buttons: ["copy", "csv", "excel", "pdf", "print"],
 
       order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
@@ -364,10 +370,9 @@ $(document).on("click", ".edit_icon", function () {
           $("#modalEdit #email").val(v.email);
           $("#modalEdit #account").val(v.account);
           $("#modalEdit #admin_user_id").val(v.id);
-          $("#modalEdit #role").html('');
-          $("#modalEdit #company").html('');
+          $("#modalEdit #role").html("");
+          $("#modalEdit #company").html("");
           $.each(e.roles, function (k, x) {
-            
             if (v.role_id == x.id) {
               $(
                 '<option value="' + x.id + '" selected>' + x.name + "</option>"
@@ -529,4 +534,11 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       },
     });
   }
+});
+
+// delete many users
+$(document).on("click", "#btn-delete-many-users", function () {
+  $('#modalDeleteManyUsers').modal('show');
+  number = $("#table_user_management tbody :checkbox(:checked)").length;
+  $('#number-user-del').html(number+' users');
 });

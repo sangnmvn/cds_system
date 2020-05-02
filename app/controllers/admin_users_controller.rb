@@ -3,9 +3,9 @@ class AdminUsersController < ApplicationController
   before_action :set_admin_user, only: [:update]
 
   def index
-    @companies = Company.all
-    @projects = Project.all
-    @roles = Role.all
+    @companies = Company.all.order(:name)
+    @projects = Project.all.order(:desc)
+    @roles = Role.all.order(:name)
     @admin_users = AdminUser.all
     @project_members = ProjectMember.all
 
@@ -56,32 +56,32 @@ class AdminUsersController < ApplicationController
 
   def get_filter_company
     if params[:company] == "all"
-      @projects = Project.all
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+      projects = Project.all
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
     else
-      @projects = Project.all.where("company_id = ?", params[:company])
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).where("projects.company_id = ?", params[:company])
+      projects = Project.all.where("company_id = ?", params[:company])
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).where("projects.company_id = ?", params[:company])
     end
     respond_to do |format|
-      format.json { render :json => { :projects => @projects, :roles => @roles } }
+      format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
     end
   end
 
   def get_filter_project
     if params[:company] == "all" && params[:project] == "all"
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
     elsif params[:company] == "all" && params[:project] != "all"
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.id = ?", params[:project])
     elsif params[:company] != "all" && params[:project] == "all"
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.company_id = ?", params[:company])
     elsif params[:company] != "all" && params[:project] != "all"
-      @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+      roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.company_id = ? and projects.id = ?", params[:company], params[:project])
     end
     respond_to do |format|
-      format.json { render :json => { :roles => @roles } }
+      format.json { render :json => { :roles => roles.order(:name) } }
     end
   end
 
@@ -118,8 +118,10 @@ class AdminUsersController < ApplicationController
   def edit
     user = AdminUser.where(id: params[:id])
     companies = Company.all
+    # project company user
     projects = Project.where(company_id: user[0]["company_id"])
     roles = Role.all
+    # project user
     project_user = ProjectMember.joins(:admin_user, :project).select("projects.id").where(admin_user_id: params[:id]).map(&:id)
     respond_to do |format|
       format.json { render :json => { companies: companies, projects: projects, roles: roles, user: user, project_user: project_user } }
@@ -135,7 +137,7 @@ class AdminUsersController < ApplicationController
   end
 
   # submit
-  def submit_filter_users_management
+  def submit_filter
     @roles = Role.all
     @projects = Project.all
     @companies = Company.all
@@ -154,6 +156,7 @@ class AdminUsersController < ApplicationController
 
     respond_to do |format|
       format.js
+      # format.json { render :json => { projects: @projects, roles: @roles, companies: @companies, project_members: @project_members, admin_users: @admin_users } }
     end
   end
 
