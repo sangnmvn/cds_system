@@ -12,7 +12,7 @@ $(document).ready(function () {
         $(response).each(function (i, e) {
           $("#filter-project").html("");
 
-          if (Array.isArray(e.projects) && e.projects.length > 1) {
+          if (Array.isArray(e.projects) && e.projects.length >= 1) {
             $('<option value="all">All</option>').appendTo("#filter-project");
           }
           $.each(e.projects, function (k, v) {
@@ -259,6 +259,7 @@ $(document).ready(function () {
 function delete_datatable_row(data_table, row_id)
 {
     // delete the row from table by id
+    row_id = row_id + 1 ;
     var row = data_table.find('tr').eq(row_id);
     data_table.fnDeleteRow(row[0]);
 }
@@ -289,14 +290,12 @@ function delete_user() {
                 delete_datatable_row(data_table, row_id);
                 break
               }
-              
             }
+            success();
           }
       );
     }
   });
-
-
 }
 
 function add_previewer_user() {

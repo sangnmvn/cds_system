@@ -19,8 +19,7 @@ Role.delete_all
 Project.delete_all
 Company.delete_all
 Group.delete_all
-
-
+ProjectMember.delete_all
 # Create role
 role_create = [
   { id: 1, name: "QC", desc: "Quality Assurance" },
@@ -46,7 +45,7 @@ Project.create!(id: 2, desc: "Project Test 1", company_id: "3")
 Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
-AdminUser.create!(id:1, email: "admin@example.com", password: "password", password_confirmation: "password", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
+AdminUser.create!(id: 1, email: "admin@example.com", password: "password", password_confirmation: "password", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
 
 NB_USERS = 100
 
@@ -75,25 +74,22 @@ NB_GROUPS.times do |n|
     u.name = "Group #{n}"
     u.description = "Description of group #{n}"
     u.status = (n % 2 == 0) ? true : false
-    rescue => exception
-      
-    else
-      
-    end
+  rescue => exception
+  else
+  end
 end
 
 NB_USER_GROUPS = 30
 user_id = 1
 NB_USER_GROUPS.times do |n|
-  
   begin
-    chances = [3,2,3,3,5,3,3,3,3,3,2]
+    chances = [3, 2, 3, 3, 5, 3, 3, 3, 3, 3, 2]
 
-    chances.each{ |chance|
+    chances.each { |chance|
       if rand(10) % chance == 0
         UserGroup.create!(group_id: 1 + n, admin_user_id: user_id)
         user_id += 1
-      end      
+      end
     }
   rescue
     next
@@ -105,7 +101,7 @@ Approver.create!(admin_user_id: 3, approver_id: 2)
 Approver.create!(admin_user_id: 4, approver_id: 5)
 Approver.create!(admin_user_id: 6, approver_id: 1)
 # Create Project Memember
-50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(2).to_i, is_managent: "0") }
+50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(3).to_i, is_managent: "0") }
 
 Approver.create!(approver_id: 1, admin_user_id: 6)
 Approver.create!(approver_id: 1, admin_user_id: 2)
@@ -1118,4 +1114,3 @@ slot_create = [
 slot_create.each do |s|
   Slot.create!(name: s[:name], desc: s[:desc], level: s[:level], competency_id: s[:competency_id])
 end
-
