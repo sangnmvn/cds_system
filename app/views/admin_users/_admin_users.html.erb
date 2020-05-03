@@ -19,7 +19,6 @@
       <th scope="col" class="project">Project</th>
       <th scope="col" class="company">Company</th>
       <th scope="col" class="action">Action</th>
-      <th scope="col" class="user_id d:none">ID</th>
     </tr>
   </thead>
   <tbody>
@@ -55,8 +54,8 @@
             %>
         </td>
         <td class="company"><%= begin companies.find(user.company_id).name rescue "" end %></td>
-        <td class="actions">
-          <%= 
+          <td class="actions">
+            <%= 
               links = []
 
               links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon", :"data-user_id" => user.id })
@@ -69,8 +68,7 @@
               end
               links.join(" ").html_safe      
           %>
-        </td>
-        <td class="user_id d:none"><%= user.id %></td>
+          </td>
         </tr>
       <% end %>
     </tbody>

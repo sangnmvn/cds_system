@@ -149,8 +149,9 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
       },
       dataType: "json",
       success: function (response) {
-        $("#modalEdit").modal("hide");
+        
         if (response.status == "success") {
+          $("#modalEdit").modal("hide");
           var table = $("#table_group").DataTable();
           var sData = table.fnGetData();
           for (var i = 0; i < sData.length; i++) {
@@ -167,7 +168,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                   '" value="0" \
                 class="collection_selection" name="collection_selection[]"></div>'
               );
-              updateData.push(sData.length + 1);
+              updateData.push(sData.length);
               updateData.push(response.name);
               updateData.push(response.status_group);
               updateData.push("0");
@@ -193,8 +194,6 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-
-          
           success();
         } else if (response.status == "exist") {
           $(".error").remove();
@@ -204,10 +203,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
         } else if (response.status == "fail") {
           fails();
         }
-      },
-      fail: function (xhr, textStatus, errorThrown) {
-        fails();
-      },
+      }
     });
   }
 });
@@ -233,26 +229,26 @@ function setup_dataTable() {
       pagingType: "full_numbers",
       iDisplayLength: 20,
       
-      order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
+      // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
 
-      aoColumns:
-        [
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": ""},
-          {"sClass": "d-none"}
-        ],
+      // aoColumns:
+      //   [
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": ""},
+      //     {"sClass": "d-none"}
+      //   ],
     });
 
     $("#table_group_length").remove();

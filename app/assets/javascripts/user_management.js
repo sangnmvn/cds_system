@@ -200,7 +200,7 @@ $(document).ready(function () {
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
                 <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on"></i></a> ';
               addData[11] = v.id;
-              
+               
               table.fnAddData(addData);              
               reorder_table_row(table, 11);
             });
@@ -425,25 +425,11 @@ function setup_dataTable() {
         $(nRow).attr('id', "admin_user_{id}".formatUnicorn({id: aData[11]}));
         return nRow;
       } ,
-      
-      "aaSortingFixed": [[ 11, "desc" ]],
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
 
-      "aoColumns": [{"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": ""},
-                    {"sClass": "d-none"}
-                  ],
+      
     });
 
     $(".toggle_all").click(function () {
