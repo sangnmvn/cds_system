@@ -1,6 +1,6 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-  before_action :set_admin_user, only: [:update]
+  before_action :set_admin_user, only: [:update, :status]
 
   def index
     @companies = Company.all.order(:name)
@@ -92,29 +92,31 @@ class AdminUsersController < ApplicationController
 
   # add
   def add
-    password_default = "password"
+    password_default = "123QWEasd"
     management_default = 0
     @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
                              last_name: params[:last], account: params[:account],
                              company_id: params[:company], role_id: params[:role])
     respond_to do |format|
-      if @use_new.save
-        unless params[:project].nil?
-          id_user_new = AdminUser.select("id").where("email = ?", params[:email])
-          params[:project].each do |id|
-            ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
-          end
-        end
-        @companies = Company.all
-        @projects = Project.all
-        @roles = Role.all
-        @admin_users = AdminUser.all
-        @admin_users.reload
-        @project_members = ProjectMember.all
-        @status = true
-        format.js { }
+      email = AdminUser.where(email: params[:email]).present?
+      account = AdminUser.where(account: params[:account]).present?
+      if email || account
+        format.json { render :json => { status: "exist", email: email, account: account } }
       else
-        format.js { }
+        if @use_new.save
+          unless params[:project].nil?
+            id_user_new = AdminUser.select("id").where("email = ?", params[:email])
+            params[:project].each do |id|
+              ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
+            end
+          end
+          user = AdminUser.select("first_name,last_name,email,account,roles.name as r,companies.name as c").joins(:company).joins(:role).where(id: id_user_new)
+          project_user = ProjectMember.select("projects.desc").joins(:project).where(admin_user_id: id_user_new).map(&:desc).join(" / ")
+          # binding.pry
+          format.json { render :json => { status: "success", user: user, project_user: project_user } }
+        else
+          format.json { render :json => { status: "fail" } }
+        end
       end
     end
   end
@@ -223,6 +225,17 @@ class AdminUsersController < ApplicationController
     end
   end
 
+  def status
+    params[:status] = @admin_user.status ? false : true
+    respond_to do |format|
+      if @admin_user.update(admin_user_params)
+        format.json { render :json => { :status => "success" } }
+      else
+        format.json { render :json => { :status => "fail" } }
+      end
+    end
+  end
+
   private
 
   def set_admin_user
@@ -230,6 +243,6 @@ class AdminUsersController < ApplicationController
   end
 
   def admin_user_params
-    params.permit(:first_name, :last_name, :email, :account, :company_id, :role_id)
+    params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status)
   end
 end

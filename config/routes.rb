@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get "get_filter_company"
       get "get_filter_project"
       get "get_modal_project"
+      post "status"
       post "submit_filter"
     end
   end

@@ -142,3 +142,11 @@
 	height: 1.15rem;
 
 }
+.fa-toggle-off {
+    font-size: 20px;
+    color: #ff0000;
+}
+.fa-toggle-on {
+    font-size: 20px;
+    color: #ffffff;
+}

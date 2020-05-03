@@ -146,29 +146,6 @@ $(document).ready(function () {
     if (company == "") {
       $("#company").after('<span class="error">Please select a Company</span>');
     }
-    if (check_account == true || check_email == true) {
-      $.ajax({
-        url: "/admin_users/check_emai_account",
-        type: "GET",
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: { email: email, account: account },
-        dataType: "json",
-        success: function (response) {
-          if (response.email == true && check_email == true) {
-            $("#email").after(
-              '<span class="error">Email already exists</span>'
-            );
-          }
-          if (response.account == true && check_account == true) {
-            $("#account").after(
-              '<span class="error">Account already exists</span>'
-            );
-          }
-        },
-      });
-    }
     if ($(".error").length == 0) {
       $.ajax({
         url: "admin_users/add",
@@ -184,6 +161,56 @@ $(document).ready(function () {
           last: last_name,
           email: email,
           account: account,
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.status == "exist") {
+            if (response.email == true) {
+              $("#email").after(
+                '<span class="error">Email already exists</span>'
+              );
+            }
+            if (response.account == true) {
+              $("#account").after(
+                '<span class="error">Account already exists</span>'
+              );
+            }
+          } else if (response.status == "success") {
+            var table = $("#table_user_management").DataTable({});
+
+            $.each(response.user, function (k, v) {
+              var addData = [];
+              addData.push("<td id='1'>aaaa</td>");
+              addData.push("1");
+              addData.push(v.first_name);
+              addData.push(v.last_name);
+              addData.push(v.email);
+              addData.push(v.account);
+              addData.push(v.r);
+              addData.push("");
+              addData.push(response.project_user);
+              addData.push(v.c);
+              addData.push(deletar);
+              // table.fnAddData([
+              //   "1",
+              //   "1",
+              //   v.first_name,
+              //   v.last_name,
+              //   v.email,
+              //   v.account,
+              //   v.r,
+              //   "",
+              //   response.project_user,
+              //   v.c,
+              //   1,
+              // ]);
+              table.fnAddData(addData);
+            });
+            $("#modalAdd").modal("hide");
+            success();
+          } else if (response.status == "fail") {
+            fails();
+          }
         },
       });
     }
@@ -256,12 +283,11 @@ $(document).ready(function () {
   });
 });
 
-function delete_datatable_row(data_table, row_id)
-{
-    // delete the row from table by id
-    row_id = row_id + 1 ;
-    var row = data_table.find('tr').eq(row_id);
-    data_table.fnDeleteRow(row[0]);
+function delete_datatable_row(data_table, row_id) {
+  // delete the row from table by id
+  row_id = row_id + 1;
+  var row = data_table.find("tr").eq(row_id);
+  data_table.fnDeleteRow(row[0]);
 }
 function delete_user() {
   var user_id = $(".delete_id").val();
@@ -273,28 +299,27 @@ function delete_user() {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     dataType: "json",
     success: function (response) {
-      $(response).each(
-          function (i, e) { //duyet mang doi tuong
-            var deleted_id = e["deleted_id"];            
-            var data_table = $("#table_user_management").dataTable();
-            var all_data_list = data_table.fnGetData();
-            
-            for (var i=0; i< all_data_list.length; i++)
-            {
-              // parse string manually because data is HTML tag string :((
-              var current_user_id = all_data_list[i][0].split('batch_action_item_')[1].split('\"')[0];
-              current_user_id = parseInt(current_user_id);
-              if (current_user_id == deleted_id)
-              {
-                var row_id = i;
-                delete_datatable_row(data_table, row_id);
-                break
-              }
-            }
-            success();
+      $(response).each(function (i, e) {
+        //duyet mang doi tuong
+        var deleted_id = e["deleted_id"];
+        var data_table = $("#table_user_management").dataTable();
+        var all_data_list = data_table.fnGetData();
+
+        for (var i = 0; i < all_data_list.length; i++) {
+          // parse string manually because data is HTML tag string :((
+          var current_user_id = all_data_list[i][0]
+            .split("batch_action_item_")[1]
+            .split('"')[0];
+          current_user_id = parseInt(current_user_id);
+          if (current_user_id == deleted_id) {
+            var row_id = i;
+            delete_datatable_row(data_table, row_id);
+            break;
           }
-      );
-    }
+        }
+        success();
+      });
+    },
   });
 }
 
@@ -362,10 +387,10 @@ function setup_dataTable() {
       order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
-      // available options.      
+      // available options.
     });
 
-    $(".toggle_all").click(function () {  
+    $(".toggle_all").click(function () {
       $(".collection_selection[type=checkbox]").prop(
         "checked",
         $(this).prop("checked")
@@ -381,16 +406,10 @@ function setup_dataTable() {
         $("#table_user_management .toggle_all").prop("checked", true);
       }
     });
-        
-
   });
-
-    
 }
 
 $("#table_user_management_length").remove();
-
-
 
 setup_dataTable();
 
@@ -586,4 +605,57 @@ $(document).on("click", "#btn-delete-many-users", function () {
   $("#modalDeleteManyUsers").modal("show");
   number = $("#table_user_management tbody :checkbox(:checked)").length;
   $("#number-user-del").html(number + " users");
+});
+
+// status user
+$(document).on("click", ".status_icon", function () {
+  var user_id = $(this).data("user_id");
+  $.ajax({
+    url: "/admin_users/status",
+    type: "POST",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { id: user_id },
+    // dataType: "json",
+    // success: function (response) {
+
+    // },
+  });
+});
+
+$(document).ready(function () {
+  var table = $("#table_user_management").DataTable();
+  var sData = table.fnGetData();
+  console.log(sData);
+  for (var i = 0; i < sData.length; i++) {
+    // parse string manually because data is HTML tag string :((
+    var current_user_id = sData[i][0];
+    console.log(current_user_id);
+  }
+  var addData = [];
+  addData[0] = '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_50" value="0" class="collection_selection" name="collection_selection[]"></div>'
+  addData.push("<td id='1'>aaaa</td>");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  addData.push("1");
+  // table.fnAddData([
+  //   "1",
+  //   "1",
+  //   v.first_name,
+  //   v.last_name,
+  //   v.email,
+  //   v.account,
+  //   v.r,
+  //   "",
+  //   response.project_user,
+  //   v.c,
+  //   1,
+  // ]);
+  console.log(addData);
+  table.fnAddData(addData);
 });
