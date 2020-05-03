@@ -188,7 +188,7 @@ $(document).ready(function () {
               addData[4] = v.email;
               addData[5] = v.account;
               addData[6] = v.r;
-              addData[7] = "1";
+              addData[7] = "";
               addData[8] = response.project_user;
               addData[9] = v.c;
               addData[10] = '<a class="action_icon edit_icon" data-user_id="'+v.id+'" href="#"><img border="0" \

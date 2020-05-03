@@ -104,8 +104,8 @@ class AdminUsersController < ApplicationController
         format.json { render :json => { status: "exist", email: email, account: account } }
       else
         if @use_new.save
+          id_user_new = AdminUser.select("id").where("email = ?", params[:email])
           unless params[:project].nil?
-            id_user_new = AdminUser.select("id").where("email = ?", params[:email])
             params[:project].each do |id|
               ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
             end
