@@ -176,34 +176,28 @@ $(document).ready(function () {
               );
             }
           } else if (response.status == "success") {
-            var table = $("#table_user_management").DataTable({});
-
+            var table = $("#table_user_management").DataTable();
+            var sData = table.fnGetData();
             $.each(response.user, function (k, v) {
               var addData = [];
-              addData.push("<td id='1'>aaaa</td>");
-              addData.push("1");
-              addData.push(v.first_name);
-              addData.push(v.last_name);
-              addData.push(v.email);
-              addData.push(v.account);
-              addData.push(v.r);
-              addData.push("");
-              addData.push(response.project_user);
-              addData.push(v.c);
-              addData.push(deletar);
-              // table.fnAddData([
-              //   "1",
-              //   "1",
-              //   v.first_name,
-              //   v.last_name,
-              //   v.email,
-              //   v.account,
-              //   v.r,
-              //   "",
-              //   response.project_user,
-              //   v.c,
-              //   1,
-              // ]);
+              addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_4" value="0" \
+              class="collection_selection" name="collection_selection[]"> </div>';
+              addData[1] = sData.length + 1;
+              addData[2] = v.first_name;
+              addData[3] = v.last_name;
+              addData[4] = v.email;
+              addData[5] = v.account;
+              addData[6] = v.r;
+              addData[7] = "1";
+              addData[8] = response.project_user;
+              addData[9] = v.c;
+              addData[10] = '<a class="action_icon edit_icon" data-user_id="'+v.id+'" href="#"><img border="0" \
+                src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+v.id+'" href="">\
+                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+                <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
+                <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
+                <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> ';
               table.fnAddData(addData);
             });
             $("#modalAdd").modal("hide");
@@ -622,40 +616,19 @@ $(document).on("click", ".status_icon", function () {
   });
 });
 
-$(document).ready(function () {
-  var table = $("#table_user_management").DataTable();
-  var sData = table.fnGetData();
-  console.log(sData);
-  for (var i = 0; i < sData.length; i++) {
-    // parse string manually because data is HTML tag string :((
-    var current_user_id = sData[i][0];
-    console.log(current_user_id);
-  }
-  var addData = [];
-  addData[0] = '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_50" value="0" class="collection_selection" name="collection_selection[]"></div>'
-  addData.push("<td id='1'>aaaa</td>");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  addData.push("1");
-  // table.fnAddData([
-  //   "1",
-  //   "1",
-  //   v.first_name,
-  //   v.last_name,
-  //   v.email,
-  //   v.account,
-  //   v.r,
-  //   "",
-  //   response.project_user,
-  //   v.c,
-  //   1,
-  // ]);
-  console.log(addData);
-  table.fnAddData(addData);
-});
+// $(document).ready(function () {
+//   var table = $("#table_user_management").DataTable();
+//   var sData = table.fnGetData();
+//   var addData = [];
+//   addData[0] = "";
+//   addData[1] = sData.length + 1;
+//   addData[2] = "1";
+//   addData[3] = "1";
+//   addData[4] = "1";
+//   addData[5] = "1";
+//   addData[6] = "1";
+//   addData[7] = "1";
+//   addData[8] = "1";
+//   addData[9] = "1";
+//   table.fnAddData(addData);
+// });

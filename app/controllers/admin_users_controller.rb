@@ -110,9 +110,8 @@ class AdminUsersController < ApplicationController
               ProjectMember.create!(admin_user_id: id_user_new[0].id, project_id: id.to_i, is_managent: management_default)
             end
           end
-          user = AdminUser.select("first_name,last_name,email,account,roles.name as r,companies.name as c").joins(:company).joins(:role).where(id: id_user_new)
+          user = AdminUser.select("admin_users.id,first_name,last_name,email,account,roles.name as r,companies.name as c").joins(:company).joins(:role).where(id: id_user_new)
           project_user = ProjectMember.select("projects.desc").joins(:project).where(admin_user_id: id_user_new).map(&:desc).join(" / ")
-          # binding.pry
           format.json { render :json => { status: "success", user: user, project_user: project_user } }
         else
           format.json { render :json => { status: "fail" } }
