@@ -164,6 +164,7 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (response) {
+          // check email and account exist
           if (response.status == "exist") {
             if (response.email == true) {
               $("#email").after(
@@ -200,6 +201,10 @@ $(document).ready(function () {
                 <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on"></i></a> ';
               table.fnAddData(addData);
             });
+            // reset and hide form add user 
+            $("#modalAdd #project option").remove();
+            $("#modalAdd .tokens-container .token").remove();
+            $('#modalAdd .form-add-user')[0].reset();
             $("#modalAdd").modal("hide");
             success();
           } else if (response.status == "fail") {
