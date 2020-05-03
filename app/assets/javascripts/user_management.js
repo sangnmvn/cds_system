@@ -180,8 +180,8 @@ $(document).ready(function () {
             var sData = table.fnGetData();
             $.each(response.user, function (k, v) {
               var addData = [];
-              addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_4" value="0" \
-              class="collection_selection" name="collection_selection[]"> </div>';
+              addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_{0}" value="0" \
+              class="collection_selection" name="collection_selection[]"> </div>'.formatUnicorn({0: v.id});
               addData[1] = sData.length + 1;
               addData[2] = v.first_name;
               addData[3] = v.last_name;
