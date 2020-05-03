@@ -1,3 +1,17 @@
+// alert success
+function success() {
+  $("#alert-success").fadeIn();
+  window.setTimeout(function () {
+    $("#alert-success").fadeOut(1000);
+  }, 5000);
+}
+// alert fails
+function fails() {
+  $("#alert-danger").fadeIn();
+  window.setTimeout(function () {
+    $("#alert-danger").fadeOut(1000);
+  }, 5000);
+}
 $(document).on("click", "#btn-submit-add-user-group", function () {
   name = $("#name").val();
   status = $('input[name="status"]:checked').val();
@@ -35,7 +49,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       },
       dataType: "json",
       success: function (response) {
-        // data group 
+        // data group
         if (response.status == "success") {
           $("#modalAdd").modal("hide");
           success();
@@ -53,7 +67,6 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
 $(document).ready(function () {
   $(".btn-edit-group").click(function () {
     group_id = $(this).data("id");
-    // alert(group_id);
     $.ajax({
       url: "/groups/get_data",
       type: "GET",
@@ -116,10 +129,15 @@ $(document).ready(function () {
             success();
           } else if (response.status == "exist") {
             $(".error").remove();
-            $("#modalEdit #name").after('<span class="error">Name already exsit</span>');
+            $("#modalEdit #name").after(
+              '<span class="error">Name already exsit</span>'
+            );
           } else if (response.status == "fail") {
             fails();
           }
+        },
+        fail: function (xhr, textStatus, errorThrown) {
+          fails();
         },
       });
     }
@@ -162,7 +180,7 @@ function setup_dataTable() {
 
     $("#table_group_length").remove();
 
-    $(".toggle_all").click(function () {  
+    $(".toggle_all").click(function () {
       $(".collection_selection[type=checkbox]").prop(
         "checked",
         $(this).prop("checked")
@@ -178,9 +196,7 @@ function setup_dataTable() {
         $(".toggle_all").prop("checked", true);
       }
     });
-
   });
-  
 }
 
 setup_dataTable();
