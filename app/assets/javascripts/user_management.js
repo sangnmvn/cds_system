@@ -176,7 +176,7 @@ $(document).ready(function () {
               );
             }
           } else if (response.status == "success") {
-            var table = $("#table_user_management").DataTable({order:[[2,"asc"]],"bDestroy": true,});
+            var table = $("#table_user_management").DataTable();
             var sData = table.fnGetData();
             $.each(response.user, function (k, v) {
               var addData = [];
@@ -197,8 +197,7 @@ $(document).ready(function () {
                 <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                 <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
-                <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> ';
-
+                <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on"></i></a> ';
               table.fnAddData(addData);
             });
             $("#modalAdd").modal("hide");
@@ -608,14 +607,12 @@ $(document).on("click", "#btn-modal-edit-user", function () {
                   <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+edited_user_id+'" href="#">\
                   <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
                   <a class="action_icon status_icon" data-user_id="'+edited_user_id+'" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> ');
-                
                 var delete_whole_row_constant = undefined;
                 var redraw_table = false;
                 data_table.fnUpdate(elements, row_id, delete_whole_row_constant, redraw_table)
                 break;
               }
           }
-
           success();
         } else if (response.status == "exist") {
           $(".error").remove();
@@ -656,13 +653,12 @@ $(document).on("click", ".status_icon", function () {
     success: function (response) {
       if (response.status == "success") {
         if (response.change == false){
-          $("#admin_user_"+user_id+" .status_icon").html('<i class="fa fa-toggle-off"></i>');
+          $('a.status_icon[data-user_id="'+user_id+'"]').html('<i class="fa fa-toggle-off"></i>');
         }else{
-          $("#admin_user_"+user_id+" .status_icon").html('<i class="fa fa-toggle-on"></i>');
+          $('a.status_icon[data-user_id="'+user_id+'"]').html('<i class="fa fa-toggle-on"></i>');
         }
-        
         success();
-      }else if (response.status == "success") {
+      }else if (response.status == "fail") {
         fails();
       }
     },

@@ -1,86 +1,82 @@
-
 <div class="modal fade bs-example-modal-xl"  id="addReviewerModal">
-  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">      
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-          <h4 class="modal-title" style="color: white">Assign Users to Group</h4>
-          <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <h4 class="modal-title" style="color: white">Assign Users to Group</h4>
+        <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body">        
-				<div class="row">
-				<div class="col-6">          
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6">
             <h4>Available Users</h4>
-              <!-- Table header màu đậm hơn -->
-              <div id="table_left_wrapper">
-                <% render "admin_users_previewer_list"%>
-              </div>
-              
-				</div>
-							<div class="col-1 button-center">
-              <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right.png", class: "arrow_icon", border: 1) %></button>
-              <p></p>
-              <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left.png", class: "arrow_icon", border: 1) %></button>
+            <!-- Table header màu đậm hơn -->
+            <div id="table_left_wrapper">
+              <% render "admin_users_previewer_list"%>
+            </div>
+          </div>
+          <div class="col-1 button-center">
+            <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right.png", class: "arrow_icon", border: 1) %></button>
+            <p></p>
+            <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left.png", class: "arrow_icon", border: 1) %></button>
+          </div>
+          <div class="col-5">
+            <h4>Selected Users</h4>
+            <!-- Table header màu đậm hơn -->
+            <div id="table_right_wrapper">
+              <% render "admin_users_selected_previewer"%>
+            </div>
+          </div>
         </div>
-							<div class="col-5">
-							<h4>Selected Users</h4>
-              <!-- Table header màu đậm hơn -->
-                <div id="table_right_wrapper">
-                  <% render "admin_users_selected_previewer"%>
-                </div>
-              </div>                      
-      </div>
-      <div class="modal-footer">
-        <div class="col-12 p-3 text-center">
-          <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <div class="modal-footer">
+          <div class="col-12 p-3 text-center">
+            <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- hidden input to contains id-->
-  <input type="text" style="display:none;" class="add_previewer_id"></input>
+    <!-- hidden input to contains id-->
+    <input type="text" style="display:none;" class="add_previewer_id"></input>
 </div>
-
 <script>
   var global_data_table_left;
   var global_data_table_right;
   
   
   function set_data_event()
-  {    
+  {
     $("#table_left .mycontrol").each( function(index, value)
     {
       $(this).click(function()
       {
         if ($("#table_left td > .mycontrol").is(':checked'))
         {
-            $('#to_right').attr("disabled", false);          
+            $('#to_right').attr("disabled", false);
         }
       });
-
+  
     });
-
+  
     $("#table_right .mycontrol").each( function(index, value)
     {
       $(this).click(function()
       {
         if ($("#table_right td > .mycontrol").is(':checked'))
         {
-            $('#to_left').attr("disabled", false);                    
+            $('#to_left').attr("disabled", false);
         }
       });
-
+  
     });
-
-                
-    document.getElementById("check_all_choose_left").onclick = function () 
+  
+  
+    document.getElementById("check_all_choose_left").onclick = function ()
               {
                 // Lấy danh sách checkbox
-                var checkboxes = $("#table_left tbody").find('input:checkbox');                            
-
+                var checkboxes = $("#table_left tbody").find('input:checkbox');
+  
                 if($("#check_all_choose_left").is(':checked'))
                 {
                   // Lặp và thiết lập checked
@@ -99,7 +95,7 @@
                   }
                 }
               };
-    document.getElementById("check_all_choose_right").onclick = function () 
+    document.getElementById("check_all_choose_right").onclick = function ()
               {
                 // Lấy danh sách checkbox
                 var checkboxes = $("#table_right tbody").find('input:checkbox');
@@ -142,13 +138,13 @@
             checkboxes[i].checked = false;
             var tr = checkboxes[i].closest("tr");
             tr.style.color = "black";
-            
-            
+  
+  
             var addRow = global_data_table_left.fnGetData(tr);
-            global_data_table_right.fnAddData(addRow);          
-            global_data_table_left.fnDeleteRow(tr);        
-            
-            set_data_event();  
+            global_data_table_right.fnAddData(addRow);
+            global_data_table_left.fnDeleteRow(tr);
+  
+            set_data_event();
         }
       }
       $('#to_right').attr("disabled",true);
@@ -161,27 +157,27 @@
             checkboxes[i].checked = false;
             var tr = checkboxes[i].closest("tr");
             tr.style.color = "black";
-            
+  
             var addRow = global_data_table_right.fnGetData(tr);
-            global_data_table_left.fnAddData(addRow);          
-            global_data_table_right.fnDeleteRow(tr);          
-            set_data_event();  
+            global_data_table_left.fnAddData(addRow);
+            global_data_table_right.fnDeleteRow(tr);
+            set_data_event();
         }
       }
       $('#to_left').attr("disabled",true);
-      $('#save').attr("disabled",false)	
-          
+      $('#save').attr("disabled",false)
+  
       $("#table_left tbody .mycontrol[type=checkbox]").click(function () {
         var nboxes = $("#table_left tbody :checkbox:not(:checked)");
         alert(nboxes);
         if (nboxes.length > 0 && $("#check_all_choose_left").is(":checked") == true) {
-          $("#check_all_choose_left").prop("checked", false);          
+          $("#check_all_choose_left").prop("checked", false);
         }
         if (nboxes.length == 0 && $("#check_all_choose_left").is(":checked") == false) {
           $("#check_all_choose_left").prop("checked", false);
         }
       });
-
+  
       $("#table_right tbody .mycontrol[type=checkbox]").click(function () {
         var nboxes = $("#table_right tbody :checkbox:not(:checked)");
         if (nboxes.length > 0 && $("#check_all_choose_right").is(":checked") == true) {
@@ -191,11 +187,11 @@
           $("#check_all_choose_right").prop("checked", false);
         }
       });
-
-    });  
+  
+    });
   }
-function set_up_data_table_previewer()
-{
+  function set_up_data_table_previewer()
+  {
   $(document).ready(function() {
   // Cấu hình các nhãn phân trang
   global_data_table_left = $('#table_left').dataTable( {
@@ -230,8 +226,8 @@ function set_up_data_table_previewer()
   });
   
   
-
-	global_data_table_right =$('#table_right').dataTable( {
+  
+  	global_data_table_right =$('#table_right').dataTable( {
       "language": {
       "sProcessing":   "Đang xử lý...",
       "sLengthMenu":   "Xem _MENU_ mục",
@@ -261,36 +257,36 @@ function set_up_data_table_previewer()
         { sClass: "add_reviewer_account"} ,
         { sClass: "add_reviewer_email"},
         { sClass: "add_reviewer_id d-none"}]
-
+  
   });
   set_data_event();
-});
-}
-
-function check_checkbox(name) {
-	var count = 0;
-	var checkboxes = document.getElementsByName(name);
-	for (var i = 0; i < checkboxes.length; i++){
-		if(checkboxes[i].checked == true)
-			count++ ;
-	}
-	return count;
-}
-
-// run once
-$('#save').click(function ()
-{
+  });
+  }
+  
+  function check_checkbox(name) {
+  	var count = 0;
+  	var checkboxes = document.getElementsByName(name);
+  	for (var i = 0; i < checkboxes.length; i++){
+  		if(checkboxes[i].checked == true)
+  			count++ ;
+  	}
+  	return count;
+  }
+  
+  // run once
+  $('#save').click(function ()
+  {
     var user_id = $('.add_previewer_id').val();
     var reviewer_ids = [];
-
+  
     var reviewer_id_rows = global_data_table_right.fnGetData();
-    
+  
     for (var i=0; i<reviewer_id_rows.length; i++)
     {
       current_approver_id = reviewer_id_rows[i][5];
       reviewer_ids.push(current_approver_id);
     }
-
+  
     // convert to string
     if (reviewer_ids.length == 0)
     {
@@ -300,12 +296,12 @@ $('#save').click(function ()
     {
       reviewer_ids = reviewer_ids.join(",");
     }
-
-    
+  
+  
     $.ajax({
     url: "/admin/user_management/add_previewer/" + user_id + '/' + reviewer_ids,
     type: "POST",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },          
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     });
-});
+  });
 </script>
