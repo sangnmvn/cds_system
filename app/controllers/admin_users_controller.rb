@@ -224,13 +224,14 @@ class AdminUsersController < ApplicationController
     end
   end
 
+  # change status user (enalbe / disable)
   def status
     params[:status] = @admin_user.status ? false : true
     respond_to do |format|
       if @admin_user.update(admin_user_params)
-        format.json { render :json => { :status => "success" } }
+        format.json { render :json => { status: "success", change: params[:status] } }
       else
-        format.json { render :json => { :status => "fail" } }
+        format.json { render :json => { status: "fail" } }
       end
     end
   end
