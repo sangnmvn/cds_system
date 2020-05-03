@@ -182,7 +182,7 @@ $(document).ready(function () {
               var addData = [];
               addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_{0}" value="0" \
               class="collection_selection" name="collection_selection[]"> </div>'.formatUnicorn({0: v.id});
-              addData[1] = sData.length + 1;
+              addData[1] = 0; // insert đầu
               addData[2] = v.first_name;
               addData[3] = v.last_name;
               addData[4] = v.email;
@@ -198,7 +198,10 @@ $(document).ready(function () {
                 <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
                 <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on"></i></a> ';
-              table.fnAddData(addData);
+              addData[11] = v.id;
+              
+              table.fnAddData(addData);              
+              reorder_table_row(table, 11);
             });
             $("#modalAdd").modal("hide");
             success();
@@ -278,24 +281,54 @@ $(document).ready(function () {
   });
 });
 
-function reorder_table_row(data_table)
+function reorder_table_row(data_table, id_column)
 {
-  var all_data_length = data_table.fnGetData().length;
+  var all_data = data_table.fnGetData();  
+    
+  var reload_table = false;
+  
+  var id_lists = [];
+  var row_lists = [];
 
-  setTimeout(
-    function() {
-      for (var i=0; i < all_data_length; i++)
-      {
-        var row_id_text = i+1;
-        data_table.fnUpdate(row_id_text, i, 1);        
-      }
-  }, 100);
+  for (var i=0; i < all_data.length; i++)
+  {
+    var id = all_data[i][id_column];
+    id_lists.push(id);
+    row_lists.push(i);
+  }
+
+  for (var i=0; i < (row_lists.length-1); i++)
+  {
+    for (var j=i+1; j < row_lists.length; j++)
+    {
+        if (id_lists[i] < id_lists[j])
+        {
+          var temp = id_lists[i];
+          id_lists[i] = id_lists[j];
+          id_lists[j] = temp;
+
+          temp = row_lists[i];
+          row_lists[i] = row_lists[j];
+          row_lists[j] = temp;
+        }
+    }
+  }
+
+  for (var i=0; i < all_data.length; i++)
+  {
+    var data_to_update = (i+1).toString();
+    var row_to_update = row_lists[i];
+
+    data_table.fnUpdate(data_to_update, row_to_update, 1, false, false);
+  }
+
+  data_table.fnDraw();
 }
 function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
   data_table.fnDeleteRow(row);  
-  reorder_table_row(data_table);
+  reorder_table_row(data_table, 11);
 }
 function delete_user() {
   var user_id = $(".delete_id").val();
@@ -375,27 +408,37 @@ processing: true,
 function setup_dataTable() {
   $("#table_user_management").ready(function () {
     $("#table_user_management").dataTable({
-      destroy: true,
+      bDestroy: true,
       ajax: {
         url: $("#table_user_management").data("source"),
       },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
-      iDisplayLength: 20,
-      columns: [
-        { data: "id" },
-        { data: "first_name" },
-        { data: "last_name" },
-        { data: "email" },
-        { data: "account" },
-      ],
-      dom: "Bfrtip",
-      buttons: ["copy", "csv", "excel", "pdf", "print"],
-
-      order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
+      iDisplayLength: 20,      
+      
+      fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+        $(nRow).attr('id', "admin_user_{id}".formatUnicorn({id: aData[11]}));
+        return nRow;
+      } ,
+      
+      "aaSortingFixed": [[ 11, "desc" ]],
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
+
+      "aoColumns": [{"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": ""},
+                    {"sClass": "d-none"}
+                  ],
     });
 
     $(".toggle_all").click(function () {

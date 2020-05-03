@@ -6,7 +6,7 @@ class AdminUsersController < ApplicationController
     @companies = Company.all.order(:name)
     @projects = Project.all.order(:desc)
     @roles = Role.all.order(:name)
-    @admin_users = AdminUser.all
+    @admin_users = AdminUser.all.order(:id => :desc)
     @project_members = ProjectMember.all
 
     respond_to do |format|

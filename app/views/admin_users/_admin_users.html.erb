@@ -19,6 +19,7 @@
       <th scope="col" class="project">Project</th>
       <th scope="col" class="company">Company</th>
       <th scope="col" class="action">Action</th>
+      <th scope="col" class="user_id d:none">ID</th>
     </tr>
   </thead>
   <tbody>
@@ -54,21 +55,22 @@
             %>
         </td>
         <td class="company"><%= begin companies.find(user.company_id).name rescue "" end %></td>
-          <td class="actions">
-            <%= 
-                links = []
+        <td class="actions">
+          <%= 
+              links = []
 
-                links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon", :"data-user_id" => user.id })
-                links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id})
-                links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon add_previewer_icon", :"data-toggle" => "modal", :"data-target" => "#addReviewerModal", :"data-user_id" => user.id})
-                if user.status
-                links << link_to('<i class="fa fa-toggle-on"></i>'.html_safe,"#",{ class: "action_icon status_icon", :"data-user_id" => user.id })
-                else 
-                links << link_to('<i class="fa fa-toggle-off"></i>'.html_safe,"#",{ class: "action_icon status_icon", :"data-user_id" => user.id })
-                end
-                links.join(" ").html_safe      
-            %>
-          </td>
+              links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon", :"data-user_id" => user.id })
+              links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id})
+              links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon add_previewer_icon", :"data-toggle" => "modal", :"data-target" => "#addReviewerModal", :"data-user_id" => user.id})
+              if user.status
+              links << link_to('<i class="fa fa-toggle-on"></i>'.html_safe,"#",{ class: "action_icon status_icon", :"data-user_id" => user.id })
+              else 
+              links << link_to('<i class="fa fa-toggle-off"></i>'.html_safe,"#",{ class: "action_icon status_icon", :"data-user_id" => user.id })
+              end
+              links.join(" ").html_safe      
+          %>
+        </td>
+        <td class="user_id d:none"><%= user.id %></td>
         </tr>
       <% end %>
     </tbody>

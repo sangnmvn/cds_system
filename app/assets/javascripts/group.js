@@ -224,25 +224,34 @@ processing: true,
 function setup_dataTable() {
   $("#table_group").ready(function () {
     $("#table_group").dataTable({
-      destroy: true,
+      bDestroy: true,
       ajax: {
         url: $("#table_group").data("source"),
       },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
-      columns: [
-        { data: "id" },
-        { data: "first_name" },
-        { data: "last_name" },
-        { data: "email" },
-        { data: "account" },
-      ],
-
-      order: [[1, "asc"]], //sắp xếp giảm dần theo cột thứ 1
+      
+      order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
+
+      aoColumns:
+        [
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": ""},
+          {"sClass": "d-none"}
+        ],
     });
 
     $("#table_group_length").remove();
