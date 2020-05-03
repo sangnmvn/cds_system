@@ -43,7 +43,8 @@
 
                 links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id })
                 links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-group_id" => group.id})                
-                links << "<i class='action_icon fas fa-key' data-group_id='#{group.id}'></i>"
+                links << link_to('<i class="fa fa-key"></i>'.html_safe,"#",{ class: "action_icon key_icon", :"data-id" => group.id })
+                links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id })
                 links.join(" ").html_safe      
             %>
         </td>

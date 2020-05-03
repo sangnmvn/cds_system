@@ -150,3 +150,8 @@
     font-size: 20px;
     color: #ffffff;
 }
+
+.key_icon, .user_group_icon {
+    color: #fff;
+    font-size: 15px;
+}
