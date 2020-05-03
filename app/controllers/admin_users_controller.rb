@@ -62,10 +62,10 @@ class AdminUsersController < ApplicationController
 
   def get_filter_company
     if params[:company] == "all"
-      projects = Project.all
+      projects = Project.select(:id, :desc).all
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
     else
-      projects = Project.all.where("company_id = ?", params[:company])
+      projects = Project.select(:id, :desc).where("company_id = ?", params[:company])
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.company_id = ?", params[:company])
     end
@@ -75,18 +75,22 @@ class AdminUsersController < ApplicationController
   end
 
   def get_filter_project
-    @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
+    @roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]]).order(:name)
     if params[:company] != "all"
       @roles = @roles.where("projects.company_id = ?", params[:company])
     end
     if params[:project] != "all" && params[:project] != "none"
       @roles = @roles.where("projects.id = ?", params[:project])
     end
-    # if params[:project] == "none"
-    #   @roles = @roles.where("projects.company_id = ?", params[:company])
-    # end
+    if params[:project] == "none"
+      list_id_user_project = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id") # user have project
+      unless list_id_user_project.empty?
+        list_role_id_user_not_project = AdminUser.where("id not in (?)", list_id_user_project).pluck("role_id").uniq
+        @roles = @roles.find(list_role_id_user_not_project)
+      end
+    end
     respond_to do |format|
-      format.json { render :json => { :roles => @roles.order(:name) } }
+      format.json { render :json => { :roles => @roles } }
     end
   end
 
@@ -122,12 +126,10 @@ class AdminUsersController < ApplicationController
 
   # get data modal edit
   def edit
-    user = AdminUser.where(id: params[:id])
-    companies = Company.all
-    # project company user
-    projects = Project.where(company_id: user[0]["company_id"])
-    roles = Role.all
-    # project user
+    user = AdminUser.select(:id, :first_name, :last_name, :email, :account, :role_id, :company_id).where(id: params[:id])
+    companies = Company.select(:id, :name).all
+    projects = Project.select(:id, :desc).where(company_id: user[0]["company_id"])
+    roles = Role.select(:id, :name).all
     project_user = ProjectMember.joins(:admin_user, :project).select("projects.id").where(admin_user_id: params[:id]).map(&:id)
     respond_to do |format|
       format.json { render :json => { companies: companies, projects: projects, roles: roles, user: user, project_user: project_user } }
@@ -215,8 +217,8 @@ class AdminUsersController < ApplicationController
               end
             end
           end
-          
-          user = AdminUser.find(params[:id])          
+
+          user = AdminUser.find(params[:id])
           user_role = user.role_id.nil? ? "" : Role.find(user.role_id).name
 
           # placeholder
@@ -226,12 +228,12 @@ class AdminUsersController < ApplicationController
           project_member_of_user = ProjectMember.where(admin_user: user)
 
           project_member_of_user.each { |project_member|
-          project_name = Project.find(project_member.project_id).desc
-          project_namelist.append(project_name)
+            project_name = Project.find(project_member.project_id).desc
+            project_namelist.append(project_name)
           }
-          user_project_name = project_namelist.join(" / ")            
+          user_project_name = project_namelist.join(" / ")
 
-          begin 
+          begin
             company = Company.find(user.company_id).name
           rescue
             company = ""
