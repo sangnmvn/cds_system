@@ -198,6 +198,7 @@ $(document).ready(function () {
                 <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
                 <a class="action_icon status_icon" data-user_id="'+v.id+'" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> ';
+
               table.fnAddData(addData);
             });
             $("#modalAdd").modal("hide");
@@ -280,9 +281,8 @@ $(document).ready(function () {
 
 function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
-  row_id = row_id + 1;
-  var row = data_table.find("tr").eq(row_id);
-  data_table.fnDeleteRow(row[0]);
+  var row = data_table.$("tr")[row_id];
+  data_table.fnDeleteRow(row);
 }
 function delete_user() {
   var user_id = $(".delete_id").val();
@@ -574,6 +574,48 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       success: function (response) {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
+          //!--
+          
+          var edited_user_id = response['edit_user_id'];
+          
+          // get row_id to replace
+          var data_table = $("#table_user_management").dataTable();
+          var all_data_list = data_table.fnGetData();
+
+          for (var i = 0; i < all_data_list.length; i++) {
+            // parse string manually because data is HTML tag string :((
+              var current_user_id = all_data_list[i][0]
+                .split("batch_action_item_")[1]
+                .split('"')[0];
+              current_user_id = parseInt(current_user_id);
+              if (current_user_id == edited_user_id) {
+                var row_id = i;
+                var elements = [];
+                elements.push('<td class="selectable"><div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_{0}" value="0" class="collection_selection" name="collection_selection[]"></div></td>'.formatUnicorn({0: edited_user_id}));
+                elements.push(row_id+1);
+                elements.push(response['first_name']);
+                elements.push(response['last_name']);
+                elements.push(response['email']);
+                elements.push(response['account']);
+                elements.push(response['role']);
+                elements.push(response['title']);
+                elements.push(response['projects']);
+                elements.push(response['company']);
+                elements.push('<a class="action_icon edit_icon" data-user_id="'+edited_user_id+'" href="#"><img border="0" \
+                  src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+                  <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+edited_user_id+'" href="">\
+                  <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+                  <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+edited_user_id+'" href="#">\
+                  <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
+                  <a class="action_icon status_icon" data-user_id="'+edited_user_id+'" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> ');
+                
+                var delete_whole_row_constant = undefined;
+                var redraw_table = false;
+                data_table.fnUpdate(elements, row_id, delete_whole_row_constant, redraw_table)
+                break;
+              }
+          }
+
           success();
         } else if (response.status == "exist") {
           $(".error").remove();

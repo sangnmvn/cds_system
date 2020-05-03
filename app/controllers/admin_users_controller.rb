@@ -215,8 +215,29 @@ class AdminUsersController < ApplicationController
               end
             end
           end
+          
+          user = AdminUser.find(params[:id])          
+          user_role = user.role_id.nil? ? "" : Role.find(user.role_id).name
 
-          format.json { render :json => { :status => "success" } }
+          # placeholder
+          user_title = ""
+
+          project_namelist = []
+          project_member_of_user = ProjectMember.where(admin_user: user)
+
+          project_member_of_user.each { |project_member|
+          project_name = Project.find(project_member.project_id).desc
+          project_namelist.append(project_name)
+          }
+          user_project_name = project_namelist.join(" / ")            
+
+          begin 
+            company = Company.find(user.company_id).name
+          rescue
+            company = ""
+          end
+
+          format.json { render :json => { :status => "success", :edit_user_id => params[:id], :first_name => user.first_name, :last_name => user.last_name, :email => user.email, :account => user.account, :role => user_role, :projects => user_project_name, :title => user_title, :company => company } }
         else
           format.json { render :json => { :status => "fail" } }
         end
