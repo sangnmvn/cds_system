@@ -51,6 +51,31 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       success: function (response) {
         // data group
         if (response.status == "success") {
+          var table = $("#table_group").DataTable();
+          var sData = table.fnGetData();
+          var addData = [];
+          addData.push(
+            '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_' +
+              response.id +
+              '" value="0" \
+            class="collection_selection" name="collection_selection[]"></div>'
+          );
+          addData.push(sData.length + 1);
+          addData.push(response.name);
+          addData.push(response.status_group);
+          addData.push("0");
+          addData.push(response.desc);
+          addData.push(
+            '<a class="action_icon edit_icon btn-edit-group" data-id="' +
+              response.id +
+              '" href="#">\
+            <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+            <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
+              response.id +
+              '" href="">\
+            <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>'
+          );
+          table.fnAddData(addData);
           $("#modalAdd").modal("hide");
           success();
         } else if (response.status == "exist") {
@@ -64,84 +89,126 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
   }
 });
 
-$(document).ready(function () {
-  $(".btn-edit-group").click(function () {
-    group_id = $(this).data("id");
-    $.ajax({
-      url: "/groups/get_data",
-      type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { id: group_id },
-      dataType: "json",
-      success: function (response) {
-        $("#modalEdit").modal("show");
-
-        $.each(response.group, function (k, v) {
-          $("#group_id").val(v.id);
-          $(".edit-group").val(v.name);
-          $(".edit-desc").val(v.description);
-          if (v.Status) {
-            $("input:radio[id=status_Enable]").prop("checked", true);
-          } else {
-            $("input:radio[id=status_Disable]").prop("checked", true);
-          }
-        });
-      },
-    });
+$(document).on("click", ".btn-edit-group", function () {
+  group_id = $(this).data("id");
+  $.ajax({
+    url: "/groups/get_data",
+    type: "GET",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { id: group_id },
+    dataType: "json",
+    success: function (response) {
+      $("#modalEdit").modal("show");
+      $.each(response.group, function (k, v) {
+        $("#group_id").val(v.id);
+        $(".edit-group").val(v.name);
+        $(".edit-desc").val(v.description);
+        if (v.Status) {
+          $("input:radio[id=status_Enable]").prop("checked", true);
+        } else {
+          $("input:radio[id=status_Disable]").prop("checked", true);
+        }
+      });
+    },
   });
-  $("#btn-submit-edit-user-group").click(function () {
-    name = $("#modalEdit #name").val();
-    status = $("input[name=status]:checked").val();
-    desc = $("#modalEdit #desc").val();
-    id = $("#modalEdit #group_id").val();
-    temp = true;
-    $(".error").remove();
-    if (name.length < 1) {
+});
+
+$(document).on("click", "#btn-submit-edit-user-group", function () {
+  name = $("#modalEdit #name").val();
+  status = $("input[name=status]:checked").val();
+  desc = $("#modalEdit #desc").val();
+  id = $("#modalEdit #group_id").val();
+  temp = true;
+  $(".error").remove();
+  if (name.length < 1) {
+    $("#modalEdit #name").after(
+      '<span class="error">Please enter Group Name</span>'
+    );
+    temp = false;
+  } else {
+    if (name.length < 2 || name.length > 100) {
       $("#modalEdit #name").after(
-        '<span class="error">Please enter Group Name</span>'
+        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
       );
       temp = false;
-    } else {
-      if (name.length < 2 || name.length > 100) {
-        $("#modalEdit #name").after(
-          '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
-        );
-        temp = false;
-      }
     }
-    if (temp == true) {
-      $.ajax({
-        url: "groups/" + id,
-        type: "PUT",
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-          name: name,
-          status: status,
-          description: desc,
-          id: id,
-        },
-        dataType: "json",
-        success: function (response) {
-          if (response.status == "success") {
-            $("#modalEdit").modal("hide");
-            success();
-          } else if (response.status == "exist") {
-            $(".error").remove();
-            $("#modalEdit #name").after(
-              '<span class="error">Name already exsit</span>'
-            );
-          } else if (response.status == "fail") {
-            fails();
+  }
+  if (temp == true) {
+    $.ajax({
+      url: "groups/" + id,
+      type: "PUT",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        name: name,
+        status: status,
+        description: desc,
+        id: id,
+      },
+      dataType: "json",
+      success: function (response) {
+        $("#modalEdit").modal("hide");
+        if (response.status == "success") {
+          var table = $("#table_group").DataTable();
+          var sData = table.fnGetData();
+          for (var i = 0; i < sData.length; i++) {
+            var current_user_id = sData[i][0]
+              .split("batch_action_item_")[1]
+              .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              updateData.push(
+                '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_' +
+                  response.id +
+                  '" value="0" \
+                class="collection_selection" name="collection_selection[]"></div>'
+              );
+              updateData.push(sData.length + 1);
+              updateData.push(response.name);
+              updateData.push(response.status_group);
+              updateData.push("0");
+              updateData.push(response.desc);
+              updateData.push(
+                '<a class="action_icon edit_icon btn-edit-group" data-id="' +
+                  response.id +
+                  '" href="#">\
+                <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
+                  response.id +
+                  '" href="">\
+                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>'
+              );
+              var delete_whole_row_constant = undefined;
+              var redraw_table = false;
+              table.fnUpdate(
+                updateData,
+                row_id,
+                delete_whole_row_constant,
+                redraw_table
+              );
+              break;
+            }
           }
-        },
-        fail: function (xhr, textStatus, errorThrown) {
+
+          
+          success();
+        } else if (response.status == "exist") {
+          $(".error").remove();
+          $("#modalEdit #name").after(
+            '<span class="error">Name already exsit</span>'
+          );
+        } else if (response.status == "fail") {
           fails();
-        },
-      });
-    }
-  });
+        }
+      },
+      fail: function (xhr, textStatus, errorThrown) {
+        fails();
+      },
+    });
+  }
 });
 
 var group_dataTable;
@@ -200,3 +267,23 @@ function setup_dataTable() {
 }
 
 setup_dataTable();
+
+// $(document).ready(function () {
+//   var table = $("#table_group").DataTable();
+//   var sData = table.fnGetData();
+//   console.log(sData[1][5]);
+//   var addData = [];
+//   addData[0] =
+//     '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_2" value="0" \
+//     class="collection_selection" name="collection_selection[]"></div>';
+//   addData[1] = sData.length + 1;
+//   addData[2] = "1";
+//   addData[3] = "1";
+//   addData[4] = "1aaaangthduyaaaaaaas";
+//   addData[5] =
+//     '<a class="action_icon edit_icon btn-edit-group" data-id="2" href="#">\
+//   <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+//   <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="2" href="">\
+//   <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>';
+//   table.fnAddData(addData);
+// });
