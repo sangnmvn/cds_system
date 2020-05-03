@@ -32,7 +32,6 @@ class GroupsController < ApplicationController
       render :json => { :status => "exist" }
     else
       if @group.save
-        # binding.pry
         status_group = @group.status ? "Enable" : "Disable"
         render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
       else
@@ -44,12 +43,10 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
-    # binding.pry
     respond_to do |format|
       if Group.where.not(id: params[:id]).where(name: params[:name]).present?
         format.json { render :json => { :status => "exist" } }
       else
-        binding.pry
         params[:status] = params[:status] == "Enable" ? 1 : 0
         if @group.update(group_params)
           status_group = @group.status ? "Enable" : "Disable"

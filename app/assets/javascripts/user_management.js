@@ -164,6 +164,7 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (response) {
+          // check email and account exist
           if (response.status == "exist") {
             if (response.email == true) {
               $("#email").after(
@@ -203,6 +204,10 @@ $(document).ready(function () {
               table.fnAddData(addData);              
               reorder_table_row(table, 11);
             });
+            // reset and hide form add user 
+            $("#modalAdd #project option").remove();
+            $("#modalAdd .tokens-container .token").remove();
+            $('#modalAdd .form-add-user')[0].reset();
             $("#modalAdd").modal("hide");
             success();
           } else if (response.status == "fail") {

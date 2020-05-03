@@ -76,6 +76,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
             <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>'
           );
           table.fnAddData(addData);
+          $('#modalAdd .form-add-group')[0].reset();
           $("#modalAdd").modal("hide");
           success();
         } else if (response.status == "exist") {
@@ -103,7 +104,7 @@ $(document).on("click", ".btn-edit-group", function () {
         $("#group_id").val(v.id);
         $(".edit-group").val(v.name);
         $(".edit-desc").val(v.description);
-        if (v.Status) {
+        if (v.status) {
           $("input:radio[id=status_Enable]").prop("checked", true);
         } else {
           $("input:radio[id=status_Disable]").prop("checked", true);
