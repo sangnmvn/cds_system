@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CompetencySystem</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'tokenize2.min', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'user_group', media: 'all', 'data-turbolinks-track': 'reload' %>
+    
+    <%= javascript_include_tag 'user_group', 'data-turbolinks-track': 'reload' %>
+
+    <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
+    
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .navbar-light .navbar-nav .nav-link {
+          background: #4472C4;;
+      color: #fff;
+      margin-right: 10px;
+      }
+      .navbar-light .navbar-nav .nav-link:hover {
+           background: #8DA9DB;
+       color: #fff;
+       margin-right: 10px;
+      }
+      .navbar-light .navbar-nav .nav-link:focus {
+       background: #8DA9DB;
+       color: #fff;
+       margin-right: 10px;
+      }
+      .dropdown-item:focus {
+       background: #8DA9DB;
+       color: #fff;
+      }
+      .btn {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar_menu">
+      <a class="navbar-brand" href="#" style="font-size: 4rem;color: #4472C4;">CDS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" >
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Dashboard </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              CDS/CDP
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Template Management</a>
+              <a class="dropdown-item" href="#">Level Mapping</a>
+              <a class="dropdown-item" href="#">CDS Accessment</a>
+              <a class="dropdown-item" href="#">CDP Accessment</a>
+              <a class="dropdown-item" href="#">CDS - CDP Review</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Administrator
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">User Management</a>
+              <a class="dropdown-item" href="#">User Group Management</a>
+              <a class="dropdown-item" href="#">Project Management</a>
+              <a class="dropdown-item" href="#">Company Management</a>
+              <a class="dropdown-item" href="#">Schedule Management</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <p class="navbar-text float-right">
+            <% if admin_user_signed_in? %>
+              <%= link_to  current_admin_user.email , edit_admin_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Logout", destroy_admin_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
+            <% else %>
+              <%= link_to "Login", new_admin_user_session_path, :class => 'btn btn-secondary'%>
+            <% end %>
+          </p>
+        </form>
+      </div>
+    </nav>
+    <%= yield %>
+  </body>
+</html>
+<script>
+  function getfocus() {
+    document.getElementById("myAnchor").focus();
+  }
+  
+  function losefocus() {
+    document.getElementById("myAnchor").blur();
+  }
+</script>

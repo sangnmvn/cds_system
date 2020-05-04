@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Title Privileges</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @title_privileges.each do |title_privilege| %>
+      <tr>
+        <td><%= title_privilege.Name %></td>
+        <td><%= link_to 'Show', title_privilege %></td>
+        <td><%= link_to 'Edit', edit_title_privilege_path(title_privilege) %></td>
+        <td><%= link_to 'Destroy', title_privilege, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Title Privilege', new_title_privilege_path %>

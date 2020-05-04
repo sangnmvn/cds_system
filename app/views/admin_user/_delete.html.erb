@@ -1,0 +1,38 @@
+<!-- The Modal -->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align: center">Confirm User Delete</h4>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <p>Are you sure you want to delete ?</p>
+              </div>
+            </div>
+            
+            <div class="row">
+            <div class="col-sm-5"></div>
+              <div class="col-sm-2">
+                <button type="button" class="btn btn-primary" id="btn-modal-delete-user" data-dismiss="modal" onclick="delete_user();">Delete</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+        </div>
+        
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <input type="text" class="delete_id" style="display:none;" name="delete_id"></input>

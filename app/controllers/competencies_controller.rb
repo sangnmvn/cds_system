@@ -1,0 +1,2 @@
+class CompetenciesController < ApplicationController
+end

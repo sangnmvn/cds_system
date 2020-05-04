@@ -1,0 +1,2 @@
+module GroupPrivilegesHelper
+end

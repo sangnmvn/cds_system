@@ -1,0 +1,85 @@
+<button type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button>
+<button type="button" class="btn btn-danger btn-lg">Delete</button>
+<!-- The Modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="mymodal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <p class="modal-title" style="text-align:center;font-size:18px">Add User Infomation</p>
+        <p style="color:red">Note: * indicates required fileld</p>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <%= form_with(url: "/admin/user_management/add/", method: "post",class: "modal-form-add-user") do  |f|%>
+              <div class="col-md-6">
+                <%# First Name %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">First Name (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.text_field( :first, class: 'first form-control',placeholder: "First Name")%>
+                  </div>
+                  <%# <div class="col-sm-12">aaaa</div> %>
+                </div>
+                <%# Last Name %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Last Name (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.text_field( :last, class: 'form-control',placeholder: "Last Name"
+                    )%>
+                  </div>
+                </div>
+                <%# Email %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Email (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.email_field( :email, class: 'form-control',placeholder: "Email" )%>
+                  </div>
+                </div>
+                <%# Account %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Account (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.text_field( :account, class: 'form-control',placeholder: "Account")%>
+                  </div>
+                </div>
+              </div>
+              <%# right %>
+              <div class="col-md-6">
+                <%# role %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Role (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.select( :role, options_from_collection_for_select(roles, "id", "name", ""),{:include_blank => "Select a role"}, {:class => "form-control"} )%>
+                  </div>
+                </div>
+                <%# company %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Company (*)</label>
+                  <div class="col-sm-9">
+                    <%= f.select( :company, options_from_collection_for_select(companies, "id", "name", ""),{:include_blank => "Select a company"}, {:class => "modal-add-user-management form-control"} )%>
+                  </div>
+                </div>
+                <%# project %>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Project</label>
+                  <div class="col-sm-9">
+                    <%= select_tag 'project', raw("<option>1</option>"), class: "tokenize-project", multiple: true %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer" style="text-align:center">
+          <button type="submit" class="btn btn-primary" id="btn-modal-add-user">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      <% end %>
+      <%# end form %>
+    </div>
+  </div>
+</div>

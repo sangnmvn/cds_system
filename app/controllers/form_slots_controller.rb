@@ -1,0 +1,2 @@
+class FormSlotsController < ApplicationController
+end
