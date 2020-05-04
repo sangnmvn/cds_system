@@ -8,8 +8,12 @@ $(document).ready(function () {
     $.ajax({
       url: "/admin_users/get_filter_company",
       type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company
+      },
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
@@ -46,8 +50,13 @@ $(document).ready(function () {
     $.ajax({
       url: "/admin_users/get_filter_project",
       type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company, project: project },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company,
+        project: project
+      },
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
@@ -183,47 +192,6 @@ $(document).ready(function () {
             }
           } else if (response.status == "success") {
             $("#table_user_management").dataTable().fnDraw();
-
-            // var table = $("#table_user_management").dataTable();
-            // var sData = table.fnGetData();
-            // $.each(response.user, function (k, v) {
-            //   var addData = [];
-            //   addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_{0}" value="0" \
-            //   class="collection_selection" name="collection_selection[]"> </div>'.formatUnicorn(
-            //     { 0: v.id }
-            //   );
-            //   addData[1] = 0; // insert đầu
-            //   addData[2] = v.first_name;
-            //   addData[3] = v.last_name;
-            //   addData[4] = v.email;
-            //   addData[5] = v.account;
-            //   addData[6] = v.r;
-            //   addData[7] = "";
-            //   addData[8] = response.project_user;
-            //   addData[9] = v.c;
-            //   addData[10] =
-            //     '<a class="action_icon edit_icon" data-user_id="' +
-            //     v.id +
-            //     '" href="#"><img border="0" \
-            //     src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-            //     <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_account="' +
-            //     v.account +
-            //     '" data-user_id="' +
-            //     v.id +
-            //     '" href="">\
-            //     <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-            //     <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
-            //     v.id +
-            //     '" href="#">\
-            //     <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
-            //     <a class="action_icon status_icon" data-user_id="' +
-            //     v.id +
-            //     '" href="#"><i class="fa fa-toggle-on"></i></a> ';
-
-            //   table.fnAddData(addData);
-            //   reorder_table_row(table);
-            // });
-
             // reset and hide form add user
             $("#modalAdd #project option").remove();
             $("#modalAdd .tokens-container .token").remove();
@@ -245,8 +213,12 @@ $(document).ready(function () {
     $.ajax({
       url: "/admin_users/get_modal_project",
       type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company
+      },
       dataType: "json",
       success: function (response) {
         $("#modalAdd .tokens-container .token").remove();
@@ -269,8 +241,12 @@ $(document).ready(function () {
     $.ajax({
       url: "/admin_users/get_modal_project",
       type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company
+      },
       dataType: "json",
       success: function (response) {
         $("#modalEdit .tokens-container .token").remove();
@@ -295,8 +271,14 @@ $(document).ready(function () {
     $.ajax({
       url: "/admin_users/submit_filter",
       type: "POST",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-      data: { company: company, project: project, role: role },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company,
+        project: project,
+        role: role
+      },
       // dataType: "json",
       // success: function (response) {
 
@@ -308,20 +290,22 @@ $(document).ready(function () {
 function reorder_table_row(data_table) {
   data_table.fnDraw();
 }
+
 function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
   data_table.fnDeleteRow(row);
   reorder_table_row(data_table);
 }
+
 function delete_user() {
   var id = $(".delete_id").val();
-
-  //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
     url: "/admin/user_management/" + id,
     method: "DELETE",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     dataType: "json",
     success: function (response) {
       $(response).each(function (i, e) {
@@ -359,7 +343,9 @@ function add_previewer_user() {
   $.ajax({
     url: "/admin/user_management/add_previewer/" + user_id,
     method: "post",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     success: function (result) {
       // Do something with the result
     },
@@ -371,9 +357,6 @@ $(document).on("click", ".delete_icon", function () {
   var user_account = $(this).data("user_account");
   $(".delete_id").val(user_id);
   $(".display_user_account_delete").html(user_account);
-  // As pointed out in comments,
-  // it is unnecessary to have to manually call the modal.
-  // $('#addBookDialog').modal('show');
 });
 
 $(document).on("click", ".add_previewer_icon", function () {
@@ -381,50 +364,43 @@ $(document).on("click", ".add_previewer_icon", function () {
   var user_account = $(this).data("user_account");
 
   $("#add_previewer_modal_title").html(
-    'Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn(
-      { account: user_account }
-    )
+    'Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn({
+      account: user_account
+    })
   );
 
   $(".add_previewer_id").val(user_id);
-  // As pointed out in comments,
-  // it is unnecessary to have to manually call the modal.
-  // $('#addBookDialog').modal('show');
   add_previewer_user();
 });
 
 var user_dataTable;
+
 function delete_dataTable() {
   user_dataTable.fnClearTable();
 }
-/*
-processing: true,
-      serverSide: true,
-  */
 
 function setup_dataTable() {
-  
+
   $("#table_user_management").ready(function () {
-    
+
     $("#table_user_management").dataTable({
       bDestroy: true,
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
-      iDisplayLength: 20,      
-      
-      fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        $(nRow).attr('id', "admin_user_{id}".formatUnicorn({id: aData[11]}));
+      iDisplayLength: 20,
+
+      fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        $(nRow).attr('id', "admin_user_{id}".formatUnicorn({
+          id: aData[11]
+        }));
         $('.dataTables_length').attr("style", "display:none");
         return nRow;
-      } ,
+      },
 
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "user_data/",
 
-      // pagingType is optional, if you want full pagination controls.
-      // Check dataTables documentation to learn more about
-      // available options.
     });
 
     $(".toggle_all").click(function () {
@@ -443,25 +419,23 @@ function setup_dataTable() {
         $("#table_user_management .toggle_all").prop("checked", true);
       }
     });
-  });  
-  
-  
+  });
+
+
 }
-
-//$("#table_user_management_length").remove();
-
 setup_dataTable();
-
-
-// get modal edit user
 
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
   $.ajax({
     url: "admin_users/" + user_id + "/edit",
     type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { id: user_id },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      id: user_id
+    },
     dataType: "json",
     success: function (response) {
       $("#modalEdit").modal("show");
@@ -504,12 +478,11 @@ $(document).on("click", ".edit_icon", function () {
             if (e.project_user.indexOf(p.id) > -1) {
               $(
                 '<option value="' +
-                  p.id +
-                  '" selected="selected">' +
-                  p.desc +
-                  "</option>"
+                p.id +
+                '" selected="selected">' +
+                p.desc +
+                "</option>"
               ).appendTo("#modalEdit .edit-projects .edit-project");
-              // $('<li class="token" data-value="' +p.id +'"><a class="dismiss"></a><span>'+p.desc+'</span></li>').appendTo(".tokens-container");
             } else {
               $(
                 '<option value="' + p.id + '">' + p.desc + "</option>"
@@ -619,65 +592,6 @@ $(document).on("click", "#btn-modal-edit-user", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           $("#table_user_management").dataTable().fnDraw();
-          //!--
-          // var edited_user_id = response["edit_user_id"];
-          // // get row_id to replace
-          // var data_table = $("#table_user_management").dataTable();
-          // var all_data_list = data_table.fnGetData();
-
-          // for (var i = 0; i < all_data_list.length; i++) {
-          //   // parse string manually because data is HTML tag string :((
-          //   var current_user_id = all_data_list[i][0]
-          //     .split("batch_action_item_")[1]
-          //     .split('"')[0];
-          //   current_user_id = parseInt(current_user_id);
-          //   if (current_user_id == edited_user_id) {
-          //     var row_id = i;
-          //     var elements = [];
-          //     elements.push(
-          //       '<td class="selectable"><div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_{0}" value="0" class="collection_selection" name="collection_selection[]"></div></td>'.formatUnicorn(
-          //         { 0: edited_user_id }
-          //       )
-          //     );
-          //     elements.push(row_id + 1);
-          //     elements.push(response["first_name"]);
-          //     elements.push(response["last_name"]);
-          //     elements.push(response["email"]);
-          //     elements.push(response["account"]);
-          //     elements.push(response["role"]);
-          //     elements.push(response["title"]);
-          //     elements.push(response["projects"]);
-          //     elements.push(response["company"]);
-          //     elements.push(
-          //       '<a class="action_icon edit_icon" data-user_id="' +
-          //         edited_user_id +
-          //         '" href="#"><img border="0" \
-          //         src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-          //         <a class="action_icon delete_icon" data-user_account="' +
-          //         response["account"] +
-          //         '" data-toggle="modal" data-target="#deleteModal" data-user_id="' +
-          //         edited_user_id +
-          //         '" href="">\
-          //         <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-          //         <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
-          //         edited_user_id +
-          //         '" href="#">\
-          //         <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
-          //         <a class="action_icon status_icon" data-user_id="' +
-          //         edited_user_id +
-          //         '" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> '
-          //     );
-          //     var delete_whole_row_constant = undefined;
-          //     var redraw_table = false;
-          //     data_table.fnUpdate(
-          //       elements,
-          //       row_id,
-          //       delete_whole_row_constant,
-          //       redraw_table
-          //     );
-          //     break;
-          //   }
-          // }
           success("Edit");
         } else if (response.status == "exist") {
           $(".error").remove();
@@ -703,28 +617,31 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 $(document).on("click", "#btn-delete-many-users", function () {
   $("#modalDeleteManyUsers").modal("show");
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
-  if (number_user_delete != 0){
+  if (number_user_delete != 0) {
     $('.btn-modal-delele-many-users').prop("disabled", false);
-    $(".display_number_users_delete").html("Are you sure you want delete "+ number_user_delete + " user ?");
-  }
-  else {
+    $(".display_number_users_delete").html("Are you sure you want delete " + number_user_delete + " user ?");
+  } else {
     $(".display_number_users_delete").html("Please select the user you want delete ?");
   }
 });
 
 $(document).on("click", ".btn-modal-delele-many-users", function () {
   var arr_id_user = [];
-  $("#table_user_management tbody :checkbox:checked").each(function(){
+  $("#table_user_management tbody :checkbox:checked").each(function () {
     var user_id = this.id
-    .split("batch_action_item_")[1]
-    .split('"')[0];
+      .split("batch_action_item_")[1]
+      .split('"')[0];
     arr_id_user.push(user_id);
   });
   $.ajax({
     url: "/admin_users/delete_multiple_users",
     type: "POST",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { list_users: arr_id_user },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      list_users: arr_id_user
+    },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
@@ -747,8 +664,12 @@ $(document).on("click", ".status_icon", function () {
   $.ajax({
     url: "/admin_users/status",
     type: "POST",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { id: user_id },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      id: user_id
+    },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
@@ -773,37 +694,35 @@ $(document).on("click", ".status_icon", function () {
 $(document).on("click", "#btn-disable-multiple-users", function () {
   $("#modalStatusMultipleUsers").modal("show");
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
-  if (number_user_delete != 0){
+  if (number_user_delete != 0) {
     $('.btn-modal-disable-multiple-users').prop("disabled", false);
-    $(".display_number_users_disable").html("Are you sure you want disable "+ number_user_delete + " user ?");
-  }
-  else {
+    $(".display_number_users_disable").html("Are you sure you want disable " + number_user_delete + " user ?");
+  } else {
     $(".display_number_users_disable").html("Please select the user you want disable ?");
   }
 });
 
 $(document).on("click", ".btn-modal-disable-multiple-users", function () {
   var arr_id_user = [];
-  $("#table_user_management tbody :checkbox:checked").each(function(){
+  $("#table_user_management tbody :checkbox:checked").each(function () {
     var user_id = this.id
-    .split("batch_action_item_")[1]
-    .split('"')[0];
+      .split("batch_action_item_")[1]
+      .split('"')[0];
     arr_id_user.push(user_id);
   });
   $.ajax({
     url: "/admin_users/disable_multiple_users",
     type: "POST",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { list_users: arr_id_user },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      list_users: arr_id_user
+    },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
         $("#modalStatusMultipleUsers").modal("hide");
-        // $.each(response.users, function (k, v) {
-        //   $('a.status_icon[data-user_id="' + v + '"]').html(
-        //     '<i class="fa fa-toggle-off"></i>'
-        //   );
-        // });
         $("#table_user_management").dataTable().fnDraw();
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
         success("Delete");
@@ -815,7 +734,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
 });
 
 
-$(document).ready(function() {
+$(document).ready(function () {
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true">Add</button> \
   <button type="button" class="btn btn-danger"  id="btn-delete-many-users">Delete</button> \
