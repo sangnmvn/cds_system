@@ -1,12 +1,14 @@
 // alert success
-function success() {
+function success(content) {
+  $('#content-alert-success').html(content);
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
     $("#alert-success").fadeOut(1000);
   }, 5000);
 }
 // alert fails
-function fails() {
+function fails(content) {
+  $('#content-alert-fail').html(content);
   $("#alert-danger").fadeIn();
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
@@ -78,12 +80,12 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           table.fnAddData(addData);
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
-          success();
+          success("Add");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
         } else if (response.status == "fail") {
-          fails();
+          fails("Add");
         }
       },
     });
@@ -167,7 +169,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                   '" value="0" \
                 class="collection_selection" name="collection_selection[]"></div>'
               );
-              updateData.push(sData.length);
+              updateData.push(row_id+1);
               updateData.push(response.name);
               updateData.push(response.status_group);
               updateData.push("0");
@@ -191,14 +193,14 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-          success();
+          success("Edit");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#modalEdit #name").after(
             '<span class="error">Name already exsit</span>'
           );
         } else if (response.status == "fail") {
-          fails();
+          fails("Edit");
         }
       },
     });
@@ -207,7 +209,6 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
 
 var group_dataTable;
 function delete_dataTable() {
-  //var table = $('#example').DataTable();
   group_dataTable.fnClearTable();
 }
 /*
@@ -270,23 +271,3 @@ function setup_dataTable() {
 }
 
 setup_dataTable();
-
-// $(document).ready(function () {
-//   var table = $("#table_group").DataTable();
-//   var sData = table.fnGetData();
-//   console.log(sData[1][5]);
-//   var addData = [];
-//   addData[0] =
-//     '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_2" value="0" \
-//     class="collection_selection" name="collection_selection[]"></div>';
-//   addData[1] = sData.length + 1;
-//   addData[2] = "1";
-//   addData[3] = "1";
-//   addData[4] = "1aaaangthduyaaaaaaas";
-//   addData[5] =
-//     '<a class="action_icon edit_icon btn-edit-group" data-id="2" href="#">\
-//   <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-//   <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="2" href="">\
-//   <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>';
-//   table.fnAddData(addData);
-// });
