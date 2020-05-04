@@ -7,9 +7,6 @@ class AdminUsersController < ApplicationController
   before_action :set_admin_user, only: [:update, :status, :destroy]
 
   def get_user_data
-    #user_per_page = params["iDisplayLength"].to_i
-
-    # admin user MAIN data generator
     user_per_page = 20
     offset = params["iDisplayStart"].to_i
 
@@ -23,7 +20,6 @@ class AdminUsersController < ApplicationController
     unless params["sSearch"].empty?
       @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", \
         "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
-      # binding.pry
     end
 
     unless @@filter_company.nil?
@@ -51,17 +47,6 @@ class AdminUsersController < ApplicationController
 
     final_data = []
     @admin_users.each_with_index { |user, index|
-      # checkbox
-      # id
-      # first name
-      # last name
-      # email
-      # account
-      # role
-      # title
-      # project
-      # company
-      # action
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
       current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
@@ -79,19 +64,16 @@ class AdminUsersController < ApplicationController
       current_user_data.push(role)
       title = ""
       current_user_data.push(title)
-      # begin project
 
       begin
         project_namelist = []
-
         project_member_of_user = @project_members.where(admin_user_id: user.id)
-
         project_member_of_user.each { |project_member|
           project_name = @projects.find(project_member.project_id).desc
           project_namelist.append(project_name)
         }
         # end project
-        projects = project_namelist.join("/")
+        projects = project_namelist.join(" / ")
       rescue
         # end project
         projects = ""
@@ -136,17 +118,14 @@ class AdminUsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      #format.json { render json: AdminUserDatatable.new(params) }
     end
   end
 
   def add_previewer
     user_id = params[:id]
     all_user_id_except_self = AdminUser.where.not(id: user_id)
-
     @existing_previewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
     @available_admin_users = all_user_id_except_self.where.not(id: @existing_previewers.pluck(:id))
-
     respond_to do |format|
       format.js
     end
@@ -158,11 +137,8 @@ class AdminUsersController < ApplicationController
     else
       approver_ids = params["approver_ids"].split(",").map(&:to_i)
     end
-
     user_id = params["id"].to_i
-
     # delete approver not in list
-
     (Approver.where(admin_user_id: user_id)).where.not(approver_id: approver_ids).destroy_all
     # add approver in list
     approver_ids.each { |approver_id|
@@ -190,9 +166,9 @@ class AdminUsersController < ApplicationController
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.company_id = ?", params[:company])
     end
-    #respond_to do |format|
-    #format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
-    #end
+    respond_to do |format|
+      format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
+    end
   end
 
   def get_filter_project
@@ -270,25 +246,6 @@ class AdminUsersController < ApplicationController
     @roles = Role.all
     @projects = Project.all
     @companies = Company.all
-    if params[:project] == "all"
-      @project_members = ProjectMember.all
-    else
-      @project_members = ProjectMember.all.where("project_id = ?", params[:project])
-    end
-    @admin_users = AdminUser.all
-    if params[:company] != "all"
-      #@admin_users = @admin_users.where("company_id = ?", params[:company])
-    end
-    if params[:project] != "all" && params[:project] != "none"
-      valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id = ?", params[:project]).pluck("admin_users.id")
-      #@admin_users = @admin_users.where("id in (?)", valid_user_ids)
-    elsif params[:project] == "none"
-      valid_user_ids = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id")
-      #@admin_users = @admin_users.where("id not in (?)", valid_user_ids) unless valid_user_ids.empty?
-    end
-    if params[:role] != "all" && params[:role] != "" && params[:role] != "none"
-      #@admin_users = @admin_users.where("role_id = ?", params[:role])
-    end
 
     @@filter_company = params[:company]
     @@filter_role = params[:role]
@@ -300,14 +257,7 @@ class AdminUsersController < ApplicationController
 
     respond_to do |format|
       format.js
-      # format.json { render :json => { projects: @projects, roles: @roles, companies: @companies, project_members: @project_members, admin_users: @admin_users } }
     end
-  end
-
-  def check_emai_account
-    email = AdminUser.where(email: params[:email]).present?
-    account = AdminUser.where(account: params[:account]).present?
-    render :json => { email: email, account: account }
   end
 
   def update
@@ -326,7 +276,6 @@ class AdminUsersController < ApplicationController
             ProjectMember.find_by(admin_user_id: params[:id]).destroy
             # delete all
           elsif project_user.empty? && !params[:project].nil?
-            # insert all params[:project]
             params[:project].each do |pro|
               ProjectMember.create!(admin_user_id: params[:id], project_id: pro.to_i, is_managent: management_default)
             end
@@ -335,12 +284,10 @@ class AdminUsersController < ApplicationController
               if pro.to_i.in?(project_user)
                 project_user.delete(pro.to_i)
               else
-                # insert
                 ProjectMember.create!(admin_user_id: params[:id], project_id: pro.to_i, is_managent: management_default)
               end
             end
             unless project_user.empty?
-              # del
               project_user.each do |old|
                 ProjectMember.find_by(admin_user_id: params[:id], project_id: old).delete
               end
@@ -349,10 +296,8 @@ class AdminUsersController < ApplicationController
 
           user = AdminUser.find(params[:id])
           user_role = user.role_id.nil? ? "" : Role.find(user.role_id).name
-
           # placeholder
           user_title = ""
-
           project_namelist = []
           project_member_of_user = ProjectMember.where(admin_user: user)
 
@@ -377,7 +322,6 @@ class AdminUsersController < ApplicationController
   end
 
   def delete_multiple_users
-    # binding.pry
     respond_to do |format|
       if params[:list_users].nil?
         format.json { render :json => { :status => "fail" } }
@@ -396,14 +340,11 @@ class AdminUsersController < ApplicationController
   end
 
   def disable_multiple_users
-    # binding.pry
-
     respond_to do |format|
       if params[:list_users].nil?
         format.json { render :json => { :status => "fail" } }
       else
         params[:list_users].each do |u|
-          # binding.pry
           user = AdminUser.find(u.to_i)
           if user
             user.update(status: false)
