@@ -644,12 +644,14 @@ $(document).on("click", ".btn-modal-delele-many-users", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
+        $('.btn-modal-delele-many-users').prop("disabled", true);
         $("#modalDeleteManyUsers").modal("hide");
         $(".display_number_users_delete").html('');
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
         $("#table_user_management").dataTable().fnDraw();
         success("Delete");
       } else if (response.status == "fail") {
+        $('.btn-modal-delele-many-users').prop("disabled", true);
         fails("Delete");
       }
     },
@@ -721,12 +723,14 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
+        $('.btn-modal-disable-multiple-users').prop("disabled", true);
         $("#modalStatusMultipleUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
-        success("Delete");
+        success("Disable");
       } else if (response.status == "fail") {
-        fails("Delete");
+        $('.btn-modal-disable-multiple-users').prop("disabled", true);
+        fails("Disable");
       }
     },
   });

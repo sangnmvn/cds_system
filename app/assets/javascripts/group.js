@@ -18,26 +18,22 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
   name = $("#name").val();
   status = $('input[name="status"]:checked').val();
   desc = $("#desc").val();
-  temp = true;
   $(".error").remove();
   if (name.length < 1) {
     $("#name").after('<span class="error">Please enter Group Name</span>');
-    temp = false;
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#name").after(
         '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
       );
-      temp = false;
     }
   }
   if (status == "undefined") {
     $("#error-status").after(
       '<span class="error">Please Select A Status</span>'
     );
-    temp = false;
   }
-  if (temp == true) {
+  if ( $(".error").length == 0) {
     $.ajax({
       url: "groups/",
       type: "POST",
@@ -101,6 +97,7 @@ $(document).on("click", ".btn-edit-group", function () {
     data: { id: group_id },
     dataType: "json",
     success: function (response) {
+      $(".error").remove();
       $("#modalEdit").modal("show");
       $.each(response.group, function (k, v) {
         $("#group_id").val(v.id);
@@ -121,22 +118,19 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
   status = $("#modalEdit input[name=status]:checked").val();
   desc = $("#modalEdit #desc").val();
   id = $("#modalEdit #group_id").val();
-  temp = true;
   $(".error").remove();
   if (name.length < 1) {
     $("#modalEdit #name").after(
       '<span class="error">Please enter Group Name</span>'
     );
-    temp = false;
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#modalEdit #name").after(
         '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
       );
-      temp = false;
     }
   }
-  if (temp == true) {
+  if ($(".error").length == 0) {
     $.ajax({
       url: "groups/" + id,
       type: "PUT",
@@ -338,4 +332,10 @@ function delete_group() {
 setup_dataTable();
 $(function() {
   $("#selectAll").select_all();
+});
+
+$(document).ready(function () {
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" \
+  data-toggle="modal" data-target="#modalAdd">Add</button></div>';
+  $(content).insertAfter(".dataTables_filter");
 });
