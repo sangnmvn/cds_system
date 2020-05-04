@@ -74,7 +74,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
               response.id +
               '" href="">\
             <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-            <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
+            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="'+response.id +'" href="#"><i class="fa fa-key"></i></a> \
             <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
           table.fnAddData(addData);
@@ -179,7 +179,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
                 <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
                 <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-                <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
+                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
                 <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
               var delete_whole_row_constant = undefined;

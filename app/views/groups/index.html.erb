@@ -2,6 +2,8 @@
 <%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'user_group', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'user_group', 'data-turbolinks-track': 'reload' %>
 <div class="container-fluid">
   <div class="container-fluid">
     <!-- Control the column width, and how they should appear on different devices -->
@@ -10,6 +12,7 @@
         <%= render 'add'  %>
         <%= render 'edit'  %>
         <%= render 'assign_user'  %>
+        <%= render 'privilege'  %>
       </div>
       <div class="col-sm-12">
         <div class="col-sm-12 table_group_wrapper">

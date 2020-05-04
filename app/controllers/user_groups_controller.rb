@@ -42,4 +42,29 @@ class UserGroupsController < ApplicationController
     end 
     render json: "1"
   end
+
+  def show_privileges
+    group_id = params[:id]
+    privilege_ids = GroupPrivilege.where(group_id: group_id).pluck(:privilege_id)
+    table_left = Privilege.where.not(id: privilege_ids).joins(:title_privilege).select("privileges.*, title_privileges.name as TitleName")
+
+    table_right = GroupPrivilege.where(group_id: group_id).joins(:privilege => :title_privilege).select("group_privileges.*, privileges.name as Name, title_privileges.name as TitleName, title_privileges.id as title_privilege_id")
+
+    @table = {left: table_left, right: table_right}
+    render json: @table
+  end
+
+  def save_privileges
+    group_id = params[:group_id]
+    data = params[:data]
+    GroupPrivilege.delete_by(group_id: params[:group_id])
+    unless data == 0 || data.nil?
+        data.uniq!
+        data.each{|v|
+          unless GroupPrivilege.where(group_id: group_id, privilege_id: v).exists?
+            GroupPrivilege.create(group_id: group_id, privilege_id: v)
+          end
+        }
+    end
+  end
 end

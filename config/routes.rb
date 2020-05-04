@@ -43,6 +43,8 @@ Rails.application.routes.draw do
   get "user_group" => "user_group#index"
   delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management
   post "admin/user_management/add_previewer/:id" => "admin_users#add_previewer", as: :add_previewer_user_management
+  get "user_groups/show_privileges/:id", to: "user_groups#show_privileges", as: "show_privileges"
+  post "user_groups/save_privileges", to: "user_groups#save_privileges", as: "save_privileges"
 
   post "admin/user_management/add_previewer/:id/:approver_ids" => "admin_users#add_previewer_to_database"
 

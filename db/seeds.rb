@@ -13,6 +13,9 @@ Competency.delete_all
 Template.delete_all
 Title.delete_all
 Approver.delete_all
+TitlePrivilege.delete_all
+Privilege.delete_all
+GroupPrivilege.delete_all
 UserGroup.delete_all
 AdminUser.delete_all
 Role.delete_all
@@ -1114,3 +1117,47 @@ slot_create = [
 slot_create.each do |s|
   Slot.create!(name: s[:name], desc: s[:desc], level: s[:level], competency_id: s[:competency_id])
 end
+
+#Create Title Privileges
+TitlePrivilege.create!(id: 1, name: "User Management")
+TitlePrivilege.create!(id: 2, name: "User Group Management")
+TitlePrivilege.create!(id: 3, name: "CDS-CDP Review")
+TitlePrivilege.create!(id: 4, name: "Template Management")
+TitlePrivilege.create!(id: 5, name: "CDS Assessment")
+TitlePrivilege.create!(id: 6, name: "CDP Assessment")
+
+#Create Privilges
+privilege = [
+  { id: 1, name: "Full Access on User Management", title_id: 1 },
+  { id: 2, name: "View User Management", title_id: 1 },
+  { id: 3, name: "Export Users", title_id: 1 },
+  { id: 4, name: "Full Access on User Group Management", title_id: 2 },
+  { id: 5, name: "View User Group Management", title_id: 2 },
+  { id: 6, name: "Full Access on CDS-CDP Review", title_id: 3 },
+  { id: 7, name: "Review CDS-CDP Review", title_id: 3 },
+  { id: 8, name: "View CDS-CDP Review", title_id: 3 },
+  { id: 9, name: "Full Access on Template Management", title_id: 4 },
+  { id: 10, name: "View Template Management", title_id: 4 },
+  { id: 11, name: "Full Access on CDS Assessment", title_id: 5 },
+  { id: 12, name: "Full Access on CDP Assessment", title_id: 6 },
+]
+privilege.each do |s|
+  Privilege.create!(id: s[:id], name: s[:name], title_privilege_id: s[:title_id])
+end
+
+#Create Groups
+Group.create!(id: 1, name: "BOD", status: 1, description: "")
+Group.create!(id: 2, name: "Admin", status: 1, description: "")
+Group.create!(id: 3, name: "HR", status: 1, description: "")
+Group.create!(id: 4, name: "Manager", status: 1, description: "")
+Group.create!(id: 5, name: "Reviewer", status: 1, description: "")
+Group.create!(id: 6, name: "Staf", status: 1, description: "")
+
+GroupPrivilege.create!(group_id: 1, privilege_id: 9)
+GroupPrivilege.create!(group_id: 1, privilege_id: 10)
+GroupPrivilege.create!(group_id: 1, privilege_id: 11)
+GroupPrivilege.create!(group_id: 1, privilege_id: 12)
+GroupPrivilege.create!(group_id: 2, privilege_id: 1)
+GroupPrivilege.create!(group_id: 2, privilege_id: 4)
+GroupPrivilege.create!(group_id: 2, privilege_id: 9)
+GroupPrivilege.create!(group_id: 2, privilege_id: 12)

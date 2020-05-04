@@ -1,6 +1,8 @@
 $(document).ready(function () {
 	myJS();
-	myAjax();
+  myAjax();
+  privilegeJS();
+  privilegeAjax();
 	$('.dataTables_length').attr("style", "display:none");
 	$('.dataTables_paginate').addClass("mypaging");
 });
@@ -310,4 +312,364 @@ function myAjax() {
 	$('#save').click(function () {
 		save();
 	});
+}
+//=================================================================================
+//Privilege
+function privilegeJS() {
+  var group_id
+  $('.key_icon').click(function () {
+    save_button(0)
+    group_id = $(this).closest('div').attr("value")
+    $(`#modalPrivilege_${group_id} #save_group_${group_id}`).unbind('click').on('click', function (e) {
+      var save_arr = []
+      $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function (key, value) {
+        save_arr.push($(value).val())
+      })
+      save_group_privileges(group_id, save_arr)
+      save_arr.length = 0
+      save_button(0)
+    })
+
+    $(`#modalPrivilege_${group_id} .table_left`).on('click', "tbody input[type='checkbox']", function () {
+      if ($(this).is(':checked')) {
+        if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox:not(:checked)`).length == 0) {
+          $(`#modalPrivilege_${group_id} .selectAll1`).prop("checked", true)
+        }
+        $(this).closest('tr').children('td').css('color', "#990000")
+      } else {
+        $(this).closest('tr').children('td').css('color', "black")
+        $(`#modalPrivilege_${group_id} .selectAll1`).prop("checked", false)
+      }
+      if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox:checked`).length == 0) {
+        to_right_button(0)
+      } else {
+        to_right_button(1)
+      }
+    })
+    //Checkbox table_right
+    $(`#modalPrivilege_${group_id} .table_right`).on('click', ' tbody input[type=checkbox]', function () {
+      if ($(this).is(':checked')) {
+        if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox:not(:checked)`).length == 0) {
+          $(`#modalPrivilege_${group_id} .selectAll2`).prop("checked", true)
+        }
+        $(this).closest('tr').css('color', "#990000")
+      } else {
+        $(this).closest('tr').css('color', "black")
+        $(`#modalPrivilege_${group_id} .selectAll2`).prop("checked", false)
+      }
+      if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox:checked`).length == 0) {
+        to_left_button(0)
+      } else {
+        to_left_button(1)
+      }
+    })
+    //CheckAll table
+    $(`#modalPrivilege_${group_id} .selectAll1`).on('click', function () {
+      $(`#modalPrivilege_${group_id} .table_left tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
+      if ($(this).is(':checked')) {
+        $(`#modalPrivilege_${group_id} .table_left tbody tr td`).css('color', "#990000")
+        to_right_button(1)
+      } else {
+        $(`#modalPrivilege_${group_id} .table_left tbody tr td`).css('color', "black")
+        to_right_button(0)
+      }
+    })
+    $(`#modalPrivilege_${group_id} .selectAll2`).on('click', function () {
+      $(`#modalPrivilege_${group_id} .table_right tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
+      if ($(this).is(':checked')) {
+        $(`#modalPrivilege_${group_id} .table_right tbody tr td`).css('color', "#990000")
+        to_left_button(1)
+      } else {
+        $(`#modalPrivilege_${group_id} .table_right tbody tr td`).css('color', "black")
+        to_left_button(0)
+      }
+    })
+
+    //Search form
+    $(`#form_search_left_${group_id}`).unbind('click').on('click', `#search_click_${group_id}`, function () {
+      var table = $(`#key_left_${group_id}`).attr("value")
+      var search = $(`#search_left_${group_id}`).val()
+      search_group_privileges(group_id, table, search)
+    })
+    $(`#form_search_right_${group_id}`).unbind('click').on('click', `#search_click_${group_id}`, function () {
+      var table = $(`#key_right_${group_id}`).attr("value")
+      var search = $(`#search_right_${group_id}`).val()
+      search_group_privileges(group_id, table, search)
+    })
+  })
+}
+
+function LeftToRight(group_id) {
+  $(`#modalPrivilege_${group_id} .table_left tbody :checkbox:checked`).closest('tr').each(function () {
+    var title = this.className
+    var name = this.id
+    if ($(`#modalPrivilege_${group_id} .table_right .privilege-name.${title}`).length == 0) {
+      $(`#modalPrivilege_${group_id} .table_left .privilege-name.${title}`).closest('tr').clone().appendTo(".table_right tbody")
+    }
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).insertAfter($(`#modalPrivilege_${group_id} .table_right tbody .privilege-name.${title}`).parent('tr'))
+    $(`#modalPrivilege_${group_id} .selectAll1`).prop("checked", false)
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).find(':checkbox').prop("checked", false)
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).children('td').css('color', "black")
+    to_right_button(0)
+    if ($(`#modalPrivilege_${group_id} .table_left .${title}`).length == 1) {
+      $(`#modalPrivilege_${group_id} .table_left .privilege-name.${title}`).closest('tr').remove()
+    }
+  })
+  var num = 1
+  $(`#modalPrivilege_${group_id} .table_right tbody`).find('td.num').each(function () {
+    $(this).text(num)
+    num += 1
+  })
+  var num = 1
+  $(`#modalPrivilege_${group_id} .table_left tbody`).find('td.num').each(function () {
+    $(this).text(num)
+    num += 1
+  })
+  if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox`).length == 0 && $(`.table_left .notice`).length == 0) {
+    $(`#modalPrivilege_${group_id} .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+    $(`#modalPrivilege_${group_id} .table_right tbody .notice`).remove()
+  }
+  if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox:checked`).length > 0) {
+    $(`#modalPrivilege_${group_id} .table_right tbody .notice`).remove()
+  }
+  // var save_arr = []
+  // $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function(key,value){
+  //   save_arr.push($(value).val())
+  // })
+  // save_group_privileges(group_id,save_arr)
+  // save_arr.length = 0
+  save_button(1)
+}
+
+function RightToLeft(group_id) {
+  $(`#modalPrivilege_${group_id} .table_right tbody :checkbox:checked`).closest('tr').each(function () {
+    var title = this.className
+    var name = this.id
+    if ($(`#modalPrivilege_${group_id} .table_left .privilege-name.${title}`).length == 0) {
+      $(`#modalPrivilege_${group_id} .table_right .privilege-name.${title}`).closest('tr').clone().appendTo(`#modalPrivilege_${group_id} .table_left tbody`)
+    }
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).insertAfter($(`#modalPrivilege_${group_id} .table_left tbody .privilege-name.${title}`).parent('tr'))
+    $(`#modalPrivilege_${group_id} .selectAll2`).prop("checked", false)
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).find(':checkbox').prop("checked", false)
+    $(`#modalPrivilege_${group_id} .${title}#${name}`).children('td').css('color', "black")
+    to_left_button(0)
+    if ($(`#modalPrivilege_${group_id} .table_right .${title}`).length == 1) {
+      $(`#modalPrivilege_${group_id} .table_right .privilege-name.${title}`).closest('tr').remove()
+    }
+  })
+  var num = 1
+  $(`#modalPrivilege_${group_id} .table_right tbody`).find('td.num').each(function () {
+    $(this).text(num)
+    num += 1
+  })
+  var num = 1
+  $(`#modalPrivilege_${group_id} .table_left tbody`).find('td.num').each(function () {
+    $(this).text(num)
+    num += 1
+  })
+  if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`).length == 0) {
+    $(`#modalPrivilege_${group_id} .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+    $(`#modalPrivilege_${group_id} .table_left tbody .notice`).remove()
+  }
+  if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox:checked`).length > 0) {
+    $(`#modalPrivilege_${group_id} .table_left tbody .notice`).remove()
+  }
+  // var save_arr = []
+  // $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function(key,value){
+  //   save_arr.push($(value).val())
+  // })
+  // save_group_privileges(group_id,save_arr)
+  // save_arr.length = 0
+  save_button(1)
+}
+
+function to_right_button(flag) {
+  if (flag == 0) {
+    $('.to_right').prop("disabled", true)
+    $('.to_right').removeClass("btn-info").addClass("btn-secondary")
+  } else {
+    $('.to_right').prop("disabled", false)
+    $('.to_right').removeClass("btn-secondary").addClass("btn-info")
+  }
+}
+
+function to_left_button(flag) {
+  if (flag == 0) {
+    $('.to_left').prop("disabled", true)
+    $('.to_left').removeClass("btn-info").addClass("btn-secondary")
+  } else {
+    $('.to_left').prop("disabled", false)
+    $('.to_left').removeClass("btn-secondary").addClass("btn-info")
+  }
+}
+
+function save_button(flag) {
+  if (flag == 0) {
+    $('.save').prop("disabled", true)
+    $('.save').removeClass("btn-info").addClass("btn-secondary")
+  } else {
+    $('.save').prop("disabled", false)
+    $('.save').removeClass("btn-secondary").addClass("btn-info")
+  }
+}
+function privilegeAjax() {
+  $('.key_icon').on('click', function () {
+    var group_id = $(this).attr("data-id")
+    $(`#modalPrivilege_${group_id} .table_left tbody`).children('tr').remove()
+    $(`#modalPrivilege_${group_id} .table_right tbody`).children('tr').remove()
+    $.ajax({
+      type: "GET",
+      url: `user_groups/show_privileges/${group_id}`,
+      dataType: "json",
+      success: function (response) {
+        $.each(response, function (key, value) {
+          if (key == "left") {
+            var old_name = []
+            var num = 1
+            $(value).each(function (k, v) {
+              if (old_name.includes(v.TitleName) == false) {
+                $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th class="privilege-name ${v.title_privilege_id}" colspan=3 style="text-align: left;">${v.TitleName}</th></tr>`)
+              }
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              old_name.push(v.TitleName)
+              num += 1
+            })
+            if (value != null && value.length == 0) {
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th style="display:none"></th><th style="display:none"></th><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+            }
+          }
+          if (key == "right") {
+            var old_name = []
+            var num = 1
+            $(value).each(function (k, v) {
+              if (old_name.includes(v.TitleName) == false) {
+                $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_privilege_id}" colspan=3 style="text-align: left;">${v.TitleName}</th></tr>`)
+              }
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.privilege_id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.privilege_id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              old_name.push(v.TitleName)
+              num += 1
+            })
+            if (value != null && value.length == 0) {
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th style="display:none"></th><th style="display:none"></th><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+            }
+          }
+          $(`#modalPrivilege_${group_id}`).on('click', `#to_left_${group_id}`, function () {
+            LeftToRight(group_id)
+            if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox`).length == 0 && $(`.table_left .notice`).length == 0) {
+              $(`#modalPrivilege_${group_id} .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+              $(`#modalPrivilege_${group_id} .table_right tbody .notice`).remove()
+            }
+          })
+          $(`#modalPrivilege_${group_id}`).on('click', `#to_right_${group_id}`, function () {
+            RightToLeft(group_id)
+            if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`).length == 0) {
+              $(`#modalPrivilege_${group_id} .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+              $(`#modalPrivilege_${group_id} .table_left tbody .notice`).remove()
+            }
+          })
+        })
+      },
+      error: function (response) {
+        fails()
+      }
+    })
+    privilegeJS()
+  })
+}
+
+function save_group_privileges(group_id, arr) {
+  $.ajax({
+    url: `user_groups/save_privileges`,
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      group_id: group_id,
+      data: arr
+    },
+    dataType: "json",
+    success: function (response) {
+      success()
+    },
+    error: function (response) {
+      fails()
+    }
+  })
+}
+
+function search_group_privileges(group_id, table, search) {
+  var ids = []
+  // $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function(){
+  //   ids.push($(this).attr("value"))
+  // })
+  $.ajax({
+    url: `user_groups/search_privileges`,
+    type: "GET",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      group_id: group_id,
+      key: table,
+      search: search
+    },
+    dataType: "json",
+    success: function (response) {
+      $.each(response, function (key, value) {
+        if (key == "left") {
+          $(`#table_left_${group_id} tbody`).empty()
+          var old_name = []
+          var num = 1
+          $(value).each(function (k, v) {
+            if (old_name.includes(v.TitleName) == false) {
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th class="privilege-name ${v.title_privilege_id}" colspan=3>${v.TitleName}</th></tr>`)
+            }
+            $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.id}"></td><td>${v.name}</td></tr>`)
+            old_name.push(v.TitleName)
+            num += 1
+          })
+          if (value.length == 0 && $(`.table_${key} .notice`) != null && $(`.table_${key} .notice`).length == 0) {
+            $(`#modalPrivilege_${group_id} .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th style="display:none"></th><th style="display:none"></th><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+          }
+        }
+        if (key == "right") {
+          $(`#table_right_${group_id} tbody`).empty()
+          var old_name = []
+          var num = 1
+          $(value).each(function (k, v) {
+            if (old_name.includes(v.TitleName) == false) {
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_privilege_id}" colspan=3>${v.TitleName}</th></tr>`)
+            }
+            $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.privilege_id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.privilege_id}"></td><td>${v.name}</td></tr>`)
+            old_name.push(v.TitleName)
+            num += 1
+          })
+          if (value.length == 0 && $(`.table_${key} .notice`) != null && $(`.table_${key} .notice`).length == 0) {
+            $(`#modalPrivilege_${group_id} .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th style="display:none"></th><th style="display:none"></th><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+          }
+        }
+
+        $(`#modalPrivilege_${group_id}`).on('click', `#to_left_${group_id}`, function () {
+          LeftToRight(group_id)
+          if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox`).length == 0 && $(`.table_left .notice`) != null && $(`.table_left .notice`).length == 0) {
+            $(`#modalPrivilege_${group_id} .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+            $(`#modalPrivilege_${group_id} .table_right tbody .notice`).remove()
+          }
+        })
+        $(`#modalPrivilege_${group_id}`).on('click', `#to_right_${group_id}`, function () {
+          RightToLeft(group_id)
+          if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`) != null && $(`.table_right .notice`).length == 0) {
+            $(`#modalPrivilege_${group_id} .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No matching records found</th></tr>')
+            $(`#modalPrivilege_${group_id} .table_left tbody .notice`).remove()
+          }
+        })
+      })
+      success()
+    },
+    error: function (response) {
+      fails()
+    }
+  })
+  privilegeJS()
 }
