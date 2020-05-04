@@ -28,8 +28,10 @@ Rails.application.routes.draw do
   resources :groups do
     collection do
       get "get_data"
+      delete 'destroy_multiple'
     end
   end
+  
   root to: "admin_users#index"
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
   get "user_group" => "user_group#index"
@@ -37,7 +39,7 @@ Rails.application.routes.draw do
   post "admin/user_management/add_previewer/:id" => "admin_users#add_previewer", as: :add_previewer_user_management
 
   post "admin/user_management/add_previewer/:id/:approver_ids" => "admin_users#add_previewer_to_database"
-
+  get '/groups/:id/destroy_page', to: 'groups#destroy_page'
   # resources :groups
   # get "groups" => "groups#index"
 end

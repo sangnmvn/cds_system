@@ -61,17 +61,43 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    @group.destroy
+   
+    
+    
     respond_to do |format|
-      format.html { redirect_to groups_url, notice: "Group was successfully destroyed." }
-      format.json { head :no_content }
-    end
+      if @group.update_attribute(:is_delete,true)
+        status_group = @group.status ? "Enable" : "Disable"
+          format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
+        else
+          format.json { render :json => { :status => "fail" } }
+        end
+      end
   end
-
   def get_data
     # binding.pry
     group = Group.where(id: params[:id])
     render :json => { group: group }
+  end
+  def destroy_page
+  
+    @group_destroy = Group.find(params[:id])
+    
+    
+    respond_to do |format|
+      format.js
+    end
+    
+  end
+  def destroy_multiple
+    @group = Group.find(params[:group_ids])
+    @group.each do |group|
+      group.update_attribute(:is_delete,true)
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to groups_url }
+      format.json { head :no_content }
+    end
   end
 
   private
