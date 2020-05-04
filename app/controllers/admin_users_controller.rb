@@ -19,6 +19,13 @@ class AdminUsersController < ApplicationController
     @projects = Project.all
 
     @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false).order(:id => :desc)
+
+    unless params["sSearch"].empty?
+      @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", \
+        "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
+      # binding.pry
+    end
+
     unless @@filter_company.nil?
       @admin_users = @admin_users.where("company_id=?", @@filter_company)
     end

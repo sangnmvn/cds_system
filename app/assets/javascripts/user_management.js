@@ -1,3 +1,6 @@
+// insert 3 button 
+
+
 // filter select company
 $(document).ready(function () {
   $("#filter-company").change(function () {
@@ -179,45 +182,48 @@ $(document).ready(function () {
               );
             }
           } else if (response.status == "success") {
-            var table = $("#table_user_management").dataTable();
-            var sData = table.fnGetData();
-            $.each(response.user, function (k, v) {
-              var addData = [];
-              addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_{0}" value="0" \
-              class="collection_selection" name="collection_selection[]"> </div>'.formatUnicorn(
-                { 0: v.id }
-              );
-              addData[1] = 0; // insert đầu
-              addData[2] = v.first_name;
-              addData[3] = v.last_name;
-              addData[4] = v.email;
-              addData[5] = v.account;
-              addData[6] = v.r;
-              addData[7] = "";
-              addData[8] = response.project_user;
-              addData[9] = v.c;
-              addData[10] =
-                '<a class="action_icon edit_icon" data-user_id="' +
-                v.id +
-                '" href="#"><img border="0" \
-                src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_account="' +
-                v.account +
-                '" data-user_id="' +
-                v.id +
-                '" href="">\
-                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-                <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
-                v.id +
-                '" href="#">\
-                <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
-                <a class="action_icon status_icon" data-user_id="' +
-                v.id +
-                '" href="#"><i class="fa fa-toggle-on"></i></a> ';
+            $("#table_user_management").dataTable().fnDraw();
 
-              table.fnAddData(addData);
-              reorder_table_row(table);
-            });
+            // var table = $("#table_user_management").dataTable();
+            // var sData = table.fnGetData();
+            // $.each(response.user, function (k, v) {
+            //   var addData = [];
+            //   addData[0] = '<div class="resource_selection_cell"> <input type="checkbox" id="batch_action_item_{0}" value="0" \
+            //   class="collection_selection" name="collection_selection[]"> </div>'.formatUnicorn(
+            //     { 0: v.id }
+            //   );
+            //   addData[1] = 0; // insert đầu
+            //   addData[2] = v.first_name;
+            //   addData[3] = v.last_name;
+            //   addData[4] = v.email;
+            //   addData[5] = v.account;
+            //   addData[6] = v.r;
+            //   addData[7] = "";
+            //   addData[8] = response.project_user;
+            //   addData[9] = v.c;
+            //   addData[10] =
+            //     '<a class="action_icon edit_icon" data-user_id="' +
+            //     v.id +
+            //     '" href="#"><img border="0" \
+            //     src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+            //     <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_account="' +
+            //     v.account +
+            //     '" data-user_id="' +
+            //     v.id +
+            //     '" href="">\
+            //     <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+            //     <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
+            //     v.id +
+            //     '" href="#">\
+            //     <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
+            //     <a class="action_icon status_icon" data-user_id="' +
+            //     v.id +
+            //     '" href="#"><i class="fa fa-toggle-on"></i></a> ';
+
+            //   table.fnAddData(addData);
+            //   reorder_table_row(table);
+            // });
+
             // reset and hide form add user
             $("#modalAdd #project option").remove();
             $("#modalAdd .tokens-container .token").remove();
@@ -612,67 +618,66 @@ $(document).on("click", "#btn-modal-edit-user", function () {
       success: function (response) {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
+          $("#table_user_management").dataTable().fnDraw();
           //!--
+          // var edited_user_id = response["edit_user_id"];
+          // // get row_id to replace
+          // var data_table = $("#table_user_management").dataTable();
+          // var all_data_list = data_table.fnGetData();
 
-          var edited_user_id = response["edit_user_id"];
-
-          // get row_id to replace
-          var data_table = $("#table_user_management").dataTable();
-          var all_data_list = data_table.fnGetData();
-
-          for (var i = 0; i < all_data_list.length; i++) {
-            // parse string manually because data is HTML tag string :((
-            var current_user_id = all_data_list[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
-            current_user_id = parseInt(current_user_id);
-            if (current_user_id == edited_user_id) {
-              var row_id = i;
-              var elements = [];
-              elements.push(
-                '<td class="selectable"><div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_{0}" value="0" class="collection_selection" name="collection_selection[]"></div></td>'.formatUnicorn(
-                  { 0: edited_user_id }
-                )
-              );
-              elements.push(row_id + 1);
-              elements.push(response["first_name"]);
-              elements.push(response["last_name"]);
-              elements.push(response["email"]);
-              elements.push(response["account"]);
-              elements.push(response["role"]);
-              elements.push(response["title"]);
-              elements.push(response["projects"]);
-              elements.push(response["company"]);
-              elements.push(
-                '<a class="action_icon edit_icon" data-user_id="' +
-                  edited_user_id +
-                  '" href="#"><img border="0" \
-                  src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                  <a class="action_icon delete_icon" data-user_account="' +
-                  response["account"] +
-                  '" data-toggle="modal" data-target="#deleteModal" data-user_id="' +
-                  edited_user_id +
-                  '" href="">\
-                  <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-                  <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
-                  edited_user_id +
-                  '" href="#">\
-                  <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
-                  <a class="action_icon status_icon" data-user_id="' +
-                  edited_user_id +
-                  '" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> '
-              );
-              var delete_whole_row_constant = undefined;
-              var redraw_table = false;
-              data_table.fnUpdate(
-                elements,
-                row_id,
-                delete_whole_row_constant,
-                redraw_table
-              );
-              break;
-            }
-          }
+          // for (var i = 0; i < all_data_list.length; i++) {
+          //   // parse string manually because data is HTML tag string :((
+          //   var current_user_id = all_data_list[i][0]
+          //     .split("batch_action_item_")[1]
+          //     .split('"')[0];
+          //   current_user_id = parseInt(current_user_id);
+          //   if (current_user_id == edited_user_id) {
+          //     var row_id = i;
+          //     var elements = [];
+          //     elements.push(
+          //       '<td class="selectable"><div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_{0}" value="0" class="collection_selection" name="collection_selection[]"></div></td>'.formatUnicorn(
+          //         { 0: edited_user_id }
+          //       )
+          //     );
+          //     elements.push(row_id + 1);
+          //     elements.push(response["first_name"]);
+          //     elements.push(response["last_name"]);
+          //     elements.push(response["email"]);
+          //     elements.push(response["account"]);
+          //     elements.push(response["role"]);
+          //     elements.push(response["title"]);
+          //     elements.push(response["projects"]);
+          //     elements.push(response["company"]);
+          //     elements.push(
+          //       '<a class="action_icon edit_icon" data-user_id="' +
+          //         edited_user_id +
+          //         '" href="#"><img border="0" \
+          //         src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
+          //         <a class="action_icon delete_icon" data-user_account="' +
+          //         response["account"] +
+          //         '" data-toggle="modal" data-target="#deleteModal" data-user_id="' +
+          //         edited_user_id +
+          //         '" href="">\
+          //         <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+          //         <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="' +
+          //         edited_user_id +
+          //         '" href="#">\
+          //         <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
+          //         <a class="action_icon status_icon" data-user_id="' +
+          //         edited_user_id +
+          //         '" href="#"><i class="fa fa-toggle-on" styl="color:white"></i></a> '
+          //     );
+          //     var delete_whole_row_constant = undefined;
+          //     var redraw_table = false;
+          //     data_table.fnUpdate(
+          //       elements,
+          //       row_id,
+          //       delete_whole_row_constant,
+          //       redraw_table
+          //     );
+          //     break;
+          //   }
+          // }
           success("Edit");
         } else if (response.status == "exist") {
           $(".error").remove();
@@ -807,4 +812,13 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
       }
     },
   });
+});
+
+
+$(document).ready(function() {
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd" \
+  data-backdrop="true" data-keyboard="true">Add</button> \
+  <button type="button" class="btn btn-danger"  id="btn-delete-many-users">Delete</button> \
+  <button type="button" class="btn btn-warning"  id="btn-disable-multiple-users">Disable</button> </div>';
+  $(content).insertAfter(".dataTables_filter");
 });
