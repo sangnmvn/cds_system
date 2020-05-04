@@ -33,8 +33,10 @@ Rails.application.routes.draw do
   resources :groups do
     collection do
       get "get_data"
+      delete 'destroy_multiple'
     end
   end
+  
   root to: "admin_users#index"
 
   get "/user_data/" => "admin_users#get_user_data", defaults: { format: 'json' }
@@ -47,7 +49,7 @@ Rails.application.routes.draw do
   post "user_groups/save_privileges", to: "user_groups#save_privileges", as: "save_privileges"
 
   post "admin/user_management/add_previewer/:id/:approver_ids" => "admin_users#add_previewer_to_database"
-
+  get '/groups/:id/destroy_page', to: 'groups#destroy_page'
   # resources :groups
   # get "groups" => "groups#index"
 end

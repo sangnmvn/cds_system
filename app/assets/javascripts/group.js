@@ -164,10 +164,10 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               var row_id = i;
               var updateData = [];
               updateData.push(
-                '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_' +
+                '<input type="checkbox" id="batch_action_item_' +
                   response.id +
                   '" value="0" \
-                class="collection_selection" name="collection_selection[]"></div>'
+                class="collection_selection" name="collection_selection[]">'
               );
               updateData.push(row_id+1);
               updateData.push(response.name);
@@ -267,4 +267,75 @@ function setup_dataTable() {
   });
 }
 
+
+$(document).on("click", ".del_btn", function () {
+  group_id = $(this).data("group");
+  $.ajax({
+    url: "/groups/"+ group_id +"/destroy_page",
+    type: "GET",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
+  });
+});
+
+function reorder_table_row(data_table)
+{
+  var all_data = data_table.fnGetData();  
+    
+  var reload_table = false;
+  
+  for (var i=0; i < all_data.length; i++)
+  {
+    data_table.fnUpdate(i+1, i, 1, reload_table,reload_table);
+  }
+
+  data_table.fnDraw();
+}
+function delete_datatable_row(data_table, row_id) {
+  // delete the row from table by id
+  var row = data_table.$("tr")[row_id];
+  data_table.fnDeleteRow(row);  
+  reorder_table_row(data_table);
+}
+
+function delete_group() {
+  var id = $("#group_id").val();
+
+  //alert( 'admin/user_management/'  + user_id + '/')
+  $.ajax({
+    url: "/groups/" + id,
+    method: "DELETE",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    success: function (response) {
+      if (response.status == "success") {
+        $("#modal").modal("hide");
+        var table = $("#table_group").dataTable();
+          var sData = table.fnGetData();
+          for (var i = 0; i < sData.length; i++) {
+            var current_user_id = sData[i][0]
+              .split("batch_action_item_")[1]
+              .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              delete_datatable_row(table, row_id);
+              break;
+           
+            }
+          }
+        success("Delete");
+      } else if (response.status == "exist") {
+        $(".error").remove();
+        $("#modalEdit #name").after(
+          '<span class="error">Name already exsit</span>'
+        );
+      } else if (response.status == "fail") {
+        fails("Edit");
+      }
+    },
+  });
+}
 setup_dataTable();
+$(function() {
+  $("#selectAll").select_all();
+});

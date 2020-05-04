@@ -3,7 +3,7 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
-
+//= require select_all.js
 // add formatUnicorn function to string
 // "Hello, {name}, are you feeling {adjective}?".formatUnicorn({name:"Gabriel", adjective: "OK"});
 

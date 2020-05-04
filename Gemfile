@@ -37,6 +37,7 @@ gem "cancancan"
 gem "pry"
 gem "jquery-rails"
 gem "chartkick"
+gem 'select_all-rails'
 # gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################
