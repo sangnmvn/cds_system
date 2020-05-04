@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
 				<div class="row">
-				  <div class="col-6" style="overflow-x:auto;">
+				  <div class="col-6 mydiv" style="overflow-x:auto;">
             <h4>Available Users</h4>
             <table class="table table-primary table-responsive-sm table-mytable" id="table_left">
               <thead>
@@ -22,24 +22,17 @@
                 </tr>
               </thead>
               <tbody>
-              <tr id="1"> 
-                  <td>1</td> 
-                  <td><input type="checkbox" class="mycontrol"/></td> 
-                  <td>User 1</td> 
-                  <td>test</td> 
-                  <td>User@example.com</td>
-                </tr>
               </tbody>
               <p></p>
             </table>
 				  </div>
-				<div class="col-1 button-center" style="overflow-x:auto;" >
+				<div class="col-1 button-center mydiv" style="overflow-x:auto;" >
             <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
             <p></p>
             <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
           </div>
           
-				<div class="col-5"style="overflow-x:auto;" >
+				<div class="col-5 mydiv"style="overflow-x:auto;" >
 					<h4>Selected Users</h4>
             <table class="table table-primary table-responsive-sm table-mytable" id="table_right">
               <thead>
@@ -52,13 +45,6 @@
                 </tr>
               </thead>
               <tbody>
-                <tr id="1"> 
-                  <td>1</td> 
-                  <td><input type="checkbox" class="mycontrol"/></td> 
-                  <td>User 1</td> 
-                  <td>test</td> 
-                  <td>User@example.com</td>
-                </tr>
               </tbody>
             </table>
             <p></p>
@@ -68,7 +54,7 @@
       <div class="modal-footer">
         <div class="col-12 p-3 text-center">
           <button id="save" type="button" class="btn btn-secondary" disabled="disabled">Save</button>
-          <button type="button" class="btn btn-secondary close_modal" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger close_modal" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>

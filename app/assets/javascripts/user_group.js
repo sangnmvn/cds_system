@@ -1,11 +1,11 @@
 $(document).ready(function () {
-	myjs();
-	myajax();
+	myJS();
+	myAjax();
 	$('.dataTables_length').attr("style", "display:none");
 	$('.dataTables_paginate').addClass("mypaging");
 });
 
-function myjs() {
+function myJS() {
 	var table_left = $('#table_left').dataTable({
 		info: false
 	});
@@ -48,6 +48,7 @@ function myjs() {
 			}
 		}
 	};
+	// click checkbox item on left
 	$('#table_left tbody').on('click', 'input:checkbox', function () {
 		$this = $(this);
 		if ($this.is(':checked')) {
@@ -64,6 +65,7 @@ function myjs() {
 			$('#check_all_choose').prop("checked", false);
 		}
 	});
+	// click checkbox item on right
 	$('#table_right tbody').on('click', 'input:checkbox', function () {
 		$this = $(this);
 		if ($this.is(':checked')) {
@@ -80,6 +82,7 @@ function myjs() {
 			$('#check_all_remove').prop("checked", false);
 		}
 	});
+	// click button to right =>
 	$('#to_right').click(function () {
 		var checkboxes = $("#table_left tbody").find('input:checkbox');
 		for (var i = 0; i < checkboxes.length; i++) {
@@ -100,6 +103,7 @@ function myjs() {
 		change_button_right(1);
 		change_button_save(0);
 	});
+	// click button to left <=
 	$('#to_left').click(function () {
 		var checkboxes = $("#table_right tbody").find('input:checkbox');
 		for (var i = 0; i < checkboxes.length; i++) {
@@ -118,11 +122,15 @@ function myjs() {
 		change_button_left(1);
 		change_button_save(0);
 	});
+
 	$('.close_modal').click(function () {
 		if ($('#save').attr("disabled") != "disabled") {
 			save();
 		}
+		$('#table_left').DataTable().search('');
+		$('#table_right').DataTable().search('');
 	});
+
 	$('#table_left').DataTable().on('order.dt search.dt', function () {
 		$('#table_left').DataTable().column(0, {
 			search: 'applied',
@@ -131,6 +139,7 @@ function myjs() {
 			cell.innerHTML = i + 1;
 		});
 	}).draw();
+
 	$('#table_right').DataTable().on('order.dt search.dt', function () {
 		$('#table_right').DataTable().column(0, {
 			search: 'applied',
@@ -139,6 +148,21 @@ function myjs() {
 			cell.innerHTML = i + 1;
 		});
 	}).draw();
+	function success(content) {
+		$('#content-alert-success').html(content);
+		$("#alert-success").fadeIn();
+		window.setTimeout(function () {
+			$("#alert-success").fadeOut(1000);
+		}, 5000);
+	}
+	// alert fails
+	function fails(content) {
+		$('#content-alert-fail').html(content);
+		$("#alert-danger").fadeIn();
+		window.setTimeout(function () {
+			$("#alert-danger").fadeOut(1000);
+		}, 5000);
+	}
 }
 
 function change_button_left(flag) {
@@ -173,7 +197,7 @@ function change_button_save(flag) {
 
 function save() {
 	bootbox.confirm({
-		message: "Do you want to save users for this group?",
+		message: "Are you sure want to save users for this group?",
 		buttons: {
 			confirm: {
 				label: "Yes",
@@ -181,7 +205,7 @@ function save() {
 			},
 			cancel: {
 				label: "No",
-				className: "btn-secondary"
+				className: "btn-danger"
 			}
 		},
 		callback: function (result) {
@@ -190,22 +214,22 @@ function save() {
 				var id_group = $("#title_group h1").text();
 				var list = [];
 				for (var i = 0; i < checkboxes.length; i++) {
-					list.push(checkboxes[i][1].split("value='")[1].split("'")[0]);
+					list.push($(checkboxes[i][1]).val());
 				}
 				change_button_save(1);
 				$.ajax({
-					url: "/user_groups/SaveUserGroup",
+					url: "/user_groups/save_user_group",
 					data: {
 						list: list,
 						id: id_group
 					},
 					type: "GET",
 					success: function (response) {
-						bootbox.alert("Saved successfully!");
+						success();
 						$("#AssignModal").modal('hide');
 					},
 					error: function () {
-						bootbox.alert("Save failed");
+						fails();
 					}
 				});
 			}
@@ -213,7 +237,7 @@ function save() {
 	});
 }
 
-function myajax() {
+function myAjax() {
 	$('.user_group_icon').click(function () {
 		$("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
 		var id = $(this).attr("data-id");
@@ -221,7 +245,7 @@ function myajax() {
 		//ajax load bảng user_group
 		$.ajax({
 			type: "GET",
-			url: "/user_groups/loadUserGroup",
+			url: "/user_groups/load_user_group",
 			data: {
 				id: id
 			},
@@ -244,7 +268,7 @@ function myajax() {
 		//ajax load bảng user
 		$.ajax({
 			type: "GET",
-			url: "/user_groups/loadUser",
+			url: "/user_groups/load_user",
 			data: {
 				id: id
 			},
@@ -267,7 +291,7 @@ function myajax() {
 		//ajax load bảng group
 		$.ajax({
 			type: "GET",
-			url: "/user_groups/loadGroup",
+			url: "/user_groups/load_group",
 			data: {
 				id: id
 			},
