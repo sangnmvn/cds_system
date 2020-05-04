@@ -194,6 +194,7 @@
   {
   $(document).ready(function() {
   // Cấu hình các nhãn phân trang
+  
   global_data_table_left = $('#table_left').dataTable( {
       "language": {
       "sProcessing":   "Đang xử lý...",
@@ -259,9 +260,11 @@
         { sClass: "add_reviewer_id d-none"}]
   
   });
+  
   set_data_event();
   });
   }
+  
   
   function check_checkbox(name) {
   	var count = 0;

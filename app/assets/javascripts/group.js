@@ -51,7 +51,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       success: function (response) {
         // data group
         if (response.status == "success") {
-          var table = $("#table_group").DataTable();
+          var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
           var addData = [];
           addData.push(
@@ -151,7 +151,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
       success: function (response) {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
-          var table = $("#table_group").DataTable();
+          var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
           for (var i = 0; i < sData.length; i++) {
             var current_user_id = sData[i][0]
@@ -219,9 +219,6 @@ function setup_dataTable() {
   $("#table_group").ready(function () {
     $("#table_group").dataTable({
       bDestroy: true,
-      ajax: {
-        url: $("#table_group").data("source"),
-      },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,

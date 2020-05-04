@@ -177,7 +177,7 @@ $(document).ready(function () {
               );
             }
           } else if (response.status == "success") {
-            var table = $("#table_user_management").DataTable();
+            var table = $("#table_user_management").dataTable();
             var sData = table.fnGetData();
             $.each(response.user, function (k, v) {
               var addData = [];
@@ -377,7 +377,6 @@ $(document).on("click", ".add_previewer_icon", function () {
 
 var user_dataTable;
 function delete_dataTable() {
-  //var table = $('#example').DataTable();
   user_dataTable.fnClearTable();
 }
 /*
@@ -386,20 +385,25 @@ processing: true,
   */
 
 function setup_dataTable() {
+  
   $("#table_user_management").ready(function () {
+    
     $("#table_user_management").dataTable({
       bDestroy: true,
-      ajax: {
-        url: $("#table_user_management").data("source"),
-      },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,      
       
       fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
         $(nRow).attr('id', "admin_user_{id}".formatUnicorn({id: aData[11]}));
+        $('.dataTables_length').attr("style", "display:none");
         return nRow;
       } ,
+
+      "bProcessing": true,
+      "bServerSide": true,
+      "sAjaxSource": "example_data/",
+
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
@@ -423,12 +427,15 @@ function setup_dataTable() {
         $("#table_user_management .toggle_all").prop("checked", true);
       }
     });
-  });
+  });  
+  
+  
 }
 
-$("#table_user_management_length").remove();
+//$("#table_user_management_length").remove();
 
 setup_dataTable();
+
 
 // get modal edit user
 
@@ -689,20 +696,5 @@ $(document).on("click", ".status_icon", function () {
 });
 
 
-// $(document).ready(function () {
-//   var table = $("#table_user_management").DataTable({order:[[2,"asc"]],"bDestroy": true,});
-//   var sData = table.fnGetData();
-//   var addData = [];
-//   addData[0] = "";
-//   addData[1] = sData.length + 1;
-//   addData[2] = "1";
-//   addData[3] = "1";
-//   addData[4] = "1";
-//   addData[5] = "1";
-//   addData[6] = "1";
-//   addData[7] = "1";
-//   addData[8] = "1";
-//   addData[9] = "1";
-//   addData[10] = "1";
-//   table.fnAddData(addData);
-// });
+
+
