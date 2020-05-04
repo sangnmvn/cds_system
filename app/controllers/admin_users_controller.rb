@@ -7,7 +7,10 @@ class AdminUsersController < ApplicationController
   before_action :set_admin_user, only: [:update, :status, :destroy]
 
   def example_data    
-    user_per_page = params["iDisplayLength"].to_i
+    #user_per_page = params["iDisplayLength"].to_i
+
+    # admin user MAIN data generator
+    user_per_page = 20
     offset        = params["iDisplayStart"].to_i
     
     @companies = Company.all    
@@ -15,7 +18,7 @@ class AdminUsersController < ApplicationController
     @project_members = ProjectMember.all
     @projects = Project.all
     
-    @admin_users = AdminUser.offset(offset).limit(user_per_page).order(:id => :asc)
+    @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false).order(:id => :desc)
     unless @@filter_company.nil?
       @admin_users = @admin_users.where("company_id=?", @@filter_company)
     end

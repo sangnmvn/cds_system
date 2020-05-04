@@ -342,8 +342,9 @@ function delete_user() {
               .split('"')[0];
             current_user_id = parseInt(current_user_id);
             if (current_user_id == deleted_id) {
-              var row_id = i;
-              delete_datatable_row(data_table, row_id);
+              // var row_id = i;
+              //delete_datatable_row(data_table, row_id);
+              data_table.fnDraw();
               break;
             }
           }
