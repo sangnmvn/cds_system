@@ -1,6 +1,126 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
+  @@filter_company = nil
+  @@filter_project = nil
+  @@filter_role = nil
+
   before_action :set_admin_user, only: [:update, :status, :destroy]
+
+  def get_user_data
+    #user_per_page = params["iDisplayLength"].to_i
+
+    # admin user MAIN data generator
+    user_per_page = 20
+    offset = params["iDisplayStart"].to_i
+
+    @companies = Company.all
+    @roles = Role.all
+    @project_members = ProjectMember.all
+    @projects = Project.all
+
+    @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false).order(:id => :desc)
+
+    unless params["sSearch"].empty?
+      @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", \
+        "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
+      # binding.pry
+    end
+
+    unless @@filter_company.nil?
+      @admin_users = @admin_users.where("company_id=?", @@filter_company)
+    end
+
+    unless @@filter_role.nil?
+      @admin_users = @admin_users.where("role_id=?", @@filter_role)
+    end
+
+    unless @@filter_project.nil?
+      if @@filter_project == "none"
+        list_id_user_project = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id") # user have project
+        unless list_id_user_project.empty?
+          @admin_users = @admin_users.where("id not in (?)", list_id_user_project)
+        end
+      else
+        list_id_user_project = (@admin_users.joins(:project_members).where("project_id=?", @@filter_project)).pluck("id") # user have project
+
+        unless list_id_user_project.empty?
+          @admin_users = @admin_users.where("id in (?)", list_id_user_project)
+        end
+      end
+    end
+
+    final_data = []
+    @admin_users.each_with_index { |user, index|
+      # checkbox
+      # id
+      # first name
+      # last name
+      # email
+      # account
+      # role
+      # title
+      # project
+      # company
+      # action
+      current_user_data = []
+      current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
+      current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
+      current_user_data.push(user.first_name)
+      current_user_data.push(user.last_name)
+      current_user_data.push(user.email)
+      current_user_data.push(user.account)
+
+      begin
+        role = user.role_id.nil? ? "" : @roles.find(user.role_id).name
+      rescue
+        next
+      end
+
+      current_user_data.push(role)
+      title = ""
+      current_user_data.push(title)
+      # begin project
+
+      begin
+        project_namelist = []
+
+        project_member_of_user = @project_members.where(admin_user_id: user.id)
+
+        project_member_of_user.each { |project_member|
+          project_name = @projects.find(project_member.project_id).desc
+          project_namelist.append(project_name)
+        }
+        # end project
+        projects = project_namelist.join("/")
+      rescue
+        # end project
+        projects = ""
+      end
+
+      current_user_data.push(projects)
+
+      begin
+        company = user.company_id.nil? ? "" : @companies.find(user.company_id).name
+      rescue
+        next
+      end
+
+      current_user_data.push(company)
+      final_data.push(current_user_data)
+
+      # action
+      current_user_data.push("<a class='action_icon edit_icon' data-user_id='#{user.id}' href='#'><img border='0' 
+        src='/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png'></a> 
+        <a class='action_icon delete_icon' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' href=''>
+        <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
+        <a class='action_icon add_previewer_icon' data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
+        <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
+        <a class='action_icon status_icon' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
+    }
+    respond_to do |format|
+      format.json { render :json => { iTotalRecords: @admin_users.count, iTotalDisplayRecords: @admin_users.unscope([:limit, :offset]).count, aaData: final_data } }
+    end
+  end
 
   def index
     @companies = Company.all.order(:name)
@@ -9,9 +129,14 @@ class AdminUsersController < ApplicationController
     @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
     @project_members = ProjectMember.all
 
+    # reset filter
+    @@filter_company = nil
+    @@filter_project = nil
+    @@filter_role = nil
+
     respond_to do |format|
       format.html
-      format.json { render json: AdminUserDatatable.new(params) }
+      #format.json { render json: AdminUserDatatable.new(params) }
     end
   end
 
@@ -65,9 +190,9 @@ class AdminUsersController < ApplicationController
       roles = Role.select(:id, :name).distinct.joins(admin_users: [project_members: [project: :company]])
         .where("projects.company_id = ?", params[:company])
     end
-    respond_to do |format|
-      format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
-    end
+    #respond_to do |format|
+    #format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
+    #end
   end
 
   def get_filter_project
@@ -152,18 +277,26 @@ class AdminUsersController < ApplicationController
     end
     @admin_users = AdminUser.all
     if params[:company] != "all"
-      @admin_users = @admin_users.where("company_id = ?", params[:company])
+      #@admin_users = @admin_users.where("company_id = ?", params[:company])
     end
     if params[:project] != "all" && params[:project] != "none"
       valid_user_ids = @admin_users.joins(:project_members).distinct.where("project_id = ?", params[:project]).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id in (?)", valid_user_ids)
+      #@admin_users = @admin_users.where("id in (?)", valid_user_ids)
     elsif params[:project] == "none"
       valid_user_ids = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id")
-      @admin_users = @admin_users.where("id not in (?)", valid_user_ids) unless valid_user_ids.empty?
+      #@admin_users = @admin_users.where("id not in (?)", valid_user_ids) unless valid_user_ids.empty?
     end
     if params[:role] != "all" && params[:role] != "" && params[:role] != "none"
-      @admin_users = @admin_users.where("role_id = ?", params[:role])
+      #@admin_users = @admin_users.where("role_id = ?", params[:role])
     end
+
+    @@filter_company = params[:company]
+    @@filter_role = params[:role]
+    @@filter_project = params[:project]
+
+    @@filter_company = nil if @@filter_company == "all"
+    @@filter_role = nil if @@filter_role == "all"
+    @@filter_project = nil if @@filter_project == "all"
 
     respond_to do |format|
       format.js
@@ -243,7 +376,47 @@ class AdminUsersController < ApplicationController
     end
   end
 
-  # change status user (enalbe / disable)
+  def delete_multiple_users
+    # binding.pry
+    respond_to do |format|
+      if params[:list_users].nil?
+        format.json { render :json => { :status => "fail" } }
+      else
+        params[:list_users].each do |u|
+          user = AdminUser.find(u.to_i)
+          if user
+            user.update(is_delete: true)
+            format.json { render :json => { :status => "success", users: params[:list_users] } }
+          else
+            format.json { render :json => { :status => "fail" } }
+          end
+        end
+      end
+    end
+  end
+
+  def disable_multiple_users
+    # binding.pry
+
+    respond_to do |format|
+      if params[:list_users].nil?
+        format.json { render :json => { :status => "fail" } }
+      else
+        params[:list_users].each do |u|
+          # binding.pry
+          user = AdminUser.find(u.to_i)
+          if user
+            user.update(status: false)
+            format.json { render :json => { :status => "success", users: params[:list_users] } }
+          else
+            format.json { render :json => { :status => "fail" } }
+          end
+        end
+      end
+    end
+  end
+
+  # change status user (enable / disable)
   def status
     params[:status] = @admin_user.status ? false : true
     respond_to do |format|

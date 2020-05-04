@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       get "get_modal_project"
       post "status"
       post "submit_filter"
+      post "delete_multiple_users"
+      post "disable_multiple_users"
     end
   end
   resources :groups do
@@ -34,6 +36,9 @@ Rails.application.routes.draw do
     end
   end
   root to: "admin_users#index"
+
+  get "/user_data/" => "admin_users#get_user_data", defaults: { format: 'json' }
+
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
   get "user_group" => "user_group#index"
   delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management
