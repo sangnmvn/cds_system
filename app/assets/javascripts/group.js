@@ -116,7 +116,7 @@ $(document).on("click", ".btn-edit-group", function () {
 
 $(document).on("click", "#btn-submit-edit-user-group", function () {
   name = $("#modalEdit #name").val();
-  status = $("input[name=status]:checked").val();
+  status = $("#modalEdit input[name=status]:checked").val();
   desc = $("#modalEdit #desc").val();
   id = $("#modalEdit #group_id").val();
   temp = true;

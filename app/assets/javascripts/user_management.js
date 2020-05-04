@@ -385,7 +385,9 @@ function add_previewer_user() {
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
+  var user_account = $(this).data("user_account");
   $(".delete_id").val(user_id);
+  $(".display_user_account_delete").html(user_account);
   // As pointed out in comments,
   // it is unnecessary to have to manually call the modal.
   // $('#addBookDialog').modal('show');
