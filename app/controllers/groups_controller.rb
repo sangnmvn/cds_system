@@ -89,7 +89,11 @@ class GroupsController < ApplicationController
     
   end
   def destroy_multiple
+    if params[:group_ids] != nil
+      
+    
     @group = Group.find(params[:group_ids])
+  
     @group.each do |group|
       group.update_attribute(:is_delete,true)
     end
@@ -98,6 +102,7 @@ class GroupsController < ApplicationController
       format.html { redirect_to groups_url }
       format.json { head :no_content }
     end
+  end
   end
 
   private
