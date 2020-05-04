@@ -164,10 +164,10 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               var row_id = i;
               var updateData = [];
               updateData.push(
-                '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_' +
+                '<input type="checkbox" id="batch_action_item_' +
                   response.id +
                   '" value="0" \
-                class="collection_selection" name="collection_selection[]"></div>'
+                class="collection_selection" name="collection_selection[]">'
               );
               updateData.push(row_id+1);
               updateData.push(response.name);
@@ -279,6 +279,27 @@ $(document).on("click", ".del_btn", function () {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
   });
 });
+
+function reorder_table_row(data_table)
+{
+  var all_data = data_table.fnGetData();  
+    
+  var reload_table = false;
+  
+  for (var i=0; i < all_data.length; i++)
+  {
+    data_table.fnUpdate(i+1, i, 1, reload_table,reload_table);
+  }
+
+  data_table.fnDraw();
+}
+function delete_datatable_row(data_table, row_id) {
+  // delete the row from table by id
+  var row = data_table.$("tr")[row_id];
+  data_table.fnDeleteRow(row);  
+  reorder_table_row(data_table);
+}
+
 function delete_group() {
   var id = $("#group_id").val();
 
@@ -289,48 +310,23 @@ function delete_group() {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     success: function (response) {
       if (response.status == "success") {
-        $("#modalEdit").modal("hide");
+        $("#modal").modal("hide");
         var table = $("#table_group").DataTable();
-        var sData = table.fnGetData();
-        for (var i = 0; i < sData.length; i++) {
-          var current_user_id = sData[i][0]
-            .split("batch_action_item_")[1]
-            .split('"')[0];
-          current_user_id = parseInt(current_user_id);
-          if (current_user_id == response.id) {
-            var row_id = i;
-            var updateData = [];
-            updateData.push(
-              '<div class="resource_selection_cell"><input type="checkbox" id="batch_action_item_' +
-                response.id +
-                '" value="0" \
-              class="collection_selection" name="collection_selection[]"></div>'
-            );
-            updateData.push(row_id+1);
-            updateData.push(response.name);
-            updateData.push(response.status_group);
-            updateData.push("0");
-            updateData.push(response.desc);
-            updateData.push(
-              '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-              <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-              <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
-              <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-              <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
-              <a class="action_icon user_group_icon" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
-            );
-            var delete_whole_row_constant = undefined;
-            var redraw_table = false;
-            table.fnUpdate(
-              updateData,
-              row_id,
-              delete_whole_row_constant,
-              redraw_table
-            );
-            break;
+          var sData = table.fnGetData();
+          for (var i = 0; i < sData.length; i++) {
+            var current_user_id = sData[i][0]
+              .split("batch_action_item_")[1]
+              .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              delete_datatable_row(table, row_id);
+              break;
+           
+            }
           }
-        }
-        success("Edit");
+        success("Delete");
       } else if (response.status == "exist") {
         $(".error").remove();
         $("#modalEdit #name").after(

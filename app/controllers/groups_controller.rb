@@ -5,7 +5,7 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.all.order(:id => :desc)
+    @groups = Group.all.order(:id => :desc).where(is_delete: false)
   end
 
   # GET /groups/1
