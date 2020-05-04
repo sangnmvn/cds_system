@@ -88,17 +88,20 @@ class AdminUsersController < ApplicationController
       end
 
       current_user_data.push(company)
-      final_data.push(current_user_data)
+      
 
       # action
       current_user_data.push("<a class='action_icon edit_icon' data-user_id='#{user.id}' href='#'><img border='0' 
         src='/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png'></a> 
         <a class='action_icon delete_icon' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' href=''>
         <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
-        <a class='action_icon add_previewer_icon' data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
+        <a class='action_icon add_reviewer_icon' data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
         <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
         <a class='action_icon status_icon' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
+
+      final_data.push(current_user_data)
     }
+
     respond_to do |format|
       format.json { render :json => { iTotalRecords: @admin_users.count, iTotalDisplayRecords: @admin_users.unscope([:limit, :offset]).count, aaData: final_data } }
     end
@@ -121,17 +124,18 @@ class AdminUsersController < ApplicationController
     end
   end
 
-  def add_previewer
+  def add_reviewer
     user_id = params[:id]
     all_user_id_except_self = AdminUser.where.not(id: user_id)
-    @existing_previewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
-    @available_admin_users = all_user_id_except_self.where.not(id: @existing_previewers.pluck(:id))
+    @existing_reviewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
+    @available_admin_users = all_user_id_except_self.where.not(id: @existing_reviewers.pluck(:id))
+
     respond_to do |format|
       format.js
     end
   end
 
-  def add_previewer_to_database
+  def add_reviewer_to_database
     if params["approver_ids"] == "none"
       approver_ids = []
     else

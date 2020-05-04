@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title" id="add_previewer_modal_title" style="color: white">Assign Users to Group</h4>
+        <h4 class="modal-title" id="add_reviewer_modal_title" style="color: white">Assign Users to Group</h4>
         <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -13,7 +13,7 @@
             <h4>Available Users</h4>
             <!-- Table header màu đậm hơn -->
             <div id="table_left_wrapper">
-              <% render "admin_users_previewer_list"%>
+              <% render "admin_users_reviewer_list"%>
             </div>
           </div>
           <div class="col-1 button-center">
@@ -25,7 +25,7 @@
             <h4>Selected Users</h4>
             <!-- Table header màu đậm hơn -->
             <div id="table_right_wrapper">
-              <% render "admin_users_selected_previewer"%>
+              <% render "admin_users_selected_reviewer"%>
             </div>
           </div>
         </div>
@@ -38,7 +38,7 @@
       </div>
     </div>
     <!-- hidden input to contains id-->
-    <input type="text" style="display:none;" class="add_previewer_id"></input>
+    <input type="text" style="display:none;" class="add_reviewer_id_modal"></input>
 </div>
 <script>
   var global_data_table_left;
@@ -190,7 +190,7 @@
   
     });
   }
-  function set_up_data_table_previewer()
+  function set_up_data_table_reviewer()
   {
   $(document).ready(function() {
   // Cấu hình các nhãn phân trang
@@ -280,7 +280,7 @@
   // run once
   $('#save').click(function ()
   {
-    var user_id = $('.add_previewer_id').val();
+    var user_id = $('.add_reviewer_id_modal').val();
     var reviewer_ids = [];
   
     var reviewer_id_rows = global_data_table_right.fnGetData();
@@ -303,7 +303,7 @@
   
   
     $.ajax({
-    url: "/admin/user_management/add_previewer/" + user_id + '/' + reviewer_ids,
+    url: "/admin/user_management/add_reviewer/" + user_id + '/' + reviewer_ids,
     type: "POST",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     });

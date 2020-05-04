@@ -337,11 +337,11 @@ function delete_user() {
   });
 }
 
-function add_previewer_user() {
-  var user_id = $(".add_previewer_id").val();
+function add_reviewer_user() {
+  var user_id = $(".add_reviewer_id_modal").val();
   //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
-    url: "/admin/user_management/add_previewer/" + user_id,
+    url: "/admin/user_management/add_reviewer/" + user_id,
     method: "post",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -359,18 +359,18 @@ $(document).on("click", ".delete_icon", function () {
   $(".display_user_account_delete").html(user_account);
 });
 
-$(document).on("click", ".add_previewer_icon", function () {
+$(document).on("click", ".add_reviewer_icon", function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_account");
 
-  $("#add_previewer_modal_title").html(
+  $("#add_reviewer_modal_title").html(
     'Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn({
       account: user_account
     })
   );
 
-  $(".add_previewer_id").val(user_id);
-  add_previewer_user();
+  $(".add_reviewer_id_modal").val(user_id);
+  add_reviewer_user();
 });
 
 var user_dataTable;
