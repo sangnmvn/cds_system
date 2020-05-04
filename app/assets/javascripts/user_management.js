@@ -614,17 +614,17 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-  $("#modalDeleteManyUsers").modal("show");
+  $("#modalDeleteMultipleUsers").modal("show");
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
-    $('.btn-modal-delele-many-users').prop("disabled", false);
+    $('.btn-modal-delele-multiple-users').prop("disabled", false);
     $(".display_number_users_delete").html("Are you sure you want delete " + number_user_delete + " user ?");
   } else {
     $(".display_number_users_delete").html("Please select the user you want delete ?");
   }
 });
 
-$(document).on("click", ".btn-modal-delele-many-users", function () {
+$(document).on("click", ".btn-modal-delele-multiple-users", function () {
   var arr_id_user = [];
   $("#table_user_management tbody :checkbox:checked").each(function () {
     var user_id = this.id
@@ -644,14 +644,14 @@ $(document).on("click", ".btn-modal-delele-many-users", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        $('.btn-modal-delele-many-users').prop("disabled", true);
-        $("#modalDeleteManyUsers").modal("hide");
+        $('.btn-modal-delele-multiple-users').prop("disabled", true);
+        $("#modalDeleteMultipleUsers").modal("hide");
         $(".display_number_users_delete").html('');
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
         $("#table_user_management").dataTable().fnDraw();
         success("Delete");
       } else if (response.status == "fail") {
-        $('.btn-modal-delele-many-users').prop("disabled", true);
+        $('.btn-modal-delele-multiple-users').prop("disabled", true);
         fails("Delete");
       }
     },
