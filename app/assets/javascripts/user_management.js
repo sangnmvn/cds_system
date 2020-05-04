@@ -388,19 +388,26 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
+      fnDrawCallback: function(){
+        $(".collection_selection[type=checkbox]").click(function () {
+          var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
+          if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
+            $("#table_user_management .toggle_all").prop("checked", false);
+          }
+          if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
+            $("#table_user_management .toggle_all").prop("checked", true);
+          }
+        });
 
-      fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-        $(nRow).attr('id', "admin_user_{id}".formatUnicorn({
-          id: aData[11]
-        }));
-        $('.dataTables_length').attr("style", "display:none");
-        return nRow;
-      },
-
+        $('.dataTables_length').attr("style", "display:none");        
+      }, 
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "user_data/",
-
+      
+      "columnDefs": [
+        { "orderable": false, "targets": 0 }
+      ],
     });
 
     $(".toggle_all").click(function () {
@@ -410,15 +417,7 @@ function setup_dataTable() {
       );
     });
 
-    $(".collection_selection[type=checkbox]").click(function () {
-      var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
-      if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
-        $("#table_user_management .toggle_all").prop("checked", false);
-      }
-      if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
-        $("#table_user_management .toggle_all").prop("checked", true);
-      }
-    });
+    
   });
 
 
