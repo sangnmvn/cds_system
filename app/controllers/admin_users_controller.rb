@@ -4,7 +4,7 @@ class AdminUsersController < ApplicationController
   @@filter_project = nil
   @@filter_role    = nil
 
-  before_action :set_admin_user, only: [:update, :status]
+  before_action :set_admin_user, only: [:update, :status, :destroy]
 
   def example_data    
     user_per_page = params["iDisplayLength"].to_i
@@ -120,7 +120,7 @@ class AdminUsersController < ApplicationController
     @companies = Company.all.order(:name)
     @projects = Project.all.order(:desc)
     @roles = Role.all.order(:name)
-    #@admin_users = AdminUser.all.order(:id => :desc)
+    @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
     @project_members = ProjectMember.all
   
     # reset filter
@@ -165,17 +165,13 @@ class AdminUsersController < ApplicationController
   end
 
   def destroy
-    user_id = params[:id]
-    AdminUser.destroy(user_id)
-    #@companies = Company.all
-    #@projects = Project.all
-    #@roles = Role.all
-    #@admin_users = AdminUser.all
-    #@admin_users.reload
-    #@project_members = ProjectMember.all
-
+    params[:is_delete] = true
     respond_to do |format|
-      format.json { render :json => { :deleted_id => user_id } }
+      if @admin_user.update(admin_user_params)
+        format.json { render :json => { status: "success", deleted_id: params[:id] } }
+      else
+        format.json { render :json => { status: "fail" } }
+      end
     end
   end
 
@@ -396,6 +392,6 @@ class AdminUsersController < ApplicationController
   end
 
   def admin_user_params
-    params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status)
+    params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete)
   end
 end

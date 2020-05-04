@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_02_170052) do
+ActiveRecord::Schema.define(version: 2020_05_04_014522) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_05_02_170052) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "status", default: true
+    t.boolean "is_delete", default: false
     t.index ["company_id"], name: "index_admin_users_on_company_id"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
