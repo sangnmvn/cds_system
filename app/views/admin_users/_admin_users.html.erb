@@ -59,8 +59,9 @@
               links = []
 
               links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon", :"data-user_id" => user.id })
-              links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id, :"data-user_account" => user.account})
-              links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon add_previewer_icon", :"data-toggle" => "modal", :"data-target" => "#addReviewerModal", :"data-user_id" => user.id})
+              links << link_to(image_tag("destroy.png", border: 0), "" , { class: "action_icon delete_icon", :"data-toggle" => "modal", :"data-target" => "#deleteModal", :"data-user_id" => user.id, :"data-user_account" => user.account})              
+
+              links << link_to(image_tag("add_reviewer.png", border: 0), "#", { class: "action_icon add_previewer_icon", :"data-toggle" => "modal", :"data-target" => "#addReviewerModal", :"data-user_id" => user.id, :"data-user_account" => user.account})              
               if user.status
               links << link_to('<i class="fa fa-toggle-on"></i>'.html_safe,"#",{ class: "action_icon status_icon", :"data-user_id" => user.id })
               else 

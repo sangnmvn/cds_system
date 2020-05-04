@@ -194,7 +194,7 @@ $(document).ready(function () {
               addData[9] = v.c;
               addData[10] = '<a class="action_icon edit_icon" data-user_id="'+v.id+'" href="#"><img border="0" \
                 src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_account="'+v.account+'" data-user_id="'+v.id+'" href="">\
+                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+v.id+'" href="">\
                 <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                 <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
@@ -202,7 +202,7 @@ $(document).ready(function () {
               addData[11] = v.id;
                
               table.fnAddData(addData);              
-              reorder_table_row(table, 11);
+              reorder_table_row(table);
             });
             // reset and hide form add user 
             $("#modalAdd #project option").remove();
@@ -286,45 +286,15 @@ $(document).ready(function () {
   });
 });
 
-function reorder_table_row(data_table, id_column)
+function reorder_table_row(data_table)
 {
   var all_data = data_table.fnGetData();  
     
   var reload_table = false;
   
-  var id_lists = [];
-  var row_lists = [];
-
   for (var i=0; i < all_data.length; i++)
   {
-    var id = all_data[i][id_column];
-    id_lists.push(id);
-    row_lists.push(i);
-  }
-
-  for (var i=0; i < (row_lists.length-1); i++)
-  {
-    for (var j=i+1; j < row_lists.length; j++)
-    {
-        if (id_lists[i] < id_lists[j])
-        {
-          var temp = id_lists[i];
-          id_lists[i] = id_lists[j];
-          id_lists[j] = temp;
-
-          temp = row_lists[i];
-          row_lists[i] = row_lists[j];
-          row_lists[j] = temp;
-        }
-    }
-  }
-
-  for (var i=0; i < all_data.length; i++)
-  {
-    var data_to_update = (i+1).toString();
-    var row_to_update = row_lists[i];
-
-    data_table.fnUpdate(data_to_update, row_to_update, 1, false, false);
+    data_table.fnUpdate(i+1, i, 1, reload_table,reload_table);
   }
 
   data_table.fnDraw();
@@ -333,7 +303,7 @@ function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
   data_table.fnDeleteRow(row);  
-  reorder_table_row(data_table, 11);
+  reorder_table_row(data_table);
 }
 function delete_user() {
   var user_id = $(".delete_id").val();
@@ -371,7 +341,6 @@ function delete_user() {
 
 function add_previewer_user() {
   var user_id = $(".add_previewer_id").val();
-
   //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
     url: "/admin/user_management/add_previewer/" + user_id,
@@ -395,6 +364,10 @@ $(document).on("click", ".delete_icon", function () {
 
 $(document).on("click", ".add_previewer_icon", function () {
   var user_id = $(this).data("user_id");
+  var user_account = $(this).data("user_account");
+
+  $("#add_previewer_modal_title").html('Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn({account: user_account}));
+
   $(".add_previewer_id").val(user_id);
   // As pointed out in comments,
   // it is unnecessary to have to manually call the modal.
@@ -504,6 +477,7 @@ $(document).on("click", ".edit_icon", function () {
           $(".edit-projects").html(
             '<select class="tokenize-project edit-project" id="project" multiple></select>'
           );
+          console.log(e.project_user);
           $.each(e.projects, function (k, p) {
             if (e.project_user.indexOf(p.id) > -1) {
               $(
@@ -651,7 +625,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
                 elements.push(response['company']);
                 elements.push('<a class="action_icon edit_icon" data-user_id="'+edited_user_id+'" href="#"><img border="0" \
                   src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                  <a class="action_icon delete_icon" data-user_account="'+response['account']+'" data-toggle="modal" data-target="#deleteModal" data-user_id="'+edited_user_id+'" href="">\
+                  <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+edited_user_id+'" href="">\
                   <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                   <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+edited_user_id+'" href="#">\
                   <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
