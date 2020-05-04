@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       get "get_modal_project"
       post "status"
       post "submit_filter"
+      post "delete_multiple_users"
+      post "disable_multiple_users"
     end
   end
   resources :groups do

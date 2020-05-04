@@ -64,7 +64,7 @@ $(document).ready(function () {
 });
 // alert success
 function success(content) {
-  $('#content-alert-success').html(content);
+  $("#content-alert-success").html(content);
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
     $("#alert-success").fadeOut(1000);
@@ -72,7 +72,7 @@ function success(content) {
 }
 // alert fails
 function fails(content) {
-  $('#content-alert-fail').html(content);
+  $("#content-alert-fail").html(content);
   $("#alert-danger").fadeIn();
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
@@ -214,8 +214,8 @@ $(document).ready(function () {
                 <a class="action_icon status_icon" data-user_id="' +
                 v.id +
                 '" href="#"><i class="fa fa-toggle-on"></i></a> ';
-               
-              table.fnAddData(addData);              
+
+              table.fnAddData(addData);
               reorder_table_row(table);
             });
             // reset and hide form add user
@@ -299,23 +299,13 @@ $(document).ready(function () {
   });
 });
 
-function reorder_table_row(data_table)
-{
-  var all_data = data_table.fnGetData();  
-    
-  var reload_table = false;
-  
-  for (var i=0; i < all_data.length; i++)
-  {
-    data_table.fnUpdate(i+1, i, 1, reload_table,reload_table);
-  }
-
+function reorder_table_row(data_table) {
   data_table.fnDraw();
 }
 function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
-  data_table.fnDeleteRow(row);  
+  data_table.fnDeleteRow(row);
   reorder_table_row(data_table);
 }
 function delete_user() {
@@ -384,7 +374,11 @@ $(document).on("click", ".add_previewer_icon", function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_account");
 
-  $("#add_previewer_modal_title").html('Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn({account: user_account}));
+  $("#add_previewer_modal_title").html(
+    'Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn(
+      { account: user_account }
+    )
+  );
 
   $(".add_previewer_id").val(user_id);
   // As pointed out in comments,
@@ -500,7 +494,6 @@ $(document).on("click", ".edit_icon", function () {
           $(".edit-projects").html(
             '<select class="tokenize-project edit-project" id="project" multiple></select>'
           );
-          console.log(e.project_user);
           $.each(e.projects, function (k, p) {
             if (e.project_user.indexOf(p.id) > -1) {
               $(
@@ -704,9 +697,44 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
   $("#modalDeleteManyUsers").modal("show");
-  number = $("#table_user_management tbody :checkbox(:checked)").length;
-  $("#number-user-del").html(number + " users");
+  number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
+  if (number_user_delete != 0){
+    $('.btn-modal-delele-many-users').prop("disabled", false);
+    $(".display_number_users_delete").html("Are you sure you want delete "+ number_user_delete + " user ?");
+  }
+  else {
+    $(".display_number_users_delete").html("Please select the user you want delete ?");
+  }
 });
+
+$(document).on("click", ".btn-modal-delele-many-users", function () {
+  var arr_id_user = [];
+  $("#table_user_management tbody :checkbox:checked").each(function(){
+    var user_id = this.id
+    .split("batch_action_item_")[1]
+    .split('"')[0];
+    arr_id_user.push(user_id);
+  });
+  $.ajax({
+    url: "/admin_users/delete_multiple_users",
+    type: "POST",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { list_users: arr_id_user },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        $("#modalDeleteManyUsers").modal("hide");
+        $(".display_number_users_delete").html('');
+        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        $("#table_user_management").dataTable().fnDraw();
+        success("Delete");
+      } else if (response.status == "fail") {
+        fails("Delete");
+      }
+    },
+  });
+});
+
 
 // status user
 $(document).on("click", ".status_icon", function () {
@@ -736,6 +764,47 @@ $(document).on("click", ".status_icon", function () {
   });
 });
 
+// disable multiple users
+$(document).on("click", "#btn-disable-multiple-users", function () {
+  $("#modalStatusMultipleUsers").modal("show");
+  number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
+  if (number_user_delete != 0){
+    $('.btn-modal-disable-multiple-users').prop("disabled", false);
+    $(".display_number_users_disable").html("Are you sure you want disable "+ number_user_delete + " user ?");
+  }
+  else {
+    $(".display_number_users_disable").html("Please select the user you want disable ?");
+  }
+});
 
-
-
+$(document).on("click", ".btn-modal-disable-multiple-users", function () {
+  var arr_id_user = [];
+  $("#table_user_management tbody :checkbox:checked").each(function(){
+    var user_id = this.id
+    .split("batch_action_item_")[1]
+    .split('"')[0];
+    arr_id_user.push(user_id);
+  });
+  $.ajax({
+    url: "/admin_users/disable_multiple_users",
+    type: "POST",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { list_users: arr_id_user },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        $("#modalStatusMultipleUsers").modal("hide");
+        // $.each(response.users, function (k, v) {
+        //   $('a.status_icon[data-user_id="' + v + '"]').html(
+        //     '<i class="fa fa-toggle-off"></i>'
+        //   );
+        // });
+        $("#table_user_management").dataTable().fnDraw();
+        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        success("Delete");
+      } else if (response.status == "fail") {
+        fails("Delete");
+      }
+    },
+  });
+});
