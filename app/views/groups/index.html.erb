@@ -1,5 +1,7 @@
 <%= stylesheet_link_tag 'group', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <div class="container-fluid">
   <div class="container-fluid">
     <!-- Control the column width, and how they should appear on different devices -->
@@ -7,6 +9,7 @@
       <div class="col-sm-12">
         <%= render 'add'  %>
         <%= render 'edit'  %>
+        <%= render 'assign_user'  %>
       </div>
       <div class="col-sm-12">
         <div class="col-sm-12 table_group_wrapper">
@@ -28,3 +31,4 @@
 </div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
+<!----------------- Modal Assign Users to Group------------------>

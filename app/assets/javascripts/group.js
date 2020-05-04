@@ -53,7 +53,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       success: function (response) {
         // data group
         if (response.status == "success") {
-          var table = $("#table_group").DataTable();
+          var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
           var addData = [];
           addData.push(
@@ -75,7 +75,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
               '" href="">\
             <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
             <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
           table.fnAddData(addData);
           $("#modalAdd .form-add-group")[0].reset();
@@ -153,7 +153,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
       success: function (response) {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
-          var table = $("#table_group").DataTable();
+          var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
           for (var i = 0; i < sData.length; i++) {
             var current_user_id = sData[i][0]
@@ -180,7 +180,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
                 <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                 <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
-                <a class="action_icon user_group_icon" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
               var delete_whole_row_constant = undefined;
               var redraw_table = false;
@@ -220,9 +220,6 @@ function setup_dataTable() {
   $("#table_group").ready(function () {
     $("#table_group").dataTable({
       bDestroy: true,
-      ajax: {
-        url: $("#table_group").data("source"),
-      },
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,

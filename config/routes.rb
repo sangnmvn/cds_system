@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   resources :user_groups do
     collection do
-      get "test"
+      get 'loadUserGroup'
+      get 'loadUser'
+      get 'loadGroup'
+      get 'SaveUserGroup'
     end
   end
   resources :group_privileges

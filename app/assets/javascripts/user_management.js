@@ -179,7 +179,7 @@ $(document).ready(function () {
               );
             }
           } else if (response.status == "success") {
-            var table = $("#table_user_management").DataTable();
+            var table = $("#table_user_management").dataTable();
             var sData = table.fnGetData();
             $.each(response.user, function (k, v) {
               var addData = [];

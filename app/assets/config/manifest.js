@@ -12,3 +12,5 @@
 //= link user_group.css
 //= link group.js
 //= link group.css
+//= link bootbox.all.js
+

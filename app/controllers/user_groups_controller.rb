@@ -1,5 +1,4 @@
 class UserGroupsController < ApplicationController
-  before_action :set_user_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
   # GET /user_groups
   # GET /user_groups.json
@@ -7,9 +6,37 @@ class UserGroupsController < ApplicationController
     @user_groups = UserGroup.all
     @user = AdminUser.all
   end
-  def test
-    @kq = AdminUser.where(:id => params[:id])
-    render json: @kq
+  def loadUser
+    user_groups = UserGroup.where(:group_id => params[:id]).map{|user| user.admin_user_id}
+    @list_user = AdminUser.all.select{|user| user unless user_groups.include? user.id }
+    render json: @list_user
+  end
+  def loadGroup
+    group = Group.find_by(id: params[:id])
+    render json: group
+  end
+  def loadUserGroup
+    @kq = UserGroup.includes(:group).includes(:admin_user).where(:group_id => params[:id])
+    arr = Array.new
+    @kq.each{|kq|
+      hs = Hash.new
+      hs[:id] = kq.id
+      hs[:group_name] = kq.group.name
+      hs[:admin_user_id] = kq.admin_user_id
+      hs[:group_id] = kq.group_id
+      hs[:first_name] = kq.admin_user.first_name
+      hs[:last_name] = kq.admin_user.last_name
+      hs[:email] = kq.admin_user.email
+      arr << hs
+    }
+    render json: arr
+  end
+  def SaveUserGroup
+    list_users = params[:list]
+    id_group = params[:id]
+    UserGroup.delete_by(group_id: id_group)
+    list_users.each{ |user| UserGroup.create(group_id: id_group, admin_user_id: user)} if list_users.present? 
+    render json: "1"
   end
   # GET /user_groups/1
   # GET /user_groups/1.json

@@ -1,6 +1,6 @@
-
 .table-mytable {
 	text-align: center;
+	overflow: auto;
 	tbody tr:nth-of-type(odd) {
 		background-color: #C6E2FF;
 	}
@@ -29,6 +29,12 @@
 	display: flex;
 	align-items: center;
 	text-align: center;
+	//margin-left: 20px;
+	justify-content: center;
+	flex-direction: column;
+}
+.button-header{
+	margin-top: 10px;
 	justify-content: center;
 	flex-direction: column;
 }
@@ -36,7 +42,10 @@
 	top: 2rem;
 	width: 1.15rem;
 	height: 1.15rem;
-
+}
+.mypaging {
+	text-align: left;
+	float: left;
 }
 
 #table_group tr.odd > th {
