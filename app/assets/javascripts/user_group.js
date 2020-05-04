@@ -130,7 +130,7 @@ function myJS() {
 		$('#table_left').DataTable().search('');
 		$('#table_right').DataTable().search('');
 	});
-
+// Add index column in table left
 	$('#table_left').DataTable().on('order.dt search.dt', function () {
 		$('#table_left').DataTable().column(0, {
 			search: 'applied',
@@ -139,7 +139,7 @@ function myJS() {
 			cell.innerHTML = i + 1;
 		});
 	}).draw();
-
+// Add index column in table right
 	$('#table_right').DataTable().on('order.dt search.dt', function () {
 		$('#table_right').DataTable().column(0, {
 			search: 'applied',
@@ -148,6 +148,8 @@ function myJS() {
 			cell.innerHTML = i + 1;
 		});
 	}).draw();
+
+	//alert success
 	function success(content) {
 		$('#content-alert-success').html(content);
 		$("#alert-success").fadeIn();
