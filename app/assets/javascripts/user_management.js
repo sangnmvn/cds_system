@@ -194,7 +194,7 @@ $(document).ready(function () {
               addData[9] = v.c;
               addData[10] = '<a class="action_icon edit_icon" data-user_id="'+v.id+'" href="#"><img border="0" \
                 src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+v.id+'" href="">\
+                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_account="'+v.account+'" data-user_id="'+v.id+'" href="">\
                 <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                 <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+v.id+'" href="#">\
                 <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \
@@ -504,7 +504,6 @@ $(document).on("click", ".edit_icon", function () {
           $(".edit-projects").html(
             '<select class="tokenize-project edit-project" id="project" multiple></select>'
           );
-          console.log(e.project_user);
           $.each(e.projects, function (k, p) {
             if (e.project_user.indexOf(p.id) > -1) {
               $(
@@ -652,7 +651,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
                 elements.push(response['company']);
                 elements.push('<a class="action_icon edit_icon" data-user_id="'+edited_user_id+'" href="#"><img border="0" \
                   src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                  <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-user_id="'+edited_user_id+'" href="">\
+                  <a class="action_icon delete_icon" data-user_account="'+response['account']+'" data-toggle="modal" data-target="#deleteModal" data-user_id="'+edited_user_id+'" href="">\
                   <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
                   <a class="action_icon add_previewer_icon" data-toggle="modal" data-target="#addReviewerModal" data-user_id="'+edited_user_id+'" href="#">\
                   <img border="0" src="/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png"></a> \

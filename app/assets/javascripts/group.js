@@ -66,17 +66,17 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           addData.push("0");
           addData.push(response.desc);
           addData.push(
-            '<a class="action_icon edit_icon btn-edit-group" data-id="' +
-              response.id +
-              '" href="#">\
+            '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
             <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
               response.id +
               '" href="">\
-            <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>'
+            <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+            <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
           table.fnAddData(addData);
-          $('#modalAdd .form-add-group')[0].reset();
+          $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success();
         } else if (response.status == "exist") {
@@ -149,7 +149,6 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
       },
       dataType: "json",
       success: function (response) {
-        
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           var table = $("#table_group").DataTable();
@@ -174,14 +173,12 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               updateData.push("0");
               updateData.push(response.desc);
               updateData.push(
-                '<a class="action_icon edit_icon btn-edit-group" data-id="' +
-                  response.id +
-                  '" href="#">\
+                '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
                 <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
-                  response.id +
-                  '" href="">\
-                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a>'
+                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
+                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
+                <a class="action_icon key_icon" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
+                <a class="action_icon user_group_icon" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
               var delete_whole_row_constant = undefined;
               var redraw_table = false;
@@ -203,7 +200,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
         } else if (response.status == "fail") {
           fails();
         }
-      }
+      },
     });
   }
 });
@@ -228,7 +225,7 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
-      
+
       // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
