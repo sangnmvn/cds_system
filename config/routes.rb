@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   end
   root to: "admin_users#index"
 
-  get "/example_data/" => "admin_users#example_data", defaults: { format: 'json' }
+  get "/user_data/" => "admin_users#get_user_data", defaults: { format: 'json' }
 
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
   get "user_group" => "user_group#index"

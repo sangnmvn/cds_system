@@ -6,7 +6,7 @@ class AdminUsersController < ApplicationController
 
   before_action :set_admin_user, only: [:update, :status, :destroy]
 
-  def example_data
+  def get_user_data
     #user_per_page = params["iDisplayLength"].to_i
 
     # admin user MAIN data generator

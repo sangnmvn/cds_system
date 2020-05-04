@@ -414,7 +414,7 @@ function setup_dataTable() {
 
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "example_data/",
+      "sAjaxSource": "user_data/",
 
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
