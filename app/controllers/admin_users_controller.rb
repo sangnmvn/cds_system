@@ -57,7 +57,7 @@ class AdminUsersController < ApplicationController
       # action
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
-      current_user_data.push((offset + index))
+      current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
       current_user_data.push(user.first_name)
       current_user_data.push(user.last_name)
       current_user_data.push(user.email)
@@ -108,7 +108,7 @@ class AdminUsersController < ApplicationController
         <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
         <a class='action_icon add_previewer_icon' data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
         <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
-        <a class='action_icon status_icon' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-on' styl='color:white'></i></a>")
+        <a class='action_icon status_icon' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
     }
     respond_to do |format|
       format.json { render :json => { iTotalRecords: @admin_users.count, iTotalDisplayRecords: @admin_users.unscope([:limit, :offset]).count, aaData: final_data } }
