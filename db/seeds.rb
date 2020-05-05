@@ -13,8 +13,8 @@ Competency.delete_all
 Template.delete_all
 Title.delete_all
 Approver.delete_all
-TitlePrivilege.delete_all
 Privilege.delete_all
+TitlePrivilege.delete_all
 GroupPrivilege.delete_all
 UserGroup.delete_all
 AdminUser.delete_all
@@ -48,24 +48,74 @@ Project.create!(id: 2, desc: "Project Test 1", company_id: "3")
 Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
-AdminUser.create!(id: 1, email: "admin@example.com", password: "password", password_confirmation: "password", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
 
-NB_USERS = 100
+AdminUser.create!(id: 1, email: "admin@example.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
+AdminUser.create!(id: 2, email: "user1@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user1", account: "user", role_id: "1", company_id: "1")
+AdminUser.create!(id: 3, email: "user2@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user2", account: "user", role_id: "2", company_id: "1")
+AdminUser.create!(id: 4, email: "user3@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user3", account: "user", role_id: "3", company_id: "1")
+AdminUser.create!(id: 5, email: "user4@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user4", account: "user", role_id: "4", company_id: "1")
+AdminUser.create!(id: 6, email: "user5@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user5", account: "user", role_id: "5", company_id: "1")
+AdminUser.create!(id: 7, email: "user6@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user6", account: "user", role_id: "6", company_id: "1")
+AdminUser.create!(id: 8, email: "user7@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user7", account: "user", role_id: "1", company_id: "2")
+AdminUser.create!(id: 9, email: "user8@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user8", account: "user", role_id: "2", company_id: "2")
+AdminUser.create!(id: 10, email: "user9@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user9", account: "user", role_id: "3", company_id: "2")
+AdminUser.create!(id: 11, email: "user10@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user10", account: "user", role_id: "4", company_id: "2")
+AdminUser.create!(id: 12, email: "user11@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user11", account: "user", role_id: "5", company_id: "2")
+AdminUser.create!(id: 13, email: "user12@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user12", account: "user", role_id: "6", company_id: "2")
+AdminUser.create!(id: 14, email: "user13@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user13", account: "user", role_id: "1", company_id: "3")
+AdminUser.create!(id: 15, email: "user14@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user14", account: "user", role_id: "2", company_id: "3")
+AdminUser.create!(id: 16, email: "user15@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user15", account: "user", role_id: "3", company_id: "3")
+AdminUser.create!(id: 17, email: "user16@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user16", account: "user", role_id: "4", company_id: "3")
+AdminUser.create!(id: 18, email: "user17@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user17", account: "user", role_id: "5", company_id: "3")
+AdminUser.create!(id: 19, email: "user18@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user18", account: "user", role_id: "6", company_id: "3")
+AdminUser.create!(id: 20, email: "user19@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user19", account: "user", role_id: "1", company_id: "4")
+AdminUser.create!(id: 21, email: "user20@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user20", account: "user", role_id: "2", company_id: "4")
+AdminUser.create!(id: 22, email: "user21@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user21", account: "user", role_id: "3", company_id: "4")
+AdminUser.create!(id: 23, email: "user22@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user22", account: "user", role_id: "4", company_id: "4")
+AdminUser.create!(id: 24, email: "user23@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user23", account: "user", role_id: "5", company_id: "4")
+AdminUser.create!(id: 25, email: "user24@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user24", account: "user", role_id: "6", company_id: "4")
+AdminUser.create!(id: 26, email: "user25@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user25", account: "user", role_id: "1", company_id: "4")
+AdminUser.create!(id: 27, email: "user26@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user26", account: "user", role_id: "2", company_id: "3")
+AdminUser.create!(id: 28, email: "user27@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user27", account: "user", role_id: "3", company_id: "2")
+AdminUser.create!(id: 29, email: "user28@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user28", account: "user", role_id: "4", company_id: "1")
+AdminUser.create!(id: 30, email: "user29@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user29", account: "user", role_id: "5", company_id: "1")
+AdminUser.create!(id: 31, email: "user30@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user30", account: "user", role_id: "6", company_id: "3")
 
-NB_USERS.times do |n|
-  AdminUser.create! do |u|
-    # u.username = Faker::Internet.user_name + n.to_s
-    # u.email = Faker::Internet.email.gsub("@", "#{n}@")
-    u.id = 2 + n
-    u.email = "user_#{n}@example.com"
-    u.first_name = "Test"
-    u.last_name = "User #{n}"
-    u.account = "user#{n}"
-    u.password = u.password_confirmation = "password"
-    u.company_id = 1 + rand(4).to_i
-    u.role_id = 1 + rand(6).to_i
-  end
-end
+ProjectMember.create!(admin_user_id: 8, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 9, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 10, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 11, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 12, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 14, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 15, project_id: 2, is_managent: "0")
+ProjectMember.create!(admin_user_id: 15, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 16, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 16, project_id: 2, is_managent: "0")
+ProjectMember.create!(admin_user_id: 17, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 17, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 18, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 19, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 19, project_id: 2, is_managent: "0")
+ProjectMember.create!(admin_user_id: 27, project_id: 2, is_managent: "0")
+ProjectMember.create!(admin_user_id: 27, project_id: 1, is_managent: "0")
+ProjectMember.create!(admin_user_id: 28, project_id: 3, is_managent: "0")
+ProjectMember.create!(admin_user_id: 31, project_id: 2, is_managent: "0")
+# NB_USERS = 100
+# NB_USERS.times do |n|
+#   AdminUser.create! do |u|
+#     u.id = 2 + n
+#     u.email = "user_#{n}@example.com"
+#     u.first_name = "Test"
+#     u.last_name = "User #{n}"
+#     u.account = "user#{n}"
+#     u.password = u.password_confirmation = "password"
+#     u.company_id = 1
+#     u.role_id = 1
+#   end
+# end
+
+# Create Project Memember
+# 50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(3).to_i, is_managent: "0") }
 
 NB_GROUPS = 30
 
@@ -103,8 +153,6 @@ Approver.create!(admin_user_id: 1, approver_id: 2)
 Approver.create!(admin_user_id: 3, approver_id: 2)
 Approver.create!(admin_user_id: 4, approver_id: 5)
 Approver.create!(admin_user_id: 6, approver_id: 1)
-# Create Project Memember
-50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(3).to_i, is_managent: "0") }
 
 Approver.create!(approver_id: 1, admin_user_id: 6)
 Approver.create!(approver_id: 1, admin_user_id: 2)
@@ -621,7 +669,7 @@ slot_create = [
   },
   {
     name: "Continuously monitor and control the test activities to achieve project objectives.",
-    desc: "- Là nguời chịu trách nhiệm chính cho toàn bộ hoạt động test của dự án 
+    desc: "- Là nguời chịu trách nhiệm chính cho toàn bộ hoạt ��ộng test của dự án 
     Đã lead testing activities thành công (các release thành công) ở ít nhất 2 dự án có qui mô từ 20 man-month trở lên được xem \
     là bằng chứng mạnh để pass slot này",
     level: "3b",
@@ -1146,18 +1194,18 @@ privilege.each do |s|
 end
 
 #Create Groups
-Group.create!(id: 1, name: "BOD", status: 1, description: "")
-Group.create!(id: 2, name: "Admin", status: 1, description: "")
-Group.create!(id: 3, name: "HR", status: 1, description: "")
-Group.create!(id: 4, name: "Manager", status: 1, description: "")
-Group.create!(id: 5, name: "Reviewer", status: 1, description: "")
-Group.create!(id: 6, name: "Staf", status: 1, description: "")
+# Group.create!(id: 1, name: "BOD", status: 1, description: "")
+# Group.create!(id: 2, name: "Admin", status: 1, description: "")
+# Group.create!(id: 3, name: "HR", status: 1, description: "")
+# Group.create!(id: 4, name: "Manager", status: 1, description: "")
+# Group.create!(id: 5, name: "Reviewer", status: 1, description: "")
+# Group.create!(id: 6, name: "Staf", status: 1, description: "")
 
-GroupPrivilege.create!(group_id: 1, privilege_id: 9)
-GroupPrivilege.create!(group_id: 1, privilege_id: 10)
-GroupPrivilege.create!(group_id: 1, privilege_id: 11)
-GroupPrivilege.create!(group_id: 1, privilege_id: 12)
-GroupPrivilege.create!(group_id: 2, privilege_id: 1)
-GroupPrivilege.create!(group_id: 2, privilege_id: 4)
-GroupPrivilege.create!(group_id: 2, privilege_id: 9)
-GroupPrivilege.create!(group_id: 2, privilege_id: 12)
+# GroupPrivilege.create!(group_id: 1, privilege_id: 9)
+# GroupPrivilege.create!(group_id: 1, privilege_id: 10)
+# GroupPrivilege.create!(group_id: 1, privilege_id: 11)
+# GroupPrivilege.create!(group_id: 1, privilege_id: 12)
+# GroupPrivilege.create!(group_id: 2, privilege_id: 1)
+# GroupPrivilege.create!(group_id: 2, privilege_id: 4)
+# GroupPrivilege.create!(group_id: 2, privilege_id: 9)
+# GroupPrivilege.create!(group_id: 2, privilege_id: 12)

@@ -15,8 +15,7 @@ class AdminUsersController < ApplicationController
     @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false).order(:id => :desc)
 
     unless params["sSearch"].empty?
-      @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", \
-        "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
+      @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
     end
 
     unless params["filter-company"] == "all"
@@ -83,12 +82,11 @@ class AdminUsersController < ApplicationController
       end
 
       current_user_data.push(company)
-      
 
       # action
       current_user_data.push("<a class='action_icon edit_icon' data-user_id='#{user.id}' href='#'><img border='0' 
         src='/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png'></a> 
-        <a class='action_icon delete_icon' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' href=''>
+        <a class='action_icon delete_icon' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href=''>
         <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
         <a class='action_icon add_reviewer_icon' data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
         <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 

@@ -165,3 +165,10 @@ table.dataTable tbody td {
 .resource_selection_cell{
     text-align: center;
 }
+
+.title-filter-user {
+    font-size: 18px;color: #fff;text-align:center;margin-top:10px;
+}
+.filter-page-user {
+    padding: 10px ; border: 1px solid #cccccc;;
+}

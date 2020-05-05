@@ -5,6 +5,9 @@
       <!-- Modal Header -->
       <div class="modal-header head-myheader">
         <h4 class="modal-title" style="text-align: center">Edit User Infomation</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <!-- Modal body -->
       <div class="modal-body">
@@ -95,15 +98,15 @@
               <%= hidden_field(:admin_user, :id) %>
             </div>
             <div class="col-sm-2">
-              <button type="button" class="btn btn-primary" id="btn-modal-edit-user">Save</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
         <%# end container  %>
       </div>
       <!-- Modal footer -->
-      <div class="modal-footer">
+      <div class="modal-footer" style="justify-content: center;">
+          <button type="button" class="btn btn-primary" id="btn-modal-edit-user">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

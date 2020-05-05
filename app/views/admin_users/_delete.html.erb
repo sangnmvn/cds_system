@@ -5,6 +5,9 @@
       <!-- Modal Header -->
       <div class="modal-header head-myheader">
         <h4 class="modal-title" style="text-align: center">Confirm User Delete</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <!-- Modal body -->
       <div class="modal-body">
@@ -15,14 +18,15 @@
             </div>
           </div>
           <div class="" style="text-align:center">
-              <button type="button" class="btn btn-danger" id="btn-modal-delete-user" data-dismiss="modal" onclick="delete_user();">Yes</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+              
             </div>
         </div>
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer" style="justify-content: center;">
           <!-- hidden input to contains id-->
           <input type="text" class="delete_id" style="display:none;" name="delete_id"></input>
+          <button type="button" class="btn btn-danger" id="btn-modal-delete-user" data-dismiss="modal" onclick="delete_user();">Yes</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
       </div>
     </div>
   </div>
