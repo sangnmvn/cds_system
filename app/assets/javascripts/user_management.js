@@ -388,6 +388,17 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
+      fnServerParams: function(aoData){
+        company = $("#filter-company").val();
+        project = $("#filter-project").val();
+        role = $("#filter-role").val();
+        
+        aoData.push({"name": "filter-company", "value": company});
+        aoData.push({"name": "filter-project", "value": project});
+        aoData.push({"name": "filter-role"   , "value": role});
+        
+      },
+      
       fnDrawCallback: function(){
         $(".collection_selection[type=checkbox]").click(function () {
           var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");

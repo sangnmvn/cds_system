@@ -1,9 +1,6 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-  @@filter_company = nil
-  @@filter_project = nil
-  @@filter_role = nil
-
+  
   before_action :set_admin_user, only: [:update, :status, :destroy]
 
   def get_user_data
@@ -22,26 +19,24 @@ class AdminUsersController < ApplicationController
         "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
     end
 
-    unless @@filter_company.nil?
-      @admin_users = @admin_users.where("company_id=?", @@filter_company)
+    unless params["filter-company"] == "all"
+      @admin_users = @admin_users.where("company_id=?", params["filter-company"])
     end
 
-    unless @@filter_role.nil?
-      @admin_users = @admin_users.where("role_id=?", @@filter_role)
+    unless params["filter-role"] == "all"
+      @admin_users = @admin_users.where("role_id=?", params["filter-role"])
     end
 
-    unless @@filter_project.nil?
-      if @@filter_project == "none"
+    unless params["filter-project"] == "all"
+      if params["filter-project"] == "none"
         list_id_user_project = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id") # user have project
         unless list_id_user_project.empty?
           @admin_users = @admin_users.where("id not in (?)", list_id_user_project)
         end
       else
-        list_id_user_project = (@admin_users.joins(:project_members).where("project_id=?", @@filter_project)).pluck("id") # user have project
-
-        unless list_id_user_project.empty?
-          @admin_users = @admin_users.where("id in (?)", list_id_user_project)
-        end
+        list_id_user_project = (@admin_users.joins(:project_members).where("project_id=?", params["filter-project"])).pluck("id") # user have project
+        @admin_users = @admin_users.where("id in (?)", list_id_user_project)
+        
       end
     end
 
@@ -113,11 +108,6 @@ class AdminUsersController < ApplicationController
     @roles = Role.all.order(:name)
     @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
     @project_members = ProjectMember.all
-
-    # reset filter
-    @@filter_company = nil
-    @@filter_project = nil
-    @@filter_role = nil
 
     respond_to do |format|
       format.html
@@ -250,14 +240,6 @@ class AdminUsersController < ApplicationController
     @roles = Role.all
     @projects = Project.all
     @companies = Company.all
-
-    @@filter_company = params[:company]
-    @@filter_role = params[:role]
-    @@filter_project = params[:project]
-
-    @@filter_company = nil if @@filter_company == "all"
-    @@filter_role = nil if @@filter_role == "all"
-    @@filter_project = nil if @@filter_project == "all"
 
     respond_to do |format|
       format.js
