@@ -1,0 +1,7 @@
+<% if @status == true %>
+success("Schedule");
+  $("#schedules").html("<%= j render(@schedules) %>");
+  $("#modalAdd").modal("hide");
+<% else %>
+  fails("Schedule");
+<% end%>

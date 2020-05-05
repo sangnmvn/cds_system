@@ -21,12 +21,13 @@ gem "jbuilder", "~> 2.7"
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem "bootstrap", "~> 4.4.1"
-gem "jquery-rails"
-gem "popper_js", "~> 1.14.5"
+gem 'bootstrap', '~> 4.4.1'
+gem 'jquery-rails'
+gem 'popper_js', '~> 1.14.5'
+gem 'select_all-rails'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
-
+gem 'kaminari'
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.2", require: false
 
@@ -35,7 +36,6 @@ gem "bootsnap", ">= 1.4.2", require: false
 gem "devise"
 gem "cancancan"
 gem "pry"
-gem "jquery-rails"
 gem "chartkick"
 gem 'select_all-rails'
 # gem "activeadmin_addons"

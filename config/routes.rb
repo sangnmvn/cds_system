@@ -10,7 +10,6 @@ Rails.application.routes.draw do
   resources :group_privileges
   resources :privileges
   resources :title_privileges
-  resources :schedules
   devise_for :admin_users
   devise_scope :admin_users do
     get "/admin_users/sign_out" => "devise/sessions#destroy"
@@ -42,8 +41,16 @@ Rails.application.routes.draw do
   get "/user_data/" => "admin_users#get_user_data", defaults: { format: 'json' }
 
   post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
-  get "user_group" => "user_group#index"
-  delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management
+  # resources :admin_users
+
+  resources :schedules do
+    collection do
+      delete 'destroy_multiple'
+    end
+  end
+  get '/schedules/:id/edit_page', to: 'schedules#edit_page'
+  get '/schedules/:id/destroy_page', to: 'schedules#destroy_page'
+
   
   post "admin/user_management/add_reviewer/:id" => "admin_users#add_reviewer", as: :add_reviewer_user_management
   post "admin/user_management/add_reviewer/:id/:approver_ids" => "admin_users#add_reviewer_to_database"

@@ -25,3 +25,4 @@ function () {
 
     return str;
 };
+//= require select_all.js

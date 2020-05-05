@@ -1,0 +1,2 @@
+$("#schedules").html("<%= j render(@schedules) %>");
+$("#paginator").html("<%= j paginate(@schedules, remote: true) %>");

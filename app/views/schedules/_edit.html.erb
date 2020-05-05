@@ -1,0 +1,56 @@
+    
+
+
+<button type="button" id="Edit" style="visibility: hidden;" class="btn btn-primary" data-toggle="modal" data-target="#modalEdit">Edit</button>
+<div class="modal fade modal-form-edit" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+   <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit a New Schedule</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+      
+            <label for="recipient-name" class="col-form-label">Project name:</label>
+             <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Select a project" %>
+          
+
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label"> Start date:</label>
+            <%= text_field_tag 'start_date', nil, class: 'form-control',placeholder: 'Please enter start date' %>
+            
+             <script>
+        $('#start_date').datepicker({
+            uiLibrary: 'bootstrap4'
+        });
+  </script>
+  <input type="hidden" id="start_date_1" name="custId" value="3487">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">End date	:</label>
+            <%= text_field_tag 'end_date', nil, class: 'form-control', placeholder: 'Please enter end date' %>
+             <script>
+        $('#end_date').datepicker({
+            uiLibrary: 'bootstrap4'
+        });
+  </script>
+   <input type="hidden" id="end_date_1" name="custId" value="3487">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Notify before end date:</label>
+            <%= text_field_tag 'notify_date', nil, class: 'form-control',type:'number', placeholder: 'Please enter notify_date' %>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_modal_add">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

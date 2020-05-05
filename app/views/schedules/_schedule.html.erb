@@ -1,0 +1,23 @@
+<tr>
+  <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
+  <td><%= schedule.id %></td>
+  <td><%= schedule.first_name %></td>
+  <td><%= schedule.last_name %></td>
+  <td><%= schedule.email%></td>
+  <td><%= schedule.desc%></td>
+  <td><%= schedule.start_date%></td>
+  <td><%= schedule.end_date%></td>
+  <td style="text-align: right;"><%= schedule.notify_date%></td>
+  <td><%= schedule.created_at%></td>
+  <td><%= schedule.updated_at%></td>
+  <td><%= schedule.status %></td>
+  <td>
+    <% if schedule.status == "In-progress" %>
+      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
+    <% end %>
+    <% if schedule.status == "Not Started" %>
+      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
+      <%= link_to(image_tag("destroy.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn", :"data-schedule" => schedule.id }) %>
+    <% end %>
+  </td>
+</tr>

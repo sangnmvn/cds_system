@@ -229,11 +229,11 @@ function save() {
 					},
 					type: "GET",
 					success: function (response) {
-						success();
+						success("Assign user to this group is ");
 						$("#AssignModal").modal('hide');
 					},
 					error: function () {
-						fails();
+						fails("Assign user to this group is ");
 					}
 				});
 			}

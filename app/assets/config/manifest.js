@@ -14,3 +14,7 @@
 //= link group.css
 //= link bootbox.all.js
 
+//= link schedules.js
+//= link gijgo.min.js
+//= link gijgo.min.css
+//= link schedule.css

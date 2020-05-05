@@ -5,6 +5,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'schedule', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'tokenize2.min', 'data-turbolinks-track': 'reload' %>
@@ -17,30 +20,12 @@
     
     <script src="https://d3js.org/d3.v4.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-      .navbar-light .navbar-nav .nav-link {
-          background: #4472C4;;
-      color: #fff;
-      margin-right: 10px;
-      }
-      .navbar-light .navbar-nav .nav-link:hover {
-           background: #8DA9DB;
-       color: #fff;
-       margin-right: 10px;
-      }
-      .navbar-light .navbar-nav .nav-link:focus {
-       background: #8DA9DB;
-       color: #fff;
-       margin-right: 10px;
-      }
-      .dropdown-item:focus {
-       background: #8DA9DB;
-       color: #fff;
-      }
-      .btn {
-        color: #fff;
-      }
-    </style>
+
+    <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'schedules', 'data-turbolinks-track': 'reload' %>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar_menu">
@@ -70,15 +55,13 @@
               Administrator
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">User Management</a>
-              <a class="dropdown-item" href="#">User Group Management</a>
-              <a class="dropdown-item" href="#">Project Management</a>
-              <a class="dropdown-item" href="#">Company Management</a>
-              <a class="dropdown-item" href="#">Schedule Management</a>
+              <a class="dropdown-item" href="/admin_users">User Management</a>
+              <a class="dropdown-item" href="/groups">User Group Management</a>
+              <a class="dropdown-item" href="/schedules">Schedule Management</a>
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="#">Help</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

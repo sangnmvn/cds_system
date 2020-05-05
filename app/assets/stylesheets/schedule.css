@@ -1,0 +1,9 @@
+.action_icon > img
+{
+  width: 18px;
+  height: 18px;
+}
+
+.table thead th {
+  background-color: #009EE0;
+}

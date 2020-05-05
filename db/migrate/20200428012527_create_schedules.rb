@@ -6,7 +6,7 @@ class CreateSchedules < ActiveRecord::Migration[6.0]
       t.datetime :start_date
       t.datetime :end_date
       t.string :notify_date
-
+      t.boolean :is_delete, default: false
       t.timestamps
     end
   end

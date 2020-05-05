@@ -1,0 +1,6 @@
+<% if @status == true %>
+$("#schedules").html("<%= j render(@schedules) %>");
+  success();
+<% else %>
+  fails();
+<% end%>
