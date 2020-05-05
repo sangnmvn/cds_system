@@ -48,7 +48,7 @@ class UserGroupsController < ApplicationController
     privilege_ids = GroupPrivilege.where(group_id: group_id).pluck(:privilege_id)
     table_left = Privilege.where.not(id: privilege_ids).joins(:title_privilege).select("privileges.*, title_privileges.name as TitleName")
 
-    table_right = GroupPrivilege.where(group_id: group_id).joins(:privilege => :title_privilege).select("group_privileges.*, privileges.name as Name, title_privileges.name as TitleName, title_privileges.id as title_privilege_id")
+    table_right = GroupPrivilege.where(group_id: group_id).joins(:privilege => :title_privilege).select("group_privileges.*, privileges.name as name, title_privileges.name as TitleName, title_privileges.id as title_privilege_id")
 
     @table = {left: table_left, right: table_right}
     render json: @table

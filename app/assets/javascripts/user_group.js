@@ -319,7 +319,7 @@ function privilegeJS() {
   var group_id
   $('.key_icon').click(function () {
     save_button(0)
-    group_id = $(this).closest('div').attr("value")
+    group_id = $(this).closest('a').attr("data-id")
     $(`#modalPrivilege_${group_id} #save_group_${group_id}`).unbind('click').on('click', function (e) {
       var save_arr = []
       $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function (key, value) {
@@ -514,7 +514,7 @@ function save_button(flag) {
 }
 function privilegeAjax() {
   $('.key_icon').on('click', function () {
-    var group_id = $(this).attr("data-id")
+    var group_id = $(this).closest('a').attr("data-id")
     $(`#modalPrivilege_${group_id} .table_left tbody`).children('tr').remove()
     $(`#modalPrivilege_${group_id} .table_right tbody`).children('tr').remove()
     $.ajax({
@@ -599,7 +599,7 @@ function save_group_privileges(group_id, arr) {
 }
 
 function search_group_privileges(group_id, table, search) {
-  var ids = []
+  // var ids = []
   // $(`#modalPrivilege_${group_id} .table_right tbody :checkbox`).each(function(){
   //   ids.push($(this).attr("value"))
   // })
@@ -639,7 +639,7 @@ function search_group_privileges(group_id, table, search) {
           var num = 1
           $(value).each(function (k, v) {
             if (old_name.includes(v.TitleName) == false) {
-              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_privilege_id}" colspan=3>${v.TitleName}</th></tr>`)
+              $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr><th class="privilege-name ${v.title_privilege_id}" colspan=3>${v.TitleName}</th></tr>`)
             }
             $(`#modalPrivilege_${group_id} .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.privilege_id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.privilege_id}"></td><td>${v.name}</td></tr>`)
             old_name.push(v.TitleName)

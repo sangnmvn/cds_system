@@ -1,4 +1,4 @@
-<% @groups.each do |group| %> 
+<% groups.each do |group| %> 
 <div class="modal fade modal-form-add-privilege" id="modalPrivilege_<%= group.id %>">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
@@ -23,7 +23,7 @@
                 -->
               </div>
               <div class="testScroll">
-                <table class="table table-responsive table-mytable table_left" id="table_left_<%= group.id %>">
+                <table class="table table-responsive table-popup-privilege table_left" id="table_left_<%= group.id %>">
                   <thead>
                     <tr>
                       <th scope="col">No</th>
@@ -52,7 +52,7 @@
                 -->
               </div>
               <div class="testScroll">
-                <table class="table table-responsive table-mytable table_right" id="table_left_<%= group.id %>">
+                <table class="table table-responsive table-popup-privilege table_right" id="table_left_<%= group.id %>">
                   <thead>
                     <tr>
                       <th scope="col">No</th>

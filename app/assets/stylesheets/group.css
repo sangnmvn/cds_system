@@ -155,3 +155,42 @@
     color: #fff;
     font-size: 15px;
 }
+
+.table-popup-privilege{
+  display: table;
+}
+.table-popup-privilege tbody tr:nth-of-type(odd) {
+  background-color: #C6E2FF;
+}
+.table-popup-privilege thead {
+  text-align: center;
+  background-color: #0066CC;
+  color: #fff;
+  font-weight: bold;
+}
+.modal-form-add-privilege table{
+  border-collapse: collapse;
+}
+.modal-form-add-privilege table, tr, th, td{
+  border: 2px solid #000;
+}
+.modal-form-add-privilege .modal-header{
+  background-color: #0066CC;
+  color: #fff;
+}
+.modal-form-add-privilege .testScroll{
+  overflow-y: auto;
+  height:350px;
+}
+.modal-form-add-privilege .button-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  float: left;
+  height: 350px; /* Equal with height in #testScroll*/
+  padding: 0;
+}
+.modal-form-add-privilege .button-center.privilege button{
+  margin: 5px 0 5px 0;
+}
