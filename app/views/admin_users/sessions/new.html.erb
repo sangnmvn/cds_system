@@ -2,56 +2,59 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
-#login .container #login-row #login-column #login-box {
-  margin-top: 120px;
-  max-width: 600px;
-  height: 320px;
-  border: 1px solid #9C9C9C;
-  background-color: #EAEAEA;
-}
-#login .container #login-row #login-column #login-box #login-form {
-  padding: 20px;
-}
-#login .container #login-row #login-column #login-box #login-form #register-link {
-  margin-top: -85px;
-}
+  #login .container #login-row #login-column #login-box {
+    margin-top: 120px;
+    max-width: 600px;
+    height: 350px;
+    border: 1px solid #9C9C9C;
+    background-color: #EAEAEA;
+  }
+  #login .container #login-row #login-column #login-box #login-form {
+    padding: 20px;
+  }
+  #login .container #login-row #login-column #login-box #login-form #register-link {
+    margin-top: -85px;
+  }
+  .text-info {
+    color: #4472C4 !important;
+  }
+  .btn-info {
+    background-color: #4472C4 !important;
+    border-color: #4472C4 !important;
+  }
 </style>
-    <div id="login">
-        <h3 class="text-center text-white pt-5">Login form</h3>
-        <div class="container">
-            <div id="login-row" class="row justify-content-center align-items-center">
-                <div id="login-column" class="col-md-6">
-                    <div id="login-box" class="col-md-12">
-                        <form id="login-form" class="form" action="" method="post">
-                            <h3 class="text-center text-info">Login</h3>
-                            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-                            <div class="form-group">
-                                <label for="username" class="text-info">Email:</label><br>
-                                <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control" %>
-                              
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="text-info">Password:</label><br>
-                                <%= f.password_field :password, autocomplete: "current-password",class:"form-control" %>
-                            </div>
-
-                            <% if devise_mapping.rememberable? %>
-                            <div class="form-group">
-                                <label for="remember-me" class="text-info"><span>Remember me</span> <span><%= f.check_box :remember_me %></span></label><br>
-                                  <% end %>
-                                 <%= f.submit "Log in",class:"btn btn-info btn-md" %>
-                              
-                            </div>
- 
-                            <% end %>
-
-<%= render "admin_users/shared/links" %>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<div id="login">
+  <h3 class="text-center text-white pt-5">Login form</h3>
+  <div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+      <div id="login-column" class="col-md-6">
+        <div id="login-box" class="col-md-12">
+          <form id="login-form" class="form" action="" method="post">
+            <h3 class="text-center text-info">Login</h3>
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <div class="form-group">
+                <label for="username" class="text-info">Email:</label>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control" %>
+              </div>
+              <div class="form-group">
+                <label for="password" class="text-info">Password:</label>
+                <%= f.password_field :password, autocomplete: "current-password",class:"form-control" %>
+              </div>
+              <% if devise_mapping.rememberable? %>
+                <div class="form-group">
+                  <label for="remember-me" class="text-info">
+                    <span><%= f.check_box :remember_me %></span>
+                    <span>Remember me</span>
+                <div ><%= render "admin_users/shared/links" %></div>
+                  </label>
+                <% end %>
+                <br/>
+                <%= f.submit "Log in",class:"btn btn-info btn-md" %>
+              </div>
+            <% end %>
+          </form>
         </div>
+      </div>
     </div>
-
-
-
+  </div>
+</div>
