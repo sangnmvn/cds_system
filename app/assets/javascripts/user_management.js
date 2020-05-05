@@ -5,6 +5,7 @@
 $(document).ready(function () {
   $("#filter-company").change(function () {
     company = $("#filter-company").val();
+    
     $.ajax({
       url: "/admin_users/get_filter_company",
       type: "GET",
