@@ -11,29 +11,36 @@
     text-align: center;
     display: none;
 }
-#table_user_management tr.odd > th {
-    font-size: 14px;
+#table_group {
+    border: 1px solid blue;
+}
+#table_group tr.odd > th {
+    font-size: 16px;
     background: #009EE0;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
+    border: 1px solid black;
 }
 
-#table_user_management > tbody[role="alert"] > tr > td{
+#table_group > tbody[role="alert"] > tr > td{
     border: 1px solid #fff;
 }
-
-#table_user_management tr.even > td {
-    font-size: 12px;
-    background: rgb(0, 198, 224);
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
+table.dataTable tbody td {
+    padding: 5px 10px 0px 10px;   
 }
 
-#table_user_management tr.odd > td {
-    font-size: 12px;
-    background: #009ED0;
+#table_group tr.even > td {
+    font-size: 16px;
+    background: #CCC;
     font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
+    color: #000;
+}
+
+#table_group tr.odd > td {
+    font-size: 16px;
+    background: #EEEEEE;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
 }
 
 .action_icon > img
@@ -61,19 +68,19 @@
     text-align: center !important;
 }
 
-#table_user_management_info{
+#table_group_info{
     color: black;
 }
 
-#table_user_management_paginate{
+#table_group_paginate{
     color: black;
 }
 
-#table_user_management_next{
+#table_group_next{
     color: black;
 }
 
-#table_user_management_previous{
+#table_group_previous{
     color: black;
 }
 
@@ -107,14 +114,15 @@
 	text-align: center;
 	tbody tr:nth-of-type(odd) {
 		background-color: #C6E2FF;
-	}
-
-	thead {
-		background-color: #0066CC;
-		color: #fff;
-		font-weight: bold;
-	}
+	}	
 }
+
+thead {
+    background-color: #0066CC;
+    color: #fff;
+    font-weight: bold;
+}
+
 .table, td, tr{
 	border: 1px solid;
 }
@@ -152,7 +160,7 @@
 }
 
 .key_icon, .user_group_icon {
-    color: #fff;
+    color: #000;
     font-size: 15px;
 }
 
