@@ -1,6 +1,6 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-  
+
   before_action :set_admin_user, only: [:update, :status, :destroy]
 
   def get_user_data
@@ -35,7 +35,6 @@ class AdminUsersController < ApplicationController
       else
         list_id_user_project = (@admin_users.joins(:project_members).where("project_id=?", params["filter-project"])).pluck("id") # user have project
         @admin_users = @admin_users.where("id in (?)", list_id_user_project)
-        
       end
     end
 
@@ -187,12 +186,15 @@ class AdminUsersController < ApplicationController
   def add
     password_default = "123QWEasd"
     management_default = 0
+    params[:email] = params[:email].strip
+    params[:account] = params[:account].strip
     @use_new = AdminUser.new(email: params[:email], password: password_default, first_name: params[:first],
                              last_name: params[:last], account: params[:account],
                              company_id: params[:company], role_id: params[:role])
     respond_to do |format|
       email = AdminUser.where(email: params[:email]).present?
       account = AdminUser.where(account: params[:account]).present?
+      # binding.pry
       if email || account
         format.json { render :json => { status: "exist", email: email, account: account } }
       else
@@ -245,6 +247,8 @@ class AdminUsersController < ApplicationController
   end
 
   def update
+    params[:email] = params[:email].strip
+    params[:account] = params[:account].strip
     email_exist = AdminUser.where.not(id: params[:id]).where(email: params[:email]).present? ? true : false
     account_exist = AdminUser.where.not(id: params[:id]).where(account: params[:account]).present? ? true : false
     respond_to do |format|
