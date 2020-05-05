@@ -1,5 +1,5 @@
-<%= form_tag destroy_multiple_groups_path, method: :delete, data: { confirm: 'Are you sure?' } do %>
-<%= submit_tag "Delete selected", :class => 'btn btn-danger btn-xs float-right', :style => 'margin: 5px' %>
+
+
 <table class="table" id="table_group" data-source="<%= groups_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
@@ -22,7 +22,7 @@
         <td class="selectable">
           <div class="resource_selection_cell">
             <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection_selection" name="collection_selection[]">
-        <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable' %>
+        <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable',  name: 'checkbox' %>
           </div>
         </td>
         <td class="id"><%= "#{index + 1}" %></td>
@@ -51,6 +51,6 @@
         </td>
       </tr>
        <% end %>
-    <% end %>
+   
   </tbody>
 </table>

@@ -336,6 +336,53 @@ $(function() {
 
 $(document).ready(function () {
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" \
-  data-toggle="modal" data-target="#modalAdd">Add</button></div>';
+  data-toggle="modal" data-target="#modalAdd">Add</button><button type="button" class="btn btn-danger btn-xs\
+   float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px" >Delete selected</button></div>';
   $(content).insertAfter(".dataTables_filter");
+});
+
+
+$(document).on("click", "#delete_selected", function () {
+
+  var groups_ids = new Array();
+
+            $.each($("input[name='checkbox']:checked"), function(){
+              groups_ids.push($(this).val());
+            });
+  $.ajax({
+    url: "/groups/destroy_multiple/",
+    method: "DELETE",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: {
+      group_ids: groups_ids,
+    },
+    success: function (response) {
+      if (response.status == "success") {
+        $("#modal").modal("hide");
+        var table = $("#table_group").dataTable();
+          var sData = table.fnGetData();
+          for (var i = 0; i < sData.length; i++) {
+            var current_user_id = sData[i][0]
+              .split("batch_action_item_")[1]
+              .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              delete_datatable_row(table, row_id);
+              break;
+           
+            }
+          }
+        success("Delete");
+      } else if (response.status == "exist") {
+        $(".error").remove();
+        $("#modalEdit #name").after(
+          '<span class="error">Name already exsit</span>'
+        );
+      } else if (response.status == "fail") {
+        fails("Edit");
+      }
+    },
+  });
 });

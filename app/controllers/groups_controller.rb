@@ -96,12 +96,12 @@ class GroupsController < ApplicationController
   
     @group.each do |group|
       group.update_attribute(:is_delete,true)
+      
     end
-    
     respond_to do |format|
-      format.html { redirect_to groups_url }
-      format.json { head :no_content }
+      format.js { @status = true }
     end
+
   end
   end
 
