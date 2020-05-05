@@ -3,8 +3,8 @@
     <div class="modal-content">
       <div class="modal-header head-myheader">
         <h4 class="modal-title" id="add_reviewer_modal_title" style="color: white">Assign Users to Group</h4>
-        <button type="button" class="close" style="background-color: white" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color:white" >&times;</span>
         </button>
       </div>
       <div class="modal-body">
@@ -195,24 +195,8 @@
   $(document).ready(function() {
   // Cấu hình các nhãn phân trang
   
-  global_data_table_left = $('#table_left').dataTable( {
-      "language": {
-      "sProcessing":   "Đang xử lý...",
-      "sLengthMenu":   "Xem _MENU_ mục",
-      "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
-      "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
-      "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
-      "sInfoFiltered": "(được lọc từ _MAX_ mục)",
-      "sInfoPostFix":  "",
-      "sSearch":       "Tìm:",
-      "sUrl":          "",
-      "oPaginate": {
-          "sFirst":    "Đầu",
-          "sPrevious": "Trước",
-          "sNext":     "Tiếp",
-          "sLast":     "Cuối"
-          }
-      },
+  global_data_table_left = $('#table_left').dataTable( {      
+      "bDestroy": true,
       "processing": true, // tiền xử lý trước
       "iDisplayLength": 10,
       "order": [[ 1, 'asc' ]], //sắp xếp giảm dần theo cột thứ 1
@@ -228,24 +212,7 @@
   
   
   
-  	global_data_table_right =$('#table_right').dataTable( {
-      "language": {
-      "sProcessing":   "Đang xử lý...",
-      "sLengthMenu":   "Xem _MENU_ mục",
-      "sZeroRecords":  "Không tìm thấy dòng nào phù hợp",
-      "sInfo":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
-      "sInfoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
-      "sInfoFiltered": "(được lọc từ _MAX_ mục)",
-      "sInfoPostFix":  "",
-      "sSearch":       "Tìm:",
-      "sUrl":          "",
-      "oPaginate": {
-          "sFirst":    "Đầu",
-          "sPrevious": "Trước",
-          "sNext":     "Tiếp",
-          "sLast":     "Cuối"
-          }
-      },
+  	global_data_table_right =$('#table_right').dataTable( {      
       "bDestroy": true,
       "processing": true, // tiền xử lý trước
       "aLengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]], // danh sách số trang trên 1 lần hiển thị bảng
