@@ -1,5 +1,3 @@
-// insert 3 button 
-
 
 // filter select company
 $(document).ready(function () {

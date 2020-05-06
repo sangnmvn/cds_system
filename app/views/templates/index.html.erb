@@ -1,0 +1,32 @@
+<%= stylesheet_link_tag 'template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'template', 'data-turbolinks-track': 'reload' %>
+
+<div class="container-fluid" id="grad1">
+    <div class="row justify-content-center mt-0">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+            <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <div class="row">
+                    <div class="col-md-12 mx-0">
+                        <form id="msform">
+                            <!-- progressbar -->
+                            <ul id="progressbar">
+                                <li class="active" id="account"><strong>General Information</strong></li>
+                                <li id="personal"><strong>Add Compentencies</strong></li>
+                                <li id="payment"><strong>Add slots</strong></li>
+                            </ul> <!-- fieldsets -->
+                            <fieldset>
+                                <%= render 'step_1'  %>
+                            </fieldset>
+                            <fieldset>
+                                <%= render 'step_2'  %>
+                            </fieldset>
+                            <fieldset>
+                                 <%= render 'step_3'  %>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

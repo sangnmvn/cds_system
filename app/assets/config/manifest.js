@@ -18,3 +18,6 @@
 //= link gijgo.min.js
 //= link gijgo.min.css
 //= link schedule.css
+
+//= link template.js
+//= link template.css

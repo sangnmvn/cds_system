@@ -1,2 +1,3 @@
-class TemplatessController < ApplicationController
+class TemplatesController < ApplicationController
+  layout "system_layout"
 end
