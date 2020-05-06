@@ -1,0 +1,13 @@
+table{
+  display: table;
+  width: 100%;
+}
+table tbody tr:nth-of-type(odd) {
+  background-color: #C6E2FF;
+}
+table thead {
+  text-align: center;
+  background-color: #0066CC;
+  color: #fff;
+  font-weight: bold;
+}
