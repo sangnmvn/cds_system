@@ -1,10 +1,46 @@
-<div class="form-card">
-  <h2 class="fs-title">Personal Information</h2> 
-  <input type="text" name="fname" placeholder="First Name" /> 
-  <input type="text" name="lname" placeholder="Last Name" /> 
-  <input type="text" name="phno" placeholder="Contact No." /> 
-  <input type="text" name="phno_2" placeholder="Alternate Contact No." />
-</div> 
+<%= form_with class: "form-add-template" do %>
+<div class="row">
+  <div class="col-sm-12">
+      
+      <div class="col-sm-8" style="text-align: left">
+        <p style="color:red;">Note: * indicates required fileld</p>
+      </div>
+  </div>
+  <div class="col-sm-12">
+      
+      <%# group name %>
+      <div class="row">
+          <div class="offset-md-1 col-sm-2" style="text-align: left">
+              <label>Name (*)</label>
+          </div>
+          <div class="col-sm-8">
+              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
+          </div>
+      </div>
+      <br>
+      <%# status %>
+      <div class="row">
+          <div class="offset-md-1 col-sm-2" style="text-align: left">
+              <label>Type</label>
+          </div>
+          <div class="col-sm-8">
+              <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
+          </div>
+      </div>
+      <br>
+      <%# Description %>
+      <div class="row">
+          <div class="offset-md-1 col-sm-2" style="text-align: left">
+              <label>Description</label>
+          </div>
+          <div class="col-sm-8">
+              <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
+          </div>
+      </div>  
+      <br>
+  </div>
+</div>
+<% end %>
 
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
 <button type="buttton" class="btn btn-primary">Save</button>

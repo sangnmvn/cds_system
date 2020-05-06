@@ -1,41 +1,42 @@
 <%= form_with class: "form-add-template" do %>
 <div class="row">
   <div class="col-sm-12">
-      <p style="color:red; text-align: left; margin-left: 10px;">Note: * indicates required fileld</p>
+      
+      <div class="col-sm-8" style="text-align: left">
+        <p style="color:red;">Note: * indicates required fileld</p>
+      </div>
   </div>
   <div class="col-sm-12">
       
       <%# group name %>
       <div class="row">
-          <div class="col-sm-3">
+          <div class="offset-md-1 col-sm-2 bg-primary" style="text-align: left">
               <label>Name (*)</label>
           </div>
-          <div class="col-sm-9">
+          <div class="col-sm-8">
               <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name' %>
           </div>
       </div>
       <br>
       <%# status %>
       <div class="row">
-        <div class="col-sm-3">
-          <label>Role (*)</label>
-        </div>
-        <div class="col-sm-9">
-          <%= select_tag "role", options_from_collection_for_select(@roles, "id", "name"), class: 'form-control' %>
-          <div id="error-status"></div>
-        </div>
+          <div class="offset-md-1 col-sm-2 bg-primary" style="text-align: left">
+              <label>Type</label>
+          </div>
+          <div class="col-sm-8">
+              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name' %>
+          </div>
       </div>
       <br>
       <%# Description %>
       <div class="row">
-        <div class="col-sm-3">
-          <label>Description</label>
-        </div>
-        <div class="col-sm-9">
-          <%= text_area_tag 'desc', nil, class: "form-control", rows: 5, style: 'width:100%;', placeholder: "Please enter description" %>
-          <div id="error-status"></div>
-        </div>
-      </div>
+          <div class="offset-md-1 col-sm-2 bg-primary" style="text-align: left">
+              <label>Description</label>
+          </div>
+          <div class="col-sm-8">
+              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name' %>
+          </div>
+      </div>  
       <br>
   </div>
 </div>
