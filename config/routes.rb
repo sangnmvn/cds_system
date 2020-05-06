@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   resources :competencies do
     collection do
       # post "create"
+      get "load"
     end
   end
 

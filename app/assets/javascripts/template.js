@@ -68,6 +68,51 @@ $(document).on("click", "#btn-add-competency", function () {
     url: "/competencies",
     type: "POST",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { name: name }
+    data: { name: name, type: type, slot: slot }
   });
 });
+
+
+
+$(document).ready(function () {
+	var table = $('#table_add_competency').DataTable({
+    "info" : false,
+    "bPaginate": false,
+    "searching": false,
+    "ordering": true
+  });
+  $(".btnUp").click(function(){
+    var id = $(this).closest('tr').attr('value');
+    moveRowbyAjax(-1);
+    //var index = table.row($(this).closest('tr')).index()
+    //moveRow('up',"table_template",index)
+  });
+  $(".btnDown").click(function(){
+    var id = $(this).closest('tr').attr('value');
+    moveRowbyAjax(1);
+    //var index = table.row($(this).closest('tr')).index()
+    //moveRow('down',"table_template",index)
+  });
+});
+
+
+function loadDataCompetencies (){
+  $.ajax({
+    type: "GET",
+    url: "/competencies/load",
+    data: {
+      id: 1
+    },
+    dataType: "json",
+    success: function (response) {
+      $(response).each(
+        function (i, e) { //duyet mang doi tuong
+          var tr = $("<tr value='"+ e.id +"'/>");
+          $("<td/>").htnl(e.name).appendTo(tr);
+          tr.appendTo($("#table_add_competency"))
+        }
+      );
+    }
+  });
+}
+loadDataCompetencies();

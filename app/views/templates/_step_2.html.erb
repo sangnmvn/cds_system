@@ -1,59 +1,126 @@
 <div class="row"  style="justify-content: center;">
-    <div class="col-lg-6">
-            <%= form_with class: "form-add-competency" do %>
-                <div class="row">
-                <div class="col-sm-12">
-                    
-                    <div class="col-sm-8" style="text-align: left">
-                        <p style="color:red;">Note: * indicates required fileld</p>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    
-                    <%# group name %>
-                    <div class="row">
-                        <div class="offset-md-1 col-md-2" style="text-align: left">
-                            <label>Name (*)</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
-                        </div>
-                    </div>
-                    <br>
-                    <%# status %>
-                    <div class="row">
-                        <div class="offset-md-1 col-md-2" style="text-align: left">
-                            <label>Type</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
-                        </div>
-                    </div>
-                    <br>
-                    <%# Description %>
-                    <div class="row">
-                        <div class="offset-md-1 col-md-2" style="text-align: left">
-                            <label>Description</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
-                        </div>
-                    </div>  
-                    <br>
-                </div>
-                </div>
-                <% end %>
+  <div class="col-lg-6">
+    <%= form_with class: "form-add-competency" do %>
+        <div class="row">
+        <div class="col-sm-12">
+            
+            <div class="col-sm-8" style="text-align: left">
+                <p style="color:red;">Note: * indicates required fileld</p>
+            </div>
         </div>
-    </div>
+        <div class="col-sm-12">
+            
+            <%# group name %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Name (*)</label>
+                </div>
+                <div class="col-sm-8">
+                    <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
+                </div>
+            </div>
+            <br>
+            <%# status %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Type</label>
+                </div>
+                <div class="col-sm-8">
+                    <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
+                </div>
+            </div>
+            <br>
+            <%# Description %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Description</label>
+                </div>
+                <div class="col-sm-8">
+                    <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
+                </div>
+            </div>  
+            <br>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
-<button type="buttton" class="btn btn-primary">Save</button>
+<button type="buttton" class="btn btn-primary" id="btn-add-competency">Save</button>
 <button class="btn btn-primary next action-button" type="button" value="Next Step" name="next">Next</button>
 <button type="buttton" class="btn btn-primary">Close</button>
 
 
-<div class="row">
-    <div class="col-md-12">
-            aaaaaaaaaaaaaaaaaaaaaaa
+<div style="margin-top: 20px">
+  <div class="row">
+    <div class="col-sm">
+        <div class="divHeader">Productivity</div>
     </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+    <table class="table table-primary table-responsive-sm table-mytable" id="table_add_competency">
+    <thead>
+        <tr>
+        <th>No.</th>
+        <th data-orderable="false">Name</th>
+        <th>Type</th>
+        <th data-orderable="false">Description</th>
+        <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="tbdTemplate">
+        <tr value='4'>
+            <td class="td_num">1</td>
+            <td>Productivity</td>
+            <td>General</td>
+            <td>Productivity</td>
+            <td class="td_action">
+              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+            </td>
+        </tr>
+        <tr value='3'>
+            <td class="td_num">1</td>
+            <td>Productivity</td>
+            <td>General</td>
+            <td>Productivity</td>
+            <td class="td_action">
+              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+            </td>
+        </tr>
+        <tr value='2'>
+            <td class="td_num">1</td>
+            <td>Productivity</td>
+            <td>General</td>
+            <td>Productivity</td>
+            <td class="td_action">
+              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+            </td>
+        </tr>
+        <tr value='1'>
+            <td class="td_num">1</td>
+            <td>Productivity</td>
+            <td>General</td>
+            <td>Productivity</td>
+            <td class="td_action">
+              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+</div>
 </div>

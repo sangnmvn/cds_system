@@ -18,6 +18,10 @@ class CompetenciesController < ApplicationController
   def update
   end
 
+  def load 
+    binding.pry
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
