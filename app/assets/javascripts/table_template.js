@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-	var table = $('#table_template').DataTable({
+	var table = $('#table_slot').DataTable({
     "info" : false,
     "bPaginate": false,
     "searching": false,
@@ -17,6 +17,9 @@ $(document).ready(function () {
     moveRowbyAjax(1);
     //var index = table.row($(this).closest('tr')).index()
     //moveRow('down',"table_template",index)
+  });
+  $('#selectCompetency').change(function(){
+    alert($(this).val());
   });
 });
 
@@ -36,20 +39,22 @@ $(document).ready(function () {
 //   table.row(index).data(data2);
 //   table.row(index + order).data(data1);
 // }
-function loadDataSlot (){
+function loadSlotByCompetencyId (competencyId)
+{
   $.ajax({
     type: "GET",
     url: "/templates/loadSlot",
     data: {
-      id: 1
+      id: id //direction phân biệt up hay down để change data cho phù hợp
     },
     dataType: "json",
     success: function (response) {
       $(response).each(
         function (i, e) { //duyet mang doi tuong
-          var tr = $("<tr value='"+ e.id +"'/>");
-          $("<td/>").htnl(e.name).appendTo(tr);
-          tr.appendTo($("#dataTemplate"))
+          $("#table_slot").dataTable().fnAddData([
+            "<td class='td_num'>"+ e.level +"</td>", e.description , e.evidence, "<td class='td_action'><button class='btn btn-light'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></button>" +
+            "<button class='btn btn-light'><i class='fa fa-trash icon' style='color:red'></i></button><button class='btn btn-primary btnUp' ><i class='fa fa-arrow-circle-up'></i></button>" +
+            "<button class='btn btn-primary btnDown'><i class='fa fa-arrow-circle-down'></i></button></td>"]);
         }
       );
     }

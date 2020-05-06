@@ -34,19 +34,23 @@
 	background-color:  #007bff;
 	text-align: left;
 	color: #FFF;
-	padding-left: 10px;
+	padding: 10px;
+	margin: auto;
 	font-weight: bold;
 }
 .divChilHeader {
 	font-size: large;
 	background-color:  #B9D3EE;
 	text-align: left;
-	color: #FFF;
-	padding-left: 10px;
+	margin: auto;
+	padding: 10px;
 	font-weight: bold;
 }
 .icon {
 	// width: 10px;
 	// height: 10px;
 	font-size: 20px;
+}
+.divTable {
+	justify-content: center;
 }
