@@ -347,7 +347,7 @@ $(function() {
 $(document).ready(function () {
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" \
   data-toggle="modal" data-target="#modalAdd">Add</button><button type="button" class="btn btn-danger btn-xs\
-   float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px" id="deletes">Delete selected</button></div>';
+   float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px" id="deletes">Delete</button></div>';
   $(content).insertAfter(".dataTables_filter");
 });
 

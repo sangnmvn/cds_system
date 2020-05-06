@@ -416,7 +416,16 @@ function setup_dataTable() {
       "sAjaxSource": "user_data/",
       
       "columnDefs": [
-        { "orderable": false, "targets": 0 }
+        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 0 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ],  "targets": 1 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 2 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 3 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 4 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 5 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 6 },
+        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 7 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 8 },
+        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 9 },
       ],
     });
 
