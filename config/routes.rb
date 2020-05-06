@@ -37,6 +37,12 @@ Rails.application.routes.draw do
   end
   resources :templates do
     collection do
+      get "add"
+    end
+  end
+  resources :competencies do
+    collection do
+      # post "create"
     end
   end
 

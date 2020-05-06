@@ -1,45 +1,56 @@
-<%= form_with class: "step1 form-add-template" do %>
-<div class="row">
-  <div class="col-sm-12">
-    <div class="col-sm-8" style="text-align: left">
-      <p style="color:red;">Note: * indicates required fileld</p>
+
+
+
+
+<div class="row"  style="justify-content: center;">
+    <div class="col-lg-6">
+            <%= form_with class: "step1 form-add-template" do %>
+        <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-8" style="text-align: left">
+            <p style="color:red;">Note: * indicates required fileld</p>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <%# Template name %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Name: (*)</label>
+                </div>
+                <div class="col-md-8">
+                <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name' %>
+                <div class="error">Please enter Name</div>
+                </div>
+            </div>
+            <br>
+            <%# Role %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Role:</label>
+                </div>
+                <div class="col-md-8">
+                <%= select_tag "type", options_from_collection_for_select(roles, :id, :name), class: 'form-control' %>
+                </div>
+            </div>
+            <br>
+            <%# Description %>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                <label>Description: </label>
+                </div>
+                <div class="col-md-8">
+                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+                <div class="error"></div>
+                </div>
+            </div>  
+            <br>
+        </div>
+        </div>
+        <% end %>
+        </div>
     </div>
-  </div>
-  <div class="col-sm-12">
-    <%# Template name %>
-    <div class="row">
-        <div class="offset-sm-2 col-sm-2" style="text-align: left">
-            <label>Name: (*)</label>
-        </div>
-        <div class="col-sm-8">
-          <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name' %>
-          <div class="error">Please enter Name</div>
-        </div>
-    </div>
-    <br>
-    <%# Role %>
-    <div class="row">
-        <div class="offset-sm-2 col-sm-2" style="text-align: left">
-            <label>Role:</label>
-        </div>
-        <div class="col-sm-8">
-          <%= select_tag "type", options_from_collection_for_select(roles, :id, :name), class: 'form-control' %>
-        </div>
-    </div>
-    <br>
-    <%# Description %>
-    <div class="row">
-        <div class="offset-sm-2 col-sm-2" style="text-align: left">
-          <label>Description: </label>
-        </div>
-        <div class="col-sm-8">
-          <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
-          <div class="error"></div>
-        </div>
-    </div>  
-    <br>
-  </div>
-</div>
-<% end %>
+
+
 <button class="btn btn-primary next action-button" type="button" value="Next Step" name="next">Next</button>
-<button class="btn btn-primary">Cancel</button>
+<button type="buttton" class="btn btn-primary">Close</button>
+

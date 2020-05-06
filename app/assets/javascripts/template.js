@@ -33,7 +33,6 @@ $(document).ready(function () {
   $(".previous").click(function () {
     current_fs = $(this).parent();
     previous_fs = $(this).parent().prev();
-
     //Remove class active
     $(".steps .step").eq($("fieldset").index(current_fs)).removeClass("step-active");
     // $(".steps .step").eq($("fieldset").index(next_fs)).removeClass("step-active");
@@ -48,7 +47,6 @@ $(document).ready(function () {
         step: function (now) {
           // for making fielset appear animation
           opacity = 1 - now;
-
           current_fs.css({
             display: "none",
             position: "relative",
@@ -59,11 +57,17 @@ $(document).ready(function () {
       }
     );
   });
+});
 
-  $(".radio-group .radio").click(function () {
-    $(this).parent().find(".radio").removeClass("selected");
-    $(this).addClass("selected");
+$(document).on("click", "#btn-add-competency", function () {
+  name = $('.form-add-competency #name').val();
+  type = $('.form-add-competency #type').val();
+  slot = $('.form-add-competency #slot').val();
+  alert(name);
+  $.ajax({
+    url: "/competencies",
+    type: "POST",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    data: { name: name }
   });
-
-  
 });

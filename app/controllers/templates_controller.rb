@@ -5,4 +5,9 @@ class TemplatesController < ApplicationController
     @roles = Role.all
     @competencies = Competency.all
   end
+
+  def add
+    @roles = Role.all
+    @competencies = Competency.all
+  end
 end
