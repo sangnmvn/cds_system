@@ -1,18 +1,18 @@
 <div class="modal-header">
-  <h5 class="modal-title" id="exampleModalLabel">Update Schedule</h5>
+  <h5 class="modal-title" id="exampleModalLabel">Edit Schedule</h5>
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <form>
+  <form id="form_content">
     <div class="form-group">
       <label for="recipient-name" class="col-form-label">Project name:</label>
       <%= select_tag "edit_project", options_from_collection_for_select(@projects, "id", "desc",selected: @schedule.project_id), class: 'form-control',  include_blank: "Select a project", disabled: true %>
       <%= text_field_tag 'schedule_id', @schedule.id,type: 'hidden', class: 'form-control'%>
     </div>
     <div class="form-group">
-      <% if @schedule.status == "Not Started" %>
+      <% if @schedule.status == "New" %>
         <label for="recipient-name" class="col-form-label"> Start date:</label>
         <%= text_field_tag 'edit_start_date', @start_date, class: 'form-control'%>
         <input type="hidden" id="edit_start_date_1" name="custId" value="3487">

@@ -1,6 +1,6 @@
 <% if @status == true %>
-$("#schedules").html("<%= j render(@schedules) %>");
   success();
+$("#schedules").html("<%= j render partial: "schedule", locals: { schedules: @schedules} %>");
 <% else %>
   fails();
 <% end%>

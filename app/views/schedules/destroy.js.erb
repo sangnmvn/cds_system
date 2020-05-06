@@ -1,7 +1,7 @@
 <% if @status == true %>
   success();
-   $("#schedules").html("<%= j render(@schedules) %>");
-  $(".modal_content_2").modal("hide");
+   $("#schedules").html("<%= j render partial: "schedule", locals: { schedules: @schedules} %>");
+  $("#modal_content").modal("hide");
 <% else %>
   fails();
 <% end%>
