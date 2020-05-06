@@ -1,0 +1,27 @@
+.table-mytable {
+	text-align: left;
+	overflow: auto;
+	tbody tr:nth-of-type(odd) {
+		background-color: #C6E2FF;
+	}
+	.td_num{
+		text-align: right;
+	}
+	thead {
+		color: #fff;
+		font-size: large;
+		font-weight: bold;
+		background-color: #007bff;
+	}
+	table, th, td {
+		border: 1px solid #FFF;
+	}
+	th{
+		text-align: center;
+	}
+	.btn_move {
+		background-color: #B9D3EE;
+		text-align: center;
+		border: none;
+	}
+}
