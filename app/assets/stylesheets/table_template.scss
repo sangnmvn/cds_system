@@ -7,6 +7,9 @@
 	.td_num{
 		text-align: right;
 	}
+	.td_action{
+		text-align: center;
+	}
 	thead {
 		color: #fff;
 		font-size: large;
@@ -18,10 +21,32 @@
 	}
 	th{
 		text-align: center;
+		font-size: medium;
 	}
 	.btn_move {
 		background-color: #B9D3EE;
 		text-align: center;
 		border: none;
 	}
+}
+.divHeader {
+	font-size: x-large;
+	background-color:  #007bff;
+	text-align: left;
+	color: #FFF;
+	padding-left: 10px;
+	font-weight: bold;
+}
+.divChilHeader {
+	font-size: large;
+	background-color:  #B9D3EE;
+	text-align: left;
+	color: #FFF;
+	padding-left: 10px;
+	font-weight: bold;
+}
+.icon {
+	// width: 10px;
+	// height: 10px;
+	font-size: 20px;
 }

@@ -1,76 +1,83 @@
-<%# <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'font-awesome.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
 
-<table class="table table-primary table-responsive-sm table-mytable" id="table_template">
-  <thead>
-    <tr>
-    <th data-orderable="false">No.</th>
-    <th data-orderable="false">Name</th>
-    <th>Description</th>
-    <th>Role</th>
-    <th>Status</th>
-    <th>Lastest update</th>
-    <th>Update by</th>
-    <th>Action</th>
-    </tr>
-  </thead>
-  <tbody id="tbdTemplate">
-    <tr value='4'>
-      <td class="td_num">1</td>
-      <td>tesst 1</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>Email Address</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>
-          <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-    <tr value='1'>
-      <td class="td_num">2</td>
-      <td>tesst 2</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>Email Address</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>
-          <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-    <tr value='2'>
-      <td class="td_num">3</td>
-      <td>tesst 3</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>Email Address</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>
-          <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-    <tr value='3'>
-      <td class="td_num">4</td>
-      <td>tesst 4</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>Email Address</td>
-      <td>dsdf</i></td>
-      <td>Last Name</td>
-      <td>
-          <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-  </tbody>
-  <p></p>
-</table>
+<div class="row">
+    <div class="col-sm">
+        <div class="divHeader">Productivity</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        <div class="divChilHeader">Slots</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+    <table class="table table-primary table-responsive-sm table-mytable" id="table_template">
+    <thead>
+        <tr>
+        <th data-orderable="false">Level</th>
+        <th data-orderable="false">Slot Description</th>
+        <th>Evidence Guide</th>
+        <th>Action</th>
+        <th>Move</th>
+        </tr>
+    </thead>
+    <tbody id="tbdTemplate">
+        <tr value='4'>
+            <td class="td_num">1</td>
+            <td>Last Name</td>
+            <td>Last Nam esdasd adsá</td>
+            <td class="td_action">
+            <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+            <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+            </td>
+            <td class="td_action">
+                <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
+                <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+            </td>
+        </tr>
+        <tr value='1'>
+        <td class="td_num">2</td>
+        <td>dsdsádasdas</td>
+        <td>Last Name</td>
+         <td class="td_action">
+            <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+            <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+        </td>
+        <td class="td_action">
+            <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+            <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+        </td>
+        </tr>
+        <tr value='2'>
+        <td class="td_num">3</td>
+        <td>Last Nameds</td>
+        <td>Last Name abc vx s s sa</td>
+         <td class="td_action">
+            <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+            <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+        </td>
+        <td class="td_action">
+            <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+            <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+        </td>
+        </tr>
+        <tr value='3'>
+        <td class="td_num">4</td>
+        <td>tesst 4</td>
+        <td>Last Name</td>
+        <td class="td_action">
+            <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
+            <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
+        </td>
+        <td class="td_action">
+            <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
+            <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+</div>
+
+
