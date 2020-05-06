@@ -42,7 +42,11 @@
   color: #9E9E9E
 }
 
-
+.error{
+  color: red;
+  text-align: left;
+  font-size: 80%;
+}
 
 
 

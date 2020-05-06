@@ -3,5 +3,6 @@ class TemplatesController < ApplicationController
 
   def index
     @roles = Role.all
+    @competencies = Competency.all
   end
 end

@@ -1,48 +1,47 @@
-<%= form_with class: "form-add-template" do %>
+<%= form_with class: "step1 form-add-template" do %>
 <div class="row">
   <div class="col-sm-12">
-      
-      <div class="col-sm-8" style="text-align: left">
-        <p style="color:red;">Note: * indicates required fileld</p>
-      </div>
+    <div class="col-sm-8" style="text-align: left">
+      <p style="color:red;">Note: * indicates required fileld</p>
+    </div>
   </div>
   <div class="col-sm-12">
-      
-      <%# group name %>
-      <div class="row">
-          <div class="offset-md-1 col-sm-2" style="text-align: left">
-              <label>Name (*)</label>
-          </div>
-          <div class="col-sm-8">
-              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
-          </div>
+    <%# Conpetency name %>
+    <div class="row">
+      <div class="offset-sm-2 col-sm-2" style="text-align: left">
+         <label>Name(*): </label>
       </div>
-      <br>
-      <%# status %>
-      <div class="row">
-          <div class="offset-md-1 col-sm-2" style="text-align: left">
-              <label>Type</label>
-          </div>
-          <div class="col-sm-8">
-              <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
-          </div>
+      <div class="col-sm-8">
+        <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name' %>
+        <div class="error">Max character: 30</div>
       </div>
-      <br>
-      <%# Description %>
-      <div class="row">
-          <div class="offset-md-1 col-sm-2" style="text-align: left">
-              <label>Description</label>
-          </div>
-          <div class="col-sm-8">
-              <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;' %>
-          </div>
-      </div>  
-      <br>
+    </div>
+    <br>
+    <%# Type %>
+    <div class="row">
+      <div class="offset-sm-2 col-sm-2" style="text-align: left">
+        <label>Type: </label>
+      </div>
+      <div class="col-sm-8">
+        <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
+      </div>
+    </div>
+    <br>
+    <%# Description %>
+    <div class="row">
+      <div class="offset-sm-2 col-sm-2" style="text-align: left">
+        <label>Description: </label>
+      </div>
+      <div class="col-sm-8">
+        <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+        <div class="error">Max character: 200</div>
+      </div>
+    </div>  
+    <br>
   </div>
 </div>
 <% end %>
-
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
 <button type="buttton" class="btn btn-primary">Save</button>
 <button class="btn btn-primary next action-button" type="button" value="Next Step" name="next">Next</button>
-<button type="buttton" class="btn btn-primary">Close</button>
+<button type="buttton" class="btn btn-primary">Cancel</button>
