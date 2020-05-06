@@ -206,3 +206,7 @@ thead {
 .modal-form-add-privilege .button-center.privilege button{
   margin: 5px 0 5px 0;
 }
+.table th, .table td {
+
+  border: 1px solid #000;
+}

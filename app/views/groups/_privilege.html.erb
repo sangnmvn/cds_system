@@ -4,7 +4,7 @@
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <p class="modal-title" style="text-align:left;font-size:18px;background-color:">Assign Privileges To Group <%= group.name %></p>
+        <p class="modal-title" style="text-align:left;font-size:18px;background-color:">Assign Privileges To <%= group.name %></p>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
@@ -25,10 +25,10 @@
               <div class="testScroll">
                 <table class="table table-responsive table-popup-privilege table_left" id="table_left_<%= group.id %>">
                   <thead>
-                    <tr>
-                      <th scope="col">No</th>
-                      <th scope="col"><input type="checkbox" class="selectAll1"></th>
-                      <th scope="col">Privilege Name</th>
+                    <tr >
+                      <th scope="col"style="border: 2px solid #000;">No</th>
+                      <th scope="col"style="border: 2px solid #000;"><input type="checkbox" class="selectAll1"></th>
+                      <th scope="col"style="border: 2px solid #000;">Privilege Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -55,9 +55,9 @@
                 <table class="table table-responsive table-popup-privilege table_right" id="table_left_<%= group.id %>">
                   <thead>
                     <tr>
-                      <th scope="col">No</th>
-                      <th scope="col"><input type="checkbox" class="selectAll2"></th>
-                      <th scope="col">Privilege Name</th>
+                      <th scope="col" style="border: 2px solid #000;">No</th>
+                      <th scope="col" style="border: 2px solid #000;"><input type="checkbox" class="selectAll2"></th>
+                      <th scope="col" style="border: 2px solid #000;">Privilege Name</th>
                     </tr>
                   </thead>
                   <tbody>

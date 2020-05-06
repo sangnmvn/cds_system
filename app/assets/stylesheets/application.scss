@@ -67,6 +67,41 @@ margin-right: 10px;
 
 color: #fff;
 }
+.navbar-light .navbar-text a.btn {
+    color: #fff;
+}
+
+.resource_selection_toggle_cell {
+    text-align: center;
+    vertical-align: middle;
+}
+#title_bar {
+    background-color: #efefef;
+    background-image: linear-gradient(180deg, #efefef, #dfe1e2);
+    text-shadow: #fff 0 1px 0;
+    border: solid 1px #cdcdcd;
+    border-color: #d4d4d4;
+    border-top-color: #e6e6e6;
+    border-right-color: #d4d4d4;
+    border-bottom-color: #cdcdcd;
+    border-left-color: #d4d4d4;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 1px #fff inset;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 18px;
+    margin-bottom: 0.5em;
+    color: #5E6469;
+    padding: 5px 10px 3px 10px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.37);
+    display: table;
+    border-bottom-color: #EEE;
+    width: 100%;
+    position: relative;
+    margin: 5px 0px 20px;
+    padding: 10px 30px;
+    z-index: 800;
+}
 /*
   *= require_tree .
   *= require_self

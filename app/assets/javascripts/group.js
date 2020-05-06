@@ -400,3 +400,7 @@ $(document).on("click", "#delete_selected", function () {
     },
   });
 });
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
+  $('[data-toggle="modal"]').tooltip();
+});

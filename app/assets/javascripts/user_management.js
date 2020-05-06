@@ -363,7 +363,7 @@ $(document).on("click", ".add_reviewer_icon", function () {
   var user_account = $(this).data("user_account");
 
   $("#add_reviewer_modal_title").html(
-    'Add Reviewer for user <span style="color: #f00;">{account}</span>'.formatUnicorn({
+    'Add Reviewer For <span style="color: #f00;font-size: bold;">{account}</span>'.formatUnicorn({
       account: user_account
     })
   );
@@ -748,9 +748,13 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
 
 
 $(document).ready(function () {
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalAdd" \
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true">Add</button> \
-  <button type="button" class="btn btn-secondary"  id="btn-delete-many-users">Delete</button> \
+  <button type="button" class="btn btn-danger"  id="btn-delete-many-users">Delete</button> \
   <button type="button" class="btn btn-secondary"  id="btn-disable-multiple-users">Disable</button> </div>';
   $(content).insertAfter(".dataTables_filter");
+});
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
+  $('[data-toggle="modal"]').tooltip();
 });
