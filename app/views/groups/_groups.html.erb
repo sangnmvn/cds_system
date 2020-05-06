@@ -5,7 +5,13 @@
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
     
-        <th data-sort-ignore="true"><input type="checkbox" id="selectAll"></th>
+        <th data-sort-ignore="true"> 
+        <div class="resource_selection_toggle_cell">
+     
+          <input type="checkbox" id="selectAll">
+       
+        </div>
+        </th>
    
       <th scope="col" class="id">ID</th>
       <th scope="col" class="name">Name</th>

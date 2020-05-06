@@ -93,13 +93,14 @@ class GroupsController < ApplicationController
       
     
     @group = Group.find(params[:group_ids])
-  
+      id=[]
     @group.each do |group|
       group.update_attribute(:is_delete,true)
-      
+      id << group.id
     end
+   
     respond_to do |format|
-      format.js { @status = true }
+      format.json { render :json => {id: id } }
     end
 
   end
