@@ -1,7 +1,7 @@
 <% if @status == true %>
-  success();
     $("#schedules").html("<%= j render partial: "schedule", locals: { schedules: @schedules} %>");
   $("#modal").modal("hide");
+  success("The schedule has been edited successfully");
 <% else %>
-  fails();
+  fails("Edited schedule failed");
 <% end%>

@@ -1,43 +1,100 @@
-<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalAdd" style="margin: 5px 15px 5px 0px;">Add</button>
+<button type="button" class="btn btn-primary float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;"><%= image_tag("Add.png") %> Add</button>
 <div class="modal fade modal-form-add" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add a New Schedule</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h4 class="modal-title" style="text-align: center">Add a New Schedule</h4>
       </div>
       <div class="modal-body">
-        <form id="form_add_schedule">
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Project name(*):</label>
-            <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Select a project" %>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <p style="color:red">Note: * indicates required fileld</p>
+            </div>
+            <div class="col-sm-6">
+              <%# Schedule name %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Schedule Name (*)</label>
+                </div>
+                <div class="col-sm-6">
+                  <%= text_field_tag 'desc', nil, class: 'form-control', placeholder: 'Please enter schedule name' %>
+                </div>
+              </div>
+              <br>
+              <%# project name %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Project Name (*)</label>
+                </div>
+                <div class="col-sm-6">
+                  <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Please select a project" %>
+                </div>
+              </div>
+              <br>
+              <%# start date %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Start date (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= date_field_tag :start_date , class: "form-control", min: Date.today %>
+                </div>
+              </div>
+              <br>
+              <%# end date employee %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Employee's end date (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= date_field_tag :end_date_employee, class: "form-control" %>
+                </div>
+              </div>
+              <br>
+            </div>
+            <%# right  %>
+            <div class="col-sm-6">
+              <%# end date reviewer %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label> Reviewer's end date (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= date_field_tag :end_date_employee, class: "form-control" %>
+                </div>
+              </div>
+              <br>
+              <%# day notice for employee %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Day notice to employee (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= number_field_tag :notify_employee, in: 1.0..20.0, class: "form-control" %>
+                </div>
+              </div>
+              <br>
+              <%# project %>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Day notice to employee</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= number_field_tag :notify_reviewer, in: 1.0..20.0, class: "form-control" %>
+                </div>
+              </div>
+              <br>
+              <%# end  %>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label"> Start date(*):</label>
-            <%= text_field_tag 'start_date', nil, class: 'form-control date_picker1',placeholder: 'Please enter start date' %>
-            <input type="hidden" id="start_date_1" name="custId" value="3487">
-          </div>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">End date(*):</label>
-            <%= text_field_tag 'end_date', nil, class: 'form-control date_picker2', placeholder: 'Please enter end date' %>
-            <input type="hidden" id="end_date_1" name="custId" value="3487">
-          </div>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Notify before end date(*):</label>
-            <%= text_field_tag 'notify_date', nil, class: 'form-control',type:'number', placeholder: 'Please enter notify_date' %>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="btn_modal_add">Save</button>
+          <%# end container  %>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-primary" id="btn_modal_add">Save</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<script>
-  $('#start_date').datetimepicker({ footer: true, modal: true });
-                $('#end_date').datetimepicker({ footer: true, modal: true });
-</script>

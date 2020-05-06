@@ -1,5 +1,7 @@
-
-function success(content) {
+$(function () {
+  $('[data-tooltip="true"]').tooltip()
+})
+function success(content="Success !") {
   $('#content-alert-success').html(content);
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
@@ -7,7 +9,7 @@ function success(content) {
   }, 5000);
 }
 // alert fails
-function fails(content) {
+function fails(content="Fail !") {
   $('#content-alert-fail').html(content);
   $("#alert-danger").fadeIn();
   window.setTimeout(function () {
