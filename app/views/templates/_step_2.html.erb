@@ -26,7 +26,7 @@
                     <label>Type</label>
                 </div>
                 <div class="col-sm-8">
-                    <%= select_tag "type", raw('<option value="0">General</option><option value="1">Specicalized</option>'), class: 'form-control' %>
+                    <%= select_tag "type", raw('<option value="General">General</option><option value="Specicalized">Specicalized</option>'), class: 'form-control' %>
                 </div>
             </div>
             <br>
@@ -52,7 +52,7 @@
 <button type="buttton" class="btn btn-primary">Close</button>
 
 
-<div style="margin-top: 20px">
+<div style="margin-top: 20px" style="justify-content: left;">
   <div class="row">
     <div class="col-sm">
         <div class="divHeader">Productivity</div>
@@ -71,7 +71,7 @@
         </tr>
     </thead>
     <tbody id="tbdTemplate">
-        <tr value='4'>
+        <%# <tr value='4'>
             <td class="td_num">1</td>
             <td>Productivity</td>
             <td>General</td>
@@ -118,7 +118,7 @@
               <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
               <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
             </td>
-        </tr>
+        </tr> %>
     </tbody>
     </table>
     </div>

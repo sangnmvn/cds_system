@@ -1,4 +1,6 @@
 class CompetenciesController < ApplicationController
+  before_action :set_competency, only: [:show, :edit, :update, :destroy]
+
   def index
   end
 
@@ -9,7 +11,19 @@ class CompetenciesController < ApplicationController
   end
 
   def create
-    binding.pry
+    # binding.pry
+    @competency = Competency.new(competency_params)
+    respond_to do |format|
+      if Competency.where(name: params[:name]).where(template_id: params[:template_id]).present?
+        format.json { render :json => { status: "exist" } }
+      else
+        if @competency.save
+          format.json { render :json => { status: "success" } }
+        else
+          format.json { render :json => { status: "fail" } }
+        end
+      end
+    end
   end
 
   def destroy
@@ -18,8 +32,25 @@ class CompetenciesController < ApplicationController
   def update
   end
 
-  def load 
-    binding.pry
+  def load
+    competencies = Competency.select(:id, :name, :_type, :desc).where(template_id: params[:id])
+    # binding.pry
+    arr = Array.new
+    competencies.each { |kq|
+      arr << {
+        id: kq.id,
+        name: kq.name,
+        type: kq._type,
+        desc: kq.desc,
+      }
+    }
+    respond_to do |format|
+      # if competency.empty?
+      format.json { render :json => { competencies: arr } }
+      # else
+      #   format.json { render :json => { competency: competency } }
+      # end
+    end
   end
 
   private
@@ -31,6 +62,6 @@ class CompetenciesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def competency_params
-    params.require(:conpetency).permit(:id)
+    params.permit(:name, :_type, :desc, :template_id)
   end
 end

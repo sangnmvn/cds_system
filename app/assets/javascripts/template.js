@@ -62,13 +62,24 @@ $(document).ready(function () {
 $(document).on("click", "#btn-add-competency", function () {
   name = $('.form-add-competency #name').val();
   type = $('.form-add-competency #type').val();
-  slot = $('.form-add-competency #slot').val();
-  alert(name);
+  desc = $('.form-add-competency #desc').val();
+  template_id = 1;
   $.ajax({
     url: "/competencies",
     type: "POST",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { name: name, type: type, slot: slot }
+    data: { name: name, _type: type, desc: desc, template_id: template_id },
+    dataType: "json",
+    success: function (response) {
+      if(response.status == "exist"){
+
+      }else if(response.status == "success") {
+
+      }
+      else if(response.status == "fail") {
+
+      }
+    }
   });
 });
 
@@ -105,13 +116,17 @@ function loadDataCompetencies (){
     },
     dataType: "json",
     success: function (response) {
-      $(response).each(
-        function (i, e) { //duyet mang doi tuong
-          var tr = $("<tr value='"+ e.id +"'/>");
-          $("<td/>").htnl(e.name).appendTo(tr);
-          tr.appendTo($("#table_add_competency"))
-        }
-      );
+      dataAdd = [];
+      $.each(e.roles, function (k, v) {
+        $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
+          "#filter-role"
+        );
+      });
+      $(response).each(function (i, e) {
+        $("#table_right").dataTable().fnAddData([
+          "<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.name + "'/>", e.name, e.name, e.name
+        ]);
+      });
     }
   });
 }
