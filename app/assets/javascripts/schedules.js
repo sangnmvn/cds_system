@@ -15,7 +15,7 @@ function fails(content) {
   }, 5000);
 }
 $(document).ready(function () {
-
+  
   $('.edit_btn').bind("click", function () {
     let schedule_param = $(this).data('schedule')
 
@@ -42,11 +42,11 @@ $(document).ready(function () {
 $(document).on("click", ".del_btn", function () {
   let schedule_param = $(this).data('schedule')
 
-    $.ajax({
-      url: "/schedules/" + schedule_param + "/destroy_page",
-      type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
-    });
+  $.ajax({
+    url: "/schedules/" + schedule_param + "/destroy_page",
+    type: "GET",
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
+  });
 });
 $(document).on("click", ".edit_btn", function () {
   let schedule_param = $(this).data('schedule')
@@ -153,7 +153,7 @@ $(document).on("click", "#btn_modal_edit", function () {
   notify_date = $("#edit_notify_date").val();
   status_edit = $("#status").val();
   temp = true;
-  if (status_edit == "Not Started") {
+  if (status_edit == "New") {
     Date.prototype.addDays = function (days) {
       var date = new Date(this.valueOf());
       date.setDate(date.getDate() + days);
@@ -221,7 +221,7 @@ $(document).on("click", "#btn_modal_edit", function () {
       });
     }
   }
-  if (status_edit == "In-progress") {
+  if (status_edit == "New") {
 
     $(".error").remove();
 
@@ -273,13 +273,13 @@ function delete_schedule() {
   });
 }
 $(document).on("click", "#delete_selected", function () {
-  
+
   var schedule_ids = new Array();
 
-            $.each($("input[name='checkbox']:checked"), function(){
-              schedule_ids.push($(this).val());
-            });
-  
+  $.each($("input[name='checkbox']:checked"), function () {
+    schedule_ids.push($(this).val());
+  });
+
   $.ajax({
     url: "/schedules/destroy_multiple/",
     method: "DELETE",
@@ -292,4 +292,21 @@ $(document).on("click", "#delete_selected", function () {
     },
   });
 });
-
+$(document).ready(function () {
+  $(".selectable").on('click', function() {
+    if( $(':checkbox:checked').length > 0){
+      $('#displayBtnDel').prop("disabled", false);
+    }
+    else{
+      $('#displayBtnDel').prop("disabled", true);
+    }
+  })
+  $('#selectAll').click(()=>{
+    if( $('#selectAll').is(':checked')){
+      $('#displayBtnDel').prop("disabled", false);
+    }
+    else{
+      $('#displayBtnDel').prop("disabled", true);
+    }
+  })
+})

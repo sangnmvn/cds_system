@@ -123,7 +123,7 @@ class SchedulesController < ApplicationController
     elsif current_time >= schedule.start_date.to_s
       schedule.status = "In-progress"
     else
-      schedule.status = "Not Started"
+      schedule.status = "New"
     end
   end
 end
