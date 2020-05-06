@@ -6,4 +6,9 @@
 
 .table thead th {
   background-color: #4472c4;
+
+  background-color: #009EE0;
+  color: #fff;
+  border: 1px solid black;
 }
+

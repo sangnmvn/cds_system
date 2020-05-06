@@ -1,7 +1,7 @@
 <% if @status == true %>
-success("Schedule");
   $("#schedules").html("<%= j render partial: "schedule", locals: { schedules: @schedules} %>");
   $("#modalAdd").modal("hide");
+  success("The schedule has been created successfully");
 <% else %>
   fails("Schedule");
 <% end%>
