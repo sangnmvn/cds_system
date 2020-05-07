@@ -2,84 +2,56 @@
 <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'template-index', media: 'all', 'data-turbolinks-track': 'reload' %>
 
-<table class="table table-primary">
-  <thead>
-    <tr>
-      <th scope="col">No</th>
-      <th scope="col">Name</th>
-      <th scope="col">Description</th>
-      <th scope="col">Role</th>
-      <th scope="col">Status</th>
-      <th scope="col">Lastest update</th>
-      <th scope="col">Updated by</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td scope="row">1</td>
-      <td scope="row">tesst 1</td>
-      <td scope="row">dsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdfdsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">Email Address</td>
-      <td scope="row">dsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">
-        <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
-        <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-    <tr>
-      <td scope="row">1</td>
-      <td scope="row">tesst 1</td>
-      <td scope="row">dsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">Email Address</td>
-      <td scope="row">dsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">
-        <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
-        <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
+    <li class="breadcrumb-item active">Teamplate Management</li>
+  </ol>
+</nav>
+<div class="container-fluid">
+  <div class="template-header">
+    <span class="title">Templates</span>
+    <div class="add-template">
+      <%= link_to '<button><img src="../assets/Add.png"> Add</button>'.html_safe, add_templates_path %>
+    </div>
+    <%# <div class="search">
+      <input type="text" placeholder="Need search?">
+      <input type="submit" value="Search">
+    </div> %>
+  </div>
+  
+  <div class="template-table">
+    <table class="table table-primary table-responsive-sm">
+      <thead>
+        <tr >
+          <th scope="col" style="width:2%">No</th>
+          <th scope="col" style="width:10%">Name</th>
+          <th scope="col" style="width:40%">Description</th>
+          <th scope="col" style="width:5%">Role</th>
+          <th scope="col" style="width:5%">Status</th>
+          <th scope="col" style="width:8%">Lastest update</th>
+          <th scope="col" style="width:10%">Updated by</th>
+          <th scope="col" style="width:8%;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @templates.each_with_index do |template,index| %>
         <tr>
-      <td scope="row">1</td>
-      <td scope="row">tesst 1</td>
-      <td scope="row">dsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">Email Address</td>
-      <td scope="row">dsdf</i></td>
-      <td scope="row">Last Name</td>
-      <td scope="row">
-        <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
-        <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="row">
-  <div class="col-1">No</div>
-  <div class="col-1">Name</div>
-  <div class="col-1">Description</div>
-  <div class="col-1">Role</div>
-  <div class="col-1">Status</div>
-  <div class="col-1">Lastest update</div>
-  <div class="col-1">Updated by</div>
-  <div class="col-1">Action</div>
+          <td class="num"><%= index+1 %></td>
+          <td><%= template.name %></td>
+          <td><%= template.desc %></td>
+          <td><%= template.role_name %></td>
+          <td><%= template.status ? "Enable" : "Disable" %></td>
+          <td class="num"><%= template.updated_at.strftime("%D") %></td>
+          <td><%= template.updated_by %></td>
+          <td class="action">
+            <%= link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group"}) %>
+            <%= link_to(('<i class="fas fa-file-export"></i>').html_safe, "#", { class: "action_icon edit_icon btn-edit-group"}) %>
+            <%= link_to(image_tag("Delete.png", border: 0), "#", { class: "action_icon del_btn"}) %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
-
-<table class="table table-responsive table-popup-privilege table_left" id="table_left">
-  <thead>
-    <tr >
-      <th scope="col"style="border: 2px solid #000;">No</th>
-      <th scope="col"style="border: 2px solid #000;"><input type="checkbox" class="selectAll1"></th>
-      <th scope="col"style="border: 2px solid #000;">Privilege Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-    
-    </tr>
-  </tbody>
-</table>
