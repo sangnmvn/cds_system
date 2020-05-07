@@ -14,7 +14,7 @@
             <div class="col-sm-6">
               <%# Schedule name %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label>Schedule Name (*)</label>
                 </div>
                 <div class="col-sm-6">
@@ -23,31 +23,44 @@
               </div>
               <br>
               <%# project name %>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Project Name (*)</label>
+              <% if current_admin_user.role.name == "HR" %>
+                <div class="row">
+                <div class="col-sm-4">
+                  <label>Company Name (*)</label>
                 </div>
                 <div class="col-sm-6">
-                  <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Please select a project" %>
+                  <%= select_tag "project", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
                 </div>
               </div>
               <br>
+              <% elsif current_admin_user.role.name == "PM" %>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Project Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Please select a project" %>
+                  </div>
+                </div>
+                <br>
+
+              <% end %>
               <%# start date %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label>Start date (*)</label>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                   <%= date_field_tag :start_date , class: "form-control", min: Date.today %>
                 </div>
               </div>
               <br>
               <%# end date employee %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label>Employee's end date (*)</label>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                   <%= date_field_tag :end_date_employee, class: "form-control" %>
                 </div>
               </div>
@@ -57,30 +70,30 @@
             <div class="col-sm-6">
               <%# end date reviewer %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label> Reviewer's end date (*)</label>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                   <%= date_field_tag :end_date_employee, class: "form-control" %>
                 </div>
               </div>
               <br>
               <%# day notice for employee %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label>Day notice to employee (*)</label>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                   <%= number_field_tag :notify_employee, in: 1.0..20.0, class: "form-control" %>
                 </div>
               </div>
               <br>
               <%# project %>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <label>Day notice to employee</label>
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                   <%= number_field_tag :notify_reviewer, in: 1.0..20.0, class: "form-control" %>
                 </div>
               </div>

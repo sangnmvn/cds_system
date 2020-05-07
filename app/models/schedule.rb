@@ -6,5 +6,4 @@ class Schedule < ApplicationRecord
   delegate :desc, to: :project
   paginates_per 20
   max_paginates_per 20
-  attr_accessor :status
 end

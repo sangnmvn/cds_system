@@ -190,6 +190,8 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
     t.string "status"
     t.date "end_date_reviewer"
     t.string "notify_reviewer"
+    t.date "end_date_hr"
+    t.string "notify_hr"
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
     t.index ["company_id"], name: "index_schedules_on_company_id"
     t.index ["project_id"], name: "index_schedules_on_project_id"

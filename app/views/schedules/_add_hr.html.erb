@@ -1,0 +1,88 @@
+<button type="button" class="btn btn-primary float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;"><%= image_tag("Add.png") %> Add</button>
+<div class="modal fade modal-form-add" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" style="text-align: center">Add a New Schedule</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <form id="form_add_hr">
+            <div class="row">
+              <div class="col-sm-12">
+                <p style="color:red">Note: * indicates required fileld</p>
+              </div>
+              <div class="col-sm-12">
+                <%# Schedule name %>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Schedule Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= text_field_tag 'desc', nil, class: 'form-control', placeholder: 'Please enter schedule name' %>
+                  </div>
+                </div>
+                <br>
+                <%# project name %>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Company Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= select_tag "company", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a company" %>
+                  </div>
+                </div>
+                <br>
+                <%# start date %>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Start date (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" id="start_date">
+                  </div>
+                </div>
+                <br>
+                <%# end date employee %>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>End date (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" id="end_date" class="form-control">
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Reminder (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= number_field_tag :notify_hr, nil %>
+                    <em>day(s) before</em>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Status</label>
+                  </div>
+                  <div class="col-sm-6" >
+                    <input type="text" class="form-control" id="status" disabled >
+                  </div>
+                </div>
+                <br>
+              </div>
+              <%# right  %>
+            </div>
+            <%# end container  %>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary" id="btn_modal_add_hr">Save</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
