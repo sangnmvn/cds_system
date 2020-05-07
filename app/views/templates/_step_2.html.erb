@@ -17,6 +17,8 @@
                 </div>
                 <div class="col-sm-8">
                     <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
+                    <%= hidden_field(:competency, :id )%>
+                    <%= hidden_field(:competency, :index )%>
                     <div id="error-name-competency"></div>
                 </div>
             </div>

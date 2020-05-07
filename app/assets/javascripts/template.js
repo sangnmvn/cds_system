@@ -3,10 +3,10 @@
 
 $(document).on("click", "#btn-add-competency", function () {
   id = $(".form-add-competency #competency_id").val();
+  index = $(".form-add-competency #competency_index").val();
   name = $(".form-add-competency #name").val();
   type = $(".form-add-competency #type").val();
   desc = $(".form-add-competency #desc").val();
-  index = $(".form-add-competency #competency_index").val();
   template_id = 1;
   // $(".form-add-competency .error").remove();
   if ($(".form-add-competency .error").length == 0 && id == "") {
@@ -61,7 +61,9 @@ $(document).on("click", "#btn-add-competency", function () {
           // $(".form-add-competency #type option[value='"+type+"']").prop("selected", true);
           success("Update");
           $('.btn-save-compentency').prop("disabled", true);
-          
+          $(".form-add-competency #competency_id").val('');
+          $(".form-add-competency #competency_index").val('');
+          $('#table_add_competency tr:nth-child('+index+1+') td .btn-delete-competency').prop("disabled", false);
           // addCompetency(response.id,response.name,response.type,response.desc);
         } else if (response.status == "fail") {
           fails("Update");
@@ -115,13 +117,14 @@ $(document).on("click", ".btn-edit-competency", function () {
       success: function (response) {
           if (response.status == "success") {
             success("Load Data");
-            id = $(".form-add-competency #competency_id").val(response.id);
-            name = $(".form-add-competency #name").val(response.name);
-            type = $(".form-add-competency #type").val(response.type);
-            desc = $(".form-add-competency #desc").val(response.desc);
-            index = $(".form-add-competency #competency_index").val(index);
+            $(".form-add-competency #competency_id").val(response.id);
+            $(".form-add-competency #name").val(response.name);
+            $(".form-add-competency #type").val(response.type);
+            $(".form-add-competency #desc").val(response.desc);
+            $(".form-add-competency #competency_index").val(index);
             $('.btn-save-compentency').prop("disabled", false);
-            $('#table_add_competency tr:nth-child('+index+1+') td .btn-delete-competency').prop("disabled", false);
+            $('#table_add_competency tr td .btn-delete-competency').prop("disabled", false);
+            $('#table_add_competency tr:nth-child('+(Number(index)+1)+') td .btn-delete-competency').prop("disabled", true);
           } else {
             fails("Load Data");
           }

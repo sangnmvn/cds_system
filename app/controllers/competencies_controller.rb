@@ -17,7 +17,6 @@ class CompetenciesController < ApplicationController
         format.json { render json: { status: "exist" } }
       else
         if @competency.save
-          # binding.pry
           format.json { render :json => { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type } }
         else
           format.json { render :json => { status: "fail" } }
@@ -29,7 +28,7 @@ class CompetenciesController < ApplicationController
   def destroy
     if @competency.update(is_delete: true)
       render :json => { status: "success" }
-    else 
+    else
       render :json => { status: "fail" }
     end
   end
@@ -37,14 +36,15 @@ class CompetenciesController < ApplicationController
   def update
     respond_to do |format|
       if Competency.where.not(id: params[:id]).where(name: params[:name]).present?
-        format.json { render :json => { :status => "exist" } }
+        format.json { render :json => { status: "exist" } }
       else
         if @competency.update(competency_params)
           # binding.pry
-          format.json { render :json => { :status => "success", id: @competency.id, name: @competency.name,\
-            type: @competency._type, desc: @competency.desc } }
+          format.json {
+            render :json => { status: "success", id: @competency.id, name: @competency.name, type: @competency._type, desc: @competency.desc }
+          }
         else
-          format.json { render :json => { :status => "fail" } }
+          format.json { render :json => { status: "fail" } }
         end
       end
     end
@@ -52,8 +52,7 @@ class CompetenciesController < ApplicationController
 
   def load
     competencies = Competency.select(:id, :name, :_type, :desc)
-    .where(template_id: params[:id],is_delete: false).order(_type: :asc)
-    # binding.pry
+      .where(template_id: params[:id], is_delete: false).order(_type: :asc)
     arr = Array.new
     competencies.each { |kq|
       arr << {
@@ -63,21 +62,17 @@ class CompetenciesController < ApplicationController
         desc: kq.desc,
       }
     }
-    # render json: arr
-      # if competency.empty?
-       render json: arr 
-      # else
-      #   format.json { render :json => { competency: competency } }
-      # end
+    render json: arr
   end
 
-    def load_data_edit
-      if @competency
-        render :json => { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
-      else 
-        render :json => { status: "fail" }
-      end
+  def load_data_edit
+    if @competency
+      render :json => { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
+    else
+      render :json => { status: "fail" }
     end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
