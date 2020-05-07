@@ -426,6 +426,7 @@ function setup_dataTable() {
         { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 7 },
         { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 8 },
         { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 9 },
+        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 10 },
       ],
     });
 
@@ -759,8 +760,11 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
 $(document).ready(function () {
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true">Add</button> \
+  <button type="button" class="btn btn-secondary"  id="btn-disable-multiple-users">Disable</button>\
+  <button type="button" class="btn btn-primary"  id="btn-enable-multiple-users">Enable</button>\
   <button type="button" class="btn btn-danger"  id="btn-delete-many-users">Delete</button> \
-  <button type="button" class="btn btn-secondary"  id="btn-disable-multiple-users">Disable</button> </div>';
+  </div>';
+  
   $(content).insertAfter(".dataTables_filter");
 });
 $(document).ready(function(){

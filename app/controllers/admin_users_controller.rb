@@ -5,7 +5,7 @@ class AdminUsersController < ApplicationController
 
   def get_user_data
     $dem ||= 0;
-
+    $dem2 ||= 0;
     user_per_page = 20
     offset = params["iDisplayStart"].to_i
     @companies = Company.all
@@ -60,7 +60,24 @@ class AdminUsersController < ApplicationController
         @admin_users = @admin_users.where("id in (?)", list_id_user_project)
       end
     end
-
+    
+    @admin_users.each_with_index { |user, index|
+      begin
+        project_namelist = []
+        project_member_of_user = @project_members.where(admin_user_id: user.id)
+        project_member_of_user.each { |project_member|
+          project_name = @projects.find(project_member.project_id).desc
+          project_namelist.append(project_name)
+        }
+        # end project
+        projects = project_namelist.join(" , ")
+      rescue
+        # end project
+        projects = ""
+      end
+      user.projectss=projects
+    }
+ 
     final_data = []
     @admin_users.each_with_index { |user, index|
       current_user_data = []
@@ -89,22 +106,10 @@ class AdminUsersController < ApplicationController
       title = ""
       current_user_data.push(title)
 
-      begin
-        project_namelist = []
-        project_member_of_user = @project_members.where(admin_user_id: user.id)
-        project_member_of_user.each { |project_member|
-          project_name = @projects.find(project_member.project_id).desc
-          project_namelist.append(project_name)
-        }
-        # end project
-        projects = project_namelist.join(" , ")
-      rescue
-        # end project
-        projects = ""
-      end
+      
 
-      current_user_data.push(projects)
-
+      current_user_data.push(user.projectss)
+      
       begin
         company = user.company_id.nil? ? "" : @companies.find(user.company_id).name
       rescue
@@ -120,15 +125,29 @@ class AdminUsersController < ApplicationController
         <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
         <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
         <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
-        <a class='action_icon status_icon' data-toggle='tooltip' title='Disable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
+        <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
 
       final_data.push(current_user_data)
     }
+   
     if $dem == 1 and params["iSortCol_0"].to_i == 1
      $dem = 0
     elsif $dem == 0 and params["iSortCol_0"].to_i == 1
       $dem = 1
     end
+
+    if $dem2 == 1 and params["iSortCol_0"].to_i == 8
+      final_data.sort! {|a,b| a[8] <=> b[8]}
+      $dem2 = 0
+    elsif $dem2 == 0 and params["iSortCol_0"].to_i == 8
+      i=1
+      final_data.sort! {|a,b| b[8] <=> a[8]}
+      final_data.each{|a| 
+        a[1]="<p class='number'>#{i}</p>"
+         i+=1}
+      $dem2 = 1
+    end
+
     
     respond_to do |format|
       format.json { render :json => { iTotalRecords: @admin_users.count, iTotalDisplayRecords: @admin_users.unscope([:limit, :offset]).count, aaData: final_data } }

@@ -11,4 +11,5 @@ class AdminUser < ApplicationRecord
 
   has_many :approvers, :class_name => 'Approver', :foreign_key => "approver_id", :dependent => :destroy
   has_many :approvees, :class_name => 'Approver', :foreign_key => "admin_user_id", :dependent => :destroy
+  attr_accessor :projectss
 end
