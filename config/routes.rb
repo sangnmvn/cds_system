@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     collection do
       get "check_emai_account"
       get "edit"
+      get "index2"
       post "add"
       post "update"
       get "get_filter_company"
@@ -27,6 +28,7 @@ Rails.application.routes.draw do
       post "submit_filter"
       post "delete_multiple_users"
       post "disable_multiple_users"
+      post "enable_multiple_users"
     end
   end
   resources :groups do

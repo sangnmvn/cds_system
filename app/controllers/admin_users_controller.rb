@@ -2,20 +2,30 @@ class AdminUsersController < ApplicationController
   layout "system_layout"
 
   before_action :set_admin_user, only: [:update, :status, :destroy]
-
+  before_action :get_privilege_id
   def get_user_data
-    $dem ||= 0;
-    $dem2 ||= 0;
+
+    $count ||= 0;
+    $count2 ||= 0;
     user_per_page = 20
     offset = params["iDisplayStart"].to_i
     @companies = Company.all
     @roles = Role.all
     @project_members = ProjectMember.all
     @projects = Project.all
-    
+ 
     # "iSortCol_0"=>"3" (cot de sort), "sSortDir_0"=>"asc" (thu tu sort)
-
     @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
+    if @v.include? 1
+    @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
+    else
+      pm = ProjectMember.where(admin_user_id: current_admin_user.id)
+      pm.each {|x|
+      @a= x.project_id
+      }
+      @admin_users = AdminUser.joins(:project_members).where(:project_members => { project_id: @a } )
+  
+    end
     if params["iSortCol_0"].to_i == 1
       @admin_users = @admin_users.order(:id => params["sSortDir_0"].to_sym)
     end
@@ -82,10 +92,10 @@ class AdminUsersController < ApplicationController
     @admin_users.each_with_index { |user, index|
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
-      if $dem == 1 and params["iSortCol_0"].to_i == 1
+      if $count == 1 and params["iSortCol_0"].to_i == 1
         current_user_data.push("<p class='number'>#{@admin_users.length-(offset + index + 1)}</p>")
      
-      elsif $dem == 0 and params["iSortCol_0"].to_i == 1
+      elsif $count == 0 and params["iSortCol_0"].to_i == 1
         current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
        
       else
@@ -119,6 +129,8 @@ class AdminUsersController < ApplicationController
       current_user_data.push(company)
 
       # action
+      if @v.include? 1
+      
       current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><img border='0' 
         src='/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png'></a> 
         <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href=''>
@@ -126,44 +138,53 @@ class AdminUsersController < ApplicationController
         <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
         <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
         <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
-
+      else
+        current_user_data.push("")
+      end
       final_data.push(current_user_data)
     }
    
-    if $dem == 1 and params["iSortCol_0"].to_i == 1
-     $dem = 0
-    elsif $dem == 0 and params["iSortCol_0"].to_i == 1
-      $dem = 1
+    if $count == 1 and params["iSortCol_0"].to_i == 1
+     $count = 0
+    elsif $count == 0 and params["iSortCol_0"].to_i == 1
+      $count = 1
     end
 
-    if $dem2 == 1 and params["iSortCol_0"].to_i == 8
+    if $count2 == 1 and params["iSortCol_0"].to_i == 8
       final_data.sort! {|a,b| a[8] <=> b[8]}
-      $dem2 = 0
-    elsif $dem2 == 0 and params["iSortCol_0"].to_i == 8
+      $count2 = 0
+    elsif $count2 == 0 and params["iSortCol_0"].to_i == 8
       i=1
       final_data.sort! {|a,b| b[8] <=> a[8]}
       final_data.each{|a| 
         a[1]="<p class='number'>#{i}</p>"
          i+=1}
-      $dem2 = 1
+      $count2 = 1
     end
-
-    
     respond_to do |format|
       format.json { render :json => { iTotalRecords: @admin_users.count, iTotalDisplayRecords: @admin_users.unscope([:limit, :offset]).count, aaData: final_data } }
     end
   end
 
   def index
+    if @v.include? 1 or @v.include? 2
     @companies = Company.all.order(:name)
     @projects = Project.all.order(:desc)
     @roles = Role.all.order(:name)
     @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
     @project_members = ProjectMember.all
-
     respond_to do |format|
       format.html
     end
+    else
+      respond_to do |format|
+      format.html { redirect_to  index2_admin_users_path}
+      end
+  end
+  end
+
+  def index2
+  
   end
 
   def add_reviewer
@@ -401,6 +422,24 @@ class AdminUsersController < ApplicationController
     end
   end
 
+  def enable_multiple_users
+    
+    respond_to do |format|
+      if params[:list_users].nil?
+        format.json { render :json => { :status => "true" } }
+      else
+        params[:list_users].each do |u|
+          user = AdminUser.find(u.to_i)
+          if user
+            user.update(status: true)
+            format.json { render :json => { :status => "success", users: params[:list_users] } }
+          else
+            format.json { render :json => { :status => "fail" } }
+          end
+        end
+      end
+    end
+  end
   # change status user (enable / disable)
   def status
     params[:status] = @admin_user.status ? false : true
@@ -414,6 +453,35 @@ class AdminUsersController < ApplicationController
   end
 
   private
+
+  def get_privilege_id
+    @v = []
+    if current_admin_user.id != 1
+    user_group = UserGroup.where(admin_user_id: current_admin_user.id)
+    user_group.each{|x|
+      group = Group.where(id: x.group_id)
+      group.each {|z|
+        if z.status == true and z.is_delete == false
+          group_privilege = GroupPrivilege.where(group_id: x.group_id)
+      group_privilege.each{|y|
+
+        if y.privilege_id == 1
+          @v.push(1) 
+          break
+        elsif y.privilege_id == 2
+          @v.push(2) 
+        elsif y.privilege_id == 3
+          @v.push(3) 
+        end
+      }
+      break
+    end
+      }
+    }
+  else
+    @v=[1,2,3,4,5,6,7,8,9,10,11]
+    end
+  end
 
   def set_admin_user
     @admin_user = AdminUser.find(params[:id])

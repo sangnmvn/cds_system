@@ -722,6 +722,16 @@ $(document).on("click", "#btn-disable-multiple-users", function () {
     $(".display_number_users_disable").html("Please select the user you want disable ?");
   }
 });
+$(document).on("click", "#btn-enable-multiple-users", function () {
+  $("#modalStatusEnableUsers").modal("show");
+  number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
+  if (number_user_delete != 0) {
+    $('.btn-modal-enable-multiple-users').prop("disabled", false);
+    $(".display_number_users_disable").html("Are you sure you want enable " + number_user_delete + " user ?");
+  } else {
+    $(".display_number_users_disable").html("Please select the user you want enable ?");
+  }
+});
 
 $(document).on("click", ".btn-modal-disable-multiple-users", function () {
   var arr_id_user = [];
@@ -755,14 +765,46 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
     },
   });
 });
+$(document).on("click", ".btn-modal-enable-multiple-users", function () {
+  var arr_id_user = [];
+  $("#table_user_management tbody :checkbox:checked").each(function () {
+    var user_id = this.id
+      .split("batch_action_item_")[1]
+      .split('"')[0];
+    arr_id_user.push(user_id);
+  });
+  $.ajax({
+    url: "/admin_users/enable_multiple_users",
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      list_users: arr_id_user
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        $('.btn-modal-enable-multiple-users').prop("disabled", true);
+        $("#modalStatusEnableUsers").modal("hide");
+        $("#table_user_management").dataTable().fnDraw();
+        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        success("Enable");
+      } else if (response.status == "fail") {
+        $('.btn-modal-enable-multiple-users').prop("disabled", true);
+        fails("Disable");
+      }
+    },
+  });
+});
 
 
 $(document).ready(function () {
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAdd" \
-  data-backdrop="true" data-keyboard="true">Add</button> \
-  <button type="button" class="btn btn-secondary"  id="btn-disable-multiple-users">Disable</button>\
-  <button type="button" class="btn btn-primary"  id="btn-enable-multiple-users">Enable</button>\
-  <button type="button" class="btn btn-danger"  id="btn-delete-many-users">Delete</button> \
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" title="Add a new User" data-toggle="modal" data-target="#modalAdd" \
+  data-backdrop="true" data-keyboard="true" style="width:140px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+  <button type="button" class="btn btn-light border-danger" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:140px;"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+  <button type="button" class="btn btn-light border-dark"  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:140px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+  <button type="button" class="btn btn-light border-danger" data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:140px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
   </div>';
   
   $(content).insertAfter(".dataTables_filter");

@@ -31,7 +31,7 @@ table.dataTable tbody td {
 
 #table_user_management tr.even > td {
     font-size: 16px;
-    background: #CCC;
+    background: #cdd4ea;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
@@ -167,7 +167,7 @@ table.dataTable tbody td {
 }
 
 .title-filter-user {
-    font-size: 18px;color: #fff;text-align:center;margin-top:10px;
+    font-size: 18px;color: #fff;text-align:center;margin-top:10px;background-color: #009EE0;
 }
 .filter-page-user {
     padding: 10px ; border: 1px solid #cccccc;;
