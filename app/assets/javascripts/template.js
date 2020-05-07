@@ -238,29 +238,7 @@ $(document).ready(function () {
     ordering: true,
     retrieve: true
   });
-  $(".btnUp").click(function () {
-    var row_id = $(this).closest('tr').index();
-    // var id = $(this).closest('tr').attr('value');
-    var index = $("#table_add_competency")
-      .DataTable()
-      .row($(this).closest("tr"))
-      .index();
-    current_row_data = table.row(row_id).data();
-    previous_row_data = table.row(row_id - 1).data();
-    temp = current_row_data[0];
-    current_row_data[0] = previous_row_data[0];
-    previous_row_data[0] = temp;
-
-    temp = $("#table_add_competency")
-      .DataTable()
-      .row(row_id)
-      .data(current_row_data);
-    $("#table_add_competency")
-      .DataTable()
-      .row(row_id - 1)
-      .data(previous_row_data);
-    $("#table_add_competency").DataTable().draw();
-  });
+  
   // $(".btnDown").click(function () {
   //   var id = $(this).closest("tr").attr("value");
   //   moveRowbyAjax(1);
@@ -337,6 +315,53 @@ $(document).on('keyup','.form-add-competency #name', function(){
 });
 
 
+$(document).on('click','.btnUp', function(){
+  var row_id = $(this).closest('tr').index();
+  // debugger
+  // var id = $(this).closest('tr').attr('value');
+  // var index = $("#table_add_competency")
+  //   .DataTable()
+  //   .row($(this).closest("tr"))
+  //   .index();
+  table =  $("#table_add_competency").DataTable();
+  current_row_data = table.row(row_id).data();
+  previous_row_data = table.row(row_id - 1).data();
+  temp = current_row_data[0];
+  current_row_data[0] = previous_row_data[0];
+  previous_row_data[0] = temp;
+
+  table.row(row_id).data(current_row_data);
+  table.row(row_id - 1).data(previous_row_data);
+  table.column(0).nodes().each(function (cell, i) {
+              cell.innerHTML = i + 1;
+            });
+  
+  $("#table_add_competency").DataTable().draw();
+});
+$(document).on('click','.btnDown', function(){
+  var row_id = $(this).closest('tr').index();
+  // debugger
+  // var id = $(this).closest('tr').attr('value');
+  // var index = $("#table_add_competency")
+  //   .DataTable()
+  //   .row($(this).closest("tr"))
+  //   .index();
+  current_row_data = table.row(row_id).data();
+  previous_row_data = table.row(row_id + 1).data();
+  temp = current_row_data[0];
+  current_row_data[0] = previous_row_data[0];
+  previous_row_data[0] = temp;
+
+  $("#table_add_competency")
+    .DataTable()
+    .row(row_id)
+    .data(current_row_data);
+  $("#table_add_competency")
+    .DataTable()
+    .row(row_id - 1)
+    .data(previous_row_data);
+  $("#table_add_competency").DataTable().draw();
+});
 
 
 
