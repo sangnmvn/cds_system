@@ -18,8 +18,6 @@
                 <div class="col-sm-8">
                     <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
                     <div id="error-name-competency"></div>
-                    <%= hidden_field(:competency, :id ) %>
-                    <%= hidden_field(:competency, :index ) %>
                 </div>
             </div>
             <br>
@@ -50,15 +48,15 @@
 </div>
 
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
-<button type="buttton" class="btn btn-primary" id="btn-add-competency">Save</button>
-<button class="btn btn-primary next action-button" type="button" value="Next Step" name="next">Next</button>
+<button type="buttton" class="btn btn-primary btn-save-compentency" disabled id="btn-add-competency">Save</button>
+<button class="btn btn-primary next action-button btn-next-competency" type="button" value="Next Step" name="next">Next</button>
 <button type="buttton" class="btn btn-primary">Close</button>
 
 
 <div style="margin-top: 20px" style="justify-content: left;">
   <div class="row">
     <div class="col-sm">
-        <div class="divHeader">Productivity</div>
+        <div class="divHeader">Competencies</div>
     </div>
 </div>
 <div class="row">
@@ -66,7 +64,7 @@
     <table class="table table-primary table-responsive-sm table-mytable" id="table_add_competency">
     <thead>
         <tr>
-        <th>No.</th>
+        <th style="width: 1px">No.</th>
         <th data-orderable="false">Name</th>
         <th>Type</th>
         <th data-orderable="false">Description</th>
@@ -79,7 +77,3 @@
     </div>
 </div>
 </div>
-
-
-
-

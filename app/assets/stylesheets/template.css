@@ -45,6 +45,7 @@
 
 .error {
   color: red;
+  font-size: 13px;  
 }
 
 #alert-success, #alert-danger {

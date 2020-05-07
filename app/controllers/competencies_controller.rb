@@ -11,11 +11,10 @@ class CompetenciesController < ApplicationController
   end
 
   def create
-    # binding.pry
     @competency = Competency.new(competency_params)
     respond_to do |format|
       if Competency.where(name: params[:name]).where(template_id: params[:template_id]).present?
-        format.json { render :json => { status: "exist" } }
+        format.json { render json: { status: "exist" } }
       else
         if @competency.save
           # binding.pry
@@ -40,7 +39,6 @@ class CompetenciesController < ApplicationController
       if Competency.where.not(id: params[:id]).where(name: params[:name]).present?
         format.json { render :json => { :status => "exist" } }
       else
-        params[:status] = params[:status] == "Enable" ? 1 : 0
         if @competency.update(competency_params)
           # binding.pry
           format.json { render :json => { :status => "success", id: @competency.id, name: @competency.name,\
@@ -66,13 +64,12 @@ class CompetenciesController < ApplicationController
       }
     }
     # render json: arr
-    respond_to do |format|
       # if competency.empty?
-      format.json { render json: arr }
+       render json: arr 
       # else
       #   format.json { render :json => { competency: competency } }
       # end
-    end
+  end
 
     def load_data_edit
       if @competency
@@ -81,9 +78,6 @@ class CompetenciesController < ApplicationController
         render :json => { status: "fail" }
       end
     end
-
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.
