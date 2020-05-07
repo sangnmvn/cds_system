@@ -1,5 +1,7 @@
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <div class="row"  style="justify-content: center;">
     <div class="col-lg-6">
         <%= form_with class: "step3 form-add-template" do %>
@@ -7,6 +9,7 @@
         <div class="col-sm-12">
             <div class="col-sm-8" style="text-align: left">
             <p style="color:red;">Note: * indicates required fileld</p>
+            <p id="hideIdSlot" style="display:none"></p>
             </div>
         </div>
         <div class="col-sm-12">
@@ -30,26 +33,17 @@
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                             <option value="4">4</option>
-                                            <option value="5">5</option>'), class: 'form-control' %>
+                                            <option value="5">5</option>'), class: 'form-control', id: "selectLevel" %>
             </div>
             </div>
-            <br>
-            <div class="row">
-                <div class="offset-md-1 col-md-2" style="text-align: left">
-                    <label>Slot ID (*)</label>
-                </div>
-                <div class="col-sm-8">
-                    <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please Enter Slot ID (LevelSlot. Ex: 1a, 1b, 1c, ...)' %>
-                </div>
-            </div>
-            <br>
+            <br/>
             <%# Evidence Guide %>
             <div class="row">
             <div class="offset-md-1 col-md-2" style="text-align: left">
                 <label>Slot Description(*)</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please Enter Slot Description" %>
+                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", maxlength: "500", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
                 <div class="error">Max character: 500</div>
             </div>
             </div>  
@@ -60,7 +54,7 @@
                 <label>Evidence Guide (*)</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please Enter Slot Evidence" %>
+                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", maxlength: "1000", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
                 <div class="error">Max character: 1000</div>
             </div>
             </div>  
@@ -72,79 +66,40 @@
 </div>
 
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
-<button type="buttton" class="btn btn-primary">Save</button>
-<button class="btn btn-primary next action-button" type="button" value="Next Step" name="next">Finish</button>
+<button type="buttton" class="btn btn-primary" id="addSlot">Save</button>
+<button class="btn btn-primary next action-button" type="button" id="btnFinish" value="Next Step" name="next">Finish</button>
 <button type="buttton" class="btn btn-primary">Close</button>
 
 <hr/>
 
 <div class="row divTable">
-    <div class="col-lg-9">
-        <div class="divHeader">Productivity</div>
+    <div class="col-8">
+        <div class="divHeader" id="nameCompetency">Productivity</div>
+    </div>
+    <div class="col-4">
+        <div class="input-group mb-3 divHeader">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Search : </span>
+            </div>
+            <input type="search" class="form-control" placeholder="search by slot's description">
+        </div>
     </div>
 </div>
 <div class="row divTable">
-    <div class="col-lg-9">
-        <div class="divChilHeader">Slots</div>
-    </div>
-</div>
-<div class="row divTable">
-    <div class="col-lg-9">
+    <div class="col-lg-12">
         <table class="table table-primary table-responsive-sm table-mytable" id="table_slot">
             <thead>
                 <tr>
-                <th data-orderable="false">Level</th>
+                <th >Level <%= image_tag("sort_both.png", border: 1) %></th>
                 <th data-orderable="false">Slot Description</th>
-                <th>Evidence Guide</th>
-                <th>Action</th>
+                <th data-orderable="false">Evidence Guide</th>
+                <th data-orderable="false">Action</th>
                 </tr>
             </thead>
             <tbody id="tbdTemplate">
-                <tr value='4'>
-                    <td class="td_num">1</td>
-                    <td>Last Name</td>
-                    <td>Last Nam esdasd adsá</td>
-                    <td class="td_action">
-                        <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-                        <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-                        <button class="btn btn-primary btnUp" ><i class="fa fa-arrow-circle-up"></i></button>
-                        <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-                    </td>
-                </tr>
-                <tr value='1'>
-                <td class="td_num">2</td>
-                <td>dsdsádasdas</td>
-                <td>Last Name</td>
-                <td class="td_action">
-                    <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-                    <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-                    <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-                    <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-                </td>
-                </tr>
-                <tr value='2'>
-                <td class="td_num">3</td>
-                <td>Last Nameds</td>
-                <td>Last Name abc vx s s sa</td>
-                <td class="td_action">
-                    <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-                    <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-                    <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-                    <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-                </td>
-                </tr>
-                <tr value='3'>
-                <td class="td_num">4</td>
-                <td>tesst 4</td>
-                <td>Last Name</td>
-                <td class="td_action">
-                    <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-                    <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-                    <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-                    <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-                </td>
-                </tr>
             </tbody>
         </table>
     </div>
 </div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>

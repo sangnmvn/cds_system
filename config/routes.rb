@@ -40,6 +40,11 @@ Rails.application.routes.draw do
   resources :templates do
     collection do
       get "add"
+      get "load_slot"
+      get "add_new_slot"
+      get "delete_slot"
+      get "check_slot_in_template"
+      get "update_slot"
     end
   end
   resources :competencies do

@@ -38,7 +38,6 @@ gem "devise"
 gem "cancancan"
 gem "pry"
 gem "chartkick"
-gem 'select_all-rails'
 # gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################

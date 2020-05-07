@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_054545) do
+ActiveRecord::Schema.define(version: 2020_05_07_033507) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -180,7 +180,6 @@ ActiveRecord::Schema.define(version: 2020_05_04_054545) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string "notify_date"
-    t.boolean "is_delete", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
@@ -188,12 +187,13 @@ ActiveRecord::Schema.define(version: 2020_05_04_054545) do
   end
 
   create_table "slots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.text "name"
     t.text "desc"
+    t.text "evidence"
     t.string "level"
     t.bigint "competency_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "slot_id"
     t.index ["competency_id"], name: "index_slots_on_competency_id"
   end
 

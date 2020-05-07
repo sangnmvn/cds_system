@@ -231,7 +231,7 @@ Competency.create!(id: "#{i_competency += 1}", name: "Project Closing", desc: "P
 # QC - General
 slot_create = [
   { name: "Consistently perform well under supervision", desc: "Nếu được giao việc và được hướng dẫn cách làm thì hoàn tất tốt công việc được giao trong mức độ năng suất hợp lý
-    Nếu có sai sót trong quá trình làm việc và đã được nhắc nhở về những lỗi cụ thể thì không lặp lại những lỗi này.", level: "1a", competency_id: "1" },
+    Nếu có sai sót trong quá trình làm việc và đã được nhắc nhở về những lỗi cụ thể thì không lặp lại những lỗi này.", level: "1a", competency_id: "1"},
   { name: "Recognized as a contributing member of the team.", desc: "Là một thành viên đóng góp tích cực cho nhóm / dự án.\n
     Những người khác không thấy nhân viên này là điểm yếu, là gánh nặng cho team trong productivity \n
     Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down và không giải quyết được. \n
