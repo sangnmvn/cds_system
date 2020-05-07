@@ -1,5 +1,8 @@
 <%= render 'delete_selected'%>
-<%= render 'add'%>
+<% if current_admin_user.role.name == "HR" %>
+  <%= render 'add_hr' %>
+<% end %>
+
 <!-- Modal show -->
 <div id="modal_content" >
   <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -14,27 +17,25 @@
   <thead>
     <tr>
       <th data-sort-ignore="true"><input type="checkbox"  id="selectAll"></th>
-      <th>No.</th>
-      <th>Created by</th>
-      <th>Email</th>
-      <th>Project name</th>
-      <th>Start date</th>
-      <th>Employee end date</th>
-      <th>Reviewer end date</th>
-      <th>Days notice to employees</th>
-      <th>Days notice to reviewer</th>
-      <th>Created at</th>
-      <th>Updated at</th>
-      <th>Status</th>
-      <th>Action</th>
+    <% @fields.each do |field| %>
+      <th> <%= field %></th>
+    <% end %>
     </tr>
   </thead>
   <tbody id="schedules">
-    <%= render partial: 'schedule' , locals: { schedules: @schedules } %>
+  <% if @schedules.nil? %>
+    <tr style="text-align: center;"><th colspan="9">No data available in table</th></tr> 
+  <% else %>
+    <% if current_admin_user.role.name == "HR" %>
+      <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
+    <% elsif current_admin_user.role.name == "PM" %>
+     <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
+    <% end %>
+  <% end %>
   </tbody>
 </table>
 <div id="paginator" class="float-right">
-  <%= paginate(@schedules) %>
+  <%= paginate(@schedules) if @schedules != nil %>
 </div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

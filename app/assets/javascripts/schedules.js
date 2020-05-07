@@ -1,7 +1,7 @@
 $(function () {
   $('[data-tooltip="true"]').tooltip()
 })
-function success(content="Success !") {
+function success(content = "Success !") {
   $('#content-alert-success').html(content);
   $("#alert-success").fadeIn();
   window.setTimeout(function () {
@@ -9,15 +9,38 @@ function success(content="Success !") {
   }, 5000);
 }
 // alert fails
-function fails(content="Fail !") {
+function fails(content = "Fail !") {
   $('#content-alert-fail').html(content);
   $("#alert-danger").fadeIn();
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
   }, 5000);
 }
+// check status when enter start date and end date
+function check_status(start) {
+  start = Date.parse(start);
+  let toDay = new Date()
+  toDay = toDay.setHours(0,0,0,0);
+  if ( start == toDay ) {
+    $('#status').val("In-progress")
+  }
+  if ( start > toDay ) {
+    $('#status').val("New")
+  }
+}
+
+// end check
+
+
+
+
 $(document).ready(function () {
   
+  $('#start_date').change(()=>{
+    let start = $('#start_date').val();
+      check_status(start)
+  })
+
   $('.edit_btn').bind("click", function () {
     let schedule_param = $(this).data('schedule')
 
@@ -59,78 +82,68 @@ $(document).on("click", ".edit_btn", function () {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
   });
 });
-$(document).on("click", "#selectAll", function () {
+$(document).on("click", "#selectAll", () => {
   $("#selectAll").select_all();
 });
-$(document).on("click", "#btn_modal_add", function () {
+
+$(() => {
+  let $dp = $("#start_date");
+  $(document).ready(()=>{
+    let toDay = new Date();
+    toDay.setDate(toDay.getDate()- 1)
+    $dp.datepicker({
+      minDate: toDay
+    })
+  })
+})
+
+$(() => {
+  let $dp = $("#end_date");
+  $(document).ready(()=>{
+    $dp.datepicker({
+      minDate: new Date()
+    })
+  })
+})
 
 
-  project = $("#project").val();
+
+$(document).on("click", "#btn_modal_add_hr", () => {
+
+  schedule_name = $('#desc').val();
+  company = $("#company").val();
   start_date = $("#start_date").val();
   end_date = $("#end_date").val();
   notify_date = $("#notify_date").val();
+  notify_hr = $('#notify_hr').val();
   temp = true;
   $(".error").remove();
-  if (start_date.length < 1) {
-    $("#start_date_1").after(
-      '<p class="error">Please enter Start date</p>'
-    );
 
+  if (start_date == "") {
     temp = false;
+    $('#start_date').after('<span class="error">Please enter start date.</span>')
   }
 
-  if (end_date.length < 1) {
+  if (end_date == "") {
+    temp = false;
+    $('#end_date').after('<span class="error">Please enter end date.</span>')
+  }
 
-    $("#end_date_1").after(
-      '<p class="error">Please enter End date</p>'
-    );
+  if (schedule_name == "") {
     temp = false;
+    $('#desc').after('<span class="error">Please enter schedule name.</span>')
   }
-  if (notify_date.length < 1) {
 
-    $("#notify_date").after(
-      '<p class="error">Please enter notify date</p>'
-    );
+  if (company == "") {
     temp = false;
+    $('#company').after('<span class="error">Please enter company name.</span>')
   }
-  if (new Date(end_date) < new Date()) {
-    $("#end_date_1").after(
-      '<p class="error">Please enter End date higher current_date</p>'
-    );
+
+  if (notify_hr == "") {
     temp = false;
+    $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter end date.</span>')
   }
-  if (new Date(start_date) > new Date(end_date)) {
-    $("#start_date_1").after(
-      '<p class="error">Please enter Start date lower End_date</p>'
-    );
-    $("#end_date_1").after(
-      '<p class="error">Please enter End_date higher Start date</p>'
-    );
-    temp = false;
-  }
-  if (new Date(start_date) < new Date()) {
-    $("#start_date_1").after(
-      '<p class="error">Please enter Start date higher current_date</p>'
-    );
-    temp = false;
-  }
-  Date.prototype.addDays = function (days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-  }
-  if (new Date(end_date) > (new Date(start_date)).addDays(30)) {
-    $("#end_date_1").after(
-      '<p class="error">The end date must not be higher than 30 days from the start date</p>'
-    );
-    temp = false;
-  }
-  if (project == "") {
-    $("#project").after(
-      '<p class="error">Please select a Project</p>'
-    );
-    temp = false;
-  }
+
   if (temp == true) {
     $.ajax({
       url: "/schedules",
@@ -155,109 +168,20 @@ $(document).on("click", "#btn_modal_edit", function () {
   notify_date = $("#edit_notify_date").val();
   status_edit = $("#status").val();
   temp = true;
-  if (status_edit == "New") {
-    Date.prototype.addDays = function (days) {
-      var date = new Date(this.valueOf());
-      date.setDate(date.getDate() + days);
-      return date;
-    }
-    if (new Date(start_date) < new Date()) {
-
-      $("#edit_start_date_1").after(
-        '<p class="error">Please enter Start date higher current date</p>'
-      );
-      temp = false;
-    }
-    if (new Date(end_date) > (new Date(start_date)).addDays(30)) {
-      $("#edit_end_date_1").after(
-        '<p class="error">The end date must not be higher than 30 days from the start date</p>'
-      );
-      temp = false;
-    }
-    $(".error").remove();
 
 
-    if (end_date.length < 1) {
-
-      $("#edit_end_date_1").after(
-        '<p class="error">Please enter End date</p>'
-      );
-      temp = false;
-    }
-    if (notify_date.length < 1) {
-
-      $("#edit_notify_date").after(
-        '<p class="error">Please enter notify date</p>'
-      );
-      temp = false;
-    }
-    if (new Date(end_date) < new Date()) {
-      $("#edit_end_date_1").after(
-        '<p class="error">Please enter End date higher current date</p>'
-      );
-      temp = false;
-    }
-
-
-    if (project == "") {
-      $("#edit_project").after(
-        '<p class="error">Please select a Project</p>'
-      );
-      temp = false;
-    }
-    end_date = new Date(end_date);
-    start_date = new Date(start_date);
-    if (temp == true) {
-      $.ajax({
-        url: "/schedules/" + id,
-        type: "PUT",
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-          project_id: project,
-          start_date: start_date,
-          end_date: end_date,
-          notify_date: notify_date,
-        },
-      });
-    }
-  }
-  if (status_edit == "New") {
-
-    $(".error").remove();
-
-
-    if (end_date.length < 1) {
-
-      $("#edit_end_date_1").after(
-        '<p class="error">Please enter End date</p>'
-      );
-      temp = false;
-    }
-    if (notify_date.length < 1) {
-
-      $("#edit_notify_date").after(
-        '<p class="error">Please enter notify date</p>'
-      );
-      temp = false;
-    }
-
-
-    end_date = new Date(end_date);
-    if (temp == true) {
-      $.ajax({
-        url: "/schedules/" + id,
-        type: "PUT",
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: {
-          end_date: end_date,
-          notify_date: notify_date,
-        },
-      });
-    }
+  if (temp == true) {
+    $.ajax({
+      url: "/schedules/" + id,
+      type: "PUT",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        end_date: end_date,
+        notify_date: notify_date,
+      },
+    });
   }
 
 });
@@ -295,19 +219,19 @@ $(document).on("click", "#delete_selected", function () {
   });
 });
 $(document).ready(function () {
-  $(".selectable").on('click', function() {
-    if( $(':checkbox:checked').length > 0){
+  $(".selectable").on('click', function () {
+    if ($(':checkbox:checked').length > 0) {
       $('#displayBtnDel').prop("disabled", false);
     }
-    else{
+    else {
       $('#displayBtnDel').prop("disabled", true);
     }
   })
-  $('#selectAll').click(()=>{
-    if( $('#selectAll').is(':checked')){
+  $('#selectAll').click(() => {
+    if ($('#selectAll').is(':checked')) {
       $('#displayBtnDel').prop("disabled", false);
     }
-    else{
+    else {
       $('#displayBtnDel').prop("disabled", true);
     }
   })

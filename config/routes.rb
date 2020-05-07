@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     collection do
       delete "destroy_multiple"
     end
+    get "view_pm"
   end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"

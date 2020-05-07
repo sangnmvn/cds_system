@@ -3,10 +3,19 @@ class SchedulesController < ApplicationController
   layout "system_layout"
 
   def index
-    @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
-    @projects = Project.all
-    @schedules.each { |schedule| update_Status(schedule) }
+    # binding.pry
+    @fields = ["No.", "Schedule name" ,"Created by", "Start date", "Status", "Action"]
+    if current_admin_user.role.name == "HR"
+      @company = Company.all
+    else
+      @fields.insert(4,"Employee end date", "Reviewer end date")
+      @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
+      @projects = Project.joins(project_members: [:admin_user]).where("admin_users.id = ?", current_admin_user.id)
+      
+    end
   end
+
+  
 
   def new
     @schedule = Schedule.new
@@ -19,9 +28,9 @@ class SchedulesController < ApplicationController
   end
 
   def create
-    @schedule = Schedule.new(admin_user_id: current_admin_user.id, project_id: params[:project], start_date: DateTime.strptime(params[:start_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"),
-                             end_date: DateTime.strptime(params[:end_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"), notify_date: params[:notify_date])
-
+    # @schedule = Schedule.new(admin_user_id: current_admin_user.id, project_id: params[:project], start_date: DateTime.strptime(params[:start_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"),
+    #                          end_date: DateTime.strptime(params[:end_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"), notify_date: params[:notify_date])
+    @schedule = Schedule.new
     respond_to do |format|
       if @schedule.save
         @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
