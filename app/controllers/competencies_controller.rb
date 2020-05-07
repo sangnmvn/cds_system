@@ -1,5 +1,5 @@
 class CompetenciesController < ApplicationController
-  before_action :set_competency, only: [:show, :edit, :update, :destroy]
+  before_action :set_competency, only: [:show, :edit, :update, :load_data_edit, :destroy]
 
   def index
   end
@@ -18,7 +18,8 @@ class CompetenciesController < ApplicationController
         format.json { render :json => { status: "exist" } }
       else
         if @competency.save
-          format.json { render :json => { status: "success" } }
+          # binding.pry
+          format.json { render :json => { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type } }
         else
           format.json { render :json => { status: "fail" } }
         end
@@ -27,13 +28,33 @@ class CompetenciesController < ApplicationController
   end
 
   def destroy
+    if @competency.update(is_delete: true)
+      render :json => { status: "success" }
+    else 
+      render :json => { status: "fail" }
+    end
   end
 
   def update
+    respond_to do |format|
+      if Competency.where.not(id: params[:id]).where(name: params[:name]).present?
+        format.json { render :json => { :status => "exist" } }
+      else
+        params[:status] = params[:status] == "Enable" ? 1 : 0
+        if @competency.update(competency_params)
+          # binding.pry
+          format.json { render :json => { :status => "success", id: @competency.id, name: @competency.name,\
+            type: @competency._type, desc: @competency.desc } }
+        else
+          format.json { render :json => { :status => "fail" } }
+        end
+      end
+    end
   end
 
   def load
-    competencies = Competency.select(:id, :name, :_type, :desc).where(template_id: params[:id])
+    competencies = Competency.select(:id, :name, :_type, :desc)
+    .where(template_id: params[:id],is_delete: false).order(_type: :asc)
     # binding.pry
     arr = Array.new
     competencies.each { |kq|
@@ -44,13 +65,23 @@ class CompetenciesController < ApplicationController
         desc: kq.desc,
       }
     }
+    # render json: arr
     respond_to do |format|
       # if competency.empty?
-      format.json { render :json => { competencies: arr } }
+      format.json { render json: arr }
       # else
       #   format.json { render :json => { competency: competency } }
       # end
     end
+
+    def load_data_edit
+      if @competency
+        render :json => { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
+      else 
+        render :json => { status: "fail" }
+      end
+    end
+
   end
 
   private

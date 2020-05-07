@@ -42,10 +42,19 @@
   color: #9E9E9E
 }
 
-.error{
+
+.error {
   color: red;
-  text-align: left;
-  font-size: 80%;
+}
+
+#alert-success, #alert-danger {
+  position: absolute;
+  z-index: 3400;
+  top: 10%;
+  left: 50%;
+  margin: 0px auto;
+  text-align: center;
+  display: none;
 }
 
 
@@ -130,7 +139,7 @@ select.list-dt:focus {
 .step-active .step_number {
   background-color: #edc351;
 }
-@media only screen and (max-width: 1200px) and (min-width: 500px){
+/* @media only screen and (max-width: 1200px) and (min-width: 500px){
     .step {
       font-size: 13px;
       text-align: left;
@@ -144,7 +153,5 @@ select.list-dt:focus {
       font-size: 13px;
       width: 40%;
     }
-    .step a {
-      /* display: inline-block; */
-    }
-}
+    
+} */

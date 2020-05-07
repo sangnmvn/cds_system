@@ -17,6 +17,9 @@
                 </div>
                 <div class="col-sm-8">
                     <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter name competency' %>
+                    <div id="error-name-competency"></div>
+                    <%= hidden_field(:competency, :id ) %>
+                    <%= hidden_field(:competency, :index ) %>
                 </div>
             </div>
             <br>
@@ -26,7 +29,7 @@
                     <label>Type</label>
                 </div>
                 <div class="col-sm-8">
-                    <%= select_tag "type", raw('<option value="General">General</option><option value="Specicalized">Specicalized</option>'), class: 'form-control' %>
+                    <%= select_tag "type", options_for_select([['General','General'], ['Specialized', 'Specialized']], 'General'), class: 'form-control' %>
                 </div>
             </div>
             <br>
@@ -67,60 +70,16 @@
         <th data-orderable="false">Name</th>
         <th>Type</th>
         <th data-orderable="false">Description</th>
-        <th>Action</th>
+        <th data-orderable="false">Action</th>
         </tr>
     </thead>
     <tbody id="tbdTemplate">
-        <%# <tr value='4'>
-            <td class="td_num">1</td>
-            <td>Productivity</td>
-            <td>General</td>
-            <td>Productivity</td>
-            <td class="td_action">
-              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-            </td>
-        </tr>
-        <tr value='3'>
-            <td class="td_num">1</td>
-            <td>Productivity</td>
-            <td>General</td>
-            <td>Productivity</td>
-            <td class="td_action">
-              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-            </td>
-        </tr>
-        <tr value='2'>
-            <td class="td_num">1</td>
-            <td>Productivity</td>
-            <td>General</td>
-            <td>Productivity</td>
-            <td class="td_action">
-              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-            </td>
-        </tr>
-        <tr value='1'>
-            <td class="td_num">1</td>
-            <td>Productivity</td>
-            <td>General</td>
-            <td>Productivity</td>
-            <td class="td_action">
-              <button class="btn btn-light"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button>
-              <button class="btn btn-light"><i class="fa fa-trash icon" style="color:red"></i></button>
-              <button class="btn btn-primary btnUp"><i class="fa fa-arrow-circle-up"></i></button>
-              <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button>
-            </td>
-        </tr> %>
     </tbody>
     </table>
     </div>
 </div>
 </div>
+
+
+
+

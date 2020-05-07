@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     collection do
       # post "create"
       get "load"
+      get "load_data_edit"
     end
   end
 
