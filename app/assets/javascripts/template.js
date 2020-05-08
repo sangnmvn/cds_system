@@ -60,8 +60,9 @@ $(document).on("click", "#btn-add-competency", function () {
           $('.btn-save-compentency').prop("disabled", true);
           $(".form-add-competency #competency_id").val('');
           $(".form-add-competency #competency_index").val('');
-          // disable button delete
-          $('#table_add_competency tr:nth-child('+index+1+') td .btn-delete-competency').prop("disabled", false);
+          // $('#table_add_competency tr:nth-child('+index+1+') td .btn-delete-competency').prop("disabled", false);
+          // enable button
+          $('#table_add_competency tr td button').prop("disabled", false);
           disableButtonMove();
           success("Update");
         } else if (response.status == "fail") {
@@ -123,7 +124,8 @@ $(document).on("click", ".btn-edit-competency", function () {
             $(".form-add-competency #competency_index").val(index);
             $('.btn-save-compentency').prop("disabled", false);
             $('#table_add_competency tr td .btn-delete-competency').prop("disabled", false);
-            $('#table_add_competency tr:nth-child('+(Number(index)+1)+') td .btn-delete-competency').prop("disabled", true);
+            // $('#table_add_competency tr:nth-child('+(Number(index)+1)+') td .btn-delete-competency').prop("disabled", true);
+            $('#table_add_competency tr td button').prop("disabled", true);
           } else {
             fails("Load Data");
           }
@@ -265,6 +267,12 @@ function loadDataCompetencies() {
             searching: false,
             ordering: true,
             retrieve: true,
+            "aoColumns": [
+              { sWidth: '9%' },
+              { sWidth: '9%' },
+              { sWidth: '9%' },
+              { sWidth: '9%' },
+              { sWidth: '9%' }, ]
           })
           .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
           <button class="btn btn-light btn-edit-competency" data-id="'+e.id+'"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button> \
@@ -314,7 +322,7 @@ $(document).on('keyup','.form-add-competency #name', function(){
     );
     $('.btn-save-compentency').prop("disabled", true);
   }else {
-    if(/^[a-zA-Z0-9- ]*$/.test(name) == false) {
+    if(/^[\w\.,\s\&]*$/.test(name) == false) {
       $(".form-add-competency #error-name-competency").html(
         '<span class="error" >Competency name can not contain special character</span>'
       );
@@ -322,7 +330,6 @@ $(document).on('keyup','.form-add-competency #name', function(){
     }else {
       $('.btn-save-compentency').prop("disabled", false);
     }
-    
   }
 });
 
@@ -412,7 +419,7 @@ $(document).on('click','.btnDown', function(){
           table.row(row_id).data(current_row_data).draw();
           table.row(row_id + 1).data(next_row_data).draw();
           disableButtonMove();
-          success("Delete");
+          success("Move");
         }else if (response.status == "success") {
           fails("Move ")
         }
