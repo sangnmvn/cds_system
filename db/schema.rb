@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_054545) do
+ActiveRecord::Schema.define(version: 2020_05_07_031441) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -203,6 +203,9 @@ ActiveRecord::Schema.define(version: 2020_05_04_054545) do
     t.bigint "role_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "status", default: false
+    t.bigint "admin_user_id", null: false
+    t.index ["admin_user_id"], name: "index_templates_on_admin_user_id"
     t.index ["role_id"], name: "index_templates_on_role_id"
   end
 
@@ -257,6 +260,7 @@ ActiveRecord::Schema.define(version: 2020_05_04_054545) do
   add_foreign_key "schedules", "admin_users"
   add_foreign_key "schedules", "projects"
   add_foreign_key "slots", "competencies"
+  add_foreign_key "templates", "admin_users"
   add_foreign_key "templates", "roles"
   add_foreign_key "title_competency_mappings", "competencies"
   add_foreign_key "title_competency_mappings", "titles"

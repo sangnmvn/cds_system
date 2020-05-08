@@ -8,11 +8,7 @@ class TemplatesController < ApplicationController
   end
 
   def new
-    name = params[:name]
-    role = params[:role]
-    description = params[:description]
-    updated_by = current_admin_user.id
-    @template = Template.new(name: name, role_id: role, desc: description, admin_user_id: updated_by)
+    @template = Template.new(template_params)
     if @template.invalid?
       render json: {errors: @template.errors }, status: 400
     elsif @template.save!
@@ -29,6 +25,12 @@ class TemplatesController < ApplicationController
   end
 
   private
-    def template_params
+    def template_params()
+      param = {
+        name: params[:name],
+        role_id: params[:role],
+        desc: params[:description],
+        admin_user_id: current_admin_user.id
+      }
     end
 end
