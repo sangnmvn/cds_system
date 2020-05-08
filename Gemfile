@@ -38,6 +38,7 @@ gem "devise"
 gem "cancancan"
 gem "pry"
 gem "chartkick"
+gem 'ransack', "~> 2.3.0"
 # gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################

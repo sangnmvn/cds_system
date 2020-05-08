@@ -25,14 +25,20 @@ class TemplatesController < ApplicationController
   end
 
   def load_slot
-    @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id)
+    search = params[:search]
+    if search
+      @slots = Slot.where(competency_id: params[:id]).ransack(desc_cont: search).result
+    else
+      @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id)
+    end
     render json: @slots
   end
 
-  def add_new_slot
-    @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1 
-    Slot.create(slot_params(@slot_id))
-    render json: "1" #repsonse success
+  def new_slot
+    @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
+    @slot = Slot.new(slot_params(@slot_id))
+    render json: {errors: @slot.errors }, status: 400 if @slot.invalid?
+    render json: @slot.id if @slot.save!
   end
 
   def update_slot
@@ -48,14 +54,19 @@ class TemplatesController < ApplicationController
 
   def check_slot_in_template
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
-    @competencies.each{|competency|
+    @competencies.each { |competency|
       slots = Slot.find_by(competency_id: competency)
       if slots.blank?
         render json: "-1"
         return
       end
-    }  
+    }
     render json: "1"
+  end
+
+  def update_status_template
+    template = Template.find(params[:template_id])
+    template.update(status: 1)
   end
 
   private

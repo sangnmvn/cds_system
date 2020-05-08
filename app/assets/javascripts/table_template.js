@@ -1,6 +1,7 @@
 $(document).ready(function () {
+  var templateId = 1;
   loadSlotsinCompetency();
-  checkSlotinTemplate(1);
+  checkSlotinTemplate(templateId);
   var table = $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
@@ -33,7 +34,7 @@ $(document).ready(function () {
     $("#evidenceSlot").val("");
     loadSlotsinCompetency();
     changeBtnSave("-1")
-    checkSlotinTemplate(1)
+    checkSlotinTemplate(templateId)
   });
   $("#tbdTemplate").on('click', '.btnDel', function () {
     var id = $(this).attr('value');
@@ -47,21 +48,38 @@ $(document).ready(function () {
     $("#evidenceSlot").val(tr[2].textContent);
     chooseSelect("selectLevel",tr[0].textContent);
     $("#hideIdSlot").html(id); //xóa id ẩn 
-    checkSlotinTemplate(1);
+    checkSlotinTemplate(templateId);
   });
   changeBtnSave("-1");
   $("#table_slot").removeClass("dataTable")
   $('.dataTables_length').attr("style", "display:none");
+  $("#btnFinish").click(function(){
+    finnish(templateId);
+  })
+  $("#txtSearch").keypress(function(){
+    if (event.keyCode == 13 || event.which == 13) {
+      var search = $(this).val();
+      loadSlotsinCompetency(search)
+    }
+  })
+  $("#descSlot").keyup(function(){
+    if ($("#descSlot").val())
+      $("#ErrorDesc").attr("style","display:none")
+    else
+      $("#ErrorDesc").attr("style","display:block")
+  })
+  //-----------------------------------------------------
 });
 //--------------------------------------------------------
-function loadSlotsinCompetency() {
+function loadSlotsinCompetency(search) {
   var id = $('#selectCompetency').val();
   $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
   $.ajax({
     type: "GET",
     url: "/templates/load_slot",
     data: {
-      id: id //truyền id competency
+      id: id, //truyền id competency
+      search: search
     },
     dataType: "json",
     success: function (response) {
@@ -69,10 +87,13 @@ function loadSlotsinCompetency() {
       table.fnClearTable();
       $(response).each(
         function (i, e) { //duyet mang doi tuong
+          var btnUpDown = "<button class='btn btn-primary btnAction btnUp' ><i class='fa fa-arrow-circle-up icon'></i></button>" +
+          "<button class='btn btn-primary btnAction btnDown'><i class='fa fa-arrow-circle-down icon'></i></button>"
+          if (search)
+            btnUpDown = "";
           table.fnAddData([
             "<td class='td_num'>" + e.level + "</td>", e.desc, e.evidence, "<td class='td_action'><button class='btn btn-light btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></button>" +
-            "<button class='btn btn-light btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></button><button class='btn btn-primary btnAction btnUp' ><i class='fa fa-arrow-circle-up icon'></i></button>" +
-            "<button class='btn btn-primary btnAction btnDown'><i class='fa fa-arrow-circle-down icon'></i></button></td>"
+            "<button class='btn btn-light btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></button>"+ btnUpDown +"</td>"
           ]);
         }
       );
@@ -119,7 +140,7 @@ function moveRowbyAjax(direction) {
 function addNewSlot(desc,evidence,level,competencyId,nameCompetency) {
   $.ajax({
     type: "GET",
-    url: "/templates/add_new_slot",
+    url: "/templates/new_slot",
     data: {
       desc: desc,
       evidence: evidence,
@@ -235,12 +256,27 @@ function chooseSelect(nameSelect,value) {
     $(this).find('option[value="'+ value +'"]').prop('selected', true); 
   });
 }
-function checkInputData() {
-  if($("#evidenceSlot").val() != "" && $("#descSlot").val() != "")
-  {
+function checkDataDesc() {
+  if($("#descSlot").val())
     changeBtnSave("1")
-  }
-  else{
+  else
     changeBtnSave("-1")
-  }
+}
+function finnish (templateId)
+{
+  $.ajax({
+    type: "GET",
+    url: "/templates/update_status_template",
+    data: {
+      template_id: templateId
+    },
+    dataType: "json",
+    success: function (response) {
+      success("change status this template is");
+      changeBtnFinish("-1")
+    },
+    error: function () {
+      fails("change status this template is");
+    }
+  });
 }

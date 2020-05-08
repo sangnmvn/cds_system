@@ -39,21 +39,22 @@
             <br/>
             <%# Evidence Guide %>
             <div class="row">
-            <div class="offset-md-1 col-md-2" style="text-align: left">
-                <label>Slot Description(*)</label>
-            </div>
-            <div class="col-sm-8">
-                <%= text_area_tag 'descSlot', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", minlength: "3", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
-            </div>
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Slot Description(*)</label>
+                </div>
+                <div class="col-sm-8">
+                    <%= text_area_tag 'Slotdesc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
+                    <small id="ErrorDesc" class="text-danger error" style="display:none">Please enter slot description!</small>    
+                </div>
             </div>  
             <br>
             <%# Description %>
             <div class="row">
             <div class="offset-md-1 col-md-2" style="text-align: left">
-                <label>Evidence Guide (*)</label>
+                <label>Evidence Guide</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'EvidenceSlot', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", minlength: "3", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
+                <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
             </div>
             </div>  
             <br>
@@ -70,16 +71,16 @@
 
 <hr/>
 
-<div class="row divTable">
+<div class="row divHeader">
     <div class="col-8">
-        <div class="divHeader" id="nameCompetency">Productivity</div>
+        <div id="nameCompetency" style=""></div>
     </div>
     <div class="col-4">
         <div class="input-group mb-3 divHeader">
             <div class="input-group-prepend">
                 <span class="input-group-text">Search : </span>
             </div>
-            <input type="search" class="form-control" placeholder="search by slot's description">
+            <input type="search" id="txtSearch" class="form-control" placeholder="search by slot's description">
         </div>
     </div>
 </div>
@@ -88,10 +89,10 @@
         <table class="table table-primary table-responsive-sm table-mytable" id="table_slot">
             <thead>
                 <tr>
-                <th >Level <%= image_tag("sort_both.png", border: 1) %></th>
-                <th data-orderable="false">Slot Description</th>
-                <th data-orderable="false">Evidence Guide</th>
-                <th data-orderable="false">Action</th>
+                    <th>  Level <%= image_tag("sort_both.png", border: 1) %></th>
+                    <th data-orderable="false">&nbsp;&nbsp;&nbsp;&nbsp;Slot Description&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th data-orderable="false">Evidence Guide</th>
+                    <th data-orderable="false">Action</th>
                 </tr>
             </thead>
             <tbody id="tbdTemplate">

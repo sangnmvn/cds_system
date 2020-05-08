@@ -41,10 +41,11 @@ Rails.application.routes.draw do
     collection do
       get "add"
       get "load_slot"
-      get "add_new_slot"
+      get "new_slot"
       get "delete_slot"
       get "check_slot_in_template"
       get "update_slot"
+      get "update_status_template"
     end
   end
   resources :competencies do
