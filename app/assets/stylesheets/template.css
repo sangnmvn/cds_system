@@ -81,7 +81,7 @@
   width: 100px;
   background: #616161;
   font-weight: bold;
-  color: white;
+  color: white;neral	Problem Solving12312321
   border: 0 none;
   border-radius: 0px;
   cursor: pointer;
@@ -156,3 +156,11 @@ select.list-dt:focus {
     }
     
 } */
+
+
+#table_add_competency tbody td {
+  padding: 5px 10px 5px 10px;   
+}
+.close-modal {
+  color: white;
+}
