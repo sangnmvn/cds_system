@@ -2,9 +2,9 @@
   <%= render 'add'%>
 <%= render 'delete_selected'%>
 <% if current_admin_user.role.name == "HR" %>
-  <%= render 'add_hr' %>
+  <%= render 'add_hr'   %>
 <% end %>
-
+<button id="mailer">Send Mail</button>
 <!-- Modal show -->
 <div id="modal_content" >
   <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">

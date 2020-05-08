@@ -33,6 +33,7 @@ gem 'jquery-rails'
 gem 'popper_js', '~> 1.14.5'
 gem 'select_all-rails'
 gem 'font-awesome-sass'
+gem 'whenever', require: false
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem 'kaminari'
