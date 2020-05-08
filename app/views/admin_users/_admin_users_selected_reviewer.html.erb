@@ -14,7 +14,7 @@
       <% @existing_reviewers.each_with_index do |user, index| %>
         <tr id="<%= user.id %>">
           <td style="text-align: right"><%= index + 1%></td>
-          <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>"</td>
+          <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>" </td>
             <td><%= "#{user.first_name} #{user.last_name}" %> </td>
             <td><%= user.account %></td>
             <td><%= user.email %></td>
