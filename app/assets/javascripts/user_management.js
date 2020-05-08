@@ -713,9 +713,10 @@ $(document).on("click", ".status_icon", function () {
 
 // disable multiple users
 $(document).on("click", "#btn-disable-multiple-users", function () {
-  $("#modalStatusMultipleUsers").modal("show");
+  
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
+    $("#modalStatusMultipleUsers").modal("show");
     $('.btn-modal-disable-multiple-users').prop("disabled", false);
     $(".display_number_users_disable").html("Are you sure you want disable " + number_user_delete + " user ?");
   } else {
@@ -723,9 +724,10 @@ $(document).on("click", "#btn-disable-multiple-users", function () {
   }
 });
 $(document).on("click", "#btn-enable-multiple-users", function () {
-  $("#modalStatusEnableUsers").modal("show");
+  
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
+    $("#modalStatusEnableUsers").modal("show");
     $('.btn-modal-enable-multiple-users').prop("disabled", false);
     $(".display_number_users_disable").html("Are you sure you want enable " + number_user_delete + " user ?");
   } else {

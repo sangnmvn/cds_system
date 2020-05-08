@@ -349,7 +349,7 @@ $(document).ready(function () {
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" \
   data-toggle="modal" data-target="#modalAdd" style="width:90px"><img border="0" style="float:left;margin-top:4px" \
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
-  float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px;width:100px" id="deletes">\
+  float-right" data-toggle="modal"  style="margin-left:5px;width:100px" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
   $(content).insertAfter(".dataTables_filter");
 });
@@ -362,6 +362,7 @@ $.each($("input[name='checkbox']:checked"), function(){
   });
 number = groups_ids.length;
   if (number != 0) {
+    $('#modalDeleteS').modal('show');
     $('#delete_selected').prop("disabled", false);
     $(".display_number_groups_delete").html("Are you sure want to delete " + number + " groups?");
   } else {
