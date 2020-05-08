@@ -29,7 +29,7 @@
     <!-- Control the column width, and how they should appear on different devices -->
     <div class="row">
       <div class="col-sm-12">
-      <input type="hidden" value="<%@privilege_array.include? 4%>" id="check_privilege">
+     
       <% if @privilege_array.include? 4%>
         <%= render 'add'  %>
         <%= render 'delete_selected'%>

@@ -1,5 +1,3 @@
-
-
 <table class="table" id="table_group" data-source="<%= groups_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
@@ -47,7 +45,7 @@
                 links = []
 
                 links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id,title: 'Edit Group', :'data-toggle' => 'tooltip'})
-                  links << link_to(image_tag("destroy.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
+                links << link_to(image_tag("Delete.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
                 links << link_to('<i class="fa fa-key"></i>'.html_safe,show_privileges_path(group.id),{ class: "action_icon key_icon", :"data-id" => group.id, :"data-toggle" => "modal",title: 'Assign Privileges To Group', :"data-target" => "#modalPrivilege_"+group.id.to_s})
                 links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal",title: 'Assign Users to Group'})
                 links.join(" ").html_safe      

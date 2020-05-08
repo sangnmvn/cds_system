@@ -31,7 +31,7 @@
         </div>
         <div class="modal-footer">
           <div class="col-12 p-3 text-center">
-            <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
+            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -56,6 +56,7 @@
           checkboxes[i].checked = true;
           checkboxes[i].closest('tr').style.color = "#990000";
           $('#to_right').attr("disabled",false);
+          $('#to_right').removeClass("btn-secondary").addClass("btn-info");
       }
     }
     else
@@ -64,6 +65,7 @@
           checkboxes[i].checked = false;
           checkboxes[i].closest('tr').style.color = "black";
           $('#to_right').attr("disabled",true);
+          $('#to_right').removeClass("btn-info").addClass("btn-secondary");
       }
     }
   }
@@ -80,6 +82,7 @@
           checkboxes[i].checked = true;
           checkboxes[i].closest('tr').style.color = "#990000";
           $('#to_left').attr("disabled",false);
+          $('#to_left').removeClass("btn-secondary").addClass("btn-info");
       }
     }
     else
@@ -88,6 +91,7 @@
           checkboxes[i].checked = false;
           checkboxes[i].closest('tr').style.color = "black";
           $('#to_left').attr("disabled",true);
+          $('#to_left').removeClass("btn-info").addClass("btn-secondary");
       }
     }
   }
@@ -137,6 +141,8 @@
         }
       }
       $('#to_right').attr("disabled",true);
+      $('#to_right').removeClass("btn-info").addClass("btn-secondary");
+       $("#check_all_choose_left").prop("checked", false);
       $('#save').attr("disabled",false);
     });
     $('#to_left').click(function() {
@@ -154,6 +160,8 @@
         }
       }
       $('#to_left').attr("disabled",true);
+      $('#to_left').removeClass("btn-info").addClass("btn-secondary");
+      $("#check_all_choose_right").prop("checked", true);
       $('#save').attr("disabled",false)
         
 
@@ -174,10 +182,12 @@
         if (nboxes_checked > 0)
         {
           $("#to_right").attr("disabled", false);
+          $('#to_right').removeClass("btn-secondary").addClass("btn-info");
         }
         else
         {
           $("#to_right").attr("disabled", true);
+          $('#to_right').removeClass("btn-info").addClass("btn-secondary");
         }
         
       });
@@ -196,10 +206,12 @@
         if (nboxes_checked > 0)
         {
           $("#to_left").attr("disabled", false);
+          $('#to_left').removeClass("btn-secondary").addClass("btn-info");
         }
         else
         {
           $("#to_left").attr("disabled", true);
+          $('#to_left').removeClass("btn-info").addClass("btn-secondary");
         }
 
       });

@@ -69,14 +69,14 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           addData.push(response.desc);
           addData.push(
             '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-            <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-            <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
-              response.id +
-              '" href="">\
-            <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="'+response.id +'" href="#"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+            <img border="0" src="/assets/edit.png"></a> \
+            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <img border="0" src="/assets/Delete.png"></a> \
+            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id+'" data-id="'+response.id+'"  title=""   href="#" data-original-title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id+'" href="#"><i class="fa fa-users"></i></a>'
           );
+         
+  
           table.fnAddData(addData);
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
@@ -179,13 +179,14 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               updateData.push(response.desc);
               updateData.push(
                 '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-                <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
-                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
-                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+                <img border="0" src="/assets/edit.png"></a> \
+                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+                <img border="0" src="/assets/Delete.png"></a> \
+                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="show_privileges_path('+response.id +')" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
-              var delete_whole_row_constant = undefined;
+
+                var delete_whole_row_constant = undefined;
               var redraw_table = false;
               table.fnUpdate(
                 updateData,
@@ -345,11 +346,11 @@ $(function() {
 });
 
 $(document).ready(function () {
-
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" \
-  data-toggle="modal" data-target="#modalAdd">Add</button><button type="button" class="btn btn-danger btn-xs\
-   float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px" id="deletes">Delete</button></div>';
-
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" \
+  data-toggle="modal" data-target="#modalAdd" style="width:90px"><img border="0" style="float:left;margin-top:4px" \
+  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
+  float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px;width:100px" id="deletes">\
+  <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
   $(content).insertAfter(".dataTables_filter");
 });
 
@@ -361,8 +362,10 @@ $.each($("input[name='checkbox']:checked"), function(){
   });
 number = groups_ids.length;
   if (number != 0) {
+    $('#delete_selected').prop("disabled", false);
     $(".display_number_groups_delete").html("Are you sure want to delete " + number + " groups?");
   } else {
+    $('#delete_selected').prop("disabled", true);
     $(".display_number_groups_delete").html("Please select the groups you want delete ?");
   }
 })

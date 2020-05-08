@@ -21,13 +21,14 @@ function myJS() {
 			// Lặp và thiết lập checked
 			for (var i = 0; i < checkboxes.length; i++) {
 				checkboxes[i].checked = true;
-				checkboxes[i].closest('tr').style.color = "#990000";
+				checkboxes[i].closest('tr').style.backgroundColor = "pink";
 				change_button_right(0);
 			}
 		} else {
 			for (var i = 0; i < checkboxes.length; i++) {
-				checkboxes[i].checked = false;
-				checkboxes[i].closest('tr').style.color = "black";
+        checkboxes[i].checked = false;
+    
+				checkboxes[i].closest('tr').style.backgroundColor = "white";
 				change_button_right(1);
 			}
 		}
@@ -39,13 +40,13 @@ function myJS() {
 			// Lặp và thiết lập checked
 			for (var i = 0; i < checkboxes.length; i++) {
 				checkboxes[i].checked = true;
-				checkboxes[i].closest('tr').style.color = "#990000";
+				checkboxes[i].closest('tr').style.backgroundColor = "pink";
 				change_button_left(0);
 			}
 		} else {
 			for (var i = 0; i < checkboxes.length; i++) {
 				checkboxes[i].checked = false;
-				checkboxes[i].closest('tr').style.color = "black";
+				checkboxes[i].closest('tr').style.backgroundColor = "white";
 				change_button_left(1);
 			}
 		}
@@ -57,13 +58,13 @@ function myJS() {
 			if ($("#table_left tbody :checkbox:not(:checked)").length == 0) {
 				$('#check_all_choose').prop("checked", true);
 			}
-			$this.closest('tr').css('color', "#990000");
+			$this.closest('tr').css('background-color', "pink");
 			change_button_right(0);
 		} else {
 			if ($("#table_left tbody :checkbox:checked").length == 0) {
 				change_button_right(1);
 			}
-			$this.closest('tr').css('color', "black");
+			$this.closest('tr').css('background-color', "white");
 			$('#check_all_choose').prop("checked", false);
 		}
 	});
@@ -75,12 +76,12 @@ function myJS() {
 				$('#check_all_remove').prop("checked", true);
 			}
 			change_button_left(0);
-			$this.closest('tr').css('color', "#990000");
+			$this.closest('tr').css('background-color', "pink");
 		} else {
 			if ($("#table_right tbody :checkbox:checked").length == 0) {
 				change_button_left(1);
 			}
-			$this.closest('tr').css('color', "black");
+			$this.closest('tr').css('background-color', "white");
 			$('#check_all_remove').prop("checked", false);
 		}
 	});
@@ -91,7 +92,7 @@ function myJS() {
 			if (checkboxes[i].checked == true) {
 				checkboxes[i].checked = false;
 				var tr = checkboxes[i].closest("tr");
-				tr.style.color = "black";
+				tr.style.backgroundColor = "white";
 				//$("#table_right tbody").append(tr);
 				var tr_add = table_left.fnGetData(tr);
 				table_right.fnAddData(tr_add);
@@ -112,7 +113,7 @@ function myJS() {
 			if (checkboxes[i].checked == true) {
 				checkboxes[i].checked = false;
 				var tr = checkboxes[i].closest("tr");
-				tr.style.color = "black";
+				tr.style.backgroundColor = "white";
 				var tr_add = table_right.fnGetData(tr);
 				table_left.fnAddData(tr_add);
 				table_right.fnDeleteRow(tr);

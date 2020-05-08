@@ -802,10 +802,10 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 $(document).ready(function () {
 
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" title="Add a new User" data-toggle="modal" data-target="#modalAdd" \
-  data-backdrop="true" data-keyboard="true" style="width:140px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-  <button type="button" class="btn btn-light border-danger" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:140px;"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-  <button type="button" class="btn btn-light border-dark"  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:140px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-  <button type="button" class="btn btn-light border-danger" data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:140px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+  data-backdrop="true" data-keyboard="true" style="width:120px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+  <button type="button" class="btn btn-light border-primary"  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+  <button type="button" class="btn btn-light border-danger" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+  <button type="button" class="btn btn-light border-danger" data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
   </div>';
 
   $(content).insertAfter(".dataTables_filter");
