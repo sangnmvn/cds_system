@@ -20,6 +20,8 @@
                   </div>
                   <div class="col-sm-6">
                     <%= text_field_tag 'desc', nil, class: 'form-control', placeholder: 'Please enter schedule name' %>
+                    <input type="hidden" name="schedule" id="schedule" value="schedule">
+                    <input type="hidden" name="user" id="user" value="<%= current_admin_user.id %>">
                   </div>
                 </div>
                 <br>

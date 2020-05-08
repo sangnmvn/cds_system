@@ -3,10 +3,10 @@
   
   <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
   <td><%= index + 1 %></td>
-
+  <td><%= schedule.desc %></td>
   <td><%= schedule.first_name + ' ' + schedule.last_name %></td>
-  <td><%= schedule.start_date%></td>
-  <td><%= schedule.end_date%></td>d>
+  <td><%= schedule.start_date %></td>
+  <td><%= schedule.end_date_hr %></td>
   <td><%= schedule.status %></td>
   <td>
     <% if schedule.status == "In-progress" %>
