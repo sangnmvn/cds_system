@@ -28,8 +28,9 @@
     </div>
   </div>
 </div>
-<% if @v.include? 1%>
+
 <div><%= render 'add_reviewer' , admin_users: @admin_users %></div>
+<% if @privilege_array.include? 1%>
 <div><%= render 'delete' %></div>
 <div><%= render 'edit' %></div>
 <div><%= render 'delete_multiple_users' %></div>

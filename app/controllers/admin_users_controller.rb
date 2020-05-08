@@ -1,10 +1,9 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-
+  include Authorize
   before_action :set_admin_user, only: [:update, :status, :destroy]
   before_action :get_privilege_id
   def get_user_data
-
     $count ||= 0;
     $count2 ||= 0;
     user_per_page = 20
@@ -15,16 +14,16 @@ class AdminUsersController < ApplicationController
     @projects = Project.all
  
     # "iSortCol_0"=>"3" (cot de sort), "sSortDir_0"=>"asc" (thu tu sort)
-    @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
-    if @v.include? 1
+
+    if @privilege_array.include? 1
     @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
     else
+      @admin_users2=[]
       pm = ProjectMember.where(admin_user_id: current_admin_user.id)
       pm.each {|x|
-      @a= x.project_id
+        @admin_users2 << AdminUser.joins(:project_members).where(:project_members => { project_id: x.project_id } )
       }
-      @admin_users = AdminUser.joins(:project_members).where(:project_members => { project_id: @a } )
-  
+      @admin_users=@admin_users2[0]
     end
     if params["iSortCol_0"].to_i == 1
       @admin_users = @admin_users.order(:id => params["sSortDir_0"].to_sym)
@@ -129,17 +128,18 @@ class AdminUsersController < ApplicationController
       current_user_data.push(company)
 
       # action
-      if @v.include? 1
+      if @privilege_array.include? 1
       
       current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><img border='0' 
-        src='/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png'></a> 
+        src='/assets/edit.png'></a> 
         <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href=''>
-        <img border='0' src='/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png'></a> 
+        <img border='0' src='/assets/Delete.png'></a> 
         <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
-        <img border='0' src='/assets/add_reviewer-be172df592436b4918ff55747fad8ecb1376cabb7ab1cafd5c16594611a9c640.png'></a> 
+        <img border='0' src='/assets/Assign_User.png'></a> 
         <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
       else
-        current_user_data.push("")
+        current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
+          <img border='0' src='/assets/Assign_User.png'></a> ")
       end
       final_data.push(current_user_data)
     }
@@ -167,20 +167,20 @@ class AdminUsersController < ApplicationController
   end
 
   def index
-    if @v.include? 1 or @v.include? 2
-    @companies = Company.all.order(:name)
-    @projects = Project.all.order(:desc)
-    @roles = Role.all.order(:name)
-    @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
-    @project_members = ProjectMember.all
-    respond_to do |format|
-      format.html
-    end
-    else
+    if @privilege_array.include? 1 or @privilege_array.include? 2
+      @companies = Company.all.order(:name)
+      @projects = Project.all.order(:desc)
+      @roles = Role.all.order(:name)
+      @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
+      @project_members = ProjectMember.all
       respond_to do |format|
-      format.html { redirect_to  index2_admin_users_path}
+        format.html
       end
-  end
+      else
+        respond_to do |format|
+        format.html { redirect_to  index2_admin_users_path}
+      end
+    end
   end
 
   def index2
@@ -454,34 +454,7 @@ class AdminUsersController < ApplicationController
 
   private
 
-  def get_privilege_id
-    @v = []
-    if current_admin_user.id != 1
-    user_group = UserGroup.where(admin_user_id: current_admin_user.id)
-    user_group.each{|x|
-      group = Group.where(id: x.group_id)
-      group.each {|z|
-        if z.status == true and z.is_delete == false
-          group_privilege = GroupPrivilege.where(group_id: x.group_id)
-      group_privilege.each{|y|
-
-        if y.privilege_id == 1
-          @v.push(1) 
-          break
-        elsif y.privilege_id == 2
-          @v.push(2) 
-        elsif y.privilege_id == 3
-          @v.push(3) 
-        end
-      }
-      break
-    end
-      }
-    }
-  else
-    @v=[1,2,3,4,5,6,7,8,9,10,11]
-    end
-  end
+  
 
   def set_admin_user
     @admin_user = AdminUser.find(params[:id])

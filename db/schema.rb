@@ -180,6 +180,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_033507) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string "notify_date"
+    t.boolean "is_delete", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
