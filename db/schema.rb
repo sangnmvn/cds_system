@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_031441) do
+ActiveRecord::Schema.define(version: 2020_05_08_023839) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_031441) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string "notify_date"
+    t.boolean "is_delete", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"

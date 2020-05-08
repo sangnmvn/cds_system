@@ -76,7 +76,7 @@ function loadSlotsinCompetency(search) {
   $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
   $.ajax({
     type: "GET",
-    url: "/templates/load_slot",
+    url: "/slots/load_slot",
     data: {
       id: id, //truyền id competency
       search: search
@@ -87,8 +87,8 @@ function loadSlotsinCompetency(search) {
       table.fnClearTable();
       $(response).each(
         function (i, e) { //duyet mang doi tuong
-          var btnUpDown = "<button class='btn btn-primary btnAction btnUp' ><i class='fa fa-arrow-circle-up icon'></i></button>" +
-          "<button class='btn btn-primary btnAction btnDown'><i class='fa fa-arrow-circle-down icon'></i></button>"
+          var btnUpDown = "<button class='btn btn-primary btnAction btnUpSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></button>" +
+          "<button class='btn btn-primary btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></button>"
           if (search)
             btnUpDown = "";
           table.fnAddData([
@@ -118,29 +118,11 @@ function fails(content) {
   }, 5000);
 }
 
-function moveRowbyAjax(direction) {
-  $.ajax({
-    type: "GET",
-    url: "/templates/moveTemplate",
-    data: {
-      id: id,
-      direction: direction //direction phân biệt up hay down để change data cho phù hợp
-    },
-    dataType: "json",
-    success: function (response) {
-      $(response).each(
-        function (i, e) { //duyet mang doi tuong
-          loadDataSlot(); //load lại table sau khi up or down
-        }
-      );
-    }
-  });
-}
 
 function addNewSlot(desc,evidence,level,competencyId,nameCompetency) {
   $.ajax({
     type: "GET",
-    url: "/templates/new_slot",
+    url: "/slots/new_slot",
     data: {
       desc: desc,
       evidence: evidence,
@@ -161,7 +143,7 @@ function addNewSlot(desc,evidence,level,competencyId,nameCompetency) {
 function updateSlot(desc,evidence,level,competencyId,presentId) {
   $.ajax({
     type: "GET",
-    url: "/templates/update_slot",
+    url: "/slots/update_slot",
     data: {
       desc: desc,
       evidence: evidence,
@@ -196,7 +178,7 @@ function delSlot (id,tr){
 		callback: function (result) {
 			if (result) {
 				$.ajax({
-					url: "/templates/delete_slot",
+					url: "/slots/delete_slot",
 					data: {
             id: id
 					},
@@ -241,7 +223,7 @@ function  changeBtnSave(direction) {
 function checkSlotinTemplate (templateId){
   $.ajax({
     type: "GET",
-    url: "/templates/check_slot_in_template",
+    url: "/slots/check_slot_in_template",
     data: {
       template_id: templateId
     },
@@ -266,7 +248,7 @@ function finnish (templateId)
 {
   $.ajax({
     type: "GET",
-    url: "/templates/update_status_template",
+    url: "/slots/update_status_template",
     data: {
       template_id: templateId
     },
@@ -277,6 +259,51 @@ function finnish (templateId)
     },
     error: function () {
       fails("change status this template is");
+    }
+  });
+}
+$(document).on('click','.btnUpSlot', function(){
+  var row_id = $(this).closest('tr').index();
+  var id = $(this).attr('value');
+  table =  $("#table_slot").DataTable();
+  if (row_id != 0)
+    moveRow(id,row_id,-1,table);
+});
+$(document).on('click','.btnDownSlot', function(){
+  var row_id = $(this).closest('tr').index();
+  var id = $(this).attr('value');
+  table =  $("#table_slot").DataTable();
+  moveRow(id,row_id,1,table)
+});
+function moveRow (id,row_id, direction,table){
+  $.ajax({
+    type: "GET",
+    url: "/slots/change_slot_id",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {
+      id: id, direction: direction
+    },
+    dataType: "json",
+    success: function (response) {
+      console.log(response)
+      if (response == "available"){
+          var num = parseInt(direction);
+          current_row_data = table.row(row_id).data();
+          previous_row_data = table.row(row_id + num).data();
+
+          table.row(row_id + num).data(current_row_data).draw();
+          table.row(row_id).data(previous_row_data).draw();
+          success("Move ");
+      }
+      else if (response == "max")
+        fails("The slot is last in Its level. Move ")
+      else
+        fails("The slot is first in Its level. Move ")
+    },
+    error: function () {
+      fails("Move ");
     }
   });
 }

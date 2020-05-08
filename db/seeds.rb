@@ -186,12 +186,12 @@ Title.create!(name: "SM Test", desc: "SM Test", role_id: "5")
 Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
-Template.create!(id: 1, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For QC", role_id: "1")
-Template.create!(id: 2, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "2")
-Template.create!(id: 3, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "3")
-Template.create!(id: 4, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "4")
-Template.create!(id: 5, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5")
-Template.create!(id: 6, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6")
+Template.create!(id: 1, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
+Template.create!(id: 2, name: "CDS/CPB HR", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "2", admin_user_id: 1)
+Template.create!(id: 3, name: "CDS/CPB BA", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "3", admin_user_id: 2)
+Template.create!(id: 4, name: "CDS/CPB DEV", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
+Template.create!(id: 5, name: "CDS/CPB SM", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
+Template.create!(id: 6, name: "CDS/CPB IT", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
 # Template.create!(id: 2, name: "CDS", desc: "Career Development System")
 
 # Create Form
@@ -247,7 +247,7 @@ slot_create = [
   { desc: "Complete assigned tasks within scheduled completion dates. \ 
     Communicate potential issues as soon as you are known.", evidence: "Hiểu rõ và tuân thủ tốt các quy trình, quy định, \
     thủ tục, chuẩn do BESTARION đang áp dụng", level: "1", competency_id: "1", slot_id: 4 },
-  { desc: "Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM, …", evidence: "", level: "1", competency_id: "1", slot_id: 5 },
+  { desc: "Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM, …", evidence: "abc", level: "1", competency_id: "1", slot_id: 5 },
   { desc: "Recognized as a proactive member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án. \n
     Nằm trong số những người đóng góp hàng đầu cho dự án.\n 
     Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com  bị down và không giải quyết được. 
@@ -288,7 +288,7 @@ slot_create = [
   { desc: "Lead simple meetings for internal or external clients. Peer and / or next level management are likely to \
     attend these meetings. ",
     evidence: "Bằng chứng thuyết phục là có dính dáng đến khách hàng bên ngoài", level: "2", competency_id: "2", slot_id: 3 },
-  { desc: "Possess and use good diagnosis / troubleshooting skills.", evidence: "", level: "2", competency_id: "2", slot_id: 4 },
+  { desc: "Possess and use good diagnosis / troubleshooting skills.", evidence: "abc", level: "2", competency_id: "2", slot_id: 4 },
   { desc: "Identifies and solves complex or sensitive problems (for example: associate performance, project scope issues,\
     and priority changes or resolving multiple conflicting agendas). ",
     evidence: "- Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.\n
@@ -307,18 +307,18 @@ slot_create = [
     Phát biểu bài toán technical lead của công ty và giải quyết nó\n             
     Phát biểu bài toán quản lý chi phí / năng suất của công ty và giải quyết nó", level: "4", competency_id: "2", slot_id: 1 },
   { desc: "Anticipate project and/or assignment risks and provide potential solutions.",
-    evidence: "", level: "4", competency_id: "2", slot_id: 2 },
+    evidence: "abc", level: "4", competency_id: "2", slot_id: 2 },
   { desc: "Capable of internal interaction. This is evident in all core communications. Example: \n
     Writing: Weekly report, email, Bug tracker, update document, etc. \n
     Reading and understanding: Project documents, Company policy, Guideline(Bug tracker, SVN, HRM), etc. \n
     Communicating with team member: discuss and  raise issues as soon as they are known",
-    evidence: "", level: "1", competency_id: "3", slot_id: 1 },
+    evidence: "abc", level: "1", competency_id: "3", slot_id: 1 },
   { desc: "Effectively attend simple meetings",
-    evidence: "", level: "1", competency_id: "3", slot_id: 2 },
+    evidence: "abc", level: "1", competency_id: "3", slot_id: 2 },
   { desc: "Lead simple internal meetings.  Peers and/or next level management are likely to attend these meetings",
-    evidence: "", level: "2", competency_id: "3", slot_id: 1 },
+    evidence: "abc", level: "2", competency_id: "3", slot_id: 1 },
   { desc: "Capable of client interaction with supervision or guidance from management or team leadership",
-    evidence: "", level: "2", competency_id: "3", slot_id: 2 },
+    evidence: "abc", level: "2", competency_id: "3", slot_id: 2 },
   { desc: "Exhibit developed good written and verbal communications. This is evident in complete, accurate and timely status \
     reports and project deliverables as well as clear and concise direct communication.",
     evidence: "Good: Có khả năng tốt về written & verbal communications, ít khi phải hỏi ai về written & verbal communications. \
@@ -347,7 +347,7 @@ slot_create = [
                thế nào, cần tìm hiểu thông tin từ khách hàng trước khi gửi bản đề xuất chính thức", level: "3", competency_id: "3", slot_id: 2 },
   { desc: "Lead or facilitate complex meetings for either internal or external clients. The next level of management likely attends \
     these meetings. (Example: formal reviews, workshops, requirements sessions).",
-    evidence: "", level: "3", competency_id: "3", slot_id: 3 },
+    evidence: "abc", level: "3", competency_id: "3", slot_id: 3 },
   { desc: "Display good negotiating skills. (Example: setting scope and time-lines with client, vendor discussions, and technical strategies.)",
     evidence: "Ví dụ 1 về good negotiating skills:\n
     Khách hàng nói: Dự án phải được hoàn tất trong phạm vi dưới 300 triệu đồng\n
@@ -409,11 +409,11 @@ slot_create = [
      ngày đi họp mà lại sử dụng thời gian họp kém hiệu quả …]\n             
     Với chừng đó thời gian có được thì không over-commit để rồi không đạt được commitment", level: "1", competency_id: "4", slot_id: 3 },
   { desc: "Arrange and finish tasks creatively ",
-    evidence: "", level: "1", competency_id: "4", slot_id: 4 },
+    evidence: "abc", level: "1", competency_id: "4", slot_id: 4 },
   { desc: "Complete assigned tasks within scheduled completion dates. Communicate potential issues as soon as they are known.",
-    evidence: "", level: "1", competency_id: "4", slot_id: 5 },
+    evidence: "abc", level: "1", competency_id: "4", slot_id: 5 },
   { desc: "Prioritize duties in a manner consistent with project objectives/ goal",
-    evidence: "", level: "1", competency_id: "4", slot_id: 6 },
+    evidence: "abc", level: "1", competency_id: "4", slot_id: 6 },
   { desc: "Organize tasks and make an effective plan for own task",
     evidence: "Hoàn tất tasks đúng hạn như ước lượng hợp lý đã đề ra", level: "2", competency_id: "4", slot_id: 1 },
   { desc: "Complete critical tasks on time.",
