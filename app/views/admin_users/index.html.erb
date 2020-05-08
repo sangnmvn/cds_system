@@ -30,6 +30,7 @@
 </div>
 
 <div><%= render 'add_reviewer' , admin_users: @admin_users %></div>
+<input type="hidden" value="<%@privilege_array.include? 1%>" id="check_privilege">
 <% if @privilege_array.include? 1%>
 <div><%= render 'delete' %></div>
 <div><%= render 'edit' %></div>

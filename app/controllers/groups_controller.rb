@@ -1,11 +1,13 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
-
+  include Authorize
+  before_action :get_privilege_id
+  before_action :redirect_to_index, :if => :check_privelege
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.all.order(:id => :desc).where(is_delete: false)
+      @groups = Group.all.order(:id => :desc).where(is_delete: false)
   end
 
   # GET /groups/1
@@ -61,9 +63,6 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-   
-    
-    
     respond_to do |format|
       if @group.update_attribute(:is_delete,true)
         status_group = @group.status ? "Enable" : "Disable"
@@ -107,7 +106,19 @@ class GroupsController < ApplicationController
   end
 
   private
-
+  def check_privelege
+    if @privilege_array.include? 4 or @privilege_array.include? 5
+      return false
+    else
+      return true
+    end
+  end
+  
+  def redirect_to_index
+      respond_to do |format|
+        format.html { redirect_to  index2_admin_users_path}
+      end
+  end
   # Use callbacks to share common setup or constraints between actions.
   def set_group
     @group = Group.find(params[:id])

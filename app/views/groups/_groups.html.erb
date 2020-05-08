@@ -5,7 +5,7 @@
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
     
-        <th data-sort-ignore="true"> 
+        <th data-sort-ignore="true" style="width:10px"> 
         <div class="resource_selection_toggle_cell">
      
           <input type="checkbox" id="selectAll">
@@ -40,9 +40,9 @@
             Disable
           <% end %>
         </td>
-        <td class="n_user"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
+        <td class="n_user" style="text-align: right;"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
         <td class="description"><%= "#{group.description}" %></td>
-        <td class="action">
+        <td class="action"><% if @privilege_array.include? 4%>
           <%= 
                 links = []
 
@@ -52,7 +52,7 @@
                 links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal",title: 'Assign Users to Group'})
                 links.join(" ").html_safe      
             %>
-         
+         <%end%>
                     
         </td>
       </tr>
