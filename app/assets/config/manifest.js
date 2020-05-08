@@ -26,3 +26,6 @@
 //= link table_template.js
 
 //= link font-awesome.min.css
+
+//= link template-index.css
+//= link step1.js

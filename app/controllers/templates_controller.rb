@@ -4,10 +4,23 @@ class TemplatesController < ApplicationController
   def index
     @roles = Role.all
     @competencies = Competency.all
+    @templates = Template.joins(:role, :admin_user).select("templates.*, roles.name as role_name, admin_users.email as updated_by")
+  end
+
+  def new
+    @template = Template.new(template_params)
+    if @template.invalid?
+      render json: {errors: @template.errors }, status: 400
+    elsif @template.save!
+      render json: @template.id
+    else
+      render json: "0"
+    end
   end
 
   def add
-    @roles = Role.all
+    role_ids = Template.pluck(:role_id)
+    @roles = Role.where.not(id: role_ids)
     @competencies = Competency.all
   end
 
@@ -18,13 +31,13 @@ class TemplatesController < ApplicationController
 
   def add_new_slot
     @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1 
-    Slot.create(template_params(@slot_id))
+    Slot.create(slot_params(@slot_id))
     render json: "1" #repsonse success
   end
 
   def update_slot
     slot = Slot.find(params[:id])
-    slot.update(template_params) if slot
+    slot.update(slot_params) if slot
     render json: "1" #repsonse success
   end
 
@@ -39,7 +52,7 @@ class TemplatesController < ApplicationController
 
   private
 
-  def template_params(slot_id = nil)
+  def slot_params(slot_id = nil)
     param = {
       desc: params[:desc],
       evidence: params[:evidence],
@@ -49,4 +62,13 @@ class TemplatesController < ApplicationController
     param[:slot_id] = slot_id if slot_id
     param
   end
+  private
+    def template_params()
+      param = {
+        name: params[:name],
+        role_id: params[:role],
+        desc: params[:description],
+        admin_user_id: current_admin_user.id
+      }
+    end
 end

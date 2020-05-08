@@ -1,0 +1,57 @@
+<%= stylesheet_link_tag 'font-awesome.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'template-index', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
+    <li class="breadcrumb-item active">Teamplate Management</li>
+  </ol>
+</nav>
+<div class="container-fluid">
+  <div class="template-header">
+    <span class="title">Templates</span>
+    <div class="add-template">
+      <%= link_to '<button><img src="../assets/Add.png"> Add</button>'.html_safe, add_templates_path %>
+    </div>
+    <%# <div class="search">
+      <input type="text" placeholder="Need search?">
+      <input type="submit" value="Search">
+    </div> %>
+  </div>
+  
+  <div class="template-table">
+    <table class="table table-primary table-responsive-sm">
+      <thead>
+        <tr >
+          <th scope="col" style="width:2%">No</th>
+          <th scope="col" style="width:10%">Name</th>
+          <th scope="col" style="width:40%">Description</th>
+          <th scope="col" style="width:5%">Role</th>
+          <th scope="col" style="width:5%">Status</th>
+          <th scope="col" style="width:8%">Lastest update</th>
+          <th scope="col" style="width:10%">Updated by</th>
+          <th scope="col" style="width:8%;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @templates.each_with_index do |template,index| %>
+        <tr>
+          <td class="num"><%= index+1 %></td>
+          <td><%= template.name %></td>
+          <td><%= template.desc %></td>
+          <td><%= template.role_name %></td>
+          <td><%= template.status ? "Enable" : "Disable" %></td>
+          <td class="num"><%= template.updated_at.strftime("%D") %></td>
+          <td><%= template.updated_by %></td>
+          <td class="action">
+            <%= link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group"}) %>
+            <%= link_to(('<i class="fas fa-file-export"></i>').html_safe, "#", { class: "action_icon edit_icon btn-edit-group"}) %>
+            <%= link_to(image_tag("Delete.png", border: 0), "#", { class: "action_icon del_btn"}) %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
