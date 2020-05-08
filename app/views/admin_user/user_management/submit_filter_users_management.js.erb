@@ -1,3 +1,0 @@
-
-$('.table-user-management').html("<%= j (render partial: "admin_users", locals: { admin_users: @admin_users, roles: @roles, projects: @projects, project_members: @project_members, companies: @companies } )%>");
-$('.paging-user-management').html("<%= j (render partial: "paging", locals: { current_page: @current_page, total_page: @total_page })%>");

@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_031441) do
     t.bigint "template_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "location"
     t.index ["template_id"], name: "index_competencies_on_template_id"
   end
 

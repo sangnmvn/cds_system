@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'template', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
 
 <div class="container-fluid" id="grad1">
     <div class="row justify-content-center mt-0">
@@ -14,17 +15,14 @@
                                     <div class="row steps " style="justify-content: center;">
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step step-active">
                                             <span class="col-sm-2 col-md-2 step-symbol"></span>
-                                            <span class="col-sm-2 col-md-2"></span>
                                             <span class="col-sm-8 col-md-8 step_number">1</span><a href="#">General Information</a>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step">
                                             <span class="col-sm-2 col-md-2 step-symbol">>></span>
-                                            <span class="col-sm-2 col-md-2"></span>
                                             <span class="col-sm-8 col-md-8 step_number">2</span><a href="#">Add Competencies</a>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step">
                                             <span class="col-sm-2 col-md-2 step-symbol">>></span>
-                                            <span class="col-sm-2 col-md-2"></span>
                                             <span class="col-sm-8 col-md-8 step_number">3</span><a href="#">Add Slots</a>
                                         </div>
                                     </div>
@@ -45,3 +43,6 @@
         </div>
     </div>
 </div>
+
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>

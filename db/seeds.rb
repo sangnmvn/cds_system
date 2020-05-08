@@ -187,6 +187,11 @@ Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
 Template.create!(id: 1, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For QC", role_id: "1")
+Template.create!(id: 2, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "2")
+Template.create!(id: 3, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "3")
+Template.create!(id: 4, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "4")
+Template.create!(id: 5, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5")
+Template.create!(id: 6, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6")
 # Template.create!(id: 2, name: "CDS", desc: "Career Development System")
 
 # Create Form
@@ -196,36 +201,36 @@ Form.create!(id: 2, admin_user_id: "1", _type: "CDP", template_id: "1")
 # Create Competency
 i_competency = 0
 # QC - General
-Competency.create!(id: "#{i_competency += 1}", name: "Productivity", desc: "Productivity", _type: "General", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Problem Solving", desc: "Problem Solving", _type: "General", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Communication", desc: "Communication", _type: "General", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Planning & Organizing", desc: "Planning & Organizing", _type: "General", template_id: "1")
+Competency.create!(id: "#{i_competency += 1}", name: "Productivity", desc: "Productivity", _type: "General", template_id: "1", location: 1)
+Competency.create!(id: "#{i_competency += 1}", name: "Problem Solving", desc: "Problem Solving", _type: "General", template_id: "1", location: 2)
+Competency.create!(id: "#{i_competency += 1}", name: "Communication", desc: "Communication", _type: "General", template_id: "1", location: 3)
+Competency.create!(id: "#{i_competency += 1}", name: "Planning And Organizing", desc: "Planning & Organizing", _type: "General", template_id: "1", location: 4)
 
 # QC - Specialized
-Competency.create!(id: "#{i_competency += 1}", name: "Software Engineering and Computer Science", desc: "Software Engineering and Computer Science", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Software Testing General", desc: "Software Testing General", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Test Management", desc: "Test Management", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Test Analysis and Design", desc: "Test Analysis and Design", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Test Implementation, Execution and Reporting", desc: "Test Implementation, Execution and Reporting", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Software Testing Specialization and Testing Tools", desc: "Software Testing Specialization and Testing Tools", _type: "Specialized", template_id: "1")
+Competency.create!(id: "#{i_competency += 1}", name: "Software Engineering and Computer Science", desc: "Software Engineering and Computer Science", _type: "Specialized", template_id: "1", location: 5)
+Competency.create!(id: "#{i_competency += 1}", name: "Software Testing General", desc: "Software Testing General", _type: "Specialized", template_id: "1", location: 6)
+Competency.create!(id: "#{i_competency += 1}", name: "Test Management", desc: "Test Management", _type: "Specialized", template_id: "1", location: 7)
+Competency.create!(id: "#{i_competency += 1}", name: "Test Analysis and Design", desc: "Test Analysis and Design", _type: "Specialized", template_id: "1", location: 8)
+Competency.create!(id: "#{i_competency += 1}", name: "Test Implementation, Execution and Reporting", desc: "Test Implementation, Execution and Reporting", _type: "Specialized", template_id: "1", location: 9)
+Competency.create!(id: "#{i_competency += 1}", name: "Software Testing Specialization and Testing Tools", desc: "Software Testing Specialization and Testing Tools", _type: "Specialized", template_id: "1", location: 10)
 # Dev - Specialized
-Competency.create!(id: "#{i_competency += 1}", name: "Computer Science", desc: "Computer Science", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Software Engineering", desc: "Software Engineering", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Programming", desc: "Programming", _type: "Specialized", template_id: "1")
+Competency.create!(id: "#{i_competency += 1}", name: "Computer Science", desc: "Computer Science", _type: "Specialized", template_id: "2")
+Competency.create!(id: "#{i_competency += 1}", name: "Software Engineering", desc: "Software Engineering", _type: "Specialized", template_id: "2")
+Competency.create!(id: "#{i_competency += 1}", name: "Programming", desc: "Programming", _type: "Specialized", template_id: "2")
 
 # BA - Specialized
-Competency.create!(id: "#{i_competency += 1}", name: "Requirement Elicitation", desc: "Requirement Elicitation", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Requirement Analysis", desc: "Requirement Analysis", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Requirement Specification", desc: "Requirement Specification", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Requirement Verification & Validation", desc: "Requirement Verification & Validation", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Requirement Monitoring & Controlling", desc: "Requirement Monitoring & Controlling", _type: "Specialized", template_id: "1")
+Competency.create!(id: "#{i_competency += 1}", name: "Requirement Elicitation", desc: "Requirement Elicitation", _type: "Specialized", template_id: "3")
+Competency.create!(id: "#{i_competency += 1}", name: "Requirement Analysis", desc: "Requirement Analysis", _type: "Specialized", template_id: "3")
+Competency.create!(id: "#{i_competency += 1}", name: "Requirement Specification", desc: "Requirement Specification", _type: "Specialized", template_id: "3")
+Competency.create!(id: "#{i_competency += 1}", name: "Requirement Verification & Validation", desc: "Requirement Verification & Validation", _type: "Specialized", template_id: "3")
+Competency.create!(id: "#{i_competency += 1}", name: "Requirement Monitoring & Controlling", desc: "Requirement Monitoring & Controlling", _type: "Specialized", template_id: "3")
 
 # PM - Specialized
-Competency.create!(id: "#{i_competency += 1}", name: "Project Initiating", desc: "Project Initiating", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Project Planning", desc: "Project Planning", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Project Executing", desc: "Project Executing", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Project Monitoring and Controlling", desc: "Project Monitoring and Controlling", _type: "Specialized", template_id: "1")
-Competency.create!(id: "#{i_competency += 1}", name: "Project Closing", desc: "Project Closing", _type: "Specialized", template_id: "1")
+Competency.create!(id: "#{i_competency += 1}", name: "Project Initiating", desc: "Project Initiating", _type: "Specialized", template_id: "4")
+Competency.create!(id: "#{i_competency += 1}", name: "Project Planning", desc: "Project Planning", _type: "Specialized", template_id: "4")
+Competency.create!(id: "#{i_competency += 1}", name: "Project Executing", desc: "Project Executing", _type: "Specialized", template_id: "4")
+Competency.create!(id: "#{i_competency += 1}", name: "Project Monitoring and Controlling", desc: "Project Monitoring and Controlling", _type: "Specialized", template_id: "4")
+Competency.create!(id: "#{i_competency += 1}", name: "Project Closing", desc: "Project Closing", _type: "Specialized", template_id: "4")
 
 # Create Slot
 # QC - General
