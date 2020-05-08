@@ -1,5 +1,6 @@
 $(document).ready(function () {
   loadSlotsinCompetency();
+  checkSlotinTemplate(1);
   var table = $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
@@ -32,11 +33,12 @@ $(document).ready(function () {
     $("#evidenceSlot").val("");
     loadSlotsinCompetency();
     changeBtnSave("-1")
+    checkSlotinTemplate(1)
   });
   $("#tbdTemplate").on('click', '.btnDel', function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
-    delSlot(id,tr)
+    delSlot(id,tr);
   });
   $("#tbdTemplate").on('click', '.btnEdit', function () {
     var id = $(this).attr('value');
@@ -44,7 +46,8 @@ $(document).ready(function () {
     $("#descSlot").val(tr[1].textContent);
     $("#evidenceSlot").val(tr[2].textContent);
     chooseSelect("selectLevel",tr[0].textContent);
-    $("#hideIdSlot").html(id);
+    $("#hideIdSlot").html(id); //xóa id ẩn 
+    checkSlotinTemplate(1);
   });
   changeBtnSave("-1");
   $("#table_slot").removeClass("dataTable")
@@ -180,6 +183,7 @@ function delSlot (id,tr){
 					success: function (response) {
             success("Delete slot is");
             $("#table_slot").dataTable().fnDeleteRow(tr);
+            checkSlotinTemplate(1); //check lại button Finnish
 					},
 					error: function () {
 						fails("Delete slot is");

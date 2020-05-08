@@ -43,8 +43,7 @@
                 <label>Slot Description(*)</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", maxlength: "500", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
-                <div class="error">Max character: 500</div>
+                <%= text_area_tag 'descSlot', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", minlength: "3", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
             </div>
             </div>  
             <br>
@@ -54,8 +53,7 @@
                 <label>Evidence Guide (*)</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", maxlength: "1000", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
-                <div class="error">Max character: 1000</div>
+                <%= text_area_tag 'EvidenceSlot', nil, rows: 5, style: 'width:100%;',onkeyup: "checkInputData()", minlength: "3", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
             </div>
             </div>  
             <br>

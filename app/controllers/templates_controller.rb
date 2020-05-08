@@ -48,6 +48,14 @@ class TemplatesController < ApplicationController
 
   def check_slot_in_template
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
+    @competencies.each{|competency|
+      slots = Slot.find_by(competency_id: competency)
+      if slots.blank?
+        render json: "-1"
+        return
+      end
+    }  
+    render json: "1"
   end
 
   private
