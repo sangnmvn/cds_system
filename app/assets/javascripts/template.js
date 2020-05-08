@@ -27,6 +27,7 @@ $(document).on("click", "#btn-add-competency", function () {
           success("Add");
           addCompetency(response.id,response.name,response.type,response.desc);
           disableNextCompetencies();
+          disableButtonMove();
           $('.btn-save-compentency').prop("disabled", true);
         } else if (response.status == "fail") {
           fails("Add");
@@ -53,18 +54,16 @@ $(document).on("click", "#btn-add-competency", function () {
           <button class="btn btn-light btn-edit-competency" data-id="'+response.id+'"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button> \
           <button class="btn btn-light btn-delete-competency" data-id="'+response.id+'"><i class="fa fa-trash icon" style="color:red"></i></button> \
           <button class="btn btn-primary btnUp" data-id="'+response.id+'"><i class="fa fa-arrow-circle-up"></i></button> \
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button> \
+          <button class="btn btn-primary btnDown" data-id="'+response.id+'"><i class="fa fa-arrow-circle-down"></i></button> \
           </td>']).draw();
-          // table.column(0).nodes().each(function (cell, i) {
-          //   cell.innerHTML = i + 1;
-          // });
-          // $(".form-add-competency #type option[value='"+type+"']").prop("selected", true);
-          success("Update");
+          
           $('.btn-save-compentency').prop("disabled", true);
           $(".form-add-competency #competency_id").val('');
           $(".form-add-competency #competency_index").val('');
+          // disable button delete
           $('#table_add_competency tr:nth-child('+index+1+') td .btn-delete-competency').prop("disabled", false);
-          // addCompetency(response.id,response.name,response.type,response.desc);
+          disableButtonMove();
+          success("Update");
         } else if (response.status == "fail") {
           fails("Update");
         }
@@ -82,7 +81,7 @@ function addCompetency(id,name,type,desc){
           <button class="btn btn-light btn-edit-competency" data-id="'+id+'"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button> \
           <button class="btn btn-light btn-delete-competency" data-id="'+id+'"><i class="fa fa-trash icon" style="color:red"></i></button> \
           <button class="btn btn-primary btnUp" data-id="'+id+'"><i class="fa fa-arrow-circle-up"></i></button> \
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button> \
+          <button class="btn btn-primary btnDown" data-id="'+id+'"><i class="fa fa-arrow-circle-down"></i></button> \
           </td>'
       ]).draw();
 }
@@ -162,6 +161,7 @@ $(document).on("click", ".btn-delete-competency", function () {
               cell.innerHTML = i + 1;
             });
             disableNextCompetencies();
+            disableButtonMove();
             success("Delete");
           } else {
             fails("Delete");
@@ -269,13 +269,14 @@ function loadDataCompetencies() {
           .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
           <button class="btn btn-light btn-edit-competency" data-id="'+e.id+'"><i class="fa fa-pencil icon" style="color:#FFCC99"></i></button> \
           <button class="btn btn-light btn-delete-competency" data-id="'+e.id+'"><i class="fa fa-trash icon" style="color:red"></i></button> \
-          <button class="btn btn-primary btnUp" data-id="'+i +'"><i class="fa fa-arrow-circle-up"></i></button> \
-          <button class="btn btn-primary btnDown"><i class="fa fa-arrow-circle-down"></i></button> \
+          <button class="btn btn-primary btnUp" data-id="'+e.id+'"><i class="fa fa-arrow-circle-up"></i></button> \
+          <button class="btn btn-primary btnDown" data-id="'+e.id+'"><i class="fa fa-arrow-circle-down"></i></button> \
           </td>',
           ])
           .draw();
       });
       disableNextCompetencies();
+      disableButtonMove();
     },
   });
 }
@@ -286,6 +287,17 @@ function disableNextCompetencies(){
     $('.btn-next-competency').prop("disabled", true);
   }else {
     $('.btn-next-competency').prop("disabled", false);
+  }
+}
+
+function disableButtonMove(){
+  table = $("#table_add_competency").DataTable();
+  length = table.rows().data().length;
+  $('#table_add_competency tr td .btnUp').prop("disabled", false);
+  $('#table_add_competency tr td .btnDown').prop("disabled", false); 
+  if (length >= 1) {
+    $('#table_add_competency tr:nth-child(1) td .btnUp').prop("disabled", true);
+    $('#table_add_competency tr:nth-child('+length+') td .btnDown').prop("disabled", true);
   }
 }
 
@@ -317,51 +329,99 @@ $(document).on('keyup','.form-add-competency #name', function(){
 
 $(document).on('click','.btnUp', function(){
   var row_id = $(this).closest('tr').index();
-  // debugger
-  // var id = $(this).closest('tr').attr('value');
-  // var index = $("#table_add_competency")
-  //   .DataTable()
-  //   .row($(this).closest("tr"))
-  //   .index();
+  var id = $(this).data("id");
   table =  $("#table_add_competency").DataTable();
-  current_row_data = table.row(row_id).data();
-  previous_row_data = table.row(row_id - 1).data();
-  temp = current_row_data[0];
-  current_row_data[0] = previous_row_data[0];
-  previous_row_data[0] = temp;
+  $.ajax({
+    type: "POST",
+    url: "/competencies/change_location",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {
+      id: id, type: "up"
+    },
+    dataType: "json",
+    success: function (response) {
+      $(response).each(function (i, e) {
+        if (response.status == "success"){
+          current_row_data = table.row(row_id).data();
+          previous_row_data = table.row(row_id - 1).data();
+          
+          temp = current_row_data[1];
+          current_row_data[1] = previous_row_data[1];
+          previous_row_data[1] = temp;
 
-  table.row(row_id).data(current_row_data);
-  table.row(row_id - 1).data(previous_row_data);
-  table.column(0).nodes().each(function (cell, i) {
-              cell.innerHTML = i + 1;
-            });
-  
-  $("#table_add_competency").DataTable().draw();
+          temp = current_row_data[2];
+          current_row_data[2] = previous_row_data[2];
+          previous_row_data[2] = temp;
+          
+          temp = current_row_data[3];
+          current_row_data[3] = previous_row_data[3];
+          previous_row_data[3] = temp;
+
+          temp = current_row_data[4];
+          current_row_data[4] = previous_row_data[4];
+          previous_row_data[4] = temp;
+          table.row(row_id).data(current_row_data).draw();
+          table.row(row_id - 1).data(previous_row_data).draw();
+          disableButtonMove();
+          success("Move");
+        }else if (response.status == "success") {
+          fails("Move ")
+        }
+      });
+    },
+  });
 });
+
+
 $(document).on('click','.btnDown', function(){
   var row_id = $(this).closest('tr').index();
-  // debugger
-  // var id = $(this).closest('tr').attr('value');
-  // var index = $("#table_add_competency")
-  //   .DataTable()
-  //   .row($(this).closest("tr"))
-  //   .index();
-  current_row_data = table.row(row_id).data();
-  previous_row_data = table.row(row_id + 1).data();
-  temp = current_row_data[0];
-  current_row_data[0] = previous_row_data[0];
-  previous_row_data[0] = temp;
+  var id = $(this).data("id");
+  $.ajax({
+    type: "POST",
+    url: "/competencies/change_location",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {
+      id: id, type: "down"
+    },
+    dataType: "json",
+    success: function (response) {
+      $(response).each(function (i, e) {
+        if (response.status == "success"){
+          table =  $("#table_add_competency").DataTable();
+          current_row_data = table.row(row_id).data();
+          next_row_data = table.row(row_id + 1).data();
+          temp = current_row_data[1];
+          current_row_data[1] = next_row_data[1];
+          next_row_data[1] = temp;
 
-  $("#table_add_competency")
-    .DataTable()
-    .row(row_id)
-    .data(current_row_data);
-  $("#table_add_competency")
-    .DataTable()
-    .row(row_id - 1)
-    .data(previous_row_data);
-  $("#table_add_competency").DataTable().draw();
+          temp = current_row_data[2];
+          current_row_data[2] = next_row_data[2];
+          next_row_data[2] = temp;
+          
+          temp = current_row_data[3];
+          current_row_data[3] = next_row_data[3];
+          next_row_data[3] = temp;
+
+          temp = current_row_data[4];
+          current_row_data[4] = next_row_data[4];
+          next_row_data[4] = temp;
+          table.row(row_id).data(current_row_data).draw();
+          table.row(row_id + 1).data(next_row_data).draw();
+          disableButtonMove();
+          success("Delete");
+        }else if (response.status == "success") {
+          fails("Move ")
+        }
+      });
+    },
+  });
 });
+
+
 
 
 

@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       # post "create"
       get "load"
       get "load_data_edit"
+      post "change_location"
     end
   end
 
