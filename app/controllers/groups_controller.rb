@@ -64,6 +64,7 @@ class GroupsController < ApplicationController
   # DELETE /groups/1.json
   def destroy
     respond_to do |format|
+      @group = Group.find(params[:id])
       if @group.update_attribute(:is_delete,true)
         status_group = @group.status ? "Enable" : "Disable"
           format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
@@ -89,8 +90,8 @@ class GroupsController < ApplicationController
   end
   def destroy_multiple
     if params[:group_ids] != nil
-      
     
+   
     @group = Group.find(params[:group_ids])
       id=[]
     @group.each do |group|
@@ -99,7 +100,8 @@ class GroupsController < ApplicationController
     end
    
     respond_to do |format|
-      format.json { render :json => {id: id } }
+      index = params[:index]
+      format.json { render :json => {id: id , index: index } }
     end
 
   end

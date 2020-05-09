@@ -298,36 +298,20 @@ function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
   data_table.fnDeleteRow(row);  
-  reorder_table_row(data_table);
+ 
 }
 
 function delete_group() {
   var id = $("#group_id").val();
-
   //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
-    url: "/groups/" + id,
+    url: "/groups/"+id,
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
         $("#modal_destroy").modal("hide");
-        var table = $("#table_group").dataTable();
-          var sData = table.fnGetData();
-          for (var i = 0; i < sData.length; i++) {
-            var current_user_id = sData[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
-            current_user_id = parseInt(current_user_id);
-            if (current_user_id == response.id) {
-              var row_id = i;
-              var updateData = [];
-              delete_datatable_row(table, row_id);
-              break;
-           
-            }
-          }
         success("Delete");
       } else if (response.status == "exist") {
         $(".error").remove();
@@ -373,9 +357,17 @@ number = groups_ids.length;
 $(document).on("click", "#delete_selected", function () {
 
   var groups_ids = new Array();
-
+  
   $.each($("input[name='checkbox']:checked"), function(){
     groups_ids.push($(this).val());
+  });
+  var index = 0;
+  var index2 = new Array();
+  $('.selectable_check').each(function() {
+      if (this.checked) {
+        index2.push(index);
+      }
+      index++;
   });
   $.ajax({
     url: "/groups/destroy_multiple/",
@@ -383,24 +375,19 @@ $(document).on("click", "#delete_selected", function () {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     data: {
       group_ids: groups_ids,
+      index: index2,
     },
     dataType: "json",
     success: function (response) {
         $("#modalDeleteS").modal("hide");
-          for (var i_1 = 0; i_1 < response.id.length; i_1++) {
+       var j=0;
+          for (var i = 0; i < response.index.length; i++) {
             var table = $("#table_group").dataTable();
-            var sData = table.fnGetData();
-          for (var i = 0; i < sData.length; i++) {
-            var current_user_id = sData[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
-            current_user_id = parseInt(current_user_id);
-            if (current_user_id == response.id[i_1]) {
-              var row_id = i;
+              var row_id = response.index[i]-j;
               var updateData = [];
               delete_datatable_row(table, row_id);
-            }
-          }}
+              j++; 
+          }
           success("Delete");
     
     },
