@@ -312,6 +312,23 @@ function delete_group() {
     success: function (response) {
       if (response.status == "success") {
         $("#modal_destroy").modal("hide");
+        var index = 0;
+        var index2 = new Array();
+        $('.selectable_check').each(function() {
+            if ($(this).val() == response.id) {
+              index2.push(index);
+            }
+            index++;
+        });
+       
+          for (var i = 0; i < index2.length; i++) {
+          var table = $("#table_group").dataTable();
+        
+            var row_id = index2[i];
+          
+            delete_datatable_row(table, row_id);
+           
+        }
         success("Delete");
       } else if (response.status == "exist") {
         $(".error").remove();
