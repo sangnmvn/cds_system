@@ -168,7 +168,7 @@ class AdminUsersController < ApplicationController
   end
 
   def index
-    if @privilege_array.include? 1 or @privilege_array.include? 2
+
       @companies = Company.all.order(:name)
       @projects = Project.all.order(:desc)
       @roles = Role.all.order(:name)
@@ -177,11 +177,7 @@ class AdminUsersController < ApplicationController
       respond_to do |format|
         format.html
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to  index2_admin_users_path}
-      end
-    end
+    
   end
 
   def index2
