@@ -35,11 +35,13 @@
         <%= render 'delete_selected'%>
         <%= render 'edit'  %>
         <%= render 'assign_user'  %>
+        <div id="vinhtest2">
         <%= render 'privilege', groups: @groups %>
+        </div>
         <%end%>
       </div>
       <div class="col-sm-12">
-        <div class="col-sm-12 table_group_wrapper">
+        <div class="col-sm-12 table_group_wrapper" id="vinhtest">
           <!-- table -->
                 <%= render partial: 'groups', locals: {groups: @groups} %>
             </div>

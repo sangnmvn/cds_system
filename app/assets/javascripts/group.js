@@ -44,6 +44,18 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         name: name,
         status: status,
         description: desc,
+        check: true,
+      },});
+    $.ajax({
+      url: "groups/",
+      type: "POST",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        name: name,
+        status: status,
+        description: desc,
       },
       dataType: "json",
       success: function (response) {
