@@ -103,7 +103,7 @@ function fails(content) {
   }, 5000);
 }
 
-$(document).on("click", ".btn-edit-competency", function () {
+$(document).on("click", "#table_add_competency .btn-edit-competency", function () {
   // load data edit
     var id = $(this).data("id");
     var index = $(this).closest('tr').index();
@@ -134,7 +134,7 @@ $(document).on("click", ".btn-edit-competency", function () {
     });
 });
 
-$(document).on("click", ".btn-delete-competency", function () {
+$(document).on("click", "#table_add_competency .btn-delete-competency", function () {
   // delete data
     var id = $(this).data("id");
     var index = $(this).closest('tr').index();
@@ -323,7 +323,7 @@ $(document).on('keyup','.form-add-competency #name', function(){
 });
 
 
-$(document).on('click','.btnUp', function(){
+$(document).on('click','#table_add_competency .btnUp', function(){
   var row_id = $(this).closest('tr').index();
   var id = $(this).data("id");
   table =  $("#table_add_competency").DataTable();
@@ -371,7 +371,7 @@ $(document).on('click','.btnUp', function(){
 });
 
 
-$(document).on('click','.btnDown', function(){
+$(document).on('click','#table_add_competency .btnDown', function(){
   var row_id = $(this).closest('tr').index();
   var id = $(this).data("id");
   $.ajax({
