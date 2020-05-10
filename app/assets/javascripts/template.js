@@ -298,6 +298,7 @@ $(document).on('click','.btn-next-template', function(){
 
 function nextStep1(){
   id = 1;
+  table = $("#table_add_competency").DataTable().clear().draw();
   loadDataCompetencies(id);
 }
 

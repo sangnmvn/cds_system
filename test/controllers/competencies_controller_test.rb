@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class GroupPrivilegesControllerTest < ActionDispatch::IntegrationTest
-  # setup do
-  #   @group_privilege = group_privileges(:one)
-  # end
+class CompetenciesControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    # @competency = competency(:one)
+  end
 
   # test "should get index" do
   #   get group_privileges_url
@@ -15,13 +15,13 @@ class GroupPrivilegesControllerTest < ActionDispatch::IntegrationTest
   #   assert_response :success
   # end
 
-  # test "should create group_privilege" do
-  #   assert_difference('GroupPrivilege.count') do
-  #     post group_privileges_url, params: { group_privilege: { reference: @group_privilege.reference } }
-  #   end
+  test "should create competency" do
+    assert_difference('Competency.count') do
+      post competencies_url, params: { name: "Productivity" }
+    end
 
-  #   assert_redirected_to group_privilege_url(GroupPrivilege.last)
-  # end
+    assert_redirected_to group_privilege_url(GroupPrivilege.last)
+  end
 
   # test "should show group_privilege" do
   #   get group_privilege_url(@group_privilege)

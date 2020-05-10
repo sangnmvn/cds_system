@@ -60,39 +60,6 @@
 
 
 
-/* #msform .action-button {
-  width: 100px;
-  background: skyblue;
-  font-weight: bold;
-  color: white;
-  border: 0 none;
-  border-radius: 0px;
-  cursor: pointer;
-  padding: 10px 5px;
-  margin: 10px 5px
-} */
-
-/* #msform .action-button:hover,
-#msform .action-button:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px skyblue
-}
-
-#msform .action-button-previous {
-  width: 100px;
-  background: #616161;
-  font-weight: bold;
-  color: white;neral	Problem Solving12312321
-  border: 0 none;
-  border-radius: 0px;
-  cursor: pointer;
-  padding: 10px 5px;
-  margin: 10px 5px
-}
-
-#msform .action-button-previous:hover,
-#msform .action-button-previous:focus {
-  box-shadow: 0 0 0 2px white, 0 0 0 3px #616161
-} */
 
 select.list-dt {
   border: none;

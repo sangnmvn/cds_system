@@ -149,15 +149,15 @@ NB_USER_GROUPS.times do |n|
   end
 end
 
-Approver.create!(admin_user_id: 1, approver_id: 2)
-Approver.create!(admin_user_id: 3, approver_id: 2)
-Approver.create!(admin_user_id: 4, approver_id: 5)
-Approver.create!(admin_user_id: 6, approver_id: 1)
+# Approver.create!(admin_user_id: 2, approver_id: 2)
+# Approver.create!(admin_user_id: 3, approver_id: 2)
+# Approver.create!(admin_user_id: 4, approver_id: 5)
+# Approver.create!(admin_user_id: 6, approver_id: 1)
 
-Approver.create!(approver_id: 1, admin_user_id: 6)
-Approver.create!(approver_id: 1, admin_user_id: 2)
-Approver.create!(approver_id: 2, admin_user_id: 4)
-Approver.create!(approver_id: 3, admin_user_id: 5)
+# Approver.create!(approver_id: 1, admin_user_id: 6)
+# Approver.create!(approver_id: 1, admin_user_id: 2)
+# Approver.create!(approver_id: 2, admin_user_id: 4)
+# Approver.create!(approver_id: 3, admin_user_id: 5)
 
 # Create Title
 # QC
