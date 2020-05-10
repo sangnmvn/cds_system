@@ -2,9 +2,11 @@
 	text-align: center;
 	overflow: auto;
 	tbody tr:nth-of-type(odd) {
-		background-color: #C6E2FF;
+		background-color: #cfdcea;
 	}
-
+	tbody tr:nth-of-type(even) {
+		background-color: #E9ebf5;
+	}
 	thead {
 		background-color: #0066CC;
 		color: #fff;

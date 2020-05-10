@@ -54,7 +54,7 @@
       // Lặp và thiết lập checked
       for (var i = 0; i < checkboxes.length; i++){
           checkboxes[i].checked = true;
-          checkboxes[i].closest('tr').style.color = "#990000";
+          checkboxes[i].closest('tr').style.backgroundColor = "pink";
           $('#to_right').attr("disabled",false);
           $('#to_right').removeClass("btn-secondary").addClass("btn-info");
       }
@@ -63,7 +63,11 @@
     {
         for (var i = 0; i < checkboxes.length; i++){
           checkboxes[i].checked = false;
-          checkboxes[i].closest('tr').style.color = "black";
+          if (i % 2 == 0){
+          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        }else{
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+        }
           $('#to_right').attr("disabled",true);
           $('#to_right').removeClass("btn-info").addClass("btn-secondary");
       }
@@ -80,7 +84,7 @@
       // Lặp và thiết lập checked
       for (var i = 0; i < checkboxes.length; i++){
           checkboxes[i].checked = true;
-          checkboxes[i].closest('tr').style.color = "#990000";
+          checkboxes[i].closest('tr').style.backgroundColor = "pink";
           $('#to_left').attr("disabled",false);
           $('#to_left').removeClass("btn-secondary").addClass("btn-info");
       }
@@ -89,7 +93,11 @@
     {
         for (var i = 0; i < checkboxes.length; i++){
           checkboxes[i].checked = false;
-          checkboxes[i].closest('tr').style.color = "black";
+          if (i % 2 == 0){
+          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        }else{
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+        }
           $('#to_left').attr("disabled",true);
           $('#to_left').removeClass("btn-info").addClass("btn-secondary");
       }
@@ -116,11 +124,15 @@
       {
         if($this.is(':checked'))
         {
-          $this.closest('tr').css('color',"#990000");
+          $this.closest('tr').css('background-color',"pink");
         }
         else
         {
-          $this.closest('tr').css('color',"black");
+            if ($this.closest('tr').attr('class') == "odd"){
+        $this.closest('tr').css('background-color', "#cfdcea");}
+        else{
+        $this.closest('tr').css('background-color', "#E9ebf5");
+        }
         }
       }
     });

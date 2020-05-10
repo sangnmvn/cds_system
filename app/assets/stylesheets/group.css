@@ -35,14 +35,14 @@ table.dataTable tbody td {
 
 #table_group tr.even > td {
     font-size: 16px;
-    background: #cdd4ea;
+    background: #cfdcea;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
 
 #table_group tr.odd > td {
     font-size: 16px;
-    background: #EEEEEE;
+    background: #E9ebf5;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
@@ -172,7 +172,10 @@ thead {
   display: table;
 }
 .table-popup-privilege tbody tr:nth-of-type(odd) {
-  background-color: #C6E2FF;
+  background-color: #cfdcea;
+}
+.table-popup-privilege tbody tr:nth-of-type(even) {
+  background-color: #E9ebf5;
 }
 .table-popup-privilege thead {
   text-align: center;

@@ -27,8 +27,11 @@ function myJS() {
 		} else {
 			for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = false;
-    
-				checkboxes[i].closest('tr').style.backgroundColor = "white";
+        if (i % 2 == 0){
+          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        }else{
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+        }
 				change_button_right(1);
 			}
 		}
@@ -45,8 +48,12 @@ function myJS() {
 			}
 		} else {
 			for (var i = 0; i < checkboxes.length; i++) {
-				checkboxes[i].checked = false;
-				checkboxes[i].closest('tr').style.backgroundColor = "white";
+        checkboxes[i].checked = false;
+        if (i % 2 == 0){
+          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        }else{
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+        }
 				change_button_left(1);
 			}
 		}
@@ -63,8 +70,12 @@ function myJS() {
 		} else {
 			if ($("#table_left tbody :checkbox:checked").length == 0) {
 				change_button_right(1);
-			}
-			$this.closest('tr').css('background-color', "white");
+      }
+      if ($this.closest('tr').attr('class') == "odd"){
+      $this.closest('tr').css('background-color', "#cfdcea");}
+      else{
+      $this.closest('tr').css('background-color', "#E9ebf5");
+      }
 			$('#check_all_choose').prop("checked", false);
 		}
 	});
@@ -80,8 +91,13 @@ function myJS() {
 		} else {
 			if ($("#table_right tbody :checkbox:checked").length == 0) {
 				change_button_left(1);
-			}
-			$this.closest('tr').css('background-color', "white");
+      }
+      if ($this.closest('tr').attr('class') == "odd"){
+        $this.closest('tr').css('background-color', "#cfdcea");}
+        else{
+        $this.closest('tr').css('background-color', "#E9ebf5");
+        }
+		
 			$('#check_all_remove').prop("checked", false);
 		}
 	});
@@ -336,9 +352,14 @@ function privilegeJS() {
         if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox:not(:checked)`).length == 0) {
           $(`#modalPrivilege_${group_id} .selectAll1`).prop("checked", true)
         }
-        $(this).closest('tr').children('td').css('color', "#990000")
+        $(this).closest('tr').css('background-color', "pink");
       } else {
-        $(this).closest('tr').children('td').css('color', "black")
+        
+        if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
+          $(this).closest('tr').css('background-color', "#cfdcea");}
+          else{
+            $(this).closest('tr').css('background-color', "#E9ebf5");
+          }
         $(`#modalPrivilege_${group_id} .selectAll1`).prop("checked", false)
       }
       if ($(`#modalPrivilege_${group_id} .table_left tbody :checkbox:checked`).length == 0) {
@@ -353,9 +374,14 @@ function privilegeJS() {
         if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox:not(:checked)`).length == 0) {
           $(`#modalPrivilege_${group_id} .selectAll2`).prop("checked", true)
         }
-        $(this).closest('tr').css('color', "#990000")
+        $(this).closest('tr').css('background-color', "pink");
       } else {
-        $(this).closest('tr').css('color', "black")
+        
+        if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
+          $(this).closest('tr').css('background-color', "#cfdcea");}
+          else{
+            $(this).closest('tr').css('background-color', "#E9ebf5");
+          }
         $(`#modalPrivilege_${group_id} .selectAll2`).prop("checked", false)
       }
       if ($(`#modalPrivilege_${group_id} .table_right tbody :checkbox:checked`).length == 0) {
@@ -368,20 +394,27 @@ function privilegeJS() {
     $(`#modalPrivilege_${group_id} .selectAll1`).on('click', function () {
       $(`#modalPrivilege_${group_id} .table_left tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
-        $(`#modalPrivilege_${group_id} .table_left tbody tr td`).css('color', "#990000")
+        $(`#modalPrivilege_${group_id} .table_left tbody tr`).css('background-color', "pink")
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd) th`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
         to_right_button(1)
       } else {
-        $(`#modalPrivilege_${group_id} .table_left tbody tr td`).css('color', "black")
+        
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd)`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_right_button(0)
       }
     })
     $(`#modalPrivilege_${group_id} .selectAll2`).on('click', function () {
       $(`#modalPrivilege_${group_id} .table_right tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
-        $(`#modalPrivilege_${group_id} .table_right tbody tr td`).css('color', "#990000")
+        $(`#modalPrivilege_${group_id} .table_right tbody tr`).css('background-color', "pink")
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd) th`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
         to_left_button(1)
       } else {
-        $(`#modalPrivilege_${group_id} .table_right tbody tr td`).css('color', "black")
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd)`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_left_button(0)
       }
     })
