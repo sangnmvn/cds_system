@@ -113,6 +113,6 @@ class CompetenciesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def competency_params
-    params.permit(:name, :_type, :desc, :template_id, :location)
+    params.permit(:id,:name, :_type, :desc, :template_id, :location)
   end
 end
