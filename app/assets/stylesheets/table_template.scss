@@ -1,9 +1,6 @@
 .table-mytable {
 	text-align: left;
 	overflow: auto;
-	tbody tr:nth-of-type(odd) {
-		background-color: #C6E2FF;
-	}
 	.td_num{
 		text-align: right;
 	}
@@ -14,7 +11,7 @@
 		color: #fff;
 		font-size: large;
 		font-weight: bold;
-		background-color: #007bff;
+		background-color: #3A5FCD;
 	}
 	table {
 		border: 2px solid #000;
@@ -31,16 +28,21 @@
 		text-align: center;
 		border: none;
 	}
+	tbody .odd {
+		background-color: #CFD5EA;
+	}
+	tbody .even {
+		background-color: #E9EBF5;
+	}
 }
 .divHeader {
 	font-size: x-large;
-	background-color:  #007bff;
+	background-color:  #6495ED;
 	text-align: left;
 	color: #FFF;
-	padding-left: 10px;
-	padding-top: 10px;
-	margin: auto;
+	// padding-left: 10px;
 	font-weight: bold;
+	padding: 5px 0px 5px 10px;
 }
 .action_icon > img
 {
