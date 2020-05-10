@@ -161,6 +161,23 @@ select.list-dt:focus {
 #table_add_competency tbody td {
   padding: 5px 10px 5px 10px;   
 }
+#table_add_competency tbody td:nth-child(1) {
+  width: 2%;
+  text-align: right;
+}
+#table_add_competency tbody td:nth-child(2) {
+  width: 20%;
+}
+#table_add_competency tbody td:nth-child(3) {
+  width: 20%;
+}
+#table_add_competency tbody td:nth-child(4) {
+  width: 30%;
+}
+#table_add_competency tbody td:nth-child(5) {
+  width: 9%;
+}
+
 .close-modal {
   color: white;
 }
