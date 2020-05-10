@@ -3,7 +3,7 @@ class AdminUsersController < ApplicationController
   include Authorize
   before_action :set_admin_user, only: [:update, :status, :destroy]
   before_action :get_privilege_id
-  before_action :redirect_to_index, :if => :check_privelege
+  before_action :redirect_to_index, :if => :check_privelege,  except: [:index2]
   def get_user_data
     $count ||= 0;
     $count2 ||= 0;
@@ -448,10 +448,11 @@ class AdminUsersController < ApplicationController
       end
     end
   end
-
+  
   private
 
   def check_privelege
+
     if @privilege_array.include? 1 or @privilege_array.include? 2
       return false
     else
@@ -460,10 +461,10 @@ class AdminUsersController < ApplicationController
   end
   
   def redirect_to_index
-      respond_to do |format|
-        format.html { redirect_to  index2_admin_users_path}
-      end
-  end
+    respond_to do |format|
+      format.html { redirect_to  index2_admin_users_path}
+    end
+end
 
 
   def set_admin_user

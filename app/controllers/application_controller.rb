@@ -17,10 +17,7 @@ class ApplicationController < ActionController::Base
               group_privilege = GroupPrivilege.where(group_id: x.group_id)
               
           group_privilege.each{|y|
-    
-            
                 @privilege_array.push(y.privilege_id)
-           
           }
       
         end
