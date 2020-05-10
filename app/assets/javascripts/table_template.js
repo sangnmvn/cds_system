@@ -36,26 +36,39 @@ $(document).ready(function () {
     changeBtnSave("-1")
     checkSlotinTemplate(templateId)
   });
-  $("#tbdTemplate").on('click', '.btnDel', function () {
+  $("#table_slot").on('click', '.btnDel', function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
     delSlot(id,tr);
+    $("#hideIdSlot").html("");
+    $("#descSlot").val("");
+    $("#evidenceSlot").val("")
   });
-  $("#tbdTemplate").on('click', '.btnEdit', function () {
+  $("#table_slot").on('click', '.btnEdit', function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr').children();
     $("#descSlot").val(tr[1].textContent);
     $("#evidenceSlot").val(tr[2].textContent);
     chooseSelect("selectLevel",tr[0].textContent);
-    $("#hideIdSlot").html(id); //xóa id ẩn 
+    $("#hideIdSlot").html(id);
     checkSlotinTemplate(templateId);
+    // $("#success-alert").dialog();
+    // $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+    //   $("#success-alert").alert('close');
+    // });
   });
   changeBtnSave("-1");
   $("#table_slot").removeClass("dataTable")
   $('.dataTables_length').attr("style", "display:none");
+
   $("#btnFinish").click(function(){
+    //Thêm điều kiện kiểm tra enable của template
+    $('#messageModal').modal('show')
+  })
+  $('#btnEnable').click(function() {
     finnish(templateId);
   })
+
   $("#txtSearch").keypress(function(){
     if (event.keyCode == 13 || event.which == 13) {
       var search = $(this).val();
@@ -87,13 +100,13 @@ function loadSlotsinCompetency(search) {
       table.fnClearTable();
       $(response).each(
         function (i, e) { //duyet mang doi tuong
-          var btnUpDown = "<button class='btn btn-primary btnAction btnUpSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></button>" +
-          "<button class='btn btn-primary btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></button>"
-          if (search)
-            btnUpDown = "";
+          // var btnUpDown = 
+          // if (search)
+          //   btnUpDown = "";
           table.fnAddData([
-            "<td class='td_num'>" + e.level + "</td>", e.desc, e.evidence, "<td class='td_action'><button class='btn btn-light btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></button>" +
-            "<button class='btn btn-light btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></button>"+ btnUpDown +"</td>"
+            e.level, e.desc, e.evidence,"<button class='btn btn-light btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></button>" +
+            "<button class='btn btn-light btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></button>"+ "<button class='btn btn-primary btnAction btnUpSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></button>" +
+            "<button class='btn btn-primary btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></button>"
           ]);
         }
       );
@@ -288,22 +301,24 @@ function moveRow (id,row_id, direction,table){
     dataType: "json",
     success: function (response) {
       console.log(response)
-      if (response == "available"){
-          var num = parseInt(direction);
-          current_row_data = table.row(row_id).data();
-          previous_row_data = table.row(row_id + num).data();
-
-          table.row(row_id + num).data(current_row_data).draw();
-          table.row(row_id).data(previous_row_data).draw();
-          success("Move ");
-      }
-      else if (response == "max")
+      if (response == "max")
         fails("The slot is last in Its level. Move ")
-      else
+      else if (response == "min")
         fails("The slot is first in Its level. Move ")
+      else
+      {
+        var num = parseInt(direction);
+        current_row_data = table.row(row_id).data();
+        previous_row_data = table.row(row_id + num).data();
+
+        table.row(row_id + num).data(current_row_data).draw();
+        table.row(row_id).data(previous_row_data).draw();
+        success("Move ");
+      }
     },
     error: function () {
       fails("Move ");
     }
   });
 }
+

@@ -42,6 +42,22 @@
 	margin: auto;
 	font-weight: bold;
 }
+.head-myheader {
+	background-color: #0066CC;
+}
+.button-center{
+	display: flex;
+	align-items: center;
+	text-align: center;
+	//margin-left: 20px;
+	justify-content: center;
+	flex-direction: column;
+}
+.button-header{
+	margin-top: 10px;
+	justify-content: center;
+	flex-direction: column;
+}
 .divChilHeader {
 	font-size: large;
 	background-color:  #B9D3EE;

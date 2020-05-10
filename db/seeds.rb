@@ -386,7 +386,7 @@ slot_create = [
     evidence: "Giao tiếp độc lập với khách hàng và hướng dẫn, giám sát, trợ giúp người khác ", level: "4", competency_id: "3", slot_id: 6 },
   { desc: "Recognized as possessing excellent communication and facilitation skills as well as negotiation skills.",
     evidence: "Không chỉ excellent về communications mà còn là excellent về negotiation. Có thể thương lượng những vấn đề mà người khác không \
-    thể thương lượng nổi", level: "5", competency_id: "3" },
+    thể thương lượng nổi", level: "5", competency_id: "3", slot_id: 3 },
   { desc: "Demonstrate effective skills in influencing Firm culture.",
     evidence: "Trong quá trình làm việc ở công ty: Có kỹ năng và ảnh hưởng ở mức độ văn hóa của tổ chức", level: "5", competency_id: "3", slot_id: 1 },
   { desc: "Demonstrate appropriate interpersonal skills required to serve as Executive Sponsor in key client relationships and/or represents \

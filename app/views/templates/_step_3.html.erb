@@ -19,7 +19,7 @@
                 <label>Competency: </label>
             </div>
             <div class="col-sm-8">
-                <%= select_tag "type", options_from_collection_for_select(competencies, :id, :name), class: 'form-control', id: "selectCompetency" %>
+                <%= select_tag "type", options_from_collection_for_select(competencies, :id, :name),onchange: "checkDataDesc()", class: 'form-control', id: "selectCompetency" %>
             </div>
             </div>
             <br>
@@ -33,7 +33,7 @@
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                             <option value="4">4</option>
-                                            <option value="5">5</option>'), class: 'form-control', id: "selectLevel" %>
+                                            <option value="5">5</option>'),onchange: "checkDataDesc()", class: 'form-control', id: "selectLevel" %>
             </div>
             </div>
             <br/>
@@ -54,7 +54,7 @@
                 <label>Evidence Guide</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
+                <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
             </div>
             </div>  
             <br>
@@ -66,7 +66,7 @@
 
 <button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
 <button type="buttton" class="btn btn-primary" id="addSlot">Save</button>
-<button class="btn btn-primary next action-button" type="button" id="btnFinish" value="Next Step" name="next">Finish</button>
+<button class="btn btn-primary action-button" type="button" id="btnFinish" >Finish</button>
 <button type="buttton" class="btn btn-primary">Close</button>
 
 <hr/>
@@ -80,7 +80,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">Search : </span>
             </div>
-            <input type="search" id="txtSearch" class="form-control" placeholder="search by slot's description">
+            <input type="search" id="txtSearch" class="form-control" placeholder="Search by slot's description">
         </div>
     </div>
 </div>
@@ -102,3 +102,32 @@
 </div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
+
+<!-- The Alert Modal -->
+<div class="modal fade" id="messageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header head-myheader">
+                <h4 class="modal-title">Confirm to Finish Add Template</h4>
+                <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                Are you want to Enable this template?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="col-12 p-3 text-center">
+                    <button id="btnEnable" type="button" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-danger close_modal" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%# <div class="alert alert-success" id="success-alert">
+       <button type="button" class="close" data-dismiss="alert">x</button>
+       <strong>Success! </strong>
+       Product have added to your wishlist.
+</div> %>

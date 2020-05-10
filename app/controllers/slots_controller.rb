@@ -3,7 +3,7 @@ class SlotsController < ApplicationController
   def load_slot
     search = params[:search]
     if search
-      @slots = Slot.where(competency_id: params[:id]).ransack(desc_cont: search).result
+      @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id).ransack(desc_cont: search).result
     else
       @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id)
     end
@@ -27,10 +27,14 @@ class SlotsController < ApplicationController
     direction = params[:direction]
     id_slot = params[:id]
     result = check_location_slot(id_slot, direction)
-    # if result == "available"
-    #   # slot = Slot.find(id_slot)
-    #   # slot.update()
-    # end
+    if result != "min" && result != "max"
+      slot = Slot.find(id_slot)
+      temp = slot[:slot_id]
+      slot.update(slot_id: result[:slot_id]) #Hoán vị 2 giá trị slot id của 2 slot cần đổi
+
+      slot_2 = Slot.find(result[:id])
+      slot_2.update(slot_id: temp)
+    end
     render json: result
   end
 
@@ -69,20 +73,15 @@ class SlotsController < ApplicationController
     param
   end
 
-  def check_location_slot (id,direction)
-    
-    # binding.pry
-    
-    level = Slot.find(id).level
-    competency_id = Slot.find(id).competency_id
-    slot_id =   Slot.find(id).slot_id
-    slot_ids = Slot.where(competency_id: competency_id, level: level).pluck(:slot_id).minmax 
-    if slot_id == slot_ids[0] && direction == "-1"
-      "min"
-    elsif slot_id == slot_ids[1] && direction == "1"
-      "max"
+  def check_location_slot (id,direction)    
+    current_slot =   Slot.find(id)
+    slot_in_level = Slot.where(competency_id: current_slot[:competency_id], level: current_slot[:level]).sort_by{|slot| slot.slot_id}
+    if direction == "-1" && current_slot == slot_in_level.first #action up, check slot hiện tại có phải đứng đầu tiên trong level ko
+        "min"
+    elsif direction == "1" && current_slot == slot_in_level.last #check slot hiện tại có phải đứng cuối trong level ko
+        "max"
     else
-      "available"
+        slot_in_level[slot_in_level.find_index(current_slot) + direction.to_i] #trả về slot đứng sau của slot hiện tại
     end
   end
 end
