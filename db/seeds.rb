@@ -190,8 +190,8 @@ Template.create!(id: 1, name: "CDS/CPB QC", desc: "Template Career Development P
 Template.create!(id: 2, name: "CDS/CPB HR", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "2", admin_user_id: 1)
 Template.create!(id: 3, name: "CDS/CPB BA", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "3", admin_user_id: 2)
 Template.create!(id: 4, name: "CDS/CPB DEV", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
-Template.create!(id: 5, name: "CDS/CPB SM", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
-Template.create!(id: 6, name: "CDS/CPB IT", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
+# Template.create!(id: 5, name: "CDS/CPB SM", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
+# Template.create!(id: 6, name: "CDS/CPB IT", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
 # Template.create!(id: 2, name: "CDS", desc: "Career Development System")
 
 # Create Form
@@ -322,7 +322,7 @@ slot_create = [
   { desc: "Exhibit developed good written and verbal communications. This is evident in complete, accurate and timely status \
     reports and project deliverables as well as clear and concise direct communication.",
     evidence: "Good: Có khả năng tốt về written & verbal communications, ít khi phải hỏi ai về written & verbal communications. \
-               Có thể chịu trách nhiệm chính về written & verbal communications cho 1 hay nhiều dự án [giới hạn ở vai trò của mình].", level: "2c", competency_id: "3", slot_id: 3 },
+               Có thể chịu trách nhiệm chính về written & verbal communications cho 1 hay nhiều dự án [giới hạn ở vai trò của mình].", level: 2, competency_id: "3", slot_id: 3 },
   { desc: "Demonstrated ability to transfer knowledge to junior associates and thus serve as a mentor.",
     evidence: "Cho sinh viên thực tập hay cho nhân viên mới? Bao nhiêu người? Level mentoring cỡ nào?", level: 2, competency_id: "3", slot_id: 4 },
   { desc: "Effectively deliver unpopular and/or difficult messages with an understanding of the receiver’s viewpoint.",
