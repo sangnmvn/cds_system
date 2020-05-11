@@ -2,6 +2,7 @@ $(document).ready(function () {
   var templateId = 1;
   loadSlotsinCompetency();
   checkSlotinTemplate(templateId);
+  $('#btnEdit').attr('disabled', true)
   var table = $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
@@ -81,6 +82,7 @@ $(document).ready(function () {
     else
       $("#ErrorDesc").attr("style","display:block")
   })
+
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -100,14 +102,21 @@ function loadSlotsinCompetency(search) {
       table.fnClearTable();
       $(response).each(
         function (i, e) { //duyet mang doi tuong
-          // var btnUpDown = 
-          // if (search)
-          //   btnUpDown = "";
-          table.fnAddData([
-            e.level, e.desc, e.evidence,"<button class='btn btn-light btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></button>" +
-            "<button class='btn btn-light btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></button>"+ "<button class='btn btn-primary btnAction btnUpSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></button>" +
-            "<button class='btn btn-primary btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></button>"
-          ]);
+          if (search)
+          {
+            table.fnAddData([
+              e.level, e.desc, e.evidence,"<a href='#' type='button' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+            ]);
+          }
+          else
+          {
+            table.fnAddData([
+              e.level, e.desc, e.evidence,"<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              "<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></a>" + "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+              + "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></a>"
+            ]);
+          }
         }
       );
     }
@@ -300,10 +309,9 @@ function moveRow (id,row_id, direction,table){
     },
     dataType: "json",
     success: function (response) {
-      console.log(response)
-      if (response == "max")
+      if (response.status == "max")
         fails("The slot is last in Its level. Move ")
-      else if (response == "min")
+      else if (response.status == "min")
         fails("The slot is first in Its level. Move ")
       else
       {
@@ -312,7 +320,7 @@ function moveRow (id,row_id, direction,table){
         previous_row_data = table.row(row_id + num).data();
 
         table.row(row_id + num).data(current_row_data).draw();
-        table.row(row_id).data(previous_row_data).draw();
+        table.row(row_id).data(previous_row_data).draw();        
         success("Move ");
       }
     },

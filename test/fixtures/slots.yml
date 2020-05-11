@@ -1,0 +1,13 @@
+one:
+  Description: MyString
+  Evidence: ""
+  Level: 1
+  Competency_id: 1
+  Slot_id: 1
+
+two:
+  Description: MyString
+  Evidence: ""
+  Level: 2
+  Competency_id: 1
+  Slot_id: 2

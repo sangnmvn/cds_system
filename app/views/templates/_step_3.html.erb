@@ -2,7 +2,10 @@
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
+
 <div class="row"  style="justify-content: center;">
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
     <div class="col-lg-6">
         <%= form_with class: "step3 form-add-template" do %>
         <div class="row">
@@ -100,9 +103,6 @@
         </table>
     </div>
 </div>
-<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
-
 <!-- The Alert Modal -->
 <div class="modal fade" id="messageModal">
     <div class="modal-dialog">

@@ -1,5 +1,4 @@
 class SlotsController < ApplicationController
-
   def load_slot
     search = params[:search]
     if search
@@ -13,7 +12,7 @@ class SlotsController < ApplicationController
   def new_slot
     @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
     @slot = Slot.new(slot_params(@slot_id))
-    render json: {errors: @slot.errors }, status: 400 if @slot.invalid?
+    render json: { errors: @slot.errors }, status: 400 if @slot.invalid?
     render json: @slot.id if @slot.save!
   end
 
@@ -35,7 +34,9 @@ class SlotsController < ApplicationController
       slot_2 = Slot.find(result[:id])
       slot_2.update(slot_id: temp)
     end
-    render json: result
+    respond_to do |format|
+      format.json { render json: { status: result } }
+    end
   end
 
   def delete_slot
@@ -47,11 +48,11 @@ class SlotsController < ApplicationController
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
     @competencies.each { |competency|
       slots = Slot.find_by(competency_id: competency)
-      if slots.blank?     
+      if slots.blank?
         render json: "-1"
         return
       end
-    }  
+    }
     render json: "1"
   end
 
@@ -73,15 +74,15 @@ class SlotsController < ApplicationController
     param
   end
 
-  def check_location_slot (id,direction)    
-    current_slot =   Slot.find(id)
-    slot_in_level = Slot.where(competency_id: current_slot[:competency_id], level: current_slot[:level]).sort_by{|slot| slot.slot_id}
+  def check_location_slot(id, direction)
+    current_slot = Slot.find(id)
+    slot_in_level = Slot.where(competency_id: current_slot[:competency_id], level: current_slot[:level]).sort_by { |slot| slot.slot_id }
     if direction == "-1" && current_slot == slot_in_level.first #action up, check slot hiện tại có phải đứng đầu tiên trong level ko
-        "min"
+      "min"
     elsif direction == "1" && current_slot == slot_in_level.last #check slot hiện tại có phải đứng cuối trong level ko
-        "max"
+      "max"
     else
-        slot_in_level[slot_in_level.find_index(current_slot) + direction.to_i] #trả về slot đứng sau của slot hiện tại
+      slot_in_level[slot_in_level.find_index(current_slot) + direction.to_i] #trả về slot đứng sau của slot hiện tại
     end
   end
 end
