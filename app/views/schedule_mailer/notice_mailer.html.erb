@@ -1,4 +1,10 @@
 <p>Dear all,</p>
-<p>Please review and commit the CDS Assessment for period [mmm dd, yyyy] - [mmm dd, yyyy] of your project / Department before: [end date 3]</p>
+<p>The schedule of CDS Assessment in period [mmm dd, yyyy] - [mmm dd, yyyy] has created with below information:</p>
+<ul>
+  <li>Stard date: <%= @schedule.start_date.strftime('%b %d, %Y')%></li>
+  <li>End date: <%= @schedule.end_date_hr.strftime('%b %d, %Y')%></li>
+  <li>Reminder of due date: <%= @schedule.notify_hr.strftime('%b %d, %Y')%></li>
+</ul>
+<p>Please complete all employee assessments in your department on-time.</p>
 <p>Thank you,</p>
 <p>HR Department</p>

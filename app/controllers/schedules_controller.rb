@@ -4,19 +4,16 @@ class SchedulesController < ApplicationController
 
   def index
     # binding.pry
-    @fields = ["No.", "Schedule name" ,"Created by", "Start date", "Status", "Action"]
+    @fields = ["No.", "Schedule name", "Created by", "Start date", "Status", "Action"]
     if current_admin_user.role.name == "HR"
       @fields.insert(4, "End date")
       @company = Company.all
       @schedules = Schedule.all.includes(:admin_user, :company).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
     else
-      @fields.insert(4,"Employee end date", "Reviewer end date")
+      @fields.insert(4, "Employee end date", "Reviewer end date")
       @projects = Project.joins(project_members: [:admin_user]).where("admin_users.id = ?", current_admin_user.id)
-      
     end
   end
-
-  
 
   def new
     @schedule = Schedule.new
@@ -28,45 +25,49 @@ class SchedulesController < ApplicationController
   def show
   end
 
-  def mailer  
+  def mailer
   end
-  
-  
-  def create
-    # @schedule = Schedule.new(admin_user_id: current_admin_user.id, project_id: params[:project], start_date: DateTime.strptime(params[:start_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"),
-    #                          end_date: DateTime.strptime(params[:end_date], "%H:%M %m/%d/%Y").strftime("%d-%m-%Y %H:%M"), notify_date: params[:notify_date])
-    
-    
-    schedule_params[:end_date_hr] = Date.strptime(params[:end_date_hr], '%m/%d/%Y').to_date
-    schedule_params[:start_date] = Date.strptime(params[:start_date], '%m/%d/%Y').to_date
-    @schedule = Schedule.new(schedule_params )
-    
-    binding.pry
-    
-    respond_to do |format|
-      if @schedule.save
-        # binding.pry
-        @schedules = Schedule.all.includes(:admin_user, :company).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
-        admin_user = AdminUser.joins(:company, :role).where("roles.name IN ('PM', 'SM', 'BDD') and admin_users.is_delete = false and companies.id = ? ", params[:company_id])
-        # ScheduleMailer.with(admin_user: admin_user, schedule: @schedule).notice_mailer.deliver_later
-        
 
-        format.js { @status = true }
-      else
-        format.js { @status = false }
+  def create
+    # format date from schedule
+    temp_params = schedule_params
+    temp_params[:end_date_hr] = date_format(params[:end_date_hr])
+    temp_params[:start_date] = date_format(params[:start_date])
+    # format date from period
+    period_params_temp = period_params
+    period_params_temp[:from_date] = date_format(params[:from_date])
+    period_params_temp[:to_date] = date_format(params[:to_date])
+
+    # binding.pry
+
+    @period = Period.new(period_params_temp)
+    if @period.save
+      respond_to do |format|
+        temp_params[:period_id] = @period.id
+        @schedule = Schedule.new(temp_params)
+        if @schedule.save
+          # binding.pry
+          @schedules = Schedule.all.includes(:admin_user, :company).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
+          admin_user = AdminUser.joins(:company, :role).where("roles.name IN ('PM', 'SM', 'BDD') and admin_users.is_delete = false and companies.id = ? ", params[:company_id])
+          # send mail
+          ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_now
+          format.js { @status = true }
+        else
+          format.js { @status = false }
+        end
       end
     end
   end
 
   def edit_page
-    @schedule = Schedule.find(params[:id])
-
-    @end_date = DateTime.strptime(@schedule[:end_date].to_s, "%Y-%m-%d %H:%M").strftime("%H:%M %m/%d/%Y")
-    @start_date = DateTime.strptime(@schedule[:start_date].to_s, "%Y-%m-%d %H:%M").strftime("%H:%M %m/%d/%Y")
-
-    update_Status(@schedule)
-    @projects = Project.all
     respond_to do |format|
+      @schedule = Schedule.find(params[:id])
+      @company = Company.all
+      # binding.pry
+
+      @schedule[:end_date_hr] = DateTime.strptime(@schedule[:end_date_hr].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
+      @schedule[:start_date] = DateTime.strptime(@schedule[:start_date].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
+
       format.js
     end
   end
@@ -130,8 +131,11 @@ class SchedulesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def schedule_params
-    params.permit(:id, :project_id, :start_date, :end_date_hr, :end_date_employee, :end_date_reviewer , :notify_reviewer \
-    , :company_id, :admin_user_id, :desc , :status , :notify_employee, :is_delete, :notify_hr)
+    params.permit(:id, :project_id, :period_id, :start_date, :end_date_hr, :end_date_employee, :end_date_reviewer, :notify_reviewer, :company_id, :admin_user_id, :desc, :status, :notify_employee, :is_delete, :notify_hr)
+  end
+
+  def period_params
+    params.permit(:id, :from_date, :to_date)
   end
 
   def schedule_params_2

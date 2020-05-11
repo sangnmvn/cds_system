@@ -49,7 +49,6 @@ Rails.application.routes.draw do
   resources :schedules do
     collection do
       delete "destroy_multiple"
-      post "mailer"
     end
     get "view_pm"
   end
