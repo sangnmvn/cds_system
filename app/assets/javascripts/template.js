@@ -15,7 +15,7 @@ $(document).on("click", "#btn-add-competency", function () {
       success: function (response) {
         if (response.status == "exist") {
           $(".form-add-competency #error-name-competency").html(
-            '<span class="error">Name Competency already exists</span>'
+            '<span class="error">The competency name already exists</span>'
           );
         } else if (response.status == "success") {
           $(".form-add-competency")[0].reset();
@@ -26,7 +26,7 @@ $(document).on("click", "#btn-add-competency", function () {
           // hide tooltip
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           // message success
-          success("Competency '"+ name +"' is created");
+          success("The competency has been saved successfully");
           $('.btn-save-competency').prop("disabled", true);
           $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
         } else if (response.status == "fail") {
@@ -44,7 +44,7 @@ $(document).on("click", "#btn-add-competency", function () {
       success: function (response) {
         if (response.status == "exist") {
           $(".form-add-competency #error-name-competency").html(
-            '<span class="error">Name Competency already exists</span>'
+            '<span class="error">The competency name already exists</span>'
           );
         } else if (response.status == "success") {
           $(".form-add-competency")[0].reset();
@@ -68,7 +68,7 @@ $(document).on("click", "#btn-add-competency", function () {
           $("#table_add_competency tr td .fa-trash").css("color", "red");
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
-          success("Competency '" + name + "' is updated");
+          success("The competency has been saved successfully");
         } else if (response.status == "fail") {
           fails("Can't update competency");
         }
@@ -141,8 +141,18 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
 $(document).on("click", "#table_add_competency .btn-delete-competency", function () {
   // delete data
     var id = $(this).data("id");
+    $('#modal_delete_competency').modal('show');  
     var index = $(this).closest('tr').index();
-    $.ajax({
+    var name_competency_delete = $("#table_add_competency").DataTable().row(index).data()[1];
+    $('#name_competency_delete').html(name_competency_delete);
+    $('#modal_delete_competency #competency_id').val(id);
+    $('#modal_delete_competency #competency_index').val(index);
+});
+
+$(document).on("click", "#confirm_yes_delete_competency", function () {
+  id = $('#modal_delete_competency #competency_id').val();
+  index = $('#modal_delete_competency #competency_index').val();
+  $.ajax({
       type: "DELETE",
       url: "/competencies/"+id,
       headers: {
@@ -169,14 +179,17 @@ $(document).on("click", "#table_add_competency .btn-delete-competency", function
             });
             disableNextCompetencies();
             disableButtonMove();
-            success("Competency is deleted");
+            $('#modal_delete_competency').modal('hide');  
+            success("The competency is deleted");
           } else {
             fails("Can't delete competency");
           }
         });
       },
     });
+
 });
+
 
 $(document).ready(function () {
   var current_fs, next_fs, previous_fs;
@@ -361,6 +374,7 @@ $(document).on('keyup','.form-add-competency #name,#desc', function(){
 
 $(document).on('click','#table_add_competency .btnUp', function(){
   var row_id = $(this).closest('tr').index();
+  console.log(row_id);
   var id = $(this).data("id");
   if (row_id > 0) {
     $.ajax({
@@ -380,6 +394,8 @@ $(document).on('click','#table_add_competency .btnUp', function(){
             current_row_data = table.row(row_id).data();
             previous_row_data = table.row(row_id - 1).data();
             
+            current_row_data[0] = row_id + 1
+
             temp = current_row_data[1];
             current_row_data[1] = previous_row_data[1];
             previous_row_data[1] = temp;
@@ -395,6 +411,8 @@ $(document).on('click','#table_add_competency .btnUp', function(){
             temp = current_row_data[4];
             current_row_data[4] = previous_row_data[4];
             previous_row_data[4] = temp;
+
+            console.log(current_row_data);
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id - 1).data(previous_row_data).draw();
             disableButtonMove();
@@ -429,6 +447,8 @@ $(document).on('click','#table_add_competency .btnDown', function(){
           if (response.status == "success"){
             current_row_data = table.row(row_id).data();
             next_row_data = table.row(row_id + 1).data();
+            
+            next_row_data[0] = row_id + 2;
             temp = current_row_data[1];
             current_row_data[1] = next_row_data[1];
             next_row_data[1] = temp;
@@ -444,6 +464,8 @@ $(document).on('click','#table_add_competency .btnDown', function(){
             temp = current_row_data[4];
             current_row_data[4] = next_row_data[4];
             next_row_data[4] = temp;
+
+            console.log(next_row_data);
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id + 1).data(next_row_data).draw();
             disableButtonMove();

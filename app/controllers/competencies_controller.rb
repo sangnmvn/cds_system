@@ -70,16 +70,16 @@ class CompetenciesController < ApplicationController
         location_new = Competency.where(template_id: template_id_current)
           .map(&:location).select { |x| x < location_current }.max
       elsif params[:type] == "down"
-        location_new = Competency.where(template_id: template_id_current)
-          .map(&:location).select { |x| x > location_current }.min
+        location_new = Competency.where(template_id: template_id_current).map(&:location).select { |x| x > location_current }.min
       end
+      return render json: { status: "fail" } if location_new.nil?
       id_previous = Competency.select("id").where(template_id: template_id_current, location: location_new)
       competency_new = Competency.find(id_previous[0].id)
       competency_current.update!(location: location_new)
       competency_new.update!(location: location_current)
-      render json: { status: "success" }
+      return render json: { status: "success" }
     else
-      render json: { status: "fail" }
+      return render json: { status: "fail" }
     end
   end
 
