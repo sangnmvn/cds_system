@@ -34,6 +34,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
     );
   }
   if ( $(".error").length == 0) {
+    
     $.ajax({
       url: "groups/",
       type: "POST",
@@ -51,6 +52,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         if (response.status == "success") {
           var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
+          
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
@@ -62,25 +64,30 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           response.id +
           '" class="selectable" name="checkbox"></div>'
           );
-          addData.push(sData.length + 1);
+          var a = sData.length + 1
+          addData.push('<div style="text-align:right">'+ a +'</div>');
           addData.push(response.name);
           addData.push(response.status_group);
-          addData.push("0");
+          addData.push('<p style="text-align:right">0</p>');
           addData.push(response.desc);
           addData.push(
             '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-            <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-            <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +
-              response.id +
-              '" href="">\
-            <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="'+response.id +'" href="#"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+            <img border="0" src="/assets/edit.png"></a> \
+            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <img border="0" src="/assets/Delete.png"></a> \
+            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="/user_groups/show_privileges/' +response.id +'" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
-          table.fnAddData(addData);
+          
+
+          
+          
+          
+         
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("Add");
+          table.fnAddData(addData,0);
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -179,13 +186,14 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               updateData.push(response.desc);
               updateData.push(
                 '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-                <img border="0" src="/assets/edit-2e62ec13257b111c7f113e2197d457741e302c7370a2d6c9ee82ba5bd9253448.png"></a> \
-                <a class="action_icon delete_icon" data-toggle="modal" data-target="#deleteModal" data-group_id="' +response.id +'" href="">\
-                <img border="0" src="/assets/destroy-7e988fb1d9a8e717aebbc559484ce9abc8e9095af98b363008aed50a685e87ec.png"></a> \
-                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="#"><i class="fa fa-key"></i></a> \
-                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+                <img border="0" src="/assets/edit.png"></a> \
+                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+                <img border="0" src="/assets/Delete.png"></a> \
+                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="show_privileges_path('+response.id +')" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
-              var delete_whole_row_constant = undefined;
+
+                var delete_whole_row_constant = undefined;
               var redraw_table = false;
               table.fnUpdate(
                 updateData,
@@ -227,7 +235,7 @@ function setup_dataTable() {
       pagingType: "full_numbers",
       iDisplayLength: 20,
 
-      // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
+      //order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
@@ -297,36 +305,37 @@ function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
   var row = data_table.$("tr")[row_id];
   data_table.fnDeleteRow(row);  
-  reorder_table_row(data_table);
+ 
 }
 
 function delete_group() {
   var id = $("#group_id").val();
-
   //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
-    url: "/groups/" + id,
+    url: "/groups/"+id,
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
         $("#modal_destroy").modal("hide");
-        var table = $("#table_group").dataTable();
-          var sData = table.fnGetData();
-          for (var i = 0; i < sData.length; i++) {
-            var current_user_id = sData[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
-            current_user_id = parseInt(current_user_id);
-            if (current_user_id == response.id) {
-              var row_id = i;
-              var updateData = [];
-              delete_datatable_row(table, row_id);
-              break;
-           
+        var index = 0;
+        var index2 = new Array();
+        $('.selectable_check').each(function() {
+            if ($(this).val() == response.id) {
+              index2.push(index);
             }
-          }
+            index++;
+        });
+       
+          for (var i = 0; i < index2.length; i++) {
+          var table = $("#table_group").dataTable();
+        
+            var row_id = index2[i];
+          
+            delete_datatable_row(table, row_id);
+           
+        }
         success("Delete");
       } else if (response.status == "exist") {
         $(".error").remove();
@@ -345,9 +354,12 @@ $(function() {
 });
 
 $(document).ready(function () {
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-primary" \
-  data-toggle="modal" data-target="#modalAdd">Add</button><button type="button" class="btn btn-danger btn-xs\
-   float-right" data-toggle="modal" data-target="#modalDeleteS" style="margin-left:5px" id="deletes">Delete</button></div>';
+
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" \
+  data-toggle="modal" data-target="#modalAdd" style="width:90px"><img border="0" style="float:left;margin-top:4px" \
+  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
+  float-right" data-toggle="modal"  style="margin-left:5px;width:100px" id="deletes">\
+  <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
   $(content).insertAfter(".dataTables_filter");
 });
 
@@ -359,17 +371,28 @@ $.each($("input[name='checkbox']:checked"), function(){
   });
 number = groups_ids.length;
   if (number != 0) {
+    $('#modalDeleteS').modal('show');
+    $('#delete_selected').prop("disabled", false);
     $(".display_number_groups_delete").html("Are you sure want to delete " + number + " groups?");
   } else {
+    $('#delete_selected').prop("disabled", true);
     $(".display_number_groups_delete").html("Please select the groups you want delete ?");
   }
 })
 $(document).on("click", "#delete_selected", function () {
 
   var groups_ids = new Array();
-
+  
   $.each($("input[name='checkbox']:checked"), function(){
     groups_ids.push($(this).val());
+  });
+  var index = 0;
+  var index2 = new Array();
+  $('.selectable_check').each(function() {
+      if (this.checked) {
+        index2.push(index);
+      }
+      index++;
   });
   $.ajax({
     url: "/groups/destroy_multiple/",
@@ -377,24 +400,19 @@ $(document).on("click", "#delete_selected", function () {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     data: {
       group_ids: groups_ids,
+      index: index2,
     },
     dataType: "json",
     success: function (response) {
         $("#modalDeleteS").modal("hide");
-          for (var i_1 = 0; i_1 < response.id.length; i_1++) {
+       var j=0;
+          for (var i = 0; i < response.index.length; i++) {
             var table = $("#table_group").dataTable();
-            var sData = table.fnGetData();
-          for (var i = 0; i < sData.length; i++) {
-            var current_user_id = sData[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
-            current_user_id = parseInt(current_user_id);
-            if (current_user_id == response.id[i_1]) {
-              var row_id = i;
+              var row_id = response.index[i]-j;
               var updateData = [];
               delete_datatable_row(table, row_id);
-            }
-          }}
+              j++; 
+          }
           success("Delete");
     
     },

@@ -1,11 +1,9 @@
-
-
 <table class="table" id="table_group" data-source="<%= groups_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
     
-        <th data-sort-ignore="true"> 
+        <th data-sort-ignore="true" style="width:10px"> 
         <div class="resource_selection_toggle_cell">
      
           <input type="checkbox" id="selectAll">
@@ -28,7 +26,7 @@
         <td class="selectable">
           <div class="resource_selection_cell">
             <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection_selection" name="collection_selection[]">
-        <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable',  name: 'checkbox' %>
+        <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable selectable_check',  name: 'checkbox' %>
           </div>
         </td>
         <td class="id number"><%= "#{index + 1}" %></td>
@@ -40,19 +38,19 @@
             Disable
           <% end %>
         </td>
-        <td class="n_user"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
+        <td class="n_user" style="text-align: right;"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
         <td class="description"><%= "#{group.description}" %></td>
-        <td class="action">
+        <td class="action"><% if @privilege_array.include? 4%>
           <%= 
                 links = []
 
                 links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id,title: 'Edit Group', :'data-toggle' => 'tooltip'})
-                  links << link_to(image_tag("destroy.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
+                links << link_to(image_tag("Delete.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
                 links << link_to('<i class="fa fa-key"></i>'.html_safe,show_privileges_path(group.id),{ class: "action_icon key_icon", :"data-id" => group.id, :"data-toggle" => "modal",title: 'Assign Privileges To Group', :"data-target" => "#modalPrivilege_"+group.id.to_s})
                 links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal",title: 'Assign Users to Group'})
                 links.join(" ").html_safe      
             %>
-         
+         <%end%>
                     
         </td>
       </tr>

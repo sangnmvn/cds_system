@@ -1,11 +1,13 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
-
+  include Authorize
+  before_action :get_privilege_id
+  before_action :redirect_to_index, :if => :check_privelege
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.all.order(:id => :desc).where(is_delete: false)
+      @groups = Group.all.order(:id => :desc).where(is_delete: false)
   end
 
   # GET /groups/1
@@ -37,6 +39,7 @@ class GroupsController < ApplicationController
       else
         render :json => { :status => "fail" }
       end
+ 
     end
   end
 
@@ -61,10 +64,8 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-   
-    
-    
     respond_to do |format|
+      @group = Group.find(params[:id])
       if @group.update_attribute(:is_delete,true)
         status_group = @group.status ? "Enable" : "Disable"
           format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
@@ -90,8 +91,8 @@ class GroupsController < ApplicationController
   end
   def destroy_multiple
     if params[:group_ids] != nil
-      
     
+   
     @group = Group.find(params[:group_ids])
       id=[]
     @group.each do |group|
@@ -100,14 +101,27 @@ class GroupsController < ApplicationController
     end
    
     respond_to do |format|
-      format.json { render :json => {id: id } }
+      index = params[:index]
+      format.json { render :json => {id: id , index: index } }
     end
 
   end
   end
 
   private
-
+  def check_privelege
+    if @privilege_array.include? 4 or @privilege_array.include? 5
+      return false
+    else
+      return true
+    end
+  end
+  
+  def redirect_to_index
+      respond_to do |format|
+        format.html { redirect_to  index2_admin_users_path}
+      end
+  end
   # Use callbacks to share common setup or constraints between actions.
   def set_group
     @group = Group.find(params[:id])

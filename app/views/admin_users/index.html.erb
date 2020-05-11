@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <div class="title_bar" id="title_bar">
         <div id="titlebar_left">
           <h2 id="page_title">User Managment</h2>
@@ -28,8 +29,10 @@
     </div>
   </div>
 </div>
-<% if @v.include? 1%>
+
 <div><%= render 'add_reviewer' , admin_users: @admin_users %></div>
+<input type="hidden" value="<%@privilege_array.include? 1%>" id="check_privilege">
+<% if @privilege_array.include? 1%>
 <div><%= render 'delete' %></div>
 <div><%= render 'edit' %></div>
 <div><%= render 'delete_multiple_users' %></div>
