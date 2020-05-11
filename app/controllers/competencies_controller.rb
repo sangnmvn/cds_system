@@ -1,18 +1,9 @@
 class CompetenciesController < ApplicationController
   before_action :set_competency, only: [:show, :edit, :update, :load_data_edit, :destroy]
 
-  def index
-  end
-
-  def new
-  end
-
-  def show
-  end
-
   def create
     respond_to do |format|
-      if Competency.where(name: params[:name].strip!).where(template_id: params[:template_id]).present?
+      if Competency.where(name: params[:name].squish!).where(template_id: params[:template_id]).present?
         format.json { render json: { status: "exist" } }
       else
         location_max = Competency.where(template_id: params[:template_id]).map(&:location).max
@@ -36,7 +27,7 @@ class CompetenciesController < ApplicationController
   end
 
   def update
-    if Competency.where.not(id: params[:id]).where(name: params[:name].strip!).present?
+    if Competency.where.not(id: params[:id]).where(name: params[:name].squish!).present?
       render json: { status: "exist" }
     else
       if @competency.update(competency_params)

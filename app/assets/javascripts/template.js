@@ -1,6 +1,3 @@
-
-
-
 $(document).on("click", "#btn-add-competency", function () {
   id = $(".form-add-competency #competency_id").val();
   index = $(".form-add-competency #competency_index").val();
@@ -26,6 +23,7 @@ $(document).on("click", "#btn-add-competency", function () {
           addCompetency(response.id,response.name,response.type,response.desc);
           disableNextCompetencies();
           disableButtonMove();
+          $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           success("Competency '"+ name +"' is created");
           $('.btn-save-compentency').prop("disabled", true);
         } else if (response.status == "fail") {
@@ -61,6 +59,7 @@ $(document).on("click", "#btn-add-competency", function () {
           $(".form-add-competency #competency_index").val('');
           // show all icon
           $('#table_add_competency tr td .icon').show();
+          $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
           success("Competency '" + name + "' is updated");
         } else if (response.status == "fail") {
@@ -238,7 +237,10 @@ $(document).ready(function () {
     bLengthChange: false,
     searching: false,
     ordering: true,
-    retrieve: true
+    retrieve: true,
+    language: {
+      "emptyTable": "No data available"
+    }
   });
 });
 
@@ -260,6 +262,9 @@ function loadDataCompetencies(id) {
             searching: false,
             ordering: true,
             retrieve: true,
+            language: {
+              "emptyTable": "No data available"
+            }
           })
           .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
           <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+e.id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
@@ -306,23 +311,31 @@ function nextStep1(){
   loadDataCompetencies(id);
 }
 
-$(document).on('keyup','.form-add-competency #name', function(){
+$(document).on('keyup','.form-add-competency #name,#desc', function(){
   name = $(".form-add-competency #name").val();
+  desc = $(".form-add-competency #desc").val();
   $(".form-add-competency .error").remove();
   if (name.length < 2 || name.length > 200) {
     $(".form-add-competency #error-name-competency").html(
-      '<span class="error" >Competency name must be from 2 to 200 character</span>'
+      '<span class="error" >The competency name must be from 2 to 200 character</span>'
     );
     $('.btn-save-compentency').prop("disabled", true);
   }else {
     if(/^[\w\.,\s\&]*$/.test(name) == false) {
       $(".form-add-competency #error-name-competency").html(
-        '<span class="error" >Competency name can not contain special character</span>'
+        '<span class="error" >The competency name can not contain special character</span>'
       );
       $('.btn-save-compentency').prop("disabled", true);
     }else {
       $('.btn-save-compentency').prop("disabled", false);
     }
+  }
+  //desc
+  if (desc.length > 200) {
+    $(".form-add-competency #error-desc-competency").html(
+      '<span class="error" >The competency desc must less than 200 character</span>'
+    );
+    $('.btn-save-compentency').prop("disabled", true);
   }
 });
 
