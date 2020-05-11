@@ -31,25 +31,18 @@ class SchedulesController < ApplicationController
   def create
     # format date from schedule
     temp_params = schedule_params
-    end_date_formatter = params[:end_date_hr].split("/").map(&:to_i)
-    temp_params[:end_date_hr] = Date.new(end_date_formatter[2], end_date_formatter[0], end_date_formatter[1]).strftime("%Y-%m-%d")
-
-    start_date_formatter = params[:start_date].split("/").map(&:to_i)
-    temp_params[:start_date] = Date.new(start_date_formatter[2], start_date_formatter[0], start_date_formatter[1]).strftime("%Y-%m-%d")
+    temp_params[:end_date_hr] = date_format(params[:end_date_hr])
+    temp_params[:start_date] = date_format(params[:start_date])
     # format date from period
     period_params_temp = period_params
-    from_date_formatter = params[:from_date].split("/").map(&:to_i)
-    period_params_temp[:from_date] = Date.new(from_date_formatter[2], from_date_formatter[0], from_date_formatter[1]).strftime("%Y-%m-%d")
+    period_params_temp[:from_date] = date_format(params[:from_date])
+    period_params_temp[:to_date] = date_format(params[:to_date])
 
-    to_date_formatter = params[:to_date].split("/").map(&:to_i)
-    period_params_temp[:to_date] = Date.new(to_date_formatter[2], to_date_formatter[0], to_date_formatter[1]).strftime("%Y-%m-%d")
-    
     # binding.pry
-    
+
     @period = Period.new(period_params_temp)
     if @period.save
-    
-    respond_to do |format|
+      respond_to do |format|
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
         if @schedule.save
@@ -138,7 +131,7 @@ class SchedulesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def schedule_params
-    params.permit(:id, :project_id, :period_id,:start_date, :end_date_hr, :end_date_employee, :end_date_reviewer, :notify_reviewer, :company_id, :admin_user_id, :desc, :status, :notify_employee, :is_delete, :notify_hr)
+    params.permit(:id, :project_id, :period_id, :start_date, :end_date_hr, :end_date_employee, :end_date_reviewer, :notify_reviewer, :company_id, :admin_user_id, :desc, :status, :notify_employee, :is_delete, :notify_hr)
   end
 
   def period_params
