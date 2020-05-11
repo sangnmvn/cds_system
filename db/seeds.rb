@@ -186,13 +186,13 @@ Title.create!(name: "SM Test", desc: "SM Test", role_id: "5")
 Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
-Template.create!(id: 1, name: "CDS/CPB QC", desc: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
-Template.create!(id: 2, name: "CDS/CPB HR", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "2", admin_user_id: 1)
-Template.create!(id: 3, name: "CDS/CPB BA", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "3", admin_user_id: 2)
-Template.create!(id: 4, name: "CDS/CPB DEV", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
-# Template.create!(id: 5, name: "CDS/CPB SM", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
-# Template.create!(id: 6, name: "CDS/CPB IT", desc: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
-# Template.create!(id: 2, name: "CDS", desc: "Career Development System")
+Template.create!(id: 1, name: "CDS/CPB QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
+Template.create!(id: 2, name: "CDS/CPB HR", description: "Template Career Development Plan / Career Development System For DEV", role_id: "2", admin_user_id: 1)
+Template.create!(id: 3, name: "CDS/CPB BA", description: "Template Career Development Plan / Career Development System For DEV", role_id: "3", admin_user_id: 2)
+Template.create!(id: 4, name: "CDS/CPB DEV", description: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
+# Template.create!(id: 5, name: "CDS/CPB SM", description: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
+# Template.create!(id: 6, name: "CDS/CPB IT", description: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
+# Template.create!(id: 2, name: "CDS", description: "Career Development System")
 
 # Create Form
 Form.create!(id: 1, admin_user_id: "1", _type: "CDS", template_id: "1")

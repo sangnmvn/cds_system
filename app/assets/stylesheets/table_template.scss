@@ -84,3 +84,21 @@
 .btnAction {
 	margin: 2px;
 }
+
+#table_slot tbody td {
+  padding: 5px 10px 5px 10px;   
+}
+#table_slot tbody td:nth-child(1) {
+  width: 2%;
+  text-align: right;
+}
+#table_slot tbody td:nth-child(2) {
+  width: 46%;
+}
+#table_slot tbody td:nth-child(3) {
+  width: 42%;
+}
+#table_slot tbody td:nth-child(4) {
+	width: 7%;
+	text-align: center;
+}

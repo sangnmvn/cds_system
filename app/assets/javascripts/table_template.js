@@ -1,9 +1,6 @@
 $(document).ready(function () {
-  var templateId = 1;
-  loadCompetency(templateId);
-  loadSlotsinCompetency();
+  var templateId = $('#msform .row .id-template').attr("value")
   checkSlotinTemplate(templateId);
-  $('#btnEdit').attr('disabled', true)
   $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
@@ -50,8 +47,8 @@ $(document).ready(function () {
   $('.dataTables_length').attr("style", "display:none");
 
   $("#btnFinish").click(function(){
-    //Thêm điều kiện kiểm tra enable của template
-    $('#messageModal').modal('show')
+    if (checkStatusTemplate() == 0)
+      $('#messageModal').modal('show')
   })
   $('#btnEnable').click(function() {
     finnish(templateId);
@@ -70,7 +67,10 @@ $(document).ready(function () {
     else
       $("#ErrorDesc").attr("style","display:block")
   })
-
+  $(".nexttoStep3").click(function(){
+    loadCompetency(templateId);
+    checkStatusTemplate(templateId);
+  });
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -100,9 +100,10 @@ function loadSlotsinCompetency(search) {
           else
           {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
-              "<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></a>" + "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
-              + "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></a>"
+              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></a>" + 
+              "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></a>" +
+              "<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" 
+              + "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
             ]);
           }
         }
@@ -209,15 +210,23 @@ function delSlot (id,tr,templateId){
 	});
 }
 function  changeBtnFinish(direction) {
-  if(direction == -1)
+  if(checkStatusTemplate() == 1)
   {
     $("#btnFinish").attr("disabled", true);
     $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
   }
   else
   {
-    $("#btnFinish").attr("disabled", false);
-    $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+    if(direction == -1)
+    {
+      $("#btnFinish").attr("disabled", true);
+      $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
+    }
+    else
+    {
+      $("#btnFinish").attr("disabled", false);
+      $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+    }
   }
 }
 function  changeBtnSave(direction) {
@@ -268,6 +277,9 @@ function finnish (templateId)
     success: function (response) {
       success("change status this template is");
       changeBtnFinish(-1)
+      window.setTimeout(function () {
+        location.replace("../templates")
+      }, 800);
     },
     error: function () {
       fails("change status this template is");
@@ -330,11 +342,22 @@ function loadCompetency (templateId)
     },
     dataType: "json",
     success: function (response) {
+      $("#selectCompetency").html("");
       $(response).each(
         function (i, e) { //duyet mang doi tuong
           $("<option value='" + e.id + "'/>").html(e.name).appendTo("#selectCompetency");
         });
+        loadSlotsinCompetency();
+        checkSlotinTemplate(templateId);
     }
   });
+}
+
+function checkStatusTemplate()
+{
+  if ($('#msform .row .status-template').attr("value") == "true" )
+    return 1
+  else
+    return 0
 }
 

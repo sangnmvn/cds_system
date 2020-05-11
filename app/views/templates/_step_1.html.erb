@@ -6,7 +6,7 @@
      <div class="row">
       <div class="col-sm-12">
         <div class="col-sm-8" style="text-align: left">
-          <p style="color:red;">Note: * indicates required fileld</p>
+          <p style="color:red;">(*) required fields</p>
         </div>
       </div>
       <div class="col-sm-12">
@@ -62,4 +62,4 @@
 </div>
 
 <button class="btn btn-primary next action-button step1 btn-next-template" type="button" value="Next step" name="next">Next</button>
-<%= link_to ('<button type="buttton" class="btn btn-primary">Close</button>').html_safe, templates_path, onclick: "return confirm('Are you sure you want to close this?')" %>
+<button type="button" class="btn btn-light border-primary" data-toggle="modal" title="Close Step 1 and Go to Template page" data-target="#modal_waring_close">Cancel</button>

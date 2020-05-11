@@ -101,8 +101,8 @@ class GroupsController < ApplicationController
     end
    
     respond_to do |format|
-      index = params[:index]
-      format.json { render :json => {id: id , index: index } }
+      
+      format.json { render :json => {id: id } }
     end
 
   end

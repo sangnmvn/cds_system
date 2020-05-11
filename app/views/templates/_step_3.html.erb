@@ -1,15 +1,10 @@
-<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
-
 <div class="row"  style="justify-content: center;">
     <div class="col-lg-6">
         <%= form_with class: "step3 form-add-template" do %>
         <div class="row">
         <div class="col-sm-12">
             <div class="col-sm-8" style="text-align: left">
-            <p style="color:red;">Note: * indicates required fileld</p>
+            <p style="color:red;">(*) required fields</p>
             <p id="hideIdSlot" style="display:none"></p>
             </div>
         </div>
@@ -66,10 +61,10 @@
     </div>
 </div>
 
-<button class="btn btn-primary previous action-button-previous" type="button" name="previous">Back</button>
-<button type="buttton" class="btn btn-primary" id="addSlot">Save</button>
+<button class="btn btn-light border-primary previous action-button-previous" title="Back to step 2" type="button" name="previous">Back</button>
+<button type="buttton" class="btn btn-primary" title="Save this slot" id="addSlot">Save</button>
 <button class="btn btn-primary action-button" type="button" id="btnFinish" >Finish</button>
-<button type="buttton" class="btn btn-primary">Close</button>
+<button type="button" class="btn btn-light border-primary" data-toggle="modal" title="Close Step 3 and Go to Template page" data-target="#modal_waring_close">Close</button>
 
 <hr/>
 

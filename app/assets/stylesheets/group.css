@@ -227,6 +227,7 @@ input.button-add {
   padding-left: 16px;     /* make text start to the right of the image */
   vertical-align: middle; /* align the text vertically centered */
 }
-.btn-light, .btn-primary, .btn-danger{
-  width: 80px;
+.error {
+  color: red;
+  font-size: 2px;
 }

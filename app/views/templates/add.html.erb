@@ -1,6 +1,9 @@
 <%= stylesheet_link_tag 'template', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <div class="container-fluid" id="grad1">
   <div class="row justify-content-center mt-0">
     <div class="col-12 col-sm-9 col-md-12 col-lg-12">
@@ -10,6 +13,7 @@
             <div id="msform">
               <div class="row">
                 <div class="col-md-3 id-template" <%= 'value='+@template_edit.id.to_s+'' if @template_edit%>></div>
+                <div class="col-md-3 status-template" <%= 'value='+@template_edit.status.to_s+'' if @template_edit%> style='display:none'></div>
                 <div class="col-md-6">
                   <div class="row steps" style="justify-content: center;">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step step-active">
@@ -47,3 +51,4 @@
   </div>
   <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
   <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<%= render 'warning_close' %>

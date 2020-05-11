@@ -1,189 +1,200 @@
 $(document).ready(function () {
-	myJS();
-  myAjax();
-  privilegeJS();
-  privilegeAjax();
+  myJS();
+  //myAjax();
+  //privilegeJS();
+  //privilegeAjax();
 	$('.dataTables_length').attr("style", "display:none");
 	$('.dataTables_paginate').addClass("mypaging");
 });
 
-function myJS() {
-	var table_left = $('#table_left').dataTable({
-		info: false
-	});
-	var table_right = $('#table_right').dataTable({
-		info: false
-	});
-	document.getElementById("check_all_choose").onclick = function () {
-		// Lấy danh sách checkbox
-		var checkboxes = $("#table_left tbody").find('input:checkbox');
-		if ($("#check_all_choose").is(':checked')) {
-			// Lặp và thiết lập checked
-			for (var i = 0; i < checkboxes.length; i++) {
-				checkboxes[i].checked = true;
-				checkboxes[i].closest('tr').style.backgroundColor = "pink";
-				change_button_right(0);
-			}
-		} else {
-			for (var i = 0; i < checkboxes.length; i++) {
+function myJS_data_event()
+{
+    document.getElementById("check_all_choose").onclick = function () {
+        // Lấy danh sách checkbox
+        var checkboxes = $("#table_left tbody").find('input:checkbox');
+        if ($("#check_all_choose").is(':checked')) {
+            // Lặp và thiết lập checked
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = true;
+                checkboxes[i].closest('tr').style.backgroundColor = "pink";
+                change_button_right(0);
+            }
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = false;
         if (i % 2 == 0){
-          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
         }else{
-          checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
+        checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
         }
-				change_button_right(1);
-			}
-		}
-	};
-	document.getElementById("check_all_remove").onclick = function () {
-		// Lấy danh sách checkbox
-		var checkboxes = $("#table_right tbody").find('input:checkbox');
-		if ($("#check_all_remove").is(':checked')) {
-			// Lặp và thiết lập checked
-			for (var i = 0; i < checkboxes.length; i++) {
-				checkboxes[i].checked = true;
-				checkboxes[i].closest('tr').style.backgroundColor = "pink";
-				change_button_left(0);
-			}
-		} else {
-			for (var i = 0; i < checkboxes.length; i++) {
+                change_button_right(1);
+            }
+        }
+    };
+    document.getElementById("check_all_remove").onclick = function () {
+        // Lấy danh sách checkbox
+        var checkboxes = $("#table_right tbody").find('input:checkbox');
+        if ($("#check_all_remove").is(':checked')) {
+            // Lặp và thiết lập checked
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = true;
+                checkboxes[i].closest('tr').style.backgroundColor = "pink";
+                change_button_left(0);
+            }
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = false;
         if (i % 2 == 0){
-          checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
+        checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
         }else{
-          checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
+        checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
         }
-				change_button_left(1);
-			}
-		}
-	};
-	// click checkbox item on left
-	$('#table_left tbody').on('click', 'input:checkbox', function () {
-		$this = $(this);
-		if ($this.is(':checked')) {
-			if ($("#table_left tbody :checkbox:not(:checked)").length == 0) {
-				$('#check_all_choose').prop("checked", true);
-			}
-			$this.closest('tr').css('background-color', "pink");
-			change_button_right(0);
-		} else {
-			if ($("#table_left tbody :checkbox:checked").length == 0) {
-				change_button_right(1);
-      }
-      if ($this.closest('tr').attr('class') == "odd"){
-      $this.closest('tr').css('background-color', "#cfd5ea");}
-      else{
-      $this.closest('tr').css('background-color', "#E9ebf5");
-      }
-			$('#check_all_choose').prop("checked", false);
-		}
-	});
-	// click checkbox item on right
-	$('#table_right tbody').on('click', 'input:checkbox', function () {
-		$this = $(this);
-		if ($this.is(':checked')) {
-			if ($("#table_right tbody :checkbox:not(:checked)").length == 0) {
-				$('#check_all_remove').prop("checked", true);
-			}
-			change_button_left(0);
-			$this.closest('tr').css('background-color', "pink");
-		} else {
-			if ($("#table_right tbody :checkbox:checked").length == 0) {
-				change_button_left(1);
-      }
-      if ($this.closest('tr').attr('class') == "odd"){
+                change_button_left(1);
+            }
+        }
+    };
+    // click checkbox item on left
+    $('#table_left tbody').on('click', 'input:checkbox', function () {
+        $this = $(this);
+        if ($this.is(':checked')) {
+            if ($("#table_left tbody :checkbox:not(:checked)").length == 0) {
+                $('#check_all_choose').prop("checked", true);
+            }
+            $this.closest('tr').css('background-color', "pink");
+            change_button_right(0);
+        } else {
+            if ($("#table_left tbody :checkbox:checked").length == 0) {
+                change_button_right(1);
+    }
+    if ($this.closest('tr').attr('class') == "odd"){
+    $this.closest('tr').css('background-color', "#cfd5ea");}
+    else{
+    $this.closest('tr').css('background-color', "#E9ebf5");
+    }
+            $('#check_all_choose').prop("checked", false);
+        }
+    });
+    // click checkbox item on right
+    $('#table_right tbody').on('click', 'input:checkbox', function () {
+        $this = $(this);
+        if ($this.is(':checked')) {
+            if ($("#table_right tbody :checkbox:not(:checked)").length == 0) {
+                $('#check_all_remove').prop("checked", true);
+            }
+            change_button_left(0);
+            $this.closest('tr').css('background-color', "pink");
+        } else {
+            if ($("#table_right tbody :checkbox:checked").length == 0) {
+                change_button_left(1);
+    }
+    if ($this.closest('tr').attr('class') == "odd"){
         $this.closest('tr').css('background-color', "#cfd5ea");}
         else{
         $this.closest('tr').css('background-color', "#E9ebf5");
         }
-		
-			$('#check_all_remove').prop("checked", false);
-		}
-	});
-	// click button to right =>
-	$('#to_right').click(function () {
-		var checkboxes = $("#table_left tbody").find('input:checkbox');
-		for (var i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i].checked == true) {
-				checkboxes[i].checked = false;
-				var tr = checkboxes[i].closest("tr");
-				tr.style.backgroundColor = "white";
-				//$("#table_right tbody").append(tr);
-				var tr_add = table_left.fnGetData(tr);
-				table_right.fnAddData(tr_add);
-				// table_right.row.add(tr).draw();
-				table_left.fnDeleteRow(tr);
-				//table_left.row(tr).remove();
-			}
-		}
-		$('#check_all_choose').prop("checked", false);
-		$('#check_all_remove').prop("checked", false);
-		change_button_right(1);
-		change_button_save(0);
-	});
-	// click button to left <=
-	$('#to_left').click(function () {
-		var checkboxes = $("#table_right tbody").find('input:checkbox');
-		for (var i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i].checked == true) {
-				checkboxes[i].checked = false;
-				var tr = checkboxes[i].closest("tr");
-				tr.style.backgroundColor = "white";
-				var tr_add = table_right.fnGetData(tr);
-				table_left.fnAddData(tr_add);
-				table_right.fnDeleteRow(tr);
-				//table_right.row(tr).remove();
-			}
-		}
-		$('#check_all_choose').prop("checked", false);
-		$('#check_all_remove').prop("checked", false);
-		change_button_left(1);
-		change_button_save(0);
-	});
+        
+            $('#check_all_remove').prop("checked", false);
+        }
+    });
+    // click button to right =>
+    $('#to_right').click(function () {
+        var checkboxes = $("#table_left tbody").find('input:checkbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked == true) {
+                checkboxes[i].checked = false;
+                var tr = checkboxes[i].closest("tr");
+                tr.style.backgroundColor = "white";
+                table_left  = $("#table_left").dataTable();
+                table_right = $("#table_right").dataTable();
 
-	$('.close_modal').click(function () {
-		if ($('#save').attr("disabled") != "disabled") {
-			save();
-		}
-		$('#table_left').DataTable().search('');
-		$('#table_right').DataTable().search('');
-	});
-// Add index column in table left
-	$('#table_left').DataTable().on('order.dt search.dt', function () {
-		$('#table_left').DataTable().column(0, {
-			search: 'applied',
-			order: 'applied'
-		}).nodes().each(function (cell, i) {
-			cell.innerHTML = i + 1;
-		});
-	}).draw();
-// Add index column in table right
-	$('#table_right').DataTable().on('order.dt search.dt', function () {
-		$('#table_right').DataTable().column(0, {
-			search: 'applied',
-			order: 'applied'
-		}).nodes().each(function (cell, i) {
-			cell.innerHTML = i + 1;
-		});
-	}).draw();
+                var tr_add = table_left.fnGetData(tr);
+                table_right.fnAddData(tr_add);
+                // table_right.row.add(tr).draw();
+                table_left.fnDeleteRow(tr);
+                //table_left.row(tr).remove();
+            }
+        }
+        $('#check_all_choose').prop("checked", false);
+        $('#check_all_remove').prop("checked", false);
+        change_button_right(1);
+        change_button_save(0);
+    });
+    // click button to left <=
+    $('#to_left').click(function () {
+        var checkboxes = $("#table_right tbody").find('input:checkbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked == true) {
+                checkboxes[i].checked = false;
+                var tr = checkboxes[i].closest("tr");
+                tr.style.backgroundColor = "white";
 
-	//alert success
-	function success(content) {
-		$('#content-alert-success').html(content);
-		$("#alert-success").fadeIn();
-		window.setTimeout(function () {
-			$("#alert-success").fadeOut(1000);
-		}, 5000);
-	}
-	// alert fails
-	function fails(content) {
-		$('#content-alert-fail').html(content);
-		$("#alert-danger").fadeIn();
-		window.setTimeout(function () {
-			$("#alert-danger").fadeOut(1000);
-		}, 5000);
-	}
+                table_left  = $("#table_left").dataTable();
+                table_right = $("#table_right").dataTable();
+
+                var tr_add = table_right.fnGetData(tr);
+                table_left.fnAddData(tr_add);
+                table_right.fnDeleteRow(tr);
+                //table_right.row(tr).remove();
+            }
+        }
+        $('#check_all_choose').prop("checked", false);
+        $('#check_all_remove').prop("checked", false);
+        change_button_left(1);
+        change_button_save(0);
+    });
+
+    $('.close_modal').click(function () {
+        if ($('#save').attr("disabled") != "disabled") {
+            save();
+        }
+        $('#table_left').DataTable().search('');
+        $('#table_right').DataTable().search('');
+    });
+    // Add index column in table left
+    $('#table_left').DataTable().on('order.dt search.dt', function () {
+        $('#table_left').DataTable().column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+    // Add index column in table right
+    $('#table_right').DataTable().on('order.dt search.dt', function () {
+        $('#table_right').DataTable().column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+
+    //alert success
+    function success(content) {
+        $('#content-alert-success').html(content);
+        $("#alert-success").fadeIn();
+        window.setTimeout(function () {
+            $("#alert-success").fadeOut(1000);
+        }, 5000);
+    }
+    // alert fails
+    function fails(content) {
+        $('#content-alert-fail').html(content);
+        $("#alert-danger").fadeIn();
+        window.setTimeout(function () {
+            $("#alert-danger").fadeOut(1000);
+        }, 5000);
+    }
+}
+
+function myJS() {
+	var table_left = $('#table_left').dataTable({
+		bInfo: false, bDestroy: true
+	});
+	var table_right = $('#table_right').dataTable({
+		bInfo: false, bDestroy: true
+  });
+  
 }
 
 function change_button_left(flag) {
@@ -246,11 +257,13 @@ function save() {
 					},
 					type: "GET",
 					success: function (response) {
-						success("Assign user to this group is ");
-						$("#AssignModal").modal('hide');
+            success("Assign user to this group is ");
+            $("#AssignModal").modal('hide');
+            $('.bootbox-confirm').modal('hide');						
 					},
 					error: function () {
-						fails("Assign user to this group is ");
+            fails("Assign user to this group is ");
+            $('.bootbox-confirm').modal('hide');;						
 					}
 				});
 			}
@@ -258,11 +271,12 @@ function save() {
 	});
 }
 
+
 function myAjax() {
 	$('.user_group_icon').click(function () {
-		$("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
-		var id = $(this).attr("data-id");
-		//$('#table_left_filter input').html("");
+    $("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
+    var id = $(this).attr("data-id");
+    //$('#table_left_filter input').html("");
 		//ajax load bảng user_group
 		$.ajax({
 			type: "GET",
@@ -274,8 +288,8 @@ function myAjax() {
 			success: function (response) {
 				$(response).each(
 					function (i, e) { //duyet mang doi tuong
-						// console.log(e);
-						$("#table_right").dataTable().fnAddData([
+            //console.log(e);
+            $("#table_right").dataTable().fnAddData([
 							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name, e.email
 						]);
 					}
@@ -284,7 +298,6 @@ function myAjax() {
 		});
 	});
 	$('.user_group_icon').click(function () {
-		$("#table_left").dataTable().fnClearTable(); //xoa du lieu cũ của table
 		var id = $(this).attr("data-id");
 		//ajax load bảng user
 		$.ajax({
@@ -295,8 +308,11 @@ function myAjax() {
 			},
 			dataType: "json",
 			success: function (response) {
+        $("#table_left").dataTable().fnClearTable(); //xoa du lieu cũ của table
+        $("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
 				$(response).each(
-					function (i, e) { //duyet mang doi tuong
+          function (i, e) { //duyet mang doi tuong
+            console.log(i + ' - ' + e);            
 						$("#table_left").dataTable().fnAddData([
 							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name, e.email
 						]);
@@ -325,9 +341,9 @@ function myAjax() {
 				);
 			}
 		});
-	});
-	$('#save').click(function () {
-		save();
+  });
+  $('#save').click(function () {
+    save();
 	});
 }
 //=================================================================================
@@ -546,6 +562,7 @@ function save_button(flag) {
 }
 function privilegeAjax() {
   $('.key_icon').on('click', function () {
+        
     var group_id = $(this).closest('a').attr("data-id")
     $(`#modalPrivilege .table_left tbody`).children('tr').remove()
     $(`#modalPrivilege .table_right tbody`).children('tr').remove()
@@ -555,6 +572,11 @@ function privilegeAjax() {
       dataType: "json",
       success: function (response) {
         $.each(response, function (key, value) {
+
+          // tranh gap bug khi goi ham 2 lan
+          if ($(".table_right tbody tr").length > 0)
+            return;
+
           if (key == "left") {
             var old_name = []
             var num = 1

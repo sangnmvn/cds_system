@@ -111,7 +111,7 @@ $(document).ready(function () {
     } else {
       if (first_name.length < 2 || first_name.length > 20) {
         $("#first").after(
-          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+          '<span class="error">The maximum length of First Name is 100 characters.</span>'
         );
       }
     }
@@ -121,7 +121,7 @@ $(document).ready(function () {
     } else {
       if (last_name.length < 2 || last_name.length > 20) {
         $("#last").after(
-          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+          '<span class="error">The maximum length of Last Name is 100 characters.</span>'
         );
       }
     }
@@ -135,7 +135,7 @@ $(document).ready(function () {
       var validEmail = regEx.test(email);
       if (!validEmail) {
         $("#email").after(
-          '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
+          '<span class="error">Please enter a valid email address. For example: abc@domain.com.</span>'
         );
       } else {
         check_email = true;
@@ -560,7 +560,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
     var validEmail = regEx.test(email);
     if (!validEmail) {
       $("#modalEdit #email").after(
-        '<span class="error">The format of email address must follow RFC 5322. For example: abc@domain.com</span>'
+        '<span class="error">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
     } else {
       check_email = true;
@@ -803,7 +803,7 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 
 $(document).ready(function () {
 
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" title="Add a new User" data-toggle="modal" data-target="#modalAdd" \
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true" style="width:120px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
   <button type="button" class="btn btn-light border-primary"  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
   <button type="button" class="btn btn-light border-danger" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
@@ -816,3 +816,4 @@ $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
   $('[data-toggle="modal"]').tooltip();
 });
+
