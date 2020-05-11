@@ -190,3 +190,13 @@ img.assign_user_img{
   .close{
       color:#fff;
   }
+  #table_left_paginate {
+    margin: 0 auto;
+    text-align: center; 
+  }
+  #table_right_paginate {
+   margin: 0 auto;
+    text-align: center; 
+}
+
+  

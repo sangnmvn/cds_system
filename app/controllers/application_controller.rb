@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
                 @privilege_array.push(y.privilege_id)
           }
       
-        end
+          end
           }
         }
        

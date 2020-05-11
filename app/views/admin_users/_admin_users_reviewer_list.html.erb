@@ -1,11 +1,10 @@
-<table class="table table-primary table-mytable table-responsive-sm" id="table_left">
+<table class="table table-primary table-mytable table-responsive-sm" style="width:100%" id="table_left">
   <thead>
     <tr>
       <td>No.</td>
       <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
       <td>Full Name</td>
       <td>Account</td>
-      <td>Email Address</td>
       <td style="display:none;">User ID</td>
     </tr>
   </thead>
@@ -13,11 +12,10 @@
     <% unless @available_admin_users.nil?%>
       <% @available_admin_users.each_with_index do |user, index| %>
         <tr id="<%= user.id %>">
-          <td style="text-align: right"><%= index + 1%></td>
+          <td ><div style="text-align: right;"><%= index + 1%></div></td>
           <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>"</td>
             <td><%= "#{user.first_name} #{user.last_name}" %> </td>
             <td><%= user.account %></td>
-            <td><%= user.email %></td>
             <td style="display:none;"><%= user.id %></td>
           </tr>
         <% end %>

@@ -186,10 +186,20 @@ class AdminUsersController < ApplicationController
 
   def add_reviewer
     user_id = params[:id]
-    all_user_id_except_self = AdminUser.where.not(id: user_id)
+    all_user_id_except_self = AdminUser.where.not(id: user_id).where(is_delete: false)
+    # if @privilege_array.include? 1
+    #   all_user_id_except_self = AdminUser.where.not(id: user_id).where(is_delete: false)
+    #   else
+    #     all_user_id_except_self=[]
+    #     pm = ProjectMember.where(admin_user_id: current_admin_user.id)
+    #     pm.each {|x|
+    #     all_user_id_except_self << AdminUser.joins(:project_members).where(:project_members => { project_id: x.project_id } ).where.not(id: user_id).where(is_delete: false)
+    #     }
+    #     all_user_id_except_self=all_user_id_except_self[0]
+    #   end
     @existing_reviewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
     @available_admin_users = all_user_id_except_self.where.not(id: @existing_reviewers.pluck(:id))
-
+  
     respond_to do |format|
       format.js
     end
@@ -452,7 +462,6 @@ class AdminUsersController < ApplicationController
   private
 
   def check_privelege
-
     if @privilege_array.include? 1 or @privilege_array.include? 2
       return false
     else
