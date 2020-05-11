@@ -149,3 +149,6 @@ select.list-dt:focus {
 .close-modal {
   color: white;
 }
+.dataTables_empty {
+  text-align: center!important;
+}
