@@ -98,21 +98,22 @@ function loadSlotsinCompetency(search) {
           if (search)
           {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a href='#' type='button' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
-              "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+              e.level, e.desc, e.evidence,"<a href='#' type='button' title='Edit' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
+              "<a  class='btnAction btnDel' title='Delete' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
             ]);
           }
           else
           {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon' style='color:green'></i></a>" + 
-              "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon' style='color:green'></i></a>" +
-              "<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" 
-              + "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' title='Move up' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon' style='color:green'></i></a>" + 
+              "<a  class='btnAction btnDownSlot' title='Move down' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon' style='color:green'></i></a>" +
+              "<a href='#' type='button' title='Edit'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" 
+              + "<a  class='btnAction btnDel' title='Delete' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
             ]);
           }
         }
       );
+      disableButtonUpDown();
     }
   });
 }
@@ -147,12 +148,12 @@ function addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId) 
     },
     dataType: "json",
     success: function () {
-      success("Add new slot to " + nameCompetency + " is ");
+      success("Add new slot to " + nameCompetency + " is successfully");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
     error: function (response) {
-      fails("Add new slot to " + nameCompetency + " is ");
+      fails("Add new slot to " + nameCompetency + " is fail");
     }
   });
 }
@@ -170,12 +171,12 @@ function updateSlot(desc,evidence,level,competencyId,presentId,templateId) {
     },
     dataType: "json",
     success: function (response) {
-      success("Update slot is ");
+      success("Update slot is successfully");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
     error: function () {
-      fails("Update slot is ");
+      fails("Update slot is fail");
     }
   });
 }
@@ -202,12 +203,13 @@ function delSlot (id,tr,templateId){
 					},
 					type: "GET",
 					success: function (response) {
-            success("Delete slot is");
+            success("Delete slot is successfully");
             $("#table_slot").dataTable().fnDeleteRow(tr);
             checkSlotinTemplate(templateId)
+            disableButtonUpDown();
 					},
 					error: function () {
-						fails("Delete slot is");
+						fails("Delete slot is fail");
 					}
 				});
 			}
@@ -280,14 +282,14 @@ function finnish (templateId)
     },
     dataType: "json",
     success: function (response) {
-      success("change status this template is");
+      success("change status this template is successfully");
       changeBtnFinish(-1)
       window.setTimeout(function () {
         location.replace("../templates")
       }, 800);
     },
     error: function () {
-      fails("change status this template is");
+      fails("change status this template is fail");
     }
   });
 }
@@ -317,9 +319,9 @@ function moveRow (id,row_id, direction,table){
     dataType: "json",
     success: function (response) {
       if (response.status == "max")
-        fails("The slot is last in Its level. Move ")
+        fails("The slot is last in Its level. Move success")
       else if (response.status == "min")
-        fails("The slot is first in Its level. Move ")
+        fails("The slot is first in Its level. Move fail")
       else
       {
         var num = parseInt(direction);
@@ -328,11 +330,12 @@ function moveRow (id,row_id, direction,table){
 
         table.row(row_id + num).data(current_row_data).draw();
         table.row(row_id).data(previous_row_data).draw();        
-        success("Move ");
+        success("This slot was changed");
       }
+      disableButtonUpDown();
     },
     error: function () {
-      fails("Move ");
+      fails("Change slot is fail");
     }
   });
 }
@@ -366,3 +369,13 @@ function checkStatusTemplate()
     return 0
 }
 
+function disableButtonUpDown(){
+  table = $("#table_slot").DataTable();
+  length = table.rows().data().length;
+  if (length >= 1) {
+    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#4d4f4e')
+    $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
+    $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#4d4f4e')
+    $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
+  }
+}
