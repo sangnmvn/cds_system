@@ -5,7 +5,7 @@ class SlotsController < ApplicationController
   end
 
   def load_competency
-    competencies = Competency.where(template_id: params[:template_id])
+    competencies = Competency.where(template_id: params[:template_id]).order(:location)
     render json: competencies
   end
 

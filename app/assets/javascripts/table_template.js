@@ -1,10 +1,14 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
-  checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
     "order": [[0, 'asc']]
+  });
+  $(".nexttoStep3").click(function(){
+    templateId = $('#msform .row .id-template').attr("value")
+    loadCompetency(templateId);
+    checkStatusTemplate(templateId);
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
@@ -67,16 +71,17 @@ $(document).ready(function () {
     else
       $("#ErrorDesc").attr("style","display:block")
   })
-  $(".nexttoStep3").click(function(){
-    loadCompetency(templateId);
-    checkStatusTemplate(templateId);
-  });
+  
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
 function loadSlotsinCompetency(search) {
   var id = $('#selectCompetency').val();
-  $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
+  var tilte = $('#selectCompetency option:selected').text()
+  if (tilte != "")
+    $("#nameCompetency").html(tilte + "'s Slot List");
+  else
+  $("#nameCompetency").html("Please select a Competency !");
   $.ajax({
     type: "GET",
     url: "/slots/load",
@@ -93,16 +98,16 @@ function loadSlotsinCompetency(search) {
           if (search)
           {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a href='#' type='button' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              e.level, e.desc, e.evidence,"<a href='#' type='button' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
               "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
             ]);
           }
           else
           {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon'></i></a>" + 
-              "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon'></i></a>" +
-              "<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" 
+              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' href='#' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon' style='color:green'></i></a>" + 
+              "<a href='#' class='btnAction btnDownSlot' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon' style='color:green'></i></a>" +
+              "<a href='#' type='button'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" 
               + "<a href='#' class='btnAction btnDel' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
             ]);
           }
