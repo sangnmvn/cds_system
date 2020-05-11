@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   resources :templates do
     collection do
       get "add"
+      post "delete/:id", to: "templates#delete", as: "delete"
     end
   end
   resources :competencies do
@@ -69,6 +70,9 @@ Rails.application.routes.draw do
   get "user_groups/show_privileges/:id", to: "user_groups#show_privileges", as: "show_privileges"
   post "user_groups/save_privileges", to: "user_groups#save_privileges", as: "save_privileges"
   delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management
+  get "templates/:id/:ext" => "templates#export_excel"
+
+  delete "templates/cleanup/:excel_filename" => "templates#cleanup_excel_file"
 
   get "/groups/:id/destroy_page", to: "groups#destroy_page"
   # resources :groups

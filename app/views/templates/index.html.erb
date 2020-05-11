@@ -1,0 +1,62 @@
+<%= stylesheet_link_tag 'font-awesome.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'template-index', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'table_template_excel.js', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'step1', 'data-turbolinks-track': 'reload' %>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
+    <li class="breadcrumb-item active">Template Management</li>
+  </ol>
+</nav>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
+<div class="container-fluid">
+  <div class="template-header">
+    <span class="title">Templates</span>
+    <div class="add-template">
+      <%= link_to '<button><img src="../assets/Add.png"> Add</button>'.html_safe, add_templates_path %>
+    </div>
+    <%# <div class="search">
+      <input type="text" placeholder="Need search?">
+      <input type="submit" value="Search">
+    </div> %>
+  </div>
+  
+  <div class="template-table">
+    <table class="table table-primary table-responsive-sm">
+      <thead>
+        <tr >
+          <th scope="col" style="width:3%">No</th>
+          <th scope="col" style="width:15%">Name</th>
+          <th scope="col" style="width:30%">Description</th>
+          <th scope="col" style="width:5%">Role</th>
+          <th scope="col" style="width:6%">Status</th>
+          <th scope="col" style="width:12%" ><%= sortable "updated_at", "Lastest update" %> <%= ('<i class="fa fa-sort"></i>').html_safe %></th>
+          <th scope="col" style="width:15%">Updated by</th>
+          <th scope="col" style="width:10%;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @templates.each_with_index do |template,index| %>
+        <tr>
+          <td class="num"><%= index+1 %></td>
+          <td><%= template.name %></td>
+          <td><%= template.description %></td>
+          <td><%= template.role_name %></td>
+          <td><%= template.status ? "Enable" : "Disable" %></td>
+          <td class="num"><%= template.updated_at.strftime("%b %m, %Y") %></td>
+          <td><%= template.updated_by %></td>
+          <td class="action">
+            <%= link_to(('<i class="fa fa-pencil"></i>').html_safe, edit_template_path(template.id), { class: "icon edit_icon btn-edit-group"}) %>
+            <%= link_to(('<i class="fa fa-file-excel-o"></i>').html_safe, "#", { class: "icon export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx"}) %>
+            <%= link_to(('<i class="fa fa-file-o"></i>').html_safe, "#", { class: "icon export_excel_icon", "data-template_id": template.id, "data-ext": "ots"}) %>
+            <%= link_to(('<i class="fa fa-trash"></i>').html_safe, "#", method: :delete, class: "icon btn-delete-tempalte", value: template.id, remote: true ) %> 
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

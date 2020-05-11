@@ -177,6 +177,14 @@ $(document).on("click", "#table_add_competency .btn-delete-competency", function
 $(document).ready(function () {
   var current_fs, next_fs, previous_fs; //fieldsets
   var opacity;
+
+
+  $(".export_excel_icon").on('click', function()
+    {      
+      debugger;
+    }
+  );
+
   $(".next").click(function () {
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
