@@ -437,8 +437,13 @@ function LeftToRight(group_id) {
     $(`#modalPrivilege .${title}#${name}`).insertAfter($(`#modalPrivilege .table_right tbody .privilege-name.${title}`).parent('tr'))
     $(`#modalPrivilege .selectAll1`).prop("checked", false)
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false)
-    $(`#modalPrivilege .table_left tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
-    $(`#modalPrivilege .table_left tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
+    if (parseInt( $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').attr('id').split('_')[1]) % 2 == 0){
+      $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#cfd5ea");}
+      else{
+        $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
+      }
+    
+  
     to_right_button(0)
     if ($(`#modalPrivilege .table_left .${title}`).length == 1) {
       $(`#modalPrivilege .table_left .privilege-name.${title}`).closest('tr').remove()
@@ -474,11 +479,16 @@ function RightToLeft(group_id) {
     if ($(`#modalPrivilege .table_left .privilege-name.${title}`).length == 0) {
       $(`#modalPrivilege .table_right .privilege-name.${title}`).closest('tr').clone().appendTo(`#modalPrivilege .table_left tbody`)
     }
+   
     $(`#modalPrivilege .${title}#${name}`).insertAfter($(`#modalPrivilege .table_left tbody .privilege-name.${title}`).parent('tr'))
     $(`#modalPrivilege .selectAll2`).prop("checked", false)
+    
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false)
-    $(`#modalPrivilege .table_right tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
-    $(`#modalPrivilege .table_right tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
+    if (parseInt( $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').attr('id').split('_')[1]) % 2 == 0){
+      $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#cfd5ea");}
+      else{
+        $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
+      }
     to_left_button(0)
     if ($(`#modalPrivilege .table_right .${title}`).length == 1) {
       $(`#modalPrivilege .table_right .privilege-name.${title}`).closest('tr').remove()

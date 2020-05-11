@@ -11,7 +11,7 @@
         </div>
         </th>
    
-      <th scope="col" class="id">No.</th>
+      <th scope="col" class="id" style="width:10px">No.</th>
       <th scope="col" class="name">Name</th>
       <th scope="col" class="status">Status</th>
       <th scope="col" class="n_user">Number of User</th>
@@ -23,13 +23,13 @@
   
     <% @groups.each_with_index do |group, index| %>
       <tr id= "<%= "group_#{group.id}" %>" >
-        <td class="selectable">
+        <td class="selectable" style="text-align:center">
           <div class="resource_selection_cell">
             <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection_selection" name="collection_selection[]">
         <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable selectable_check',  name: 'checkbox' %>
           </div>
         </td>
-        <td class="id number"><%= "#{index + 1}" %></td>
+        <td class="id number" style="text-align:right"><%= "#{index + 1}" %></td>
         <td class="name"><%= "#{group.name}" %></td>
         <td class="status">
           <% if group.status %>

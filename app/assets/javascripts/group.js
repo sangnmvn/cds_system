@@ -75,15 +75,9 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
             <img border="0" src="/assets/edit.png"></a> \
             <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
             <img border="0" src="/assets/Delete.png"></a> \
-            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="' +response.id +'" href="/user_groups/show_privileges/' +response.id +'" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
             <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
-          
-
-          
-          
-          
-         
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("Add");
