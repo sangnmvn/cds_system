@@ -18,6 +18,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
   name = $("#name").val();
   status = $('input[name="status"]:checked').val();
   desc = $("#desc").val();
+
   $(".error").remove();
   if (name.length < 1) {
     $("#name").after('<span class="error">Please enter Group Name</span>');
@@ -50,8 +51,8 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       success: function (response) {
         // data group
         if (response.status == "success") {
-          var table = $("#table_group").dataTable();
-          var sData = table.fnGetData();
+          var table = $("#table_group").DataTable();
+          var sData = table.rows().data();
           
           var addData = [];
           addData.push(
@@ -62,7 +63,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
      
           '<input type="checkbox" id="group_ids[]" value="' +
           response.id +
-          '" class="selectable" name="checkbox"></div>'
+          '" class="selectable selectable_check" name="checkbox"></div>'
           );
           var a = sData.length + 1
           addData.push('<div style="text-align:right">'+ a +'</div>');
@@ -81,7 +82,9 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("Add");
-          table.fnAddData(addData,0);
+          table.row.add(addData);
+          table.draw();
+
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -152,12 +155,14 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
       success: function (response) {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
-          var table = $("#table_group").dataTable();
-          var sData = table.fnGetData();
-          for (var i = 0; i < sData.length; i++) {
-            var current_user_id = sData[i][0]
-              .split("batch_action_item_")[1]
-              .split('"')[0];
+          var table = $("#table_group").DataTable();
+          var dataLength = table.rows().data().length;
+          for (var i = 0; i < dataLength; i++) {
+            debugger;
+            
+            var current_user_id = table.row(i).data()[0]
+            .split("batch_action_item_")[1]
+            .split('"')[0];
             current_user_id = parseInt(current_user_id);
             if (current_user_id == response.id) {
               var row_id = i;
@@ -170,7 +175,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
      
           '<input type="checkbox" id="group_ids[]" value="' +
           response.id +
-          '" class="selectable" name="checkbox"></div>'
+          '" class="selectable selectable_check" name="checkbox"></div>'
 
               );
               var a=row_id+1;
@@ -184,18 +189,21 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 <img border="0" src="/assets/edit.png"></a> \
                 <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
                 <img border="0" src="/assets/Delete.png"></a> \
-                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="' +response.id +'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon key_icon" data-id="'+response.id+'" data-toggle="modal" data-target="#modalPrivilege"  href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
                 <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
 
                 var delete_whole_row_constant = undefined;
               var redraw_table = false;
+              table.row(row_id).data(updateData)
+              /*
               table.fnUpdate(
                 updateData,
                 row_id,
                 delete_whole_row_constant,
                 redraw_table
               );
+              */ ;
               break;
             }
           }
@@ -224,13 +232,22 @@ processing: true,
 
 function setup_dataTable() {
   $("#table_group").ready(function () {
-    $("#table_group").dataTable({
+    $("#table_group").DataTable({
       bDestroy: true,
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
 
-      //order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
+      fnDrawCallback: function()
+      { 
+        myJS_data_event();
+        myAjax();
+        privilegeAjax();	
+        privilegeJS();
+      }
+      ,
+
+      // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
@@ -279,8 +296,10 @@ $(document).on("click", ".del_btn", function () {
   $.ajax({
     url: "/groups/"+ group_id +"/destroy_page",
     type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
+    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }    
   });
+
+
 });
 
 function reorder_table_row(data_table)
@@ -298,9 +317,9 @@ function reorder_table_row(data_table)
 }
 function delete_datatable_row(data_table, row_id) {
   // delete the row from table by id
-  var row = data_table.$("tr")[row_id];
-  data_table.fnDeleteRow(row);  
- 
+  //var row = data_table.$("tr")[row_id];
+  
+  data_table.row(row_id).remove().draw();
 }
 
 function delete_group() {
@@ -314,6 +333,8 @@ function delete_group() {
     success: function (response) {
       if (response.status == "success") {
         $("#modal_destroy").modal("hide");
+
+        /*
         var index = 0;
         var index2 = new Array();
         $('.selectable_check').each(function() {
@@ -324,13 +345,30 @@ function delete_group() {
         });
        
           for (var i = 0; i < index2.length; i++) {
-          var table = $("#table_group").dataTable();
+          var table = $("#table_group").DataTable();
         
             var row_id = index2[i];
-          
-            delete_datatable_row(table, row_id);
            
+            delete_datatable_row(table, row_id);
+        
+         
         }
+        */
+       table = $('#table_group').DataTable()
+
+       var n_row = table.rows().data().length
+       for (var i=0; i<n_row; i++)
+       {
+          var data = table.row(i).data()[0];
+          var current_id = parseInt(data.split("batch_action_item_")[1].split('"')[0])
+          if (current_id == response.id)
+          {
+            delete_datatable_row(table, i);
+            break;
+          }
+
+       }
+
         success("Delete");
       } else if (response.status == "exist") {
         $(".error").remove();
@@ -381,33 +419,33 @@ $(document).on("click", "#delete_selected", function () {
   $.each($("input[name='checkbox']:checked"), function(){
     groups_ids.push($(this).val());
   });
-  var index = 0;
-  var index2 = new Array();
-  $('.selectable_check').each(function() {
-      if (this.checked) {
-        index2.push(index);
-      }
-      index++;
-  });
+ 
   $.ajax({
     url: "/groups/destroy_multiple/",
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     data: {
       group_ids: groups_ids,
-      index: index2,
     },
     dataType: "json",
     success: function (response) {
         $("#modalDeleteS").modal("hide");
-       var j=0;
-          for (var i = 0; i < response.index.length; i++) {
-            var table = $("#table_group").dataTable();
-              var row_id = response.index[i]-j;
-              var updateData = [];
-              delete_datatable_row(table, row_id);
-              j++; 
-          }
+        
+      
+        table = $('#table_group').DataTable()
+
+        var n_row = table.rows().data().length
+        for (var i=0; i<n_row; i++)
+        {
+          for (var j = 0;j<response.id.length;j++)  {
+           var data = table.row(i).data()[0];
+           var current_id = parseInt(data.split("batch_action_item_")[1].split('"')[0])
+           if (current_id == response.id[j])
+           {
+             delete_datatable_row(table, i);
+           }
+        }
+      }
           success("Delete");
     
     },
