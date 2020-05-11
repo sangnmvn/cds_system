@@ -134,8 +134,8 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.datetime "from_date"
-    t.datetime "to_date"
+    t.date "from_date"
+    t.date "to_date"
     t.bigint "form_id"
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
@@ -192,8 +192,10 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
     t.integer "notify_reviewer"
     t.date "end_date_hr"
     t.integer "notify_hr"
+    t.bigint "period_id"
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
     t.index ["company_id"], name: "index_schedules_on_company_id"
+    t.index ["period_id"], name: "index_schedules_on_period_id"
     t.index ["project_id"], name: "index_schedules_on_project_id"
   end
 
@@ -269,6 +271,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   add_foreign_key "privileges", "title_privileges"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "admin_users"
+  add_foreign_key "schedules", "periods"
   add_foreign_key "schedules", "projects"
   add_foreign_key "slots", "competencies"
   add_foreign_key "templates", "admin_users"

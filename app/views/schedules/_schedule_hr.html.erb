@@ -5,8 +5,8 @@
   <td><%= index + 1 %></td>
   <td><%= schedule.desc %></td>
   <td><%= schedule.first_name + ' ' + schedule.last_name %></td>
-  <td><%= schedule.start_date %></td>
-  <td><%= schedule.end_date_hr %></td>
+  <td><%= schedule.start_date.strftime('%b %d, %Y') %></td>
+  <td><%= schedule.end_date_hr.strftime('%b %d, %Y') %></td>
   <td><%= schedule.status %></td>
   <td>
     <% if schedule.status == "In-progress" %>

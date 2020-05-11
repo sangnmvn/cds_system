@@ -1,41 +1,83 @@
 <div class="modal-header">
-  <h5 class="modal-title" id="exampleModalLabel">Edit Schedule</h5>
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <h4 class="modal-title" style="text-align: center">Edit schedule</h4>
 </div>
 <div class="modal-body">
-  <form id="form_content">
-    <div class="form-group">
-      <label for="recipient-name" class="col-form-label">Project name:</label>
-      <%= select_tag "edit_project", options_from_collection_for_select(@projects, "id", "desc",selected: @schedule.project_id), class: 'form-control',  include_blank: "Select a project", disabled: true %>
-      <%= text_field_tag 'schedule_id', @schedule.id,type: 'hidden', class: 'form-control'%>
+  <div class="container-fluid">
+    <form id="form_edit_hr">
+      <div class="row">
+        <div class="col-sm-12">
+          <p style="color:red">Note: * indicates required fileld</p>
+        </div>
+        <div class="col-sm-12">
+          <%# Schedule name %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Schedule Name (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <%= text_field_tag 'desc', nil, class: 'form-control', value: schedule.desc %>
+              <input type="hidden" name="schedule" id="schedule" value="schedule">
+              <input type="hidden" name="user" id="user" value="<%= current_admin_user.id %>">
+            </div>
+          </div>
+          <br>
+          <%# project name %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Company Name (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
+            </div>
+          </div>
+          <br>
+          <%# start date %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Start date (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date %>">
+            </div>
+          </div>
+          <br>
+          <%# end date employee %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>End date (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr %>">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Reminder (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <%= number_field_tag :notify_hr, nil %>
+              <em>day(s) before</em>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Status</label>
+            </div>
+            <div class="col-sm-6" >
+              <input type="text" class="form-control" id="status" value="<%= schedule.status %>" disabled >
+            </div>
+          </div>
+          <br>
+        </div>
+        <%# right  %>
+      </div>
+      <%# end container  %>
     </div>
-    <div class="form-group">
-      <% if @schedule.status == "New" %>
-        <label for="recipient-name" class="col-form-label"> Start date:</label>
-        <%= text_field_tag 'edit_start_date', @start_date, class: 'form-control'%>
-        <input type="hidden" id="edit_start_date_1" name="custId" value="3487">
-        <%= text_field_tag 'check_start_date', @start_date,type: 'hidden', class: 'form-control' %>
-      <% end %>
+    <div class="modal-footer justify-content-center">
+      <button type="button" class="btn btn-primary" id="btn_modal_add_hr">Save</button>
+      <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
     </div>
-    <div class="form-group">
-      <label for="recipient-name" class="col-form-label">End date	:</label>
-      <%= text_field_tag 'edit_end_date', @end_date, class: 'form-control', placeholder: 'Please enter end date' %>
-      <input type="hidden" id="edit_end_date_1" name="custId" value="3487">
-    </div>
-    <div class="form-group">
-      <label for="recipient-name" class="col-form-label">Notify before end date:</label>
-      <%= text_field_tag 'edit_notify_date',@schedule.notify_date , class: 'form-control',type:'number', placeholder: 'Please enter notify_date' %>
-    </div>
-    <%= text_field_tag 'status',@schedule.status, class: 'form-control',type:'hidden' %>
   </form>
 </div>
-<div class="modal-footer justify-content-center" >
-  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-  <button type="button" class="btn btn-primary" id="btn_modal_edit">Save</button>
-</div>
-<script>
-  $('#edit_end_date').datetimepicker({ footer: true, modal: true });
-  $('#edit_start_date').datetimepicker({ footer: true, modal: true });
-</script>
