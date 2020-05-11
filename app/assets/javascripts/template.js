@@ -7,7 +7,7 @@ $(document).on("click", "#btn-add-competency", function () {
   name = $(".form-add-competency #name").val();
   type = $(".form-add-competency #type").val();
   desc = $(".form-add-competency #desc").val();
-  template_id = 1;
+  template_id = $('#msform .id-template').attr('value');
   // $(".form-add-competency .error").remove();
   if ($(".form-add-competency .error").length == 0 && id == "") {
     $.ajax({
@@ -305,7 +305,7 @@ $(document).on('click','.btn-next-template', function(){
 });
 
 function nextStep1(){
-  id = 1;
+  id = $('#msform .id-template').attr('value');
   table = $("#table_add_competency").DataTable().clear().draw();
   loadDataCompetencies(id);
 }
