@@ -48,7 +48,10 @@ table.dataTable tbody td {
   width: 18px;
   height: 18px;
 }
-
+img.assign_user_img{
+    width: 30x;
+    height: 35px;
+}
 .next_page_icon{
   width: 16px;
   height: 12px;
@@ -134,7 +137,10 @@ table.dataTable tbody td {
 	padding: 0;
 }
 .head-myheader {
-	background-color: #0066CC;
+    background-color: #0066CC;
+}
+.modal-title {
+    font-size: 18px;
 }
 .button-center{
 	display: flex;
@@ -167,11 +173,20 @@ table.dataTable tbody td {
 }
 
 .title-filter-user {
-    font-size: 18px;color: #fff;text-align:center;margin-top:10px;background-color: #009EE0;
+    font-size: 18px;color: #fff;text-align:center;margin-top:0px;background-color: #009EE0;
 }
 .filter-page-user {
     padding: 10px ; border: 1px solid #cccccc;;
 }
 .btn-light, .btn-primary, .btn-danger{
     width: 80px;
+  }
+  .error {
+    color: red;
+    font-size: 10px;
+    margin:0 0 0 0;
+    padding: 0 0 0 0;
+  }  
+  .close{
+      color:#fff;
   }

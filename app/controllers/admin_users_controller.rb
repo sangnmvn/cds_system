@@ -130,16 +130,16 @@ class AdminUsersController < ApplicationController
 
       # action
       if @privilege_array.include? 1
-      
+    
       current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><img border='0' 
         src='/assets/edit.png'></a> 
-        <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href=''>
+        <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href=''>
         <img border='0' src='/assets/Delete.png'></a> 
-        <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
-        <img border='0' src='/assets/Assign_User.png'></a> 
+        <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='#'>
+        <img border='0' src='/assets/Assign_User.png' class='assign_user_img'></a> 
         <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
       else
-        current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'>
+        current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}' href='#'>
           <img border='0' src='/assets/Assign_User.png'></a> ")
       end
       final_data.push(current_user_data)

@@ -146,7 +146,7 @@ $(document).ready(function () {
     } else {
       if (account.length < 2 || account.length > 20) {
         $("#account").after(
-          '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+          '<span class="error">The maximum length of Account is 100 characters.</span>'
         );
       } else {
         check_account = true;
@@ -196,7 +196,7 @@ $(document).ready(function () {
             $("#modalAdd .tokens-container .token").remove();
             $("#modalAdd .form-add-user")[0].reset();
             $("#modalAdd").modal("hide");
-            success("Add");
+            success("The new account information has been created successfully.");
           } else if (response.status == "fail") {
             fails("Add");
           }
@@ -327,7 +327,7 @@ function delete_user() {
               break;
             }
           }
-          success("Delete");
+          success("The account information has been deleted successfully.");
         } else {
           fails("Delete");
         }
@@ -353,7 +353,7 @@ function add_reviewer_user() {
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
-  var user_account = $(this).data("user_account");
+  var user_account = $(this).data("user_firstname")+" "+$(this).data("user_lastname");
   $(".delete_id").val(user_id);
   $(".display_user_account_delete").html(user_account);
 });
@@ -363,7 +363,7 @@ $(document).on("click", ".add_reviewer_icon", function () {
   var user_account = $(this).data("user_account");
 
   $("#add_reviewer_modal_title").html(
-    'Add Reviewer For <span style="color: #f00;font-size: bold;">{account}</span>'.formatUnicorn({
+    'Add Reviewer For <span style="color: #fff;font-size: bold;">{account}</span>'.formatUnicorn({
       account: user_account
     })
   );
@@ -535,7 +535,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   } else {
     if (first_name.length < 2 || first_name.length > 20) {
       $("#modalEdit #first").after(
-        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+        '<span class="error">The maximum length of First Name is 100 characters.</span>'
       );
     }
   }
@@ -546,7 +546,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   } else {
     if (last_name.length < 2 || last_name.length > 20) {
       $("#modalEdit #last").after(
-        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+        '<span class="error">The maximum length of Last Name is 100 characters.</span>'
       );
     }
   }
@@ -573,7 +573,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   } else {
     if (account.length < 2 || account.length > 20) {
       $("#modalEdit #account").after(
-        '<span class="error">Please enter a value between {2} and {20} characters long.</span>'
+        '<span class="error">The maximum length of Account is 100 characters.</span>'
       );
     } else {
       check_account = true;
@@ -611,7 +611,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           $("#table_user_management").dataTable().fnDraw();
-          success("Edit");
+          success("The account information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           if (response.email_exist) {
@@ -634,9 +634,10 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-  $("#modalDeleteMultipleUsers").modal("show");
+  
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
+    $("#modalDeleteMultipleUsers").modal("show");
     $('.btn-modal-delele-multiple-users').prop("disabled", false);
     $(".display_number_users_delete").html("Are you sure you want delete " + number_user_delete + " user ?");
   } else {
@@ -669,7 +670,7 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
         $(".display_number_users_delete").html('');
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
         $("#table_user_management").dataTable().fnDraw();
-        success("Delete");
+        success("The account information has been deleted successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-delele-multiple-users').prop("disabled", true);
         fails("Delete");
@@ -759,7 +760,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
         $("#modalStatusMultipleUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
-        success("Disable");
+        success("The account information has been disabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-disable-multiple-users').prop("disabled", true);
         fails("Disable");
@@ -791,7 +792,7 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
         $("#modalStatusEnableUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
         $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
-        success("Enable");
+        success("The account information has been enabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-enable-multiple-users').prop("disabled", true);
         fails("Disable");
@@ -803,11 +804,11 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 
 $(document).ready(function () {
 
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true" style="width:120px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-  <button type="button" class="btn btn-light border-primary"  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-  <button type="button" class="btn btn-light border-danger" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-  <button type="button" class="btn btn-light border-danger" data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+  <button type="button" class="btn btn-light "  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+  <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+  <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
   </div>';
 
   $(content).insertAfter(".dataTables_filter");
@@ -816,4 +817,20 @@ $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
   $('[data-toggle="modal"]').tooltip();
 });
+$(document).click(function(e) {    
+  
+  var number = $("#table_user_management tbody :checkbox:checked").length;
 
+  if (parseInt(number) > 0){
+    $("#btn-disable-multiple-users").css('background-color', "#fff");
+    $("#btn-delete-many-users").css('background-color', "#fff");
+    $("#btn-enable-multiple-users").css('background-color', "#90EE90");
+    
+  }
+  else{
+    
+    $("#btn-disable-multiple-users").css('background-color', "#f8f9fa");
+    $("#btn-delete-many-users").css('background-color', "#f8f9fa");
+    $("#btn-enable-multiple-users").css('background-color', "#f8f9fa"); 
+  }
+});
