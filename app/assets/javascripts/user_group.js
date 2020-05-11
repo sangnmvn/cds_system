@@ -30,7 +30,7 @@ function myJS() {
         if (i % 2 == 0){
           checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
         }else{
-          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
         }
 				change_button_right(1);
 			}
@@ -52,7 +52,7 @@ function myJS() {
         if (i % 2 == 0){
           checkboxes[i].closest('tr').style.backgroundColor = "#E9ebf5";
         }else{
-          checkboxes[i].closest('tr').style.backgroundColor = "#cfdcea";
+          checkboxes[i].closest('tr').style.backgroundColor = "#cfd5ea";
         }
 				change_button_left(1);
 			}
@@ -72,7 +72,7 @@ function myJS() {
 				change_button_right(1);
       }
       if ($this.closest('tr').attr('class') == "odd"){
-      $this.closest('tr').css('background-color', "#cfdcea");}
+      $this.closest('tr').css('background-color', "#cfd5ea");}
       else{
       $this.closest('tr').css('background-color', "#E9ebf5");
       }
@@ -93,7 +93,7 @@ function myJS() {
 				change_button_left(1);
       }
       if ($this.closest('tr').attr('class') == "odd"){
-        $this.closest('tr').css('background-color', "#cfdcea");}
+        $this.closest('tr').css('background-color', "#cfd5ea");}
         else{
         $this.closest('tr').css('background-color', "#E9ebf5");
         }
@@ -356,7 +356,7 @@ function privilegeJS() {
       } else {
         
         if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-          $(this).closest('tr').css('background-color', "#cfdcea");}
+          $(this).closest('tr').css('background-color', "#cfd5ea");}
           else{
             $(this).closest('tr').css('background-color', "#E9ebf5");
           }
@@ -378,7 +378,7 @@ function privilegeJS() {
       } else {
         
         if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-          $(this).closest('tr').css('background-color', "#cfdcea");}
+          $(this).closest('tr').css('background-color', "#cfd5ea");}
           else{
             $(this).closest('tr').css('background-color', "#E9ebf5");
           }
@@ -395,12 +395,12 @@ function privilegeJS() {
       $(`#modalPrivilege_${group_id} .table_left tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
         $(`#modalPrivilege_${group_id} .table_left tbody tr`).css('background-color', "pink")
-        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd) th`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd) th`).css('background-color', "#cfd5ea");
         $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
         to_right_button(1)
       } else {
         
-        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd)`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
         $(`#modalPrivilege_${group_id} .table_left tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_right_button(0)
       }
@@ -409,11 +409,11 @@ function privilegeJS() {
       $(`#modalPrivilege_${group_id} .table_right tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
         $(`#modalPrivilege_${group_id} .table_right tbody tr`).css('background-color', "pink")
-        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd) th`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd) th`).css('background-color', "#cfd5ea");
         $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
         to_left_button(1)
       } else {
-        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd)`).css('background-color', "#cfdcea");
+        $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
         $(`#modalPrivilege_${group_id} .table_right tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_left_button(0)
       }

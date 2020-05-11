@@ -33,16 +33,13 @@ class GroupsController < ApplicationController
     if Group.where(name: params[:name]).present?
       render :json => { :status => "exist" }
     else
-      respond_to do |format|
-        
-      if params[:check] != nil
-        @group.save
-        @groups = Group.all.order(:id => :desc).where(is_delete: false)
-        format.js
+      if @group.save
+        status_group = @group.status ? "Enable" : "Disable"
+        render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
       else
         render :json => { :status => "fail" }
       end
-    end
+ 
     end
   end
 

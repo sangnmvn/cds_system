@@ -34,18 +34,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
     );
   }
   if ( $(".error").length == 0) {
-    $.ajax({
-      url: "groups/",
-      type: "POST",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-      },
-      data: {
-        name: name,
-        status: status,
-        description: desc,
-        check: true,
-      },});
+    
     $.ajax({
       url: "groups/",
       type: "POST",
@@ -63,6 +52,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         if (response.status == "success") {
           var table = $("#table_group").dataTable();
           var sData = table.fnGetData();
+          
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
@@ -74,25 +64,30 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           response.id +
           '" class="selectable" name="checkbox"></div>'
           );
-          addData.push(sData.length + 1);
+          var a = sData.length + 1
+          addData.push('<div style="text-align:right">'+ a +'</div>');
           addData.push(response.name);
           addData.push(response.status_group);
-          addData.push("0");
+          addData.push('<p style="text-align:right">0</p>');
           addData.push(response.desc);
           addData.push(
             '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit.png"></a> \
             <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
             <img border="0" src="/assets/Delete.png"></a> \
-            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id+'" data-id="'+response.id+'"  title=""   href="#" data-original-title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id+'" href="#"><i class="fa fa-users"></i></a>'
+            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege_'+response.id +'" data-id="' +response.id +'" href="/user_groups/show_privileges/' +response.id +'" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
+          
+
+          
+          
+          
          
-  
-          table.fnAddData(addData);
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("Add");
+          table.fnAddData(addData,0);
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -240,7 +235,7 @@ function setup_dataTable() {
       pagingType: "full_numbers",
       iDisplayLength: 20,
 
-      // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
+      //order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
       // Check dataTables documentation to learn more about
       // available options.
@@ -359,6 +354,7 @@ $(function() {
 });
 
 $(document).ready(function () {
+
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" \
   data-toggle="modal" data-target="#modalAdd" style="width:90px"><img border="0" style="float:left;margin-top:4px" \
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
