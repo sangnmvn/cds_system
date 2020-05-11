@@ -143,7 +143,7 @@ select.list-dt:focus {
   width: 30%;
 }
 #table_add_competency tbody td:nth-child(5) {
-  width: 9%;
+  width: 5%;
 }
 
 .close-modal {
