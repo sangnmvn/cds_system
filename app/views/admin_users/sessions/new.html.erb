@@ -2,45 +2,68 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
-  #login .container #login-row #login-column #login-box {
-    margin-top: 120px;
-    max-width: 600px;
-    height: 350px;
-    border: 1px solid #9C9C9C;
-    background-color: #EAEAEA;
-  }
-  #login .container #login-row #login-column #login-box #login-form {
-    padding: 20px;
-  }
-  #login .container #login-row #login-column #login-box #login-form #register-link {
-    margin-top: -85px;
-  }
-  .text-info {
-    color: #4472C4 !important;
-  }
-  .btn-info {
-    background-color: #4472C4 !important;
-    border-color: #4472C4 !important;
-  }
+body{
+    background:#0066CC;
+}
+.forget-pwd > a{
+    color: #dc3545;
+    font-weight: 500;
+}
+.forget-password .panel-default{
+    padding: 31%;
+    margin-top: -27%;
+}
+.forget-password .panel-body{
+    padding: 15%;
+    margin-bottom: -50%;
+    background: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+img{
+    width:40%;
+    margin-bottom:10%;
+}
+.btnForget{
+  
+    border:none;
+}
+.forget-password .dropdown{
+    width: 100%;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+.forget-password .dropdown button{
+    width: 100%;
+}
+.forget-password .dropdown ul{
+    width: 100%;
+}
 </style>
-<div id="login">
-  <h3 class="text-center text-white pt-5">Login form</h3>
-  <div class="container">
-    <div id="login-row" class="row justify-content-center align-items-center">
-      <div id="login-column" class="col-md-6">
-        <div id="login-box" class="col-md-12">
-          <form id="login-form" class="form" action="" method="post">
-            <h3 class="text-center text-info">Login</h3>
-            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-              <div class="form-group">
-                <label for="username" class="text-info">Email:</label>
-                <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control" %>
-              </div>
-              <div class="form-group">
-                <label for="password" class="text-info">Password:</label>
-                <%= f.password_field :password, autocomplete: "current-password",class:"form-control" %>
-              </div>
-              <% if devise_mapping.rememberable? %>
+<div class="container forget-password">
+            <div class="row">
+                <div class="col-md-12 col-md-offset-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="text-center">
+                                <img src="/assets/login.png" alt="car-key" border="0">
+                                <h2 class="text-center">Login form</h2>
+                                <p>Login</p>
+                                <form id="register-form" role="form" autocomplete="off" class="form" method="post">
+                                   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <div class="input-group">                                
+                                           <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control",placeholder:"Please input your email"  %>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                           <%= f.password_field :password, autocomplete: "current-password",class:"form-control",placeholder:"Please input your password"%>
+                                        </div>
+                                    </div>
+                                     <% if devise_mapping.rememberable? %>
                 <div class="form-group">
                   <label for="remember-me" class="text-info">
                     <span><%= f.check_box :remember_me %></span>
@@ -49,12 +72,21 @@
                   </label>
                 <% end %>
                 <br/>
-                <%= f.submit "Log in",class:"btn btn-info btn-md" %>
-              </div>
-            <% end %>
-          </form>
+                                    <div class="form-group">
+                   <%= f.submit "Log in", class:"btn btn-lg btn-primary btn-block btnForget" %>
+                                    </div>
+                                  <% end %>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+
+
+
+
+
+
+
