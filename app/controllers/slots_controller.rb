@@ -1,25 +1,23 @@
 class SlotsController < ApplicationController
-  def load_slot
-    search = params[:search]
-    if search
-      @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id).ransack(desc_cont: search).result
-    else
-      @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id)
-    end
+  def load
+    @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id).ransack(desc_cont: params[:search]).result
     render json: @slots
   end
 
-  def new_slot
-    @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
-    @slot = Slot.new(slot_params(@slot_id))
-    render json: { errors: @slot.errors }, status: 400 if @slot.invalid?
-    render json: @slot.id if @slot.save!
+  def load_competency
+    competencies = Competency.where(template_id: params[:template_id])
+    render json: competencies
   end
 
-  def update_slot
+  def new
+    @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
+    @slot = Slot.create(slot_params(@slot_id))
+    render json: { errors: @slot.errors }, status: 400 if @slot.invalid?
+  end
+
+  def update
     slot = Slot.find(params[:id])
     slot.update(slot_params) if slot
-    render json: "1" #repsonse success
   end
 
   def change_slot_id
@@ -39,21 +37,15 @@ class SlotsController < ApplicationController
     end
   end
 
-  def delete_slot
+  def delete
     Slot.destroy(params[:id])
-    render json: "1"
   end
 
   def check_slot_in_template
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
-    @competencies.each { |competency|
-      slots = Slot.find_by(competency_id: competency)
-      if slots.blank?
-        render json: "-1"
-        return
-      end
-    }
-    render json: "1"
+    @slot = Slot.where(competency_id: @competencies).pluck(:competency_id).uniq.count
+    # binding.pry
+    render json: @competencies.count > @slot ? -1 : 1
   end
 
   def update_status_template

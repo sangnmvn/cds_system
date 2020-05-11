@@ -23,7 +23,6 @@ class TemplatesController < ApplicationController
     @roles = Role.where.not(id: role_ids)
     @competencies = Competency.all
   end
-
   private
     def template_params()
       param = {

@@ -236,22 +236,22 @@ Competency.create!(id: "#{i_competency += 1}", name: "Project Closing", desc: "P
 # QC - General
 slot_create = [
   { desc: "Consistently perform well under supervision", evidence: "Nếu được giao việc và được hướng dẫn cách làm thì hoàn tất tốt công việc được giao trong mức độ năng suất hợp lý
-    Nếu có sai sót trong quá trình làm việc và đã được nhắc nhở về những lỗi cụ thể thì không lặp lại những lỗi này.", level: "1", competency_id: "1", slot_id: 1 },
+    Nếu có sai sót trong quá trình làm việc và đã được nhắc nhở về những lỗi cụ thể thì không lặp lại những lỗi này.", level: 1, competency_id: "1", slot_id: 1 },
   { desc: "Recognized as a contributing member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án.\n
     Những người khác không thấy nhân viên này là điểm yếu, là gánh nặng cho team trong productivity \n
     Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down và không giải quyết được. \n
-    5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: "1", competency_id: "1", slot_id: 2 },
+    5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: 1, competency_id: "1", slot_id: 2 },
   { desc: "Complete assigned tasks within scheduled completion dates. \
     Communicate potential issues as soon as you are known.", evidence: "Hoàn tất công việc được giao một cách đúng hạn, với chất lượng tốt. \n
-    Trao đổi, thông báo ngay về những vấn đề tiềm năng khi phát hiện ra chúng", level: "1", competency_id: "1", slot_id: 3 },
+    Trao đổi, thông báo ngay về những vấn đề tiềm năng khi phát hiện ra chúng", level: 1, competency_id: "1", slot_id: 3 },
   { desc: "Complete assigned tasks within scheduled completion dates. \ 
     Communicate potential issues as soon as you are known.", evidence: "Hiểu rõ và tuân thủ tốt các quy trình, quy định, \
-    thủ tục, chuẩn do BESTARION đang áp dụng", level: "1", competency_id: "1", slot_id: 4 },
-  { desc: "Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM, …", evidence: "abc", level: "1", competency_id: "1", slot_id: 5 },
+    thủ tục, chuẩn do BESTARION đang áp dụng", level: 1, competency_id: "1", slot_id: 4 },
+  { desc: "Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM, …", evidence: "abc", level: 1, competency_id: "1", slot_id: 5 },
   { desc: "Recognized as a proactive member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án. \n
     Nằm trong số những người đóng góp hàng đầu cho dự án.\n 
     Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com  bị down và không giải quyết được. 
-    \n 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: "2", competency_id: "1", slot_id: 1 },
+    \n 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: 2, competency_id: "1", slot_id: 1 },
   { desc: "Complete critical tasks on time", evidence: "Critical tasks: Những công việc quan trọng, chủ chốt, cốt lõi trong dự án, \
     trong bộ phận mà nhân viên tham gia, ở góc độ vai trò tương ứng. \n
     Ví dụ:  \n Nhân viên làm Business Analyst trong một dự án thì critical tasks là những công việc chủ chốt, cốt lõi liên quan đến phân \
@@ -259,7 +259,7 @@ slot_create = [
     Nhân viên làm Developer trong một dự án thì critical tasks là những công việc liên quan đến thiết kế / tài liệu hóa / lập trình / sửa bugs \
     của những thứ quan trọng, chủ chốt, cốt lõi. \n
     Nhân viên làm Tester trong một dự án thì thì critical tasks là những công việc liên quan đến việc phát triển test plan / test cases / tiến \
-    hành test execution của những thứ quan trọng, chủ chốt, cốt lõi trong dự án.", level: "2", competency_id: "1", slot_id: 2 },
+    hành test execution của những thứ quan trọng, chủ chốt, cốt lõi trong dự án.", level: 2, competency_id: "1", slot_id: 2 },
   { desc: "Able to represent the skills and capabilities of your department/ practice unit/business unit. ", evidence: "Represent: Đại diện. \n
     Có nhiều mức độ đại diện – ví dụ \n  
     Đại diện cho dự án để training cho một nhân viên mới, training cho sinh viên thực tập về kiến thức, kỹ năng ở vai trò của mình; \n  
@@ -267,64 +267,64 @@ slot_create = [
     Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận; \n  
     Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần \n  
     Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn \
-    trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần", level: "2", competency_id: "1", slot_id: 3 },
+    trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần", level: 2, competency_id: "1", slot_id: 3 },
   { desc: "Recognized internally as a solid knowledge resource.", evidence: "Cứ có vấn đề gì về mảng kiến thức mà cần trợ giúp / câu \
-    trả lời là nghĩ ngay đến nhân viên này", level: "3", competency_id: "1", slot_id: 1 },
+    trả lời là nghĩ ngay đến nhân viên này", level: 3, competency_id: "1", slot_id: 1 },
   { desc: "Successfully complete tasks and assignments independently and supervise the work of others as requested.",
     evidence: "Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục: \n
 - Khi được giao việc thì hoàn tất được công việc một cách độc lập, không cần có sự chỉ dẫn về cách làm, và \n
-- Có thể hướng dẫn, hỗ trợ, giám sát người khác [vài người] hoàn tất công việc", level: "3", competency_id: "1", slot_id: 2 },
+- Có thể hướng dẫn, hỗ trợ, giám sát người khác [vài người] hoàn tất công việc", level: 3, competency_id: "1", slot_id: 2 },
   { desc: "Regularly requested by Company or Business Unit leadership and clients for advice and guidance.",
     evidence: "Có khả năng tư vấn, định hướng, dẫn đường cho công ty hoặc khách hàng về: \n
 - Chuyên môn kỹ thuật ở vai trò mình nắm giữ, hoặc \n
-- Trong những vấn đề liên quan đến hoạt động chung của công ty ", level: "3", competency_id: "1", slot_id: 3 },
+- Trong những vấn đề liên quan đến hoạt động chung của công ty ", level: 3, competency_id: "1", slot_id: 3 },
   { desc: "Identify problems, think through potential solutions then communicate and/or escalate appropriately.",
     evidence: "Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down \
-     và không giải quyết được. 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: "1", competency_id: "2", slot_id: 1 },
+     và không giải quyết được. 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: 1, competency_id: "2", slot_id: 1 },
   { desc: "Identify and solve simple problems independently (for example: recognizing changes in scope and communicating them).",
-    evidence: "Không cần hỏi người khác về giải pháp cho vấn đề [đơn giản] đang gặp phải", level: "2", competency_id: "2", slot_id: 1 },
+    evidence: "Không cần hỏi người khác về giải pháp cho vấn đề [đơn giản] đang gặp phải", level: 2, competency_id: "2", slot_id: 1 },
   { desc: "Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and/or sensitive).",
-    evidence: "Đề xuất, hỗ trợ được trong việc giải quyết các vấn đề phức tạp", level: "2", competency_id: "2", slot_id: 2 },
+    evidence: "Đề xuất, hỗ trợ được trong việc giải quyết các vấn đề phức tạp", level: 2, competency_id: "2", slot_id: 2 },
   { desc: "Lead simple meetings for internal or external clients. Peer and / or next level management are likely to \
     attend these meetings. ",
-    evidence: "Bằng chứng thuyết phục là có dính dáng đến khách hàng bên ngoài", level: "2", competency_id: "2", slot_id: 3 },
-  { desc: "Possess and use good diagnosis / troubleshooting skills.", evidence: "abc", level: "2", competency_id: "2", slot_id: 4 },
+    evidence: "Bằng chứng thuyết phục là có dính dáng đến khách hàng bên ngoài", level: 2, competency_id: "2", slot_id: 3 },
+  { desc: "Possess and use good diagnosis / troubleshooting skills.", evidence: "abc", level: 2, competency_id: "2", slot_id: 4 },
   { desc: "Identifies and solves complex or sensitive problems (for example: associate performance, project scope issues,\
     and priority changes or resolving multiple conflicting agendas). ",
     evidence: "- Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.\n
               - Thế nào là vấn đề phức tạp hoặc nhạy cảm trong phát triển phần mềm?\n
               - Yêu cầu của khách hàng phức tạp, logic xử lý phức tạp, giải thuật phức tạp và có đòi hỏi cao về performance, \
               security; đòi hỏi hiểu biết cao để ứng dụng các frameworks sẵn có thay vì phải hiện thực từ đầu; phải xử lý các \
-              vấn đề phức tạp đồng thời", level: "3", competency_id: "2", slot_id: 1 },
+              vấn đề phức tạp đồng thời", level: 3, competency_id: "2", slot_id: 1 },
   { desc: "Breaks down major issues and problems into workable pieces; sees whole situation behind a problem or issue; \
     understands the causes, effects, implications; sets priorities and takes right action for resolution.",
     evidence: "- Có khả năng chia nhỏ vấn đề lớn, phức tạp thành những phần nhỏ hơn để xử lý; \n
                - Nắm được bức tranh tổng thể của một vấn đề phức tạp; hiểu rõ nguyên nhân, hậu quả, những vấn đề có liên quan; \
-               thiết lập được độ ưu tiên, thứ tự và tiến hành các công việc phù hợp để giải quyết bài toán", level: "3", competency_id: "2", slot_id: 2 },
+               thiết lập được độ ưu tiên, thứ tự và tiến hành các công việc phù hợp để giải quyết bài toán", level: 3, competency_id: "2", slot_id: 2 },
   { desc: "Identify and solve complex or sensitive problems at the strategic executive level.",
     evidence: "Ví dụ: \n
     Phát biểu bài toán 7 năm của công ty và giải quyết nó\n             
     Phát biểu bài toán technical lead của công ty và giải quyết nó\n             
-    Phát biểu bài toán quản lý chi phí / năng suất của công ty và giải quyết nó", level: "4", competency_id: "2", slot_id: 1 },
+    Phát biểu bài toán quản lý chi phí / năng suất của công ty và giải quyết nó", level: 4, competency_id: "2", slot_id: 1 },
   { desc: "Anticipate project and/or assignment risks and provide potential solutions.",
-    evidence: "abc", level: "4", competency_id: "2", slot_id: 2 },
+    evidence: "abc", level: 4, competency_id: "2", slot_id: 2 },
   { desc: "Capable of internal interaction. This is evident in all core communications. Example: \n
     Writing: Weekly report, email, Bug tracker, update document, etc. \n
     Reading and understanding: Project documents, Company policy, Guideline(Bug tracker, SVN, HRM), etc. \n
     Communicating with team member: discuss and  raise issues as soon as they are known",
-    evidence: "abc", level: "1", competency_id: "3", slot_id: 1 },
+    evidence: "abc", level: 1, competency_id: "3", slot_id: 1 },
   { desc: "Effectively attend simple meetings",
-    evidence: "abc", level: "1", competency_id: "3", slot_id: 2 },
+    evidence: "abc", level: 1, competency_id: "3", slot_id: 2 },
   { desc: "Lead simple internal meetings.  Peers and/or next level management are likely to attend these meetings",
-    evidence: "abc", level: "2", competency_id: "3", slot_id: 1 },
+    evidence: "abc", level: 2, competency_id: "3", slot_id: 1 },
   { desc: "Capable of client interaction with supervision or guidance from management or team leadership",
-    evidence: "abc", level: "2", competency_id: "3", slot_id: 2 },
+    evidence: "abc", level: 2, competency_id: "3", slot_id: 2 },
   { desc: "Exhibit developed good written and verbal communications. This is evident in complete, accurate and timely status \
     reports and project deliverables as well as clear and concise direct communication.",
     evidence: "Good: Có khả năng tốt về written & verbal communications, ít khi phải hỏi ai về written & verbal communications. \
                Có thể chịu trách nhiệm chính về written & verbal communications cho 1 hay nhiều dự án [giới hạn ở vai trò của mình].", level: "2c", competency_id: "3", slot_id: 3 },
   { desc: "Demonstrated ability to transfer knowledge to junior associates and thus serve as a mentor.",
-    evidence: "Cho sinh viên thực tập hay cho nhân viên mới? Bao nhiêu người? Level mentoring cỡ nào?", level: "2", competency_id: "3", slot_id: 4 },
+    evidence: "Cho sinh viên thực tập hay cho nhân viên mới? Bao nhiêu người? Level mentoring cỡ nào?", level: 2, competency_id: "3", slot_id: 4 },
   { desc: "Effectively deliver unpopular and/or difficult messages with an understanding of the receiver’s viewpoint.",
     evidence: "Một key member [Senior Software Engineer hoặc tương ứng trở lên] muốn rời khỏi công ty, thậm chí đã gửi đơn xin nghỉ việc. \
     Thuyết phục người này ở lại bằng cách nào? \n
@@ -334,7 +334,7 @@ slot_create = [
     hourly rate khách hàng chấp nhận được là bao nhiêu, có xét tới lợi ích của công ty. Ví dụ cụ thể: Ước lượng chúng ta cần \
     charge khách hàng 530 working hours thì mới có mức lãi như kỳ vọng, nhưng chúng ta không biết mức độ chấp nhận của khách hàng \
     thế nào, cần tìm hiểu thông tin từ khách hàng trước khi gửi bản đề xuất chính thức
-    ", level: "3", competency_id: "3", slot_id: 1 },
+    ", level: 3, competency_id: "3", slot_id: 1 },
   { desc: "Demonstrate strong written and verbal communication skills. (Example: formal documents, client/peer or conference \
     presentations).",
     evidence: "Strong: written & verbal communications là sở trường, lợi thế, sở thích. Được khách hàng, đồng nghiệp, cấp trên khen ngợi, \
@@ -344,10 +344,10 @@ slot_create = [
                Tìm hiểu được thông tin từ khách hàng xem mức chi phí mà khách hàng chấp nhận cho 1 dự án fixed cost là bao nhiêu, \
                hourly rate khách hàng chấp nhận được là bao nhiêu, có xét tới lợi ích của công ty. Ví dụ cụ thể: Ước lượng chúng ta \
                cần charge khách hàng 530 working hours thì mới có mức lãi như kỳ vọng, nhưng chúng ta không biết mức độ chấp nhận của khách hàng \
-               thế nào, cần tìm hiểu thông tin từ khách hàng trước khi gửi bản đề xuất chính thức", level: "3", competency_id: "3", slot_id: 2 },
+               thế nào, cần tìm hiểu thông tin từ khách hàng trước khi gửi bản đề xuất chính thức", level: 3, competency_id: "3", slot_id: 2 },
   { desc: "Lead or facilitate complex meetings for either internal or external clients. The next level of management likely attends \
     these meetings. (Example: formal reviews, workshops, requirements sessions).",
-    evidence: "abc", level: "3", competency_id: "3", slot_id: 3 },
+    evidence: "abc", level: 3, competency_id: "3", slot_id: 3 },
   { desc: "Display good negotiating skills. (Example: setting scope and time-lines with client, vendor discussions, and technical strategies.)",
     evidence: "Ví dụ 1 về good negotiating skills:\n
     Khách hàng nói: Dự án phải được hoàn tất trong phạm vi dưới 300 triệu đồng\n
@@ -364,119 +364,119 @@ slot_create = [
     Ví dụ 4 về good negotiating skills:             
     Một key member đã rời công ty và đi làm ở công ty khác. Công ty cần người này làm part time vào các thứ bảy, chủ nhật, \
     buổi tối trong một khoảng thời gian. Vậy khoảng thời gian này có tính là overtime với hệ số 1,5 hay không? ==> thương lượng \
-    là nó chỉ hệ số 1", level: "4", competency_id: "3", slot_id: 1 },
+    là nó chỉ hệ số 1", level: 4, competency_id: "3", slot_id: 1 },
   { desc: "Exhibit the appropriate interpersonal skills required to establish effective working relationships with clients and/or \
     business partners",
     evidence: "Thế nào là interpersonal skills? http://en.wikipedia.org/wiki/Interpersonal 
                Nói về Interpersonal Relationship, dựa vào đó sẽ cần có các skills để Flourishing Relationships
-               Hãy chứng minh bạn có Appropriate Interpersonal Skills!", level: "4", competency_id: "3", slot_id: 2 },
+               Hãy chứng minh bạn có Appropriate Interpersonal Skills!", level: 4, competency_id: "3", slot_id: 2 },
   { desc: "Demonstrate excellent written and verbal communication skills as well as facilitation skills.",
     evidence: "Không chỉ strong, mà còn phải biết hát. Là một người cực kỳ xuất sắc về communications. Rất hiếm người đạt được slot này.\n
-    Nếu làm việc với khách hàng nước ngoài bằng tiếng Anh thì một điều kiện cần là TOEIC 900?", level: "4", competency_id: "3", slot_id: 3 },
+    Nếu làm việc với khách hàng nước ngoài bằng tiếng Anh thì một điều kiện cần là TOEIC 900?", level: 4, competency_id: "3", slot_id: 3 },
   { desc: "Effectively communicate BESTARION’s capabilities to clients.",
     evidence: "Phải có bằng chứng làm việc với khách hàng bên ngoài – chịu trách nhiệm chính, nhất là trong các dự án mới với khách \
     hàng bên ngoài. \n
-    Việc chịu trách nhiệm chính và biến dự án tiềm năng thành dự án thực tế cho công ty là bằng chứng rõ ràng.", level: "4", competency_id: "3", slot_id: 4 },
+    Việc chịu trách nhiệm chính và biến dự án tiềm năng thành dự án thực tế cho công ty là bằng chứng rõ ràng.", level: 4, competency_id: "3", slot_id: 4 },
   { desc: "Lead or facilitate complex, multi-session, politically charged meetings for clients. The most senior members of the client\
     (internal or external) team are likely to attend these meetings representing their own group’s interest. ",
     evidence: "Chịu trách nhiệm chính từ phía BESTARION trong các buổi họp phức tạp, khó khăn, gồm nhiều buổi, có yếu tố political \
               [ví dụ tại sao lại outsource thay vì tự làm; tại sao lại outsource sang VN mà không phải là ở India, etc] liên quan đến khách hàng. \
-              Các buổi họp này có đại diện cấp cao nhất của khách hàng tham gia.", level: "4", competency_id: "3", slot_id: 5 },
+              Các buổi họp này có đại diện cấp cao nhất của khách hàng tham gia.", level: 4, competency_id: "3", slot_id: 5 },
   { desc: "Independently interact with clients and provide guidance and supervision to others in this area ",
-    evidence: "Giao tiếp độc lập với khách hàng và hướng dẫn, giám sát, trợ giúp người khác ", level: "4", competency_id: "3", slot_id: 6 },
+    evidence: "Giao tiếp độc lập với khách hàng và hướng dẫn, giám sát, trợ giúp người khác ", level: 4, competency_id: "3", slot_id: 6 },
   { desc: "Recognized as possessing excellent communication and facilitation skills as well as negotiation skills.",
     evidence: "Không chỉ excellent về communications mà còn là excellent về negotiation. Có thể thương lượng những vấn đề mà người khác không \
-    thể thương lượng nổi", level: "5", competency_id: "3", slot_id: 3 },
+    thể thương lượng nổi", level: 5, competency_id: "3", slot_id: 3 },
   { desc: "Demonstrate effective skills in influencing Firm culture.",
-    evidence: "Trong quá trình làm việc ở công ty: Có kỹ năng và ảnh hưởng ở mức độ văn hóa của tổ chức", level: "5", competency_id: "3", slot_id: 1 },
+    evidence: "Trong quá trình làm việc ở công ty: Có kỹ năng và ảnh hưởng ở mức độ văn hóa của tổ chức", level: 5, competency_id: "3", slot_id: 1 },
   { desc: "Demonstrate appropriate interpersonal skills required to serve as Executive Sponsor in key client relationships and/or represents \
     BESTARION in strategic business partnerships.",
     evidence: "Là người đại diện công ty để thiết lập và duy trì mối quan hệ với những khách hàng chủ chốt, quan trọng của công ty. Đại diện công \
-               ty trong các mối quan hệ kinh doanh chiến lược. “Không có tôi thì không xong”", level: "5", competency_id: "3", slot_id: 2 },
+               ty trong các mối quan hệ kinh doanh chiến lược. “Không có tôi thì không xong”", level: 5, competency_id: "3", slot_id: 2 },
   { desc: "Able to improve skill knowledge to adapt yourself to new requirements",
     evidence: "Bằng chứng [bao gồm, không chỉ gồm]:\n
     Đơn giản nhất là hoàn tất training plan cho newcomer và được đánh giá tốt [đúng hạn, kết quả kiểm tra tốt chẳng hạn]\n             
     Tham gia các khóa huấn luyện của công ty và thi lần đầu là pass ngay\n             
     Nâng cao trình độ Anh văn đúng thời điểm như đã cam kết với công ty\n             
-    Tìm hiểu vấn đề mới để giải quyết công việc trong dự án đạt đúng ước lượng hợp lý đã đề ra", level: "1", competency_id: "4", slot_id: 1 },
+    Tìm hiểu vấn đề mới để giải quyết công việc trong dự án đạt đúng ước lượng hợp lý đã đề ra", level: 1, competency_id: "4", slot_id: 1 },
   { desc: "Able to write report if having any request",
-    evidence: "Good meeting minutes, các báo cáo về một vấn đề nào đó khi được yêu cầu", level: "1", competency_id: "4", slot_id: 2 },
+    evidence: "Good meeting minutes, các báo cáo về một vấn đề nào đó khi được yêu cầu", level: 1, competency_id: "4", slot_id: 2 },
   { desc: "Estimate how much time one has, to allocate it effectively, and to stay within time limits and deadlines.",
     evidence: "Thể hiện ở 2 khía cạnh:\n
     Với chừng đó thời gian có được thì cần hoàn tất khối lượng công việc tương xứng ==> đây là thứ cần được hỏi và trả lời \
     hàng ngày: Do I finish a reasonable amount of tasks today? Do the peer / direct manager / customer happy with my achievement? \
     Nếu thời gian đang được sử dụng không hiệu quả do yếu tố khách quan thì cần có phản hồi với những người có liên quan [ví dụ: suốt \
      ngày đi họp mà lại sử dụng thời gian họp kém hiệu quả …]\n             
-    Với chừng đó thời gian có được thì không over-commit để rồi không đạt được commitment", level: "1", competency_id: "4", slot_id: 3 },
+    Với chừng đó thời gian có được thì không over-commit để rồi không đạt được commitment", level: 1, competency_id: "4", slot_id: 3 },
   { desc: "Arrange and finish tasks creatively ",
-    evidence: "abc", level: "1", competency_id: "4", slot_id: 4 },
+    evidence: "abc", level: 1, competency_id: "4", slot_id: 4 },
   { desc: "Complete assigned tasks within scheduled completion dates. Communicate potential issues as soon as they are known.",
-    evidence: "abc", level: "1", competency_id: "4", slot_id: 5 },
+    evidence: "abc", level: 1, competency_id: "4", slot_id: 5 },
   { desc: "Prioritize duties in a manner consistent with project objectives/ goal",
-    evidence: "abc", level: "1", competency_id: "4", slot_id: 6 },
+    evidence: "abc", level: 1, competency_id: "4", slot_id: 6 },
   { desc: "Organize tasks and make an effective plan for own task",
-    evidence: "Hoàn tất tasks đúng hạn như ước lượng hợp lý đã đề ra", level: "2", competency_id: "4", slot_id: 1 },
+    evidence: "Hoàn tất tasks đúng hạn như ước lượng hợp lý đã đề ra", level: 2, competency_id: "4", slot_id: 1 },
   { desc: "Complete critical tasks on time.",
-    evidence: "Hoàn tất critical tasks đúng hạn.", level: "2", competency_id: "4", slot_id: 2 },
+    evidence: "Hoàn tất critical tasks đúng hạn.", level: 2, competency_id: "4", slot_id: 2 },
   { desc: "Demonstrate exceptional time management and prioritization skills",
     evidence: "Khả năng quản lý thời gian mà mình có; khả năng đặt độ ưu tiên các tasks.\n
-    Bằng chứng: Hoàn tất tốt công việc khi cùng lúc tham gia nhiều dự án / nhiều việc xen kẽ nhau", level: "2", competency_id: "4", slot_id: 3 },
+    Bằng chứng: Hoàn tất tốt công việc khi cùng lúc tham gia nhiều dự án / nhiều việc xen kẽ nhau", level: 2, competency_id: "4", slot_id: 3 },
   { desc: "Consistently deliver quality, on-time task assignment outcomes as a result of good planning and organizational skills.",
     evidence: "Nếu có bằng chứng consistently; không có phản ví dụ trong vòng xxx tháng [cả về chất lượng lẫn thời hạn]. Nếu hoàn tất \
-    task trong 3 hours nhưng lại tốn thêm 2 hours trở lên để đi sửa ==> phản ví dụ ", level: "2", competency_id: "4", slot_id: 4 },
+    task trong 3 hours nhưng lại tốn thêm 2 hours trở lên để đi sửa ==> phản ví dụ ", level: 2, competency_id: "4", slot_id: 4 },
   { desc: "Assistant to develop project plans and then tracks tasks, manage scope and risk, accurately reports status to client / \
     project manager / delivery manager.",
     evidence: "Hỗ trợ làm các loại project plans, kiểm soát phạm vi và rủi ro, báo cáo tình trạng dự án cho khách hàng / trưởng dự án /\
-                … Ít nhất cũng phải hỗ trợ trong khoảng 3 tháng trở lên", level: "2", competency_id: "4", slot_id: 5 },
+                … Ít nhất cũng phải hỗ trợ trong khoảng 3 tháng trở lên", level: 2, competency_id: "4", slot_id: 5 },
   { desc: "Successfully complete tasks and assignments independently and supervise the work of others as requested.",
     evidence: "Hoàn tất tasks một cách độc lập [không cần hỏi người khác về cách giải quyết] và có thể kiểm tra, theo dõi, \
     hướng dẫn, hỗ trợ người khác. Bằng chứng có khả năng là phải hoàn tất được tasks một cách độc lập trong khoảng 3 tháng trở lên; \
-    hỗ trợ được người khác ít nhất tương ứng 6 billable man-month trở lên", level: "2", competency_id: "4", slot_id: 6 },
+    hỗ trợ được người khác ít nhất tương ứng 6 billable man-month trở lên", level: 2, competency_id: "4", slot_id: 6 },
   { desc: "Develop project plans and then track tasks, manage scope and risk, accurately report status to client / project manager /\
     delivery manager.",
-    evidence: "Ít nhất 3 tháng trở lên?", level: "3", competency_id: "4", slot_id: 1 },
+    evidence: "Ít nhất 3 tháng trở lên?", level: 3, competency_id: "4", slot_id: 1 },
   { desc: "Develop estimates and schedules for potential follow on opportunities.",
     evidence: "Follow on opportunities: Cho khách hàng tiềm năng. Ít nhất cho 3 khách hàng tiềm năng với tổng số estimated effort ít nhất \
-    khoảng 6 billable man-months", level: "3", competency_id: "4", slot_id: 2 },
+    khoảng 6 billable man-months", level: 3, competency_id: "4", slot_id: 2 },
   { desc: "Successfully manage scope and client expectations to deliver Task deliverables that meet and exceed client expectations",
-    evidence: "Ít nhất 3 tháng trở lên? Phải có bằng chứng về việc quản lý client expectations và meet / exceed client expectations;", level: "3", competency_id: "4", slot_id: 3 },
+    evidence: "Ít nhất 3 tháng trở lên? Phải có bằng chứng về việc quản lý client expectations và meet / exceed client expectations;", level: 3, competency_id: "4", slot_id: 3 },
   { desc: "Accountable for accurate and timely feedback to project associates through Task / Documents reviews and / or other forms \
     of formal feedback",
-    evidence: "Có phản hồi chính xác và đúng hạn cho các đồng nghiệp / khách hàng hay không?", level: "3", competency_id: "4", slot_id: 4 },
+    evidence: "Có phản hồi chính xác và đúng hạn cho các đồng nghiệp / khách hàng hay không?", level: 3, competency_id: "4", slot_id: 4 },
   { desc: "Successfully handle and organize strategy task",
     evidence: "Một số ví dụ:\n
     Handle & Organize CMMI Level 3 project\n             
     Handle & Organize Portfolio Management \n             
     Handle & Organize: Quản lý năng suất tại công ty\n             
-    Handle & Organize: Quản lý nhân sự tại công ty – bài toán giữ người, bài toán lương thưởng / phúc lợi", level: "4", competency_id: "4", slot_id: 1 },
+    Handle & Organize: Quản lý nhân sự tại công ty – bài toán giữ người, bài toán lương thưởng / phúc lợi", level: 4, competency_id: "4", slot_id: 1 },
   { desc: "Successfully manage and organize multiple tasks at the company level",
     evidence: "Vừa manage & organize CMMI Level 3 project, vừa quản lý phòng tổng hợp, vừa quản lý Dự án một cách thành công trong tối \
     thiểu 3 tháng chẳng hạn.\n
     Người đồng thời tham gia nhiều dự án [ví dụ 3 dự án phần mềm] nhưng không phải ở vị trí manager thì sao? Không được tính, chỉ \
     được tính vào slot 2c\n
-    Người đồng thời làm manager ở vài dự án khác nhau thì sao?", level: "4", competency_id: "4", slot_id: 2 },
+    Người đồng thời làm manager ở vài dự án khác nhau thì sao?", level: 4, competency_id: "4", slot_id: 2 },
   { desc: "Accountable for developing his/ her own management skill set to meet the company expectation. ",
     evidence: "PMP, MBA là điều kiện cần\n
-    Cần có bằng chứng về việc áp dụng management skill set thành công", level: "4", competency_id: "4", slot_id: 3 },
+    Cần có bằng chứng về việc áp dụng management skill set thành công", level: 4, competency_id: "4", slot_id: 3 },
   { desc: "Able to use basic features of version control system, bug tracking system like git, svn, jira, mantis etc.",
     evidence: "Sử dụng tốt những chức năng cơ bản như là tạo/update thông tin task, bug một cách hiệu quả. Bằng chứng để pass slot này \
-    là đã dùng các loại công cụ này một cách hiệu quả liên tục trong 6 tháng.", level: "1", competency_id: "5", slot_id: 1 },
+    là đã dùng các loại công cụ này một cách hiệu quả liên tục trong 6 tháng.", level: 1, competency_id: "5", slot_id: 1 },
   { desc: "Understand and follow project defined processes.",
     evidence: "Để pass slot này, tester cần có bằng chứng việc: \n
     - Đã được đào tạo về qui trình của dự án (project defined processes)\n
     -Tuân thủ các qui trình liên quan đến vị trí công việc của mình (số lượng non-compliance trong phạm vi cho phép, được qui định \
-     cho từng dự án cụ thể). Việc tuân thủ tốt về qui trình ở ít nhất 2 dự án mà tester đã tham gia sẽ là bằng chứng tốt cho việc pass slot này.", level: "1", competency_id: "5", slot_id: 2 },
+     cho từng dự án cụ thể). Việc tuân thủ tốt về qui trình ở ít nhất 2 dự án mà tester đã tham gia sẽ là bằng chứng tốt cho việc pass slot này.", level: 1, competency_id: "5", slot_id: 2 },
   { desc: "Demonstrate the ability to run simple scripts (like maven, bash scripts) to build software system for testing.",
     evidence: "Có bằng chứng chạy script đơn giản để có thể build ứng dụng phục vụ cho việc test.\n
-    Căn bản: copy / move / delete files, setup environment variables, thay đổi các cấu hình (configuration files)", level: "1", competency_id: "5", slot_id: 3 },
+    Căn bản: copy / move / delete files, setup environment variables, thay đổi các cấu hình (configuration files)", level: 1, competency_id: "5", slot_id: 3 },
   { desc: "Know about some alternatives to popular and standard tools that are required by the current position.",
     evidence: "- Kể tên  và những chức năng căn bản của một số tool (được sử dụng rộng rãi / nổi tiếng), và có thể đưa ra một vài so sánh \
     với tool hiện tại đang dùng. Ít nhất nên có thể kể thêm 1 tool, thuộc tất cả các thể loại sau: Automation testing tools, version \
-    control system, bug tracking system.", level: "1", competency_id: "5", slot_id: 5 },
+    control system, bug tracking system.", level: 1, competency_id: "5", slot_id: 5 },
   { desc: "Able to understand important non-functional requirements (security, concurrency & capacity, performance, reliability, \
     maintainability, usability, documentation) and able to reflect those requirements in testing under supervision.",
     evidence: "Hiểu được ý nghĩa của những yêu cầu non-functional chính như liệt kê như trong slot, biết được thế nào thì được gọi là \
-               đạt yêu cầu / không đạt yêu cầu. Khi được hướng dẫn thì có thể hiện thực được những yêu cầu này vào testing", level: "1", competency_id: "5", slot_id: 4 },
+               đạt yêu cầu / không đạt yêu cầu. Khi được hướng dẫn thì có thể hiện thực được những yêu cầu này vào testing", level: 1, competency_id: "5", slot_id: 4 },
   { desc: "Able to understand important concepts, techniques about databases/SQL and able to apply for testing activities",
     evidence: "Để pass slot này, tester cần có bằng chứng của việc:\n
     + Hiểu được sự khác biệt của các loại database khác nhau\n
@@ -484,7 +484,7 @@ slot_create = [
     + Hiểu được sự khác biệt giữa datatable, keys và Index.\n
     + Có thể viết các câu SQL đơn giản phục vụ cho việc truy vấn dữ liệu phục vụ cho việc testing.\n
     Tester cần có bằng chứng cho việc đã truy vấn các loại dữ liệu từ database và so sánh dữ liệu đã truy vấn với dữ liệu được \
-    hiển thị trên giao diện của ứng dụng (có bằng chứng ở ít nhất 2 dự án)", level: "2", competency_id: "5", slot_id: 1 },
+    hiển thị trên giao diện của ứng dụng (có bằng chứng ở ít nhất 2 dự án)", level: 2, competency_id: "5", slot_id: 1 },
   { desc: "Basic understanding of file management, process management, memory management, cpu management in Windows and Linux. ",
     evidence: "Yêu cầu cả trên Windows và Linux, phải biết những thứ sau:\n
     - Biết được trong hệ điều hành có những file / folder nào, mục đích chính của chúng dùng để làm gì → để khi cần lấy file, \
@@ -495,10 +495,10 @@ slot_create = [
     - Biết sơ qua các loại memory như main memory, swap, page, cache memory, biết cách tìm thông tin memory trong hệ thống như thế nào
     - Có kiến thức cơ bản về CPU, như tốc độ CPU là gì, cache là gì, tìm những thông tin này ở đâu trong hệ điều hành, hệ điều hành phân \
     phát CPU cho các process như thế nào (mức độ căn bản)
-    → slot này giúp tester hiểu được sự tương tác giữa ứng dụng và hệ diều hành ở mức độ căn bản làm nền tãng quan trọng cho hoạt động testing", level: "2", competency_id: "5", slot_id: 2 },
+    → slot này giúp tester hiểu được sự tương tác giữa ứng dụng và hệ diều hành ở mức độ căn bản làm nền tãng quan trọng cho hoạt động testing", level: 2, competency_id: "5", slot_id: 2 },
   { desc: "Able to understand software system specification",
     evidence: "- Có khả năng đọc hiểu các tài liệu đặc tả (Software Requirements Specification, Use Cases, High Level Design Specification,..) \
-   bóc tách được các yêu cầu chức năng và phi chức năng, các risks, assumptions nhằm phục vụ hiệu quả cho các hoạt động testing", level: "2", competency_id: "5", slot_id: 3 },
+   bóc tách được các yêu cầu chức năng và phi chức năng, các risks, assumptions nhằm phục vụ hiệu quả cho các hoạt động testing", level: 2, competency_id: "5", slot_id: 3 },
   { desc: "Promote efficient and effective communication by using a common vocabulary for software testing",
     evidence: "+ Không sử dụng nhầm lẫn các khái niệm căn bản nhất về software testing:
     Testing vs Debugging
@@ -510,13 +510,13 @@ slot_create = [
     + Giải thích một cách thuyết phục cho người khác về lý do tại sao phải thực hiện các hoạt động software testing trong dự án. Mô tả được \
      một cách chính xác và chi tiết các hoạt động test trong test process.
     + Có bằng chứng về việc sử dụng chính xác các thuật ngữ cơ bản về software testing trong ít nhất 1 dự án. Nếu bị khách hàng hay đồng nghiệp \
-    complain về việc không dùng đúng thuật ngữ software testing --> Phản ví dụ cho slot này", level: "1", competency_id: "6", slot_id: 1 },
+    complain về việc không dùng đúng thuật ngữ software testing --> Phản ví dụ cho slot này", level: 1, competency_id: "6", slot_id: 1 },
   { desc: "Understand fundamental concepts of software testing",
     evidence: "- Nắm được mục đích của Test Plan 
     - Hiểu được pros and cons của các Test Approaches khác nhau (quan trọng nhất là Test types and Test Levels được áp dụng vào dự án)  
     - Hiểu được cấu trúc của một test report tốt 
     - Hiểu được sự ảnh hưởng của configuration management đối với hoạt động testing 
-    Nếu đã từng tham gia vào quá trình Create / Update hoặc review Test Plan and / or Test Report ờ ít nhất 1 dự án được xem là bằng chứng để pass slot này", level: "1", competency_id: "6", slot_id: 2 },
+    Nếu đã từng tham gia vào quá trình Create / Update hoặc review Test Plan and / or Test Report ờ ít nhất 1 dự án được xem là bằng chứng để pass slot này", level: 1, competency_id: "6", slot_id: 2 },
   { desc: "Demonstrate understanding of how different development and testing practices, and different constraints on testing may apply in \
     optimizing testing to different contexts",
     evidence: "- Hiểu được ngữ cảnh của dự án (industry domain, development methodology) và mối quan hệ giữa các hoạt động phát triển phần\
@@ -525,7 +525,7 @@ slot_create = [
                 system mà dự án sẽ phát triển. 
                - Hiểu và xác định được các hoạt động test cần thực hiện vào bất kỳ giai đoạn nào của dự án (bao gồm cả giai đoạn maintenance)
                - Việc tham gia / đóng góp ý kiến cải tiến qui trình testing của dự án / công ty và được EPG đồng ý chỉnh sửa là bằng chứng để pass \
-               slot này.", level: "1", competency_id: "6", slot_id: 3 },
+               slot này.", level: 1, competency_id: "6", slot_id: 3 },
   { desc: "Understand the value that software testing brings to stakeholders",
     evidence: "- Giải thích rõ ràng, xúc tích giá trị của hoạt động testing đang thực hiện trong dự án với bất kỳ đối tượng nào bên trong và \
     bên ngoài dự án bao gồm khách hàng của dự án (Ví dụ 1: dự án vào giai đoạn UAT, khách hàng không involve vào hoạt động test như kế hoạch \
@@ -533,24 +533,24 @@ slot_create = [
      pass slot này. Ví dụ 2: Developer không thực hiện hoạt động Unit/Component testing hay Integration Testing vì không hiểu giá trị của các \
      hoạt động test này, giải thích và thuyết phục được developers thực hiện Unit Testing, Integration Testing --> 1 bằng chứng khác cho slot này) 
     - Giải thích được giá trị của việc dùng / bảo trì RTM đối với hoạt động testing. Việc cập nhật tài liệu RTM trong quá trình thực hiện các hoạt \
-    động test là bằng chứng của slot này.", level: "2", competency_id: "6", slot_id: 1 },
+    động test là bằng chứng của slot này.", level: 2, competency_id: "6", slot_id: 1 },
   { desc: "Appreciate how testing activities and work products align with project objectives, measures and targets",
     evidence: "- Nắm được project objectives, measures và targets của dự án như (Deliverables, Release schedule, Defect Density, Defect Leakage, Test \
     Coverage,..) từ đó tìm ra cách thức thực hiện các hoạt động test (bao gồm việc thiết kế test cases, test procedures, execute test cases, report \
      defects) nhằm giúp dự án đạt được các objectives, measures và target. Để pass được slot này cần đảm bảo không có release nào của dự án bị trễ \
-     deadline do việc chậm trễ của các hoạt động test.", level: "2", competency_id: "6", slot_id: 2 },
+     deadline do việc chậm trễ của các hoạt động test.", level: 2, competency_id: "6", slot_id: 2 },
   { desc: "Determine the appropriate types of functional testing to be performed.",
     evidence: "- Xác định và lựa chọn đúng loại functional testing cần thực hiện dựa vào ngữ cảnh của dự án (Time, scope, cost, risk, \
     quality,..) nhằm đạt được các mục tiêu về quality như defect density, số lượng defect, defect leakage. Ví dụ như xác định được \
     phạm vi / mức độ / effort để thực hiện regression test / confirmation test khi có sự thay đổi trên software system (defects fixing, \
      change requests, migration,..).
-    - Xác định được mức độ / effort cho việc thực hiện smoke testing / sanity testing trước khi release", level: "2", competency_id: "6", slot_id: 3 },
+    - Xác định được mức độ / effort cho việc thực hiện smoke testing / sanity testing trước khi release", level: 2, competency_id: "6", slot_id: 3 },
   { desc: "Determine the proper prioritization of the testing activities based on the information provided by the risk analysis.",
     evidence: " - Biết dựa vào các rủi ro (project and product risks) để xác định độ ưu tiên của: 
     + Test conditions (functions / features nào ưu tiến test trước) 
     + Test cases generation và đánh độ ưu tiên của các test cases 
     Ví dụ dự án gần đến dealines, thời gian test còn lại không nhiều thì cần thực hiện test tính năng nào trước, tính năng nào sao để đảm \
-    bảo defect leakage là thấp nhất?", level: "2", competency_id: "6", slot_id: 4 },
+    bảo defect leakage là thấp nhất?", level: 2, competency_id: "6", slot_id: 4 },
   { desc: "Explain the benefits and drawbacks of independent testing",
     evidence: "Giải thích được lợi ích và nguy cơ của các cách thức tổ chức hoạt động testing trong dự án / công ty bao gồm các mức độ sau: 
     + Developer test code do chính họ khác viết ra 
@@ -559,7 +559,7 @@ slot_create = [
     + Có team QC độc lập sẽ thực hiện hoạt động test app / system cho tất cả các dự án khác nhau  trong công ty 
     + Công ty bên ngoài làm dịch vụ test app / system cho các dự án khác nhau trong công ty 
     Ví dụ: khách hàng không muốn có vị trí QC trong dự án mà yêu cầu developer test --> có thể giải thích với khách hàng những nguy cơ có \
-    thể có khi developer test app / system do họ viết ra (tính chủ quan cao)", level: "1", competency_id: "7", slot_id: 1 },
+    thể có khi developer test app / system do họ viết ra (tính chủ quan cao)", level: 1, competency_id: "7", slot_id: 1 },
   { desc: "Identify factors that influence the effort related to testing and explain the difference between two estimation techniques: the \
     metrics-based technique and the expert-based technique",
     evidence: "- Xác định được các yếu tố ảnh hưởng đến testing effort (test iterations, reporting time, waiting time until developers finish \
@@ -567,12 +567,12 @@ slot_create = [
                - Trong ngữ cảnh cụ thể của dự án mình đang làm, có thể xác định được khi nào cần dùng kỹ thuật estimate dựa trên các số liệu (historical \
                 data), khi nào cần dùng kỹ thuật estimate dựa trên ý kiến chuyên gia (expert-based)
                Khi được leader / manager / customer hỏi về estimate của 1 hay nhiều hoat động test --> có thể break down / giải thích một cách thuyết phục \
-               tại sao estimate như thế.", level: "1", competency_id: "7", slot_id: 2 },
+               tại sao estimate như thế.", level: 1, competency_id: "7", slot_id: 2 },
   { desc: "Identify the testing tasks at test levels or/and test phases and perform task estimation (under supervision)",
     evidence: "- Xác định được các công việc cụ thể cần làm trong mỗi test level. Ví dụ như trong giai đoạn làm System Test thì cần làm gì? Trong giai \
     đoạn UAT thì cần làm gì?. 
     - Có thể breakdown các công việc thành các công việc nhỏ và chi tiết hơn, từ đó thực hiện việc estimate chính xác cho các công việc này \
-    (thông qua việc vận dụng các estimate techniques hợp lý, +/-10%)", level: "1", competency_id: "7", slot_id: 3 },
+    (thông qua việc vận dụng các estimate techniques hợp lý, +/-10%)", level: 1, competency_id: "7", slot_id: 3 },
   { desc: "Differentiate between various test strategies",
     evidence: "Phân biệt được các test strategies khác nhau, trả lời được các câu hỏi sau một cách rõ ràng và chính xác:  
     - Test objetives của dự án là gì?  (ví dụ như: test coverage, #defect trên từng giai đoạn của dự án, Defect Density, Defect Leakage,..)\
@@ -580,7 +580,7 @@ slot_create = [
     - Dự án cần thực hiện test levels nào? Tại sao cần thực hiện test levels đó? Mỗi test levels (Unit Testing, Integration Testing In Small \
      and In Large, System Testing, UAT) có mục tiêu như thế nào? Mục tiêu này góp phần như thế nào để đạt được Test Objectives? 
     - Các test types nào cần thực hiện? Tại sao lại thực hiện các test types nào? 
-    - What are methods to conduct testing activities?", level: "1", competency_id: "7", slot_id: 4 },
+    - What are methods to conduct testing activities?", level: 1, competency_id: "7", slot_id: 4 },
   { desc: "Identify Entry and Exit criteria for testing activities at given projects.",
     evidence: "- Xác định được các điều kiện đầu vào (cần và đủ để 1 hoạt động test nào đó của dự án được tiến hành). Nếu developer giao ứng \
     dụng cứ thế test mà không kiểm tra điều kiện đầu vào thì không thể pass slot này được. QC chỉ tiến hành các hoạt động test khi ứng dụng \

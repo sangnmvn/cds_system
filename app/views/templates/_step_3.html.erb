@@ -4,8 +4,6 @@
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 
 <div class="row"  style="justify-content: center;">
-<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span> Success !</div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
     <div class="col-lg-6">
         <%= form_with class: "step3 form-add-template" do %>
         <div class="row">
@@ -22,7 +20,8 @@
                 <label>Competency: </label>
             </div>
             <div class="col-sm-8">
-                <%= select_tag "type", options_from_collection_for_select(competencies, :id, :name),onchange: "checkDataDesc()", class: 'form-control', id: "selectCompetency" %>
+                <select class="form-control" onchange= "checkDataDesc()" id= "selectCompetency">
+                </select>
             </div>
             </div>
             <br>
@@ -126,8 +125,3 @@
         </div>
     </div>
 </div>
-<%# <div class="alert alert-success" id="success-alert">
-       <button type="button" class="close" data-dismiss="alert">x</button>
-       <strong>Success! </strong>
-       Product have added to your wishlist.
-</div> %>

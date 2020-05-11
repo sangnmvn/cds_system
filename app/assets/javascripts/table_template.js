@@ -1,20 +1,13 @@
 $(document).ready(function () {
   var templateId = 1;
+  loadCompetency(templateId);
   loadSlotsinCompetency();
   checkSlotinTemplate(templateId);
   $('#btnEdit').attr('disabled', true)
-  var table = $('#table_slot').DataTable({
+  $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
     "order": [[0, 'asc']]
-  });
-  $(".btnUp").click(function () {
-    var id = $(this).closest('tr').attr('value');
-    moveRowbyAjax(-1);
-  });
-  $(".btnDown").click(function () {
-    var id = $(this).closest('tr').attr('value');
-    moveRowbyAjax(1);
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
@@ -28,19 +21,18 @@ $(document).ready(function () {
     var presentId = $("#hideIdSlot").html();
     $("#hideIdSlot").html("");
     if (presentId == "")
-      addNewSlot(desc,evidence,level,competencyId,nameCompetency);
+      addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId);
     else
-      updateSlot(desc,evidence,level,competencyId,presentId);
+      updateSlot(desc,evidence,level,competencyId,presentId,templateId);
     $("#descSlot").val("");
     $("#evidenceSlot").val("");
     loadSlotsinCompetency();
-    changeBtnSave("-1")
-    checkSlotinTemplate(templateId)
+    changeBtnSave(-1)
   });
   $("#table_slot").on('click', '.btnDel', function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
-    delSlot(id,tr);
+    delSlot(id,tr,templateId);
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
     $("#evidenceSlot").val("")
@@ -52,13 +44,8 @@ $(document).ready(function () {
     $("#evidenceSlot").val(tr[2].textContent);
     chooseSelect("selectLevel",tr[0].textContent);
     $("#hideIdSlot").html(id);
-    checkSlotinTemplate(templateId);
-    // $("#success-alert").dialog();
-    // $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
-    //   $("#success-alert").alert('close');
-    // });
   });
-  changeBtnSave("-1");
+  changeBtnSave(-1);
   $("#table_slot").removeClass("dataTable")
   $('.dataTables_length').attr("style", "display:none");
 
@@ -68,6 +55,7 @@ $(document).ready(function () {
   })
   $('#btnEnable').click(function() {
     finnish(templateId);
+    $('#messageModal').modal('hide')
   })
 
   $("#txtSearch").keypress(function(){
@@ -91,7 +79,7 @@ function loadSlotsinCompetency(search) {
   $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
   $.ajax({
     type: "GET",
-    url: "/slots/load_slot",
+    url: "/slots/load",
     data: {
       id: id, //truyền id competency
       search: search
@@ -141,10 +129,10 @@ function fails(content) {
 }
 
 
-function addNewSlot(desc,evidence,level,competencyId,nameCompetency) {
+function addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId) {
   $.ajax({
     type: "GET",
-    url: "/slots/new_slot",
+    url: "/slots/new",
     data: {
       desc: desc,
       evidence: evidence,
@@ -152,20 +140,21 @@ function addNewSlot(desc,evidence,level,competencyId,nameCompetency) {
       competency_id: competencyId
     },
     dataType: "json",
-    success: function (response) {
+    success: function () {
       success("Add new slot to " + nameCompetency + " is ");
       loadSlotsinCompetency();
+      checkSlotinTemplate(templateId)
     },
-    error: function () {
+    error: function (response) {
       fails("Add new slot to " + nameCompetency + " is ");
     }
   });
 }
 
-function updateSlot(desc,evidence,level,competencyId,presentId) {
+function updateSlot(desc,evidence,level,competencyId,presentId,templateId) {
   $.ajax({
     type: "GET",
-    url: "/slots/update_slot",
+    url: "/slots/update",
     data: {
       desc: desc,
       evidence: evidence,
@@ -177,6 +166,7 @@ function updateSlot(desc,evidence,level,competencyId,presentId) {
     success: function (response) {
       success("Update slot is ");
       loadSlotsinCompetency();
+      checkSlotinTemplate(templateId)
     },
     error: function () {
       fails("Update slot is ");
@@ -184,7 +174,7 @@ function updateSlot(desc,evidence,level,competencyId,presentId) {
   });
 }
 
-function delSlot (id,tr){
+function delSlot (id,tr,templateId){
   bootbox.confirm({
 		message: "Are you sure want to delete this slot?",
 		buttons: {
@@ -200,7 +190,7 @@ function delSlot (id,tr){
 		callback: function (result) {
 			if (result) {
 				$.ajax({
-					url: "/slots/delete_slot",
+					url: "/slots/delete",
 					data: {
             id: id
 					},
@@ -208,7 +198,7 @@ function delSlot (id,tr){
 					success: function (response) {
             success("Delete slot is");
             $("#table_slot").dataTable().fnDeleteRow(tr);
-            checkSlotinTemplate(1); //check lại button Finnish
+            checkSlotinTemplate(templateId)
 					},
 					error: function () {
 						fails("Delete slot is");
@@ -219,7 +209,7 @@ function delSlot (id,tr){
 	});
 }
 function  changeBtnFinish(direction) {
-  if(direction == "-1")
+  if(direction == -1)
   {
     $("#btnFinish").attr("disabled", true);
     $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
@@ -231,7 +221,7 @@ function  changeBtnFinish(direction) {
   }
 }
 function  changeBtnSave(direction) {
-  if(direction == "-1")
+  if(direction == -1)
   {
     $("#addSlot").attr("disabled", true);
     $("#addSlot").removeClass("btn-primary").addClass("btn-secondary")
@@ -251,7 +241,7 @@ function checkSlotinTemplate (templateId){
     },
     dataType: "json",
     success: function (response) {
-      changeBtnFinish(response);
+      changeBtnFinish(parseInt(response));
     }
   });
 }
@@ -262,9 +252,9 @@ function chooseSelect(nameSelect,value) {
 }
 function checkDataDesc() {
   if($("#descSlot").val())
-    changeBtnSave("1")
+    changeBtnSave(1)
   else
-    changeBtnSave("-1")
+    changeBtnSave(-1)
 }
 function finnish (templateId)
 {
@@ -277,7 +267,7 @@ function finnish (templateId)
     dataType: "json",
     success: function (response) {
       success("change status this template is");
-      changeBtnFinish("-1")
+      changeBtnFinish(-1)
     },
     error: function () {
       fails("change status this template is");
@@ -326,6 +316,24 @@ function moveRow (id,row_id, direction,table){
     },
     error: function () {
       fails("Move ");
+    }
+  });
+}
+
+function loadCompetency (templateId)
+{
+  $.ajax({
+    type: "GET",
+    url: "/slots/load_competency",
+    data: {
+      template_id: templateId
+    },
+    dataType: "json",
+    success: function (response) {
+      $(response).each(
+        function (i, e) { //duyet mang doi tuong
+          $("<option value='" + e.id + "'/>").html(e.name).appendTo("#selectCompetency");
+        });
     }
   });
 }
