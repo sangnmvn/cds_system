@@ -68,14 +68,14 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           addData.push('<div style="text-align:right">'+ a +'</div>');
           addData.push(response.name);
           addData.push(response.status_group);
-          addData.push('<p style="text-align:right">0</p>');
+          addData.push('<div style="text-align:right">0</div>');
           addData.push(response.desc);
           addData.push(
             '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit.png"></a> \
             <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
             <img border="0" src="/assets/Delete.png"></a> \
-            <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
             <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
           );
           $("#modalAdd .form-add-group")[0].reset();
@@ -173,17 +173,18 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
           '" class="selectable" name="checkbox"></div>'
 
               );
-              updateData.push(row_id+1);
+              var a=row_id+1;
+              updateData.push('<div style="text-align:right">'+ a +'</div>');
               updateData.push(response.name);
               updateData.push(response.status_group);
-              updateData.push("0");
+              updateData.push('<div style="text-align:right">0</div>');
               updateData.push(response.desc);
               updateData.push(
                 '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
                 <img border="0" src="/assets/edit.png"></a> \
                 <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
                 <img border="0" src="/assets/Delete.png"></a> \
-                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="' +response.id +'" href="show_privileges_path('+response.id +')" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon key_icon" data-toggle="modal" data-target="#modalPrivilege" data-id="' +response.id +'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
                 <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
               );
 

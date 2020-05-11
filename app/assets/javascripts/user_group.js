@@ -355,11 +355,9 @@ function privilegeJS() {
         $(this).closest('tr').css('background-color', "pink");
       } else {
         
-        if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-          $(this).closest('tr').css('background-color', "#cfd5ea");}
-          else{
+        
             $(this).closest('tr').css('background-color', "#E9ebf5");
-          }
+      
         $(`#modalPrivilege .selectAll1`).prop("checked", false)
       }
       if ($(`#modalPrivilege .table_left tbody :checkbox:checked`).length == 0) {
@@ -377,11 +375,9 @@ function privilegeJS() {
         $(this).closest('tr').css('background-color', "pink");
       } else {
         
-        if (parseInt($(this).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-          $(this).closest('tr').css('background-color', "#cfd5ea");}
-          else{
+       
             $(this).closest('tr').css('background-color', "#E9ebf5");
-          }
+         
         $(`#modalPrivilege .selectAll2`).prop("checked", false)
       }
       if ($(`#modalPrivilege .table_right tbody :checkbox:checked`).length == 0) {
@@ -395,12 +391,12 @@ function privilegeJS() {
       $(`#modalPrivilege .table_left tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
         $(`#modalPrivilege .table_left tbody tr`).css('background-color', "pink")
-        $(`#modalPrivilege .table_left tbody tr:nth-of-type(odd) th`).css('background-color', "#cfd5ea");
-        $(`#modalPrivilege .table_left tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
+      
+        $(`#modalPrivilege .table_left tbody tr:nth-of-type(even) th`).css('background-color', "#cfd5ea");
         to_right_button(1)
       } else {
         
-        $(`#modalPrivilege .table_left tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
+     
         $(`#modalPrivilege .table_left tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_right_button(0)
       }
@@ -409,11 +405,11 @@ function privilegeJS() {
       $(`#modalPrivilege .table_right tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
         $(`#modalPrivilege .table_right tbody tr`).css('background-color', "pink")
-        $(`#modalPrivilege .table_right tbody tr:nth-of-type(odd) th`).css('background-color', "#cfd5ea");
-        $(`#modalPrivilege .table_right tbody tr:nth-of-type(even) th`).css('background-color', "#E9ebf5");
+      
+        $(`#modalPrivilege .table_right tbody tr:nth-of-type(even) th`).css('background-color', "#cfd5ea");
         to_left_button(1)
       } else {
-        $(`#modalPrivilege .table_right tbody tr:nth-of-type(odd)`).css('background-color', "#cfd5ea");
+
         $(`#modalPrivilege .table_right tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_left_button(0)
       }
@@ -437,11 +433,9 @@ function LeftToRight(group_id) {
     $(`#modalPrivilege .${title}#${name}`).insertAfter($(`#modalPrivilege .table_right tbody .privilege-name.${title}`).parent('tr'))
     $(`#modalPrivilege .selectAll1`).prop("checked", false)
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false)
-    if (parseInt( $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-      $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#cfd5ea");}
-      else{
+   
         $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
-      }
+        $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('th').css('background-color', "#cfd5ea");
     
   
     to_right_button(0)
@@ -463,7 +457,7 @@ function LeftToRight(group_id) {
     num += 1
   })
   if ($(`#modalPrivilege .table_left tbody :checkbox`).length == 0 && $(`.table_left .notice`).length == 0) {
-    $(`#modalPrivilege .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+    $(`#modalPrivilege .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
     $(`#modalPrivilege .table_right tbody .notice`).remove()
   }
   if ($(`#modalPrivilege .table_right tbody :checkbox:checked`).length > 0) {
@@ -484,11 +478,9 @@ function RightToLeft(group_id) {
     $(`#modalPrivilege .selectAll2`).prop("checked", false)
     
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false)
-    if (parseInt( $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').attr('id').split('_')[1]) % 2 == 0){
-      $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#cfd5ea");}
-      else{
+  
         $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
-      }
+        $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('th').css('background-color', "#cfd5ea");
     to_left_button(0)
     if ($(`#modalPrivilege .table_right .${title}`).length == 1) {
       $(`#modalPrivilege .table_right .privilege-name.${title}`).closest('tr').remove()
@@ -508,7 +500,7 @@ function RightToLeft(group_id) {
     num += 1
   })
   if ($(`#modalPrivilege .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`).length == 0) {
-    $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+    $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
     $(`#modalPrivilege .table_left tbody .notice`).remove()
   }
   if ($(`#modalPrivilege .table_left tbody :checkbox:checked`).length > 0) {
@@ -570,12 +562,12 @@ function privilegeAjax() {
               if (old_name.includes(v.TitleName) == false) {
                 $(`#modalPrivilege .table_${key} tbody`).append(`<tr><th class="privilege-name ${v.title_privilege_id}" colspan=3 style="text-align: left;">${v.TitleName}</th></tr>`)
               }
-              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
               old_name.push(v.TitleName)
               num += 1
             })
             if (value != null && value.length == 0) {
-              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
             }
           }
           if (key == "right") {
@@ -583,27 +575,27 @@ function privilegeAjax() {
             var num = 1
             $(value).each(function (k, v) {
               if (old_name.includes(v.TitleName) == false) {
-                $(`#modalPrivilege .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_privilege_id}" colspan=3 style="text-align: left;">${v.TitleName}</th></tr>`)
+                $(`#modalPrivilege .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_privilege_id}" style="background-color:#cfd5ea" colspan=3 style="text-align: left;">${v.TitleName}</th></tr>`)
               }
-              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.privilege_id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" value="${v.privilege_id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_privilege_id}" id="${group_id}_${v.privilege_id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.privilege_id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
               old_name.push(v.TitleName)
               num += 1
             })
             if (value != null && value.length == 0) {
-              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
             }
           }
           $(`#modalPrivilege`).on('click', `#to_left`, function () {
             LeftToRight(group_id)
             if ($(`#modalPrivilege .table_left tbody :checkbox`).length == 0 && $(`.table_left .notice`).length == 0) {
-              $(`#modalPrivilege .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+              $(`#modalPrivilege .table_left tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
               $(`#modalPrivilege .table_right tbody .notice`).remove()
             }
           })
           $(`#modalPrivilege`).on('click', `#to_right`, function () {
             RightToLeft(group_id)
             if ($(`#modalPrivilege .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`).length == 0) {
-              $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" colspan=3>No data available in table</th></tr>')
+              $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name"style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
               $(`#modalPrivilege .table_left tbody .notice`).remove()
             }
           })
@@ -630,6 +622,7 @@ function save_group_privileges(group_id, arr) {
     },
     dataType: "json",
     success: function (response) {
+      $("#modalPrivilege").modal("hide");
       success()
     },
     error: function (response) {
