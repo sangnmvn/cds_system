@@ -48,17 +48,20 @@ $(document).on("click", "#btn-add-competency", function () {
           table = $("#table_add_competency").DataTable();
           table.row(index).data([Number(index)+1,response.name,response.type,response.desc,
           '<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+response.id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+response.id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+response.id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+response.id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-trash icon" style="color:red"></i></a> \
           </td>']).draw();
           $('.btn-save-compentency').prop("disabled", true);
           // reset value 
           $(".form-add-competency #competency_id").val('');
           $(".form-add-competency #competency_index").val('');
           // show all icon
-          $('#table_add_competency tr td .icon').show();
+          // $('#table_add_competency tr td .icon').show();
+          // $('#table_add_competency tr td a').addClass(["btnUp","btnDown","btn-delete-competency"]);
+          // $('#table_add_competency tr td a:nth-child(1)').addClass("btnUp");
+          $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
           success("Competency '" + name + "' is updated");
@@ -76,10 +79,10 @@ function addCompetency(id,name,type,desc){
   length = table.rows()[0].length;
   table.row.add([length+1,name,type,desc,
     '<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-trash icon" style="color:red"></i></a> \
           </td>'
       ]).draw();
 }
@@ -120,7 +123,10 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
             $(".form-add-competency #desc").val(response.desc);
             $(".form-add-competency #competency_index").val(index);
             $('.btn-save-compentency').prop("disabled", false);
-            $('#table_add_competency tr td .icon').hide();
+            // $('#table_add_competency tr td .icon').hide();
+            $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-delete-competency"]);
+            $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
+            // $('#table_add_competency tr:nth-child(1) td a').addClass("btnUp");
             success("Load Data Success");
           } else {
             fails("Load Data Fail");
@@ -267,10 +273,10 @@ function loadDataCompetencies(id) {
             }
           })
           .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+e.id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+e.id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+e.id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+e.id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-trash icon" style="color:red"></i></a> \
           </td>',
           ])
           .draw();
@@ -296,8 +302,11 @@ function disableButtonMove(){
   $('#table_add_competency tr td .btnUp').show();
   $('#table_add_competency tr td .btnDown').show(); 
   if (length >= 1) {
-    $('#table_add_competency tr:nth-child(1) td .btnUp').hide();
-    $('#table_add_competency tr:nth-child('+length+') td .btnDown').hide();
+    $('#table_add_competency tr:nth-child(1) td a').removeClass("btnUp");
+    $("#table_add_competency tr:nth-child(1) td .fa-arrow-circle-up").css("color", "#4d4f4e");
+
+    $('#table_add_competency tr:nth-child('+length+') td a').removeClass("btnDown");
+    $('#table_add_competency tr:nth-child('+length+') td .fa-arrow-circle-down').css("color", "#4d4f4e");
   }
 }
 
