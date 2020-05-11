@@ -24,6 +24,7 @@
 
 //= link table_template.css
 //= link table_template.js
+//= link table_template_excel.js
 
 //= link font-awesome.min.css
 

@@ -172,3 +172,6 @@ table.dataTable tbody td {
 .filter-page-user {
     padding: 10px ; border: 1px solid #cccccc;;
 }
+.btn-light, .btn-primary, .btn-danger{
+    width: 80px;
+  }

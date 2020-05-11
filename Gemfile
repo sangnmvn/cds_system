@@ -1,8 +1,15 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+#sudo apt-get install libreoffice
 ruby "2.7.1"
 gem "ajax-datatables-rails"
+
+gem 'zip-zip' 
+gem 'axlsx', "~> 1.3.4"
+gem 'axlsx_rails' # Provide templates for the axlsx gem
+gem 'libreconv'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.2", ">= 6.0.2.2"
 # Use mysql as the database for Active Record

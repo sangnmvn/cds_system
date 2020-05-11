@@ -43,3 +43,20 @@ table thead {
 a:hover{
   color: red;
 }
+.notice{
+  text-align: center;
+  font-weight: bold;
+}
+.sort-header{
+  text-decoration: none;
+  color: #fff;
+}
+#alert-success, #alert-danger {
+  position: absolute;
+  z-index: 3400;
+  top: 10%;
+  left: 50%;
+  margin: 0px auto;
+  text-align: center;
+  display: none;
+}

@@ -1,8 +1,8 @@
 <%= javascript_include_tag 'step1', 'data-turbolinks-track': 'reload' %>
 
-<div class="row"  style="justify-content: center;">
+<div class="row" id="step1" style="justify-content: center;">
   <div class="col-lg-6">
-    <%= form_with class: "step1 form-add-template", method: "GET", remote: true do %>
+    <%= form_with class: "step1 form-add-template", method: "GET" do %>
      <div class="row">
       <div class="col-sm-12">
         <div class="col-sm-8" style="text-align: left">
@@ -15,8 +15,12 @@
           <div class="offset-md-1 col-md-2" style="text-align: left">
             <label>Name: (*)</label>
           </div>
-          <div class="col-md-8">
-            <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name' %>
+          <div class="col-md-8 name">
+            <% if @template_edit %>
+              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name', value: @template_edit.name %>
+            <% else %>
+              <%= text_field_tag 'name', nil, class: 'form-control', placeholder: 'Please enter Name' %>
+            <% end %>
             <div class="error"></div>
           </div>
         </div>
@@ -26,8 +30,13 @@
           <div class="offset-md-1 col-md-2" style="text-align: left">
             <label>Role:</label>
           </div>
-          <div class="col-md-8">
-            <%= select_tag "role", options_from_collection_for_select(roles, :id, :name), class: 'form-control' %>
+          <div class="col-md-8 role">
+            <% if @roles_edit %>
+              <%= select_tag "role", options_from_collection_for_select(@roles_edit, :id, :name), class: 'form-control' %>
+            <% else %>
+              <%= select_tag "role", options_from_collection_for_select(roles, :id, :name), class: 'form-control' %>
+            <% end %>
+            <div class="error"></div>
           </div>
        </div>
         <br>
@@ -36,8 +45,12 @@
           <div class="offset-md-1 col-md-2" style="text-align: left">
             <label>Description: </label>
           </div>
-          <div class="col-md-8">
-            <%= text_area_tag 'description', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+          <div class="col-md-8 description">
+            <% if @template_edit %>
+              <%= text_area_tag 'description', @template_edit.description, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+            <% else %>
+              <%= text_area_tag 'description', nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+            <% end %>
             <div class="error"></div>
           </div>
         </div>
@@ -48,7 +61,5 @@
   </div>
 </div>
 
-
-<button class="btn btn-primary next action-button btn-next-template" type="button" value="Next Step" name="next">Next</button>
-<button type="buttton" class="btn btn-primary">Close</button>
-
+<button class="btn btn-primary next action-button step1 btn-next-template" type="button" value="Next step" name="next">Next</button>
+<%= link_to ('<button type="buttton" class="btn btn-primary">Close</button>').html_safe, templates_path, onclick: "return confirm('Are you sure you want to close this?')" %>

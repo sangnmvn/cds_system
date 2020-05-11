@@ -8,20 +8,23 @@
         <div class="row">
           <div class="col-md-12 mx-0">
             <div id="msform">
-              <div class="row ">
-                <div class="col-md-3"></div>
+              <div class="row">
+                <div class="col-md-3 id-template" <%= 'value='+@template_edit.id.to_s+'' if @template_edit%>></div>
                 <div class="col-md-6">
-                  <div class="row steps " style="justify-content: center;">
+                  <div class="row steps" style="justify-content: center;">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step step-active">
                       <span class="col-sm-2 col-md-2 step-symbol"></span>
+                      <span class="col-sm-2 col-md-2"></span>
                       <span class="col-sm-8 col-md-8 step_number">1</span><a href="#">General Information</a>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step">
                       <span class="col-sm-2 col-md-2 step-symbol">>></span>
+                      <span class="col-sm-2 col-md-2"></span>
                       <span class="col-sm-8 col-md-8 step_number">2</span><a href="#">Add Competencies</a>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step">
                       <span class="col-sm-2 col-md-2 step-symbol">>></span>
+                      <span class="col-sm-2 col-md-2"></span>
                       <span class="col-sm-8 col-md-8 step_number">3</span><a href="#">Add Slots</a>
                     </div>
                   </div>
