@@ -16,7 +16,7 @@
   <div class="template-header">
     <span class="title">Templates</span>
     <div class="add-template title">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, add_templates_path, title: "Add a Template") %>
+      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
     </div>
   </div>
   
@@ -38,14 +38,14 @@
         <% @templates.each_with_index do |template,index| %>
         <tr>
           <td class="num"><%= index+1 %></td>
-          <td><%= link_to(template.name, add_templates_path(id: template.id)) %></td>
+          <td><%= link_to(template.name, edit_template_path(template.id), class: "edit_template") %></td>
           <td><%= template.description %></td>
           <td><%= template.role_name %></td>
           <td><%= template.updated_at.strftime("%b %m, %Y") %></td>
           <td><%= template.updated_by %></td>
           <td><%= template.status ? "Enable" : "Disable" %></td>
           <td class="action">
-           <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, add_templates_path(id: template.id), { class: "edit_icon", title: "Edit Template" }) %>
+           <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, edit_template_path(template.id), { class: "edit_template", title: "Edit Template" }) %>
             <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", { class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel" }) %>
             <%= link_to(('<i class="fa fa-file-o icon" style="color:##0066CC"></i>').html_safe, "#", { class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS" }) %>
             <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", { class: "delete_icon", value: template.id, remote: true, title: "Delete Template", "data-id": template.id, "data-toggle": "modal", "data-target": "#modal_warning_close" }) %> 

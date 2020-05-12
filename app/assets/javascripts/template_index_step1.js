@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  checkPrivileges()
   if ($('.template-table tbody tr').length == 0) {
     $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
   }
@@ -7,8 +8,7 @@ $(document).ready(function () {
   checkValidation()
   if ($('#msform .row .id-template').attr('value') === undefined) {
     next_button(0)
-  }
-  else{
+  } else {
     next_button(1)
   }
   postDeleteTemplate()
@@ -46,17 +46,6 @@ function next_button(flag) {
   } else {
     $('.next').prop("disabled", false)
     $('.next').removeClass("btn-secondary").addClass("btn-info")
-  }
-}
-function disabledTemplateStep1(flag) {
-  if (flag == 0) {
-    $('#name').prop("disabled", true)
-    $('#role').prop("disabled", true)
-    $('#discription').prop("disabled", true)
-  } else {
-    $('#name').prop("disabled", false)
-    $('#role').prop("disabled", false)
-    $('#discription').prop("disabled", false)
   }
 }
 
@@ -119,8 +108,7 @@ function postCreateTemplate(name, role, description) {
       $.each(json_response, function (key, value) {
         if ($(`#step1 .${key}`).closest('div').children('.error').length == 0) {
           $(`#step1 .${key}`).closest('div').append(`<div class="error">${key.capitalize()} ${value}</div>`)
-        }
-        else{
+        } else {
           $(`#step1 .${key}`).closest('div').children('.error').html(`${key.capitalize()} ${value}`)
         }
       })
@@ -151,8 +139,7 @@ function applyEditTemplate(id, name, role, description) {
       $.each(json_response, function (key, value) {
         if ($(`#step1 .${key}`).closest('div').children('.error').length == 0) {
           $(`#step1 .${key}`).closest('div').append(`<div class="error">${key.capitalize()} ${value}</div>`)
-        }
-        else{
+        } else {
           $(`#step1 .${key}`).closest('div').children('.error').html(`${key.capitalize()} ${value}`)
         }
         fails("Can't edit template")
@@ -188,6 +175,28 @@ function postDeleteTemplate() {
   })
 }
 
-String.prototype.capitalize = function() {
+function checkPrivileges() {
+  $.ajax({
+    type: "GET",
+    url: "/competencies/check_privileges",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.privileges == "view") {
+        $('#add_template_button').remove()
+        $('.delete_icon').removeAttr("data-target")
+        $('.delete_icon i').css("color", "#000")
+        $('#step1 #name').prop("disabled", true)
+        $('#step1 #role').prop("disabled", true)
+        $('#step1 #description').prop("disabled", true)
+      }
+    },
+  });
+}
+
+//capitalize
+String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 }

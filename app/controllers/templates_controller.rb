@@ -8,6 +8,13 @@ class TemplatesController < ApplicationController
     @templates = Template.joins(:role, :admin_user).select('templates.*, roles.name as role_name, concat(admin_users.first_name," ",admin_users.last_name) as updated_by').order('updated_at desc')
   end
 
+  def new
+    role_ids = Template.pluck(:role_id)
+    @roles = Role.where.not(id: role_ids)
+    @competencies = Competency.all
+    render "add"
+  end
+
   def create
     @template = Template.new(template_params)
     @template.admin_user_id = current_admin_user.id if current_admin_user
@@ -18,6 +25,14 @@ class TemplatesController < ApplicationController
     else
       render json: 'Failed'
     end
+  end
+
+  def edit
+    role_ids = Template.pluck(:role_id)
+    @template = Template.find(params[:id])
+    current_role_id = Template.find_by_id(params[:id]).role_id
+    @roles = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
+    render "add"
   end
 
   def update
@@ -63,20 +78,6 @@ class TemplatesController < ApplicationController
 
     respond_to do |format|
       format.json { render :json => { :filename => output_filename } }
-    end
-  end
-
-  def add
-    # view Add
-    role_ids = Template.pluck(:role_id)
-    @roles = Role.where.not(id: role_ids)
-    @competencies = Competency.all
-
-    # view Edit
-    if params[:id]
-      @template = Template.find(params[:id])
-      current_role_id = Template.find_by_id(params[:id]).role_id
-      @roles = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
     end
   end
 

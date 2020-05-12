@@ -11,7 +11,7 @@
         <%= defined?(content) ? content : "Do you want to redirect to template page ?" %>
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <a href=<%= defined?(content) ? "#" : "../templates" %>><button type="button" class="btn btn-primary">Yes</button></a>
+        <a href=<%= defined?(content) ? "#" : templates_path %>><button type="button" class="btn btn-primary">Yes</button></a>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>
