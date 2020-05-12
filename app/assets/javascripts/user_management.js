@@ -285,6 +285,35 @@ $(document).ready(function () {
     });
   });
 });
+$(document).ready(function () {
+  $("#btn-reset").click(function () {
+    
+    $('#filter-company option[value=all]').attr('selected','selected');
+    company = $("#filter-company").val();
+    
+    $('#filter-project option[value=all]').attr('selected','selected');
+    project = $("#filter-project").val();
+    
+    $('#filter-role option[value=all]').attr('selected','selected');
+    role = $("#filter-role").val();
+    $.ajax({
+      url: "/admin_users/submit_filter",
+      type: "POST",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+        company: company,
+        project: project,
+        role: role
+      },
+      // dataType: "json",
+      // success: function (response) {
+
+      // },
+    });
+  });
+});
 
 function reorder_table_row(data_table) {
   data_table.fnDraw();

@@ -19,47 +19,39 @@ class AdminUsersController < ApplicationController
     if @privilege_array.include? 1
     @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
     else
-      @admin_users2=[]
-      pm = ProjectMember.where(admin_user_id: current_admin_user.id)
-      pm.each {|x|
-        @admin_users2 << AdminUser.joins(:project_members).where(:project_members => { project_id: x.project_id } )
-      }
-      @admin_users=@admin_users2[0]
+      pm = ProjectMember.where(admin_user_id: current_admin_user.id).pluck(:project_id)
+      @admin_users = AdminUser.joins(:project_members).where(project_members: { project_id: pm} )
     end
-    if params["iSortCol_0"].to_i == 1
-      @admin_users = @admin_users.order(:id => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 2
-      @admin_users = @admin_users.order(:first_name => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 3
-      @admin_users = @admin_users.order(:last_name => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 4
-      @admin_users = @admin_users.order(:email => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 5
-      @admin_users = @admin_users.order(:account => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 6
-      @admin_users = @admin_users.order(:role_id => params["sSortDir_0"].to_sym)
-    end
-    if params["iSortCol_0"].to_i == 9
-      @admin_users = @admin_users.order(:company_id => params["sSortDir_0"].to_sym)
-    end
+    case params["iSortCol_0"]
+      when "1"
+        @admin_users = @admin_users.order(id: params["sSortDir_0"].to_sym)
+      when "2"
+        @admin_users = @admin_users.order(first_name: params["sSortDir_0"].to_sym)
+      when "3"
+        @admin_users = @admin_users.order(last_name: params["sSortDir_0"].to_sym)
+      when "4"
+        @admin_users = @admin_users.order(email: params["sSortDir_0"].to_sym)
+      when "5"
+        @admin_users = @admin_users.order(account: params["sSortDir_0"].to_sym)
+      when "6"
+        @admin_users = @admin_users.order(role_id: params["sSortDir_0"].to_sym)
+      when "9"
+        @admin_users = @admin_users.order(company_id: params["sSortDir_0"].to_sym)
+    end  
+
     unless params["sSearch"].empty?
       @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
     end
 
-    unless params["filter-company"] == "all"
+    if params["filter-company"] != "all"
       @admin_users = @admin_users.where("company_id=?", params["filter-company"])
     end
 
-    unless params["filter-role"] == "all"
+    if params["filter-role"] != "all"
       @admin_users = @admin_users.where("role_id=?", params["filter-role"])
     end
 
-    unless params["filter-project"] == "all"
+    if params["filter-project"] != "all"
       if params["filter-project"] == "none"
         list_id_user_project = ProjectMember.left_outer_joins(:admin_user).pluck("admin_users.id") # user have project
         unless list_id_user_project.empty?
@@ -70,96 +62,78 @@ class AdminUsersController < ApplicationController
         @admin_users = @admin_users.where("id in (?)", list_id_user_project)
       end
     end
-    
-    @admin_users.each_with_index { |user, index|
-      begin
-        project_namelist = []
-        project_member_of_user = @project_members.where(admin_user_id: user.id)
-        project_member_of_user.each { |project_member|
-          project_name = @projects.find(project_member.project_id).desc
-          project_namelist.append(project_name)
-        }
-        # end project
-        projects = project_namelist.join(" , ")
-      rescue
-        # end project
-        projects = ""
-      end
-      user.projectss=projects
-    }
- 
+
     final_data = []
-    @admin_users.each_with_index { |user, index|
+    @admin_users.each_with_index do |user, index|
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
-      if $count == 1 and params["iSortCol_0"].to_i == 1
+      if $count == 1 && params["iSortCol_0"].to_i == 1
         current_user_data.push("<p class='number'>#{@admin_users.length-(offset + index + 1)}</p>")
-     
-      elsif $count == 0 and params["iSortCol_0"].to_i == 1
-        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
-       
+      elsif $count == 0 && params["iSortCol_0"].to_i == 1
+        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")  
       else
-      current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
+        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
       end
       current_user_data.push(user.first_name)
       current_user_data.push(user.last_name)
       current_user_data.push(user.email)
       current_user_data.push(user.account)
-
       begin
         role = user.role_id.nil? ? "" : @roles.find(user.role_id).name
       rescue
         next
       end
-
       current_user_data.push(role)
       title = ""
       current_user_data.push(title)
-
-      
-
+      begin
+        project_member_of_user = @project_members.where(admin_user_id: user.id).pluck(:project_id)
+        project_name = Project.all.find(project_member_of_user).pluck(:desc).join(", ")
+        # end project
+      rescue
+        # end project
+        project_name = ""
+      end
+      user.projectss = project_name
       current_user_data.push(user.projectss)
-      
       begin
         company = user.company_id.nil? ? "" : @companies.find(user.company_id).name
       rescue
         next
       end
-
       current_user_data.push(company)
-
       # action
       if @privilege_array.include? 1
-    
-      current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><img border='0' 
-        src='/assets/edit.png'></a> 
-        <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href=''>
-        <img border='0' src='/assets/Delete.png'></a> 
-        <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='#'>
-        <img border='0' src='/assets/Assign_User.png' class='assign_user_img'></a> 
-        <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
+        current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><img border='0' 
+          src='/assets/edit.png'></a> 
+          <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href=''>
+          <img border='0' src='/assets/Delete.png'></a> 
+          <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='#'>
+          <img border='0' src='/assets/Assign_User.png' class='assign_user_img'></a> 
+          <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
       else
         current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}' href='#'>
           <img border='0' src='/assets/Assign_User.png'></a> ")
       end
       final_data.push(current_user_data)
-    }
+    end
    
-    if $count == 1 and params["iSortCol_0"].to_i == 1
+    if $count == 1 && params["iSortCol_0"].to_i == 1
      $count = 0
-    elsif $count == 0 and params["iSortCol_0"].to_i == 1
+    elsif $count == 0 && params["iSortCol_0"].to_i == 1
       $count = 1
     end
 
-    if $count2 == 1 and params["iSortCol_0"].to_i == 8
+    if $count2 == 1 && params["iSortCol_0"].to_i == 8
       final_data.sort! {|a,b| a[8] <=> b[8]}
       $count2 = 0
-    elsif $count2 == 0 and params["iSortCol_0"].to_i == 8
+    elsif $count2 == 0 && params["iSortCol_0"].to_i == 8
       i=1
       final_data.sort! {|a,b| b[8] <=> a[8]}
       final_data.each{|a| 
         a[1]="<p class='number'>#{i}</p>"
-         i+=1}
+        i+=1
+      }
       $count2 = 1
     end
     respond_to do |format|
@@ -324,10 +298,10 @@ class AdminUsersController < ApplicationController
     @roles = Role.all
     @projects = Project.all
     @companies = Company.all
-    
     respond_to do |format|
       format.js
     end
+  
   end
 
   def update
