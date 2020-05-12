@@ -105,14 +105,14 @@ function loadSlotsinCompetency(search) {
         function (i, e) { //duyet mang doi tuong
           if (search) {
             table.fnAddData([
-              e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
               "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
           } else {
             table.fnAddData([
               e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
               "<a class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
-              "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
               "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
           }
@@ -303,10 +303,11 @@ function moveRow(id, row_id, direction, table) {
     },
     dataType: "json",
     success: function (response) {
-      if (response.status == "max")
-        fails("The slot is last in Its level. Move fail")
-      else if (response.status == "min")
-        fails("The slot is first in Its level. Move fail")
+      if (response.status != "success")
+      {
+        $("#contentMessageMove").html("This slot is belonging to level "+ response.status +". Therefore, you cannot move it to another level. Please update its level before doing this action.")
+        $('#messageMove').modal('show')
+      }
       else {
         var num = parseInt(direction);
         current_row_data = table.row(row_id).data();
@@ -354,9 +355,9 @@ function disableButtonUpDown(){
   tables = $("#table_slot").DataTable();
   length = tables.rows().data().length;
   if (length >= 1) {
-    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#4d4f4e')
+    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
     $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
-    $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#4d4f4e')
+    $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#6c757d')
     $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
   }
 }

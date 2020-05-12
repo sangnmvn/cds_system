@@ -53,6 +53,10 @@
 	background-color: #0066CC;
 	
 }
+.head-Warningheader {
+	background-color: #FF9900;
+	
+}
 .button-center{
 	display: flex;
 	align-items: center;
@@ -85,7 +89,10 @@
 .btnAction {
 	margin: 2px;
 }
-
+.divcontent{
+	justify-content: left;
+	text-align: left;
+}
 #table_slot tbody td {
   padding: 5px 10px 5px 10px;   
 }

@@ -31,6 +31,9 @@ class SlotsController < ApplicationController
 
       slot_2 = Slot.find(result[:id])
       slot_2.update(slot_id: temp)
+      result = "success"
+    else
+      result = Slot.find(id_slot).level
     end
     respond_to do |format|
       format.json { render json: { status: result } }
