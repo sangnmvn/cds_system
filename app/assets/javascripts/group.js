@@ -392,6 +392,7 @@ $(document).ready(function () {
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
   float-right" data-toggle="modal"  style="margin-left:5px;width:100px" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
   $(content).insertAfter(".dataTables_filter");
 });
 
