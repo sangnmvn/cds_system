@@ -67,6 +67,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       @group = Group.find(params[:id])
       if @group.update_attribute(:is_delete,true)
+        UserGroup.delete_by(group_id: @group.id)
         status_group = @group.status ? "Enable" : "Disable"
           format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
         else
@@ -97,6 +98,7 @@ class GroupsController < ApplicationController
       id=[]
     @group.each do |group|
       group.update_attribute(:is_delete,true)
+      UserGroup.delete_by(group_id: group.id)
       id << group.id
     end
    

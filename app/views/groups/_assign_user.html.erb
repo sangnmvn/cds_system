@@ -9,16 +9,15 @@
       </div>
       <div class="modal-body">
 				<div class="row">
-				  <div class="col-6 mydiv" style="overflow-x:auto;">
-            <h4>Available Users</h4>
-            <table class="table table-primary table-responsive-sm table-mytable" id="table_left">
+				  <div class="col-5 mydiv" style="overflow-x:auto;">
+            <h5>Available Users</h5>
+            <table class="table table-primary table-responsive-sm table-mytable" id="table_left" style="width:100%">
               <thead>
                 <tr>
                   <td data-orderable="false">No.</td>
                   <td data-orderable="false"><input type="checkbox" id="check_all_choose" value="all" class="mycontrol"/></td>
                   <td>First Name</i></td>
                   <td>Last Name</td>
-                  <td>Email Address</td>
                 </tr>
               </thead>
               <tbody>
@@ -26,22 +25,21 @@
               <p></p>
             </table>
 				  </div>
-				<div class="col-1 button-center mydiv" style="overflow-x:auto;" >
+				<div class="col-2 button-center mydiv" style="overflow-x:auto;" >
             <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
             <p></p>
             <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
           </div>
           
 				<div class="col-5 mydiv"style="overflow-x:auto;" >
-					<h4>Selected Users</h4>
-            <table class="table table-primary table-responsive-sm table-mytable" id="table_right">
+					<h5>Selected Users</h5>
+            <table class="table table-primary table-responsive-sm table-mytable" id="table_right" style="width:100%">
               <thead>
                 <tr>
                   <td data-orderable="false">No.</td>
                   <td data-orderable="false"><input type="checkbox" id="check_all_remove" value="all" class="mycontrol"/></td>
                   <td>First Name</td>
                   <td>Last Name</td>
-                  <td>Email Address</td>
                 </tr>
               </thead>
               <tbody>
@@ -53,8 +51,8 @@
       </div>
       <div class="modal-footer">
         <div class="col-12 p-3 text-center">
-          <button id="save" type="button" class="btn btn-secondary" disabled="disabled">Save</button>
-          <button type="button" class="btn btn-danger close_modal" data-dismiss="modal">Cancel</button>
+          <button id="save" type="button" class="btn btn-primary" disabled="disabled">Save</button>
+          <button type="button" class="btn btn-light border-dark close_modal" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>

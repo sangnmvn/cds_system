@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <!-- Modal Header -->
-      <div class="modal-header head-myheader">
+      <div class="modal-header head-myheader" style="height:50px">
         <h4 class="modal-title" style="text-align: center">Confirm Delete User</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -14,7 +14,7 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-12">
-              <p>Are you sure you want delete user <span class="display_user_account_delete" style="color:red"></span> ?</p>
+              <p>Are you sure you want delete user <span class="display_user_account_delete" style="font-weight: bold;"></span> ?</p>
             </div>
           </div>
           <div class="" style="text-align:center">
@@ -22,7 +22,7 @@
             </div>
         </div>
         <!-- Modal footer -->
-        <div class="modal-footer" style="justify-content: center;">
+        <div class="modal-footer" style="justify-content: center;border-top:0px;">
           <!-- hidden input to contains id-->
           <input type="text" class="delete_id" style="display:none;" name="delete_id"></input>
           <button type="button" class="btn btn-primary" id="btn-modal-delete-user" data-dismiss="modal" onclick="delete_user();">Yes</button>

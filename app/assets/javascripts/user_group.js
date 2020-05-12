@@ -220,10 +220,10 @@ function change_button_right(flag) {
 function change_button_save(flag) {
 	if (flag == 0) {
 		$('#save').attr("disabled", false);
-		$('#save').removeClass("btn-secondary").addClass("btn-info");
+  
 	} else {
 		$('#save').attr("disabled", true);
-		$('#save').removeClass("btn-info").addClass("btn-secondary");
+
 	}
 }
 
@@ -259,7 +259,59 @@ function save() {
 					success: function (response) {
             success("Assign user to this group is ");
             $("#AssignModal").modal('hide');
-            $('.bootbox-confirm').modal('hide');						
+            $('.bootbox-confirm').modal('hide');	
+            var table = $("#table_group").DataTable();
+          var dataLength = table.rows().data().length;
+          for (var i = 0; i < dataLength; i++) {
+            
+            
+            var current_user_id = table.row(i).data()[0]
+            .split("batch_action_item_")[1]
+            .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              updateData.push(
+                '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
+              response.id +
+              '" value="0" \
+            class="collection_selection" name="collection_selection[]">'+
+     
+          '<input type="checkbox" id="group_ids[]" value="' +
+          response.id +
+          '" class="selectable selectable_check" name="checkbox"></div>'
+
+              );
+              var a=row_id+1;
+              updateData.push('<div style="text-align:right">'+ a +'</div>');
+              updateData.push(response.name);
+              updateData.push(response.status_group);
+              updateData.push('<div style="text-align:right">'+response.number+'</div>');
+              updateData.push(response.desc);
+              updateData.push(
+                '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+                <img border="0" src="/assets/edit.png"></a> \
+                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+                <img border="0" src="/assets/Delete.png"></a> \
+                <a class="action_icon key_icon" data-id="'+response.id+'" data-toggle="modal" data-target="#modalPrivilege"  href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+              );
+
+                var delete_whole_row_constant = undefined;
+              var redraw_table = false;
+              table.row(row_id).data(updateData)
+              /*
+              table.fnUpdate(
+                updateData,
+                row_id,
+                delete_whole_row_constant,
+                redraw_table
+              );
+              */ ;
+              break;
+            }
+          }
 					},
 					error: function () {
             fails("Assign user to this group is ");
@@ -290,7 +342,7 @@ function myAjax() {
 					function (i, e) { //duyet mang doi tuong
             //console.log(e);
             $("#table_right").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name, e.email
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name
 						]);
 					}
 				);
@@ -314,7 +366,7 @@ function myAjax() {
           function (i, e) { //duyet mang doi tuong
             console.log(i + ' - ' + e);            
 						$("#table_left").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name, e.email
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name
 						]);
 					}
 				);
@@ -323,7 +375,7 @@ function myAjax() {
 	});
 	$('.user_group_icon').click(function () {
 		$('#save').attr("disabled", true);
-		$('#save').removeClass("btn-info").addClass("btn-secondary");
+	
 		var id = $(this).attr("data-id");
 		//ajax load bảng group
 		$.ajax({
@@ -554,10 +606,10 @@ function to_left_button(flag) {
 function save_button(flag) {
   if (flag == 0) {
     $('.save').prop("disabled", true)
-    $('.save').removeClass("btn-info").addClass("btn-secondary")
+   
   } else {
     $('.save').prop("disabled", false)
-    $('.save').removeClass("btn-secondary").addClass("btn-info")
+
   }
 }
 function privilegeAjax() {
@@ -645,7 +697,7 @@ function save_group_privileges(group_id, arr) {
     dataType: "json",
     success: function (response) {
       $("#modalPrivilege").modal("hide");
-      success()
+      success('The group information has been updated privilege successfully.')
     },
     error: function (response) {
       fails()

@@ -25,7 +25,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#name").after(
-        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
+        '<span class="error">The maximum length of Group Name is 100 characters.</span>'
       );
     }
   }
@@ -81,10 +81,9 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
-          success("Add");
+          success("The new group information has been created successfully.");
           table.row.add(addData);
           table.draw();
-
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -134,7 +133,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#modalEdit #name").after(
-        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
+        '<span class="error">The maximum length of Group Name is 100 characters.</span>'
       );
     }
   }
@@ -158,7 +157,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
           var table = $("#table_group").DataTable();
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
-            debugger;
+            
             
             var current_user_id = table.row(i).data()[0]
             .split("batch_action_item_")[1]
@@ -207,7 +206,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-          success("Edit");
+          success("The group information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#modalEdit #name").after(
@@ -369,7 +368,7 @@ function delete_group() {
 
        }
 
-        success("Delete");
+        success("The group information has been deleted successfully.");
       } else if (response.status == "exist") {
         $(".error").remove();
         $("#modalEdit #name").after(
@@ -393,6 +392,7 @@ $(document).ready(function () {
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
   float-right" data-toggle="modal"  style="margin-left:5px;width:100px" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+
   $(content).insertAfter(".dataTables_filter");
 });
 
@@ -446,7 +446,7 @@ $(document).on("click", "#delete_selected", function () {
            }
         }
       }
-          success("Delete");
+          success("The groups information has been deleted successfully.");
     
     },
   });

@@ -40,7 +40,12 @@ class UserGroupsController < ApplicationController
         UserGroup.create(group_id: id_group, admin_user_id: user)
     }
     end 
-    render json: "1"
+    @group = Group.find(params[:id])
+    number = UserGroup.where(group_id: @group.id).count
+    status_group = @group.status ? "Enable" : "Disable"
+    
+    render :json => {number: number, id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } 
+    
   end
 
   def show_privileges
@@ -55,6 +60,7 @@ class UserGroupsController < ApplicationController
   end
 
   def save_privileges
+    
     group_id = params[:group_id]
     data = params[:data]
     GroupPrivilege.delete_by(group_id: params[:group_id])
@@ -65,6 +71,7 @@ class UserGroupsController < ApplicationController
             GroupPrivilege.create(group_id: group_id, privilege_id: v)
           end
         }
+       
     end
   end
 end

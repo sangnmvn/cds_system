@@ -229,5 +229,10 @@ input.button-add {
 }
 .error {
   color: red;
-  font-size: 2px;
+  font-size: 10px;
+  margin:0 0 0 0;
+  padding: 0 0 0 0;
+}  
+.modal-title {
+  font-size: 18px;
 }
