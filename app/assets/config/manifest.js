@@ -29,4 +29,4 @@
 //= link font-awesome.min.css
 
 //= link template-index.css
-//= link step1.js
+//= link template_index_step1.js

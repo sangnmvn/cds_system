@@ -1,57 +1,93 @@
-table{
+table {
   table-layout: fixed;
 }
-table tbody tr:nth-of-type(odd) {
-  background-color: #C6E2FF;
+
+#template-index tr,
+th,
+td {
+  border: 1px solid #fff;
 }
+
+table tbody tr:nth-of-type(odd) {
+  background-color: #CDD5EA;
+}
+
+table tbody tr:nth-of-type(even) {
+  background-color: #E9EBF5;
+}
+
 table thead {
   text-align: center;
-  background-color: #0066CC;
+  background-color: #4472c4;
   color: #fff;
   font-weight: bold;
 }
 
+.template-header {
+  background-color: #8da8db;
+  color: #fff;
+  font-weight: bold;
+  padding-left: 10px;
+  border: 3px solid #4882bf;
+}
+
+.template-table .description {
+  font-family: Arial, Helvetica, sans-serif;
+  ;
+}
+
 .table td {
-  white-space: normal !important; 
+  white-space: normal !important;
   word-wrap: break-word;
 }
-.action{
-	align-items: center;
-	text-align: center;
-	justify-content: center;
+
+.action {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
 }
-.num{
-  text-align:right;
+
+.num {
+  text-align: right;
 }
-.title{
+
+.title {
   display: inline-block;
   font-weight: bold;
   font-size: 150%;
 }
-.search{
+
+.search {
   display: inline-block;
   float: right;
 }
-.add-template{
+
+.add-template {
   display: inline-block;
   float: right;
   padding-left: 10px;
 }
-.breadcrumb a, .action a{
+
+.add-template button {
+  height: 100%;
+  border: 0;
+  background-color: #8da8db;
+  padding: 0 5px 0 0;
+}
+
+.breadcrumb a,
+.action a {
   text-decoration: none;
+  padding: 0 5px 0 5px;
 }
-a:hover{
-  color: red;
-}
-.notice{
+
+.notice {
   text-align: center;
   font-weight: bold;
 }
-.sort-header{
-  text-decoration: none;
-  color: #fff;
-}
-#alert-success, #alert-danger {
+
+#alert-success,
+#alert-danger {
   position: absolute;
   z-index: 3400;
   top: 10%;

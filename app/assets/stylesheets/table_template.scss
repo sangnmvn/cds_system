@@ -114,3 +114,9 @@ a.disabled {
   pointer-events: none;
   cursor: default;
 }
+
+.status .status_radio{
+	display: inline-block;
+	float: left;
+	padding-right: 35%;
+}

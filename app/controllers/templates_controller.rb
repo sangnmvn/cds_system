@@ -1,40 +1,31 @@
 class TemplatesController < ApplicationController
   layout "system_layout"
-  include TemplatesHelper
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_template
-  helper_method :sort_column, :sort_direction
   FILE_CLEANUP_TIME_IN_SECONDS = 30
 
   def index
-    @roles = Role.all
-    @competencies = Competency.all
-    @templates = Template.joins(:role, :admin_user).select("templates.*, roles.name as role_name, admin_users.email as updated_by").order(sort_column + " " + sort_direction)
+    @templates = Template.joins(:role, :admin_user).select('templates.*, roles.name as role_name, concat(admin_users.first_name," ",admin_users.last_name) as updated_by').order('updated_at desc')
   end
 
-  def new
-    template = Template.new(template_params)
-    template.admin_user_id = current_admin_user.id if current_admin_user
-    if template.invalid?
-      render json: { errors: template.errors }, status: 400
-    elsif template.save!
-      render json: template.id
+  def create
+    @template = Template.new(template_params)
+    @template.admin_user_id = current_admin_user.id if current_admin_user
+    if @template.invalid?
+      render json: { errors: @template.errors.messages }, status: 400
+    elsif @template.save!
+      render json: @template.id
     else
-      render json: "Failed"
+      render json: 'Failed'
     end
   end
 
-  def edit
-    #Check view Edit or Action Edit
-    if params[:type] == "Edit"
-      template = Template.find(params[:id])
-      if template.update_attributes(template_params)
-        template.update_attributes(admin_user_id: current_admin_user.id)
-        render json: template_params
-      else
-        render json: { errors: template.errors }, status: 400
-      end
+  def update
+    @template = Template.find(params[:id])
+    if @template.update_attributes(template_params)
+      @template.update_attributes(admin_user_id: current_admin_user.id)
+      render json: @template
     else
-      redirect_to add_templates_path(id: params[:id])
+      render json: { errors: @template.errors }, status: 400
     end
   end
 
@@ -75,24 +66,24 @@ class TemplatesController < ApplicationController
   end
 
   def add
-    #Add
+    # view Add
     role_ids = Template.pluck(:role_id)
     @roles = Role.where.not(id: role_ids)
     @competencies = Competency.all
 
-    #Edit
+    # view Edit
     if params[:id]
-      @template_edit = Template.find(params[:id])
+      @template = Template.find(params[:id])
       current_role_id = Template.find_by_id(params[:id]).role_id
-      @roles_edit = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
+      @roles = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
     end
   end
 
-  def delete
+  def destroy
     @template = Template.find(params[:id])
     @template.destroy
     respond_to do |format|
-      format.html { redirect_to action: "index" }
+      format.html { redirect_to action: 'index' }
       format.json { head :no_content }
     end
   end
@@ -100,19 +91,13 @@ class TemplatesController < ApplicationController
   private
 
   def template_params
-    params.permit(:name, :role_id, :description) if params.has_key?(:name) && params.has_key?(:role_id) && params.has_key?(:description)
+    if params.key?(:name) && params.key?(:role_id)
+      params.permit(:name, :role_id, :description)
+    end
   end
 
   def invalid_template
     logger.error "Attempt to access invalid template #{params[:id]}"
-    redirect_to action: "index", notice: "Invalid template"
-  end
-
-  def sort_column
-    Template.column_names.include?(params[:sort]) ? params[:sort] : "name"
-  end
-
-  def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    redirect_to action: 'index', notice: 'Invalid template'
   end
 end
