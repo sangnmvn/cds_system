@@ -119,6 +119,13 @@ module TemplatesHelper
     cds_sheet.merge_cells "C7:C8"
     cds_sheet.merge_cells "D7:D8"
 
+    cds_sheet.sheet_view.pane do |pane|
+      pane.top_left_cell = "C3"
+      pane.state = :frozen
+      pane.x_split = 2
+      pane.y_split = 1
+      pane.active_pane = :bottom_right
+    end
     # convert to array to prevent additional query
     competencies = Competency.select(:id, :name).joins(:template).where("templates.id=?", template_id).order(:_type).to_a
     all_levels = Competency.joins(:slots).order(:level => :asc).select(:id, :level, :"slots.evidence", :"slots.desc").to_a
