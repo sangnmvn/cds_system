@@ -2,6 +2,7 @@ $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
+    fnDrawCallback: function(){checkPrivileges(); disableButtonUpDown();}, //; 
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
     "order": [
@@ -10,7 +11,6 @@ $(document).ready(function () {
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
-    disableButtonUpDown();
   });
   $("#addSlot").click(function () {
     var desc = $("#descSlot").val();
@@ -34,7 +34,7 @@ $(document).ready(function () {
   $("#table_slot").on('click', '.btnDel', function () {
     idDel = $(this).attr('value');
     trDel = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
-    $('#contentMessageDelete').html("Are you sure you want to delete the slot " + trDel.children()[1].textContent)
+    $('#contentMessageDelete').html("Are you sure you want to delete the slot '" + trDel.children()[1].textContent + "'")
     $("#messageDelete").modal('show')
   });
   $("#btnDelete").click(function(){
@@ -83,7 +83,6 @@ $(document).ready(function () {
     templateId = $('#msform .row .id-template').attr("value")
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
-    checkPrivileges();
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
     $("#evidenceSlot").val("")
@@ -92,6 +91,7 @@ $(document).ready(function () {
   $("#btnMessageEnable").click(function(){
     location.replace("../templates")
   })
+
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -115,17 +115,18 @@ function loadSlotsinCompetency(search) {
             table.fnAddData([
               e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
               "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
-            ]);
+            ], 0);
           } else {
             table.fnAddData([
               e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
               "<a class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
               "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
               "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
-            ]);
+            ], 0);
           }
         }
       );
+      table.fnDraw();
       disableButtonUpDown()
       checkPrivileges()
     }
@@ -289,8 +290,7 @@ $(document).on('click', '.btnUpSlot', function () {
   var row_id = $(this).closest('tr').index();
   var id = $(this).attr('value');
   table = $("#table_slot").DataTable();
-  if (row_id != 0)
-    moveRow(id, row_id, -1, table);
+  moveRow(id, row_id, -1, table);
 });
 $(document).on('click', '.btnDownSlot', function () {
   var row_id = $(this).closest('tr').index();
@@ -318,6 +318,7 @@ function moveRow(id, row_id, direction, table) {
         $('#messageMove').modal('show')
       }
       else {
+        success("Move success");
         var num = parseInt(direction);
         current_row_data = table.row(row_id).data();
         previous_row_data = table.row(row_id + num).data();
@@ -325,7 +326,6 @@ function moveRow(id, row_id, direction, table) {
         table.row(row_id + num).data(current_row_data).draw();
         table.row(row_id).data(previous_row_data).draw();
         disableButtonUpDown()
-        success("Move success");
       }
     },
     error: function () {
@@ -361,14 +361,15 @@ function checkStatusTemplate() {
     return 0
 }
 function disableButtonUpDown(){
-  tables = $("#table_slot").DataTable();
-  length = tables.rows().data().length;
-  if (length >= 1) {
-    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
-    $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
-    $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#6c757d')
-    $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
-  }
+  // resetButton();
+  // tables = $("#table_slot").DataTable();
+  // length = tables.rows().data().length;
+  // if (length >= 1) {
+  //   $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
+  //   $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
+  //   $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#6c757d')
+  //   $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
+  // }
 }
 function checkPrivileges(){
   $.ajax({
@@ -382,7 +383,7 @@ function checkPrivileges(){
     success: function (response) {
       if (response.privileges == "view"){
         $('#tbdTemplate tr td a').addClass("disabled");
-        $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#4d4f4e");
+        $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#6c757d");
         $('#selectLevel').prop("disabled", true);
         $('#descSlot').prop("disabled", true);
         $('#evidenceSlot').prop("disabled", true);
@@ -391,4 +392,10 @@ function checkPrivileges(){
       }
     },
   });
+}
+function resetButton ()
+{
+  $('#tbdTemplate tr td a').removeClass("disabled");
+  $('#table_slot tr:nth-child(1) td .btnDownSlot .icon').attr('style','color:green')
+  $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:green')
 }

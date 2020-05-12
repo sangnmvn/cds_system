@@ -1,6 +1,7 @@
 class SlotsController < ApplicationController
   layout "system_layout"
   include Authorize
+  before_action :get_privilege_id
   def load
     @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id).ransack(desc_cont: params[:search]).result
     render json: @slots
@@ -12,17 +13,20 @@ class SlotsController < ApplicationController
   end
 
   def new
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
     @slot = Slot.create(slot_params(@slot_id))
     render json: { errors: @slot.errors }, status: 400 if @slot.invalid?
   end
 
   def update
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     slot = Slot.find(params[:id])
     slot.update(slot_params) if slot
   end
 
   def change_slot_id
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     direction = params[:direction]
     id_slot = params[:id]
     result = check_location_slot(id_slot, direction)
@@ -43,6 +47,7 @@ class SlotsController < ApplicationController
   end
 
   def delete
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     Slot.destroy(params[:id])
   end
 
@@ -54,6 +59,7 @@ class SlotsController < ApplicationController
   end
 
   def update_status_template
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     template = Template.find(params[:template_id])
     template.update(status: 1)
   end

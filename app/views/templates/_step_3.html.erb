@@ -4,20 +4,25 @@
         <div class="row">
         <div class="col-sm-12">
             <div class="col-sm-8" style="text-align: left">
-            <p style="color:red;">(*) required fields</p>
+            
             <p id="hideIdSlot" style="display:none"></p>
             </div>
         </div>
         <div class="col-sm-12">
             <%# Choose competency %>
             <div class="row">
-            <div class="offset-md-1 col-md-2" style="text-align: left">
-                <label>Competency: </label>
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <label>Competency: </label>
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-control border-primary" onchange= "checkDataDesc()" id= "selectCompetency">
+                    </select>
+                </div>
             </div>
-            <div class="col-sm-8">
-                <select class="form-control" onchange= "checkDataDesc()" id= "selectCompetency">
-                </select>
-            </div>
+            <div class="row">
+                <div class="offset-md-1 col-md-2" style="text-align: left">
+                    <p style="color:red;">(*) required fields</p>
+                </div>
             </div>
             <br>
             <%# Level %>
@@ -30,7 +35,7 @@
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                             <option value="4">4</option>
-                                            <option value="5">5</option>'),onchange: "checkDataDesc()", class: 'form-control', id: "selectLevel" %>
+                                            <option value="5">5</option>'),onchange: "checkDataDesc()", class: 'form-control border-primary', id: "selectLevel" %>
             </div>
             </div>
             <br/>
@@ -40,7 +45,7 @@
                     <label>Slot Description(*)</label>
                 </div>
                 <div class="col-sm-8">
-                    <%= text_area_tag 'Slotdesc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control', placeholder: "Please Enter Slot Description", id: "descSlot" %>
+                    <%= text_area_tag 'Slotdesc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control border-primary', placeholder: "Please Enter Slot Description", id: "descSlot" %>
                     <small id="ErrorDesc" class="text-danger error" style="display:none">Please enter slot description!</small>    
                 </div>
             </div>  
@@ -51,7 +56,7 @@
                 <label>Evidence Guide</label>
             </div>
             <div class="col-sm-8">
-                <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
+                <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control border-primary', placeholder: "Please Enter Slot Evidence", id: "evidenceSlot" %>
             </div>
             </div>  
             <br>
@@ -73,12 +78,7 @@
         <div id="nameCompetency" style=""></div>
     </div>
     <div class="col-4">
-        <div class="input-group mb-3 divHeader">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Search : </span>
-            </div>
-            <input type="search" id="txtSearch" class="form-control" placeholder="Search by slot's description">
-        </div>
+        <input type="search" id="txtSearch" class="form-control" placeholder="Search by slot's description">
     </div>
 </div>
 <div class="row divTable">

@@ -16,7 +16,7 @@
             <label>Name: (*)</label>
           </div>
           <div class="col-md-8 name">
-            <%= text_field_tag 'name', defined?(@template) ? @template[:name] : nil, class: 'form-control', placeholder: 'Please enter Name' %>
+            <%= text_field_tag 'name', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter Name' %>
             <div class="error"></div>
           </div>
         </div>
@@ -27,7 +27,7 @@
             <label>Role:</label>
           </div>
           <div class="col-md-4 role">
-            <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), class: 'form-control' %>
+            <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), class: 'form-control border-primary' %>
             <div class="error"></div>
           </div>
        </div>
@@ -38,7 +38,7 @@
             <label>Description: </label>
           </div>
           <div class="col-md-8 description">
-            <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control', placeholder: "Please enter Description" %>
+            <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary', placeholder: "Please enter Description" %>
             <div class="error"></div>
           </div>
         </div>

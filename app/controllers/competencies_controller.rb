@@ -72,7 +72,10 @@ class CompetenciesController < ApplicationController
   end
 
   def change_location
-    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
+    
+    # binding.pry
+    
+    return render json: { status: "fail" } unless @privilege_array.include?(9)
     if competency_current = Competency.find(params[:id])
       location_current = competency_current.location
       template_id_current = competency_current.template_id
