@@ -1,5 +1,6 @@
 class TemplatesController < ApplicationController
   layout "system_layout"
+  include TemplatesHelper
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_template
   FILE_CLEANUP_TIME_IN_SECONDS = 30
 

@@ -1,6 +1,5 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
-  var privileges = 1
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
@@ -11,6 +10,7 @@ $(document).ready(function () {
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
+    disableButtonUpDown();
   });
   $("#addSlot").click(function () {
     var desc = $("#descSlot").val();
@@ -84,6 +84,10 @@ $(document).ready(function () {
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
     checkPrivileges();
+    $("#hideIdSlot").html("");
+    $("#descSlot").val("");
+    $("#evidenceSlot").val("")
+    changeBtnSave(-1);
   });
   $("#btnMessageEnable").click(function(){
     location.replace("../templates")
@@ -202,6 +206,7 @@ function delSlot(id, tr, templateId) {
       success("Delete slot is successfully");
       $("#table_slot").dataTable().fnDeleteRow(tr);
       checkSlotinTemplate(templateId)
+      disableButtonUpDown()
     },
     error: function () {
       fails("Delete slot is fail");
@@ -210,16 +215,16 @@ function delSlot(id, tr, templateId) {
 }
 
 function changeBtnFinish(direction) {
-  if (checkStatusTemplate() == 1 || privileges == 0) {
+  if (checkStatusTemplate() == 1) {
     $("#btnFinish").attr("disabled", true);
-    $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
+    $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
   } else {
     if (direction == -1) {
       $("#btnFinish").attr("disabled", true);
-      $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
+      $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
     } else {
       $("#btnFinish").attr("disabled", false);
-      $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+      $("#btnFinish").addClass("btn-info").removeClass("btn-secondary")
     }
   }
 }
@@ -381,7 +386,8 @@ function checkPrivileges(){
         $('#selectLevel').prop("disabled", true);
         $('#descSlot').prop("disabled", true);
         $('#evidenceSlot').prop("disabled", true);
-        privileges = 0;
+        $("#btnFinish").attr("disabled", true);
+        $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
       }
     },
   });

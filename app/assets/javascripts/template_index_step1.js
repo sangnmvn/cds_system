@@ -154,8 +154,8 @@ function postDeleteTemplate() {
   $('.delete_icon').on('click', function () {
     clicked = $(this)
     var template_id = $(this).attr("value")
-    $('#modal_waring_close button').on('click', function () {
-      if ($(this).text() == "Yes" && $('#modal_waring_close a').attr("href") == "#") {
+    $('#modal_warning_close button').on('click', function () {
+      if ($(this).text() == "Yes" && $('#modal_warning_close a').attr("href") == "#") {
         $.ajax({
           type: "DELETE",
           url: `/templates/${template_id}`,
@@ -169,7 +169,7 @@ function postDeleteTemplate() {
             if ($('.template-table tbody tr').length == 0) {
               $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
             }
-            $('#modal_waring_close').modal('hide');
+            $('#modal_warning_close').modal('hide');
           }
         });
       }
