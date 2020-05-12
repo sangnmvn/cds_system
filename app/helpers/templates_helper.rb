@@ -128,7 +128,7 @@ module TemplatesHelper
     end
     # convert to array to prevent additional query
     competencies = Competency.select(:id, :name).joins(:template).where("templates.id=?", template_id).order(:_type).to_a
-    all_levels = Competency.joins(:slots).order(:level => :asc).select(:id, :level, :"slots.evidence", :"slots.desc").to_a
+    all_levels = Competency.joins(:slots).order(:level => :asc, :"slots.slot_id" => :asc).select(:id, :level, :"slots.evidence", :"slots.desc").to_a
 
     competencies.each_with_index do |competency, index|
       roman_index = roman(index + 1)
@@ -194,25 +194,25 @@ module TemplatesHelper
       pane.active_pane = :bottom_right
     end
 
-    competencies.each_with_index { |competency, index|
+    competencies.each_with_index do |competency, index|
       roman_index = roman(index + 1)
       roman_name = competency.name
       cdp_sheet.add_row [roman_index, roman_name, "", "", "", ""], :style => format4
       levels = all_levels.collect { |c| c.level.to_i if c.id == competency.id }.uniq.compact
       all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
-      levels.each { |level|
+      levels.each do |level|
         cdp_sheet.add_row ["", "Level #{level}", "", "", "", ""], :style => format5
         slot_this_level = all_slot_levels.collect { |c| c if c.level.to_i == level }.compact
-        slot_this_level.each_with_index { |s, index|
+        slot_this_level.each_with_index do |s, index|
           final_name = s.desc.squish
           final_desc = s.evidence.squish
           final_level = s.level + alph(index + 1)
           cdp_sheet.add_row [final_level, final_name, final_desc, "Commit", "Commit", ""], :style => format6
           height = [((final_desc.length / 100) + 3) * 10, ((final_name.length / 100) + 3) * 10].max
           cdp_sheet.rows[-1].height = height
-        }
-      }
-    }
+        end
+      end
+    end
 
     cds_sheet.column_widths 5, 90 # run at last
     cdp_sheet.column_widths 5, 90 # run at last
