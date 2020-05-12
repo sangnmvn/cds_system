@@ -12,20 +12,7 @@ $(document).ready(function(){
               $(response).each(
                 function (i, e) {
                     // download this file
-                    window.location = e['filename'];
-
-                    // file will be in server for 5 seconds
-                    setTimeout(function(){
-                        $.ajax({
-                            type: "DELETE",
-                            headers: {
-                                "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-                            },
-                            //url: "/templates/cleanup/" + e['filename'],
-                            url: "/templates/cleanup/" + e['filename'],
-                            dataType: "json",                        
-                        });
-                    }, 5000);
+                    window.location = e['filename'];                    
                 }
               );
             }
