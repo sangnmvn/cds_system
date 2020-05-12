@@ -81,6 +81,7 @@ AdminUser.create!(id: 29, email: "user28@example.com", password: "password", pas
 AdminUser.create!(id: 30, email: "user29@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user29", account: "user29", role_id: "5", company_id: "1")
 AdminUser.create!(id: 31, email: "user30@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user30", account: "user30", role_id: "6", company_id: "3")
 
+
 ProjectMember.create!(admin_user_id: 8, project_id: 3, is_managent: "0")
 ProjectMember.create!(admin_user_id: 9, project_id: 3, is_managent: "0")
 ProjectMember.create!(admin_user_id: 10, project_id: 3, is_managent: "0")
@@ -1213,3 +1214,15 @@ end
 # GroupPrivilege.create!(group_id: 2, privilege_id: 4)
 # GroupPrivilege.create!(group_id: 2, privilege_id: 9)
 # GroupPrivilege.create!(group_id: 2, privilege_id: 12)
+
+
+#  test template
+AdminUser.create!(id: 32, email: "fulltemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user31", account: "user31", role_id: "6", company_id: "3")
+Group.create!(id:31 ,name: "Template", description: "Template", status: 1)
+UserGroup.create!(group_id: 31, admin_user_id: 32)
+GroupPrivilege.create!(group_id: 31, privilege_id: 9)
+
+AdminUser.create!(id: 33, email: "viewtemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user32", account: "user32", role_id: "5", company_id: "3")
+Group.create!(id:32 ,name: "Template", description: "Template", status: 1)
+UserGroup.create!(group_id: 32, admin_user_id: 33)
+GroupPrivilege.create!(group_id: 32, privilege_id: 10)
