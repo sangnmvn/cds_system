@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
+  var privileges = 1
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
@@ -82,12 +83,11 @@ $(document).ready(function () {
     templateId = $('#msform .row .id-template').attr("value")
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
+    checkPrivileges();
   });
   $("#btnMessageEnable").click(function(){
     location.replace("../templates")
   })
-
-
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -123,6 +123,7 @@ function loadSlotsinCompetency(search) {
         }
       );
       disableButtonUpDown()
+      checkPrivileges()
     }
   });
 }
@@ -209,7 +210,7 @@ function delSlot(id, tr, templateId) {
 }
 
 function changeBtnFinish(direction) {
-  if (checkStatusTemplate() == 1) {
+  if (checkStatusTemplate() == 1 || privileges == 0) {
     $("#btnFinish").attr("disabled", true);
     $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
   } else {
@@ -363,4 +364,25 @@ function disableButtonUpDown(){
     $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#6c757d')
     $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
   }
+}
+function checkPrivileges(){
+  $.ajax({
+    type: "GET",
+    url: "/competencies/check_privileges",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {},
+    dataType: "json",
+    success: function (response) {
+      if (response.privileges == "view"){
+        $('#tbdTemplate tr td a').addClass("disabled");
+        $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#4d4f4e");
+        $('#selectLevel').prop("disabled", true);
+        $('#descSlot').prop("disabled", true);
+        $('#evidenceSlot').prop("disabled", true);
+        privileges = 0;
+      }
+    },
+  });
 }

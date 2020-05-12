@@ -341,7 +341,6 @@ function nextStep1(){
 }
 
 function checkPrivileges(){
-  
   $.ajax({
     type: "GET",
     url: "/competencies/check_privileges",

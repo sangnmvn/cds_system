@@ -1,4 +1,6 @@
 class SlotsController < ApplicationController
+  layout "system_layout"
+  include Authorize
   def load
     @slots = Slot.where(competency_id: params[:id]).order(:level, :slot_id).ransack(desc_cont: params[:search]).result
     render json: @slots
