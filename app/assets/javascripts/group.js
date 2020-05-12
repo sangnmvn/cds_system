@@ -72,12 +72,12 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           addData.push('<div style="text-align:right">0</div>');
           addData.push(response.desc);
           addData.push(
-            '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+            '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit.png"></a> \
-            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
-            <img border="0" src="/assets/Delete.png"></a> \
             <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>\
+            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <img border="0" src="/assets/Delete.png"></a> </div>'
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
@@ -184,12 +184,12 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               updateData.push('<div style="text-align:right">0</div>');
               updateData.push(response.desc);
               updateData.push(
-                '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+                '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
                 <img border="0" src="/assets/edit.png"></a> \
-                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
-                <img border="0" src="/assets/Delete.png"></a> \
                 <a class="action_icon key_icon" data-id="'+response.id+'" data-toggle="modal" data-target="#modalPrivilege"  href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>\
+                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+                <img border="0" src="/assets/Delete.png"></a></div>'
               );
 
                 var delete_whole_row_constant = undefined;
@@ -243,8 +243,12 @@ function setup_dataTable() {
         myAjax();
         privilegeAjax();	
         privilegeJS();
-      }
-      ,
+      },
+      language: {
+        "info": " _START_ - _END_ of _TOTAL_"
+      },
+    
+      
 
       // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
       // pagingType is optional, if you want full pagination controls.
@@ -386,14 +390,17 @@ $(function() {
 });
 
 $(document).ready(function () {
-
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light border-primary" \
-  data-toggle="modal" data-target="#modalAdd" style="width:90px"><img border="0" style="float:left;margin-top:4px" \
-  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light border-danger\
-  float-right" data-toggle="modal"  style="margin-left:5px;width:100px" id="deletes">\
+ 
+   a=$(".get_privilege").val();
+  if(a == 'true'){
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+  data-toggle="modal" data-target="#modalAdd" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
+  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+  float-right" data-toggle="modal"  style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
 
   $(content).insertAfter(".dataTables_filter");
+  }
 });
 
 $(document).on("click","#deletes",function(){
@@ -454,4 +461,15 @@ $(document).on("click", "#delete_selected", function () {
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
   $('[data-toggle="modal"]').tooltip();
+});
+$(document).click(function(e) {    
+  
+  var number = $("#table_group tbody :checkbox:checked").length;
+
+  if (parseInt(number) > 0){
+    $("#deletes").css('background-color', "#fff");
+  }
+  else{
+    $("#deletes").css('background-color', "#dcdcdc");
+  }
 });

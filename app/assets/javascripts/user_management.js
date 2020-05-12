@@ -288,13 +288,15 @@ $(document).ready(function () {
 $(document).ready(function () {
   $("#btn-reset").click(function () {
     
-    $('#filter-company option[value=all]').attr('selected','selected');
+ 
+  
+$("#filter-company").val("all");
     company = $("#filter-company").val();
-    
-    $('#filter-project option[value=all]').attr('selected','selected');
+    $("#filter-project").val("all");
+
     project = $("#filter-project").val();
-    
-    $('#filter-role option[value=all]').attr('selected','selected');
+    $("#filter-role").val("all");
+
     role = $("#filter-role").val();
     $.ajax({
       url: "/admin_users/submit_filter",
@@ -443,7 +445,10 @@ function setup_dataTable() {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "user_data/",
-      
+      language: {
+        "info": " _START_ - _END_ of _TOTAL_",
+        "infoFiltered": ""
+      },
       "columnDefs": [
         { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 0 },
         { "orderable": true,"orderSequence": [ "desc","asc" ],  "targets": 1 },
@@ -832,17 +837,18 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 
 
 $(document).ready(function () {
-
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
-  data-backdrop="true" data-keyboard="true" style="width:120px"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-  <button type="button" class="btn btn-light "  id="btn-enable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-  <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-  <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+  a=$(".get_privilege").val();
+  if(a == 'true'){
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light"title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+  data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+  <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+  <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+  <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
   </div>';
 
   $(content).insertAfter(".dataTables_filter");
   $(".hidden").attr("placeholder", "Type here to search");
-  
+  }
 });
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 

@@ -1,6 +1,6 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-  include Authorize
+
   before_action :set_admin_user, only: [:update, :status, :destroy]
   before_action :get_privilege_id
   before_action :redirect_to_index, :if => :check_privelege,  except: [:index2]
@@ -110,7 +110,7 @@ class AdminUsersController < ApplicationController
           <img border='0' src='/assets/Delete.png'></a> 
           <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='#'>
           <img border='0' src='/assets/Assign_User.png' class='assign_user_img'></a> 
-          <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' styl='color:white'></i></a>")
+          <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px'></i></a>")
       else
         current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}' href='#'>
           <img border='0' src='/assets/Assign_User.png'></a> ")
