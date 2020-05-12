@@ -46,10 +46,11 @@ class CompetenciesController < ApplicationController
   end
 
   def load
-    return render json: { status: "fail" } unless (@privilege_array & [9,10]).any?
+    # binding.pry
+    arr = Array.new
+    return render json: arr unless (@privilege_array & [9,10]).any?
     competencies = Competency.select(:id, :name, :_type, :desc)
       .where(template_id: params[:id]).order(location: :asc)
-    arr = Array.new
     competencies.each { |kq|
       arr << {
         id: kq.id,

@@ -339,6 +339,27 @@ function nextStep1(){
   loadDataCompetencies(id);
 }
 
+function checkPrivileges(){
+  $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
+  $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
+  // $.ajax({
+  //   type: "GET",
+  //   url: "/competencies/check_privileges",
+  //   headers: {
+  //     "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+  //   },
+  //   data: {},
+  //   dataType: "json",
+  //   success: function (response) {
+  //     $(response).each(function (i, e) {
+  //       if (response.status == "success"){
+        
+  //       }
+  //     });
+  //   },
+  // });
+}
+
 $(document).on('keyup','.form-add-competency #name,#desc', function(){
   name = $(".form-add-competency #name").val();
   desc = $(".form-add-competency #desc").val();
