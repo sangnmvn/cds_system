@@ -11,6 +11,9 @@
   </ol>
 </nav>
 <div class="container-fluid" id="grad1">
+  <div class="template-header">
+    <span class="title"><%= title %></span>
+  </div>
   <div class="row justify-content-center mt-0">
     <div class="col-12 col-sm-9 col-md-12 col-lg-12">
       <div class="">
@@ -49,6 +52,7 @@
       </div>
     </div>
   </div>
-  <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
-  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
-  <%= render 'warning_close' %>
+</div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<%= render 'warning_close' %>

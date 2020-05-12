@@ -18,10 +18,10 @@ class TemplatesController < ApplicationController
   def create
     @template = Template.new(template_params)
     @template.admin_user_id = current_admin_user.id if current_admin_user
-    if @template.invalid?
-      render json: { errors: @template.errors.messages }, status: 400
-    elsif @template.save!
+    if @template.save
       render json: @template.id
+    elsif @template.invalid?
+      render json: { errors: @template.errors.messages }, status: 400
     else
       render json: 'Failed'
     end
@@ -30,8 +30,8 @@ class TemplatesController < ApplicationController
   def edit
     role_ids = Template.pluck(:role_id)
     @template = Template.find(params[:id])
-    current_role_id = Template.find_by_id(params[:id]).role_id
-    @roles = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
+    @current_role_id = Template.find_by_id(params[:id]).role_id
+    @roles = Role.where(id: @current_role_id).or(Role.where.not(id: role_ids))
     render "add", locals: { title: "Edit the template" }
   end
 
@@ -93,9 +93,7 @@ class TemplatesController < ApplicationController
   private
 
   def template_params
-    if params.key?(:name) && params.key?(:role_id)
-      params.permit(:name, :role_id, :description)
-    end
+    params.permit(:name, :role_id, :description)
   end
 
   def invalid_template
