@@ -1,43 +1,44 @@
 class AdminUsersController < ApplicationController
   layout "system_layout"
-
+  include Authorize
   before_action :set_admin_user, only: [:update, :status, :destroy]
   before_action :get_privilege_id
-  before_action :redirect_to_index, :if => :check_privelege,  except: [:index2]
+  before_action :redirect_to_index, :if => :check_privelege, except: [:index2]
+
   def get_user_data
-    $count ||= 0;
-    $count2 ||= 0;
+    $count ||= 0
+    $count2 ||= 0
     user_per_page = 20
     offset = params["iDisplayStart"].to_i
     @companies = Company.all
     @roles = Role.all
     @project_members = ProjectMember.all
     @projects = Project.all
- 
+
     # "iSortCol_0"=>"3" (cot de sort), "sSortDir_0"=>"asc" (thu tu sort)
 
     if @privilege_array.include? 1
-    @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
+      @admin_users = AdminUser.offset(offset).limit(user_per_page).where(is_delete: false)
     else
       pm = ProjectMember.where(admin_user_id: current_admin_user.id).pluck(:project_id)
-      @admin_users = AdminUser.joins(:project_members).where(project_members: { project_id: pm} )
+      @admin_users = AdminUser.joins(:project_members).where(project_members: { project_id: pm })
     end
     case params["iSortCol_0"]
-      when "1"
-        @admin_users = @admin_users.order(id: params["sSortDir_0"].to_sym)
-      when "2"
-        @admin_users = @admin_users.order(first_name: params["sSortDir_0"].to_sym)
-      when "3"
-        @admin_users = @admin_users.order(last_name: params["sSortDir_0"].to_sym)
-      when "4"
-        @admin_users = @admin_users.order(email: params["sSortDir_0"].to_sym)
-      when "5"
-        @admin_users = @admin_users.order(account: params["sSortDir_0"].to_sym)
-      when "6"
-        @admin_users = @admin_users.order(role_id: params["sSortDir_0"].to_sym)
-      when "9"
-        @admin_users = @admin_users.order(company_id: params["sSortDir_0"].to_sym)
-    end  
+    when "1"
+      @admin_users = @admin_users.order(id: params["sSortDir_0"].to_sym)
+    when "2"
+      @admin_users = @admin_users.order(first_name: params["sSortDir_0"].to_sym)
+    when "3"
+      @admin_users = @admin_users.order(last_name: params["sSortDir_0"].to_sym)
+    when "4"
+      @admin_users = @admin_users.order(email: params["sSortDir_0"].to_sym)
+    when "5"
+      @admin_users = @admin_users.order(account: params["sSortDir_0"].to_sym)
+    when "6"
+      @admin_users = @admin_users.order(role_id: params["sSortDir_0"].to_sym)
+    when "9"
+      @admin_users = @admin_users.order(company_id: params["sSortDir_0"].to_sym)
+    end
 
     unless params["sSearch"].empty?
       @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
@@ -68,9 +69,9 @@ class AdminUsersController < ApplicationController
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
       if $count == 1 && params["iSortCol_0"].to_i == 1
-        current_user_data.push("<p class='number'>#{@admin_users.length-(offset + index + 1)}</p>")
+        current_user_data.push("<p class='number'>#{@admin_users.length - (offset + index + 1)}</p>")
       elsif $count == 0 && params["iSortCol_0"].to_i == 1
-        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")  
+        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
       else
         current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
       end
@@ -117,22 +118,22 @@ class AdminUsersController < ApplicationController
       end
       final_data.push(current_user_data)
     end
-   
+
     if $count == 1 && params["iSortCol_0"].to_i == 1
-     $count = 0
+      $count = 0
     elsif $count == 0 && params["iSortCol_0"].to_i == 1
       $count = 1
     end
 
     if $count2 == 1 && params["iSortCol_0"].to_i == 8
-      final_data.sort! {|a,b| a[8] <=> b[8]}
+      final_data.sort! { |a, b| a[8] <=> b[8] }
       $count2 = 0
     elsif $count2 == 0 && params["iSortCol_0"].to_i == 8
-      i=1
-      final_data.sort! {|a,b| b[8] <=> a[8]}
-      final_data.each{|a| 
-        a[1]="<p class='number'>#{i}</p>"
-        i+=1
+      i = 1
+      final_data.sort! { |a, b| b[8] <=> a[8] }
+      final_data.each { |a|
+        a[1] = "<p class='number'>#{i}</p>"
+        i += 1
       }
       $count2 = 1
     end
@@ -142,20 +143,17 @@ class AdminUsersController < ApplicationController
   end
 
   def index
-
-      @companies = Company.all.order(:name)
-      @projects = Project.all.order(:desc)
-      @roles = Role.all.order(:name)
-      @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
-      @project_members = ProjectMember.all
-      respond_to do |format|
-        format.html
-      end
-    
+    @companies = Company.all.order(:name)
+    @projects = Project.all.order(:desc)
+    @roles = Role.all.order(:name)
+    @admin_users = AdminUser.where(is_delete: false).order(:id => :desc)
+    @project_members = ProjectMember.all
+    respond_to do |format|
+      format.html
+    end
   end
 
   def index2
-  
   end
 
   def add_reviewer
@@ -173,7 +171,7 @@ class AdminUsersController < ApplicationController
     #   end
     @existing_reviewers = all_user_id_except_self.where(id: Approver.where(admin_user_id: user_id).distinct.pluck(:approver_id))
     @available_admin_users = all_user_id_except_self.where.not(id: @existing_reviewers.pluck(:id))
-  
+
     respond_to do |format|
       format.js
     end
@@ -204,14 +202,14 @@ class AdminUsersController < ApplicationController
       end
     end
   end
+
   def get_filter_company
     if params[:company] == "all"
       projects = Project.select(:id, :desc).all
-      roles = Role.select(:id, :name).joins(admin_users: :company)    
-      
+      roles = Role.select(:id, :name).joins(admin_users: :company)
     else
       projects = Project.select(:id, :desc).where("company_id = ?", params[:company])
-      
+
       admin_user_ids = AdminUser.where(company_id: params[:company], is_delete: false).pluck(:role_id).uniq
       roles = Role.select(:id, :name).where("id in (?)", admin_user_ids)
     end
@@ -301,7 +299,6 @@ class AdminUsersController < ApplicationController
     respond_to do |format|
       format.js
     end
-  
   end
 
   def update
@@ -404,7 +401,6 @@ class AdminUsersController < ApplicationController
   end
 
   def enable_multiple_users
-    
     respond_to do |format|
       if params[:list_users].nil?
         format.json { render :json => { :status => "true" } }
@@ -421,6 +417,7 @@ class AdminUsersController < ApplicationController
       end
     end
   end
+
   # change status user (enable / disable)
   def status
     params[:status] = @admin_user.status ? false : true
@@ -432,7 +429,7 @@ class AdminUsersController < ApplicationController
       end
     end
   end
-  
+
   private
 
   def check_privelege
@@ -442,13 +439,12 @@ class AdminUsersController < ApplicationController
       return true
     end
   end
-  
+
   def redirect_to_index
     respond_to do |format|
-      format.html { redirect_to  index2_admin_users_path}
+      format.html { redirect_to index2_admin_users_path }
     end
-end
-
+  end
 
   def set_admin_user
     @admin_user = AdminUser.find(params[:id])

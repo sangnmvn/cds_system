@@ -218,14 +218,14 @@ function delSlot(id, tr, templateId) {
 function changeBtnFinish(direction) {
   if (checkStatusTemplate() == 1) {
     $("#btnFinish").attr("disabled", true);
-    $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
+    $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
   } else {
     if (direction == -1) {
       $("#btnFinish").attr("disabled", true);
-      $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
+      $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
     } else {
       $("#btnFinish").attr("disabled", false);
-      $("#btnFinish").addClass("btn-info").removeClass("btn-secondary")
+      $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
     }
   }
 }
@@ -388,7 +388,7 @@ function checkPrivileges(){
         $('#descSlot').prop("disabled", true);
         $('#evidenceSlot').prop("disabled", true);
         $("#btnFinish").attr("disabled", true);
-        $("#btnFinish").removeClass("btn-info").addClass("btn-secondary")
+        $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
       }
     },
   });
