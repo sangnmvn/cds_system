@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
     before_action :authenticate_admin_user!
-    module Authorize
+   
         private
     def get_privilege_id
         @privilege_array = [0]
@@ -27,5 +27,5 @@ class ApplicationController < ActionController::Base
         @privilege_array=[1,2,3,4,5,6,7,8,9,10,11]
         end
       end
-    end
+    
 end

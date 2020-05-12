@@ -1,8 +1,9 @@
+
 <table class="table" id="table_user_management" data-source="<%= admin_users_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">    
-      <th>
+      <th style="background-image:none">
         <div class="resource_selection_toggle_cell">
           <label>
             <input type="checkbox" id="collection_selection_toggle_all" name="collection_selection_toggle_all" class="toggle_all">

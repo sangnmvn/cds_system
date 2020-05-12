@@ -199,8 +199,19 @@ img.assign_user_img{
     text-align: center; 
 }
 
-.btn-light {
-    color: #212529;
-    background-color: #dcdcdc;
-    border-color: #f8f9fa;
+.dataTables_wrapper .dataTables_filter input {
+    background-image: url(/assets/search-3-16.png);
+  background-repeat: no-repeat;
+  background-position: right center;
+  outline: 0;
 }
+table.dataTable thead .sorting {
+    background-image: url(/assets/sort_both.png);
+}
+#table_user_management tr.odd > th {
+    background-image: url(/assets/sort_both.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    outline: 0;
+  }
+  

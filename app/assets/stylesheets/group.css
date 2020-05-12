@@ -236,3 +236,24 @@ input.button-add {
 .modal-title {
   font-size: 18px;
 }
+.dataTables_wrapper .dataTables_filter input {
+  background-image: url(/assets/search-3-16.png);
+  background-repeat: no-repeat;
+  background-position: right center;
+  outline: 0;
+  margin-left: 0.5em;
+  width: 300px;
+}
+table.dataTable thead .sorting {
+  background-image: url(/assets/sort_both.png);
+}
+#table_group tr.odd > th{
+  background-image: url(/assets/sort_both.png);
+  background-repeat: no-repeat;
+  background-position: right center;
+  outline: 0;
+}
+.key_icon, .user_group_icon {
+  color: #007bff;
+  font-size: 15px;
+}

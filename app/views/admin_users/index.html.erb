@@ -1,6 +1,7 @@
 <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+ <input type="hidden" value="<%= @privilege_array.include? 1%>" class="get_privilege">
 <div class="title_bar" id="title_bar">
     <div id="titlebar_left">
       <h2 id="page_title">User Managment</h2>

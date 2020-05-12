@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
-  include Authorize
+  
   before_action :get_privilege_id
   before_action :redirect_to_index, :if => :check_privelege
   # GET /groups
