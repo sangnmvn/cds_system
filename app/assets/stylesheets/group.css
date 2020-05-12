@@ -227,3 +227,12 @@ input.button-add {
   padding-left: 16px;     /* make text start to the right of the image */
   vertical-align: middle; /* align the text vertically centered */
 }
+.error {
+  color: red;
+  font-size: 10px;
+  margin:0 0 0 0;
+  padding: 0 0 0 0;
+}  
+.modal-title {
+  font-size: 18px;
+}

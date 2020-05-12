@@ -199,4 +199,8 @@ img.assign_user_img{
     text-align: center; 
 }
 
-  
+.btn-light {
+    color: #212529;
+    background-color: #dcdcdc;
+    border-color: #f8f9fa;
+}

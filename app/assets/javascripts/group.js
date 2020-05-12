@@ -25,7 +25,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#name").after(
-        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
+        '<span class="error">The maximum length of Group Name is 100 characters.</span>'
       );
     }
   }
@@ -134,7 +134,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
   } else {
     if (name.length < 2 || name.length > 100) {
       $("#modalEdit #name").after(
-        '<span class="error">Please enter a value between {2} and {100} characters long.</span>'
+        '<span class="error">The maximum length of Group Name is 100 characters.</span>'
       );
     }
   }

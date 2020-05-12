@@ -220,10 +220,10 @@ function change_button_right(flag) {
 function change_button_save(flag) {
 	if (flag == 0) {
 		$('#save').attr("disabled", false);
-		$('#save').removeClass("btn-secondary").addClass("btn-info");
+
 	} else {
 		$('#save').attr("disabled", true);
-		$('#save').removeClass("btn-info").addClass("btn-secondary");
+
 	}
 }
 
@@ -290,7 +290,7 @@ function myAjax() {
 					function (i, e) { //duyet mang doi tuong
             //console.log(e);
             $("#table_right").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name, e.email
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name
 						]);
 					}
 				);
@@ -314,7 +314,7 @@ function myAjax() {
           function (i, e) { //duyet mang doi tuong
             console.log(i + ' - ' + e);            
 						$("#table_left").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name, e.email
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name
 						]);
 					}
 				);
@@ -323,7 +323,7 @@ function myAjax() {
 	});
 	$('.user_group_icon').click(function () {
 		$('#save').attr("disabled", true);
-		$('#save').removeClass("btn-info").addClass("btn-secondary");
+	
 		var id = $(this).attr("data-id");
 		//ajax load bảng group
 		$.ajax({
@@ -554,10 +554,10 @@ function to_left_button(flag) {
 function save_button(flag) {
   if (flag == 0) {
     $('.save').prop("disabled", true)
-    $('.save').removeClass("btn-info").addClass("btn-secondary")
+   
   } else {
     $('.save').prop("disabled", false)
-    $('.save').removeClass("btn-secondary").addClass("btn-info")
+
   }
 }
 function privilegeAjax() {

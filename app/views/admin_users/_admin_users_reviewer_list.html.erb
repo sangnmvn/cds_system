@@ -14,11 +14,15 @@
         <tr id="<%= user.id %>">
           <td ><div style="text-align: right;"><%= index + 1%></div></td>
           <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>"</td>
-            <td><%= "#{user.first_name} #{user.last_name}" %> </td>
-            <td><%= user.account %></td>
+            <td style="text-align: left"><%= "#{user.first_name} #{user.last_name}" %> </td>
+            <td style="text-align: left"><%= user.account %></td>
             <td style="display:none;"><%= user.id %></td>
           </tr>
         <% end %>
       <% end %>
     </tbody>
   </table>
+
+
+
+

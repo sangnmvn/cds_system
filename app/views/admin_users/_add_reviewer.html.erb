@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-5" style="text-align:center">
+          <div class="col-5" >
            <h5>Available Users</h5>
             <!-- Table header màu đậm hơn -->
             <div id="table_left_wrapper" style="overflow-x:auto;">
@@ -21,7 +21,7 @@
             <p></p>
             <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left.png", class: "arrow_icon", border: 1) %></button>
           </div>
-          <div class="col-5" style="text-align:center">
+          <div class="col-5">
             <h5>Selected Users</h5>
             <!-- Table header màu đậm hơn -->
             <div id="table_right_wrapper" style="overflow-x:auto;">
@@ -31,8 +31,8 @@
         </div>
         <div class="modal-footer">
           <div class="col-12 p-3 text-center">
-            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal" disabled>Save</button>
+            <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
 <script>
   var global_data_table_left;
   var global_data_table_right;
-   
+
   function set_all_left_checkbox()
   {
     // Lấy danh sách checkbox
@@ -150,6 +150,7 @@
             global_data_table_left.fnDeleteRow(tr);
   
             set_data_event();
+            save_button(1);
         }
       }
       $('#to_right').attr("disabled",true);
@@ -169,6 +170,7 @@
             global_data_table_left.fnAddData(addRow);
             global_data_table_right.fnDeleteRow(tr);
             set_data_event();
+            save_button(1);
         }
       }
       $('#to_left').attr("disabled",true);
@@ -314,5 +316,14 @@
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     });
   });
+  function save_button(flag) {
+  if (flag == 0) {
+    $('#save').prop("disabled", true)
+    
+  } else {
+    $('#save').prop("disabled", false)
+  
+  }
+}
   
 </script>

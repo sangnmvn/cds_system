@@ -812,6 +812,8 @@ $(document).ready(function () {
   </div>';
 
   $(content).insertAfter(".dataTables_filter");
+  $(".hidden").attr("placeholder", "Type here to search");
+  
 });
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
@@ -829,8 +831,8 @@ $(document).click(function(e) {
   }
   else{
     
-    $("#btn-disable-multiple-users").css('background-color', "#f8f9fa");
-    $("#btn-delete-many-users").css('background-color', "#f8f9fa");
-    $("#btn-enable-multiple-users").css('background-color', "#f8f9fa"); 
+    $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
+    $("#btn-delete-many-users").css('background-color', "#dcdcdc");
+    $("#btn-enable-multiple-users").css('background-color', "#dcdcdc"); 
   }
 });
