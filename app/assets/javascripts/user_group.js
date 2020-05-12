@@ -259,7 +259,59 @@ function save() {
 					success: function (response) {
             success("Assign user to this group is ");
             $("#AssignModal").modal('hide');
-            $('.bootbox-confirm').modal('hide');						
+            $('.bootbox-confirm').modal('hide');	
+            var table = $("#table_group").DataTable();
+          var dataLength = table.rows().data().length;
+          for (var i = 0; i < dataLength; i++) {
+            
+            
+            var current_user_id = table.row(i).data()[0]
+            .split("batch_action_item_")[1]
+            .split('"')[0];
+            current_user_id = parseInt(current_user_id);
+            if (current_user_id == response.id) {
+              var row_id = i;
+              var updateData = [];
+              updateData.push(
+                '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
+              response.id +
+              '" value="0" \
+            class="collection_selection" name="collection_selection[]">'+
+     
+          '<input type="checkbox" id="group_ids[]" value="' +
+          response.id +
+          '" class="selectable selectable_check" name="checkbox"></div>'
+
+              );
+              var a=row_id+1;
+              updateData.push('<div style="text-align:right">'+ a +'</div>');
+              updateData.push(response.name);
+              updateData.push(response.status_group);
+              updateData.push('<div style="text-align:right">'+response.number+'</div>');
+              updateData.push(response.desc);
+              updateData.push(
+                '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+                <img border="0" src="/assets/edit.png"></a> \
+                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+                <img border="0" src="/assets/Delete.png"></a> \
+                <a class="action_icon key_icon" data-id="'+response.id+'" data-toggle="modal" data-target="#modalPrivilege"  href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+              );
+
+                var delete_whole_row_constant = undefined;
+              var redraw_table = false;
+              table.row(row_id).data(updateData)
+              /*
+              table.fnUpdate(
+                updateData,
+                row_id,
+                delete_whole_row_constant,
+                redraw_table
+              );
+              */ ;
+              break;
+            }
+          }
 					},
 					error: function () {
             fails("Assign user to this group is ");

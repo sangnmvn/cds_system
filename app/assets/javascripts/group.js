@@ -84,7 +84,6 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           success("Add");
           table.row.add(addData);
           table.draw();
-
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -158,7 +157,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
           var table = $("#table_group").DataTable();
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
-            debugger;
+            
             
             var current_user_id = table.row(i).data()[0]
             .split("batch_action_item_")[1]
