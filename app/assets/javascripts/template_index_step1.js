@@ -48,6 +48,17 @@ function next_button(flag) {
     $('.next').removeClass("btn-secondary").addClass("btn-info")
   }
 }
+function disabledTemplateStep1(flag) {
+  if (flag == 0) {
+    $('#name').prop("disabled", true)
+    $('#role').prop("disabled", true)
+    $('#discription').prop("disabled", true)
+  } else {
+    $('#name').prop("disabled", false)
+    $('#role').prop("disabled", false)
+    $('#discription').prop("disabled", false)
+  }
+}
 
 function checkValidation() {
   $('.step1 #name').on('keyup', function () {
