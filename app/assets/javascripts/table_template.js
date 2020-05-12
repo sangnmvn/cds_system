@@ -1,14 +1,12 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
+  checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
-    "order": [[0, 'asc']]
-  });
-  $(".nexttoStep3").click(function(){
-    templateId = $('#msform .row .id-template').attr("value")
-    loadCompetency(templateId);
-    checkStatusTemplate(templateId);
+    "order": [
+      [0, 'asc']
+    ]
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
@@ -22,66 +20,76 @@ $(document).ready(function () {
     var presentId = $("#hideIdSlot").html();
     $("#hideIdSlot").html("");
     if (presentId == "")
-      addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId);
+      addNewSlot(desc, evidence, level, competencyId, nameCompetency, templateId);
     else
-      updateSlot(desc,evidence,level,competencyId,presentId,templateId);
+      updateSlot(desc, evidence, level, competencyId, presentId, templateId);
     $("#descSlot").val("");
     $("#evidenceSlot").val("");
     loadSlotsinCompetency();
     changeBtnSave(-1)
   });
+  var trDel;
+  var idDel;
   $("#table_slot").on('click', '.btnDel', function () {
-    var id = $(this).attr('value');
-    var tr = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
-    delSlot(id,tr,templateId);
+    idDel = $(this).attr('value');
+    trDel = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
+    $('#contentMessageDelete').html("Are you sure you want to delete the slot " + trDel.children()[1].textContent)
+    $("#messageDelete").modal('show')
+  });
+  $("#btnDelete").click(function(){
+    delSlot(idDel, trDel, templateId);
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
     $("#evidenceSlot").val("")
-  });
+    $("#messageDelete").modal('hide')
+    $('#contentMessageDelete').html("")
+  })
+
   $("#table_slot").on('click', '.btnEdit', function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr').children();
     $("#descSlot").val(tr[1].textContent);
     $("#evidenceSlot").val(tr[2].textContent);
-    chooseSelect("selectLevel",tr[0].textContent);
+    chooseSelect("selectLevel", tr[0].textContent);
     $("#hideIdSlot").html(id);
   });
   changeBtnSave(-1);
   $("#table_slot").removeClass("dataTable")
   $('.dataTables_length').attr("style", "display:none");
 
-  $("#btnFinish").click(function(){
+  $("#btnFinish").click(function () {
     if (checkStatusTemplate() == 0)
       $('#messageModal').modal('show')
   })
-  $('#btnEnable').click(function() {
+  $('#btnEnable').click(function () {
     finnish(templateId);
     $('#messageModal').modal('hide')
   })
 
-  $("#txtSearch").keypress(function(){
+  $("#txtSearch").keypress(function () {
     if (event.keyCode == 13 || event.which == 13) {
       var search = $(this).val();
       loadSlotsinCompetency(search)
     }
   })
-  $("#descSlot").keyup(function(){
+  $("#descSlot").keyup(function () {
     if ($("#descSlot").val())
-      $("#ErrorDesc").attr("style","display:none")
+      $("#ErrorDesc").attr("style", "display:none")
     else
-      $("#ErrorDesc").attr("style","display:block")
+      $("#ErrorDesc").attr("style", "display:block")
   })
+  $(".nexttoStep3").click(function () {
+    templateId = $('#msform .row .id-template').attr("value")
+    loadCompetency(templateId);
+    checkStatusTemplate(templateId);
+  });
   
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
 function loadSlotsinCompetency(search) {
   var id = $('#selectCompetency').val();
-  var tilte = $('#selectCompetency option:selected').text()
-  if (tilte != "")
-    $("#nameCompetency").html(tilte + "'s Slot List");
-  else
-  $("#nameCompetency").html("Please select a Competency !");
+  $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
   $.ajax({
     type: "GET",
     url: "/slots/load",
@@ -95,25 +103,22 @@ function loadSlotsinCompetency(search) {
       table.fnClearTable();
       $(response).each(
         function (i, e) { //duyet mang doi tuong
-          if (search)
-          {
+          if (search) {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a href='#' type='button' title='Edit' class='btnAction btnEdit' value='"+ e.id +"'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
-              "<a  class='btnAction btnDel' title='Delete' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+              e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              "<a href='#' class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
-          }
-          else
-          {
+          } else {
             table.fnAddData([
-              e.level, e.desc, e.evidence,"<a class='btnAction btnUpSlot' title='Move up' value='"+ e.id +"'><i class='fa fa-arrow-circle-up icon' style='color:green'></i></a>" + 
-              "<a  class='btnAction btnDownSlot' title='Move down' value='"+ e.id +"'><i class='fa fa-arrow-circle-down icon' style='color:green'></i></a>" +
-              "<a href='#' type='button' title='Edit'  class='btnAction btnEdit' value='"+ e.id +"' disabled><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" 
-              + "<a  class='btnAction btnDel' title='Delete' value='"+ e.id +"'><i class='fa fa-trash icon' style='color:red'></i></a>" 
+              e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' href='#' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
+              "<a href='#' class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
+              "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
+              "<a href='#' class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
           }
         }
       );
-      disableButtonUpDown();
+      disableButtonUpDown()
     }
   });
 }
@@ -136,7 +141,7 @@ function fails(content) {
 }
 
 
-function addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId) {
+function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/new",
@@ -158,7 +163,7 @@ function addNewSlot(desc,evidence,level,competencyId,nameCompetency,templateId) 
   });
 }
 
-function updateSlot(desc,evidence,level,competencyId,presentId,templateId) {
+function updateSlot(desc, evidence, level, competencyId, presentId, templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/update",
@@ -181,74 +186,50 @@ function updateSlot(desc,evidence,level,competencyId,presentId,templateId) {
   });
 }
 
-function delSlot (id,tr,templateId){
-  bootbox.confirm({
-		message: "Are you sure want to delete this slot?",
-		buttons: {
-			confirm: {
-				label: "Yes",
-				className: "btn-primary"
-			},
-			cancel: {
-				label: "No",
-				className: "btn-danger"
-			}
-		},
-		callback: function (result) {
-			if (result) {
-				$.ajax({
-					url: "/slots/delete",
-					data: {
-            id: id
-					},
-					type: "GET",
-					success: function (response) {
-            success("Delete slot is successfully");
-            $("#table_slot").dataTable().fnDeleteRow(tr);
-            checkSlotinTemplate(templateId)
-            disableButtonUpDown();
-					},
-					error: function () {
-						fails("Delete slot is fail");
-					}
-				});
-			}
-		}
-	});
+function delSlot(id, tr, templateId) {
+  $.ajax({
+    url: "/slots/delete",
+    data: {
+      id: id
+    },
+    type: "GET",
+    success: function (response) {
+      success("Delete slot is successfully");
+      $("#table_slot").dataTable().fnDeleteRow(tr);
+      checkSlotinTemplate(templateId)
+    },
+    error: function () {
+      fails("Delete slot is fail");
+    }
+  });
 }
-function  changeBtnFinish(direction) {
-  if(checkStatusTemplate() == 1)
-  {
+
+function changeBtnFinish(direction) {
+  if (checkStatusTemplate() == 1) {
     $("#btnFinish").attr("disabled", true);
     $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
-  }
-  else
-  {
-    if(direction == -1)
-    {
+  } else {
+    if (direction == -1) {
       $("#btnFinish").attr("disabled", true);
       $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
-    }
-    else
-    {
+    } else {
       $("#btnFinish").attr("disabled", false);
       $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
     }
   }
 }
-function  changeBtnSave(direction) {
-  if(direction == -1)
-  {
+
+function changeBtnSave(direction) {
+  if (direction == -1) {
     $("#addSlot").attr("disabled", true);
     $("#addSlot").removeClass("btn-primary").addClass("btn-secondary")
-  }
-  else
-  {
+  } else {
     $("#addSlot").attr("disabled", false);
     $("#addSlot").addClass("btn-primary").removeClass("btn-secondary")
   }
 }
-function checkSlotinTemplate (templateId){
+
+function checkSlotinTemplate(templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/check_slot_in_template",
@@ -261,19 +242,21 @@ function checkSlotinTemplate (templateId){
     }
   });
 }
-function chooseSelect(nameSelect,value) {
-  $("#"+ nameSelect).each(function(){ 
-    $(this).find('option[value="'+ value +'"]').prop('selected', true); 
+
+function chooseSelect(nameSelect, value) {
+  $("#" + nameSelect).each(function () {
+    $(this).find('option[value="' + value + '"]').prop('selected', true);
   });
 }
+
 function checkDataDesc() {
-  if($("#descSlot").val())
+  if ($("#descSlot").val())
     changeBtnSave(1)
   else
     changeBtnSave(-1)
 }
-function finnish (templateId)
-{
+
+function finnish(templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/update_status_template",
@@ -293,20 +276,21 @@ function finnish (templateId)
     }
   });
 }
-$(document).on('click','.btnUpSlot', function(){
+$(document).on('click', '.btnUpSlot', function () {
   var row_id = $(this).closest('tr').index();
   var id = $(this).attr('value');
-  table =  $("#table_slot").DataTable();
+  table = $("#table_slot").DataTable();
   if (row_id != 0)
-    moveRow(id,row_id,-1,table);
+    moveRow(id, row_id, -1, table);
 });
-$(document).on('click','.btnDownSlot', function(){
+$(document).on('click', '.btnDownSlot', function () {
   var row_id = $(this).closest('tr').index();
   var id = $(this).attr('value');
-  table =  $("#table_slot").DataTable();
-  moveRow(id,row_id,1,table)
+  table = $("#table_slot").DataTable();
+  moveRow(id, row_id, 1, table)
 });
-function moveRow (id,row_id, direction,table){
+
+function moveRow(id, row_id, direction, table) {
   $.ajax({
     type: "GET",
     url: "/slots/change_slot_id",
@@ -314,34 +298,33 @@ function moveRow (id,row_id, direction,table){
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
     },
     data: {
-      id: id, direction: direction
+      id: id,
+      direction: direction
     },
     dataType: "json",
     success: function (response) {
       if (response.status == "max")
-        fails("The slot is last in Its level. Move success")
+        fails("The slot is last in Its level. Move fail")
       else if (response.status == "min")
         fails("The slot is first in Its level. Move fail")
-      else
-      {
+      else {
         var num = parseInt(direction);
         current_row_data = table.row(row_id).data();
         previous_row_data = table.row(row_id + num).data();
 
         table.row(row_id + num).data(current_row_data).draw();
-        table.row(row_id).data(previous_row_data).draw();        
-        success("This slot was changed");
+        table.row(row_id).data(previous_row_data).draw();
+        disableButtonUpDown()
+        success("Move success");
       }
-      disableButtonUpDown();
     },
     error: function () {
-      fails("Change slot is fail");
+      fails("Move fail");
     }
   });
 }
 
-function loadCompetency (templateId)
-{
+function loadCompetency(templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/load_competency",
@@ -355,23 +338,21 @@ function loadCompetency (templateId)
         function (i, e) { //duyet mang doi tuong
           $("<option value='" + e.id + "'/>").html(e.name).appendTo("#selectCompetency");
         });
-        loadSlotsinCompetency();
-        checkSlotinTemplate(templateId);
+      loadSlotsinCompetency();
+      checkSlotinTemplate(templateId);
     }
   });
 }
 
-function checkStatusTemplate()
-{
-  if ($('#msform .row .status-template').attr("value") == "true" )
+function checkStatusTemplate() {
+  if ($('#msform .row .status-template').attr("value") == "true")
     return 1
   else
     return 0
 }
-
 function disableButtonUpDown(){
-  table = $("#table_slot").DataTable();
-  length = table.rows().data().length;
+  tables = $("#table_slot").DataTable();
+  length = tables.rows().data().length;
   if (length >= 1) {
     $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#4d4f4e')
     $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')

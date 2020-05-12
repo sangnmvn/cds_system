@@ -62,9 +62,9 @@
 </div>
 
 <button class="btn btn-light border-primary previous action-button-previous" title="Back to step 2" type="button" name="previous">Back</button>
-<button type="buttton" class="btn btn-primary" title="Save this slot" id="addSlot">Save</button>
-<button class="btn btn-primary action-button" type="button" id="btnFinish" title="Finish and Enable this template" >Finish</button>
-<button type="button" class="btn btn-light border-primary" data-toggle="modal" title="Close Step 3 and Go to Template page" data-target="#modal_waring_close">Close</button>
+<button type="buttton" class="btn btn-primary" title="Save Slot" id="addSlot">Save</button>
+<button class="btn btn-primary action-button" type="button" id="btnFinish" title="Enable Template" >Finish</button>
+<button type="button" class="btn btn-light border-primary" data-toggle="modal" title="Close and Go to Template page" data-target="#modal_waring_close">Close</button>
 
 <hr/>
 
@@ -97,7 +97,7 @@
         </table>
     </div>
 </div>
-<!-- The Alert Modal -->
+<!-- The Finish Alert Modal -->
 <div class="modal fade" id="messageModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,6 +114,29 @@
             <div class="modal-footer">
                 <div class="col-12 p-3 text-center">
                     <button id="btnEnable" type="button" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-danger close_modal" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The Delete Alert Modal -->
+<div class="modal fade" id="messageDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header head-myheader">
+                <h4 class="modal-title">Confirm Delete Slot</h4>
+                <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body" id="contentMessageDelete">
+                Are you sure you want to delete the slot 
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="col-12 p-3 text-center">
+                    <button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
                     <button type="button" class="btn btn-danger close_modal" data-dismiss="modal">No</button>
                 </div>
             </div>
