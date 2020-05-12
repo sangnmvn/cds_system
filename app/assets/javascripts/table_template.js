@@ -59,11 +59,11 @@ $(document).ready(function () {
 
   $("#btnFinish").click(function () {
     if (checkStatusTemplate() == 0)
-      $('#messageModal').modal('show')
+      $('#messageQuestionEnable').modal('show')
   })
   $('#btnEnable').click(function () {
     finnish(templateId);
-    $('#messageModal').modal('hide')
+    $('#messageQuestionEnable').modal('hide')
   })
 
   $("#txtSearch").keypress(function () {
@@ -83,6 +83,10 @@ $(document).ready(function () {
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
   });
+  $("#btnMessageEnable").click(function(){
+    location.replace("../templates")
+  })
+
 
   //-----------------------------------------------------
 });
@@ -265,14 +269,13 @@ function finnish(templateId) {
     },
     dataType: "json",
     success: function (response) {
-      success("change status this template is successfully");
+      $("#contentMessageEnable").html("Enable Successfully")
+      $("#messageEnable").modal('show')
       changeBtnFinish(-1)
-      window.setTimeout(function () {
-        location.replace("../templates")
-      }, 800);
     },
     error: function () {
-      fails("change status this template is fail");
+      $("#contentMessageEnable").html("Can't Enable This Template!")
+      $("#messageEnable").modal('show')
     }
   });
 }
