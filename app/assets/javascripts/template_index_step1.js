@@ -32,7 +32,7 @@ function clickSaveButton() {
 function save_button(flag) {
   if (flag == 0) {
     $('.save').prop("disabled", true)
-    $('.save').removeClass("btn-info").addClass("btn-secondary")
+    $('.save').removeClass("btn-primary").addClass("btn-secondary")
   } else {
     $('.save').prop("disabled", false)
     $('.save').removeClass("btn-secondary").addClass("btn-primary")
@@ -42,10 +42,10 @@ function save_button(flag) {
 function next_button(flag) {
   if (flag == 0) {
     $('.next').prop("disabled", true)
-    $('.next').removeClass("btn-info").addClass("btn-secondary")
+    $('.next').removeClass("btn-primary").addClass("btn-secondary")
   } else {
     $('.next').prop("disabled", false)
-    $('.next').removeClass("btn-secondary").addClass("btn-info")
+    $('.next').removeClass("btn-secondary").addClass("btn-primary")
   }
 }
 

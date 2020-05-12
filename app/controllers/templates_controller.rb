@@ -12,7 +12,7 @@ class TemplatesController < ApplicationController
     role_ids = Template.pluck(:role_id)
     @roles = Role.where.not(id: role_ids)
     @competencies = Competency.all
-    render "add"
+    render "add", locals: { title: "Add a new template" }
   end
 
   def create
@@ -32,7 +32,7 @@ class TemplatesController < ApplicationController
     @template = Template.find(params[:id])
     current_role_id = Template.find_by_id(params[:id]).role_id
     @roles = Role.where(id: current_role_id).or(Role.where.not(id: role_ids))
-    render "add"
+    render "add", locals: { title: "Edit the template" }
   end
 
   def update

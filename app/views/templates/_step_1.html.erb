@@ -13,10 +13,10 @@
         <%# Template name %>
         <div class="row">
           <div class="offset-md-1 col-md-2" style="text-align: left">
-            <label>Name: (*)</label>
+            <label>Template Name: (*)</label>
           </div>
           <div class="col-md-8 name">
-            <%= text_field_tag 'name', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter Name' %>
+            <%= text_field_tag 'name', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter template name' %>
             <div class="error"></div>
           </div>
         </div>
@@ -38,7 +38,7 @@
             <label>Description: </label>
           </div>
           <div class="col-md-8 description">
-            <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary', placeholder: "Please enter Description" %>
+            <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary' %>
             <div class="error"></div>
           </div>
         </div>
