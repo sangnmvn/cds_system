@@ -220,7 +220,7 @@ function change_button_right(flag) {
 function change_button_save(flag) {
 	if (flag == 0) {
 		$('#save').attr("disabled", false);
-
+  
 	} else {
 		$('#save').attr("disabled", true);
 
@@ -697,7 +697,7 @@ function save_group_privileges(group_id, arr) {
     dataType: "json",
     success: function (response) {
       $("#modalPrivilege").modal("hide");
-      success()
+      success('The group information has been updated privilege successfully.')
     },
     error: function (response) {
       fails()
