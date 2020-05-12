@@ -61,6 +61,7 @@ Rails.application.routes.draw do
       get "load"
       get "load_data_edit"
       post "change_location"
+      get "check_privileges"
     end
   end
 

@@ -299,6 +299,7 @@ function loadDataCompetencies(id) {
       });
       disableNextCompetencies();
       disableButtonMove();
+      checkPrivileges();
     },
   });
 }
@@ -340,24 +341,27 @@ function nextStep1(){
 }
 
 function checkPrivileges(){
-  $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
-  $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
-  // $.ajax({
-  //   type: "GET",
-  //   url: "/competencies/check_privileges",
-  //   headers: {
-  //     "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-  //   },
-  //   data: {},
-  //   dataType: "json",
-  //   success: function (response) {
-  //     $(response).each(function (i, e) {
-  //       if (response.status == "success"){
-        
-  //       }
-  //     });
-  //   },
-  // });
+  
+  $.ajax({
+    type: "GET",
+    url: "/competencies/check_privileges",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {},
+    dataType: "json",
+    success: function (response) {
+      $(response).each(function (i, e) {
+        if (response.privileges == "view"){
+          $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
+          $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#4d4f4e");
+          $('.form-add-competency #name').prop("disabled", true);
+          $('.form-add-competency #desc').prop("disabled", true);
+          $('.form-add-competency #type').prop("disabled", true);
+        }
+      });
+    },
+  });
 }
 
 $(document).on('keyup','.form-add-competency #name,#desc', function(){

@@ -93,6 +93,14 @@ class CompetenciesController < ApplicationController
     end
   end
 
+  def check_privileges
+    if (@privilege_array & [9]).any?
+      return render json: { privileges: "full" }
+    else 
+      return render json: { privileges: "view" }
+    end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
