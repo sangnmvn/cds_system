@@ -15,8 +15,9 @@
               <label>Schedule Name (*)</label>
             </div>
             <div class="col-sm-6">
-              <%= text_field_tag 'desc', nil, class: 'form-control', value: schedule.desc %>
+              <%= text_field_tag 'desc_edit', nil, class: 'form-control', value: schedule.desc %>
               <input type="hidden" name="id" id="id" value="<%= schedule.id%>">
+              <input type="hidden" name="status_form" id="status_form" value="<%= schedule.status %>">
             </div>
           </div>
           <br>
@@ -27,9 +28,9 @@
             </div>
             <div class="col-sm-6">
               <% if schedule.status == "In-progress" %>
-                <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control', form: 'fakeform' , disabled: 'disabled'%>
+                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control', form: 'fakeform' , disabled: 'disabled'%>
               <% else %>
-                <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
+                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
               <% end %>
             </div>
           </div>
@@ -86,7 +87,7 @@
               <label>Reminder (*)</label>
             </div>
             <div class="col-sm-6">
-              <input type="number" name="notify_hr" id="notify_hr" value="<%= schedule.notify_hr %>">
+              <input type="number" name="notify_hr_edit" id="notify_hr_edit" value="<%= schedule.notify_hr %>">
               <em>day(s) before</em>
             </div>
           </div>

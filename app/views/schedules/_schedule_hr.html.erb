@@ -1,7 +1,10 @@
 <% @schedules.each_with_index do |schedule, index| %>
 <tr>
-  
-  <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
+  <% if schedule.status == "New" %>
+    <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
+    <% else %>
+    <td></td>
+  <% end %>
   <td><%= index + 1 %></td>
   <td><%= schedule.desc %></td>
   <td><%= schedule.company.name %></td>

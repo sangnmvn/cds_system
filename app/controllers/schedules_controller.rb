@@ -101,22 +101,41 @@ class SchedulesController < ApplicationController
       end
     end
     respond_to do |format|
-      @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
+      @schedules = Schedule.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
       @schedules.each { |schedule| update_Status(schedule) }
       format.js { @status = true }
     end
   end
 
   def update
+    temp_params = schedule_params
+    temp_params[:end_date_hr] = helpers.date_format(params[:end_date_hr])
     @schedule = Schedule.find(params[:id])
-
-    respond_to do |format|
-      if @schedule.update(schedule_params_2)
-        @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
-        @schedules.each { |schedule| update_Status(schedule) }
-        format.js { @status = true }
-      else
-        format.js { @status = false }
+    if params[:status_form] == "New"
+      temp_params[:start_date] = helpers.date_format(params[:start_date])
+      # format date from period
+      period_params_temp = period_params
+      period_params_temp[:from_date] = helpers.date_format(params[:from_date])
+      period_params_temp[:to_date] = helpers.date_format(params[:to_date])
+      @period = Period.find(@schedule.period_id)
+      
+      respond_to do |format|
+        if @schedule.update(temp_params) && @period.update(period_params_temp)
+          @schedules = Schedule.where(is_delete: false).order(id: :DESC).page(params[:page]).per(20)
+          format.js { @status = true }
+        else
+          format.js { @status = false }
+        end
+      end
+    end
+    if params[:status_form] == "In-progress"
+      respond_to do |format|
+        if @schedule.update(temp_params)
+          @schedules = Schedule.where(is_delete: false).order(id: :DESC).page(params[:page]).per(20)
+          format.js { @status = true }
+        else
+          format.js { @status = false }
+        end
       end
     end
   end
@@ -135,10 +154,6 @@ class SchedulesController < ApplicationController
 
   def period_params
     params.permit(:id, :from_date, :to_date)
-  end
-
-  def schedule_params_2
-    params.permit(:project_id, :start_date, :end_date, :notify_date)
   end
 
   def update_Status(schedule)
