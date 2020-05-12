@@ -17,7 +17,7 @@ function fails(content = "Fail !") {
   }, 5000);
 }
 // check status when enter start date and end date
-function check_status(start,status_id) {
+function check_status(start, status_id) {
   start = Date.parse(start);
   let toDay = new Date()
   toDay = toDay.setHours(0, 0, 0, 0);
@@ -29,10 +29,28 @@ function check_status(start,status_id) {
   }
 }
 
-function change_status(start_date){
+function check_notify(end_date, notify) {
+  var end_date_val = $(end_date).val();
+  var notify_val = $(notify).val();
+  var format_end_date = new Date(end_date_val);
+  format_end_date.setDate(format_end_date.getDate() - parseInt(notify_val))
+  var toDay = new Date();
+  toDay.setHours(0, 0, 0, 0)
+  if (toDay > format_end_date) {
+    $(notify).after('<span class="error' + "_" + notify + '">Notice date must be greater than current date.</span>')
+  }
+}
+
+
+function change_status(start_date, attr_status) {
   $(start_date).change(function () {
     var start = $(this).val();
-    check_status(start, "#status_id")
+    check_status(start, attr_status)
+  })
+}
+function change_notify(end_date, notify) {
+  $(notify).change(function () {
+    check_notify(end_date, notify)
   })
 }
 // end check
@@ -45,7 +63,14 @@ $(document).ready(function () {
   end_date_id = "#end_date"
   from_date = "#from_date"
   to_date = "#to_date"
-  datepicker_setup(start_date_id,[end_date_id, from_date, to_date])
+  attr_id_notify = "#notify_hr"
+  datepicker_setup([start_date_id, end_date_id, from_date, to_date])
+
+  $(attr_id_notify).change(function () {
+    debugger
+    check_notify(end_date_id, attr_id_notify)
+  })
+
   $('#start_date').change(function () {
     var start = $(start_date_id).val();
     check_status(start, "#status")
@@ -82,13 +107,16 @@ $(document).on("click", ".edit_btn", function () {
     url: "/schedules/" + schedule_param + "/edit_page",
     type: "GET",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    success: function() {
-      start_date_id = "#start_date_edit";
-      end_date_id = "#end_date_edit";
-      from_date = "#from_date_edit";
-      to_date = "#to_date_edit";
-      datepicker_setup(start_date_id,[end_date_id,from_date,to_date]);
-      change_status(start_date_id);
+    success: function () {
+      attr_start_date_id = "#start_date_edit";
+      attr_end_date_id = "#end_date_edit";
+      attr_from_date = "#from_date_edit";
+      attr_to_date = "#to_date_edit";
+      attr_id_notify = "#notify_hr_edit";
+      attr_status = "#status_id"
+      datepicker_setup([attr_start_date_id, attr_end_date_id, attr_from_date, attr_to_date]);
+      change_status(attr_start_date_id, attr_status);
+      change_notify(attr_end_date_id, attr_id_notify);
     }
   });
 
@@ -98,22 +126,17 @@ $(document).on("click", "#selectAll", function () {
 });
 
 // btn datepicker form add
-function datepicker_setup(start_id, arr_end_date){  
-    var toDay = new Date();
-    toDay.setDate(toDay.getDate())
-    $(start_id).datepicker({
+function datepicker_setup(arr_date) {
+  var toDay = new Date();
+  toDay.setDate(toDay.getDate())
+  for (i = 0; i <= arr_date.length; i++) {
+    $(arr_date[i]).datepicker({
       todayBtn: "linked",
       todayHighlight: true,
-      startDate: toDay
+      startDate: toDay,
+      autoclose: true
     })
-   for(i = 0; i<= arr_end_date.length; i++)
-   {
-     $(arr_end_date[i]).datepicker({
-      todayBtn: "linked",
-      todayHighlight: true,
-      startDate: toDay
-     })
-   } 
+  }
 }
 
 
@@ -132,7 +155,7 @@ $(document).on("click", "#btn_modal_add_hr", function () {
   status_hr = $('#status').val();
   temp = true;
   $(".error").remove();
-  
+
   // check date start and end
   if (Date.parse(start_date) >= Date.parse(end_date)) {
     temp = false;
@@ -203,48 +226,48 @@ $(document).on("click", "#btn_modal_add_hr", function () {
 });
 $(document).on("click", "#btn_modal_edit_hr", function () {
   id_schedule = $('#id').val()
-  schedule_name = $('#desc').val();
-  company = $("#company").val();
-  start_date = $("#start_date").val();
-  end_date = $("#end_date").val();
-  from_date = $("#from_date").val();
-  to_date = $("#to_date").val();
-  notify_date = $("#notify_date").val();
-  notify_hr = $('#notify_hr').val();
-  status_hr = $('#status').val();
+  schedule_name = $('#desc_edit').val();
+  company = $("#company_edit").val();
+  start_date = $("#start_date_edit").val();
+  end_date = $("#end_date_edit").val();
+  from_date = $("#from_date_edit").val();
+  to_date = $("#to_date_edit").val();
+  notify_hr = $('#notify_hr_edit').val();
+  status_hr = $('#status_id').val();
+  status_form = $('#status_form').val();
   temp = true;
   $(".error").remove();
-  
+  debugger
   // check date start and end
   if (Date.parse(start_date) >= Date.parse(end_date)) {
     temp = false;
-    $('#end_date').after('<span class="error">End date must be greater than start date.</span>')
+    $('#end_date_edit').after('<span class="error">End date must be greater than start date.</span>')
   }
   if (Date.parse(from_date) >= Date.parse(to_date)) {
     temp = false;
-    $('#to_date').after('<span class="error">Period end date must be greater than period start date.</span>')
+    $('#to_date_edit').after('<span class="error">Period end date must be greater than period start date.</span>')
   }
   if (from_date == "") {
     temp = false;
-    $('#from_date').after('<span class="error">Please enter from date.</span>')
+    $('#from_date_edit').after('<span class="error">Please enter from date.</span>')
   }
   if (to_date == "") {
     temp = false;
-    $('#to_date').after('<span class="error">Please enter to date.</span>')
+    $('#to_date_edit').after('<span class="error">Please enter to date.</span>')
   }
   if (start_date == "") {
     temp = false;
-    $('#start_date').after('<span class="error">Please enter start date.</span>')
+    $('#start_date_edit').after('<span class="error">Please enter start date.</span>')
   }
 
   if (end_date == "") {
     temp = false;
-    $('#end_date').after('<span class="error">Please enter end date.</span>')
+    $('#end_date_edit').after('<span class="error">Please enter end date.</span>')
   }
   // end check date
   if (schedule_name == "") {
     temp = false;
-    $('#desc').after('<span class="error">Please enter schedule name.</span>')
+    $('#desc_edit').after('<span class="error">Please enter schedule name.</span>')
   }
 
   if (company == "") {
@@ -254,33 +277,47 @@ $(document).on("click", "#btn_modal_edit_hr", function () {
 
   if (notify_hr == "") {
     temp = false;
-    $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+    $('#notify_hr_edit').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
   }
 
+  var params_ajax = {
+    url: "/schedules/" + id_schedule,
+    type: "PUT",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {},
+    success: (res) => {
+      $('#form_edit_hr')[0].reset();
+    }
+  }
+  // update form with in progress
+  if (status_form == "In-progress") {
+      params_ajax.data = {
+        desc: schedule_name,
+        end_date_hr: end_date,
+        notify_hr: notify_hr,
+        status_form: status_form
+      }
+  }
 
-
-  if (temp == true) {
-    $.ajax({
-      url: "/schedules",
-      type: "POST",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-      },
-      data: {
+  // update form with status new
+  if (status_form == "New") {
+    params_ajax.data = {
         from_date: from_date,
         to_date: to_date,
-        admin_user_id: admin_user_id,
         desc: schedule_name,
         company_id: company,
         start_date: start_date,
         end_date_hr: end_date,
         notify_hr: notify_hr,
-        status: status_hr
-      },
-      success: (res) => {
-        $('#form_add_hr')[0].reset();
+        status: status_hr,
+        status_form: status_form
       }
-    });
+  }
+
+  if (temp == true) {
+    $.ajax(params_ajax);
   }
 });
 function delete_schedule() {
