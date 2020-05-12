@@ -15,7 +15,7 @@ $(document).on("click", "#btn-add-competency", function () {
       success: function (response) {
         if (response.status == "exist") {
           $(".form-add-competency #error-name-competency").html(
-            '<span class="error">Name Competency already exists</span>'
+            '<span class="error">The competency name already exists</span>'
           );
         } else if (response.status == "success") {
           $(".form-add-competency")[0].reset();
@@ -23,9 +23,12 @@ $(document).on("click", "#btn-add-competency", function () {
           addCompetency(response.id,response.name,response.type,response.desc);
           disableNextCompetencies();
           disableButtonMove();
+          // hide tooltip
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
-          success("Competency '"+ name +"' is created");
-          $('.btn-save-compentency').prop("disabled", true);
+          // message success
+          success("The competency has been saved successfully");
+          $('.btn-save-competency').prop("disabled", true);
+          $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
         } else if (response.status == "fail") {
           fails("Can't create competency");
         }
@@ -41,27 +44,31 @@ $(document).on("click", "#btn-add-competency", function () {
       success: function (response) {
         if (response.status == "exist") {
           $(".form-add-competency #error-name-competency").html(
-            '<span class="error">Name Competency already exists</span>'
+            '<span class="error">The competency name already exists</span>'
           );
         } else if (response.status == "success") {
           $(".form-add-competency")[0].reset();
           table = $("#table_add_competency").DataTable();
           table.row(index).data([Number(index)+1,response.name,response.type,response.desc,
           '<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+response.id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+response.id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+response.id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+response.id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-trash icon"></i></a> \
           </td>']).draw();
-          $('.btn-save-compentency').prop("disabled", true);
+          $('.btn-save-competency').prop("disabled", true);
+          $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
           // reset value 
           $(".form-add-competency #competency_id").val('');
           $(".form-add-competency #competency_index").val('');
-          // show all icon
-          $('#table_add_competency tr td .icon').show();
+          $('#table_add_competency tr td a:nth-child(1)').addClass("btnUp");
+          $('#table_add_competency tr td a:nth-child(2)').addClass("btnDown");
+          $('#table_add_competency tr td a:nth-child(4)').addClass("btn-delete-competency");
+          $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "green");
+          $("#table_add_competency tr td .fa-trash").css("color", "red");
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
-          success("Competency '" + name + "' is updated");
+          success("The competency has been saved successfully");
         } else if (response.status == "fail") {
           fails("Can't update competency");
         }
@@ -76,10 +83,10 @@ function addCompetency(id,name,type,desc){
   length = table.rows()[0].length;
   table.row.add([length+1,name,type,desc,
     '<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-pencil icon"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+id+'" href="javascript:void(0)"><i class="fa fa-trash icon"></i></a> \
           </td>'
       ]).draw();
 }
@@ -119,8 +126,10 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
             $(".form-add-competency #type").val(response.type);
             $(".form-add-competency #desc").val(response.desc);
             $(".form-add-competency #competency_index").val(index);
-            $('.btn-save-compentency').prop("disabled", false);
-            $('#table_add_competency tr td .icon').hide();
+            $('.btn-save-competency').prop("disabled", false);
+            $(".btn-save-competency").removeClass("btn-secondary").addClass("btn-primary");
+            $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-delete-competency"]);
+            $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
             success("Load Data Success");
           } else {
             fails("Load Data Fail");
@@ -132,8 +141,18 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
 $(document).on("click", "#table_add_competency .btn-delete-competency", function () {
   // delete data
     var id = $(this).data("id");
+    $('#modal_delete_competency').modal('show');  
     var index = $(this).closest('tr').index();
-    $.ajax({
+    var name_competency_delete = $("#table_add_competency").DataTable().row(index).data()[1];
+    $('#name_competency_delete').html(name_competency_delete);
+    $('#modal_delete_competency #competency_id').val(id);
+    $('#modal_delete_competency #competency_index').val(index);
+});
+
+$(document).on("click", "#confirm_yes_delete_competency", function () {
+  id = $('#modal_delete_competency #competency_id').val();
+  index = $('#modal_delete_competency #competency_index').val();
+  $.ajax({
       type: "DELETE",
       url: "/competencies/"+id,
       headers: {
@@ -160,14 +179,17 @@ $(document).on("click", "#table_add_competency .btn-delete-competency", function
             });
             disableNextCompetencies();
             disableButtonMove();
-            success("Competency is deleted");
+            $('#modal_delete_competency').modal('hide');  
+            success("The competency is deleted");
           } else {
             fails("Can't delete competency");
           }
         });
       },
     });
+
 });
+
 
 $(document).ready(function () {
   var current_fs, next_fs, previous_fs;
@@ -267,10 +289,10 @@ function loadDataCompetencies(id) {
             }
           })
           .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
-          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+e.id+'" href="#"><i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+e.id+'" href="#"><i class="fa fa-trash icon" style="color:red"></i></a> \
-          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+e.id+'" href="#"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+e.id+'" href="#"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btnUp" data-toggle="tooltip" title="Move up Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
+          <a class="btnDown" data-toggle="tooltip" title="Move down Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
+          <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon"></i></a> \
+          <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-trash icon"></i></a> \
           </td>',
           ])
           .draw();
@@ -285,19 +307,25 @@ function disableNextCompetencies(){
   table = $("#table_add_competency").DataTable();
   if ( table.rows()[0].length == 0 ) {
     $('.btn-next-competency').prop("disabled", true);
+    $(".btn-next-competency").removeClass("btn-primary").addClass("btn-secondary")
   }else {
     $('.btn-next-competency').prop("disabled", false);
+    $(".btn-next-competency").removeClass("btn-secondary").addClass("btn-primary")
   }
 }
 
 function disableButtonMove(){
   table = $("#table_add_competency").DataTable();
   length = table.rows().data().length;
-  $('#table_add_competency tr td .btnUp').show();
-  $('#table_add_competency tr td .btnDown').show(); 
+  $('#table_add_competency tr td a:nth-child(1)').addClass("btnUp");
+  $('#table_add_competency tr td a:nth-child(2)').addClass("btnDown");
+  $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down").css("color", "green");
   if (length >= 1) {
-    $('#table_add_competency tr:nth-child(1) td .btnUp').hide();
-    $('#table_add_competency tr:nth-child('+length+') td .btnDown').hide();
+    $('#table_add_competency tr:nth-child(1) td a').removeClass("btnUp");
+    $("#table_add_competency tr:nth-child(1) td .fa-arrow-circle-up").css("color", "#4d4f4e");
+
+    $('#table_add_competency tr:nth-child('+length+') td a').removeClass("btnDown");
+    $('#table_add_competency tr:nth-child('+length+') td .fa-arrow-circle-down').css("color", "#4d4f4e");
   }
 }
 
@@ -311,6 +339,27 @@ function nextStep1(){
   loadDataCompetencies(id);
 }
 
+function checkPrivileges(){
+  $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
+  $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
+  // $.ajax({
+  //   type: "GET",
+  //   url: "/competencies/check_privileges",
+  //   headers: {
+  //     "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+  //   },
+  //   data: {},
+  //   dataType: "json",
+  //   success: function (response) {
+  //     $(response).each(function (i, e) {
+  //       if (response.status == "success"){
+        
+  //       }
+  //     });
+  //   },
+  // });
+}
+
 $(document).on('keyup','.form-add-competency #name,#desc', function(){
   name = $(".form-add-competency #name").val();
   desc = $(".form-add-competency #desc").val();
@@ -319,15 +368,18 @@ $(document).on('keyup','.form-add-competency #name,#desc', function(){
     $(".form-add-competency #error-name-competency").html(
       '<span class="error" >The competency name must be from 2 to 200 character</span>'
     );
-    $('.btn-save-compentency').prop("disabled", true);
+    $('.btn-save-competency').prop("disabled", true);
+    $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
   }else {
     if(/^[\w\.,\s\&]*$/.test(name) == false) {
       $(".form-add-competency #error-name-competency").html(
         '<span class="error" >The competency name can not contain special character</span>'
       );
-      $('.btn-save-compentency').prop("disabled", true);
+      $('.btn-save-competency').prop("disabled", true);
+      $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
     }else {
-      $('.btn-save-compentency').prop("disabled", false);
+      $('.btn-save-competency').prop("disabled", false);
+      $(".btn-save-competency").removeClass("btn-secondary").addClass("btn-primary")
     }
   }
   //desc
@@ -335,103 +387,117 @@ $(document).on('keyup','.form-add-competency #name,#desc', function(){
     $(".form-add-competency #error-desc-competency").html(
       '<span class="error" >The competency desc must less than 200 character</span>'
     );
-    $('.btn-save-compentency').prop("disabled", true);
+    $('.btn-save-competency').prop("disabled", true);
+    $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
   }
 });
 
 
 $(document).on('click','#table_add_competency .btnUp', function(){
   var row_id = $(this).closest('tr').index();
+  console.log(row_id);
   var id = $(this).data("id");
-  table =  $("#table_add_competency").DataTable();
-  $.ajax({
-    type: "POST",
-    url: "/competencies/change_location",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {
-      id: id, type: "up"
-    },
-    dataType: "json",
-    success: function (response) {
-      $(response).each(function (i, e) {
-        if (response.status == "success"){
-          current_row_data = table.row(row_id).data();
-          previous_row_data = table.row(row_id - 1).data();
-          
-          temp = current_row_data[1];
-          current_row_data[1] = previous_row_data[1];
-          previous_row_data[1] = temp;
+  if (row_id > 0) {
+    $.ajax({
+      type: "POST",
+      url: "/competencies/change_location",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        id: id, type: "up"
+      },
+      dataType: "json",
+      success: function (response) {
+        $(response).each(function (i, e) {
+          if (response.status == "success"){
+            table =  $("#table_add_competency").DataTable();
+            current_row_data = table.row(row_id).data();
+            previous_row_data = table.row(row_id - 1).data();
+            
+            current_row_data[0] = row_id + 1
 
-          temp = current_row_data[2];
-          current_row_data[2] = previous_row_data[2];
-          previous_row_data[2] = temp;
-          
-          temp = current_row_data[3];
-          current_row_data[3] = previous_row_data[3];
-          previous_row_data[3] = temp;
+            temp = current_row_data[1];
+            current_row_data[1] = previous_row_data[1];
+            previous_row_data[1] = temp;
 
-          temp = current_row_data[4];
-          current_row_data[4] = previous_row_data[4];
-          previous_row_data[4] = temp;
-          table.row(row_id).data(current_row_data).draw();
-          table.row(row_id - 1).data(previous_row_data).draw();
-          disableButtonMove();
-          success("Competency is moved");
-        }else if (response.status == "success") {
-          fails("Can't move competency");
-        }
-      });
-    },
-  });
+            temp = current_row_data[2];
+            current_row_data[2] = previous_row_data[2];
+            previous_row_data[2] = temp;
+            
+            temp = current_row_data[3];
+            current_row_data[3] = previous_row_data[3];
+            previous_row_data[3] = temp;
+
+            temp = current_row_data[4];
+            current_row_data[4] = previous_row_data[4];
+            previous_row_data[4] = temp;
+
+            console.log(current_row_data);
+            table.row(row_id).data(current_row_data).draw();
+            table.row(row_id - 1).data(previous_row_data).draw();
+            disableButtonMove();
+            success("Competency is moved");
+          }else if (response.status == "fail") {
+            fails("Can't move competency");
+          }
+        });
+      },
+    });
+  }
 });
 
 
 $(document).on('click','#table_add_competency .btnDown', function(){
   var row_id = $(this).closest('tr').index();
   var id = $(this).data("id");
-  $.ajax({
-    type: "POST",
-    url: "/competencies/change_location",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {
-      id: id, type: "down"
-    },
-    dataType: "json",
-    success: function (response) {
-      $(response).each(function (i, e) {
-        if (response.status == "success"){
-          table =  $("#table_add_competency").DataTable();
-          current_row_data = table.row(row_id).data();
-          next_row_data = table.row(row_id + 1).data();
-          temp = current_row_data[1];
-          current_row_data[1] = next_row_data[1];
-          next_row_data[1] = temp;
+  table =  $("#table_add_competency").DataTable();
+  if (table.rows().data().length-1 > row_id){
+    $.ajax({
+      type: "POST",
+      url: "/competencies/change_location",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        id: id, type: "down"
+      },
+      dataType: "json",
+      success: function (response) {
+        $(response).each(function (i, e) {
+          if (response.status == "success"){
+            current_row_data = table.row(row_id).data();
+            next_row_data = table.row(row_id + 1).data();
+            
+            next_row_data[0] = row_id + 2;
+            temp = current_row_data[1];
+            current_row_data[1] = next_row_data[1];
+            next_row_data[1] = temp;
 
-          temp = current_row_data[2];
-          current_row_data[2] = next_row_data[2];
-          next_row_data[2] = temp;
-          
-          temp = current_row_data[3];
-          current_row_data[3] = next_row_data[3];
-          next_row_data[3] = temp;
+            temp = current_row_data[2];
+            current_row_data[2] = next_row_data[2];
+            next_row_data[2] = temp;
+            
+            temp = current_row_data[3];
+            current_row_data[3] = next_row_data[3];
+            next_row_data[3] = temp;
 
-          temp = current_row_data[4];
-          current_row_data[4] = next_row_data[4];
-          next_row_data[4] = temp;
-          table.row(row_id).data(current_row_data).draw();
-          table.row(row_id + 1).data(next_row_data).draw();
-          disableButtonMove();
-          success("Competency is moved");
-        }else if (response.status == "success") {
-          fails("Can't move competency");
-        }
-      });
-    },
-  });
+            temp = current_row_data[4];
+            current_row_data[4] = next_row_data[4];
+            next_row_data[4] = temp;
+
+            console.log(next_row_data);
+            table.row(row_id).data(current_row_data).draw();
+            table.row(row_id + 1).data(next_row_data).draw();
+            disableButtonMove();
+            success("Competency is moved");
+          }else if (response.status == "fail") {
+            fails("Can't move competency");
+          }
+        });
+      },
+    });
+  }
 });
 
 $(document).ready(function(){

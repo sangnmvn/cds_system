@@ -83,7 +83,7 @@ $(document).ready(function () {
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
   });
-  
+
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -106,14 +106,14 @@ function loadSlotsinCompetency(search) {
           if (search) {
             table.fnAddData([
               e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
-              "<a href='#' class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
+              "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
           } else {
             table.fnAddData([
-              e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' href='#' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
-              "<a href='#' class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
+              e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
+              "<a class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
               "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#FFCC99'></i></a>" +
-              "<a href='#' class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
+              "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ]);
           }
         }

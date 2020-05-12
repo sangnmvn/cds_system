@@ -130,7 +130,7 @@ select.list-dt:focus {
   padding: 5px 10px 5px 10px;   
 }
 #table_add_competency tbody td:nth-child(1) {
-  width: 2%;
+  width: 1%;
   text-align: right;
 }
 #table_add_competency tbody td:nth-child(2) {
@@ -144,6 +144,7 @@ select.list-dt:focus {
 }
 #table_add_competency tbody td:nth-child(5) {
   width: 5%;
+  text-align: center;
 }
 
 .close-modal {
@@ -151,4 +152,13 @@ select.list-dt:focus {
 }
 .dataTables_empty {
   text-align: center!important;
+}
+#table_add_competency .fa-arrow-circle-up,.fa-arrow-circle-down {
+  color: green;
+}
+#table_add_competency .fa-pencil {
+  color: #fc9803;
+}
+#table_add_competency .fa-trash {
+  color: red;
 }

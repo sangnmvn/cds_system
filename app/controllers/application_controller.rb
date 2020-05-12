@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
           
     
           group.each {|z|
-            if z.status == true and z.is_delete == false
+            if z.status == true && z.is_delete == false
               group_privilege = GroupPrivilege.where(group_id: x.group_id)
               
           group_privilege.each{|y|
