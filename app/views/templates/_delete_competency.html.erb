@@ -7,12 +7,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="text-align: left;">
         Are you sure you want to delete the competency <span id="name_competency_delete" style="font-weight: bold;"></span>?
-        <form>
-          <%= hidden_field(:competency, :id )%>
-          <%= hidden_field(:competency, :index )%>
-        </form>
+        <%= hidden_field(:competency, :id )%>
+        <%= hidden_field(:competency, :index )%>
       </div>
       <div class="modal-footer" style="justify-content: center;">
         <button type="button" class="btn btn-primary" id="confirm_yes_delete_competency">Yes</button>

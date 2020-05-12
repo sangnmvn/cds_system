@@ -3,19 +3,16 @@
     <%= form_with class: "form-add-competency" do %>
       <div class="row">
         <div class="col-sm-12">
-            
-            <div class="col-sm-8 border-primary" style="text-align: left">
-                <p style="color:red;">(*) required fields</p>
-            </div>
+          <p style="color:red; text-align: left">(*) required fields</p>
         </div>
         <div class="col-sm-12">
           <%# group name %>
           <div class="row">
-            <div class="offset-md-1 col-md-2" style="text-align: left">
+            <div class="col-md-2" style="text-align: left">
               <label>Name (*)</label>
             </div>
-            <div class="col-sm-8">
-              <%= text_field_tag 'name', nil, class: 'form-control border-primary', placeholder: 'Please enter name competency' %>
+            <div class="col-sm-10">
+              <%= text_field_tag 'name', nil, class: 'form-control border-primary', placeholder: 'Please enter competency name' %>
               <%= hidden_field(:competency, :id )%>
               <%= hidden_field(:competency, :index )%>
               <div id="error-name-competency">
@@ -26,7 +23,7 @@
           <br>
           <%# status %>
           <div class="row">
-            <div class="offset-md-1 col-md-2" style="text-align: left">
+            <div class="col-md-2" style="text-align: left">
               <label>Type</label>
             </div>
             <div class="col-sm-4">
@@ -36,10 +33,10 @@
           <br>
           <%# Description %>
           <div class="row">
-            <div class="offset-md-1 col-md-2" style="text-align: left">
+            <div class="col-md-2" style="text-align: left">
               <label>Description</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-10">
               <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary'  %>
               <div id="error-desc-competency">
                 <span class="error"></span>
@@ -60,7 +57,7 @@
 <div style="margin-top: 20px" style="justify-content: left;">
   <div class="row">
     <div class="col-sm">
-      <div class="divHeader">Competencies List</div>
+      <div class="divHeader">Competency List</div>
     </div>
   </div>
   <div class="row">
@@ -69,7 +66,7 @@
         <thead>
           <tr>
             <th data-orderable="false" data-width="20%">No.</th>
-            <th data-orderable="false" data-width="20%">Name</th>
+            <th data-orderable="false" data-width="20%">Competency Name</th>
             <th data-orderable="false" data-width="20%">Type</th>
             <th data-orderable="false" data-width="20%">Description</th>
             <th data-orderable="false" data-width="20%">Action</th>
