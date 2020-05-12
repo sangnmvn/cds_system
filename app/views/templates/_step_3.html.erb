@@ -13,24 +13,19 @@
             <div class="row">
                 <div class="offset-md-1 col-md-2" style="text-align: left">
                     <label>Competency: </label>
+                    <p style="color:red;">(*) required fields</p>
                 </div>
                 <div class="col-sm-8">
                     <select class="form-control border-primary" onchange= "checkDataDesc()" id= "selectCompetency">
                     </select>
                 </div>
             </div>
-            <div class="row">
-                <div class="offset-md-1 col-md-2" style="text-align: left">
-                    <p style="color:red;">(*) required fields</p>
-                </div>
-            </div>
-            <br>
             <%# Level %>
             <div class="row">
             <div class="offset-md-1 col-md-2" style="text-align: left">
                 <label>Level</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 <%= select_tag "type", raw('<option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
