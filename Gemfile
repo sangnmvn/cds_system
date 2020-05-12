@@ -24,6 +24,7 @@ gem "jbuilder", "~> 2.7"
 gem 'bootstrap', '~> 4.4.1'
 gem 'jquery-rails'
 gem 'popper_js', '~> 1.14.5'
+gem 'bootstrap-datepicker-rails'
 gem 'whenever', require: false
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

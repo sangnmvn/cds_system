@@ -1,6 +1,6 @@
 <button type="button" class="btn btn-primary float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;"><%= image_tag("Add.png") %> Add</button>
 <div class="modal fade modal-form-add" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" style="text-align: center">Add a New Schedule</h4>
@@ -35,15 +35,17 @@
                   </div>
                 </div>
                 <br>
-                 <div class="row">
-                  <div class="col-sm-3">
+                <div class="row">
+                  <div class="col-sm-4">
                     <label>Periods (*)</label>
                   </div>
-                  <div class="col-sm-4">
-                    <input type="text" id="from_date">
+                  <div class="col-sm-1">From</div>
+                  <div class="col-sm-2">
+                    <input type="text" id="from_date" class="form-control">
                   </div>
-                  <div class="col-sm-4">
-                    <input type="text" id="to_date">
+                  <div class="col-sm-1">To</div>
+                  <div class="col-sm-2">
+                    <input type="text" id="to_date" class="form-control">
                   </div>
                 </div>
                 <br>
@@ -53,7 +55,7 @@
                     <label>Start date (*)</label>
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" id="start_date">
+                    <input type="text" id="start_date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                   </div>
                 </div>
                 <br>
@@ -63,7 +65,7 @@
                     <label>End date (*)</label>
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" id="end_date" class="form-control">
+                    <input type="text" id="end_date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                   </div>
                 </div>
                 <br>

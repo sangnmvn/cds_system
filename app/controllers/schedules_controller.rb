@@ -1,14 +1,15 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
+  ROLE_NAME = ["PM", "SM", "BOD"]
 
   def index
     # binding.pry
-    @fields = ["No.", "Schedule name", "Created by", "Start date", "Status", "Action"]
+    @fields = ["No.", "Schedule name", "Company name", "Period", "Start date", "Status", "Action"]
     if current_admin_user.role.name == "HR"
-      @fields.insert(4, "End date")
+      @fields.insert(5, "End date")
       @company = Company.all
-      @schedules = Schedule.all.includes(:admin_user, :company).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
+      @schedules = Schedule.includes(:admin_user, :company).where(is_delete: false).order(id: :DESC).page(params[:page]).per(20)
     else
       @fields.insert(4, "Employee end date", "Reviewer end date")
       @projects = Project.joins(project_members: [:admin_user]).where("admin_users.id = ?", current_admin_user.id)
@@ -17,9 +18,6 @@ class SchedulesController < ApplicationController
 
   def new
     @schedule = Schedule.new
-    respond_to do |format|
-      format.js { render layout: false, content_type: "text/javascript" }
-    end
   end
 
   def show
@@ -31,30 +29,32 @@ class SchedulesController < ApplicationController
   def create
     # format date from schedule
     temp_params = schedule_params
-    temp_params[:end_date_hr] = date_format(params[:end_date_hr])
-    temp_params[:start_date] = date_format(params[:start_date])
+    temp_params[:end_date_hr] = helpers.date_format(params[:end_date_hr])
+    temp_params[:start_date] = helpers.date_format(params[:start_date])
     # format date from period
     period_params_temp = period_params
-    period_params_temp[:from_date] = date_format(params[:from_date])
-    period_params_temp[:to_date] = date_format(params[:to_date])
+    period_params_temp[:from_date] = helpers.date_format(params[:from_date])
+    period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
     # binding.pry
 
     @period = Period.new(period_params_temp)
-    if @period.save
-      respond_to do |format|
+    respond_to do |format|
+      if @period.save
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
         if @schedule.save
           # binding.pry
-          @schedules = Schedule.all.includes(:admin_user, :company).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
-          admin_user = AdminUser.joins(:company, :role).where("roles.name IN ('PM', 'SM', 'BDD') and admin_users.is_delete = false and companies.id = ? ", params[:company_id])
+          @schedules = Schedule.where(is_delete: false).order(id: :DESC).page(params[:page]).per(20)
+          admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
           ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_now
           format.js { @status = true }
         else
           format.js { @status = false }
         end
+      else
+        format.js { @status = false }
       end
     end
   end
@@ -63,8 +63,7 @@ class SchedulesController < ApplicationController
     respond_to do |format|
       @schedule = Schedule.find(params[:id])
       @company = Company.all
-      # binding.pry
-
+      
       @schedule[:end_date_hr] = DateTime.strptime(@schedule[:end_date_hr].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
       @schedule[:start_date] = DateTime.strptime(@schedule[:start_date].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
 
@@ -85,7 +84,7 @@ class SchedulesController < ApplicationController
 
     respond_to do |format|
       if @schedule.update(is_delete: true)
-        @schedules = Schedule.all.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
+        @schedules = Schedule.includes(:admin_user, :project).where("is_delete = false").order("id DESC").page(params[:page]).per(20)
         @schedules.each { |schedule| update_Status(schedule) }
         format.js { @status = true }
       else
