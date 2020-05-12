@@ -417,7 +417,7 @@ $(document).on('click','#table_add_competency .btnUp', function(){
             table.row(row_id - 1).data(previous_row_data).draw();
             disableButtonMove();
             success("Competency is moved");
-          }else if (response.status == "success") {
+          }else if (response.status == "fail") {
             fails("Can't move competency");
           }
         });
@@ -470,7 +470,7 @@ $(document).on('click','#table_add_competency .btnDown', function(){
             table.row(row_id + 1).data(next_row_data).draw();
             disableButtonMove();
             success("Competency is moved");
-          }else if (response.status == "success") {
+          }else if (response.status == "fail") {
             fails("Can't move competency");
           }
         });

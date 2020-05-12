@@ -1,7 +1,11 @@
 class CompetenciesController < ApplicationController
+  layout "system_layout"
+  include Authorize
+  before_action :get_privilege_id
   before_action :set_competency, only: [:show, :edit, :update, :load_data_edit, :destroy]
 
   def create
+    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     respond_to do |format|
       if Competency.where(name: params[:name].squish!).where(template_id: params[:template_id]).present?
         format.json { render json: { status: "exist" } }
@@ -16,9 +20,11 @@ class CompetenciesController < ApplicationController
         end
       end
     end
+    
   end
 
   def destroy
+    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if @competency.destroy
       render json: { status: "success" }
     else
@@ -27,18 +33,20 @@ class CompetenciesController < ApplicationController
   end
 
   def update
+    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if Competency.where.not(id: params[:id]).where(name: params[:name].squish!).present?
-      render json: { status: "exist" }
+      return render json: { status: "exist" }
     else
       if @competency.update(competency_params)
-        render json: { status: "success", id: @competency.id, name: @competency.name, type: @competency._type, desc: @competency.desc }
+        return render json: { status: "success", id: @competency.id, name: @competency.name, type: @competency._type, desc: @competency.desc }
       else
-        render json: { status: "fail" }
+        return render json: { status: "fail" }
       end
     end
   end
 
   def load
+    return render json: { status: "fail" } unless (@privilege_array & [9,10]).any?
     competencies = Competency.select(:id, :name, :_type, :desc)
       .where(template_id: params[:id]).order(location: :asc)
     arr = Array.new
@@ -54,6 +62,7 @@ class CompetenciesController < ApplicationController
   end
 
   def load_data_edit
+    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if @competency
       render json: { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
     else
@@ -62,7 +71,7 @@ class CompetenciesController < ApplicationController
   end
 
   def change_location
-    # eval(params[:type] + " " + params[:id])
+    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if competency_current = Competency.find(params[:id])
       location_current = competency_current.location
       template_id_current = competency_current.template_id
@@ -94,4 +103,5 @@ class CompetenciesController < ApplicationController
   def competency_params
     params.permit(:id, :name, :_type, :desc, :template_id, :location)
   end
+
 end
