@@ -338,12 +338,14 @@ function myAjax() {
 			},
 			dataType: "json",
 			success: function (response) {
-				$(response).each(
-					function (i, e) { //duyet mang doi tuong
-            //console.log(e);
-            $("#table_right").dataTable().fnAddData([
+       
+        
+				$.each(response,function (i, e) { //duyet mang doi tuong
+          table=$("#table_right").dataTable();
+            table.fnAddData([
 							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name
-						]);
+            ]);
+         
 					}
 				);
 			}
@@ -361,7 +363,7 @@ function myAjax() {
 			dataType: "json",
 			success: function (response) {
         $("#table_left").dataTable().fnClearTable(); //xoa du lieu cũ của table
-        $("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
+         //xoa du lieu cũ của table
 				$(response).each(
           function (i, e) { //duyet mang doi tuong
             console.log(i + ' - ' + e);            
