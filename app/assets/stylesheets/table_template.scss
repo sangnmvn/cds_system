@@ -40,9 +40,9 @@
 	background-color:  #6495ED;
 	text-align: left;
 	color: #FFF;
-	// padding-left: 10px;
 	font-weight: bold;
-	padding: 5px 0px 5px 10px;
+	padding-top: 1.5%;
+	padding-left: 1.5%;
 }
 .action_icon > img
 {
@@ -129,4 +129,16 @@ a.disabled {
   display: inline-block;
   font-weight: bold;
   font-size: 150%;
+}
+input.empty {
+	position: absolute;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: inherit;
+}
+span.search{
+	background-color: transparent;
+	border-color: transparent;
+	color: #FFF;
 }

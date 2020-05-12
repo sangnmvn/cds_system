@@ -54,7 +54,9 @@ class SlotsController < ApplicationController
   def check_slot_in_template
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
     @slot = Slot.where(competency_id: @competencies).pluck(:competency_id).uniq.count
-    # binding.pry
+    # @levels = Slot.where(competency_id: @competencies).pluck(:level).uniq.sort
+    # check_level = check_array_level(@levels)
+    # render json: @competencies.count > @slot || check_array_level == 0 ? -1 : 1
     render json: @competencies.count > @slot ? -1 : 1
   end
 
@@ -88,4 +90,14 @@ class SlotsController < ApplicationController
       slot_in_level[slot_in_level.find_index(current_slot) + direction.to_i] #trả về slot đứng sau của slot hiện tại
     end
   end
+
+  # def check_array_level(array)
+  #   return 0 if array[0].to_i != 1
+  #   if array.count > 1
+  #     for i in 0..array.count
+  #       return 0 if array[i].to_i != array[i+1].to_i + 1
+  #     end
+  #   end
+  #   return 1
+  # end
 end

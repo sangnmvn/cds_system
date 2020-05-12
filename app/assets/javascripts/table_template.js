@@ -11,6 +11,7 @@ $(document).ready(function () {
   });
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
+    $("#selectLevel").val($("#selectLevel option:first").val());
   });
   $("#addSlot").click(function () {
     var desc = $("#descSlot").val();
@@ -34,7 +35,7 @@ $(document).ready(function () {
   $("#table_slot").on('click', '.btnDel', function () {
     idDel = $(this).attr('value');
     trDel = $(this).closest('tr'); //loại bỏ hàng đó khỏi UI
-    $('#contentMessageDelete').html("Are you sure you want to delete the slot '" + trDel.children()[1].textContent + "'")
+    $('#contentMessageDelete').html("Are you sure you want to delete the slot below?<p><i>" + trDel.children()[1].textContent + "</i></p>")
     $("#messageDelete").modal('show')
   });
   $("#btnDelete").click(function(){
@@ -88,16 +89,12 @@ $(document).ready(function () {
     $("#evidenceSlot").val("")
     changeBtnSave(-1);
   });
-  $("#btnMessageEnable").click(function(){
-    location.replace("../templates")
-  })
-
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
 function loadSlotsinCompetency(search) {
   var id = $('#selectCompetency').val();
-  $("#nameCompetency").html($('#selectCompetency option:selected').text() + "'s Slots");
+  $("#nameCompetency").html("  " + $('#selectCompetency option:selected').text() + "/ Slot List");
   $.ajax({
     type: "GET",
     url: "/slots/load",
@@ -163,12 +160,12 @@ function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templat
     },
     dataType: "json",
     success: function () {
-      success("Add new slot to " + nameCompetency + " is successfully");
+      success("The slot has been saved successfully.");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
     error: function (response) {
-      fails("Add new slot to " + nameCompetency + " is fail");
+      fails("The slot hasn't been saved");
     }
   });
 }
@@ -186,12 +183,12 @@ function updateSlot(desc, evidence, level, competencyId, presentId, templateId) 
     },
     dataType: "json",
     success: function (response) {
-      success("Update slot is successfully");
+      success("The slot has been updated successfully.");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
     error: function () {
-      fails("Update slot is fail");
+      fails("The slot hasn't been updated");
     }
   });
 }
@@ -204,13 +201,13 @@ function delSlot(id, tr, templateId) {
     },
     type: "GET",
     success: function (response) {
-      success("Delete slot is successfully");
+      success("The slot has been deleted successfully.");
       $("#table_slot").dataTable().fnDeleteRow(tr);
       checkSlotinTemplate(templateId)
       disableButtonUpDown()
     },
     error: function () {
-      fails("Delete slot is fail");
+      fails("The slot hasn't been deleted");
     }
   });
 }
