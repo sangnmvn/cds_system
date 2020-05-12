@@ -4,13 +4,14 @@
   <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
   <td><%= index + 1 %></td>
   <td><%= schedule.desc %></td>
-  <td><%= schedule.first_name + ' ' + schedule.last_name %></td>
+  <td><%= schedule.company.name %></td>
+  <td><%= schedule.period.from_date.strftime('%b %d, %Y') %> - <%= schedule.period.to_date.strftime('%b %d, %Y') %></td>
   <td><%= schedule.start_date.strftime('%b %d, %Y') %></td>
   <td><%= schedule.end_date_hr.strftime('%b %d, %Y') %></td>
   <td><%= schedule.status %></td>
   <td>
     <% if schedule.status == "In-progress" %>
-      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
+      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id, :"data-status" => schedule.status }) %>
     <% end %>
     <% if schedule.status == "New" %>
       <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>

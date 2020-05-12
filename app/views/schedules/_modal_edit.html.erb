@@ -16,8 +16,7 @@
             </div>
             <div class="col-sm-6">
               <%= text_field_tag 'desc', nil, class: 'form-control', value: schedule.desc %>
-              <input type="hidden" name="schedule" id="schedule" value="schedule">
-              <input type="hidden" name="user" id="user" value="<%= current_admin_user.id %>">
+              <input type="hidden" name="id" id="id" value="<%= schedule.id%>">
             </div>
           </div>
           <br>
@@ -27,17 +26,48 @@
               <label>Company Name (*)</label>
             </div>
             <div class="col-sm-6">
-              <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
+              <% if schedule.status == "In-progress" %>
+                <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control', form: 'fakeform' , disabled: 'disabled'%>
+              <% else %>
+                <%= select_tag "company", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
+              <% end %>
             </div>
           </div>
           <br>
+          <% if schedule.status == "In-progress" %>
+            <div class="row">
+              <div class="col-sm-4">
+                <label>Periods (*)</label>
+              </div>
+              <div class="col-sm-1">From</div>
+              <input type="text" class="col-sm-2 form-control" id="from_date_edit" disabled form="fakeform" disabled value="<%= schedule.period.from_date.strftime('%m/%d/%Y') %>">
+              <div class="col-sm-1">To</div>
+              <input type="text" class="col-sm-2 form-control" id="to_date_edit" disabled form="fakeform" disabled value="<%= schedule.period.to_date.strftime('%m/%d/%Y')%>">
+            </div>
+            <br>
+          <% else %>
+            <div class="row">
+              <div class="col-sm-4">
+                <label>Periods (*)</label>
+              </div>
+              <div class="col-sm-1">From</div>
+              <input type="text" class="col-sm-2 form-control" id="from_date_edit" value="<%= schedule.period.from_date.strftime('%m/%d/%Y') %>">
+              <div class="col-sm-1">To</div>
+              <input type="text" class="col-sm-2 form-control" id="to_date_edit" value="<%= schedule.period.to_date.strftime('%m/%d/%Y')%>">
+            </div>
+            <br>
+          <% end %>
           <%# start date %>
           <div class="row">
             <div class="col-sm-4">
               <label>Start date (*)</label>
             </div>
             <div class="col-sm-6">
-              <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date %>">
+              <% if schedule.status == "In-progress" %>
+                <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%m/%d/%Y') %>" disabled>
+              <% else %>
+                <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%m/%d/%Y') %>">
+              <% end %>
             </div>
           </div>
           <br>
@@ -47,7 +77,7 @@
               <label>End date (*)</label>
             </div>
             <div class="col-sm-6">
-              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr %>">
+              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr.strftime('%m/%d/%Y') %>">
             </div>
           </div>
           <br>
@@ -56,7 +86,7 @@
               <label>Reminder (*)</label>
             </div>
             <div class="col-sm-6">
-              <%= number_field_tag :notify_hr, nil %>
+              <input type="number" name="notify_hr" id="notify_hr" value="<%= schedule.notify_hr %>">
               <em>day(s) before</em>
             </div>
           </div>
@@ -66,7 +96,7 @@
               <label>Status</label>
             </div>
             <div class="col-sm-6" >
-              <input type="text" class="form-control" id="status" value="<%= schedule.status %>" disabled >
+              <input type="text" class="form-control" id="status_id" value="<%= schedule.status %>" disabled >
             </div>
           </div>
           <br>
@@ -76,7 +106,7 @@
       <%# end container  %>
     </div>
     <div class="modal-footer justify-content-center">
-      <button type="button" class="btn btn-primary" id="btn_modal_add_hr">Save</button>
+      <button type="button" class="btn btn-primary" id="btn_modal_edit_hr">Save</button>
       <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
     </div>
   </form>

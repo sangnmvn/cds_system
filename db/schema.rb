@@ -108,10 +108,12 @@ ActiveRecord::Schema.define(version: 2020_05_11_094331) do
   create_table "forms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "_type"
     t.bigint "template_id"
+    t.bigint "period_id"
     t.bigint "admin_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_forms_on_admin_user_id"
+    t.index ["period_id"], name: "index_forms_on_period_id"
     t.index ["template_id"], name: "index_forms_on_template_id"
   end
 
@@ -136,11 +138,9 @@ ActiveRecord::Schema.define(version: 2020_05_11_094331) do
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.date "from_date"
     t.date "to_date"
-    t.bigint "form_id"
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["form_id"], name: "index_periods_on_form_id"
   end
 
   create_table "privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -265,9 +265,9 @@ ActiveRecord::Schema.define(version: 2020_05_11_094331) do
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
   add_foreign_key "forms", "admin_users"
+  add_foreign_key "forms", "periods"
   add_foreign_key "group_privileges", "groups"
   add_foreign_key "group_privileges", "privileges"
-  add_foreign_key "periods", "forms"
   add_foreign_key "privileges", "title_privileges"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "admin_users"
