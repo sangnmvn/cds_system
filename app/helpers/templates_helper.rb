@@ -1,11 +1,4 @@
 module TemplatesHelper
-  TEST_STRING = "<ol>
-<li><em>Des 1</em></li>
-<li><strong>Des 2</strong></li>
-<li><p>Des 3</p></li>
-</ol>"
-
-  TEST_STRING2 = "<em>Des 1</em> <strong>Des 2</strong> <p>Des 3</p>"
   ROMAN_NUMBERS = {
     1000 => "M",
     900 => "CM",
@@ -31,32 +24,67 @@ module TemplatesHelper
     roman
   end
 
-  def element_to_rich_text(html_element, is_root = true, format_arr = nil)
+  def element_to_rich_text(html_element, recursive_level = 0, format_arr = nil, index_arr = nil)
     if format_arr.nil?
-      format_arr = {}
+      format_arr = Hash.new { |h,k| h[k] = [] }
+      index_arr = []
     end
+    is_root = (recursive_level == 0) ? true : false
+    
     if html_element.name == "strong"
       html_element.children.each do |children|
-        text = element_to_rich_text(children, false, format_arr)
-        format_arr[text] = Set.new if format_arr[text].nil?
-        format_arr[text].add(:b)
-        return text unless is_root
+        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        format_arr[text].push(:b)
+        
+        is_already_included = false
+        index_arr.each do |arr_info|
+          index_text = arr_info[0]
+          if index_text == text
+            is_already_included = true
+            break
+          end
+        end
+        
+        index_arr.push [text, recursive_level] unless is_already_included        
       end
+      return html_element.children.text unless is_root
     elsif html_element.name == "em"
       html_element.children.each do |children|
-        text = element_to_rich_text(children, false, format_arr)
-        format_arr[text] = Set.new if format_arr[text].nil?
-        format_arr[text].add(:i)
-        return text unless is_root
+        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        format_arr[text].push(:i)
+
+        is_already_included = false
+        index_arr.each do |arr_info|
+          index_text = arr_info[0]
+          if index_text == text
+            is_already_included = true
+            break
+          end
+        end
+        
+        index_arr.push [text, recursive_level] unless is_already_included        
       end
+      return html_element.children.text unless is_root
+    elsif html_element.name == "p"
+      html_element.children.each do |children|
+        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        format_arr[text].push(:p)
+        is_already_included = false
+        index_arr.each do |arr_info|
+          index_text = arr_info[0]
+          if index_text == text
+            is_already_included = true
+            break
+          end
+        end
+        
+        index_arr.push [text, recursive_level] unless is_already_included        
+      end    
+      return html_element.children.text unless is_root
     elsif html_element.name == "text"
-      if is_root
-        format_arr[html_element.text] = []
-      else
-        return html_element.text
-      end
+      return html_element.text      
     end
-    return format_arr if is_root
+    return format_arr, index_arr if is_root
   end
 
   def from_HTML_to_axlsx_text(html)
@@ -65,13 +93,46 @@ module TemplatesHelper
 
     final_text = Axlsx::RichText.new
 
-    final_format = {}
-    innerHTML.children.each do |children_element|
-      format_arr = element_to_rich_text(children_element)
-      final_format.merge!(format_arr)
-    end
     rt = Axlsx::RichText.new
-    final_format.each { |text, format| rt.add_run(text, :b => format.include?(:b), :i => format.include?(:i)) }
+
+    innerHTML.children.each_with_index do |children_element, element_index|
+      format_arr, index_arr = element_to_rich_text(children_element)
+      format = {:b => false, :i => false, :p => false}
+      parent_index = []
+      (0...(index_arr.length)).each do |i|
+        next if parent_index.include?(i)
+        text , level = index_arr[i]
+        current_format = format_arr[text]
+
+        format[:b] = current_format.include?(:b)
+        format[:i] = current_format.include?(:i)
+        format[:p] = current_format.include?(:p)
+        (i+1...(index_arr.length)).each do |j|
+          next_text , next_level = index_arr[j]
+          next_format = format_arr[next_text]
+          if next_text.include?(text) && next_level < level
+            format[:b] = format[:b] | next_format.include?(:b)
+            format[:i] = format[:i] | next_format.include?(:i)            
+            format[:p] = format[:p] | next_format.include?(:p)            
+            parent_index.push j
+          end
+        end
+
+        if (i == 0) 
+          final_text = format[:p] ? "\n#{text}" : text        
+        elsif (i == index_arr.length-1)
+          final_text = format[:p] ? "#{text}\n" : text        
+        else
+          final_text = text
+        end
+
+        if element_index == 0
+          rt.add_run(final_text.lstrip, :b => format[:b], :i => format[:i] ,:font_name => "Arial", :sz => 10)      
+        else
+          rt.add_run(final_text, :b => format[:b], :i => format[:i] ,:font_name => "Arial", :sz => 10)      
+        end
+      end      
+    end    
     rt
   end
 
@@ -83,6 +144,7 @@ module TemplatesHelper
     sentences = s.lines
     sentences.each do |sentence|
       sentence_height = (sentence.length + 111) / 112 # lam tron len
+      sentence_height += (sentence.scan(/<p>/).length + 1) / 2
       height += sentence_height
     end
     height * 13
@@ -103,7 +165,8 @@ module TemplatesHelper
 
   def squish_keep_newline(s)
     # convert new line to an unused character and restore it back
-    new_s = s.gsub(/\n/, "ή")
+    new_s = s.strip
+    new_s.gsub!(/\n/, "ή")
     new_s.squish!
     new_s.gsub!(/ή/, "\n")
     new_s.gsub(/\n{1}[ \t]*/, "\n")
