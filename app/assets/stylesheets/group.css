@@ -20,7 +20,7 @@
 }
 #table_group tr.odd > th {
     font-size: 16px;
-    background: #009EE0;
+    background: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
     border: 1px solid black;
@@ -38,6 +38,7 @@ table.dataTable tbody td {
     background: #cfd5ea;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
+    text-align: left;
 }
 
 #table_group tr.odd > td {
@@ -45,6 +46,7 @@ table.dataTable tbody td {
     background: #E9ebf5;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
+    text-align: left;
 }
 
 .action_icon > img
@@ -90,7 +92,7 @@ table.dataTable tbody td {
 
 .panel_contents table tr.odd > th {
     font-size: 14px;
-    background: #009EE0;
+    background: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
 }
@@ -122,7 +124,7 @@ table.dataTable tbody td {
 }
 
 thead {
-    background-color: #0066CC;
+    background-color: #4472c4;
     color: #fff;
     font-weight: bold;
 }
@@ -139,7 +141,7 @@ thead {
 	padding: 0;
 }
 .head-myheader {
-	background-color: #0066CC;
+	background-color: #4472c4;
 }
 .button-center{
 	display: flex;
@@ -182,7 +184,7 @@ thead {
 }
 .table-popup-privilege thead {
   text-align: center;
-  background-color: #0066CC;
+  background-color: #4472c4;
   color: #fff;
   font-weight: bold;
 }
@@ -193,7 +195,7 @@ thead {
   border: 2px solid #000;
 }
 .modal-form-add-privilege .modal-header{
-  background-color: #0066CC;
+  background-color: #4472c4;
   color: #fff;
 }
 .modal-form-add-privilege .testScroll{

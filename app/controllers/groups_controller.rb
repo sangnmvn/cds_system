@@ -52,7 +52,8 @@ class GroupsController < ApplicationController
         params[:status] = params[:status] == "Enable" ? 1 : 0
         if @group.update(group_params)
           status_group = @group.status ? "Enable" : "Disable"
-          format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
+          number = UserGroup.where(group_id: @group.id).count
+          format.json { render :json => { :status => "success",number: number, id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
         else
           format.json { render :json => { :status => "fail" } }
         end

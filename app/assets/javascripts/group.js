@@ -69,8 +69,10 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           addData.push('<div style="text-align:right">'+ a +'</div>');
           addData.push(response.name);
           addData.push(response.status_group);
-          addData.push('<div style="text-align:right">0</div>');
           addData.push(response.desc);
+          
+          addData.push('<div style="text-align:right">0</div>');
+          
           addData.push(
             '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit.png"></a> \
@@ -83,7 +85,6 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
           table.row.add(addData);
-          table.draw();
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -180,9 +181,10 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               var a=row_id+1;
               updateData.push('<div style="text-align:right">'+ a +'</div>');
               updateData.push(response.name);
-              updateData.push(response.status_group);
-              updateData.push('<div style="text-align:right">0</div>');
               updateData.push(response.desc);
+              updateData.push('<div style="text-align:right">'+response.number+'</div>');
+              updateData.push(response.status_group);
+              
               updateData.push(
                 '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
                 <img border="0" src="/assets/edit.png"></a> \
@@ -247,6 +249,7 @@ function setup_dataTable() {
       language: {
         "info": " _START_ - _END_ of _TOTAL_"
       },
+   
     
       
 

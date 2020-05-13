@@ -11,11 +11,13 @@
         </div>
         </th>
    
-      <th scope="col" class="id" style="width:6%;text-align:center">No.</th>
-      <th scope="col" class="name"  style="width:12%;text-align:center">Name</th>
-      <th scope="col" class="status"  style="width:10%;text-align:center">Status</th>
-      <th scope="col" class="n_user"  style="width:10%;text-align:center">Number of User</th>
+      <th scope="col" class="id" style="width:4%;text-align:center">No.</th>
+      <th scope="col" class="name"  style="width:30%;text-align:center">Name</th>
       <th scope="col" class="description" style="text-align:center">Description</th>
+      <th scope="col" class="n_user"  style="width:10%;text-align:center">Number of User</th>
+      <th scope="col" class="status"  style="width:10%;text-align:center">Status</th>
+      
+      
       <th scope="col" class="action"style="width:7%;background-image:none;text-align:center">Action</th>
     </tr>
   </thead>
@@ -31,6 +33,8 @@
         </td>
         <td class="id number" style="text-align:right"><%= "#{index + 1}" %></td>
         <td class="name"><%= "#{group.name}" %></td>
+        <td class="description"><%= "#{group.description}" %></td>
+        <td class="n_user" style="text-align: right;"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
         <td class="status">
           <% if group.status %>
             Enable
@@ -38,8 +42,8 @@
             Disable
           <% end %>
         </td>
-        <td class="n_user" style="text-align: right;"><%= "#{UserGroup.where(group_id: group.id).count}" %></td>
-        <td class="description"><%= "#{group.description}" %></td>
+        
+        
         <td class="action" style="text-align:center"><% if @privilege_array.include? 4%>
           <%= 
                 links = []
