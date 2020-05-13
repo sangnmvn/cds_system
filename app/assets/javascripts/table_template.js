@@ -14,7 +14,6 @@ $(document).ready(function () {
   });
   $("#addSlot").click(function () {
     var desc = $("#descSlot").val();
-    //var evidence = $("#evidenceSlot").val();
     var evidence = CKEDITOR.instances.editor.getData();
     var level = $("#selectLevel").val();
     var competencyId = $("#selectCompetency").val();
@@ -105,7 +104,13 @@ $(document).ready(function () {
     CKEDITOR.instances.editor.setData("");
     changeBtnSave(-1);
   });
-  
+  CKEDITOR.instances.editor.removePlugins = 'link'
+  $("#cke_15").attr("style","display:none")
+  $("#cke_18").attr("style","display:none")
+
+  $("#btnAlertCancel").click(function(){
+    $(location).attr('href','/templates')
+  })
 
   //-----------------------------------------------------
 });
@@ -403,13 +408,13 @@ function checkPrivilegesSlot(){
     data: {},
     dataType: "json",
     success: function (response) {
+
       if (response.privileges == "view"){
         $('#tbdTemplate tr td a').addClass("disabled");
         $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#6c757d");
         $('#selectLevel').prop("disabled", true);
         $('#descSlot').prop("disabled", true);
         CKEDITOR.instances.editor.setReadOnly(true)
-        //$('#evidenceSlot').prop("disabled", true);
         $("#btnFinish").attr("disabled", true);
         $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
       }

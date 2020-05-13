@@ -14,6 +14,7 @@ class SlotsController < ApplicationController
 
   def new
     return render json: { status: "fail" } unless @privilege_array.include?(9)
+    return render json: { status: "NaN" } unless @privilege_array.include?(10)
     @slot_id = Slot.where(competency_id: params[:competency_id], level: params[:level]).pluck(:slot_id).compact.max.to_i + 1
     @slot = Slot.create(slot_params(@slot_id))
     render json: { errors: @slot.errors }, status: 400 if @slot.invalid?
@@ -21,12 +22,14 @@ class SlotsController < ApplicationController
 
   def update
     return render json: { status: "fail" } unless @privilege_array.include?(9)
+    return render json: { status: "NaN" } unless @privilege_array.include?(10)
     slot = Slot.find(params[:id])
     slot.update(slot_params) if slot
   end
 
   def change_slot_id
     return render json: { status: "fail" } unless @privilege_array.include?(9)
+    return render json: { status: "NaN" } unless @privilege_array.include?(10)
     direction = params[:direction]
     id_slot = params[:id]
     result = check_location_slot(id_slot, direction)
@@ -48,6 +51,7 @@ class SlotsController < ApplicationController
 
   def delete
     return render json: { status: "fail" } unless @privilege_array.include?(9)
+    return render json: { status: "NaN" } unless @privilege_array.include?(10)
     Slot.destroy(params[:id])
   end
 
@@ -67,6 +71,7 @@ class SlotsController < ApplicationController
 
   def update_status_template
     return render json: { status: "fail" } unless @privilege_array.include?(9)
+    return render json: { status: "NaN" } unless @privilege_array.include?(10)
     template = Template.find(params[:template_id])
     template.update(status: 1)
   end
