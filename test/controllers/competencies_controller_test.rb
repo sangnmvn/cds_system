@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CompetenciesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    # @competency = competency(:one)
+    @competency = competency(:one)
   end
 
   # test "should get index" do
@@ -15,13 +15,13 @@ class CompetenciesControllerTest < ActionDispatch::IntegrationTest
   #   assert_response :success
   # end
 
-  test "should create competency" do
-    assert_difference('Competency.count') do
-      post competencies_url, params: { name: "Productivity" }
-    end
+  # test "should create competency" do
+  #   assert_difference('Competency.count') do
+  #     post competencies_url, params: { name: "Productivity" }
+  #   end
 
-    assert_redirected_to group_privilege_url(GroupPrivilege.last)
-  end
+  #   assert_redirected_to group_privilege_url(GroupPrivilege.last)
+  # end
 
   # test "should show group_privilege" do
   #   get group_privilege_url(@group_privilege)

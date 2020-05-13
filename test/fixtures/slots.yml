@@ -1,13 +1,13 @@
 one:
-  Description: MyString
-  Evidence: ""
-  Level: 1
-  Competency_id: 1
-  Slot_id: 1
+  desc: MyString
+  evidence: ""
+  level: 1
+  competency_id: 1
+  slot_id: 1
 
 two:
-  Description: MyString
-  Evidence: ""
-  Level: 2
-  Competency_id: 1
-  Slot_id: 2
+  desc: MyString
+  evidence: ""
+  level: 2
+  competency_id: 1
+  slot_id: 2

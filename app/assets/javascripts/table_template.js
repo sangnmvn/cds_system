@@ -94,7 +94,7 @@ $(document).ready(function () {
 //--------------------------------------------------------
 function loadSlotsinCompetency(search) {
   var id = $('#selectCompetency').val();
-  $("#nameCompetency").html("  " + $('#selectCompetency option:selected').text() + "/ Slot List");
+  $("#nameCompetency").html("  " + $('#selectCompetency option:selected').text() + " / Slot List");
   $.ajax({
     type: "GET",
     url: "/slots/load",
