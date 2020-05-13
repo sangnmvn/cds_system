@@ -14,6 +14,15 @@ $(document).ready(function () {
     next_button(1)
   }
   postDeleteTemplate()
+  $('.step1_cancel').click(function() {
+    if ($('.save.step1').attr('disabled') == 'disabled') {
+      $('.step1_cancel').attr('data-target', "")
+      $(location).attr('href', '/templates')
+    }
+    else{
+      $('.step1_cancel').attr('data-target', "#modal_warning_close")
+    }
+  })
 })
 
 function clickSaveButton() {
@@ -99,7 +108,7 @@ function checkChangeUpdate() {
 function checkModalCancel() {
   var name = $('.step1 #template').val()
   var role = $('.step1 #role').val()
-  if (name !== undefined || role !== undefined){
+  if (name !== undefined || role !== undefined) {
     if (name.length == 0 && role.length == 0) {
       $('.step1_cancel').attr('data-target', "")
       $('.step1_cancel').click(function () {
@@ -111,11 +120,11 @@ function checkModalCancel() {
       $('#modal_warning_close button.btn-primary').on('click', function () {
         if ($(this).text() == "Save" && $('#modal_warning_close .modal-footer a').attr("href") != "#") {
           var description = $('.step1 #description').val()
-          postCreateTemplate(name,role,description)
+          postCreateTemplate(name, role, description)
         }
       })
     }
-  }    
+  }
 }
 
 function success(content) {
@@ -268,12 +277,19 @@ function checkPrivileges_step1() {
     dataType: "json",
     success: function (response) {
       if (response.privileges == "view") {
+        $('.btn-light.border-primary').attr('data-target', "")
+        $('.btn-light.border-primary').click(function () {
+          $(location).attr('href', '/templates')
+        })
         $('#add_template_button').remove()
         $('.delete_icon').removeAttr("data-target")
         $('.delete_icon i').css("color", "#000")
         $('#step1 #template').prop("disabled", true)
         $('#step1 #role').prop("disabled", true)
         $('#step1 #description').prop("disabled", true)
+      }
+      if (response.location) {
+        $(location).attr('href', response.location)
       }
     },
   });

@@ -33,11 +33,6 @@ table thead {
   border: 2px solid #4882bf;
 }
 
-.template-table .description {
-  font-family: Arial, Helvetica, sans-serif;
-  ;
-}
-
 .table td {
   white-space: normal !important;
   word-wrap: break-word;

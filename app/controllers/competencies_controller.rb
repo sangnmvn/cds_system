@@ -99,8 +99,10 @@ class CompetenciesController < ApplicationController
   def check_privileges
     if (@privilege_array & [9]).any?
       return render json: { privileges: "full" }
-    else 
+    elsif (@privilege_array & [10]).any?
       return render json: { privileges: "view" }
+    else
+      return render json: { location: index2_admin_users_path }
     end
   end
 

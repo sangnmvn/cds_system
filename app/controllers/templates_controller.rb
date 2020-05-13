@@ -102,6 +102,6 @@ class TemplatesController < ApplicationController
 
   def invalid_template
     logger.error "Attempt to access invalid template #{params[:id]}"
-    redirect_to action: "index", notice: "Invalid template"
+    redirect_to action: "index"
   end
 end
