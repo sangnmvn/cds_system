@@ -14,7 +14,7 @@ $(document).ready(function () {
     next_button(1)
   }
   postDeleteTemplate()
-  $('.step1_cancel').click(function() {
+  $('.step1_cancel').on('click',function() {
     if ($('.save.step1').attr('disabled') == 'disabled') {
       $('.step1_cancel').attr('data-target', "")
       $(location).attr('href', '/templates')
