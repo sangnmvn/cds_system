@@ -343,7 +343,7 @@ function myAjax() {
 				$.each(response,function (i, e) { //duyet mang doi tuong
           table=$("#table_right").dataTable();
             table.fnAddData([
-							"<td style='text-align: right'></td>", "<div style='text-align:center' ><input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/></div>", e.first_name, e.last_name
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name
             ]);
          
 					}
@@ -368,7 +368,7 @@ function myAjax() {
           function (i, e) { //duyet mang doi tuong
             console.log(i + ' - ' + e);            
 						$("#table_left").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<div style='text-align:center' ><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
+							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name
 						]);
 					}
 				);
