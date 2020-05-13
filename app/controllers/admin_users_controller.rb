@@ -214,6 +214,7 @@ class AdminUsersController < ApplicationController
       roles = Role.select(:id, :name).where("id in (?)", admin_user_ids)
     end
     respond_to do |format|
+ 
       format.json { render :json => { :projects => projects.order(:desc), :roles => roles.order(:name) } }
     end
   end

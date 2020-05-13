@@ -15,12 +15,14 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
+       
         $(response).each(function (i, e) {
+         
           $("#filter-project").html("");
-
-          if (Array.isArray(e.projects) && e.projects.length >= 1) {
+          
+         
             $('<option value="all">All</option>').appendTo("#filter-project");
-          }
+       
           $.each(e.projects, function (k, v) {
             $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
               "#filter-project"
@@ -291,12 +293,12 @@ $(document).ready(function () {
  
   
 $("#filter-company").val("all");
-    company = $("#filter-company").val();
+    
     $("#filter-project").val("all");
-
-    project = $("#filter-project").val();
+    company = $("#filter-company").val();
+    
     $("#filter-role").val("all");
-
+    project = $("#filter-project").val();
     role = $("#filter-role").val();
     $.ajax({
       url: "/admin_users/submit_filter",

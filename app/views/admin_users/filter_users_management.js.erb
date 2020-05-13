@@ -1,2 +1,2 @@
 $('#filter-project').html('<option value="all">All</option><% @projects.each {|x| %><option value="<%= x.id%>" <%= "selected" if @project.to_i == x.id%> ><%= x.desc %></option><%}%>');
-$('#filter-role').html('<option value="all">All</option><% @roles.each {|x| %><option value="<%= x.id%>"><%= x.name %></option><%}%>');
+$('#filter-role').html('<% @roles.each {|x| %><option value="<%= x.id%>"><%= x.name %></option><%}%>');
