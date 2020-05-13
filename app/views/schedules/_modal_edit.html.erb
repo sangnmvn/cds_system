@@ -17,58 +17,42 @@
             <div class="col-sm-6">
               <%= text_field_tag 'desc_edit', nil, class: 'form-control', value: schedule.desc %>
               <input type="hidden" name="id" id="id" value="<%= schedule.id%>">
-              <input type="hidden" name="status_form" id="status_form" value="<%= schedule.status %>">
             </div>
           </div>
           <br>
           <%# project name %>
           <div class="row">
             <div class="col-sm-4">
-              <label>Company Name (*)</label>
+              <label>Company Name</label>
             </div>
             <div class="col-sm-6">
-              <% if schedule.status == "In-progress" %>
-                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control', form: 'fakeform' , disabled: 'disabled'%>
-              <% else %>
-                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control'%>
-              <% end %>
+        
+                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control' , disabled: 'disabled'%>
+              
             </div>
           </div>
           <br>
-          <% if schedule.status == "In-progress" %>
-            <div class="row">
-              <div class="col-sm-4">
-                <label>Periods (*)</label>
-              </div>
-              <div class="col-sm-1">From</div>
-              <input type="text" class="col-sm-2 form-control" id="from_date_edit" disabled form="fakeform" disabled value="<%= schedule.period.from_date.strftime('%m/%d/%Y') %>">
-              <div class="col-sm-1">To</div>
-              <input type="text" class="col-sm-2 form-control" id="to_date_edit" disabled form="fakeform" disabled value="<%= schedule.period.to_date.strftime('%m/%d/%Y')%>">
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Periods</label>
             </div>
-            <br>
-          <% else %>
-            <div class="row">
-              <div class="col-sm-4">
-                <label>Periods (*)</label>
-              </div>
-              <div class="col-sm-1">From</div>
-              <input type="text" class="col-sm-2 form-control" id="from_date_edit" value="<%= schedule.period.from_date.strftime('%m/%d/%Y') %>">
-              <div class="col-sm-1">To</div>
-              <input type="text" class="col-sm-2 form-control" id="to_date_edit" value="<%= schedule.period.to_date.strftime('%m/%d/%Y')%>">
-            </div>
-            <br>
-          <% end %>
+            <div class="col-sm-2">From</div>
+            <input type="text" class="col-sm-3 form-control" id="from_date_edit" disabled value="<%= schedule.period.from_date.strftime('%b %d, %Y') %>">
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-2">To</div>
+            <input type="text" id="to_date" class="form-control col-sm-3" disabled value="<%= schedule.period.to_date.strftime('%b %d, %Y') %>">
+          </div>
+          <br>
           <%# start date %>
           <div class="row">
             <div class="col-sm-4">
-              <label>Start date (*)</label>
+              <label>Start date</label>
             </div>
             <div class="col-sm-6">
-              <% if schedule.status == "In-progress" %>
-                <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%m/%d/%Y') %>" disabled>
-              <% else %>
-                <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%m/%d/%Y') %>">
-              <% end %>
+              <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%b %d, %Y') %>" disabled>
             </div>
           </div>
           <br>
@@ -78,7 +62,7 @@
               <label>End date (*)</label>
             </div>
             <div class="col-sm-6">
-              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr.strftime('%m/%d/%Y') %>">
+              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr.strftime('%b %d, %Y') %>">
             </div>
           </div>
           <br>
@@ -87,7 +71,7 @@
               <label>Reminder (*)</label>
             </div>
             <div class="col-sm-6">
-              <input type="number" name="notify_hr_edit" id="notify_hr_edit" value="<%= schedule.notify_hr %>">
+              <input type="number" name="notify_hr_edit" min="1" id="notify_hr_edit" style="text-align: right;" value="<%= schedule.notify_hr %>">
               <em>day(s) before</em>
             </div>
           </div>
@@ -97,6 +81,7 @@
               <label>Status</label>
             </div>
             <div class="col-sm-6" >
+              
               <input type="text" class="form-control" id="status_id" value="<%= schedule.status %>" disabled >
             </div>
           </div>

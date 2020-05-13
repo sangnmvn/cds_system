@@ -37,7 +37,13 @@ function check_notify(end_date, notify) {
   var toDay = new Date();
   toDay.setHours(0, 0, 0, 0)
   if (toDay > format_end_date) {
-    $(notify).after('<span class="error' + "_" + notify + '">Notice date must be greater than current date.</span>')
+    if ($('.error' + "_" + notify.split("#")[1]).length == 0) {
+      // $(notify).after('<span class="error' + "_" + notify.split("#")[1] + '">Notice date must be greater than current date.</span>')
+      $(notify).closest('div').children('em').after('<br><span class="error error' + "_" + notify.split("#")[1] + '">Notice date must be greater than current date.</span>')
+    }
+    else {
+      $(this).html('Notice date must be greater than current date.')
+    }
   }
 }
 
@@ -65,9 +71,8 @@ $(document).ready(function () {
   to_date = "#to_date"
   attr_id_notify = "#notify_hr"
   datepicker_setup([start_date_id, end_date_id, from_date, to_date])
-
+  check_selectAll()
   $(attr_id_notify).change(function () {
-    debugger
     check_notify(end_date_id, attr_id_notify)
   })
 
@@ -134,15 +139,14 @@ function datepicker_setup(arr_date) {
       todayBtn: "linked",
       todayHighlight: true,
       startDate: toDay,
-      autoclose: true
+      autoclose: true,
+      format: "M dd, yyyy"
     })
   }
 }
 
-
-
 // btn add new schedule of HR 
-$(document).on("click", "#btn_modal_add_hr", function () {
+$(document).one("click", "#btn_modal_add_hr", function () {
   admin_user_id = $('#user').val();
   schedule_name = $('#desc').val();
   company = $("#company").val();
@@ -220,11 +224,12 @@ $(document).on("click", "#btn_modal_add_hr", function () {
       },
       success: (res) => {
         $('#form_add_hr')[0].reset();
+        check_selectAll();
       }
     });
   }
 });
-$(document).on("click", "#btn_modal_edit_hr", function () {
+$(document).one("click", "#btn_modal_edit_hr", function () {
   id_schedule = $('#id').val()
   schedule_name = $('#desc_edit').val();
   company = $("#company_edit").val();
@@ -233,32 +238,9 @@ $(document).on("click", "#btn_modal_edit_hr", function () {
   from_date = $("#from_date_edit").val();
   to_date = $("#to_date_edit").val();
   notify_hr = $('#notify_hr_edit').val();
-  status_hr = $('#status_id').val();
-  status_form = $('#status_form').val();
+  status_hr = $('#status_id').val()
   temp = true;
   $(".error").remove();
-  debugger
-  // check date start and end
-  if (Date.parse(start_date) >= Date.parse(end_date)) {
-    temp = false;
-    $('#end_date_edit').after('<span class="error">End date must be greater than start date.</span>')
-  }
-  if (Date.parse(from_date) >= Date.parse(to_date)) {
-    temp = false;
-    $('#to_date_edit').after('<span class="error">Period end date must be greater than period start date.</span>')
-  }
-  if (from_date == "") {
-    temp = false;
-    $('#from_date_edit').after('<span class="error">Please enter from date.</span>')
-  }
-  if (to_date == "") {
-    temp = false;
-    $('#to_date_edit').after('<span class="error">Please enter to date.</span>')
-  }
-  if (start_date == "") {
-    temp = false;
-    $('#start_date_edit').after('<span class="error">Please enter start date.</span>')
-  }
 
   if (end_date == "") {
     temp = false;
@@ -270,54 +252,28 @@ $(document).on("click", "#btn_modal_edit_hr", function () {
     $('#desc_edit').after('<span class="error">Please enter schedule name.</span>')
   }
 
-  if (company == "") {
-    temp = false;
-    $('#company').after('<span class="error">Please enter company name.</span>')
-  }
-
   if (notify_hr == "") {
     temp = false;
     $('#notify_hr_edit').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
   }
 
-  var params_ajax = {
-    url: "/schedules/" + id_schedule,
-    type: "PUT",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {},
-    success: (res) => {
-      $('#form_edit_hr')[0].reset();
-    }
-  }
-  // update form with in progress
-  if (status_form == "In-progress") {
-      params_ajax.data = {
-        desc: schedule_name,
-        end_date_hr: end_date,
-        notify_hr: notify_hr,
-        status_form: status_form
-      }
-  }
-
-  // update form with status new
-  if (status_form == "New") {
-    params_ajax.data = {
-        from_date: from_date,
-        to_date: to_date,
-        desc: schedule_name,
-        company_id: company,
-        start_date: start_date,
-        end_date_hr: end_date,
-        notify_hr: notify_hr,
-        status: status_hr,
-        status_form: status_form
-      }
-  }
-
   if (temp == true) {
-    $.ajax(params_ajax);
+    $.ajax({
+      url: "/schedules/" + id_schedule,
+      type: "PUT",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        desc: schedule_name,
+        end_date_hr: end_date,
+        notify_hr: notify_hr
+      },
+      success: (res) => {
+        $('#form_edit_hr')[0].reset();
+        check_selectAll();
+      }
+    })
   }
 });
 function delete_schedule() {
@@ -329,7 +285,7 @@ function delete_schedule() {
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     success: function (result) {
-      // Do something with the result
+      check_selectAll();
     },
   });
 }
@@ -353,7 +309,7 @@ $(document).on("click", "#delete_selected", function () {
     },
   });
 });
-$(document).ready(function () {
+function check_selectAll() {
   $(".selectable").on('click', function () {
     if ($(':checkbox:checked').length > 0) {
       $('#displayBtnDel').prop("disabled", false);
@@ -370,4 +326,12 @@ $(document).ready(function () {
       $('#displayBtnDel').prop("disabled", true);
     }
   })
-})
+
+  if ($('.table tbody :checkbox').length == 0) {
+    $('#selectAll').prop("disabled",true);
+  }
+
+  if ($('.table tbody :checkbox').length > 0) {
+    $('#selectAll').prop("disabled",false);
+  }
+}
