@@ -4,6 +4,16 @@
 @import "font-awesome";
 @import "bootstrap-datepicker";
 
+#alert-success, #alert-danger {
+  position: absolute;
+  z-index: 3400;
+  top: 10%;
+  left: 50%;
+  margin: 0px auto;
+  text-align: center;
+  display: none;
+}
+
 .table-mytable {
 	text-align: center;
 	tbody tr:nth-of-type(odd) {

@@ -96,6 +96,9 @@ class SchedulesController < ApplicationController
   def destroy_multiple
     if params[:schedule_ids] != nil
       schedule = Schedule.find(params[:schedule_ids])
+      
+      binding.pry
+      
       schedule.each do |schedule|
         schedule.destroy
       end

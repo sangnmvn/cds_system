@@ -347,8 +347,8 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webdrivers
   webpacker (~> 4.0)
-  zip-zip
   whenever
+  zip-zip
 
 RUBY VERSION
    ruby 2.7.1p83

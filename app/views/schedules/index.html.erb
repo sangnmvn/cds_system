@@ -1,5 +1,5 @@
 <%= javascript_include_tag 'schedules', 'data-turbolinks-track': 'reload' %>
-  <%= render 'add'%>
+<%= stylesheet_link_tag 'schedule', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= render 'delete_selected'%>
 <% if current_admin_user.role.name == "HR" %>
   <%= render 'add_hr'   %>
@@ -30,16 +30,10 @@
     </tr>
   </thead>
   <tbody id="schedules">
-    <% if @schedules.nil? || @schedules.empty? %>
-      <tr style="text-align: center;">
-        <th colspan="9">No data available in table</th>
-      </tr>
-    <% else %>
-      <% if current_admin_user.role.name == "HR" %>
-        <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
-      <% elsif current_admin_user.role.name == "PM" %>
-        <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
-      <% end %>
+    <% if current_admin_user.role.name == "HR" %>
+      <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
+    <% elsif current_admin_user.role.name == "PM" %>
+      <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
     <% end %>
   </tbody>
 </table>

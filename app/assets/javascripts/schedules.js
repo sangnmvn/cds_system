@@ -70,8 +70,8 @@ $(document).ready(function () {
   from_date = "#from_date"
   to_date = "#to_date"
   attr_id_notify = "#notify_hr"
-  datepicker_setup([start_date_id, end_date_id, from_date, to_date])
-  check_selectAll()
+  datepicker_setup([start_date_id, end_date_id, from_date, to_date]);
+  check_selectAll();
   $(attr_id_notify).change(function () {
     check_notify(end_date_id, attr_id_notify)
   })
@@ -329,9 +329,5 @@ function check_selectAll() {
 
   if ($('.table tbody :checkbox').length == 0) {
     $('#selectAll').prop("disabled",true);
-  }
-
-  if ($('.table tbody :checkbox').length > 0) {
-    $('#selectAll').prop("disabled",false);
   }
 }
