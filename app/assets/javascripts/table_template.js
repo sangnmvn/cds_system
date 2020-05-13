@@ -2,20 +2,20 @@ $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
-    fnDrawCallback: function(){checkPrivileges_step3(); disableButtonUpDown();}, //; 
+    fnDrawCallback: function(){checkPrivilegesSlot(); disableButtonUpDown();}, //; 
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
-    "order": [
-      [0, 'asc']
-    ]
+    "order": false
   });
+  $('#ckedit').addClass('border-primary')
   $('#selectCompetency').change(function () {
     loadSlotsinCompetency();
     $("#selectLevel").val($("#selectLevel option:first").val());
   });
   $("#addSlot").click(function () {
     var desc = $("#descSlot").val();
-    var evidence = $("#evidenceSlot").val();
+    //var evidence = $("#evidenceSlot").val();
+    var evidence = CKEDITOR.instances.editor.getData();
     var level = $("#selectLevel").val();
     var competencyId = $("#selectCompetency").val();
     var nameCompetency = $("#selectCompetency option:selected").text();
@@ -26,7 +26,7 @@ $(document).ready(function () {
     else
       updateSlot(desc, evidence, level, competencyId, presentId, templateId);
     $("#descSlot").val("");
-    $("#evidenceSlot").val("");
+    CKEDITOR.instances.editor.setData("");
     loadSlotsinCompetency();
     changeBtnSave(-1)
   });
@@ -42,7 +42,7 @@ $(document).ready(function () {
     delSlot(idDel, trDel, templateId);
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
-    $("#evidenceSlot").val("")
+    CKEDITOR.instances.editor.setData("");
     $("#messageDelete").modal('hide')
     $('#contentMessageDelete').html("")
   })
@@ -51,9 +51,12 @@ $(document).ready(function () {
     var id = $(this).attr('value');
     var tr = $(this).closest('tr').children();
     $("#descSlot").val(tr[1].textContent);
-    $("#evidenceSlot").val(tr[2].textContent);
+    CKEDITOR.instances.editor.insertHtml(tr[2].innerHTML);
     chooseSelect("selectLevel", tr[0].textContent);
     $("#hideIdSlot").html(id);
+    CKEDITOR.instances.editor.on('change', function() { 
+      checkDataDesc()
+    });
   });
   changeBtnSave(-1);
   $("#table_slot").removeClass("dataTable")
@@ -61,7 +64,20 @@ $(document).ready(function () {
 
   $("#btnFinish").click(function () {
     if (checkStatusTemplate() == 0)
+    {
+      $.ajax({
+        type: "GET",
+        url: "/slots/get_role",
+        data: {
+          id: templateId
+        },
+        dataType: "json",
+        success: function (response) {
+          $("#contentQuestionEnable").html("You finished this template for role "+ response.name +". Do you want to enable the template for user using ?")
+        },
+      });
       $('#messageQuestionEnable').modal('show')
+    }
   })
   $('#btnEnable').click(function () {
     finnish(templateId);
@@ -86,9 +102,11 @@ $(document).ready(function () {
     checkStatusTemplate(templateId);
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
-    $("#evidenceSlot").val("")
+    CKEDITOR.instances.editor.setData("");
     changeBtnSave(-1);
   });
+  
+
   //-----------------------------------------------------
 });
 //--------------------------------------------------------
@@ -125,7 +143,6 @@ function loadSlotsinCompetency(search) {
       );
       table.fnDraw();
       disableButtonUpDown()
-      checkPrivileges_step3()
     }
   });
 }
@@ -273,15 +290,16 @@ function finnish(templateId) {
     },
     dataType: "json",
     success: function (response) {
-      $("#contentMessageEnable").html("Enable Successfully")
-      $("#messageEnable").modal('show')
+      success("The template has been finished")
       changeBtnFinish(-1)
     },
     error: function () {
-      $("#contentMessageEnable").html("Can't Enable This Template!")
-      $("#messageEnable").modal('show')
+      fails("The template hasn't been finished")
     }
   });
+  window.setTimeout(function () {
+    $(location).attr('href','/templates')
+  }, 1200);
 }
 $(document).on('click', '.btnUpSlot', function () {
   var row_id = $(this).closest('tr').index();
@@ -316,13 +334,18 @@ function moveRow(id, row_id, direction, table) {
       }
       else {
         success("Move success");
-        var num = parseInt(direction);
-        current_row_data = table.row(row_id).data();
-        previous_row_data = table.row(row_id + num).data();
+        if(row_id != 1 && direction != -1)
+        {
+          var num = parseInt(direction);
+          current_row_data = table.row(row_id).data();
+          previous_row_data = table.row(row_id + num).data();
 
-        table.row(row_id + num).data(current_row_data).draw();
-        table.row(row_id).data(previous_row_data).draw();
-        disableButtonUpDown()
+          table.row(row_id + num).data(current_row_data).draw();
+          table.row(row_id).data(previous_row_data).draw();
+          disableButtonUpDown()
+        }
+        else
+          loadSlotsinCompetency()
       }
     },
     error: function () {
@@ -358,17 +381,19 @@ function checkStatusTemplate() {
     return 0
 }
 function disableButtonUpDown(){
-  // resetButton();
-  // tables = $("#table_slot").DataTable();
-  // length = tables.rows().data().length;
-  // if (length >= 1) {
-  //   $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
-  //   $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
-  //   $('#table_slot tr:nth-child('+length+') td .btnDownSlot .icon').attr('style','color:#6c757d')
-  //   $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
-  // }
+  tables = $("#table_slot").DataTable();
+  length = tables.rows().data().length;
+  if(length >= 1 && $("#table_slot_next").hasClass('disabled'))
+  {
+    $('#table_slot tr:last td .btnDownSlot .icon').attr('style','color:#6c757d')
+    $('#table_slot tr:last td .btnDownSlot').addClass('disabled')
+  }
+  if (length >= 1 && $("#table_slot_previous").hasClass('disabled')) {
+    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
+    $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
+  }
 }
-function checkPrivileges_step3(){
+function checkPrivilegesSlot(){
   $.ajax({
     type: "GET",
     url: "/competencies/check_privileges",
@@ -383,16 +408,11 @@ function checkPrivileges_step3(){
         $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#6c757d");
         $('#selectLevel').prop("disabled", true);
         $('#descSlot').prop("disabled", true);
-        $('#evidenceSlot').prop("disabled", true);
+        CKEDITOR.instances.editor.setReadOnly(true)
+        //$('#evidenceSlot').prop("disabled", true);
         $("#btnFinish").attr("disabled", true);
         $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
       }
     },
   });
-}
-function resetButton ()
-{
-  $('#tbdTemplate tr td a').removeClass("disabled");
-  $('#table_slot tr:nth-child(1) td .btnDownSlot .icon').attr('style','color:green')
-  $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:green')
 }

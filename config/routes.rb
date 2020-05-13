@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get "update_status_template"
       get "change_slot_id"
       get "load_competency"
+      get "get_role"
     end
   end
   resources :competencies do

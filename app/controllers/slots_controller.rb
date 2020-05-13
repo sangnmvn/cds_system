@@ -54,10 +54,15 @@ class SlotsController < ApplicationController
   def check_slot_in_template
     @competencies = Competency.where(template_id: params[:template_id]).pluck(:id)
     @slot = Slot.where(competency_id: @competencies).pluck(:competency_id).uniq.count
-    # @levels = Slot.where(competency_id: @competencies).pluck(:level).uniq.sort
-    # check_level = check_array_level(@levels)
-    # render json: @competencies.count > @slot || check_array_level == 0 ? -1 : 1
-    render json: @competencies.count > @slot ? -1 : 1
+    check_level = 1
+    @competencies.each{|competency|
+      levels = Slot.where(competency_id: competency).pluck(:level).uniq.sort
+      #binding.pry
+      check_level = check_array_level(levels)
+      break if check_level == 0
+    }
+    render json: @competencies.count > @slot || check_level == 0 ? -1 : 1
+
   end
 
   def update_status_template
@@ -66,8 +71,14 @@ class SlotsController < ApplicationController
     template.update(status: 1)
   end
 
-  private
+  def get_role
+    role_name = Template.includes(:role).find(params[:id]).role.name
+    respond_to do |format|
+      format.json { render json: { name: role_name } }
+    end
+  end
 
+  private
   def slot_params(slot_id = nil)
     param = {
       desc: params[:desc],
@@ -91,13 +102,13 @@ class SlotsController < ApplicationController
     end
   end
 
-  # def check_array_level(array)
-  #   return 0 if array[0].to_i != 1
-  #   if array.count > 1
-  #     for i in 0..array.count
-  #       return 0 if array[i].to_i != array[i+1].to_i + 1
-  #     end
-  #   end
-  #   return 1
-  # end
+  def check_array_level(array)
+    return 0 if array[0].to_i != 1
+    if array.count > 1
+      for i in 1...array.count
+        return 0 if array[i].to_i != array[i-1].to_i + 1
+      end
+    end
+    return 1
+  end
 end

@@ -29,8 +29,7 @@ class GroupsController < ApplicationController
   def create
     params[:status] = params[:status] == "Enable" ? 1 : 0
     @group = Group.new(group_params)
-    # binding.pry
-    if Group.where(name: params[:name]).present?
+    if Group.where(name: params[:name],is_delete: false).present?
       render :json => { :status => "exist" }
     else
       if @group.save
