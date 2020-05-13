@@ -58,6 +58,12 @@ function change_notify(end_date, notify) {
     check_notify(end_date, notify)
   })
 }
+
+function reset_datepicker(arr_date) {
+  for (i = 0; i <= arr_date.length; i++) {
+    $(arr_date[i]).val('').datepicker('update');
+  }
+}
 // end check
 
 function view_schedule() {
@@ -79,10 +85,11 @@ $(document).ready(function () {
   from_date = "#from_date"
   to_date = "#to_date"
   attr_id_notify = "#notify_hr"
-  datepicker_setup([start_date_id, end_date_id, from_date, to_date]);
+  datepicker_setup([start_date_id, end_date_id], [from_date, to_date]);
   check_selectAll();
   action_add();
   view_schedule();
+  on_click_btn();
   $(attr_id_notify).change(function () {
     check_notify(end_date_id, attr_id_notify)
   })
@@ -92,55 +99,67 @@ $(document).ready(function () {
     check_status(start, "#status")
   })
 
+});
 
-
-  $('.del_btn').bind("click", function () {
-    let schedule_param = $(this).data('schedule')
-
+function on_click_btn() {
+  
+  $(document).on("click", ".del_btn", function () {
+    var schedule_param = $(this).data('schedule')
+  
     $.ajax({
       url: "/schedules/" + schedule_param + "/destroy_page",
       type: "GET",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
     });
-  })
-
-
-
-});
-$(document).on("click", ".del_btn", function () {
-  var schedule_param = $(this).data('schedule')
-
-  $.ajax({
-    url: "/schedules/" + schedule_param + "/destroy_page",
-    type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
   });
-});
-$(document).on("click", ".edit_btn", function () {
-
-  var schedule_param = $(this).data('schedule');
-  $.ajax({
-    url: "/schedules/" + schedule_param + "/edit_page",
-    type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    success: function () {
-      attr_start_date_id = "#start_date_edit";
-      attr_end_date_id = "#end_date_edit";
-      attr_from_date = "#from_date_edit";
-      attr_to_date = "#to_date_edit";
-      attr_id_notify = "#notify_hr_edit";
-      attr_status = "#status_id"
-      datepicker_setup([attr_start_date_id, attr_end_date_id, attr_from_date, attr_to_date]);
-      change_status(attr_start_date_id, attr_status);
-      change_notify(attr_end_date_id, attr_id_notify);
-      view_schedule();
-    }
+  $(document).on("click", ".edit_btn", function () {
+  
+    var schedule_param = $(this).data('schedule');
+    $.ajax({
+      url: "/schedules/" + schedule_param + "/edit_page",
+      type: "GET",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      success: function () {
+        attr_start_date_id = "#start_date_edit";
+        attr_end_date_id = "#end_date_edit";
+        attr_from_date = "#from_date_edit";
+        attr_to_date = "#to_date_edit";
+        attr_id_notify = "#notify_hr_edit";
+        attr_status = "#status_id"
+        datepicker_setup([attr_start_date_id, attr_end_date_id], [attr_from_date, attr_to_date]);
+        change_status(attr_start_date_id, attr_status);
+        change_notify(attr_end_date_id, attr_id_notify);
+        view_schedule();
+      }
+    });
+  
+  });
+  $(document).on("click", "#selectAll", function () {
+    $("#selectAll").select_all();
   });
 
-});
-$(document).on("click", "#selectAll", function () {
-  $("#selectAll").select_all();
-});
+  $("#delete_selected").on("click", function () {
+
+    var schedule_ids = new Array();
+  
+    $.each($("input[name='checkbox']:checked"), function () {
+      schedule_ids.push($(this).val());
+    });
+  
+    $.ajax({
+      url: "/schedules/destroy_multiple/",
+      method: "DELETE",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      data: {
+        schedule_ids: schedule_ids,
+      },
+      success: function (result) {
+        // Do something with the result
+      },
+    });
+  });
+}
+
 
 // btn datepicker form add
 function datepicker_setup(arr_date, period_date) {
@@ -156,7 +175,7 @@ function datepicker_setup(arr_date, period_date) {
     })
   }
   for (i = 0; i <= period_date.length; i++) {
-    $(arr_date[i]).datepicker({
+    $(period_date[i]).datepicker({
       todayBtn: "linked",
       todayHighlight: true,
       autoclose: true,
@@ -167,7 +186,7 @@ function datepicker_setup(arr_date, period_date) {
 
 // btn add new schedule of HR 
 function action_add() {
-  
+
   $("#btn_modal_add_hr").one("click", function () {
     admin_user_id = $('#user').val();
     schedule_name = $('#desc').val();
@@ -181,7 +200,7 @@ function action_add() {
     status_hr = $('#status').val();
     temp = true;
     $(".error").remove();
-  
+
     // check date start and end
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
@@ -193,17 +212,17 @@ function action_add() {
     }
     if (from_date == "") {
       temp = false;
-      $('#from_date').after('<span class="error">Please enter from date.</span>')
+      $('#from_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter from date.</span></div>')
     }
     if (to_date == "") {
       temp = false;
-      $('#to_date').after('<span class="error">Please enter to date.</span>')
+      $('#to_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter to date.</span></div>')
     }
     if (start_date == "") {
       temp = false;
       $('#start_date').after('<span class="error">Please enter start date.</span>')
     }
-  
+
     if (end_date == "") {
       temp = false;
       $('#end_date').after('<span class="error">Please enter end date.</span>')
@@ -213,19 +232,23 @@ function action_add() {
       temp = false;
       $('#desc').after('<span class="error">Please enter schedule name.</span>')
     }
-  
+
     if (company == "") {
       temp = false;
       $('#company').after('<span class="error">Please enter company name.</span>')
     }
-  
+
     if (notify_hr == "") {
       temp = false;
       $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
     }
-  
-  
-  
+
+    if (notify_hr < 0) {
+      temp = false;
+      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+    }
+
+
     if (temp == true) {
       $.ajax({
         url: "/schedules",
@@ -246,61 +269,73 @@ function action_add() {
         },
         success: (res) => {
           $('#form_add_hr')[0].reset();
+          reset_datepicker(["#end_date","#start_date","#to_date","#rom_date"]);
           check_selectAll();
           action_add();
+          action_edit();
           view_schedule();
         }
       });
     }
   });
 }
-$(document).one("click", "#btn_modal_edit_hr", function () {
-  id_schedule = $('#id').val()
-  schedule_name = $('#desc_edit').val();
-  company = $("#company_edit").val();
-  start_date = $("#start_date_edit").val();
-  end_date = $("#end_date_edit").val();
-  from_date = $("#from_date_edit").val();
-  to_date = $("#to_date_edit").val();
-  notify_hr = $('#notify_hr_edit').val();
-  status_hr = $('#status_id').val()
-  temp = true;
-  $(".error").remove();
 
-  if (end_date == "") {
-    temp = false;
-    $('#end_date_edit').after('<span class="error">Please enter end date.</span>')
-  }
-  // end check date
-  if (schedule_name == "") {
-    temp = false;
-    $('#desc_edit').after('<span class="error">Please enter schedule name.</span>')
-  }
+function action_edit() {
 
-  if (notify_hr == "") {
-    temp = false;
-    $('#notify_hr_edit').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
-  }
+  $(document).one("click", "#btn_modal_edit_hr", function () {
+    id_schedule = $('#id').val()
+    schedule_name = $('#desc_edit').val();
+    company = $("#company_edit").val();
+    start_date = $("#start_date_edit").val();
+    end_date = $("#end_date_edit").val();
+    from_date = $("#from_date_edit").val();
+    to_date = $("#to_date_edit").val();
+    notify_hr = $('#notify_hr_edit').val();
+    status_hr = $('#status_id').val()
+    temp = true;
+    $(".error").remove();
 
-  if (temp == true) {
-    $.ajax({
-      url: "/schedules/" + id_schedule,
-      type: "PUT",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-      },
-      data: {
-        desc: schedule_name,
-        end_date_hr: end_date,
-        notify_hr: notify_hr
-      },
-      success: (res) => {
-        $('#form_edit_hr')[0].reset();
-        check_selectAll();
-      }
-    })
-  }
-});
+    if (end_date == "") {
+      temp = false;
+      $('#end_date_edit').after('<span class="error">Please enter end date.</span>')
+    }
+    // end check date
+    if (schedule_name == "") {
+      temp = false;
+      $('#desc_edit').after('<span class="error">Please enter schedule name.</span>')
+    }
+
+    if (notify_hr == "") {
+      temp = false;
+      $('#notify_hr_edit').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+    }
+
+    if (temp == true) {
+      $.ajax({
+        url: "/schedules/" + id_schedule,
+        type: "PUT",
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: {
+          desc: schedule_name,
+          end_date_hr: end_date,
+          notify_hr: notify_hr
+        },
+        success: (res) => {
+          $('#form_edit_hr')[0].reset();
+
+          check_selectAll();
+          action_edit();
+          action_add();
+          view_schedule();
+        }
+      })
+    }
+  });
+}
+
+
 function delete_schedule() {
   var id = $("#schedule_id").val();
 
@@ -315,26 +350,7 @@ function delete_schedule() {
     },
   });
 }
-$(document).on("click", "#delete_selected", function () {
 
-  var schedule_ids = new Array();
-
-  $.each($("input[name='checkbox']:checked"), function () {
-    schedule_ids.push($(this).val());
-  });
-
-  $.ajax({
-    url: "/schedules/destroy_multiple/",
-    method: "DELETE",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: {
-      schedule_ids: schedule_ids,
-    },
-    success: function (result) {
-      // Do something with the result
-    },
-  });
-});
 function check_selectAll() {
   $(".selectable").on('click', function () {
     if ($(':checkbox:checked').length > 0) {
@@ -354,6 +370,9 @@ function check_selectAll() {
   })
 
   if ($('.table tbody :checkbox').length == 0) {
-    $('#selectAll').prop("disabled",true);
+    $('#selectAll').prop("disabled", true);
+  }
+  if ($('.table tbody :checkbox').length != 0) {
+    $('#selectAll').prop("disabled", false);
   }
 }
