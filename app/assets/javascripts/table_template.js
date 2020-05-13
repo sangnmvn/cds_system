@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
+  CKEDITOR.replace( 'editor' );
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
     fnDrawCallback: function(){checkPrivilegesSlot(); disableButtonUpDown();}, //; 
@@ -13,6 +14,7 @@ $(document).ready(function () {
     $("#selectLevel").val($("#selectLevel option:first").val());
   });
   $("#addSlot").click(function () {
+    $("#txtSearch").html("")
     var desc = $("#descSlot").val();
     var evidence = CKEDITOR.instances.editor.getData();
     var level = $("#selectLevel").val();
@@ -53,10 +55,12 @@ $(document).ready(function () {
     CKEDITOR.instances.editor.insertHtml(tr[2].innerHTML);
     chooseSelect("selectLevel", tr[0].textContent);
     $("#hideIdSlot").html(id);
-    CKEDITOR.instances.editor.addEventListener('onkeyup', function() { 
-      alert("hello");
-      checkDataDesc()
-    });
+    changeBtnSave(-1)
+  });
+
+  CKEDITOR.instances.editor.on("key", function(event)
+  {
+    checkDataDesc()
   });
   changeBtnSave(-1);
   $("#table_slot").removeClass("dataTable")
@@ -83,6 +87,12 @@ $(document).ready(function () {
     finnish(templateId);
     $('#messageQuestionEnable').modal('hide')
   })
+  $('#btnCloseStep3').click(function (){
+    if ($('#addSlot').prop("disabled") == false)
+      $("#modal_warning_cancel").modal("show");
+    else
+      $(location).attr('href','/templates')
+  })
 
   $("#txtSearch").keypress(function () {
     if (event.keyCode == 13 || event.which == 13) {
@@ -105,7 +115,6 @@ $(document).ready(function () {
     CKEDITOR.instances.editor.setData("");
     changeBtnSave(-1);
   });
-  CKEDITOR.instances.editor.removePlugins = 'link'
 
   $("#btnAlertCancel").click(function(){
     $(location).attr('href','/templates')

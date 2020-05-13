@@ -238,37 +238,37 @@ Competency.create!(id: "#{i_competency += 1}", name: "Project Closing", desc: "P
 slot_create = [
   { desc: "Consistently perform well under supervision", evidence: "Nếu được giao việc và được hướng dẫn cách làm thì hoàn tất tốt công việc được giao trong mức độ năng suất hợp lý
     Nếu có sai sót trong quá trình làm việc và đã được nhắc nhở về những lỗi cụ thể thì không lặp lại những lỗi này.", level: 1, competency_id: "1", slot_id: 1 },
-  { desc: "Recognized as a contributing member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án.\n
-    Những người khác không thấy nhân viên này là điểm yếu, là gánh nặng cho team trong productivity \n
-    Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down và không giải quyết được. \n
+  { desc: "Recognized as a contributing member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án.
+    <p>Những người khác không thấy nhân viên này là điểm yếu, là gánh nặng cho team trong productivity </p>
+    <p>Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down và không giải quyết được.</p>
     5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: 1, competency_id: "1", slot_id: 2 },
   { desc: "Complete assigned tasks within scheduled completion dates. \
-    Communicate potential issues as soon as you are known.", evidence: "Hoàn tất công việc được giao một cách đúng hạn, với chất lượng tốt. \n
-    Trao đổi, thông báo ngay về những vấn đề tiềm năng khi phát hiện ra chúng", level: 1, competency_id: "1", slot_id: 3 },
+    Communicate potential issues as soon as you are known.", evidence: "Hoàn tất công việc được giao một cách đúng hạn, với chất lượng tốt.
+    <p>Trao đổi, thông báo ngay về những vấn đề tiềm năng khi phát hiện ra chúng</p>", level: 1, competency_id: "1", slot_id: 3 },
   { desc: "Complete assigned tasks within scheduled completion dates. \ 
     Communicate potential issues as soon as you are known.", evidence: "Hiểu rõ và tuân thủ tốt các quy trình, quy định, \
     thủ tục, chuẩn do BESTARION đang áp dụng", level: 1, competency_id: "1", slot_id: 4 },
   { desc: "Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM, …", evidence: "abc", level: 1, competency_id: "1", slot_id: 5 },
-  { desc: "Recognized as a proactive member of the team.", evidence: "Là một thành viên đóng góp tích cực cho nhóm / dự án. \n
-    Nằm trong số những người đóng góp hàng đầu cho dự án.\n 
-    Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com  bị down và không giải quyết được. 
+  { desc: "Recognized as a proactive member of the team.", evidence: "<p>Là một thành viên đóng góp tích cực cho nhóm / dự án.</p>
+    <p>Nằm trong số những người đóng góp hàng đầu cho dự án.</p>
+    <p>Phản ví dụ: Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com  bị down và không giải quyết được.</p>
     \n 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để", level: 2, competency_id: "1", slot_id: 1 },
   { desc: "Complete critical tasks on time", evidence: "Critical tasks: Những công việc quan trọng, chủ chốt, cốt lõi trong dự án, \
     trong bộ phận mà nhân viên tham gia, ở góc độ vai trò tương ứng. \n
-    Ví dụ:  \n Nhân viên làm Business Analyst trong một dự án thì critical tasks là những công việc chủ chốt, cốt lõi liên quan đến phân \
-    tích yêu cầu khách hàng \n
-    Nhân viên làm Developer trong một dự án thì critical tasks là những công việc liên quan đến thiết kế / tài liệu hóa / lập trình / sửa bugs \
-    của những thứ quan trọng, chủ chốt, cốt lõi. \n
-    Nhân viên làm Tester trong một dự án thì thì critical tasks là những công việc liên quan đến việc phát triển test plan / test cases / tiến \
-    hành test execution của những thứ quan trọng, chủ chốt, cốt lõi trong dự án.", level: 2, competency_id: "1", slot_id: 2 },
+    Ví dụ:  <p> Nhân viên làm Business Analyst trong một dự án thì critical tasks là những công việc chủ chốt, cốt lõi liên quan đến phân \
+    tích yêu cầu khách hàng </>
+    <p>Nhân viên làm Developer trong một dự án thì critical tasks là những công việc liên quan đến thiết kế / tài liệu hóa / lập trình / sửa bugs \
+    của những thứ quan trọng, chủ chốt, cốt lõi. </p>
+    <p>Nhân viên làm Tester trong một dự án thì thì critical tasks là những công việc liên quan đến việc phát triển test plan / test cases / tiến \
+    hành test execution của những thứ quan trọng, chủ chốt, cốt lõi trong dự án.</p>", level: 2, competency_id: "1", slot_id: 2 },
   { desc: "Able to represent the skills and capabilities of your department/ practice unit/business unit. ", evidence: "Represent: Đại diện. \n
-    Có nhiều mức độ đại diện – ví dụ \n  
-    Đại diện cho dự án để training cho một nhân viên mới, training cho sinh viên thực tập về kiến thức, kỹ năng ở vai trò của mình; \n  
-    Đại diện cho dự án để làm việc với dự án khác; đại diện cho dự án làm việc với khách hàng; \n
-    Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận; \n  
-    Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần \n  
-    Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn \
-    trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần", level: 2, competency_id: "1", slot_id: 3 },
+    <p>Có nhiều mức độ đại diện – ví dụ</p>
+    <p>Đại diện cho dự án để training cho một nhân viên mới, training cho sinh viên thực tập về kiến thức, kỹ năng ở vai trò của mình; \n  
+    Đại diện cho dự án để làm việc với dự án khác; đại diện cho dự án làm việc với khách hàng;</p>
+    <p>Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận;</p> 
+    <p>Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần </p>  
+    <p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn \
+    trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần</p>", level: 2, competency_id: "1", slot_id: 3 },
   { desc: "Recognized internally as a solid knowledge resource.", evidence: "Cứ có vấn đề gì về mảng kiến thức mà cần trợ giúp / câu \
     trả lời là nghĩ ngay đến nhân viên này", level: 3, competency_id: "1", slot_id: 1 },
   { desc: "Successfully complete tasks and assignments independently and supervise the work of others as requested.",
@@ -292,21 +292,21 @@ slot_create = [
   { desc: "Possess and use good diagnosis / troubleshooting skills.", evidence: "abc", level: 2, competency_id: "2", slot_id: 4 },
   { desc: "Identifies and solves complex or sensitive problems (for example: associate performance, project scope issues,\
     and priority changes or resolving multiple conflicting agendas). ",
-    evidence: "- Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.\n
-              - Thế nào là vấn đề phức tạp hoặc nhạy cảm trong phát triển phần mềm?\n
-              - Yêu cầu của khách hàng phức tạp, logic xử lý phức tạp, giải thuật phức tạp và có đòi hỏi cao về performance, \
+    evidence: "<p>- Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.</p>
+              <p>- Thế nào là vấn đề phức tạp hoặc nhạy cảm trong phát triển phần mềm?</p>
+              <p>- Yêu cầu của khách hàng phức tạp, logic xử lý phức tạp, giải thuật phức tạp và có đòi hỏi cao về performance, \
               security; đòi hỏi hiểu biết cao để ứng dụng các frameworks sẵn có thay vì phải hiện thực từ đầu; phải xử lý các \
-              vấn đề phức tạp đồng thời", level: 3, competency_id: "2", slot_id: 1 },
+              vấn đề phức tạp đồng thời</p>", level: 3, competency_id: "2", slot_id: 1 },
   { desc: "Breaks down major issues and problems into workable pieces; sees whole situation behind a problem or issue; \
     understands the causes, effects, implications; sets priorities and takes right action for resolution.",
-    evidence: "- Có khả năng chia nhỏ vấn đề lớn, phức tạp thành những phần nhỏ hơn để xử lý; \n
-               - Nắm được bức tranh tổng thể của một vấn đề phức tạp; hiểu rõ nguyên nhân, hậu quả, những vấn đề có liên quan; \
-               thiết lập được độ ưu tiên, thứ tự và tiến hành các công việc phù hợp để giải quyết bài toán", level: 3, competency_id: "2", slot_id: 2 },
+    evidence: "<p>- Có khả năng chia nhỏ vấn đề lớn, phức tạp thành những phần nhỏ hơn để xử lý;</p>
+               <p>- Nắm được bức tranh tổng thể của một vấn đề phức tạp; hiểu rõ nguyên nhân, hậu quả, những vấn đề có liên quan; \
+               thiết lập được độ ưu tiên, thứ tự và tiến hành các công việc phù hợp để giải quyết bài toán</p>", level: 3, competency_id: "2", slot_id: 2 },
   { desc: "Identify and solve complex or sensitive problems at the strategic executive level.",
-    evidence: "Ví dụ: \n
-    Phát biểu bài toán 7 năm của công ty và giải quyết nó\n             
-    Phát biểu bài toán technical lead của công ty và giải quyết nó\n             
-    Phát biểu bài toán quản lý chi phí / năng suất của công ty và giải quyết nó", level: 4, competency_id: "2", slot_id: 1 },
+    evidence: "<p>Ví dụ: </p>
+    <p>Phát biểu bài toán 7 năm của công ty và giải quyết nó<p>           
+    <p>Phát biểu bài toán technical lead của công ty và giải quyết nó</p>             
+    <p>Phát biểu bài toán quản lý chi phí / năng suất của công ty và giải quyết nó</p>", level: 4, competency_id: "2", slot_id: 1 },
   { desc: "Anticipate project and/or assignment risks and provide potential solutions.",
     evidence: "abc", level: 4, competency_id: "2", slot_id: 2 },
   { desc: "Capable of internal interaction. This is evident in all core communications. Example: \n
@@ -479,24 +479,24 @@ slot_create = [
     evidence: "Hiểu được ý nghĩa của những yêu cầu non-functional chính như liệt kê như trong slot, biết được thế nào thì được gọi là \
                đạt yêu cầu / không đạt yêu cầu. Khi được hướng dẫn thì có thể hiện thực được những yêu cầu này vào testing", level: 1, competency_id: "5", slot_id: 4 },
   { desc: "Able to understand important concepts, techniques about databases/SQL and able to apply for testing activities",
-    evidence: "Để pass slot này, tester cần có bằng chứng của việc:\n
-    + Hiểu được sự khác biệt của các loại database khác nhau\n
-    + Kết nối database sử dụng các loại SQL connection client khác nhau.\n
-    + Hiểu được sự khác biệt giữa datatable, keys và Index.\n
-    + Có thể viết các câu SQL đơn giản phục vụ cho việc truy vấn dữ liệu phục vụ cho việc testing.\n
+    evidence: "<p>Để pass slot này, tester cần có bằng chứng của việc:</p>
+    <p>+ Hiểu được sự khác biệt của các loại database khác nhau</p>
+    <p>+ Kết nối database sử dụng các loại SQL connection client khác nhau.</p>
+    <p>+ Hiểu được sự khác biệt giữa datatable, keys và Index.</p>
+    <p>+ Có thể viết các câu SQL đơn giản phục vụ cho việc truy vấn dữ liệu phục vụ cho việc testing.</p>
     Tester cần có bằng chứng cho việc đã truy vấn các loại dữ liệu từ database và so sánh dữ liệu đã truy vấn với dữ liệu được \
     hiển thị trên giao diện của ứng dụng (có bằng chứng ở ít nhất 2 dự án)", level: 2, competency_id: "5", slot_id: 1 },
   { desc: "Basic understanding of file management, process management, memory management, cpu management in Windows and Linux. ",
-    evidence: "Yêu cầu cả trên Windows và Linux, phải biết những thứ sau:\n
-    - Biết được trong hệ điều hành có những file / folder nào, mục đích chính của chúng dùng để làm gì → để khi cần lấy file, \
-    sửa đổi file thì có thể biết được ngay phải lấy ở đâu, có ảnh hưởng đến hệ thống không. 
-    - Biết được file / folder có những thuộc tính nào, cách thay đổi thuộc tính file / folder như thế nào → mức độ căn bản nhất của security
-    - Có chút khái niệm về FAT, NTFS, Ext → hiểu sơ được file trong ổ cứng được quản lý thế nào
-    - Biết được cách xem thông tin process trong hệ thống, cách terminate process
-    - Biết sơ qua các loại memory như main memory, swap, page, cache memory, biết cách tìm thông tin memory trong hệ thống như thế nào
-    - Có kiến thức cơ bản về CPU, như tốc độ CPU là gì, cache là gì, tìm những thông tin này ở đâu trong hệ điều hành, hệ điều hành phân \
-    phát CPU cho các process như thế nào (mức độ căn bản)
-    → slot này giúp tester hiểu được sự tương tác giữa ứng dụng và hệ diều hành ở mức độ căn bản làm nền tãng quan trọng cho hoạt động testing", level: 2, competency_id: "5", slot_id: 2 },
+    evidence: "<p>Yêu cầu cả trên Windows và Linux, phải biết những thứ sau:</p>
+    <p>- Biết được trong hệ điều hành có những file / folder nào, mục đích chính của chúng dùng để làm gì → để khi cần lấy file, \
+    sửa đổi file thì có thể biết được ngay phải lấy ở đâu, có ảnh hưởng đến hệ thống không.</p>
+    <p>- Biết được file / folder có những thuộc tính nào, cách thay đổi thuộc tính file / folder như thế nào → mức độ căn bản nhất của security</p>
+    <p>- Có chút khái niệm về FAT, NTFS, Ext → hiểu sơ được file trong ổ cứng được quản lý thế nào</p>
+    <p>- Biết được cách xem thông tin process trong hệ thống, cách terminate process</p>
+    <p>- Biết sơ qua các loại memory như main memory, swap, page, cache memory, biết cách tìm thông tin memory trong hệ thống như thế nào</p>
+    <p>- Có kiến thức cơ bản về CPU, như tốc độ CPU là gì, cache là gì, tìm những thông tin này ở đâu trong hệ điều hành, hệ điều hành phân \
+    phát CPU cho các process như thế nào (mức độ căn bản)</p>
+    <p>→ slot này giúp tester hiểu được sự tương tác giữa ứng dụng và hệ diều hành ở mức độ căn bản làm nền tãng quan trọng cho hoạt động testing</p>", level: 2, competency_id: "5", slot_id: 2 },
   { desc: "Able to understand software system specification",
     evidence: "- Có khả năng đọc hiểu các tài liệu đặc tả (Software Requirements Specification, Use Cases, High Level Design Specification,..) \
    bóc tách được các yêu cầu chức năng và phi chức năng, các risks, assumptions nhằm phục vụ hiệu quả cho các hoạt động testing", level: 2, competency_id: "5", slot_id: 3 },
