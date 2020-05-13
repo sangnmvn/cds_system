@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_101037) do
+ActiveRecord::Schema.define(version: 2020_05_13_020931) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -108,10 +108,12 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   create_table "forms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "_type"
     t.bigint "template_id"
+    t.bigint "period_id"
     t.bigint "admin_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_forms_on_admin_user_id"
+    t.index ["period_id"], name: "index_forms_on_period_id"
     t.index ["template_id"], name: "index_forms_on_template_id"
   end
 
@@ -134,13 +136,11 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.datetime "from_date"
-    t.datetime "to_date"
-    t.bigint "form_id"
+    t.date "from_date"
+    t.date "to_date"
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["form_id"], name: "index_periods_on_form_id"
   end
 
   create_table "privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -178,14 +178,23 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
 
   create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "admin_user_id", null: false
-    t.bigint "project_id", null: false
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.string "notify_date"
-    t.boolean "is_delete", default: false
+    t.bigint "project_id"
+    t.date "start_date"
+    t.date "end_date_employee"
+    t.integer "notify_employee"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "company_id"
+    t.text "desc"
+    t.string "status"
+    t.date "end_date_reviewer"
+    t.integer "notify_reviewer"
+    t.date "end_date_hr"
+    t.integer "notify_hr"
+    t.bigint "period_id"
     t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
+    t.index ["company_id"], name: "index_schedules_on_company_id"
+    t.index ["period_id"], name: "index_schedules_on_period_id"
     t.index ["project_id"], name: "index_schedules_on_project_id"
   end
 
@@ -255,12 +264,13 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
   add_foreign_key "forms", "admin_users"
+  add_foreign_key "forms", "periods"
   add_foreign_key "group_privileges", "groups"
   add_foreign_key "group_privileges", "privileges"
-  add_foreign_key "periods", "forms"
   add_foreign_key "privileges", "title_privileges"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "admin_users"
+  add_foreign_key "schedules", "periods"
   add_foreign_key "schedules", "projects"
   add_foreign_key "slots", "competencies"
   add_foreign_key "templates", "admin_users"

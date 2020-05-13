@@ -1,6 +1,7 @@
 <% if @status == true %>
-$("#schedules").html("<%= j render(@schedules) %>");
-  success();
+  $("#schedules").html("<%= j render partial: "schedule_hr", locals: { schedules: @schedules} %>");
+  $("#modalDeleteS").modal("hide");
+  success("The schedule has been deleted successfully");
 <% else %>
-  fails();
+  fails("Deleted schedules failed"));
 <% end%>

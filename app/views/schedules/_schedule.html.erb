@@ -1,8 +1,10 @@
+<% @schedules.each_with_index do |schedule, index| %>
 <tr>
+  
   <td><%= check_box_tag "schedule_ids[]", schedule.id, false, class: 'selectable',name: 'checkbox' %></td>
-  <td><%= schedule.id %></td>
-  <td><%= schedule.first_name %></td>
-  <td><%= schedule.last_name %></td>
+  <td><%= index + 1 %></td>
+
+  <td><%= schedule.first_name + ' ' + schedule.last_name %></td>
   <td><%= schedule.email%></td>
   <td><%= schedule.desc%></td>
   <td><%= schedule.start_date%></td>
@@ -15,9 +17,10 @@
     <% if schedule.status == "In-progress" %>
       <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
     <% end %>
-    <% if schedule.status == "Not Started" %>
+    <% if schedule.status == "New" %>
       <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
-      <%= link_to(image_tag("destroy.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn", :"data-schedule" => schedule.id }) %>
+      <%= link_to(image_tag("Delete.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn", :"data-schedule" => schedule.id }) %>
     <% end %>
   </td>
 </tr>
+<% end %>

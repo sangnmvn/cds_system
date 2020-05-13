@@ -1,10 +1,18 @@
 class Schedule < ApplicationRecord
-  belongs_to :admin_user
-  belongs_to :project
+  belongs_to :admin_user, optional: true
+  belongs_to :project, optional: true
+  belongs_to :company, optional: true
+  belongs_to :period, optional: true
 
   delegate :first_name, :last_name, :email, to: :admin_user
-  delegate :desc, to: :project
+  
   paginates_per 20
   max_paginates_per 20
-  attr_accessor :status
+
+  
+
+
+  def sample
+    Schedule.create!(admin_user_id: 3,status: 'New')
+  end
 end

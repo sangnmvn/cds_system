@@ -28,11 +28,13 @@ gem "jbuilder", "~> 2.7"
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem "bootstrap", "~> 4.4.1"
-gem "jquery-rails"
-gem "popper_js", "~> 1.14.5"
-gem "select_all-rails"
-gem "font-awesome-sass"
+gem 'bootstrap', '~> 4.4.1'
+gem 'jquery-rails'
+gem 'popper_js', '~> 1.14.5'
+gem 'select_all-rails'
+gem 'font-awesome-sass'
+gem 'bootstrap-datepicker-rails'
+gem 'whenever', require: false
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem "kaminari"
