@@ -106,6 +106,7 @@ function checkModalCancel() {
         $(location).attr('href', '/templates')
       })
     } else {
+      $('.step1_cancel').off('click')
       $('.step1_cancel').attr('data-target', "#modal_warning_close")
     }
   }    

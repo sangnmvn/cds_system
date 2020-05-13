@@ -2,14 +2,16 @@ table {
   table-layout: fixed;
 }
 
-#template-index tr,
-th,
+#template-index th,
 td {
   border: 1px solid #fff;
 }
+table#template-index{
+  border: 2px solid #3d7fbc;
+}
 
 table tbody tr:nth-of-type(odd) {
-  background-color: #CDD5EA;
+  background-color: #cfd5ea;
 }
 
 table tbody tr:nth-of-type(even) {
@@ -28,7 +30,7 @@ table thead {
   color: #fff;
   font-weight: bold;
   padding-left: 10px;
-  border: 3px solid #4882bf;
+  border: 2px solid #4882bf;
 }
 
 .template-table .description {
