@@ -48,25 +48,12 @@ $(document).on("click", "#btn-add-competency", function () {
           );
         } else if (response.status == "success") {
           $(".form-add-competency")[0].reset();
-          // table = $("#table_add_competency").DataTable();
-          // table.row(index).data([Number(index)+1,response.name,response.type,response.desc,
-          // '<td class="td_action"> \
-          // <a class="btnUp" data-toggle="tooltip" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
-          // <a class="btnDown" data-toggle="tooltip" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
-          // <a class="btn-edit-competency" data-toggle="tooltip" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon"></i></a> \
-          // <a class="btn-delete-competency" data-toggle="tooltip" data-id="'+response.id+'" href="javascript:void(0)"><i class="fa fa-trash icon"></i></a> \
-          // </td>']).draw();
           nextStep1();
           $('.btn-save-competency').prop("disabled", true);
           $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
           // // reset value 
           $(".form-add-competency #competency_id").val('');
           $(".form-add-competency #competency_index").val('');
-          // $('#table_add_competency tr td a:nth-child(1)').addClass("btnUp");
-          // $('#table_add_competency tr td a:nth-child(2)').addClass("btnDown");
-          // $('#table_add_competency tr td a:nth-child(4)').addClass("btn-delete-competency");
-          // $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "green");
-          // $("#table_add_competency tr td .fa-trash").css("color", "red");
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
           success("The competency has been saved successfully.");
@@ -128,10 +115,6 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
             $(".form-add-competency #desc").val(response.desc);
             $(".form-add-competency #competency_index").val(index);
             $('.btn-save-competency').prop("disabled", true);
-            // $(".btn-save-competency").removeClass("btn-secondary").addClass("btn-primary");
-            // $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-delete-competency"]);
-            // $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash").css("color", "#4d4f4e");
-            
           } 
       },
     });
