@@ -12,8 +12,13 @@
     display: none;
 }
 #table_user_management {
-    border: 1px solid blue;
+    border: 2px solid #4882bf;
 }
+table.dataTable{
+    border: 2px solid #4882bf;
+    border-bottom: 2px solid #4882bf;
+}
+
 #table_user_management tr.odd > th {
     font-size: 16px;
     background: #4472c4;

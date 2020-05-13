@@ -861,9 +861,9 @@ $(document).click(function(e) {
   var number = $("#table_user_management tbody :checkbox:checked").length;
 
   if (parseInt(number) > 0){
-    $("#btn-disable-multiple-users").css('background-color', "#fff");
-    $("#btn-delete-many-users").css('background-color', "#fff");
-    $("#btn-enable-multiple-users").css('background-color', "#90EE90");
+    $("#btn-disable-multiple-users").css('background-color', "#8da8db");
+    $("#btn-delete-many-users").css('background-color', "#8da8db");
+    $("#btn-enable-multiple-users").css('background-color', "#8da8db");
     
   }
   else{

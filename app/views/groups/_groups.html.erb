@@ -1,4 +1,4 @@
-<table class="table" id="table_group" data-source="<%= groups_path(format: :json) %>">
+<table class="table" id="table_group"style="border: 3px solid #4882bf;" data-source="<%= groups_path(format: :json) %>">
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
@@ -48,10 +48,10 @@
           <%= 
                 links = []
 
-                links << link_to(image_tag("edit.png", border: 0), "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id,title: 'Edit Group', :'data-toggle' => 'tooltip'})
+                links << link_to('<i class="fa fa-pencil icon" style="color:#fc9803"></i>'.html_safe, "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id,title: 'Edit Group', :'data-toggle' => 'tooltip'})
                 links << link_to('<i class="fa fa-key"></i>'.html_safe,"#",{ class: "action_icon key_icon", :"data-id" => group.id, :"data-toggle" => "modal",title: 'Assign Privileges To Group', :"data-target" => "#modalPrivilege"})
                 links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal",title: 'Assign Users to Group'})
-                 links << link_to(image_tag("Delete.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
+                 links << link_to('<i class="fa fa-trash icon" style="color:red"></i>'.html_safe, "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
                 links.join(" ").html_safe      
             %>
          <%end%>

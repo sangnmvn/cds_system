@@ -13,9 +13,7 @@
 		font-weight: bold;
 	}
 }
-.table, td, tr{
-	border: 1px solid;
-}
+
 .td-mytd{
 	text-align: center;
 	display: flex;
@@ -57,7 +55,9 @@
 #table_group > tbody[role="alert"] > tr > td{
 	border: 1px solid #fff;
 }
-
+.table td {
+	border-top: 2px solid #fff;
+  }
 #table_group tr.even > td {
 	font-size: 12px;
 	background: rgb(0, 198, 224);

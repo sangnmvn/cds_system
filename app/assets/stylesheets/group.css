@@ -11,9 +11,7 @@
     text-align: center;
     display: none;
 }
-#table_group {
-    border: 1px solid blue;
-}
+
 .resource_selection_toggle_cell{
   text-align: center; /* center checkbox horizontally */
   vertical-align: middle; /* center checkbox vertically */
@@ -129,9 +127,7 @@ thead {
     font-weight: bold;
 }
 
-.table, td, tr{
-	border: 1px solid;
-}
+
 .td-mytd{
 	text-align: center;
 	display: flex;
@@ -191,7 +187,7 @@ thead {
 .modal-form-add-privilege table{
   border-collapse: collapse;
 }
-.modal-form-add-privilege table, tr, th, td{
+.modal-form-add-privilege th, td{
   border: 2px solid #fff;
 }
 .modal-form-add-privilege .modal-header{
@@ -214,10 +210,7 @@ thead {
 .modal-form-add-privilege .button-center.privilege button{
   margin: 5px 0 5px 0;
 }
-.table th, .table td {
 
-  border: 2px solid #fff;
-}
 input.button-add {
   background-image: url(/assets/Add.png); /* 16px x 16px */
   background-color: transparent; /* make the button transparent */
@@ -264,4 +257,10 @@ table.dataTable tbody td.sorting_1 {
 }
 table.dataTable tbody td {
   text-align: left;
+}
+table.table-popup-privilege{
+  border: 3px solid #4882bf;
+}
+.table-primary th, .table-primary td, .table-primary thead th, .table-primary tbody + tbody {
+  border-color: #ffffff;
 }

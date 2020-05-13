@@ -17,6 +17,7 @@ GroupPrivilege.delete_all
 Privilege.delete_all
 TitlePrivilege.delete_all
 UserGroup.delete_all
+Privilege.delete_all
 AdminUser.delete_all
 Role.delete_all
 Project.delete_all

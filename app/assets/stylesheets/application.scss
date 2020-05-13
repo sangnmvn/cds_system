@@ -17,6 +17,9 @@
   display: none;
 }
 
+.table-mytable tbody tr:nth-of-type(even) {
+  background-color: #E9EBF5;
+}
 .table-mytable {
 	text-align: center;
 	tbody tr:nth-of-type(odd) {
@@ -28,9 +31,7 @@
 		font-weight: bold;
 	}
 }
-.table, td, tr{
-	border: 1px solid;
-}
+
 .td-mytd{
 	text-align: center;
 	display: flex;
@@ -151,6 +152,7 @@ h2,
 .navbar-expand-lg .navbar-nav {
   padding-left: 10%;
 }
+
 /*
   *= require_tree .
   *= require_self

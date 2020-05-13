@@ -24,7 +24,7 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Dashboard </a>
           </li>
-          <li class="nav-item dropdown active">
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               CDS/CDP
             </a>
@@ -36,7 +36,7 @@
               <a class="dropdown-item" href="#">CDS - CDP Review</a>
             </div>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown active">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Administrator
             </a>
@@ -68,7 +68,10 @@
 <script>
 $(document).ready(function() {
   $('li.active').removeClass('active');
-  $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+  
+  $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+  $('li.active').find("a").css('background-color','#CFD5eA'); 
+  
 });
   function getfocus() {
     document.getElementById("myAnchor").focus();
