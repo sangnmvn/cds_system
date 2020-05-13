@@ -1220,6 +1220,9 @@ AdminUser.create!(id: 32, email: "fulltemplate@example.com", password: "password
 Group.create!(id: 31, name: "Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 31, admin_user_id: 32)
 GroupPrivilege.create!(group_id: 31, privilege_id: 9)
+# GroupPrivilege.create!(group_id: 33, privilege_id: 1)
+# GroupPrivilege.create!(group_id: 34, privilege_id: 2)
+# GroupPrivilege.create!(group_id: 35, privilege_id: 3)
 
 AdminUser.create!(id: 33, email: "viewtemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user32", account: "user32", role_id: "5", company_id: "3")
 Group.create!(id: 32, name: "Template", description: "Template", status: 1)

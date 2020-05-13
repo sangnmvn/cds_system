@@ -31,7 +31,7 @@
         </div>
         <div class="modal-footer">
           <div class="col-12 p-3 text-center">
-            <button id="save" type="button" class="btn btn-primary" data-dismiss="modal" disabled>Save</button>
+            <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Save</button>
             <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -157,6 +157,7 @@
       $('#to_right').removeClass("btn-info").addClass("btn-secondary");
        $("#check_all_choose_left").prop("checked", false);
       $('#save').attr("disabled",false);
+      $("#save").removeClass("btn-secondary").addClass("btn-primary");
     });
     $('#to_left').click(function() {
       var checkboxes = $("#table_right tbody").find('input:checkbox');
@@ -177,7 +178,7 @@
       $('#to_left').removeClass("btn-info").addClass("btn-secondary");
       $("#check_all_choose_right").prop("checked", false);
       $('#save').attr("disabled",false)
-        
+        $("#save").removeClass("btn-secondary").addClass("btn-primary");
 
     });
 
@@ -319,10 +320,10 @@
   function save_button(flag) {
   if (flag == 0) {
     $('#save').prop("disabled", true)
-    
+    $("#save").removeClass("btn-primary").addClass("btn-secondary");
   } else {
     $('#save').prop("disabled", false)
-  
+  $("#save").removeClass("btn-secondary").addClass("btn-primary");
   }
 }
   

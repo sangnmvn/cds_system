@@ -266,6 +266,31 @@ $(document).ready(function () {
   });
 });
 
+function checkPrivileges_step2(){
+  
+  $.ajax({
+    type: "GET",
+    url: "/competencies/check_privileges",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {},
+    dataType: "json",
+    success: function (response) {
+      $(response).each(function (i, e) {
+        if (response.privileges == "view"){
+          // $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
+          // $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#4d4f4e");
+          $('.form-add-competency #name').prop("disabled", true);
+          $('.form-add-competency #desc').prop("disabled", true);
+          $('.form-add-competency #type').prop("disabled", true);
+        }
+      });
+    },
+  });
+}
+
+
 function loadDataCompetencies(id) {
   $.ajax({
     type: "GET",
@@ -299,7 +324,8 @@ function loadDataCompetencies(id) {
       });
       disableNextCompetencies();
       disableButtonMove();
-      checkPrivileges();
+      checkPrivileges_step2();
+      
     },
   });
 }
@@ -340,28 +366,7 @@ function nextStep1(){
   loadDataCompetencies(id);
 }
 
-function checkPrivileges(){
-  $.ajax({
-    type: "GET",
-    url: "/competencies/check_privileges",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {},
-    dataType: "json",
-    success: function (response) {
-      $(response).each(function (i, e) {
-        if (response.privileges == "view"){
-          $('#table_add_competency tr td a').removeClass(["btnUp","btnDown","btn-edit-competency","btn-delete-competency"]);
-          $("#table_add_competency tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#4d4f4e");
-          $('.form-add-competency #name').prop("disabled", true);
-          $('.form-add-competency #desc').prop("disabled", true);
-          $('.form-add-competency #type').prop("disabled", true);
-        }
-      });
-    },
-  });
-}
+
 
 $(document).on('change','.form-add-competency #name,#desc', function(){
   name = $(".form-add-competency #name").val();

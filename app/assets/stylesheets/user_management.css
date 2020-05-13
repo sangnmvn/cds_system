@@ -16,7 +16,7 @@
 }
 #table_user_management tr.odd > th {
     font-size: 16px;
-    background: #009EE0;
+    background: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
     border: 1px solid black;
@@ -89,7 +89,7 @@ img.assign_user_img{
 
 .panel_contents table tr.odd > th {
     font-size: 14px;
-    background: #009EE0;
+    background: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
 }
@@ -120,7 +120,7 @@ img.assign_user_img{
 	}
 
 	thead {
-		background-color: #0066CC;
+		background-color: #4472c4;
 		color: #fff;
 		font-weight: bold;
 	}
@@ -137,7 +137,7 @@ img.assign_user_img{
 	padding: 0;
 }
 .head-myheader {
-    background-color: #0066CC;
+    background-color: #4472c4;
 }
 .modal-title {
     font-size: 18px;
@@ -173,7 +173,7 @@ img.assign_user_img{
 }
 
 .title-filter-user {
-    font-size: 18px;color: #fff;text-align:center;margin-top:0px;background-color: #009EE0;
+    font-size: 18px;color: #fff;text-align:center;margin-top:0px;background-color: #4472c4;
 }
 .filter-page-user {
     padding: 10px ; border: 1px solid #cccccc;;
@@ -214,4 +214,9 @@ table.dataTable thead .sorting {
     background-position: right center;
     outline: 0;
   }
-  
+  table.dataTable tbody th, table.dataTable tbody td.add_reviewer_name{
+    text-align: left;
+}
+table.dataTable tbody th, table.dataTable tbody td.add_reviewer_account{
+    text-align: left;
+}
