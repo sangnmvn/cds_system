@@ -26,6 +26,17 @@ module TemplatesHelper
 
   # 1 -> a, 2 -> b
 
+  def calculate_height(s)
+    # calculate height in excel
+    height = 0
+    sentences = s.lines
+    sentences.each do |sentence|
+      sentence_height = (sentence.length + 111) / 112 # lam tron len
+      height += sentence_height
+    end
+    height * 13
+  end
+
   ALPH = ("a".."z").to_a
 
   def alph(n)
@@ -37,6 +48,14 @@ module TemplatesHelper
       break if q.zero?
     end
     s
+  end
+
+  def squish_keep_newline(s)
+    # convert new line to an unused character and restore it back
+    new_s = s.gsub(/\n/, "ή")
+    new_s.squish!
+    new_s.gsub!(/ή/, "\n")
+    new_s.gsub(/\n{1}[ \t]*/, "\n")
   end
 
   def export_excel_CDS_CDP(template_id, extension)
@@ -134,17 +153,96 @@ module TemplatesHelper
       roman_index = roman(index + 1)
       roman_name = competency.name
       cds_sheet.add_row [roman_index, roman_name, "", "", "", "", "", "", "", ""], :style => format4
+
+      row_id = cds_sheet.rows.length
+      cell_id = "E#{row_id}"
+      cds_sheet.add_data_validation(cell_id, {
+        :type => :list,
+        :formula1 => '"Rất tốt, Tốt, Đạt yêu cầu, Chưa đạt yêu cầu, Chưa có cơ hội thực hiện, Không biết làm"',
+        :showDropDown => false,
+        :showInputMessage => true,
+        :promptTitle => "",
+        :prompt => "",
+      })
+
+      row_id = cds_sheet.rows.length
+      cell_id = "I#{row_id}:J#{row_id}"
+      cds_sheet.add_data_validation(cell_id, {
+        :type => :list,
+        :formula1 => '"Rất tốt, Tốt, Đạt yêu cầu, Chưa đạt yêu cầu, Chưa có cơ hội thực hiện, Không biết làm"',
+        :showDropDown => false,
+        :showInputMessage => true,
+        :promptTitle => "",
+        :prompt => "",
+      })
+
       levels = all_levels.collect { |c| c.level.to_i if c.id == competency.id }.uniq.compact
       all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
       levels.each do |level|
         cds_sheet.add_row ["", "Level #{level}", "", "", "", "", "", "", "", ""], :style => format5
+
+        row_id = cds_sheet.rows.length
+        cell_id = "E#{row_id}"
+        cds_sheet.add_data_validation(cell_id, {
+          :type => :list,
+          :formula1 => '"Rất tốt, Tốt, Đạt yêu cầu, Chưa đạt yêu cầu, Chưa có cơ hội thực hiện, Không biết làm"',
+          :showDropDown => false,
+          :showInputMessage => true,
+          :promptTitle => "",
+          :prompt => "",
+        })
+
+        row_id = cds_sheet.rows.length
+        cell_id = "I#{row_id}:J#{row_id}"
+        cds_sheet.add_data_validation(cell_id, {
+          :type => :list,
+          :formula1 => '"Rất tốt, Tốt, Đạt yêu cầu, Chưa đạt yêu cầu, Chưa có cơ hội thực hiện, Không biết làm"',
+          :showDropDown => false,
+          :showInputMessage => true,
+          :promptTitle => "",
+          :prompt => "",
+        })
+
         slot_this_level = all_slot_levels.collect { |c| c if c.level.to_i == level }.compact
         slot_this_level.each_with_index do |s, index|
-          final_name = s.desc.squish
-          final_desc = s.evidence.squish
+          final_name = squish_keep_newline(s.desc)
+          final_desc = squish_keep_newline(s.evidence)
           final_level = s.level + alph(index + 1)
           cds_sheet.add_row [final_level, final_name, final_desc, "Commit", "Commit", "", "", "", "", ""], :style => format6
-          height = [((final_desc.length / 100) + 3) * 10, ((final_name.length / 100) + 3) * 10].max
+
+          row_id = cds_sheet.rows.length
+          cell_id = "D#{row_id}:E#{row_id}"
+
+          cds_sheet.add_data_validation(cell_id, {
+            :type => :list,
+            :formula1 => '"Commit, Uncommit"',
+            :showDropDown => false,
+            :showInputMessage => true,
+            :promptTitle => "",
+            :prompt => "",
+          })
+
+          cell_id = "E#{row_id}"
+          cds_sheet.add_data_validation(cell_id, {
+            :type => :list,
+            :formula1 => '"Outstanding, Exceeds Expectations, Meets Expectations, Needs Improvement, Does Not Meet Minimum Standards, N/A"',
+            :showDropDown => false,
+            :showInputMessage => true,
+            :promptTitle => "",
+            :prompt => "",
+          })
+
+          cell_id = "I#{row_id}"
+          cds_sheet.add_data_validation(cell_id, {
+            :type => :list,
+            :formula1 => '"Outstanding, Exceeds Expectations, Meets Expectations, Needs Improvement, Does Not Meet Minimum Standards, N/A"',
+            :showDropDown => false,
+            :showInputMessage => true,
+            :promptTitle => "",
+            :prompt => "",
+          })
+
+          height = [calculate_height(final_desc), calculate_height(final_name)].max
           cds_sheet.rows[-1].height = height
         end
       end
@@ -202,23 +300,43 @@ module TemplatesHelper
       all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
       levels.each do |level|
         cdp_sheet.add_row ["", "Level #{level}", "", "", "", ""], :style => format5
+
+        row_id = cdp_sheet.rows.length
+        cell_id = "D#{row_id}:E#{row_id}"
+
+        cdp_sheet.add_data_validation(cell_id, {
+          :type => :list,
+          :formula1 => '"Commit, Uncommit"',
+          :showDropDown => false,
+          :showInputMessage => true,
+          :promptTitle => "",
+          :prompt => "",
+        })
+
         slot_this_level = all_slot_levels.collect { |c| c if c.level.to_i == level }.compact
         slot_this_level.each_with_index do |s, index|
-          final_name = s.desc.squish
-          final_desc = s.evidence.squish
+          final_name = squish_keep_newline(s.desc)
+          final_desc = squish_keep_newline(s.evidence)
           final_level = s.level + alph(index + 1)
           cdp_sheet.add_row [final_level, final_name, final_desc, "Commit", "Commit", ""], :style => format6
-          height = [((final_desc.length / 100) + 3) * 10, ((final_name.length / 100) + 3) * 10].max
+          height = [calculate_height(final_desc), calculate_height(final_name)].max
           cdp_sheet.rows[-1].height = height
         end
       end
     end
 
-    cds_sheet.column_widths 5, 90 # run at last
-    cdp_sheet.column_widths 5, 90 # run at last
+    cds_sheet.column_widths 5, 90, 90 # run at last
+    cdp_sheet.column_widths 5, 90, 90 # run at last
 
     template_name = current_template.name.gsub(/[\/\\]+/, "_")
-    xlsx_name = "public/cds_cdp_template_#{template_name}.xlsx"
+
+    # If OTS then create a different xlsx file
+    # so as not to delete existing xlsx file
+    if extension.downcase == "ots"
+      xlsx_name = "public/temp.xlsx"
+    else
+      xlsx_name = "public/cds_cdp_template_#{template_name}.xlsx"
+    end
     package.serialize(xlsx_name)
 
     if extension.downcase == "ots"
@@ -230,5 +348,4 @@ module TemplatesHelper
       File.basename(xlsx_name)
     end
   end
-
 end

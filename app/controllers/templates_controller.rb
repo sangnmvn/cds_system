@@ -2,10 +2,10 @@ class TemplatesController < ApplicationController
   layout "system_layout"
   include TemplatesHelper
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_template
-  FILE_CLEANUP_TIME_IN_SECONDS = 30
+  FILE_CLEANUP_TIME_IN_SECONDS = 10 * 60
 
   def index
-    @templates = Template.joins(:role, :admin_user).select('templates.*, roles.name as role_name, concat(admin_users.first_name," ",admin_users.last_name) as updated_by').order('updated_at desc')
+    @templates = Template.joins(:role, :admin_user).select('templates.*, roles.name as role_name, concat(admin_users.first_name," ",admin_users.last_name) as updated_by').order("updated_at desc")
   end
 
   def new
@@ -23,7 +23,7 @@ class TemplatesController < ApplicationController
     elsif @template.invalid?
       render json: { errors: @template.errors.messages }, status: 400
     else
-      render json: 'Failed'
+      render json: "Failed"
     end
   end
 
@@ -62,11 +62,15 @@ class TemplatesController < ApplicationController
     Thread.new do
       (0...(FILE_CLEANUP_TIME_IN_SECONDS)).each do |i|
         sleep 1
-        f = File.new("public/#{output_filename}")
-        new_creation_time = f.ctime
-        if creation_time != new_creation_time
-          # File has been modified, exit the thread
-          # Later thread will clean it up
+        begin
+          f = File.new("public/#{output_filename}")
+          new_creation_time = f.ctime
+          if creation_time != new_creation_time
+            # File has been modified, exit the thread
+            # Later thread will clean it up
+            Thread.exit
+          end
+        rescue
           Thread.exit
         end
       end
@@ -85,7 +89,7 @@ class TemplatesController < ApplicationController
     @template = Template.find(params[:id])
     @template.destroy
     respond_to do |format|
-      format.html { redirect_to action: 'index' }
+      format.html { redirect_to action: "index" }
       format.json { head :no_content }
     end
   end
@@ -98,6 +102,6 @@ class TemplatesController < ApplicationController
 
   def invalid_template
     logger.error "Attempt to access invalid template #{params[:id]}"
-    redirect_to action: 'index', notice: 'Invalid template'
+    redirect_to action: "index", notice: "Invalid template"
   end
 end

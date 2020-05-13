@@ -5,10 +5,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.7.1"
 gem "ajax-datatables-rails"
 
-gem 'zip-zip' 
-gem 'axlsx', "~> 1.3.4"
-gem 'axlsx_rails' # Provide templates for the axlsx gem
-gem 'libreconv'
+gem "zip-zip"
+gem "axlsx", "~> 1.3.4"
+gem "axlsx_rails" # Provide templates for the axlsx gem
+gem "libreconv"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.2", ">= 6.0.2.2"
@@ -28,14 +28,14 @@ gem "jbuilder", "~> 2.7"
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'bootstrap', '~> 4.4.1'
-gem 'jquery-rails'
-gem 'popper_js', '~> 1.14.5'
-gem 'select_all-rails'
-gem 'font-awesome-sass'
+gem "bootstrap", "~> 4.4.1"
+gem "jquery-rails"
+gem "popper_js", "~> 1.14.5"
+gem "select_all-rails"
+gem "font-awesome-sass"
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
-gem 'kaminari'
+gem "kaminari"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.2", require: false
 
@@ -45,7 +45,7 @@ gem "devise"
 gem "cancancan"
 gem "pry"
 gem "chartkick"
-gem 'ransack', "~> 2.3.0"
+gem "ransack", "~> 2.3.0"
 # gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################

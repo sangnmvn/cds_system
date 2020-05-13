@@ -13,9 +13,9 @@ Competency.delete_all
 Template.delete_all
 Title.delete_all
 Approver.delete_all
+GroupPrivilege.delete_all
 Privilege.delete_all
 TitlePrivilege.delete_all
-GroupPrivilege.delete_all
 UserGroup.delete_all
 AdminUser.delete_all
 Role.delete_all
@@ -80,7 +80,6 @@ AdminUser.create!(id: 28, email: "user27@example.com", password: "password", pas
 AdminUser.create!(id: 29, email: "user28@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user28", account: "user28", role_id: "4", company_id: "1")
 AdminUser.create!(id: 30, email: "user29@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user29", account: "user29", role_id: "5", company_id: "1")
 AdminUser.create!(id: 31, email: "user30@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user30", account: "user30", role_id: "6", company_id: "3")
-
 
 ProjectMember.create!(admin_user_id: 8, project_id: 3, is_managent: "0")
 ProjectMember.create!(admin_user_id: 9, project_id: 3, is_managent: "0")
@@ -489,7 +488,7 @@ slot_create = [
   { desc: "Basic understanding of file management, process management, memory management, cpu management in Windows and Linux. ",
     evidence: "Yêu cầu cả trên Windows và Linux, phải biết những thứ sau:\n
     - Biết được trong hệ điều hành có những file / folder nào, mục đích chính của chúng dùng để làm gì → để khi cần lấy file, \
-    sửa đổi file thì có thể biết được ngay phải lấy ở đâu, có ảnh hưởng đến hệ thống không
+    sửa đổi file thì có thể biết được ngay phải lấy ở đâu, có ảnh hưởng đến hệ thống không. 
     - Biết được file / folder có những thuộc tính nào, cách thay đổi thuộc tính file / folder như thế nào → mức độ căn bản nhất của security
     - Có chút khái niệm về FAT, NTFS, Ext → hiểu sơ được file trong ổ cứng được quản lý thế nào
     - Biết được cách xem thông tin process trong hệ thống, cách terminate process
@@ -553,7 +552,8 @@ slot_create = [
     Ví dụ dự án gần đến dealines, thời gian test còn lại không nhiều thì cần thực hiện test tính năng nào trước, tính năng nào sao để đảm \
     bảo defect leakage là thấp nhất?", level: 2, competency_id: "6", slot_id: 4 },
   { desc: "Explain the benefits and drawbacks of independent testing",
-    evidence: "Giải thích được lợi ích và nguy cơ của các cách thức tổ chức hoạt động testing trong dự án / công ty bao gồm các mức độ sau: 
+    evidence: "
+    Giải thích được lợi ích và nguy cơ của các cách thức tổ chức hoạt động testing trong dự án / công ty bao gồm các mức độ sau: 
     + Developer test code do chính họ khác viết ra 
     + Developer này test code do developer viết ra 
     + Có các bạn tester (QC) độc lập trong dự án sẽ thực hiện việc test app / system
@@ -637,7 +637,7 @@ slot_create = [
   },
   {
     desc: "Able to assit in test plan creation",
-    evidence: "- Tham gia vào quá trình tạo test plan (nhưng không phải là người chịu trách nhiệm chính) ở ít nhất 2 dự án với qui mô 10 man \
+    evidence: "- Tham gia vào quá trình tạo test plan (nhưng không phải là người ch��u trách nhiệm chính) ở ít nhất 2 dự án với qui mô 10 man \
     month trở lên hoặc chịu trách nhiệm chính trong việc tạo test plan của dự án với qui mô từ 20 man-month trở lên.",
     level: "2",
     competency_id: "7", slot_id: 4,
@@ -1215,14 +1215,13 @@ end
 # GroupPrivilege.create!(group_id: 2, privilege_id: 9)
 # GroupPrivilege.create!(group_id: 2, privilege_id: 12)
 
-
 #  test template
 AdminUser.create!(id: 32, email: "fulltemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user31", account: "user31", role_id: "6", company_id: "3")
-Group.create!(id:31 ,name: "Template", description: "Template", status: 1)
+Group.create!(id: 31, name: "Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 31, admin_user_id: 32)
 GroupPrivilege.create!(group_id: 31, privilege_id: 9)
 
 AdminUser.create!(id: 33, email: "viewtemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user32", account: "user32", role_id: "5", company_id: "3")
-Group.create!(id:32 ,name: "Template", description: "Template", status: 1)
+Group.create!(id: 32, name: "Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 32, admin_user_id: 33)
 GroupPrivilege.create!(group_id: 32, privilege_id: 10)
