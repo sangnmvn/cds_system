@@ -8,7 +8,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
       </div>
-  </div>
+    </div>
   </div>
 </div>
 <!-- end modal -->
@@ -16,28 +16,29 @@
   <thead>
     <tr>
       <th data-sort-ignore="true" style="width:50px;"><input type="checkbox"  id="selectAll"></th>
-    <% @fields.each do |field| %>
-      <% if field == "No." %>
-        <th style="width:50px;text-align:right"><%= field %></th>
-      <% elsif field == "Action"  %>
-        <th style="width:70px;"><%= field %></th>
-      <% else %>
-        <th><%= field %></th>
+      <% @fields.each do |field| %>
+        <% if field == "No." %>
+          <th style="width:50px;text-align:right"><%= field %></th>
+        <% elsif field == "Action"  %>
+          <th style="width:70px;"><%= field %></th>
+        <% else %>
+          <th><%= field %></th>
+        <% end %>
       <% end %>
-      
-    <% end %>
     </tr>
   </thead>
   <tbody id="schedules">
-  <% if @schedules.nil? || @schedules.empty? %>
-    <tr style="text-align: center;"><th colspan="9">No data available in table</th></tr> 
-  <% else %>
-    <% if current_admin_user.role.name == "HR" %>
-      <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
-    <% elsif current_admin_user.role.name == "PM" %>
-     <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
+    <% if @schedules.nil? || @schedules.empty? %>
+      <tr style="text-align: center;">
+        <th colspan="9">No data available in table</th>
+      </tr>
+    <% else %>
+      <% if current_admin_user.role.name == "HR" %>
+        <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
+      <% elsif current_admin_user.role.name == "PM" %>
+        <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
+      <% end %>
     <% end %>
-  <% end %>
   </tbody>
 </table>
 <div id="paginator" class="float-right">

@@ -14,11 +14,11 @@
   <td><%= schedule.status %></td>
   <td>
     <% if schedule.status == "In-progress" %>
-      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id, :"data-status" => schedule.status }) %>
+      <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
     <% end %>
     <% if schedule.status == "New" %>
-      <%= link_to(image_tag("edit.png", border: 0), "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
-      <%= link_to(image_tag("Delete.png", border: 0), "javascript:void(0)", { class: "action_icon del_btn", :"data-schedule" => schedule.id }) %>
+      <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "javascript:void(0)", { class: "action_icon edit_btn", :"data-schedule" => schedule.id }) %>
+      <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "javascript:void(0)", { class: "action_icon del_btn", :"data-schedule" => schedule.id }) %>
     <% end %>
   </td>
 </tr>

@@ -1,20 +1,19 @@
 <div > <button id="displayBtnDel" type='button' class='btn btn-danger btn-xs float-right' data-tooltip="true" data-placement="top" title="Delete schedule"  data-toggle='modal' data-target='#modalDeleteS' style="margin: 5px 15px 5px 0px;" disabled><%= image_tag("Delete.png", size: "16x16") %>  Delete</button></div>
-
 <div class="modal fade modal-form-add" id="modalDeleteS" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Selected Schedule</h5>rails g migration
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete Schedule</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Do you want to delete all this schedule?</p>
+        <p>Are you sure you want to Delete all schedules?</p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-primary" id="delete_selected">Yes</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="delete_selected">Save</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
