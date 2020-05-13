@@ -1,4 +1,11 @@
 module TemplatesHelper
+  TEST_STRING = "<ol>
+<li><em>Des 1</em></li>
+<li><strong>Des 2</strong></li>
+<li><p>Des 3</p></li>
+</ol>"
+
+  TEST_STRING2 = "<em>Des 1</em> <strong>Des 2</strong> <p>Des 3</p>"
   ROMAN_NUMBERS = {
     1000 => "M",
     900 => "CM",
@@ -22,6 +29,50 @@ module TemplatesHelper
       n = n % value
     end
     roman
+  end
+
+  def element_to_rich_text(html_element, is_root = true, format_arr = nil)
+    if format_arr.nil?
+      format_arr = {}
+    end
+    if html_element.name == "strong"
+      html_element.children.each do |children|
+        text = element_to_rich_text(children, false, format_arr)
+        format_arr[text] = Set.new if format_arr[text].nil?
+        format_arr[text].add(:b)
+        return text unless is_root
+      end
+    elsif html_element.name == "em"
+      html_element.children.each do |children|
+        text = element_to_rich_text(children, false, format_arr)
+        format_arr[text] = Set.new if format_arr[text].nil?
+        format_arr[text].add(:i)
+        return text unless is_root
+      end
+    elsif html_element.name == "text"
+      if is_root
+        format_arr[html_element.text] = []
+      else
+        return html_element.text
+      end
+    end
+    return format_arr if is_root
+  end
+
+  def from_HTML_to_axlsx_text(html)
+    html_tree = Nokogiri::HTML.parse(html)
+    innerHTML = html_tree.children[1].children[0]
+
+    final_text = Axlsx::RichText.new
+
+    final_format = {}
+    innerHTML.children.each do |children_element|
+      format_arr = element_to_rich_text(children_element)
+      final_format.merge!(format_arr)
+    end
+    rt = Axlsx::RichText.new
+    final_format.each { |text, format| rt.add_run(text, :b => format.include?(:b), :i => format.include?(:i)) }
+    rt
   end
 
   # 1 -> a, 2 -> b
@@ -207,8 +258,9 @@ module TemplatesHelper
         slot_this_level.each_with_index do |s, index|
           final_name = squish_keep_newline(s.desc)
           final_desc = squish_keep_newline(s.evidence)
+          final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
           final_level = s.level + alph(index + 1)
-          cds_sheet.add_row [final_level, final_name, final_desc, "Commit", "Commit", "", "", "", "", ""], :style => format6
+          cds_sheet.add_row [final_level, final_name, final_desc_with_HTML, "Commit", "Commit", "", "", "", "", ""], :style => format6
 
           row_id = cds_sheet.rows.length
           cell_id = "D#{row_id}:E#{row_id}"
@@ -317,8 +369,9 @@ module TemplatesHelper
         slot_this_level.each_with_index do |s, index|
           final_name = squish_keep_newline(s.desc)
           final_desc = squish_keep_newline(s.evidence)
+          final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
           final_level = s.level + alph(index + 1)
-          cdp_sheet.add_row [final_level, final_name, final_desc, "Commit", "Commit", ""], :style => format6
+          cdp_sheet.add_row [final_level, final_name, final_desc_with_HTML, "Commit", "Commit", ""], :style => format6
           height = [calculate_height(final_desc), calculate_height(final_name)].max
           cdp_sheet.rows[-1].height = height
         end

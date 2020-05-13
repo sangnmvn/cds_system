@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_033507) do
+ActiveRecord::Schema.define(version: 2020_04_29_021122) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 2020_05_07_033507) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "admin_user_id"
-    t.bigint "approver_id_id"
+    t.bigint "approver_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_user_id"], name: "index_approvers_on_admin_user_id"
-    t.index ["approver_id_id"], name: "index_approvers_on_approver_id_id"
+    t.index ["approver_id"], name: "index_approvers_on_approver_id"
   end
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -203,9 +203,9 @@ ActiveRecord::Schema.define(version: 2020_05_07_033507) do
     t.text "evidence"
     t.string "level"
     t.bigint "competency_id"
+    t.string "slot_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "slot_id"
     t.index ["competency_id"], name: "index_slots_on_competency_id"
   end
 
