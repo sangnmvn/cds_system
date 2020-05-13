@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  checkPrivileges()
+  checkPrivileges_step1();
   if ($('.template-table tbody tr').length == 0) {
     $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
   }
@@ -251,7 +251,7 @@ function postDeleteTemplate() {
   })
 }
 
-function checkPrivileges() {
+function checkPrivileges_step1() {
   $.ajax({
     type: "GET",
     url: "/competencies/check_privileges",

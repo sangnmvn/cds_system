@@ -5,17 +5,13 @@
     <%= form_with class: "step1 form-add-template", method: "GET" do %>
      <div class="row">
       <div class="col-sm-12">
-        <div class="row">
-          <div class="offset-md-1 col-md-3" style="text-align: left">
-            <p style="color:red;">(*) required fields</p>
-          </div>
-        </div>
+        <p style="color:red; text-align: left">(*) required fields</p>
         <%# Template name %>
         <div class="row">
-          <div class="offset-md-1 col-md-2" style="text-align: left">
+          <div class="col-md-2" style="text-align: left">
             <label>Template Name (*)</label>
           </div>
-          <div class="col-md-8 name">
+          <div class="col-md-10 name">
             <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter template name' %>
             <div class="error"></div>
           </div>
@@ -23,7 +19,7 @@
         <br>
         <%# Role %>
         <div class="row">
-          <div class="offset-md-1 col-md-2" style="text-align: left">
+          <div class="col-md-2" style="text-align: left">
             <label>Role</label>
           </div>
           <div class="col-md-4 role">
@@ -38,10 +34,10 @@
         <br>
         <%# Description %>
         <div class="row">
-          <div class="offset-md-1 col-md-2" style="text-align: left">
+          <div class="col-md-2" style="text-align: left">
             <label>Description</label>
           </div>
-          <div class="col-md-8 description">
+          <div class="col-md-10 description">
             <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary' %>
             <div class="error"></div>
           </div>
@@ -49,7 +45,7 @@
         <br>
         <%# Status %>
         <div class="row">
-          <div class="offset-md-1 col-md-2" style="text-align: left">
+          <div class="col-md-2" style="text-align: left">
             <label>Status</label>
           </div>
           <div class="col-md-3 status_radio">

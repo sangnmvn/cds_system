@@ -2,7 +2,7 @@ $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
-    fnDrawCallback: function(){checkPrivileges(); disableButtonUpDown();}, //; 
+    fnDrawCallback: function(){checkPrivileges_step3(); disableButtonUpDown();}, //; 
     "info": false, //không hiển thị số record / tổng số record
     "searching": false,
     "order": [
@@ -125,7 +125,7 @@ function loadSlotsinCompetency(search) {
       );
       table.fnDraw();
       disableButtonUpDown()
-      checkPrivileges()
+      checkPrivileges_step3()
     }
   });
 }
@@ -368,7 +368,7 @@ function disableButtonUpDown(){
   //   $('#table_slot tr:nth-child('+length+') td .btnDownSlot').addClass('disabled')
   // }
 }
-function checkPrivileges(){
+function checkPrivileges_step3(){
   $.ajax({
     type: "GET",
     url: "/competencies/check_privileges",
