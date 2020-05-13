@@ -1178,6 +1178,7 @@ TitlePrivilege.create!(id: 3, name: "CDS-CDP Review")
 TitlePrivilege.create!(id: 4, name: "Template Management")
 TitlePrivilege.create!(id: 5, name: "CDS Assessment")
 TitlePrivilege.create!(id: 6, name: "CDP Assessment")
+TitlePrivilege.create!(id: 7, name: "Schedule Management")
 
 #Create Privilges
 privilege = [
@@ -1193,6 +1194,8 @@ privilege = [
   { id: 10, name: "View Template Management", title_id: 4 },
   { id: 11, name: "Full Access on CDS Assessment", title_id: 5 },
   { id: 12, name: "Full Access on CDP Assessment", title_id: 6 },
+  { id: 13, name: "Full Access on schedule company", title_id: 7 },
+  { id: 14, name: "Full Access on schedule project", title_id: 7 },
 ]
 privilege.each do |s|
   Privilege.create!(id: s[:id], name: s[:name], title_privilege_id: s[:title_id])
@@ -1228,3 +1231,8 @@ AdminUser.create!(id: 33, email: "viewtemplate@example.com", password: "password
 Group.create!(id: 32, name: "Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 32, admin_user_id: 33)
 GroupPrivilege.create!(group_id: 32, privilege_id: 10)
+
+AdminUser.create!(id: 34, email: "schedulefull@example.com", password: "password", password_confirmation: "password", first_name: "Anh", last_name: "Nguyen Van", account: "anhnv", role_id: "4", company_id: "3")
+Group.create!( id: 33, name: "HR", description: "HR", status: 1)
+UserGroup.create!(group_id: 33, admin_user_id: 34)
+GroupPrivilege.create!(group_id: 33, privilege_id: 13)

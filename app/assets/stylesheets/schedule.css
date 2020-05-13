@@ -30,4 +30,5 @@ table tbody tr:nth-of-type(even) {
 
 .error {
   font-size: 80%;
+  color: red;
 }

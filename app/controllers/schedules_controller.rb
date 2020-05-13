@@ -1,18 +1,20 @@
 class SchedulesController < ApplicationController
+  include Authorize
+  before_action :get_privilege_id
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
   ROLE_NAME = ["PM", "SM", "BOD"]
 
   def index
     # binding.pry
+
     @fields = ["No.", "Schedule name", "Company name", "Period", "Start date", "Status", "Action"]
-    if current_admin_user.role.name == "HR"
+    if (@privilege_array & [13]).any?
       @fields.insert(5, "End date")
       @company = Company.all
       @schedules = Schedule.includes(:admin_user, :company).order(id: :DESC).page(params[:page]).per(20)
     else
-      @fields.insert(4, "Employee end date", "Reviewer end date")
-      @projects = Project.joins(project_members: [:admin_user]).where("admin_users.id = ?", current_admin_user.id)
+      redirect_to root_path
     end
   end
 
@@ -21,6 +23,13 @@ class SchedulesController < ApplicationController
   end
 
   def show
+    @schedule = Schedule.includes(:company, :period).find(params[:id])
+
+    # binding.pry
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def mailer
@@ -83,9 +92,12 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     @period = Period.find(@schedule.id)
     respond_to do |format|
+      @period = Period.find(@schedule.period_id)
+      admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
+      ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_now
       if @schedule.destroy && @period.destroy
+        # binding.pry
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-        @Periods = Period.all
         format.js { @status = true }
       else
         format.js { @status = false }
@@ -94,18 +106,21 @@ class SchedulesController < ApplicationController
   end
 
   def destroy_multiple
-    if params[:schedule_ids] != nil
-      schedule = Schedule.find(params[:schedule_ids])
-      
-      binding.pry
-      
-      schedule.each do |schedule|
-        schedule.destroy
-      end
-    end
     respond_to do |format|
-      @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-      format.js { @status = false }
+      if params[:schedule_ids] != nil
+        schedule = Schedule.find(params[:schedule_ids])
+
+        schedule.each do |schedule|
+          period = Period.find(schedule.period_id)
+          admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
+          ScheduleMailer.with(admin_user: admin_user.to_a, period: period).del_mailer.deliver_now
+          schedule.destroy
+        end
+        @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+        format.js { @status = true }
+      else
+        format.js { @status = false }
+      end
     end
   end
 
@@ -115,6 +130,10 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     respond_to do |format|
       if @schedule.update(temp_params)
+        # binding.pry
+        admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
+        @period = Period.find(@schedule.period_id)
+        ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_now
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
@@ -124,6 +143,9 @@ class SchedulesController < ApplicationController
   end
 
   private
+
+  def check_privilege
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_schedule

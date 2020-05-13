@@ -47,7 +47,6 @@ function check_notify(end_date, notify) {
   }
 }
 
-
 function change_status(start_date, attr_status) {
   $(start_date).change(function () {
     var start = $(this).val();
@@ -61,7 +60,17 @@ function change_notify(end_date, notify) {
 }
 // end check
 
+function view_schedule() {
+  $('.view_detail').on('click', function () {
+    let schedule_param = $(this).data('schedule')
 
+    $.ajax({
+      url: "/schedules/" + schedule_param,
+      type: "GET",
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
+    });
+  })
+}
 
 
 $(document).ready(function () {
@@ -72,6 +81,8 @@ $(document).ready(function () {
   attr_id_notify = "#notify_hr"
   datepicker_setup([start_date_id, end_date_id, from_date, to_date]);
   check_selectAll();
+  action_add();
+  view_schedule();
   $(attr_id_notify).change(function () {
     check_notify(end_date_id, attr_id_notify)
   })
@@ -122,6 +133,7 @@ $(document).on("click", ".edit_btn", function () {
       datepicker_setup([attr_start_date_id, attr_end_date_id, attr_from_date, attr_to_date]);
       change_status(attr_start_date_id, attr_status);
       change_notify(attr_end_date_id, attr_id_notify);
+      view_schedule();
     }
   });
 
@@ -131,7 +143,7 @@ $(document).on("click", "#selectAll", function () {
 });
 
 // btn datepicker form add
-function datepicker_setup(arr_date) {
+function datepicker_setup(arr_date, period_date) {
   var toDay = new Date();
   toDay.setDate(toDay.getDate())
   for (i = 0; i <= arr_date.length; i++) {
@@ -143,92 +155,105 @@ function datepicker_setup(arr_date) {
       format: "M dd, yyyy"
     })
   }
+  for (i = 0; i <= period_date.length; i++) {
+    $(arr_date[i]).datepicker({
+      todayBtn: "linked",
+      todayHighlight: true,
+      autoclose: true,
+      format: "M dd, yyyy"
+    })
+  }
 }
 
 // btn add new schedule of HR 
-$(document).one("click", "#btn_modal_add_hr", function () {
-  admin_user_id = $('#user').val();
-  schedule_name = $('#desc').val();
-  company = $("#company").val();
-  start_date = $("#start_date").val();
-  end_date = $("#end_date").val();
-  from_date = $("#from_date").val();
-  to_date = $("#to_date").val();
-  notify_date = $("#notify_date").val();
-  notify_hr = $('#notify_hr').val();
-  status_hr = $('#status').val();
-  temp = true;
-  $(".error").remove();
-
-  // check date start and end
-  if (Date.parse(start_date) >= Date.parse(end_date)) {
-    temp = false;
-    $('#end_date').after('<span class="error">End date must be greater than start date.</span>')
-  }
-  if (Date.parse(from_date) >= Date.parse(to_date)) {
-    temp = false;
-    $('#to_date').after('<span class="error">Period end date must be greater than period start date.</span>')
-  }
-  if (from_date == "") {
-    temp = false;
-    $('#from_date').after('<span class="error">Please enter from date.</span>')
-  }
-  if (to_date == "") {
-    temp = false;
-    $('#to_date').after('<span class="error">Please enter to date.</span>')
-  }
-  if (start_date == "") {
-    temp = false;
-    $('#start_date').after('<span class="error">Please enter start date.</span>')
-  }
-
-  if (end_date == "") {
-    temp = false;
-    $('#end_date').after('<span class="error">Please enter end date.</span>')
-  }
-  // end check date
-  if (schedule_name == "") {
-    temp = false;
-    $('#desc').after('<span class="error">Please enter schedule name.</span>')
-  }
-
-  if (company == "") {
-    temp = false;
-    $('#company').after('<span class="error">Please enter company name.</span>')
-  }
-
-  if (notify_hr == "") {
-    temp = false;
-    $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
-  }
-
-
-
-  if (temp == true) {
-    $.ajax({
-      url: "/schedules",
-      type: "POST",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-      },
-      data: {
-        from_date: from_date,
-        to_date: to_date,
-        admin_user_id: admin_user_id,
-        desc: schedule_name,
-        company_id: company,
-        start_date: start_date,
-        end_date_hr: end_date,
-        notify_hr: notify_hr,
-        status: status_hr
-      },
-      success: (res) => {
-        $('#form_add_hr')[0].reset();
-        check_selectAll();
-      }
-    });
-  }
-});
+function action_add() {
+  
+  $("#btn_modal_add_hr").one("click", function () {
+    admin_user_id = $('#user').val();
+    schedule_name = $('#desc').val();
+    company = $("#company").val();
+    start_date = $("#start_date").val();
+    end_date = $("#end_date").val();
+    from_date = $("#from_date").val();
+    to_date = $("#to_date").val();
+    notify_date = $("#notify_date").val();
+    notify_hr = $('#notify_hr').val();
+    status_hr = $('#status').val();
+    temp = true;
+    $(".error").remove();
+  
+    // check date start and end
+    if (Date.parse(start_date) >= Date.parse(end_date)) {
+      temp = false;
+      $('#end_date').after('<span class="error">End date must be greater than start date.</span>')
+    }
+    if (Date.parse(from_date) >= Date.parse(to_date)) {
+      temp = false;
+      $('#to_date').after('<span class="error">Period end date must be greater than period start date.</span>')
+    }
+    if (from_date == "") {
+      temp = false;
+      $('#from_date').after('<span class="error">Please enter from date.</span>')
+    }
+    if (to_date == "") {
+      temp = false;
+      $('#to_date').after('<span class="error">Please enter to date.</span>')
+    }
+    if (start_date == "") {
+      temp = false;
+      $('#start_date').after('<span class="error">Please enter start date.</span>')
+    }
+  
+    if (end_date == "") {
+      temp = false;
+      $('#end_date').after('<span class="error">Please enter end date.</span>')
+    }
+    // end check date
+    if (schedule_name == "") {
+      temp = false;
+      $('#desc').after('<span class="error">Please enter schedule name.</span>')
+    }
+  
+    if (company == "") {
+      temp = false;
+      $('#company').after('<span class="error">Please enter company name.</span>')
+    }
+  
+    if (notify_hr == "") {
+      temp = false;
+      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+    }
+  
+  
+  
+    if (temp == true) {
+      $.ajax({
+        url: "/schedules",
+        type: "POST",
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: {
+          from_date: from_date,
+          to_date: to_date,
+          admin_user_id: admin_user_id,
+          desc: schedule_name,
+          company_id: company,
+          start_date: start_date,
+          end_date_hr: end_date,
+          notify_hr: notify_hr,
+          status: status_hr
+        },
+        success: (res) => {
+          $('#form_add_hr')[0].reset();
+          check_selectAll();
+          action_add();
+          view_schedule();
+        }
+      });
+    }
+  });
+}
 $(document).one("click", "#btn_modal_edit_hr", function () {
   id_schedule = $('#id').val()
   schedule_name = $('#desc_edit').val();
@@ -286,6 +311,7 @@ function delete_schedule() {
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     success: function (result) {
       check_selectAll();
+      view_schedule();
     },
   });
 }

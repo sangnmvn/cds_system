@@ -1,5 +1,8 @@
-<div class="modal-header">
+<div class="modal-header head-myheader">
   <h4 class="modal-title" style="text-align: center">Edit schedule</h4>
+  <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
   <div class="container-fluid">
@@ -26,9 +29,7 @@
               <label>Company Name</label>
             </div>
             <div class="col-sm-6">
-        
-                <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control' , disabled: 'disabled'%>
-              
+              <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control' , disabled: 'disabled'%>
             </div>
           </div>
           <br>
@@ -81,7 +82,6 @@
               <label>Status</label>
             </div>
             <div class="col-sm-6" >
-              
               <input type="text" class="form-control" id="status_id" value="<%= schedule.status %>" disabled >
             </div>
           </div>

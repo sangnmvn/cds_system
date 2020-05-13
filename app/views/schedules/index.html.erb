@@ -1,9 +1,7 @@
 <%= javascript_include_tag 'schedules', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'schedule', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= render 'delete_selected'%>
-<% if current_admin_user.role.name == "HR" %>
-  <%= render 'add_hr'   %>
-<% end %>
+<%= render 'add_hr'   %>
 <!-- Modal show -->
 <div id="modal_content" >
   <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -30,11 +28,7 @@
     </tr>
   </thead>
   <tbody id="schedules">
-    <% if current_admin_user.role.name == "HR" %>
-      <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
-    <% elsif current_admin_user.role.name == "PM" %>
-      <%= render partial: 'schedule_pm' , locals: { schedules: @schedules, type: 'PM' } %>
-    <% end %>
+    <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
   </tbody>
 </table>
 <div id="paginator" class="float-right">

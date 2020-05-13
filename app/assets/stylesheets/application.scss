@@ -39,10 +39,6 @@
 	margin: 0 auto;
 	padding: 0;
 }
-.head-myheader {
-	background-color: #4472c4;
-	color: #fff;
-}
 .button-center{
 	display: flex;
 	align-items: center;
@@ -65,12 +61,13 @@
   padding: 0;
 }
 .head-myheader {
-  background-color: #0066cc;
+  background-color: #4472c4;
   color: #fff;
   // justify-content: center;
 }
 .head-myheader button {
   margin-left: 0px;
+  color: white;
   position: absolute;
   right: 10px;
 }

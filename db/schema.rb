@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_101037) do
+ActiveRecord::Schema.define(version: 2020_05_07_033507) do
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -20,14 +20,14 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
     t.string "account"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.boolean "is_delete", default: false
+    t.boolean "status", default: true
+    t.string "title", default: ""
     t.datetime "remember_created_at"
     t.bigint "company_id"
     t.bigint "role_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "status", default: true
-    t.boolean "is_delete", default: false
-    t.string "title", default: "1"
     t.index ["company_id"], name: "index_admin_users_on_company_id"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "admin_user_id"
+    t.bigint "approver_id_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "approver_id"
     t.index ["admin_user_id"], name: "index_approvers_on_admin_user_id"
-    t.index ["approver_id"], name: "fk_rails_bfdd408f43"
+    t.index ["approver_id_id"], name: "index_approvers_on_approver_id_id"
   end
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -67,9 +67,9 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
     t.text "desc"
     t.string "_type"
     t.bigint "template_id", null: false
+    t.integer "location"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "location"
     t.index ["template_id"], name: "index_competencies_on_template_id"
   end
 
@@ -130,9 +130,9 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
     t.string "name"
     t.boolean "status"
     t.text "description"
+    t.boolean "is_delete", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_delete", default: false
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -212,11 +212,11 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   create_table "templates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "description"
+    t.bigint "admin_user_id", null: false
     t.bigint "role_id"
+    t.boolean "status", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "status", default: false
-    t.bigint "admin_user_id", null: false
     t.index ["admin_user_id"], name: "index_templates_on_admin_user_id"
     t.index ["role_id"], name: "index_templates_on_role_id"
   end
@@ -254,7 +254,6 @@ ActiveRecord::Schema.define(version: 2020_05_08_101037) do
   add_foreign_key "admin_users", "companies"
   add_foreign_key "admin_users", "roles"
   add_foreign_key "approvers", "admin_users"
-  add_foreign_key "approvers", "admin_users", column: "approver_id"
   add_foreign_key "comments", "form_slots"
   add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"
