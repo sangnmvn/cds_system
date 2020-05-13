@@ -213,10 +213,20 @@ table.dataTable thead .sorting {
     background-repeat: no-repeat;
     background-position: right center;
     outline: 0;
+    border-color: #fff;
   }
   table.dataTable tbody th, table.dataTable tbody td.add_reviewer_name{
     text-align: left;
 }
 table.dataTable tbody th, table.dataTable tbody td.add_reviewer_account{
     text-align: left;
+}
+#table_user_management td, #table_user_management th {
+    border-color: #fff;
+}
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
+    border-color: #fff;
+}
+table.dataTable tbody th, table.dataTable tbody td{
+    border-color: #fff;
 }

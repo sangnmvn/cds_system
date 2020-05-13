@@ -23,7 +23,7 @@
     background: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
-    border: 1px solid black;
+    border: 2px solid #fff;
 }
 
 #table_group > tbody[role="alert"] > tr > td{
@@ -192,7 +192,7 @@ thead {
   border-collapse: collapse;
 }
 .modal-form-add-privilege table, tr, th, td{
-  border: 2px solid #000;
+  border: 2px solid #fff;
 }
 .modal-form-add-privilege .modal-header{
   background-color: #4472c4;
@@ -216,7 +216,7 @@ thead {
 }
 .table th, .table td {
 
-  border: 1px solid #000;
+  border: 2px solid #fff;
 }
 input.button-add {
   background-image: url(/assets/Add.png); /* 16px x 16px */
