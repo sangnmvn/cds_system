@@ -108,6 +108,12 @@ function checkModalCancel() {
     } else {
       $('.step1_cancel').off('click')
       $('.step1_cancel').attr('data-target', "#modal_warning_close")
+      $('#modal_warning_close button.btn-primary').on('click', function () {
+        if ($(this).text() == "Save" && $('#modal_warning_close .modal-footer a').attr("href") != "#") {
+          var description = $('.step1 #description').val()
+          postCreateTemplate(name,role,description)
+        }
+      })
     }
   }    
 }
@@ -177,7 +183,7 @@ function postCreateTemplate(name, role, description) {
             }
           }
         })
-        fails("Can't creat Template")
+        fails("The template hasn't been created")
       }
     });
   }
@@ -218,7 +224,7 @@ function applyEditTemplate(id, name, role, description) {
               $(`#step1 .${key}`).closest('div').children('.error').html(`${value}`)
             }
           }
-          fails("Can't edit template")
+          fails("The template hasn't been created")
         })
       }
     });
@@ -230,7 +236,7 @@ function postDeleteTemplate() {
     clicked = $(this)
     var template_id = $(this).attr("value")
     $('#modal_warning_close button.btn-primary').on('click', function () {
-      if ($(this).text() == "Save" && $('#modal_warning_close .modal-footer a').attr("href") == "#") {
+      if ($(this).text() == "Yes" && $('#modal_warning_close .modal-footer a').attr("href") == "#") {
         $.ajax({
           type: "DELETE",
           url: `/templates/${template_id}`,
