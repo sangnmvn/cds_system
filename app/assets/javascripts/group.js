@@ -68,11 +68,11 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           var a = sData.length + 1
           addData.push('<div style="text-align:right">'+ a +'</div>');
           addData.push(response.name);
-          addData.push(response.status_group);
+          
           addData.push(response.desc);
           
           addData.push('<div style="text-align:right">0</div>');
-          
+          addData.push(response.status_group);
           addData.push(
             '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
             <img border="0" src="/assets/edit.png"></a> \
@@ -85,6 +85,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
           table.row.add(addData);
+          table.draw();
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -196,7 +197,8 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
 
                 var delete_whole_row_constant = undefined;
               var redraw_table = false;
-              table.row(row_id).data(updateData)
+              table.row(row_id).data(updateData);
+              table.draw();
               /*
               table.fnUpdate(
                 updateData,
