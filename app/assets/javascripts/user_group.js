@@ -220,10 +220,10 @@ function change_button_right(flag) {
 function change_button_save(flag) {
 	if (flag == 0) {
 		$('#save').attr("disabled", false);
-  
+    $("#save").removeClass("btn-secondary").addClass("btn-primary");
 	} else {
 		$('#save').attr("disabled", true);
-
+    $("#save").removeClass("btn-primary").addClass("btn-secondary");
 	}
 }
 
@@ -290,12 +290,12 @@ function save() {
               updateData.push('<div style="text-align:right">'+response.number+'</div>');
               updateData.push(response.desc);
               updateData.push(
-                '<a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
-                <img border="0" src="/assets/edit.png"></a> \
-                <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
-                <img border="0" src="/assets/Delete.png"></a> \
-                <a class="action_icon key_icon" data-id="'+response.id+'" data-toggle="modal" data-target="#modalPrivilege"  href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-                <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>'
+                '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+            <img border="0" src="/assets/edit.png"></a> \
+            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>\
+            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <img border="0" src="/assets/Delete.png"></a> </div>'
               );
 
                 var delete_whole_row_constant = undefined;
@@ -343,7 +343,7 @@ function myAjax() {
 				$.each(response,function (i, e) { //duyet mang doi tuong
           table=$("#table_right").dataTable();
             table.fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/>", e.first_name, e.last_name
+							"<td style='text-align: right'></td>", "<div style='text-align:center' ><input type='checkbox' class='mycontrol cb_right' value='" + e.admin_user_id + "'/></div>", e.first_name, e.last_name
             ]);
          
 					}
@@ -368,7 +368,7 @@ function myAjax() {
           function (i, e) { //duyet mang doi tuong
             console.log(i + ' - ' + e);            
 						$("#table_left").dataTable().fnAddData([
-							"<td style='text-align: right'></td>", "<input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/>", e.first_name, e.last_name
+							"<td style='text-align: right'></td>", "<div style='text-align:center' ><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
 						]);
 					}
 				);
@@ -377,7 +377,7 @@ function myAjax() {
 	});
 	$('.user_group_icon').click(function () {
 		$('#save').attr("disabled", true);
-	
+    $("#save").removeClass("btn-primary").addClass("btn-secondary");
 		var id = $(this).attr("data-id");
 		//ajax load bảng group
 		$.ajax({
@@ -608,10 +608,10 @@ function to_left_button(flag) {
 function save_button(flag) {
   if (flag == 0) {
     $('.save').prop("disabled", true)
-   
+    $(".save").removeClass("btn-primary").addClass("btn-secondary");
   } else {
     $('.save').prop("disabled", false)
-
+    $(".save").removeClass("btn-secondary").addClass("btn-primary");
   }
 }
 function privilegeAjax() {

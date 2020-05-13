@@ -214,4 +214,9 @@ table.dataTable thead .sorting {
     background-position: right center;
     outline: 0;
   }
-  
+  table.dataTable tbody th, table.dataTable tbody td.add_reviewer_name{
+    text-align: left;
+}
+table.dataTable tbody th, table.dataTable tbody td.add_reviewer_account{
+    text-align: left;
+}

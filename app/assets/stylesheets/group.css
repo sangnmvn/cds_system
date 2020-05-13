@@ -257,3 +257,9 @@ table.dataTable thead .sorting {
   color: #007bff;
   font-size: 15px;
 }
+table.dataTable tbody td.sorting_1 {
+  text-align: right;
+}
+table.dataTable tbody td {
+  text-align: left;
+}
