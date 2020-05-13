@@ -12,7 +12,9 @@ class DeviseCreateAdminUsers < ActiveRecord::Migration[6.0]
       ## Recoverable
       t.string   :reset_password_token
       t.datetime :reset_password_sent_at
-
+      t.boolean :is_delete, default: false
+      t.boolean :status, default: true
+      t.string :title, default: ""
       ## Rememberable
       t.datetime :remember_created_at
 

@@ -4,7 +4,7 @@ class CreateGroups < ActiveRecord::Migration[6.0]
       t.string :name
       t.boolean :status
       t.text :description
-
+      t.boolean :is_delete, default: false
       t.timestamps
     end
   end
