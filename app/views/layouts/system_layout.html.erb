@@ -67,11 +67,14 @@
 </html>
 <script>
 $(document).ready(function() {
+ if (location.pathname == '/'){
+$('li.active').find("a").css('background-color','#CFD5eA');
+ }else{
   $('li.active').removeClass('active');
   
   $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-  $('li.active').find("a").css('background-color','#CFD5eA'); 
-  
+   $('li.active').find("a").css('background-color','#CFD5eA');
+  }
 });
   function getfocus() {
     document.getElementById("myAnchor").focus();

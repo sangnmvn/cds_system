@@ -105,15 +105,15 @@ class AdminUsersController < ApplicationController
       current_user_data.push(company)
       # action
       if @privilege_array.include? 1
-        current_user_data.push("<a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
+        current_user_data.push("<div style='text-align:center'><a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
           <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href=''>
           <i class='fa fa-trash icon' style='color:red'></i></a> 
           <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='#'>
           <img border='0' src='/assets/Assign_User.png' class='assign_user_img'></a> 
-          <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px'></i></a>")
+          <a class='action_icon status_icon' data-toggle='tooltip' title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='#'><i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px'></i></a></div>")
       else
-        current_user_data.push("<a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}' href='#'>
-          <img border='0' src='/assets/Assign_User.png'></a> ")
+        current_user_data.push("<div style='text-align:center'><a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}' href='#'>
+          <img border='0' src='/assets/Assign_User.png'></a></div> ")
       end
       final_data.push(current_user_data)
     end
