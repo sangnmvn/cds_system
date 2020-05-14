@@ -76,7 +76,6 @@ class GroupsController < ApplicationController
   end
 
   def get_data
-    # binding.pry
     group = Group.where(id: params[:id])
     render :json => { group: group }
   end

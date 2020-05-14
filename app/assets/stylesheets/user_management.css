@@ -235,3 +235,8 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
 table.dataTable tbody th, table.dataTable tbody td{
     border-color: #fff;
 }
+.fa {
+    width: 13px;
+    height: 13px;
+    font-size: 19px;
+}

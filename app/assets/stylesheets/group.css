@@ -264,3 +264,13 @@ table.table-popup-privilege{
 .table-primary th, .table-primary td, .table-primary thead th, .table-primary tbody + tbody {
   border-color: #ffffff;
 }
+
+.fa {
+  width: 13px;
+  height: 13px;
+  font-size: 19px;
+  margin-right: 5px;
+}
+#table_group tbody td:nth-child(7) {
+  width: 8%;
+}

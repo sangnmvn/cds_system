@@ -254,7 +254,7 @@ class AdminUsersController < ApplicationController
     respond_to do |format|
       email = AdminUser.where(email: params[:email]).present?
       account = AdminUser.where(account: params[:account]).present?
-      # binding.pry
+      
       if email || account
         format.json { render :json => { status: "exist", email: email, account: account } }
       else

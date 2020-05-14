@@ -740,9 +740,9 @@ $(document).on("click", ".status_icon", function () {
             '<i class="fa fa-toggle-on"></i>'
           );
         }
-        success("Change Status");
+        success("The status has been changed successfully.");
       } else if (response.status == "fail") {
-        fails("Change Status");
+        fails("The status hasn't been changed.");
       }
     },
   });

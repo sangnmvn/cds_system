@@ -30,7 +30,7 @@ $(document).on("click", "#btn-add-competency", function () {
           $('.btn-save-competency').prop("disabled", true);
           $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
         } else if (response.status == "fail") {
-          fails("Can't create competency.");
+          fails("The competency has not been saved.");
         }
       },
     });
@@ -58,7 +58,7 @@ $(document).on("click", "#btn-add-competency", function () {
           disableButtonMove();
           success("The competency has been saved successfully.");
         } else if (response.status == "fail") {
-          fails("Can't update competency.");
+          fails("The competency has not been saved.");
         }
       },
     });
@@ -184,14 +184,6 @@ $(document).on("click", "#confirm_yes_delete_competency", function () {
 $(document).ready(function () {
   var current_fs, next_fs, previous_fs;
   var opacity;
-
-
-  $(".export_excel_icon").on('click', function()
-    {      
-      debugger;
-    }
-  );
-
   $(".next").click(function () {
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
@@ -437,7 +429,7 @@ $(document).on('click','#table_add_competency .btnUp', function(){
             disableButtonMove();
             success("The competency is moved up 1 row successfully.");
           }else if (response.status == "fail") {
-            fails("Can't move up competency.");
+            fails("The competency is not moved up 1 row.");
           }
         });
       },
@@ -490,7 +482,7 @@ $(document).on('click','#table_add_competency .btnDown', function(){
             disableButtonMove();
             success("The competency is moved down 1 row successfully.");
           }else if (response.status == "fail") {
-            fails("Can't move down competency");
+            fails("The competency is not moved down 1 row.");
           }
         });
       },

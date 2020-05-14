@@ -6,7 +6,7 @@ class SchedulesController < ApplicationController
   ROLE_NAME = ["PM", "SM", "BOD"]
 
   def index
-    # binding.pry
+    
 
     @fields = ["No.", "Schedule name", "Company name", "Period", "Start date", "Status", "Action"]
     if (@privilege_array & [13]).any?
@@ -25,7 +25,7 @@ class SchedulesController < ApplicationController
   def show
     @schedule = Schedule.includes(:company, :period).find(params[:id])
 
-    # binding.pry
+    
 
     respond_to do |format|
       format.js
@@ -45,7 +45,7 @@ class SchedulesController < ApplicationController
     period_params_temp[:from_date] = helpers.date_format(params[:from_date])
     period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
-    # binding.pry
+    
 
     @period = Period.new(period_params_temp)
     respond_to do |format|
@@ -53,7 +53,7 @@ class SchedulesController < ApplicationController
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
         if @schedule.save
-          # binding.pry
+          
           @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
           admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
@@ -96,7 +96,7 @@ class SchedulesController < ApplicationController
       admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
       ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_now
       if @schedule.destroy && @period.destroy
-        # binding.pry
+        
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
@@ -130,7 +130,6 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     respond_to do |format|
       if @schedule.update(temp_params)
-        # binding.pry
         admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
         @period = Period.find(@schedule.period_id)
         ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_now

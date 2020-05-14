@@ -46,7 +46,7 @@ class CompetenciesController < ApplicationController
   end
 
   def load
-    # binding.pry
+    
     arr = Array.new
     return render json: arr unless (@privilege_array & [9,10]).any?
     competencies = Competency.select(:id, :name, :_type, :desc)
@@ -72,9 +72,6 @@ class CompetenciesController < ApplicationController
   end
 
   def change_location
-    
-    # binding.pry
-    
     return render json: { status: "fail" } unless @privilege_array.include?(9)
     if competency_current = Competency.find(params[:id])
       location_current = competency_current.location

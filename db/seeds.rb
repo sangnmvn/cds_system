@@ -52,31 +52,31 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
 
-AdminUser.create!(id: 1, email: "admin@example.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
+AdminUser.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
 AdminUser.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "1")
 AdminUser.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: "1")
-AdminUser.create!(id: 4, email: "hungdq@example.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "1")
-AdminUser.create!(id: 5, email: "vinhmx@example.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
-AdminUser.create!(id: 6, email: "hoanphungthe@example.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
-AdminUser.create!(id: 7, email: "baonguyenquoc@example.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
-AdminUser.create!(id: 8, email: "phungnguyenvan@example.com", password: "password", password_confirmation: "password", first_name: "Phung", last_name: "Nguyen Van", account: "phungnv", role_id: "1", company_id: "2")
-AdminUser.create!(id: 9, email: "locnguyenvan@example.com", password: "password", password_confirmation: "password", first_name: "Loc", last_name: "Nguyen Van", account: "locnv", role_id: "2", company_id: "2")
+AdminUser.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "1")
+AdminUser.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
+AdminUser.create!(id: 6, email: "hoanphungthe@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
+AdminUser.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
+AdminUser.create!(id: 8, email: "phungnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phung", last_name: "Nguyen Van", account: "phungnv", role_id: "1", company_id: "2")
+AdminUser.create!(id: 9, email: "locnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Loc", last_name: "Nguyen Van", account: "locnv", role_id: "2", company_id: "2")
 AdminUser.create!(id: 10, email: "ngocph@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ngoc", last_name: "Pham Huu", account: "ngocph", role_id: "3", company_id: "2")
 AdminUser.create!(id: 11, email: "phuctnh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phuc", last_name: "Tran Nguyen Hoang", account: "phuctnh", role_id: "4", company_id: "2")
-AdminUser.create!(id: 12, email: "lamnguyenngoc@example.com", password: "password", password_confirmation: "password", first_name: "Lam", last_name: "Nguyen Ngoc", account: "lamng", role_id: "5", company_id: "2")
-AdminUser.create!(id: 13, email: "linhlevu@example.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Le Vu", account: "linhlv", role_id: "6", company_id: "2")
-AdminUser.create!(id: 14, email: "linhnguyenquang@example.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Nguyen Quang", account: "linhnq", role_id: "1", company_id: "3")
-AdminUser.create!(id: 15, email: "hiendinhthuy@example.com", password: "password", password_confirmation: "password", first_name: "Hien", last_name: "Dinh Thuy", account: "hiendt", role_id: "2", company_id: "3")
-AdminUser.create!(id: 16, email: "tientranquanhoang@example.com", password: "password", password_confirmation: "password", first_name: "Tien", last_name: "Tran Quang Hoang", account: "tientqh", role_id: "3", company_id: "3")
-AdminUser.create!(id: 17, email: "tuyenhothikim@example.com", password: "password", password_confirmation: "password", first_name: "Tuyen", last_name: "Ho Thi Kim", account: "tuyenhtk", role_id: "4", company_id: "3")
-AdminUser.create!(id: 18, email: "dongnguyenchinh@example.com", password: "password", password_confirmation: "password", first_name: "Dong", last_name: "Nguyen Chinh", account: "dongnc", role_id: "5", company_id: "3")
-AdminUser.create!(id: 19, email: "dungphamthu@example.com", password: "password", password_confirmation: "password", first_name: "Dung", last_name: "Pham Thu", account: "dungpt", role_id: "6", company_id: "3")
-AdminUser.create!(id: 20, email: "lydothi@example.com", password: "password", password_confirmation: "password", first_name: "Ly", last_name: "Do Thi", account: "lydt", role_id: "1", company_id: "4")
-AdminUser.create!(id: 21, email: "tamleminh@example.com", password: "password", password_confirmation: "password", first_name: "Tam", last_name: "Le Minh", account: "tamlm", role_id: "2", company_id: "4")
-AdminUser.create!(id: 22, email: "vandaonthihong@example.com", password: "password", password_confirmation: "password", first_name: "Van", last_name: "Doan Thi Hong", account: "vandth", role_id: "3", company_id: "4")
-AdminUser.create!(id: 23, email: "vuvotruong@example.com", password: "password", password_confirmation: "password", first_name: "Vu", last_name: "Vo Truong", account: "vuvt", role_id: "4", company_id: "4")
-AdminUser.create!(id: 24, email: "ninhnguyenthi@example.com", password: "password", password_confirmation: "password", first_name: "Ninh", last_name: "Nguyen Thi", account: "ninhnt", role_id: "5", company_id: "4")
-AdminUser.create!(id: 25, email: "thangnguyentat@example.com", password: "password", password_confirmation: "password", first_name: "Thang", last_name: "Nguyen Tat", account: "thangnt", role_id: "6", company_id: "4")
+AdminUser.create!(id: 12, email: "lamnguyenngoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Lam", last_name: "Nguyen Ngoc", account: "lamng", role_id: "5", company_id: "2")
+AdminUser.create!(id: 13, email: "linhlevu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Le Vu", account: "linhlv", role_id: "6", company_id: "2")
+AdminUser.create!(id: 14, email: "linhnguyenquang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Nguyen Quang", account: "linhnq", role_id: "1", company_id: "3")
+AdminUser.create!(id: 15, email: "hiendinhthuy@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hien", last_name: "Dinh Thuy", account: "hiendt", role_id: "2", company_id: "3")
+AdminUser.create!(id: 16, email: "tientranquanhoang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tien", last_name: "Tran Quang Hoang", account: "tientqh", role_id: "3", company_id: "3")
+AdminUser.create!(id: 17, email: "tuyenhothikim@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tuyen", last_name: "Ho Thi Kim", account: "tuyenhtk", role_id: "4", company_id: "3")
+AdminUser.create!(id: 18, email: "dongnguyenchinh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dong", last_name: "Nguyen Chinh", account: "dongnc", role_id: "5", company_id: "3")
+AdminUser.create!(id: 19, email: "dungphamthu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dung", last_name: "Pham Thu", account: "dungpt", role_id: "6", company_id: "3")
+AdminUser.create!(id: 20, email: "lydothi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ly", last_name: "Do Thi", account: "lydt", role_id: "1", company_id: "4")
+AdminUser.create!(id: 21, email: "tamleminh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tam", last_name: "Le Minh", account: "tamlm", role_id: "2", company_id: "4")
+AdminUser.create!(id: 22, email: "vandaonthihong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Van", last_name: "Doan Thi Hong", account: "vandth", role_id: "3", company_id: "4")
+AdminUser.create!(id: 23, email: "vuvotruong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vu", last_name: "Vo Truong", account: "vuvt", role_id: "4", company_id: "4")
+AdminUser.create!(id: 24, email: "ninhnguyenthi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ninh", last_name: "Nguyen Thi", account: "ninhnt", role_id: "5", company_id: "4")
+AdminUser.create!(id: 25, email: "thangnguyentat@bestarion.com", password: "password", password_confirmation: "password", first_name: "Thang", last_name: "Nguyen Tat", account: "thangnt", role_id: "6", company_id: "4")
 
 ProjectMember.create!(admin_user_id: 8, project_id: 3, is_managent: "0")
 ProjectMember.create!(admin_user_id: 9, project_id: 3, is_managent: "0")
@@ -97,7 +97,7 @@ ProjectMember.create!(admin_user_id: 19, project_id: 2, is_managent: "0")
 # NB_USERS.times do |n|
 #   AdminUser.create! do |u|
 #     u.id = 2 + n
-#     u.email = "user_#{n}@example.com"
+#     u.email = "user_#{n}@bestarion.com"
 #     u.first_name = "Test"
 #     u.last_name = "User #{n}"
 #     u.account = "user#{n}"
@@ -179,12 +179,12 @@ Title.create!(name: "SM Test", desc: "SM Test", role_id: "5")
 Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
-Template.create!(id: 1, name: "CDS/CPB QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
-Template.create!(id: 2, name: "CDS/CPB HR", description: "Template Career Development Plan / Career Development System For HR", role_id: "2", admin_user_id: 1)
-Template.create!(id: 3, name: "CDS/CPB BA", description: "Template Career Development Plan / Career Development System For BA", role_id: "3", admin_user_id: 2)
-Template.create!(id: 4, name: "CDS/CPB DEV", description: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
-# Template.create!(id: 5, name: "CDS/CPB SM", description: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
-# Template.create!(id: 6, name: "CDS/CPB IT", description: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
+Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
+Template.create!(id: 2, name: "CDS/CDP HR", description: "Template Career Development Plan / Career Development System For HR", role_id: "2", admin_user_id: 1)
+Template.create!(id: 3, name: "CDS/CDP BA", description: "Template Career Development Plan / Career Development System For BA", role_id: "3", admin_user_id: 2)
+Template.create!(id: 4, name: "CDS/CDP DEV", description: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
+# Template.create!(id: 5, name: "CDS/CDP SM", description: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
+# Template.create!(id: 6, name: "CDS/CDP IT", description: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
 # Template.create!(id: 2, name: "CDS", description: "Career Development System")
 
 # Create Form
@@ -1202,24 +1202,24 @@ Group.create!(id: 35, name: "Reviewer", description: "Reviewer", status: 1)
 Group.create!(id: 36, name: "Staff", description: "Staff", status: 1)
 
 #  template HR
-AdminUser.create!(id: 32, email: "nguyenvana@example.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3")
+AdminUser.create!(id: 32, email: "nguyenvana@bestarion.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3")
 UserGroup.create!(group_id: 33, admin_user_id: 32)
 GroupPrivilege.create!(group_id: 33, privilege_id: 9)
 GroupPrivilege.create!(group_id: 33, privilege_id: 10)
 
-AdminUser.create!(id: 33, email: "nguyenvanb@example.com", password: "password", password_confirmation: "password", first_name: "B", last_name: "Nguyen Van", account: "bnv", role_id: "5", company_id: "3")
+AdminUser.create!(id: 33, email: "nguyenvanb@bestarion.com", password: "password", password_confirmation: "password", first_name: "B", last_name: "Nguyen Van", account: "bnv", role_id: "5", company_id: "3")
 UserGroup.create!(group_id: 32, admin_user_id: 33)
 GroupPrivilege.create!(group_id: 32, privilege_id: 10)
 
-AdminUser.create!(id: 34, email: "nguyenvanc@example.com", password: "password", password_confirmation: "password", first_name: "C", last_name: "Nguyen Van", account: "cnv", role_id: "4", company_id: "3")
+AdminUser.create!(id: 34, email: "nguyenvanc@bestarion.com", password: "password", password_confirmation: "password", first_name: "C", last_name: "Nguyen Van", account: "cnv", role_id: "4", company_id: "3")
 UserGroup.create!(group_id: 33, admin_user_id: 34)
 GroupPrivilege.create!(group_id: 33, privilege_id: 13)
 #  test user management
-AdminUser.create!(id: 35, email: "nguyenvand@example.com", password: "password", password_confirmation: "password", first_name: "D", last_name: "Nguyen Van", account: "dnv", role_id: "6", company_id: "3")
+AdminUser.create!(id: 35, email: "nguyenvand@bestarion.com", password: "password", password_confirmation: "password", first_name: "D", last_name: "Nguyen Van", account: "dnv", role_id: "6", company_id: "3")
 UserGroup.create!(group_id: 34, admin_user_id: 35)
 GroupPrivilege.create!(group_id: 34, privilege_id: 1)
 
-AdminUser.create!(id: 36, email: "nguyenvane@example.com", password: "password", password_confirmation: "password", first_name: "E", last_name: "Nguyen Van", account: "env", role_id: "6", company_id: "2")
+AdminUser.create!(id: 36, email: "nguyenvane@bestarion.com", password: "password", password_confirmation: "password", first_name: "E", last_name: "Nguyen Van", account: "env", role_id: "6", company_id: "2")
 UserGroup.create!(group_id: 35, admin_user_id: 36)
 GroupPrivilege.create!(group_id: 35, privilege_id: 2)
 ProjectMember.create!(admin_user_id: 36, project_id: 3, is_managent: "0")
