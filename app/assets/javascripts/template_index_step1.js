@@ -170,9 +170,13 @@ function postCreateTemplate(name, role, description) {
       },
       dataType: "json",
       success: function (response) {
-        $('#msform .row .id-template').attr("value", response)
-        success("The template has been created successfully.")
-        save_button(0)
+        if(response.status == 'fail'){
+          fails("The template hasn't been created successfully..");
+        }else{
+          $('#msform .row .id-template').attr("value", response)
+          success("The template has been created successfully.")
+          save_button(0)
+        }
       },
       error: function (response) {
         var json_response = response.responseJSON.errors;
@@ -192,7 +196,7 @@ function postCreateTemplate(name, role, description) {
             }
           }
         })
-        fails("The template hasn't been created")
+        fails("The template hasn't been created.")
       }
     });
   }
@@ -213,8 +217,12 @@ function applyEditTemplate(id, name, role, description) {
       },
       dataType: "json",
       success: function (response) {
-        success("The template has been edited successfully.")
-        save_button(0)
+        if(response.status == 'fail'){
+          fails("The template hasn't been edited.");
+        }else{
+          success("The template has been edited successfully.")
+          save_button(0)
+        }
       },
       error: function (response) {
         var json_response = response.responseJSON.errors;
@@ -254,12 +262,16 @@ function postDeleteTemplate() {
           },
           dataType: "json",
           success: function (response) {
-            success("The template has been deleted successfully.")
-            clicked.closest('tr').remove();
-            if ($('.template-table tbody tr').length == 0) {
-              $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
-            }
-            $('#modal_warning_close').modal('hide');
+            if(response.status == 'fail'){
+              fails("The template hasn't been deleted.");
+            }else{
+              success("The template has been deleted successfully.")
+              clicked.closest('tr').remove();
+              if ($('.template-table tbody tr').length == 0) {
+                $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
+              }
+              $('#modal_warning_close').modal('hide');
+            }            
           }
         });
       }
