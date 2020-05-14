@@ -18,8 +18,8 @@ Privilege.delete_all
 TitlePrivilege.delete_all
 UserGroup.delete_all
 Privilege.delete_all
-Period.delete_all
 Schedule.delete_all
+Period.delete_all
 AdminUser.delete_all
 Role.delete_all
 Project.delete_all
@@ -1224,9 +1224,9 @@ UserGroup.create!(group_id: 35, admin_user_id: 36)
 GroupPrivilege.create!(group_id: 35, privilege_id: 2)
 ProjectMember.create!(admin_user_id: 36, project_id: 3, is_managent: "0")
 
-Period.create!(id: 3, from_date: "2019-06-16", to_date: "2019-07-16")
-Period.create!(id: 4, from_date: "2019-07-16", to_date: "2019-8-16")
-Period.create!(id: 5, from_date: "2019-10-16", to_date: "2019-11-16")
-Schedule.create!(admin_user_id: 34, company_id: 3, period_id: 3, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
-Schedule.create!(admin_user_id: 34, company_id: 2, period_id: 4, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done")
-Schedule.create!(admin_user_id: 34, company_id: 1, period_id: 5, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New")
+Period.create!(id: 30, from_date: "2019-06-16", to_date: "2019-07-16")
+Period.create!(id: 40, from_date: "2019-07-16", to_date: "2019-8-16")
+Period.create!(id: 50, from_date: "2019-10-16", to_date: "2019-11-16")
+Schedule.create!(admin_user_id: 34, company_id: 3, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
+Schedule.create!(admin_user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done")
+Schedule.create!(admin_user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New")
