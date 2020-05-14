@@ -5,10 +5,10 @@
   </button>
 </div>
 <div class="modal-body">
-  <p>Are you sure you want to Delete this schedule?</p>
+  <p>Are you sure to detete this schedule?</p>
   <%= text_field_tag 'schedule_id', @schedule.id,type: 'hidden', class: 'form-control' %>
 </div>
 <div class="modal-footer justify-content-center">
-  <button type="button" class="btn btn-primary" id="btn_modal_delete" onclick="delete_schedule();">Save</button>
-  <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancle</button>
+  <button type="button" class="btn btn-primary" id="btn_modal_delete" onclick="delete_schedule();">Yes</button>
+  <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
 </div>
