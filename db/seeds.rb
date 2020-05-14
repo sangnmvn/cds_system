@@ -188,8 +188,8 @@ Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
 Template.create!(id: 1, name: "CDS/CPB QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", admin_user_id: 1)
-Template.create!(id: 2, name: "CDS/CPB HR", description: "Template Career Development Plan / Career Development System For DEV", role_id: "2", admin_user_id: 1)
-Template.create!(id: 3, name: "CDS/CPB BA", description: "Template Career Development Plan / Career Development System For DEV", role_id: "3", admin_user_id: 2)
+Template.create!(id: 2, name: "CDS/CPB HR", description: "Template Career Development Plan / Career Development System For HR", role_id: "2", admin_user_id: 1)
+Template.create!(id: 3, name: "CDS/CPB BA", description: "Template Career Development Plan / Career Development System For BA", role_id: "3", admin_user_id: 2)
 Template.create!(id: 4, name: "CDS/CPB DEV", description: "Template Career Development Plan / Career Development System For DEV", role_id: "4", admin_user_id: 2)
 # Template.create!(id: 5, name: "CDS/CPB SM", description: "Template Career Development Plan / Career Development System For DEV", role_id: "5",admin_user_id: 2 )
 # Template.create!(id: 6, name: "CDS/CPB IT", description: "Template Career Development Plan / Career Development System For DEV", role_id: "6", admin_user_id: 1)
@@ -1202,39 +1202,19 @@ privilege.each do |s|
   Privilege.create!(id: s[:id], name: s[:name], title_privilege_id: s[:title_id])
 end
 
-#Create Groups
-# Group.create!(id: 1, name: "BOD", status: 1, description: "")
-# Group.create!(id: 2, name: "Admin", status: 1, description: "")
-# Group.create!(id: 3, name: "HR", status: 1, description: "")
-# Group.create!(id: 4, name: "Manager", status: 1, description: "")
-# Group.create!(id: 5, name: "Reviewer", status: 1, description: "")
-# Group.create!(id: 6, name: "Staf", status: 1, description: "")
-
-# GroupPrivilege.create!(group_id: 1, privilege_id: 9)
-# GroupPrivilege.create!(group_id: 1, privilege_id: 10)
-# GroupPrivilege.create!(group_id: 1, privilege_id: 11)
-# GroupPrivilege.create!(group_id: 1, privilege_id: 12)
-# GroupPrivilege.create!(group_id: 2, privilege_id: 1)
-# GroupPrivilege.create!(group_id: 2, privilege_id: 4)
-# GroupPrivilege.create!(group_id: 2, privilege_id: 9)
-# GroupPrivilege.create!(group_id: 2, privilege_id: 12)
-
 #  test template
 AdminUser.create!(id: 32, email: "fulltemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user31", account: "user31", role_id: "6", company_id: "3")
-Group.create!(id: 31, name: "Template", description: "Template", status: 1)
+Group.create!(id: 31, name: "Full Access Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 31, admin_user_id: 32)
 GroupPrivilege.create!(group_id: 31, privilege_id: 9)
-GroupPrivilege.create!(group_id: 31, privilege_id: 10)
-# GroupPrivilege.create!(group_id: 33, privilege_id: 1)
-# GroupPrivilege.create!(group_id: 34, privilege_id: 2)
-# GroupPrivilege.create!(group_id: 35, privilege_id: 3)
+# GroupPrivilege.create!(group_id: 31, privilege_id: 10)
 
 AdminUser.create!(id: 33, email: "viewtemplate@example.com", password: "password", password_confirmation: "password", first_name: "user", last_name: "user32", account: "user32", role_id: "5", company_id: "3")
-Group.create!(id: 32, name: "Template", description: "Template", status: 1)
+Group.create!(id: 32, name: "View Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 32, admin_user_id: 33)
 GroupPrivilege.create!(group_id: 32, privilege_id: 10)
 
 AdminUser.create!(id: 34, email: "schedulefull@example.com", password: "password", password_confirmation: "password", first_name: "Anh", last_name: "Nguyen Van", account: "anhnv", role_id: "4", company_id: "3")
-Group.create!( id: 33, name: "HR", description: "HR", status: 1)
+Group.create!(id: 33, name: "HR", description: "HR", status: 1)
 UserGroup.create!(group_id: 33, admin_user_id: 34)
 GroupPrivilege.create!(group_id: 33, privilege_id: 13)

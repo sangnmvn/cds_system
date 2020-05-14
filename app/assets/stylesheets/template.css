@@ -154,3 +154,6 @@ select.list-dt:focus {
 #table_add_competency .fa-trash {
   color: red;
 }
+/* .action-button-previous, .btn-save-competency, .nexttoStep3, .step1_cancel {
+  width: 5%;
+} */
