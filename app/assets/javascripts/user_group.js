@@ -228,20 +228,6 @@ function change_button_save(flag) {
 }
 
 function save() {
-	bootbox.confirm({
-		message: "Are you sure want to save users for this group?",
-		buttons: {
-			confirm: {
-				label: "Yes",
-				className: "btn-primary"
-			},
-			cancel: {
-				label: "No",
-				className: "btn-danger"
-			}
-		},
-		callback: function (result) {
-			if (result) {
         
 				var checkboxes = $("#table_right").DataTable().rows().data();
 				var id_group = $("#title_group h1").text();
@@ -322,9 +308,6 @@ function save() {
             $('.bootbox-confirm').modal('hide');;						
 					}
 				});
-			}
-		}
-	});
 }
 
 
