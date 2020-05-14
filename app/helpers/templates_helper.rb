@@ -26,16 +26,16 @@ module TemplatesHelper
 
   def element_to_rich_text(html_element, recursive_level = 0, format_arr = nil, index_arr = nil)
     if format_arr.nil?
-      format_arr = Hash.new { |h,k| h[k] = [] }
+      format_arr = Hash.new { |h, k| h[k] = [] }
       index_arr = []
     end
     is_root = (recursive_level == 0) ? true : false
-    
+
     if html_element.name == "strong"
       html_element.children.each do |children|
-        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        text = element_to_rich_text(children, recursive_level + 1, format_arr, index_arr)
         format_arr[text].push(:b)
-        
+
         is_already_included = false
         index_arr.each do |arr_info|
           index_text = arr_info[0]
@@ -44,13 +44,13 @@ module TemplatesHelper
             break
           end
         end
-        
-        index_arr.push [text, recursive_level] unless is_already_included        
+
+        index_arr.push [text, recursive_level] unless is_already_included
       end
       return html_element.children.text unless is_root
     elsif html_element.name == "em"
       html_element.children.each do |children|
-        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        text = element_to_rich_text(children, recursive_level + 1, format_arr, index_arr)
         format_arr[text].push(:i)
 
         is_already_included = false
@@ -61,15 +61,16 @@ module TemplatesHelper
             break
           end
         end
-        
-        index_arr.push [text, recursive_level] unless is_already_included        
+
+        index_arr.push [text, recursive_level] unless is_already_included
       end
       return html_element.children.text unless is_root
     elsif html_element.name == "p"
       html_element.children.each do |children|
-        text = element_to_rich_text(children, recursive_level+1, format_arr, index_arr)
+        text = element_to_rich_text(children, recursive_level + 1, format_arr, index_arr)
         format_arr[text].push(:p)
         is_already_included = false
+
         index_arr.each do |arr_info|
           index_text = arr_info[0]
           if index_text == text
@@ -77,12 +78,12 @@ module TemplatesHelper
             break
           end
         end
-        
-        index_arr.push [text, recursive_level] unless is_already_included        
-      end    
+
+        index_arr.push [text, recursive_level] unless is_already_included
+      end
       return html_element.children.text unless is_root
     elsif html_element.name == "text"
-      return html_element.text      
+      return html_element.text
     end
     return format_arr, index_arr if is_root
   end
@@ -97,42 +98,44 @@ module TemplatesHelper
 
     innerHTML.children.each_with_index do |children_element, element_index|
       format_arr, index_arr = element_to_rich_text(children_element)
-      format = {:b => false, :i => false, :p => false}
+
+      format = { :b => false, :i => false, :p => false }
       parent_index = []
       (0...(index_arr.length)).each do |i|
         next if parent_index.include?(i)
-        text , level = index_arr[i]
+        text, level = index_arr[i]
         current_format = format_arr[text]
 
         format[:b] = current_format.include?(:b)
         format[:i] = current_format.include?(:i)
         format[:p] = current_format.include?(:p)
-        (i+1...(index_arr.length)).each do |j|
-          next_text , next_level = index_arr[j]
+        (i + 1...(index_arr.length)).each do |j|
+          next_text, next_level = index_arr[j]
           next_format = format_arr[next_text]
-          if next_text.include?(text) && next_level < level
+          if next_text.include?(text) && next_level < level && next_level > 1
             format[:b] = format[:b] | next_format.include?(:b)
-            format[:i] = format[:i] | next_format.include?(:i)            
-            format[:p] = format[:p] | next_format.include?(:p)            
+            format[:i] = format[:i] | next_format.include?(:i)
+            format[:p] = format[:p] | next_format.include?(:p)
+            
             parent_index.push j
           end
         end
 
-        if (i == 0) 
-          final_text = format[:p] ? "\n#{text}" : text        
-        elsif (i == index_arr.length-1)
-          final_text = format[:p] ? "#{text}\n" : text        
+        if (i == 0)
+          final_text = format[:p] ? "\n#{text}" : text
+        elsif (i == index_arr.length - 1)
+          final_text = format[:p] ? "#{text}\n" : text
         else
           final_text = text
         end
 
         if element_index == 0
-          rt.add_run(final_text.lstrip, :b => format[:b], :i => format[:i] ,:font_name => "Arial", :sz => 10)      
+          rt.add_run(final_text.lstrip, :b => format[:b], :i => format[:i], :font_name => "Arial", :sz => 10)
         else
-          rt.add_run(final_text, :b => format[:b], :i => format[:i] ,:font_name => "Arial", :sz => 10)      
+          rt.add_run(final_text, :b => format[:b], :i => format[:i], :font_name => "Arial", :sz => 10)
         end
-      end      
-    end    
+      end
+    end
     rt
   end
 
