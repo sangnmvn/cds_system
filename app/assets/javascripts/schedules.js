@@ -232,7 +232,7 @@ function action_add() {
 
     if (Date.parse(start_date) <= Date.parse(from_date)) {
       temp = false;
-      $('#to_date').after('<span class="error">Start date must be greater than period start date.</span>')
+      $('#start_date').after('<span class="error">Start date must be greater than period from date.</span>')
     }
 
     if (from_date == "") {
@@ -407,6 +407,14 @@ function check_selectAll() {
     else {
       $('#displayBtnDel').prop("disabled", true);
     }
+
+    if($('.table tbody :checkbox:not(:checked)').length == 0 ){
+      $('#selectAll').prop('checked', true);
+    }
+    else
+    {
+      $('#selectAll').prop('checked', false);
+    }
   })
   $('#selectAll').click(function () {
     if ($('#selectAll').is(':checked')) {
@@ -416,6 +424,8 @@ function check_selectAll() {
       $('#displayBtnDel').prop("disabled", true);
     }
   })
+
+
 
   if ($('.table tbody :checkbox').length == 0) {
     $('#selectAll').prop("disabled", true);
