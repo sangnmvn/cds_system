@@ -148,3 +148,21 @@ span.search{
 .cke_reset_all{
 	border-color: #0066CC;
 }
+.cke_button__link{
+	display: none;
+	position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.cke_button__unlink{
+	display: none;
+	position: absolute;
+  top: -9999px;
+  left: -9999px;
+}
+.cke_button__about{
+	display: none;
+	position: absolute;
+  top: -9999px;
+  left: -9999px;
+}

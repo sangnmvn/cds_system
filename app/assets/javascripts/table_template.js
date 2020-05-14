@@ -141,15 +141,15 @@ function loadSlotsinCompetency(search) {
         function (i, e) { //duyet mang doi tuong
           if (search) {
             table.fnAddData([
-              e.level, e.desc, e.evidence, "<a href='#' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
-              "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
+              e.level, e.desc, e.evidence, "<a href='#' title='Edit slot' type='button' class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
+              "<a class='btnAction btnDel' title='Delete slot' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ], 0);
           } else {
             table.fnAddData([
-              e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
-              "<a class='btnAction btnDownSlot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
-              "<a href='#' type='button'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
-              "<a class='btnAction btnDel' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
+              e.level, e.desc, e.evidence, "<a class='btnAction btnUpSlot' title='Move up slot' style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-up icon'></i></a>" +
+              "<a class='btnAction btnDownSlot' title='Move down slot'  style='color:green' value='" + e.id + "'><i class='fa fa-arrow-circle-down icon'></i></a>" +
+              "<a href='#' type='button' title='Edit slot'  class='btnAction btnEdit' value='" + e.id + "'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>" +
+              "<a class='btnAction btnDel' title='Delete slot' value='" + e.id + "'><i class='fa fa-trash icon' style='color:red'></i></a>"
             ], 0);
           }
         }
