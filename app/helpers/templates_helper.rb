@@ -101,6 +101,7 @@ module TemplatesHelper
 
       format = { :b => false, :i => false, :p => false }
       parent_index = []
+      next if index_arr.nil?
       (0...(index_arr.length)).each do |i|
         next if parent_index.include?(i)
         text, level = index_arr[i]
@@ -116,7 +117,7 @@ module TemplatesHelper
             format[:b] = format[:b] | next_format.include?(:b)
             format[:i] = format[:i] | next_format.include?(:i)
             format[:p] = format[:p] | next_format.include?(:p)
-            
+
             parent_index.push j
           end
         end
