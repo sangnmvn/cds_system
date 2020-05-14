@@ -160,7 +160,7 @@ function on_click_btn() {
     $.each($("input[name='checkbox']:checked"), function () {
       schedule_ids.push($(this).val());
     });
-  
+    $('.lmask').show();
     $.ajax({
       url: "/schedules/destroy_multiple/",
       method: "DELETE",
@@ -169,6 +169,7 @@ function on_click_btn() {
         schedule_ids: schedule_ids,
       },
       success: function (result) {
+        $('.lmask').hide();
         // Do something with the result
       },
     });
@@ -202,6 +203,9 @@ function datepicker_setup(arr_date, period_date) {
 // btn add new schedule of HR 
 function action_add() {
 
+  $("[type='number']").keypress(function (evt) {
+    evt.preventDefault();
+  });
   $("#btn_modal_add_hr").off('click').on("click", function () {
     admin_user_id = $('#user').val();
     schedule_name = $('#desc').val();
@@ -225,6 +229,12 @@ function action_add() {
       temp = false;
       $('#to_date').after('<span class="error">Period end date must be greater than period start date.</span>')
     }
+
+    if (Date.parse(start_date) <= Date.parse(from_date)) {
+      temp = false;
+      $('#to_date').after('<span class="error">Start date must be greater than period start date.</span>')
+    }
+
     if (from_date == "") {
       temp = false;
       $('#from_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter from date.</span></div>')
@@ -305,6 +315,9 @@ function action_add() {
 }
 
 function action_edit() {
+  $("[type='number']").keypress(function (evt) {
+    evt.preventDefault();
+  });
   $("#btn_modal_edit_hr").on("click", function () {
     id_schedule = $('#id').val()
     schedule_name = $('#desc_edit').val();
@@ -317,6 +330,7 @@ function action_edit() {
     status_hr = $('#status_id').val()
     temp = true;
     $(".error").remove();
+    
     if (end_date == "") {
       temp = false;
       $('#end_date_edit').after('<span class="error">Please enter end date.</span>')

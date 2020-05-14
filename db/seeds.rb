@@ -1192,7 +1192,12 @@ privilege = [
 privilege.each do |s|
   Privilege.create!(id: s[:id], name: s[:name], title_privilege_id: s[:title_id])
 end
-
+Period.create!(id: 3, from_date: "2019-06-16", to_date: "2019-07-16")
+Period.create!(id: 4, from_date: "2019-07-16", to_date: "2019-8-16")
+Period.create!(id: 5, from_date: "2019-10-16", to_date: "2019-11-16")
+Schedule.create!(admin_user_id: 34, company_id:3, period_id: 3, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5,desc: "Period 1", status: "Done")
+Schedule.create!(admin_user_id: 34, company_id:2, period_id: 4, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6,desc: "Period 2", status: "Done")
+Schedule.create!(admin_user_id: 34, company_id:1, period_id: 5, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3,desc: "Period 3", status: "New")
 #  test template
 Group.create!(id: 31, name: "Administration", description: "Administration", status: 1)
 Group.create!(id: 32, name: "BOD", description: "BOD", status: 1)
