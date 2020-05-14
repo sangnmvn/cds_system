@@ -316,6 +316,7 @@
     type: "POST",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     });
+    success("Add reviewer to this group has been successfully!");
   });
   function save_button(flag) {
   if (flag == 0) {
