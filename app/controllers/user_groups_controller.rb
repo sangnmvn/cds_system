@@ -7,7 +7,7 @@ class UserGroupsController < ApplicationController
   def load_user
   
     user_groups = UserGroup.where(group_id: params[:id]).pluck(:admin_user_id)
-    list_user = AdminUser.where().not(is_delete: true,id: user_groups)
+    list_user = AdminUser.where.not(is_delete: true,id: user_groups)
     render json: list_user
   end
   def load_group
@@ -69,6 +69,7 @@ class UserGroupsController < ApplicationController
           unless GroupPrivilege.where(group_id: group_id, privilege_id: v).exists?
             GroupPrivilege.create(group_id: group_id, privilege_id: v)
           end
+        }
     end
   end
 end

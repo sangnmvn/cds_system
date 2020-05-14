@@ -1,8 +1,8 @@
 $(document).ready(function () {
   myJS();
-  //myAjax();
-  //privilegeJS();
-  //privilegeAjax();
+  myAjax();
+  privilegeJS();
+  privilegeAjax();
 	$('.dataTables_length').attr("style", "display:none");
 	$('.dataTables_paginate').addClass("mypaging");
 });
@@ -304,7 +304,8 @@ function save() {
 
                 var delete_whole_row_constant = undefined;
               var redraw_table = false;
-              table.row(row_id).data(updateData)
+              table.row(row_id).data(updateData);
+              table.draw();
               /*
               table.fnUpdate(
                 updateData,
@@ -330,7 +331,7 @@ function save() {
 
 function myAjax() {
 	$('.user_group_icon').click(function () {
-    $("#table_right").dataTable().fnClearTable(); //xoa du lieu cũ của table
+    //xoa du lieu cũ của table
     var id = $(this).attr("data-id");
     //$('#table_left_filter input').html("");
 		//ajax load bảng user_group
@@ -343,7 +344,7 @@ function myAjax() {
 			dataType: "json",
 			success: function (response) {
        
-        
+        $("#table_right").dataTable().fnClearTable(); 
 				$.each(response,function (i, e) { //duyet mang doi tuong
           table=$("#table_right").dataTable();
             table.fnAddData([

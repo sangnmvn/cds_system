@@ -84,7 +84,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
-          table.row.add(addData);
+          table.row.add(addData,0);
           table.draw();
         } else if (response.status == "exist") {
           $(".error").remove();
