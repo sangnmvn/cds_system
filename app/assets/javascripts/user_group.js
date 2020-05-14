@@ -143,13 +143,13 @@ function myJS_data_event()
         change_button_save(0);
     });
 
-    $('.close_modal').click(function () {
-        if ($('#save').attr("disabled") != "disabled") {
-            save();
-        }
-        $('#table_left').DataTable().search('');
-        $('#table_right').DataTable().search('');
-    });
+    // $('.close_modal').click(function () {
+    //     if ($('#save').attr("disabled") != "disabled") {
+    //         save();
+    //     }
+    //     $('#table_left').DataTable().search('');
+    //     $('#table_right').DataTable().search('');
+    // });
     // Add index column in table left
     $('#table_left').DataTable().on('order.dt search.dt', function () {
         $('#table_left').DataTable().column(0, {
@@ -315,7 +315,7 @@ function myAjax() {
 	$('.user_group_icon').click(function () {
     //xoa du lieu cũ của table
     var id = $(this).attr("data-id");
-    //$('#table_left_filter input').html("");
+    //$('#table_left_filter input').html("");$('#to_left')
 		//ajax load bảng user_group
 		$.ajax({
 			type: "GET",
@@ -325,7 +325,12 @@ function myAjax() {
 			},
 			dataType: "json",
 			success: function (response) {
-       
+        $('#check_all_choose').prop("checked", false);
+        $('#to_left').prop("disabled", true);
+        $('#to_right').prop("disabled", true);
+        $('#to_left').removeClass("btn-info").addClass("btn-secondary");
+        $('#to_right').removeClass("btn-info").addClass("btn-secondary");
+        
         $("#table_right").dataTable().fnClearTable(); 
 				$.each(response,function (i, e) { //duyet mang doi tuong
           table=$("#table_right").dataTable();
@@ -334,7 +339,8 @@ function myAjax() {
             
             ]);
          
-					}
+          }
+          
 				);
 			}
 		});
@@ -603,6 +609,7 @@ function save_button(flag) {
   }
 }
 function privilegeAjax() {
+
   $('.key_icon').on('click', function () {
         
     var group_id = $(this).closest('a').attr("data-id")
@@ -614,7 +621,11 @@ function privilegeAjax() {
       dataType: "json",
       success: function (response) {
         $.each(response, function (key, value) {
-
+          $('#check_all_choose').prop("checked", false);
+          $('#to_left').prop("disabled", true);
+          $('#to_right').prop("disabled", true);
+          $('#to_left').removeClass("btn-info").addClass("btn-secondary");
+          $('#to_right').removeClass("btn-info").addClass("btn-secondary");
           // tranh gap bug khi goi ham 2 lan
           if ($(".table_right tbody tr").length > 0)
             return;
