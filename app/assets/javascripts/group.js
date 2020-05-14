@@ -399,12 +399,20 @@ $(document).ready(function () {
    a=$(".get_privilege").val();
   if(a == 'true'){
   content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
-  data-toggle="modal" data-target="#modalAdd" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
+  data-toggle="modal" data-target="#modalAdd" style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
   float-right" data-toggle="modal"  style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
 
   $(content).insertAfter(".dataTables_filter");
+  }else{
+    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+    data-toggle="modal" data-target="#modalAdd" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
+    src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+    float-right" data-toggle="modal"  style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
+    <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
+    $(content).insertAfter(".dataTables_filter");
   }
 });
 
@@ -468,7 +476,8 @@ $(document).ready(function(){
   $('[data-toggle="modal"]').tooltip();
 });
 $(document).click(function(e) {    
-  
+  a=$(".get_privilege").val();
+  if(a == 'true'){
   var number = $("#table_group tbody :checkbox:checked").length;
 
   if (parseInt(number) > 0){
@@ -477,4 +486,5 @@ $(document).click(function(e) {
   else{
     $("#deletes").css('background-color', "#dcdcdc");
   }
+}
 });

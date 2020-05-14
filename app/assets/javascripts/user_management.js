@@ -841,8 +841,8 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 $(document).ready(function () {
   a=$(".get_privilege").val();
   if(a == 'true'){
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light"title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
-  data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+  data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
   <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
   <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
   <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
@@ -850,6 +850,16 @@ $(document).ready(function () {
 
   $(content).insertAfter(".dataTables_filter");
   $(".hidden").attr("placeholder", "Type here to search");
+  }else{
+    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+    data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+    <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+    <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+    <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+    </div>';
+  
+    $(content).insertAfter(".dataTables_filter");
+    $(".hidden").attr("placeholder", "Type here to search");
   }
 });
 $(document).ready(function(){
@@ -857,7 +867,8 @@ $(document).ready(function(){
   $('[data-toggle="modal"]').tooltip();
 });
 $(document).click(function(e) {    
-  
+  a=$(".get_privilege").val();
+  if(a == 'true'){
   var number = $("#table_user_management tbody :checkbox:checked").length;
 
   if (parseInt(number) > 0){
@@ -871,5 +882,5 @@ $(document).click(function(e) {
     $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
     $("#btn-delete-many-users").css('background-color', "#dcdcdc");
     $("#btn-enable-multiple-users").css('background-color', "#dcdcdc"); 
-  }
+  }}
 });
