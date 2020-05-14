@@ -88,6 +88,7 @@ $(document).ready(function () {
   datepicker_setup([start_date_id, end_date_id], [from_date, to_date]);
   check_selectAll();
   action_add();
+  action_edit();
   view_schedule();
   on_click_btn();
   $(attr_id_notify).change(function () {
@@ -109,7 +110,20 @@ function on_click_btn() {
     $.ajax({
       url: "/schedules/" + schedule_param + "/destroy_page",
       type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
+      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+      success: function () {
+        attr_start_date_id = "#start_date_edit";
+        attr_end_date_id = "#end_date_edit";
+        attr_from_date = "#from_date_edit";
+        attr_to_date = "#to_date_edit";
+        attr_id_notify = "#notify_hr_edit";
+        attr_status = "#status_id"
+        datepicker_setup([attr_start_date_id, attr_end_date_id], [attr_from_date, attr_to_date]);
+        change_status(attr_start_date_id, attr_status);
+        change_notify(attr_end_date_id, attr_id_notify);
+        view_schedule();
+        action_edit();
+      }
     });
   });
   $(document).on("click", ".edit_btn", function () {
@@ -130,6 +144,7 @@ function on_click_btn() {
         change_status(attr_start_date_id, attr_status);
         change_notify(attr_end_date_id, attr_id_notify);
         view_schedule();
+        action_edit();
       }
     });
   
@@ -187,7 +202,7 @@ function datepicker_setup(arr_date, period_date) {
 // btn add new schedule of HR 
 function action_add() {
 
-  $("#btn_modal_add_hr").one("click", function () {
+  $("#btn_modal_add_hr").off('click').on("click", function () {
     admin_user_id = $('#user').val();
     schedule_name = $('#desc').val();
     company = $("#company").val();
@@ -245,11 +260,12 @@ function action_add() {
 
     if (notify_hr < 0) {
       temp = false;
-      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Notice date must be greater than current date.</span>')
     }
 
 
     if (temp == true) {
+      $('.lmask').show();
       $.ajax({
         url: "/schedules",
         type: "POST",
@@ -267,9 +283,17 @@ function action_add() {
           notify_hr: notify_hr,
           status: status_hr
         },
-        success: (res) => {
+        success: function (res) {
+          $('.lmask').hide();
           $('#form_add_hr')[0].reset();
           reset_datepicker(["#end_date","#start_date","#to_date","#rom_date"]);
+          check_selectAll();
+          action_add();
+          action_edit();
+          view_schedule();
+        },
+        error: function () {
+          $('.lmask').hide();
           check_selectAll();
           action_add();
           action_edit();
@@ -281,8 +305,8 @@ function action_add() {
 }
 
 function action_edit() {
-
-  $(document).one("click", "#btn_modal_edit_hr", function () {
+  $("#btn_modal_edit_hr").on("click", function () {
+    debugger
     id_schedule = $('#id').val()
     schedule_name = $('#desc_edit').val();
     company = $("#company_edit").val();
@@ -294,7 +318,7 @@ function action_edit() {
     status_hr = $('#status_id').val()
     temp = true;
     $(".error").remove();
-
+    debugger
     if (end_date == "") {
       temp = false;
       $('#end_date_edit').after('<span class="error">Please enter end date.</span>')
@@ -311,6 +335,7 @@ function action_edit() {
     }
 
     if (temp == true) {
+      $('.lmask').show();
       $.ajax({
         url: "/schedules/" + id_schedule,
         type: "PUT",
@@ -323,8 +348,15 @@ function action_edit() {
           notify_hr: notify_hr
         },
         success: (res) => {
+          $('.lmask').hide();
           $('#form_edit_hr')[0].reset();
-
+          check_selectAll();
+          action_edit();
+          action_add();
+          view_schedule();
+        },
+        error: function () {
+          $('.lmask').hide();
           check_selectAll();
           action_edit();
           action_add();
@@ -340,11 +372,15 @@ function delete_schedule() {
   var id = $("#schedule_id").val();
 
   //alert( 'admin/user_management/'  + user_id + '/')
+  $('.lmask').show();
   $.ajax({
     url: "/schedules/" + id,
     method: "DELETE",
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    beforeSend: function () {
+    },
     success: function (result) {
+      $('.lmask').hide();
       check_selectAll();
       view_schedule();
     },
