@@ -109,37 +109,37 @@ ProjectMember.create!(admin_user_id: 19, project_id: 2, is_managent: "0")
 # Create Project Memember
 # 50.times { |x| ProjectMember.create!(admin_user_id: "#{x + 1}", project_id: 1 + rand(3).to_i, is_managent: "0") }
 
-NB_GROUPS = 30
+# NB_GROUPS = 30
 
-NB_GROUPS.times do |n|
-  Group.create! do |u|
-    # u.username = Faker::Internet.user_name + n.to_s
-    # u.email = Faker::Internet.email.gsub("@", "#{n}@")
-    u.id = 1 + n
-    u.name = "Group #{n}"
-    u.description = "Description of group #{n}"
-    u.status = (n % 2 == 0) ? true : false
-  rescue => exception
-  else
-  end
-end
+# NB_GROUPS.times do |n|
+#   Group.create! do |u|
+#     # u.username = Faker::Internet.user_name + n.to_s
+#     # u.email = Faker::Internet.email.gsub("@", "#{n}@")
+#     u.id = 1 + n
+#     u.name = "Group #{n}"
+#     u.description = "Description of group #{n}"
+#     u.status = (n % 2 == 0) ? true : false
+#   rescue => exception
+#   else
+#   end
+# end
 
-NB_USER_GROUPS = 30
-user_id = 1
-NB_USER_GROUPS.times do |n|
-  begin
-    chances = [3, 2, 3, 3, 5, 3, 3, 3, 3, 3, 2]
+# NB_USER_GROUPS = 30
+# user_id = 1
+# NB_USER_GROUPS.times do |n|
+#   begin
+#     chances = [3, 2, 3, 3, 5, 3, 3, 3, 3, 3, 2]
 
-    chances.each { |chance|
-      if rand(10) % chance == 0
-        UserGroup.create!(group_id: 1 + n, admin_user_id: user_id)
-        user_id += 1
-      end
-    }
-  rescue
-    next
-  end
-end
+#     chances.each { |chance|
+#       if rand(10) % chance == 0
+#         UserGroup.create!(group_id: 1 + n, admin_user_id: user_id)
+#         user_id += 1
+#       end
+#     }
+#   rescue
+#     next
+#   end
+# end
 
 # Approver.create!(admin_user_id: 2, approver_id: 2)
 # Approver.create!(admin_user_id: 3, approver_id: 2)
@@ -645,7 +645,7 @@ slot_create = [
   {
     desc: "Able to write a progress report for testing activities against test plan",
     evidence: "- Có khả năng viết test progress report (vs test plan) khi được yêu cầu bởi Project Manager hay customer.  
-    - Đã viết Test Summary Report cho các release được xem là bằng chứng của slot n����y.",
+    - Đã viết Test Summary Report cho c������������������������c release được xem là bằng chứng của slot n����y.",
     level: "2",
     competency_id: "7", slot_id: 6,
   },
@@ -1194,29 +1194,32 @@ privilege.each do |s|
 end
 
 #  test template
+Group.create!(id: 31, name: "Administration", description: "Administration", status: 1)
+Group.create!(id: 32, name: "BOD", description: "BOD", status: 1)
+Group.create!(id: 33, name: "HR", description: "HR", status: 1)
+Group.create!(id: 34, name: "Manager", description: "Manager", status: 1)
+Group.create!(id: 35, name: "Reviewer", description: "Reviewer", status: 1)
+Group.create!(id: 36, name: "Staff", description: "Staff", status: 1)
+
+#  template HR
 AdminUser.create!(id: 32, email: "nguyenvana@example.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3")
-Group.create!(id: 31, name: "Full Access Template", description: "Template", status: 1)
-UserGroup.create!(group_id: 31, admin_user_id: 32)
-GroupPrivilege.create!(group_id: 31, privilege_id: 9)
-GroupPrivilege.create!(group_id: 31, privilege_id: 10)
+UserGroup.create!(group_id: 33, admin_user_id: 32)
+GroupPrivilege.create!(group_id: 33, privilege_id: 9)
+GroupPrivilege.create!(group_id: 33, privilege_id: 10)
 
 AdminUser.create!(id: 33, email: "nguyenvanb@example.com", password: "password", password_confirmation: "password", first_name: "B", last_name: "Nguyen Van", account: "bnv", role_id: "5", company_id: "3")
-Group.create!(id: 32, name: "View Template", description: "Template", status: 1)
 UserGroup.create!(group_id: 32, admin_user_id: 33)
 GroupPrivilege.create!(group_id: 32, privilege_id: 10)
 
 AdminUser.create!(id: 34, email: "nguyenvanc@example.com", password: "password", password_confirmation: "password", first_name: "C", last_name: "Nguyen Van", account: "cnv", role_id: "4", company_id: "3")
-Group.create!(id: 33, name: "HR", description: "HR", status: 1)
 UserGroup.create!(group_id: 33, admin_user_id: 34)
 GroupPrivilege.create!(group_id: 33, privilege_id: 13)
 #  test user management
 AdminUser.create!(id: 35, email: "nguyenvand@example.com", password: "password", password_confirmation: "password", first_name: "D", last_name: "Nguyen Van", account: "dnv", role_id: "6", company_id: "3")
-Group.create!(id: 34, name: "Full User Management", description: "Full User Management", status: 1)
 UserGroup.create!(group_id: 34, admin_user_id: 35)
 GroupPrivilege.create!(group_id: 34, privilege_id: 1)
 
 AdminUser.create!(id: 36, email: "nguyenvane@example.com", password: "password", password_confirmation: "password", first_name: "E", last_name: "Nguyen Van", account: "env", role_id: "6", company_id: "2")
-Group.create!(id: 35, name: "View User Management", description: "View User Management", status: 1)
 UserGroup.create!(group_id: 35, admin_user_id: 36)
 GroupPrivilege.create!(group_id: 35, privilege_id: 2)
 ProjectMember.create!(admin_user_id: 36, project_id: 3, is_managent: "0")
