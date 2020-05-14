@@ -246,7 +246,6 @@ function save() {
 				var checkboxes = $("#table_right").DataTable().rows().data();
 				var id_group = $("#title_group h1").text();
         var list = [];
-        debugger;
 				for (var i = 0; i < checkboxes.length; i++) {
 					list.push($(checkboxes[i][1].split("<div style='text-align:center'>")[1].split("</div>")[0]).val());
 				}

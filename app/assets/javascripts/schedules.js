@@ -306,7 +306,6 @@ function action_add() {
 
 function action_edit() {
   $("#btn_modal_edit_hr").on("click", function () {
-    debugger
     id_schedule = $('#id').val()
     schedule_name = $('#desc_edit').val();
     company = $("#company_edit").val();
@@ -318,7 +317,6 @@ function action_edit() {
     status_hr = $('#status_id').val()
     temp = true;
     $(".error").remove();
-    debugger
     if (end_date == "") {
       temp = false;
       $('#end_date_edit').after('<span class="error">Please enter end date.</span>')

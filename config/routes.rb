@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "admin_users#index"
+  root to: "admin_users#index2"
 
   get "/user_data/" => "admin_users#get_user_data", defaults: { format: "json" }
 

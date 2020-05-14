@@ -6,14 +6,12 @@
 
 <%= stylesheet_link_tag 'group', media: 'all', 'data-turbolinks-track': 'reload' %>
  <input type="hidden" value="<%= @privilege_array.include? 4%>" class="get_privilege">
-<div class="title_bar" id="title_bar">
-        <div id="titlebar_left">
-          <h2 id="page_title">User Group Managment</h2>
-        </div>
-        <div id="titlebar_right">
-          <div class="action_items"></div>
-        </div>
-      </div>
+<nav aria-label="breadcrumb" class="">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
+    <li class="breadcrumb-item active">User Group Management</li>
+  </ol>
+</nav>
 
 <!-- Modal show -->
 <div id="modal_content" class="modal_destroy">

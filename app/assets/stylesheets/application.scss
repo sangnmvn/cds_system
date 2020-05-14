@@ -157,7 +157,14 @@ h2,
   color: red;
 }
 
-
+.breadcrumb {
+  background-color: #8da8db;
+  color: white;
+}
+.breadcrumb a {
+  // font-size: 120%;
+  color: white;
+}
 /*
   *= require_tree .
   *= require_self

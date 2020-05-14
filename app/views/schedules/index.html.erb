@@ -1,7 +1,15 @@
 <%= javascript_include_tag 'schedules', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'schedule', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+<nav aria-label="breadcrumb" class="">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
+    <li class="breadcrumb-item active">Schedule Management</li>
+  </ol>
+</nav>
 <%= render 'delete_selected'%>
 <%= render 'add_hr'   %>
+
 <!-- Modal show -->
 <div id="modal_content" >
   <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -14,7 +22,7 @@
 <div class="lmask">
 </div>
 <!-- end modal -->
-<table class="table" id="users-datatable">
+<table class="table" id="scheduletable">
   <thead>
     <tr>
       <th data-sort-ignore="true" style="width:50px;"><input type="checkbox"  id="selectAll"></th>
