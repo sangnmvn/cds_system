@@ -1,7 +1,5 @@
 class UserGroupsController < ApplicationController
   layout "system_layout"
-  # GET /user_groups
-  # GET /user_groups.json
   def index
     @user_groups = UserGroup.all
     @user = AdminUser.all
@@ -71,8 +69,6 @@ class UserGroupsController < ApplicationController
           unless GroupPrivilege.where(group_id: group_id, privilege_id: v).exists?
             GroupPrivilege.create(group_id: group_id, privilege_id: v)
           end
-        }
-       
     end
   end
 end

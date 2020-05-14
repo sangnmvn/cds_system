@@ -3,8 +3,8 @@ $(document).ready(function () {
   CKEDITOR.replace( 'editor' );
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
-    fnDrawCallback: function(){checkPrivilegesSlot(); disableButtonUpDown();}, //; 
-    "info": false, //không hiển thị số record / tổng số record
+    fnDrawCallback: function(){checkPrivilegesSlot(); disableButtonUpDown();},
+    "info": false,
     "searching": false,
     "order": false
   });

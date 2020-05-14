@@ -65,7 +65,6 @@ class SlotsController < ApplicationController
     check_level = 1
     @competencies.each{|competency|
       levels = Slot.where(competency_id: competency).pluck(:level).uniq.sort
-      #binding.pry
       check_level = check_array_level(levels)
       break if check_level == 0
     }
