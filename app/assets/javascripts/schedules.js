@@ -170,6 +170,7 @@ function on_click_btn() {
       },
       success: function (result) {
         $('.lmask').hide();
+        check_selectAll();
         // Do something with the result
       },
     });

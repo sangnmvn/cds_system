@@ -6,9 +6,7 @@ class SchedulesController < ApplicationController
   ROLE_NAME = ["PM", "SM", "BOD"]
 
   def index
-    
-
-    @fields = ["No.", "Schedule name", "Company name", "Period", "Start date", "Status", "Action"]
+    @fields = ["No.", "Schedule name", "Company name", "Assessment period", "Start date", "Status", "Action"]
     if (@privilege_array & [13]).any?
       @fields.insert(5, "End date")
       @company = Company.all
@@ -24,8 +22,6 @@ class SchedulesController < ApplicationController
 
   def show
     @schedule = Schedule.includes(:company, :period).find(params[:id])
-
-    
 
     respond_to do |format|
       format.js
@@ -45,15 +41,12 @@ class SchedulesController < ApplicationController
     period_params_temp[:from_date] = helpers.date_format(params[:from_date])
     period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
-    
-
     @period = Period.new(period_params_temp)
     respond_to do |format|
       if @period.save
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
         if @schedule.save
-          
           @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
           admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
@@ -90,13 +83,12 @@ class SchedulesController < ApplicationController
 
   def destroy
     @schedule = Schedule.find(params[:id])
-    @period = Period.find(@schedule.id)
+    @period = Period.find(@schedule.period_id)
     respond_to do |format|
       @period = Period.find(@schedule.period_id)
       admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
       ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_now
       if @schedule.destroy && @period.destroy
-        
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
