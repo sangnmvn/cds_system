@@ -84,8 +84,8 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
-          table.row.add(addData,0);
-          table.draw();
+          table.row.add(addData).draw( false );
+         
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -198,7 +198,10 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 var delete_whole_row_constant = undefined;
               var redraw_table = false;
               table.row(row_id).data(updateData);
-              table.draw();
+              myJS_data_event();
+              myAjax();
+              privilegeAjax();	
+              privilegeJS();
               /*
               table.fnUpdate(
                 updateData,

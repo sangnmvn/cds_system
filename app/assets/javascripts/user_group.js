@@ -287,10 +287,13 @@ function save() {
                 <i class="fa fa-trash icon" style="color:red"></i></a> </div>'
               );
 
-                var delete_whole_row_constant = undefined;
+              var delete_whole_row_constant = undefined;
               var redraw_table = false;
               table.row(row_id).data(updateData);
-              table.draw();
+              myJS_data_event();
+              myAjax();
+              privilegeAjax();	
+              privilegeJS();
               /*
               table.fnUpdate(
                 updateData,
@@ -299,7 +302,7 @@ function save() {
                 redraw_table
               );
               */ ;
-              break;
+            
             }
           }
 					},
