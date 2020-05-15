@@ -66,7 +66,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           '" class="selectable selectable_check" name="checkbox"></div>'
           );
           var a = sData.length + 1
-          addData.push('<div style="text-align:right">'+ a +'</div>');
+          addData.push('<div style="text-align:right">'+1+'</div>');
           addData.push(response.name);
           
           addData.push(response.desc);
@@ -84,7 +84,12 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
-          table.row.add(addData).draw( false );
+          table.row.add(addData,0).draw();
+          
+          myJS_data_event();
+          myAjax();
+          privilegeAjax();	
+          privilegeJS();
          
         } else if (response.status == "exist") {
           $(".error").remove();
@@ -254,7 +259,12 @@ function setup_dataTable() {
       language: {
         "info": " _START_ - _END_ of _TOTAL_"
       },
-   
+      aoColumnDefs: [
+
+        { "sClass": "numericCol", "aTargets": [ 1 ] }
+        //You can also set 'sType' to 'numeric' and use the built in css.           
+      ]
+  
     
       
 
@@ -477,6 +487,14 @@ $(document).on("click", "#delete_selected", function () {
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
   $('[data-toggle="modal"]').tooltip();
+  $('#table_group').DataTable().on('order.dt search.dt', function () {
+    $('#table_group').DataTable().column(1, {
+    search: 'applied',
+    order: 'applied'
+    }).nodes().each(function (cell, i) {
+    cell.innerHTML = i + 1;
+    });
+    }).draw();
 });
 $(document).click(function(e) {    
   a=$(".get_privilege").val();

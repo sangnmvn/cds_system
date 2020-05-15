@@ -30,9 +30,9 @@ $(document).ready(function () {
           });
           $('<option value="none">None</option>').appendTo("#filter-project");
           $("#filter-role").html("");
-          if (Array.isArray(e.roles) && e.roles.length > 1) {
+         
             $('<option value="all">All</option>').appendTo("#filter-role");
-          }
+          
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
               "#filter-role"
@@ -62,9 +62,9 @@ $(document).ready(function () {
       success: function (response) {
         $(response).each(function (i, e) {
           $("#filter-role").html("");
-          if (Array.isArray(e.roles) && e.roles.length > 1) {
+        
             $('<option value="all">All</option>').appendTo("#filter-role");
-          }
+      
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
               "#filter-role"

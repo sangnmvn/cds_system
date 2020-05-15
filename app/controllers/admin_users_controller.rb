@@ -6,7 +6,7 @@ class AdminUsersController < ApplicationController
   before_action :redirect_to_index, :if => :check_privelege, except: [:index2]
 
   def get_user_data
-    $count ||= 0
+  
     $count2 ||= 0
     user_per_page = 20
     offset = params["iDisplayStart"].to_i
@@ -23,22 +23,9 @@ class AdminUsersController < ApplicationController
       pm = ProjectMember.where(admin_user_id: current_admin_user.id).pluck(:project_id)
       @admin_users = AdminUser.joins(:project_members).where(project_members: { project_id: pm })
     end
-    case params["iSortCol_0"]
-    when "1"
-      @admin_users = @admin_users.order(id: params["sSortDir_0"].to_sym)
-    when "2"
-      @admin_users = @admin_users.order(first_name: params["sSortDir_0"].to_sym)
-    when "3"
-      @admin_users = @admin_users.order(last_name: params["sSortDir_0"].to_sym)
-    when "4"
-      @admin_users = @admin_users.order(email: params["sSortDir_0"].to_sym)
-    when "5"
-      @admin_users = @admin_users.order(account: params["sSortDir_0"].to_sym)
-    when "6"
-      @admin_users = @admin_users.order(role_id: params["sSortDir_0"].to_sym)
-    when "9"
-      @admin_users = @admin_users.order(company_id: params["sSortDir_0"].to_sym)
-    end
+
+     @admin_users = @admin_users.order(get_sort_params) if params[:iSortCol_0] != "0" && params[:iSortCol_0] != "8"
+     
 
     unless params["sSearch"].empty?
       @admin_users = @admin_users.where("email LIKE ? OR account LIKE ? OR first_name LIKE ? OR last_name LIKE ?", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%", "%#{params["sSearch"]}%")
@@ -68,13 +55,9 @@ class AdminUsersController < ApplicationController
     @admin_users.each_with_index do |user, index|
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
-      if $count == 1 && params["iSortCol_0"].to_i == 1
-        current_user_data.push("<p class='number'>#{@admin_users.length - (offset + index + 1)}</p>")
-      elsif $count == 0 && params["iSortCol_0"].to_i == 1
+     
         current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
-      else
-        current_user_data.push("<p class='number'>#{(offset + index + 1)}</p>")
-      end
+     
       current_user_data.push(user.first_name)
       current_user_data.push(user.last_name)
       current_user_data.push(user.email)
@@ -122,11 +105,7 @@ class AdminUsersController < ApplicationController
       final_data.push(current_user_data)
     end
 
-    if $count == 1 && params["iSortCol_0"].to_i == 1
-      $count = 0
-    elsif $count == 0 && params["iSortCol_0"].to_i == 1
-      $count = 1
-    end
+
 
     if $count2 == 1 && params["iSortCol_0"].to_i == 8
       final_data.sort! { |a, b| a[8] <=> b[8] }
@@ -435,6 +414,32 @@ class AdminUsersController < ApplicationController
   end
 
   private
+
+  def get_sort_params
+  
+    sort = case params[:iSortCol_0]
+    when "1"
+      :id
+    when "2"
+      :first_name
+    when "3"
+      :last_name
+    when "4"
+      :email
+    when "5"  
+      :account 
+    when "6"   
+      :role_id
+    when "9"    
+      :company_id
+    end
+
+    {
+      sort => params[:sSortDir_0]
+    }  
+    
+ 
+  end
 
   def check_privelege
     if @privilege_array.include? 1 or @privilege_array.include? 2

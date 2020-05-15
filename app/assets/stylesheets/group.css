@@ -39,12 +39,17 @@ table.dataTable tbody td {
     text-align: left;
 }
 
+
 #table_group tr.odd > td {
     font-size: 16px;
     background: #E9ebf5;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
     text-align: left;
+}
+#table_group tr > td.numericCol {
+
+  text-align: right;
 }
 
 .action_icon > img
