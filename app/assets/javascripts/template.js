@@ -350,7 +350,7 @@ function nextStep1(){
 
 
 
-$(document).on('change','.form-add-competency #name,#desc', function(){
+$(document).on('change','.form-add-competency #name,#desc,#type', function(){
   name = $(".form-add-competency #name").val();
   desc = $(".form-add-competency #desc").val();
   $(".form-add-competency .error").remove();
