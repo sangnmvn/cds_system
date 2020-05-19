@@ -50,7 +50,7 @@ class SchedulesController < ApplicationController
           @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
           admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
-          ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_now
+          ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
           format.js { @status = true }
         else
           format.js { @status = false }
@@ -87,7 +87,7 @@ class SchedulesController < ApplicationController
     respond_to do |format|
       @period = Period.find(@schedule.period_id)
       admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
-      ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_now
+      ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
       if @schedule.destroy && @period.destroy
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
@@ -105,7 +105,7 @@ class SchedulesController < ApplicationController
         schedule.each do |schedule|
           period = Period.find(schedule.period_id)
           admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-          ScheduleMailer.with(admin_user: admin_user.to_a, period: period).del_mailer.deliver_now
+          ScheduleMailer.with(admin_user: admin_user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
           schedule.destroy
         end
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
@@ -124,7 +124,7 @@ class SchedulesController < ApplicationController
       if @schedule.update(temp_params)
         admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
         @period = Period.find(@schedule.period_id)
-        ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_now
+        ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_later(wait: 1.minute)
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
