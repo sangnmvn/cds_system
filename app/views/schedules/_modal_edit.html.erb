@@ -26,7 +26,7 @@
           <%# project name %>
           <div class="row">
             <div class="col-sm-4">
-              <label>Company Name</label>
+              <label>Company Name (*)</label>
             </div>
             <div class="col-sm-6">
               <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control' , disabled: 'disabled'%>
@@ -35,7 +35,7 @@
           <br>
           <div class="row">
             <div class="col-sm-4">
-              <label>Assessment Period</label>
+              <label>Assessment Period (*)</label>
             </div>
             <div class="col-sm-2">From</div>
             <input type="text" class="col-sm-3 form-control" id="from_date_edit" disabled value="<%= schedule.period.from_date.strftime('%b %d, %Y') %>">
@@ -50,7 +50,7 @@
           <%# start date %>
           <div class="row">
             <div class="col-sm-4">
-              <label>Start date</label>
+              <label>Start date (*)</label>
             </div>
             <div class="col-sm-6">
               <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%b %d, %Y') %>" disabled>
