@@ -294,8 +294,10 @@ function checkPrivileges_step1() {
           $(location).attr('href', '/templates')
         })
         $('#add_template_button').remove()
-        $('.delete_icon').removeAttr("data-target")
-        $('.delete_icon i').css("color", "#000")
+        $('.edit_template').removeAttr("href");        
+        $('.edit_template i').css("color", "#000");
+        $('.delete_icon').removeAttr("data-target");
+        $('.delete_icon i').css("color", "#000");
         $('#step1 #template').prop("disabled", true)
         $('#step1 #role').prop("disabled", true)
         $('#step1 #description').prop("disabled", true)
