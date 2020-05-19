@@ -1,20 +1,20 @@
-class AdminAdminUserDatatable < AjaxDatatablesRails::ActiveRecord
+class AdminUserDatatable < AjaxDatatablesRails::ActiveRecord
 
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
     @view_columns ||= {
-      id: { source: "AdminUser.id", cond: :eq },
-      first_name: { source: "AdminUser.first_name", cond: :like }
-      last_name:  { source: "AdminUser.last_name", cond: :like }
-      email:  { source: "AdminUser.email", cond: :like }
-      account:  { source: "AdminUser.account", cond: :like }
+      id: { source: "User.id", cond: :eq },
+      first_name: { source: "User.first_name", cond: :like }
+      last_name:  { source: "User.last_name", cond: :like }
+      email:  { source: "User.email", cond: :like }
+      account:  { source: "User.account", cond: :like }
       
-      role:  { source: "AdminUser.Role.name", cond: :like }
-      title:  { source: "AdminUser.account", cond: :like }
-      project:  { source: "AdminUser.account", cond: :like }
-      company:  { source: "AdminUser.account", cond: :like }
-      action:  { source: "AdminUser.account", cond: :like }
+      role:  { source: "User.Role.name", cond: :like }
+      title:  { source: "User.account", cond: :like }
+      project:  { source: "User.account", cond: :like }
+      company:  { source: "User.account", cond: :like }
+      action:  { source: "User.account", cond: :like }
 
     }
   end
@@ -40,7 +40,7 @@ class AdminAdminUserDatatable < AjaxDatatablesRails::ActiveRecord
 
   def get_raw_records
     # insert query here
-    AdminUser.all
+    User.all
   end
 
 end

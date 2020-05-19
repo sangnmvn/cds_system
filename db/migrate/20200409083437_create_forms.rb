@@ -5,7 +5,7 @@ class CreateForms < ActiveRecord::Migration[6.0]
       t.string :_type
       t.references :template
       t.belongs_to :period, foreign_key: true
-      t.belongs_to :admin_user, foreign_key: true
+      t.belongs_to :user, foreign_key: true
       t.timestamps
     end
   end

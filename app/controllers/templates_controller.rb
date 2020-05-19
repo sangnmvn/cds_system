@@ -12,7 +12,7 @@ class TemplatesController < ApplicationController
 
   def index
     redirect_to index2_admin_users_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
-    @templates = Template.joins(:role, :admin_user).select('templates.*, roles.name as role_name, concat(admin_users.first_name," ",admin_users.last_name) as updated_by').order("updated_at desc")
+    @templates = Template.joins(:role, :user).select('templates.*, roles.name as role_name, concat(users.first_name," ",users.last_name) as updated_by').order("updated_at desc")
   end
 
   def new
@@ -26,7 +26,7 @@ class TemplatesController < ApplicationController
     return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_RIGHT)
 
     @template = Template.new(template_params)
-    @template.admin_user_id = current_admin_user.id if current_admin_user
+    @template.user_id = current_user.id if current_user
     if @template.save
       render json: @template.id
     elsif @template.invalid?
@@ -53,7 +53,7 @@ class TemplatesController < ApplicationController
 
     @template = Template.find(params[:id])
     if @template.update_attributes(template_params)
-      @template.update_attributes(admin_user_id: current_admin_user.id)
+      @template.update_attributes(user_id: current_user.id)
       render json: @template
     else
       render json: { errors: @template.errors }, status: 400
@@ -61,9 +61,7 @@ class TemplatesController < ApplicationController
   end
 
   def export_excel
-    unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
-      return render json: { status: "fail" }
-    end
+    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
 
     template_id = params["id"]
     ext = params["ext"]

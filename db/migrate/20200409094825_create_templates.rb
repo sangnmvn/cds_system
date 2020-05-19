@@ -4,10 +4,10 @@ class CreateTemplates < ActiveRecord::Migration[6.0]
     create_table :templates do |t|
       t.text :name
       t.text :description
-      t.references :admin_user, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
       t.belongs_to :role, foreign_key: true
       t.boolean :status, default: 0
-      
+
       #t.has_many :competencies
       t.timestamps
     end

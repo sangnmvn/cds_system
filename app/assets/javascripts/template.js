@@ -108,7 +108,7 @@ $(document).on("click", "#table_add_competency .btn-edit-competency", function (
     var index = $(this).closest('tr').index();
     $.ajax({
       type: "GET",
-      url: "/competencies/load_data_edit",
+      url: "/competencies/edit",
       data: {
         id: id,
       },
@@ -295,7 +295,7 @@ function loadDataCompetencies(id) {
               "emptyTable": "No data available"
             }
           })
-          .row.add([i+1,e.name,e.type,e.desc,'<td class="td_action"> \
+          .row.add([i+1, e.name, e._type, e.desc,'<td class="td_action"> \
           <a class="btnUp" data-toggle="tooltip" title="Move Up Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-up icon"></i></a> \
           <a class="btnDown" data-toggle="tooltip" title="Move Down Competency" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-arrow-circle-down icon"></i></a> \
           <a class="btn-edit-competency" data-toggle="tooltip" title="Edit Competency" title="M" data-id="'+e.id+'" href="javascript:void(0)"><i class="fa fa-pencil icon"></i></a> \

@@ -208,7 +208,7 @@ function action_add() {
     evt.preventDefault();
   });
   $("#btn_modal_add_hr").off('click').on("click", function () {
-    admin_user_id = $('#user').val();
+    user_id = $('#user').val();
     schedule_name = $('#desc').val();
     company = $("#company").val();
     start_date = $("#start_date").val();
@@ -286,7 +286,7 @@ function action_add() {
         data: {
           from_date: from_date,
           to_date: to_date,
-          admin_user_id: admin_user_id,
+          user_id: user_id,
           desc: schedule_name,
           company_id: company,
           start_date: start_date,

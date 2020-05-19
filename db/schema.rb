@@ -10,37 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_021122) do
-
-  create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "last_name"
-    t.string "first_name"
-    t.string "account"
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.boolean "is_delete", default: false
-    t.boolean "status", default: true
-    t.string "title", default: ""
-    t.datetime "remember_created_at"
-    t.bigint "company_id"
-    t.bigint "role_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_admin_users_on_company_id"
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
-    t.index ["role_id"], name: "index_admin_users_on_role_id"
-  end
+ActiveRecord::Schema.define(version: 2020_05_15_064431) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "admin_user_id"
+    t.bigint "user_id"
     t.bigint "approver_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_approvers_on_admin_user_id"
     t.index ["approver_id"], name: "index_approvers_on_approver_id"
+    t.index ["user_id"], name: "index_approvers_on_user_id"
   end
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -109,21 +87,12 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
     t.string "_type"
     t.bigint "template_id"
     t.bigint "period_id"
-    t.bigint "admin_user_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_forms_on_admin_user_id"
     t.index ["period_id"], name: "index_forms_on_period_id"
     t.index ["template_id"], name: "index_forms_on_template_id"
-  end
-
-  create_table "group_privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "group_id", null: false
-    t.bigint "privilege_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["group_id"], name: "index_group_privileges_on_group_id"
-    t.index ["privilege_id"], name: "index_group_privileges_on_privilege_id"
+    t.index ["user_id"], name: "index_forms_on_user_id"
   end
 
   create_table "groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -133,6 +102,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
     t.boolean "is_delete", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "privileges"
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -143,22 +113,14 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.bigint "title_privilege_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["title_privilege_id"], name: "index_privileges_on_title_privilege_id"
-  end
-
   create_table "project_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "admin_user_id"
+    t.bigint "user_id"
     t.bigint "project_id"
     t.boolean "is_managent"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_project_members_on_admin_user_id"
     t.index ["project_id"], name: "index_project_members_on_project_id"
+    t.index ["user_id"], name: "index_project_members_on_user_id"
   end
 
   create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -177,7 +139,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   end
 
   create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "admin_user_id", null: false
+    t.bigint "user_id", null: false
     t.bigint "project_id"
     t.bigint "company_id"
     t.bigint "period_id"
@@ -192,10 +154,10 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_schedules_on_admin_user_id"
     t.index ["company_id"], name: "index_schedules_on_company_id"
     t.index ["period_id"], name: "index_schedules_on_period_id"
     t.index ["project_id"], name: "index_schedules_on_project_id"
+    t.index ["user_id"], name: "index_schedules_on_user_id"
   end
 
   create_table "slots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -212,13 +174,13 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   create_table "templates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "description"
-    t.bigint "admin_user_id", null: false
+    t.bigint "user_id", null: false
     t.bigint "role_id"
     t.boolean "status", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_templates_on_admin_user_id"
     t.index ["role_id"], name: "index_templates_on_role_id"
+    t.index ["user_id"], name: "index_templates_on_user_id"
   end
 
   create_table "title_competency_mappings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -227,12 +189,6 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
     t.bigint "competency_id"
     t.index ["competency_id"], name: "index_title_competency_mappings_on_competency_id"
     t.index ["title_id"], name: "index_title_competency_mappings_on_title_id"
-  end
-
-  create_table "title_privileges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "titles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -244,16 +200,36 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
 
   create_table "user_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "group_id", null: false
-    t.bigint "admin_user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["admin_user_id"], name: "index_user_groups_on_admin_user_id"
     t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
   end
 
-  add_foreign_key "admin_users", "companies"
-  add_foreign_key "admin_users", "roles"
-  add_foreign_key "approvers", "admin_users"
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "last_name"
+    t.string "first_name"
+    t.string "account"
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.boolean "is_delete", default: false
+    t.boolean "status", default: true
+    t.string "title", default: ""
+    t.datetime "remember_created_at"
+    t.bigint "company_id"
+    t.bigint "role_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_users_on_company_id"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role_id"], name: "index_users_on_role_id"
+  end
+
+  add_foreign_key "approvers", "users"
   add_foreign_key "comments", "form_slots"
   add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"
@@ -262,22 +238,21 @@ ActiveRecord::Schema.define(version: 2020_04_29_021122) do
   add_foreign_key "form_slot_trackings", "periods"
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
-  add_foreign_key "forms", "admin_users"
   add_foreign_key "forms", "periods"
-  add_foreign_key "group_privileges", "groups"
-  add_foreign_key "group_privileges", "privileges"
-  add_foreign_key "privileges", "title_privileges"
+  add_foreign_key "forms", "users"
   add_foreign_key "projects", "companies"
-  add_foreign_key "schedules", "admin_users"
   add_foreign_key "schedules", "companies"
   add_foreign_key "schedules", "periods"
   add_foreign_key "schedules", "projects"
+  add_foreign_key "schedules", "users"
   add_foreign_key "slots", "competencies"
-  add_foreign_key "templates", "admin_users"
   add_foreign_key "templates", "roles"
+  add_foreign_key "templates", "users"
   add_foreign_key "title_competency_mappings", "competencies"
   add_foreign_key "title_competency_mappings", "titles"
   add_foreign_key "titles", "roles"
-  add_foreign_key "user_groups", "admin_users"
   add_foreign_key "user_groups", "groups"
+  add_foreign_key "user_groups", "users"
+  add_foreign_key "users", "companies"
+  add_foreign_key "users", "roles"
 end

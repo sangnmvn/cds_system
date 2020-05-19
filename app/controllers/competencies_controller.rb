@@ -2,29 +2,26 @@ class CompetenciesController < ApplicationController
   layout "system_layout"
   include Authorize
   before_action :get_privilege_id
-  before_action :set_competency, only: [:show, :edit, :update, :load_data_edit, :destroy]
+  before_action :set_competency, :check_edit, only: [:show, :edit, :update, :edit, :destroy]
+  before_action :redirect_to_index
+  before_action :check_edit
 
   def create
-    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
-    respond_to do |format|
-      if Competency.where(name: params[:name].squish!).where(template_id: params[:template_id]).present?
-        format.json { render json: { status: "exist" } }
+    if Competency.where(name: params[:name].squish!, template_id: params[:template_id]).present?
+      render json: { status: "exist" }
+    else
+      location_max = Competency.where(template_id: params[:template_id]).map(&:location).max
+      params[:location] = location_max.nil? ? 1 : location_max + 1
+      competency = Competency.new(competency_params)
+      if competency.save
+        render json: { status: "success", id: competency.id, name: competency.name, desc: competency.desc, type: competency._type }
       else
-        location_max = Competency.where(template_id: params[:template_id]).map(&:location).max
-        params[:location] = location_max.nil? ? 1 : location_max + 1
-        @competency = Competency.new(competency_params)
-        if @competency.save
-          format.json { render json: { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type } }
-        else
-          format.json { render json: { status: "fail" } }
-        end
+        render json: { status: "fail" }
       end
     end
-    
   end
 
   def destroy
-    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if @competency.destroy
       render json: { status: "success" }
     else
@@ -33,7 +30,6 @@ class CompetenciesController < ApplicationController
   end
 
   def update
-    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
     if Competency.where.not(id: params[:id]).where(name: params[:name].squish!).present?
       return render json: { status: "exist" }
     else
@@ -46,60 +42,42 @@ class CompetenciesController < ApplicationController
   end
 
   def load
-    
-    arr = Array.new
-    return render json: arr unless (@privilege_array & [9,10]).any?
-    competencies = Competency.select(:id, :name, :_type, :desc)
-      .where(template_id: params[:id]).order(location: :asc)
-    competencies.each { |kq|
-      arr << {
-        id: kq.id,
-        name: kq.name,
-        type: kq._type,
-        desc: kq.desc,
-      }
-    }
-    render json: arr
+    competencies = Competency.select(:id, :name, :_type, :desc).where(template_id: params[:id]).order(location: :asc)
+
+    render json: competencies
   end
 
-  def load_data_edit
-    return render json: { status: "fail" } unless (@privilege_array & [9]).any?
-    if @competency
-      render json: { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
-    else
-      render json: { status: "fail" }
-    end
+  def edit
+    return render json: { status: "fail" } unless @competency.present?
+    render json: { status: "success", id: @competency.id, name: @competency.name, desc: @competency.desc, type: @competency._type }
   end
 
   def change_location
-    return render json: { status: "fail" } unless @privilege_array.include?(9)
-    if competency_current = Competency.find(params[:id])
-      location_current = competency_current.location
-      template_id_current = competency_current.template_id
-      if params[:type] == "up"
-        location_new = Competency.where(template_id: template_id_current)
-          .map(&:location).select { |x| x < location_current }.max
-      elsif params[:type] == "down"
-        location_new = Competency.where(template_id: template_id_current).map(&:location).select { |x| x > location_current }.min
-      end
-      return render json: { status: "fail" } if location_new.nil?
-      id_previous = Competency.select("id").where(template_id: template_id_current, location: location_new)
-      competency_new = Competency.find(id_previous[0].id)
-      competency_current.update!(location: location_new)
-      competency_new.update!(location: location_current)
-      return render json: { status: "success" }
-    else
-      return render json: { status: "fail" }
+    competency_current = Competency.find(params[:id])
+
+    return render json: { status: "fail" } if competency_current.nil?
+    location_current = competency_current.location
+    template_id_current = competency_current.template_id
+    if params[:type] == "up"
+      location_new = Competency.where(template_id: template_id_current).where("location < #{location_current}").pluck(:location).max
+    elsif params[:type] == "down"
+      location_new = Competency.where(template_id: template_id_current).where("location > #{location_current}").pluck(:location).min
     end
+
+    return render json: { status: "fail" } if location_new.nil?
+
+    Competency.where(template_id: template_id_current, location: location_new).update(location: location_current)
+    competency_current.update(location: location_new)
+    render json: { status: "success" }
   end
 
   def check_privileges
-    if (@privilege_array & [9]).any?
-      return render json: { privileges: "full" }
-    elsif (@privilege_array & [10]).any?
-      return render json: { privileges: "view" }
+    if @privilege_array.include?(9)
+      render json: { privileges: "full" }
+    elsif @privilege_array.include?(10)
+      render json: { privileges: "view" }
     else
-      return render json: { location: index2_admin_users_path }
+      render json: { location: index2_users_path }
     end
   end
 
@@ -115,4 +93,11 @@ class CompetenciesController < ApplicationController
     params.permit(:id, :name, :_type, :desc, :template_id, :location)
   end
 
+  def check_edit
+    render json: { status: "fail" } unless @privilege_array.include?(9)
+  end
+
+  def redirect_to_index
+    redirect_to index2_users_path unless (@privilege_array.include?(9) || @privilege_array.include?(10))
+  end
 end

@@ -22,8 +22,7 @@
       <div class="collapse navbar-collapse" >
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            
-            <%= link_to "Dashboard",index2_admin_users_path, class: "nav-link"%>
+            <%= link_to "Dashboard",index2_users_path, class: "nav-link"%>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,7 +41,7 @@
               Administrator
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/admin_users">User Management</a>
+              <a class="dropdown-item" href="/users">User Management</a>
               <a class="dropdown-item" href="/groups">User Group Management</a>
               <a class="dropdown-item" href="/schedules">Schedule Management</a>
             </div>
@@ -53,11 +52,11 @@
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <p class="navbar-text float-right">
-            <% if admin_user_signed_in? %>
-              <%= link_to "Welcome " + current_admin_user.first_name + " " + current_admin_user.last_name, edit_admin_user_registration_path, :class => 'navbar-link' %> |
-              <%= link_to "Logout", destroy_admin_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
+            <% if user_signed_in? %>
+              <%= link_to "Welcome " + current_user.first_name + " " + current_user.last_name, edit_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Logout", destroy_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
             <% else %>
-              <%= link_to "Login", new_admin_user_session_path, :class => 'btn btn-secondary'%>
+              <%= link_to "Login", new_user_session_path, :class => 'btn btn-secondary'%>
             <% end %>
           </p>
         </form>
@@ -67,21 +66,21 @@
   </body>
 </html>
 <script>
-$(document).ready(function() {
- if (location.pathname == '/'){
-$('li.active').find("a").css('background-color','#CFD5eA');
- }else{
-  $('li.active').removeClass('active');
+  $(document).ready(function() {
+   if (location.pathname == '/'){
+  $('li.active').find("a").css('background-color','#CFD5eA');
+   }else{
+    $('li.active').removeClass('active');
   
-  $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-   $('li.active').find("a").css('background-color','#CFD5eA');
-  }
-});
-  function getfocus() {
-    document.getElementById("myAnchor").focus();
-  }
+    $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+     $('li.active').find("a").css('background-color','#CFD5eA');
+    }
+  });
+    function getfocus() {
+      document.getElementById("myAnchor").focus();
+    }
   
-  function losefocus() {
-    document.getElementById("myAnchor").blur();
-  }
+    function losefocus() {
+      document.getElementById("myAnchor").blur();
+    }
 </script>

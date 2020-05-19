@@ -23,17 +23,17 @@
               </div>
               <br>
               <%# project name %>
-              <% if current_admin_user.role.name == "HR" %>
+              <% if current_user.role.name == "HR" %>
                 <div class="row">
-                <div class="col-sm-4">
-                  <label>Company Name (*)</label>
+                  <div class="col-sm-4">
+                    <label>Company Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= select_tag "project", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
+                  </div>
                 </div>
-                <div class="col-sm-6">
-                  <%= select_tag "project", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
-                </div>
-              </div>
-              <br>
-              <% elsif current_admin_user.role.name == "PM" %>
+                <br>
+              <% elsif current_user.role.name == "PM" %>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Project Name (*)</label>
@@ -43,7 +43,6 @@
                   </div>
                 </div>
                 <br>
-
               <% end %>
               <%# start date %>
               <div class="row">

@@ -29,55 +29,46 @@ class GroupsController < ApplicationController
   def create
     params[:status] = params[:status] == "Enable" ? 1 : 0
     @group = Group.new(group_params)
-    if Group.where(name: params[:name],is_delete: false).present?
-      render :json => { :status => "exist" }
+    return render json: { status: "exist" } if Group.where(name: params[:name]).present?
+    if @group.save
+      status_group = @group.status ? "Enable" : "Disable"
+      render json: { status: "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
     else
-      if @group.save
-        status_group = @group.status ? "Enable" : "Disable"
-        render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
-      else
-        render :json => { :status => "fail" }
-      end
+      render json: { status: "fail" }
     end
   end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
-    respond_to do |format|
-      if Group.where.not(id: params[:id]).where(name: params[:name]).present?
-        format.json { render :json => { :status => "exist" } }
-      else
-        params[:status] = params[:status] == "Enable" ? 1 : 0
-        if @group.update(group_params)
-          status_group = @group.status ? "Enable" : "Disable"
-          number = UserGroup.where(group_id: @group.id).count
-          format.json { render :json => { :status => "success",number: number, id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
-        else
-          format.json { render :json => { :status => "fail" } }
-        end
-      end
+    return render json: { status: "exist" } if Group.where(name: params[:name]).present?
+
+    params[:status] = params[:status] == "Enable" ? 1 : 0
+    if @group.update(group_params)
+      status_group = @group.status ? "Enable" : "Disable"
+      number = UserGroup.where(group_id: @group.id).count
+      render json: { status: "success", number: number, id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
+    else
+      render json: { status: "fail" }
     end
   end
 
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    respond_to do |format|
-      @group = Group.find(params[:id])
-      if @group.update_attribute(:is_delete, true)
-        UserGroup.delete_by(group_id: @group.id)
-        status_group = @group.status ? "Enable" : "Disable"
-        format.json { render :json => { :status => "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description } }
-      else
-        format.json { render :json => { :status => "fail" } }
-      end
+    @group = Group.find(params[:id])
+    if @group.update_attribute(:is_delete, true)
+      UserGroup.delete_by(group_id: @group.id)
+      status_group = @group.status ? "Enable" : "Disable"
+      render json: { status: "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
+    else
+      render json: { status: "fail" }
     end
   end
 
   def get_data
     group = Group.where(id: params[:id])
-    render :json => { group: group }
+    render json: { group: group }
   end
 
   def destroy_page
@@ -97,27 +88,14 @@ class GroupsController < ApplicationController
         UserGroup.delete_by(group_id: group.id)
         id << group.id
       end
-
-      respond_to do |format|
-        format.json { render :json => { id: id } }
-      end
+      render json: { id: id }
     end
   end
 
   private
 
   def check_privelege
-    if @privilege_array.include? 4 or @privilege_array.include? 5
-      return false
-    else
-      return true
-    end
-  end
-
-  def redirect_to_index
-    respond_to do |format|
-      format.html { redirect_to index2_admin_users_path }
-    end
+    redirect_to index2_users_path if !(@privilege_array.include?(4) || @privilege_array.include?(5))
   end
 
   # Use callbacks to share common setup or constraints between actions.

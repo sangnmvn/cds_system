@@ -1,0 +1,115 @@
+<% if @privilege_array.include? 1%>
+  <!-- The Modal -->
+  <div class="modal fade modal-form-add-user" id="modalAdd">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header head-myheader">
+          <h4 class="modal-title " style="text-align: center">Add a New User</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container-fluid">
+            <%= form_with class: "form-add-user" do |f|%>
+              <div class="row">
+                <div class="col-sm-12">
+                  <p style="color:red">(*) required fields</p>
+                </div>
+                <div class="col-sm-6">
+                  <%# first name %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>First Name (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'first', nil, class: 'form-control', placeholder: 'Please enter first name' %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# last name %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Last Name (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'last', nil, class: 'form-control', placeholder: 'Please enter last name' %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# email %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Email (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'email', nil, class: 'form-control', placeholder: 'Please enter email' %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# account %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Account (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= text_field_tag 'account', nil, class: 'form-control', placeholder: 'Please enter account' %>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+                <%# right  %>
+                <div class="col-sm-6">
+                  <%# role %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Role (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag "role", options_for_select(roles), class: 'form-control', include_blank: "Select a role" %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# company %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Company (*)</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag "company", options_for_select(companies), class: 'form-control modal-add-user-management',  include_blank: "Select a company" %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# project %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Project</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <%= select_tag 'project', raw("<option></option>"), class: "tokenize-project", multiple: true %>
+                    </div>
+                  </div>
+                  <br>
+                  <%# end  %>
+                </div>
+              </div>
+            <% end %>
+            <div class="row">
+              <div class="col-sm-5"></div>
+              <div class="col-sm-2">
+              </div>
+            </div>
+          </div>
+          <%# end container  %>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer" style="justify-content: center;">
+          <button type="button" class="btn btn-primary" id="btn-modal-add-user">Save</button>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<%end%>

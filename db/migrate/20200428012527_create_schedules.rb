@@ -1,7 +1,7 @@
 class CreateSchedules < ActiveRecord::Migration[6.0]
   def change
     create_table :schedules do |t|
-      t.references :admin_user, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
       t.references :project, null: true, foreign_key: true
       t.references :company, null: true, foreign_key: true
       t.references :period, null: true, foreign_key: true
@@ -14,7 +14,7 @@ class CreateSchedules < ActiveRecord::Migration[6.0]
       t.integer :notify_hr
       t.column :desc, :text
       t.column :status, :string
-      
+
       t.timestamps
     end
   end

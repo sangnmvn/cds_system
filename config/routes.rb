@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :user_groups do
     collection do
       get "load_user_group"
@@ -7,19 +8,16 @@ Rails.application.routes.draw do
       get "save_user_group"
     end
   end
-  resources :group_privileges
-  resources :privileges
-  resources :title_privileges
-  devise_for :admin_users
-  devise_scope :admin_users do
-    get "/admin_users/sign_out" => "devise/sessions#destroy"
+  # devise_for :users
+  devise_scope :users do
+    get "/users/sign_out" => "devise/sessions#destroy"
   end
-  resources :admin_users do
+  resources :users do
     collection do
       get "check_emai_account"
       get "edit"
       get "index2"
-      post "add"
+      post "create"
       post "update"
       get "get_filter_company"
       get "get_filter_project"
@@ -60,17 +58,17 @@ Rails.application.routes.draw do
     collection do
       # post "create"
       get "load"
-      get "load_data_edit"
+      get "edit"
       post "change_location"
       get "check_privileges"
     end
   end
 
-  root to: "admin_users#index2"
+  root to: "users#index2"
 
-  get "/user_data/" => "admin_users#get_user_data", defaults: { format: "json" }
+  get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
 
-  # resources :admin_users
+  # resources :users
 
   resources :schedules do
     collection do
@@ -81,12 +79,12 @@ Rails.application.routes.draw do
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
 
-  post "/admin/user_management/:id/edit" => "admin_users#get_modal_edit_users_management", as: :edit_user_management
-  post "admin/user_management/add_reviewer/:id" => "admin_users#add_reviewer", as: :add_reviewer_user_management
-  post "admin/user_management/add_reviewer/:id/:approver_ids" => "admin_users#add_reviewer_to_database"
+  post "/admin/user_management/:id/edit" => "users#get_modal_edit_users_management", as: :edit_user_management
+  post "/admin/user_management/add_reviewer/:id" => "users#add_reviewer", as: :add_reviewer_user_management
+  post "/admin/user_management/add_reviewer/:id/:approver_ids" => "users#add_reviewer_to_database"
   get "user_groups/show_privileges/:id", to: "user_groups#show_privileges", as: "show_privileges"
   post "user_groups/save_privileges", to: "user_groups#save_privileges", as: "save_privileges"
-  delete "admin/user_management/:id" => "admin_users#destroy", as: :destroy_user_management
+  delete "admin/user_management/:id" => "users#destroy", as: :destroy_user_management
   get "templates/:id/:ext" => "templates#export_excel"
 
   delete "templates/cleanup/:excel_filename" => "templates#cleanup_excel_file"

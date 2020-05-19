@@ -10,7 +10,7 @@ class SchedulesController < ApplicationController
     if (@privilege_array & [13]).any?
       @fields.insert(5, "End date")
       @company = Company.all
-      @schedules = Schedule.includes(:admin_user, :company).order(id: :DESC).page(params[:page]).per(20)
+      @schedules = Schedule.includes(:user, :company).order(id: :DESC).page(params[:page]).per(20)
     else
       redirect_to root_path
     end
@@ -48,9 +48,9 @@ class SchedulesController < ApplicationController
         @schedule = Schedule.new(temp_params)
         if @schedule.save
           @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-          admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
+          user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
-          ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
+          ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
           format.js { @status = true }
         else
           format.js { @status = false }
@@ -86,8 +86,8 @@ class SchedulesController < ApplicationController
     @period = Period.find(@schedule.period_id)
     respond_to do |format|
       @period = Period.find(@schedule.period_id)
-      admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
-      ScheduleMailer.with(admin_user: admin_user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
+      user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
+      ScheduleMailer.with(user: user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
       if @schedule.destroy && @period.destroy
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
@@ -104,8 +104,8 @@ class SchedulesController < ApplicationController
 
         schedule.each do |schedule|
           period = Period.find(schedule.period_id)
-          admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-          ScheduleMailer.with(admin_user: admin_user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
+          user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
+          ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
           schedule.destroy
         end
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
@@ -122,9 +122,9 @@ class SchedulesController < ApplicationController
     @schedule = Schedule.find(params[:id])
     respond_to do |format|
       if @schedule.update(temp_params)
-        admin_user = AdminUser.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
+        user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
         @period = Period.find(@schedule.period_id)
-        ScheduleMailer.with(admin_user: admin_user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_later(wait: 1.minute)
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer.deliver_later(wait: 1.minute)
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
@@ -145,7 +145,7 @@ class SchedulesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def schedule_params
-    params.permit(:id, :project_id, :period_id, :start_date, :end_date_hr, :end_date_employee, :end_date_reviewer, :notify_reviewer, :company_id, :admin_user_id, :desc, :status, :notify_employee, :is_delete, :notify_hr)
+    params.permit(:id, :project_id, :period_id, :start_date, :end_date_hr, :end_date_employee, :end_date_reviewer, :notify_reviewer, :company_id, :user_id, :desc, :status, :notify_employee, :is_delete, :notify_hr)
   end
 
   def period_params

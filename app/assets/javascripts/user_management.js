@@ -3,9 +3,9 @@
 $(document).ready(function () {
   $("#filter-company").change(function () {
     company = $("#filter-company").val();
-    
+
     $.ajax({
-      url: "/admin_users/get_filter_company",
+      url: "/users/get_filter_company",
       type: "GET",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -15,14 +15,14 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-       
+
         $(response).each(function (i, e) {
-         
+
           $("#filter-project").html("");
-          
-         
-            $('<option value="all">All</option>').appendTo("#filter-project");
-       
+
+
+          $('<option value="all">All</option>').appendTo("#filter-project");
+
           $.each(e.projects, function (k, v) {
             $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
               "#filter-project"
@@ -49,7 +49,7 @@ $(document).ready(function () {
     company = $("#filter-company").val();
     project = $("#filter-project").val();
     $.ajax({
-      url: "/admin_users/get_filter_project",
+      url: "/users/get_filter_project",
       type: "GET",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -163,7 +163,7 @@ $(document).ready(function () {
     }
     if ($(".error").length == 0) {
       $.ajax({
-        url: "admin_users/add",
+        url: "users/create",
         type: "POST",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -212,7 +212,7 @@ $(document).ready(function () {
   $(".modal-add-user-management").change(function () {
     company = $(".modal-add-user-management").val();
     $.ajax({
-      url: "/admin_users/get_modal_project",
+      url: "/users/get_modal_project",
       type: "GET",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -225,11 +225,7 @@ $(document).ready(function () {
         $("#modalAdd .tokens-container .token").remove();
         $("#modalAdd #project option").remove();
         $(response).each(function (i, e) {
-          $.each(e.projects, function (k, v) {
-            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
-              "#modalAdd .tokenize-project"
-            );
-          });
+          $('<option value="' + e.id + '">' + e.desc + "</option>").appendTo("#modalAdd .tokenize-project");
         });
       },
     });
@@ -240,7 +236,7 @@ $(document).ready(function () {
   $(".modal-edit-user-management").change(function () {
     company = $(".modal-edit-user-management").val();
     $.ajax({
-      url: "/admin_users/get_modal_project",
+      url: "/users/get_modal_project",
       type: "GET",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -253,11 +249,7 @@ $(document).ready(function () {
         $("#modalEdit .tokens-container .token").remove();
         $("#modalEdit #project option").remove();
         $(response).each(function (i, e) {
-          $.each(e.projects, function (k, v) {
-            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
-              "#modalEdit .tokenize-project"
-            );
-          });
+          $('<option value="' + e.id + '">' + e.desc + "</option>").appendTo("#modalEdit .tokenize-project");
         });
       },
     });
@@ -266,56 +258,16 @@ $(document).ready(function () {
 // submit filter
 $(document).ready(function () {
   $("#btn-filter").click(function () {
-    company = $("#filter-company").val();
-    project = $("#filter-project").val();
-    role = $("#filter-role").val();
-    $.ajax({
-      url: "/admin_users/submit_filter",
-      type: "POST",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      data: {
-        company: company,
-        project: project,
-        role: role
-      },
-      // dataType: "json",
-      // success: function (response) {
-
-      // },
-    });
+    $('#table_user_management').dataTable().fnDraw();
   });
 });
+
 $(document).ready(function () {
   $("#btn-reset").click(function () {
-    
- 
-  
-$("#filter-company").val("all");
-    
+    $("#filter-company").val("all");
     $("#filter-project").val("all");
-    company = $("#filter-company").val();
-    
     $("#filter-role").val("all");
-    project = $("#filter-project").val();
-    role = $("#filter-role").val();
-    $.ajax({
-      url: "/admin_users/submit_filter",
-      type: "POST",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      data: {
-        company: company,
-        project: project,
-        role: role
-      },
-      // dataType: "json",
-      // success: function (response) {
-
-      // },
-    });
+    $('#table_user_management').dataTable().fnDraw();
   });
 });
 
@@ -386,7 +338,7 @@ function add_reviewer_user() {
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
-  var user_account = $(this).data("user_firstname")+" "+$(this).data("user_lastname");
+  var user_account = $(this).data("user_firstname") + " " + $(this).data("user_lastname");
   $(".delete_id").val(user_id);
   $(".display_user_account_delete").html(user_account);
 });
@@ -420,18 +372,18 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
-      fnServerParams: function(aoData){
+      fnServerParams: function (aoData) {
         company = $("#filter-company").val();
         project = $("#filter-project").val();
         role = $("#filter-role").val();
-        
-        aoData.push({"name": "filter-company", "value": company});
-        aoData.push({"name": "filter-project", "value": project});
-        aoData.push({"name": "filter-role"   , "value": role});
-        
+
+        aoData.push({ "name": "filter-company", "value": company });
+        aoData.push({ "name": "filter-project", "value": project });
+        aoData.push({ "name": "filter-role", "value": role });
+
       },
-      
-      fnDrawCallback: function(){
+
+      fnDrawCallback: function () {
         $(".collection_selection[type=checkbox]").click(function () {
           var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
           if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
@@ -442,8 +394,8 @@ function setup_dataTable() {
           }
         });
 
-        $('.dataTables_length').attr("style", "display:none");        
-      }, 
+        $('.dataTables_length').attr("style", "display:none");
+      },
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "user_data/",
@@ -452,17 +404,17 @@ function setup_dataTable() {
         "infoFiltered": ""
       },
       "columnDefs": [
-        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 0 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ],  "targets": 1 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 2 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 3 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 4 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 5 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 6 },
-        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 7 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 8 },
-        { "orderable": true,"orderSequence": [ "desc","asc" ], "targets": 9 },
-        { "orderable": false,"orderSequence": [ "desc","asc" ], "targets": 10 },
+        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 0 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 1 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 2 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 3 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 4 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 5 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 6 },
+        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 7 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 8 },
+        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 9 },
+        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 10 },
       ],
     });
 
@@ -473,7 +425,7 @@ function setup_dataTable() {
       );
     });
 
-    
+
   });
 
 
@@ -483,7 +435,7 @@ setup_dataTable();
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
   $.ajax({
-    url: "admin_users/" + user_id + "/edit",
+    url: "users/" + user_id + "/edit",
     type: "GET",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -496,56 +448,55 @@ $(document).on("click", ".edit_icon", function () {
       $("#modalEdit").modal("show");
       $(".error").remove();
       $(response).each(function (i, e) {
-        $.each(e.user, function (k, v) {
-          $("#modalEdit #first").val(v.first_name);
-          $("#modalEdit #last").val(v.last_name);
-          $("#modalEdit #email").val(v.email);
-          $("#modalEdit #account").val(v.account);
-          $("#modalEdit #admin_user_id").val(v.id);
-          $("#modalEdit #role").html("");
-          $("#modalEdit #company").html("");
-          $.each(e.roles, function (k, x) {
-            if (v.role_id == x.id) {
-              $(
-                '<option value="' + x.id + '" selected>' + x.name + "</option>"
-              ).appendTo("#modalEdit #role");
-            } else {
-              $(
-                '<option value="' + x.id + '">' + x.name + "</option>"
-              ).appendTo("#modalEdit #role");
-            }
-          });
-          $.each(e.companies, function (k, y) {
-            if (v.company_id == y.id) {
-              $(
-                '<option value="' + y.id + '" selected>' + y.name + "</option>"
-              ).appendTo("#modalEdit #company");
-            } else {
-              $(
-                '<option value="' + y.id + '">' + y.name + "</option>"
-              ).appendTo("#modalEdit #company");
-            }
-          });
-          $(".edit-projects").html(
-            '<select class="tokenize-project edit-project" id="project" multiple></select>'
-          );
-          $.each(e.projects, function (k, p) {
-            if (e.project_user.indexOf(p.id) > -1) {
-              $(
-                '<option value="' +
-                p.id +
-                '" selected="selected">' +
-                p.desc +
-                "</option>"
-              ).appendTo("#modalEdit .edit-projects .edit-project");
-            } else {
-              $(
-                '<option value="' + p.id + '">' + p.desc + "</option>"
-              ).appendTo("#modalEdit .edit-projects .edit-project");
-            }
-          });
-          $(".tokenize-project").tokenize2();
+        v = e.user
+        $("#modalEdit #first").val(v.first_name);
+        $("#modalEdit #last").val(v.last_name);
+        $("#modalEdit #email").val(v.email);
+        $("#modalEdit #account").val(v.account);
+        $("#modalEdit #user_id").val(v.id);
+        $("#modalEdit #role").html("");
+        $("#modalEdit #company").html("");
+        $.each(e.roles, function (k, x) {
+          if (v.role_id == x.id) {
+            $(
+              '<option value="' + x.id + '" selected>' + x.name + "</option>"
+            ).appendTo("#modalEdit #role");
+          } else {
+            $(
+              '<option value="' + x.id + '">' + x.name + "</option>"
+            ).appendTo("#modalEdit #role");
+          }
         });
+        $.each(e.companies, function (k, y) {
+          if (v.company_id == y.id) {
+            $(
+              '<option value="' + y.id + '" selected>' + y.name + "</option>"
+            ).appendTo("#modalEdit #company");
+          } else {
+            $(
+              '<option value="' + y.id + '">' + y.name + "</option>"
+            ).appendTo("#modalEdit #company");
+          }
+        });
+        $(".edit-projects").html(
+          '<select class="tokenize-project edit-project" id="project" multiple></select>'
+        );
+        $.each(e.projects, function (k, p) {
+          if (e.project_ids.indexOf(p.id) > -1) {
+            $(
+              '<option value="' +
+              p.id +
+              '" selected="selected">' +
+              p.desc +
+              "</option>"
+            ).appendTo("#modalEdit .edit-projects .edit-project");
+          } else {
+            $(
+              '<option value="' + p.id + '">' + p.desc + "</option>"
+            ).appendTo("#modalEdit .edit-projects .edit-project");
+          }
+        });
+        $(".tokenize-project").tokenize2();
       });
     },
   });
@@ -560,7 +511,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   role = $("#modalEdit #role").val();
   company = $("#modalEdit #company").val();
   project = $("#modalEdit #project").val();
-  id = $("#modalEdit #admin_user_id").val();
+  id = $("#modalEdit #user_id").val();
   check_email = false;
   check_account = false;
   $(".error").remove();
@@ -627,7 +578,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
   }
   if ($(".error").length == 0) {
     $.ajax({
-      url: "/admin_users/" + id,
+      url: "/users/" + id,
       type: "PUT",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -670,7 +621,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-  
+
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
     $("#modalDeleteMultipleUsers").modal("show");
@@ -690,7 +641,7 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
     arr_id_user.push(user_id);
   });
   $.ajax({
-    url: "/admin_users/delete_multiple_users",
+    url: "/users/delete_multiple_users",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -720,7 +671,7 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
 $(document).on("click", ".status_icon", function () {
   var user_id = $(this).data("user_id");
   $.ajax({
-    url: "/admin_users/status",
+    url: "/users/status",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -750,7 +701,7 @@ $(document).on("click", ".status_icon", function () {
 
 // disable multiple users
 $(document).on("click", "#btn-disable-multiple-users", function () {
-  
+
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
     $("#modalStatusMultipleUsers").modal("show");
@@ -761,7 +712,7 @@ $(document).on("click", "#btn-disable-multiple-users", function () {
   }
 });
 $(document).on("click", "#btn-enable-multiple-users", function () {
-  
+
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
     $("#modalStatusEnableUsers").modal("show");
@@ -781,7 +732,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
     arr_id_user.push(user_id);
   });
   $.ajax({
-    url: "/admin_users/disable_multiple_users",
+    url: "/users/disable_multiple_users",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -813,7 +764,7 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
     arr_id_user.push(user_id);
   });
   $.ajax({
-    url: "/admin_users/enable_multiple_users",
+    url: "/users/enable_multiple_users",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -839,48 +790,49 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
 
 
 $(document).ready(function () {
-  a=$(".get_privilege").val();
-  if(a == 'true'){
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+  a = $(".get_privilege").val();
+  if (a == 'true') {
+    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
   data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
   <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
   <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
   <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
   </div>';
 
-  $(content).insertAfter(".dataTables_filter");
-  $(".hidden").attr("placeholder", "Type here to search");
-  }else{
+    $(content).insertAfter(".dataTables_filter");
+    $(".hidden").attr("placeholder", "Type here to search");
+  } else {
     content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
     data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
     <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
     <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
     <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
     </div>';
-  
+
     $(content).insertAfter(".dataTables_filter");
     $(".hidden").attr("placeholder", "Type here to search");
   }
 });
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip(); 
+$(document).ready(function () {
+  $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="modal"]').tooltip();
 });
-$(document).click(function(e) {    
-  a=$(".get_privilege").val();
-  if(a == 'true'){
-  var number = $("#table_user_management tbody :checkbox:checked").length;
+$(document).click(function (e) {
+  a = $(".get_privilege").val();
+  if (a == 'true') {
+    var number = $("#table_user_management tbody :checkbox:checked").length;
 
-  if (parseInt(number) > 0){
-    $("#btn-disable-multiple-users").css('background-color', "#8da8db");
-    $("#btn-delete-many-users").css('background-color', "#8da8db");
-    $("#btn-enable-multiple-users").css('background-color', "#8da8db");
-    
+    if (parseInt(number) > 0) {
+      $("#btn-disable-multiple-users").css('background-color', "#8da8db");
+      $("#btn-delete-many-users").css('background-color', "#8da8db");
+      $("#btn-enable-multiple-users").css('background-color', "#8da8db");
+
+    }
+    else {
+
+      $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
+      $("#btn-delete-many-users").css('background-color', "#dcdcdc");
+      $("#btn-enable-multiple-users").css('background-color', "#dcdcdc");
+    }
   }
-  else{
-    
-    $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
-    $("#btn-delete-many-users").css('background-color', "#dcdcdc");
-    $("#btn-enable-multiple-users").css('background-color', "#dcdcdc"); 
-  }}
 });
