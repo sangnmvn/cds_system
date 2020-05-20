@@ -41,7 +41,7 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
-    return render json: { status: "exist" } if Group.where(name: params[:name]).present?
+    return render json: { status: "exist" } if Group.where.not(id: params[:id]).where(name: params[:name]).present?
 
     params[:status] = params[:status] == "Enable" ? 1 : 0
     if @group.update(group_params)

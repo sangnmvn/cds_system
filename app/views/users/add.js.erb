@@ -1,9 +1,0 @@
-<% if @status == true %>
-  $('#table_user_management').remove();
-  $('#table_user_management_wrapper').html("<%= j (render partial: "users", locals: { users: @users, roles: @roles, projects: @projects, project_members: @project_members, companies: @companies } )%>");
-  setup_dataTable();
-  $('#modalAdd').modal('hide');
-  success();
-<% else %>
-  fails();
-<% end%>

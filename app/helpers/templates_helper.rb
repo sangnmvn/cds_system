@@ -137,7 +137,6 @@ module TemplatesHelper
         (i + 1...(index_arr.length)).each do |j|
           next_text, next_level = index_arr[j]
           next_format = format_arr[next_text]
-          #binding.pry if level.nil? || next_level.nil?
           if next_text.include?(text) && next_level < level && next_level > 1
             format[:b] = format[:b] | next_format.include?(:b)
             format[:i] = format[:i] | next_format.include?(:i)
