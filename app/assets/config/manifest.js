@@ -31,3 +31,5 @@
 //= link template-index.css
 //= link template_index_step1.js
 
+//= link form_slot.css
+//= link form_slot.js
