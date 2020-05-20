@@ -6,11 +6,9 @@ class FormSlotsController < ApplicationController
     arr_id_slot = FormSlot.where(form_id: form_id).pluck(:slot_id)
     arr_id_competency = Slot.where("id in (?)", arr_id_slot).pluck(:competency_id).uniq
     # Competency.select(:id, :name).where(template_id: form_id)
-    # binding.pry
     @competency = Competency.select(:id, :name, :_type).where("id in (?)", arr_id_competency)
     @competency.each do |c|
       c._type = c._type == "General" ? "G" : "S"
     end
-    # binding.pry
   end
 end

@@ -82,7 +82,16 @@
   font-size: 15px;
 }
 .left_panel table td {
-  border: 1px solid white !important;
+  border-left: 1px solid white !important;
+  border-color: white;
+}
+.left_panel table th {
+  // border: 1px solid white !important;
+//   border-color: white;
+  border-top: none;
 }
 
+.left_panel table td:nth-child(2) {
+  text-align: left;
+}
 // end

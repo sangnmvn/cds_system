@@ -3,7 +3,7 @@
   
     <div class="left-panel-competency">  
       <div style="float: right">
-        <a href="#" data-toggle="sidebar-colapse">
+        <a href="javascript:void(0)" data-toggle="sidebar-colapse">
           <span id="collapse-icon" class="fa fa-2x fa-angle-double-left"></span>
         </a>
       </div>
@@ -14,7 +14,7 @@
           <tr>
             <td class="col-12" style="color:white">Competency
               <div style="float: right" >
-                <a href="#" data-toggle="sidebar-colapse" class="">
+                <a href="javascript:void(0)" data-toggle="sidebar-colapse" class="">
                   <span id="collapse-icon" class="fa fa-2x fa-angle-double-left" style="color:white"></span>
                 </a>
               </div>
@@ -23,46 +23,65 @@
         </thead>
       </table>
 
-      <% @competency.each do |c|%>
-
-      <div class="card">
-        <div class="card-header">
-            <table class="table table-primary table-responsive-sm table-mytable">
-                <thead>
-                  <tr class="d-flex">
-                    <td class="col-2"><%= c._type %></td>
-                    <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
-                      <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse<%= c.id %>" aria-expanded="true" aria-controls="collapse<%= c.id %>">
-                      <%= c.name %>
-                     </a>
-                      </td>
-                    <td class="col-3">1</td>
-                  </tr>
-                </thead>
-              </table>
-        </div>
-        <div id="collapse<%= c.id %>" class="collapse" data-parent="#accordion">
-          <div class="card-body">
-            <div class="competency">
-              <table class="table table-primary table-responsive-sm table-mytable">
-                <tbody>
-                  <tr class="d-flex">
-                    <td class="col-2"></td>
-                    <td class="col-7">Level 2</td>
-                    <td class="col-3">2/3</td>
-                  </tr>
-                  <tr class="d-flex">
-                    <td class="col-2"></td>
-                    <td class="col-7">Level 2</td>
-                    <td class="col-3">2/3</td>
-                  </tr>
-                </tbody>
-              </table>
+      <% if @competency.empty?%>
+        <div class="card">
+            <div class="card-header">
+                <table class="table table-primary table-responsive-sm table-mytable table">
+                      <tr class="d-flex">
+                        <td class="col-12">No data available in table</td>
+                      </tr>
+                  </table>
+            </div>
+            <div id="collapse" class="collapse" data-parent="#accordion">
+              <div class="card-body">
+                <div class="competency">
+                  
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+      <% else %>
+        <% @competency.each_with_index do |c,i|%>
+          <div class="card">
+            <div class="card-header">
+                <table class="table table-primary table-responsive-sm table-mytable table<%= i %>">
+                    <thead>
+                      <tr class="d-flex">
+                        <td class="col-2"><%= c._type %></td>
+                        <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
+                          <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse<%= i %>" aria-expanded="true" aria-controls="collapse<%= i %>">
+                          <%= c.name %>
+                        </a>
+                          </td>
+                        <td class="col-3">1</td>
+                      </tr>
+                    </thead>
+                  </table>
+            </div>
+            <div id="collapse<%= i %>" class="collapse" data-parent="#accordion">
+              <div class="card-body">
+                <div class="competency">
+                  <table class="table table-primary table-responsive-sm table-mytable">
+                    <tbody>
+                      <tr class="d-flex">
+                        <td class="col-2"></td>
+                        <td class="col-7">Level 2</td>
+                        <td class="col-3">2/3</td>
+                      </tr>
+                      <tr class="d-flex">
+                        <td class="col-2"></td>
+                        <td class="col-7">Level 2</td>
+                        <td class="col-3">2/3</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
       <% end %>
+      
     </div>
   
 </div>

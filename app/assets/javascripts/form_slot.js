@@ -1,6 +1,8 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
+  StartLeftPanel();
+
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
   });
@@ -8,6 +10,13 @@ $(document).ready(function () {
     $(".card table thead tr").css("background-color", "#ccc");
     $(this).closest("tr").css("background-color", "#8da8db");
   });
+
+  function StartLeftPanel() {
+    $("#collapse0").addClass("show");
+    $(".table0 tr").css("background-color", "#8da8db");
+  }
+
+
   function SidebarCollapse() {
     $(".menu-collapsed").toggleClass("d-none");
     $(".sidebar-submenu").toggleClass("d-none");

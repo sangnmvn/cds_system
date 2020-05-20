@@ -7,12 +7,39 @@
     <li class="breadcrumb-item active">User Management</li>
   </ol>
 </nav>
+
+<div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; padding: 0px 16px 0px 16px; color: white;">
+  <div class="col-md-4">
+    CDS Reviewer for 
+  </div>
+  <div class="col-md-2">
+    Search
+  </div>
+  <div class="col-md-2">
+    Filter
+  </div>
+  <div class="col-md-1">
+    Reviewer Result
+  </div>
+  <div class="col-md-1">
+    Submit
+  </div>
+  <div class="col-md-1">
+    Approve
+  </div>
+  <div class="col-md-1">
+    Cancel
+  </div>
+</div>
+
+
+
 <div class="container-fluid">
   <div class="container-fluid">
     <div class="row" id="body-row">
       <%= render 'left_panel'%>
     
-      <div class="col p-4">
+      <div class="col">
         <%= render 'form_slot'%>
       </div>
 
@@ -20,14 +47,8 @@
   </div>
 </div>
 
-<div class="action-form-slot">
-  a<br>
-  a<br>
-  a<br>
-  a<br>
-</div>
-
-
+<%= render 'modal_submit_cds'%>
+<%= render 'modal_delete_cds'%>
 
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
