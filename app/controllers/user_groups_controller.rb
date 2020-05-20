@@ -52,15 +52,15 @@ class UserGroupsController < ApplicationController
 
   def show_privileges
     group_pri = Group.find_by_id(params[:id]).privileges&.split(",") || []
-    table_right = group_pri.map { |pri_id| Settings.privileges[pri_id].to_json }
-    table_left = Settings.privileges.map { |k, value| value.to_json }
+    table_right = group_pri.uniq.map { |pri_id| Settings.privileges[pri_id].to_json }
+    table_left = Settings.privileges.map { |k, value| value.to_json } - table_right
 
     render json: { left: table_left, right: table_right }
   end
 
   def save_privileges
     group_id = params[:group_id]
-    data = params[:data].join(",")
+    data = params[:data]&.join(",") || ""
 
     Group.where(id: group_id).update(privileges: data)
   end

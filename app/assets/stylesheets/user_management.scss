@@ -1,0 +1,292 @@
+.error {
+    color: red;
+}
+
+#alert-success,
+#alert-danger {
+    position: absolute;
+    z-index: 3400;
+    top: 10%;
+    left: 50%;
+    margin: 0px auto;
+    text-align: center;
+    display: none;
+}
+
+#table_user_management {
+    border: 2px solid #4882bf;
+}
+
+table.dataTable {
+    border: 2px solid #4882bf;
+    border-bottom: 2px solid #4882bf;
+}
+
+#table_user_management tr.odd>th {
+    font-size: 16px;
+    background: #4472c4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    border: 1px solid black;
+}
+
+#table_user_management>tbody[role="alert"]>tr>td {
+    border: 1px solid #fff;
+}
+
+table.dataTable tbody td {
+    padding: 5px 10px 0px 10px;
+}
+
+#table_user_management tr.even>td {
+    font-size: 16px;
+    background: #cfd5ea;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+}
+
+#table_user_management tr.odd>td {
+    font-size: 16px;
+    background: #E9ebf5;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+}
+
+.action_icon>img {
+    width: 18px;
+    height: 18px;
+}
+
+img.assign_user_img {
+    width: 30x;
+    height: 35px;
+}
+
+.next_page_icon {
+    width: 16px;
+    height: 12px;
+}
+
+.prev_page_icon {
+    width: 16px;
+    height: 12px;
+}
+
+.arrow_icon {
+    width: 16px;
+    height: 12px;
+}
+
+.add_reviewer_index {
+    text-align: center !important;
+}
+
+#table_user_management_info {
+    color: black;
+}
+
+#table_user_management_paginate {
+    color: black;
+}
+
+#table_user_management_next {
+    color: black;
+}
+
+#table_user_management_previous {
+    color: black;
+}
+#table_user_management_wrapper {
+    .action_icon {
+        text-decoration: none;
+    }   
+}
+.panel_contents table tr.odd>th {
+    font-size: 14px;
+    background: #4472c4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.panel_contents table th td {
+    border: 1px solid #fff;
+}
+
+.panel_contents table tr.even>td {
+    font-size: 12px;
+    background: rgb(0, 198, 224);
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.panel_contents table tr.odd>td {
+    font-size: 12px;
+    background: #009ED0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+
+.table-mytable {
+    text-align: center;
+
+    tbody tr:nth-of-type(odd) {
+        background-color: #C6E2FF;
+    }
+
+    thead {
+        background-color: #4472c4;
+        color: #fff;
+        font-weight: bold;
+    }
+}
+
+.table,
+td,
+tr {
+    border: 1px solid;
+}
+
+.td-mytd {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.head-myheader {
+    background-color: #4472c4;
+}
+
+.modal-title {
+    font-size: 18px;
+}
+
+.button-center {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.mycontrol {
+    top: 2rem;
+    width: 1.15rem;
+    height: 1.15rem;
+
+}
+
+.fa-toggle-off {
+    font-size: 20px;
+    color: #ff0000;
+}
+
+.fa-toggle-on {
+    font-size: 20px;
+    color: blue;
+}
+
+.number {
+    text-align: right;
+}
+
+.resource_selection_cell {
+    text-align: center;
+}
+
+.title-filter-user {
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    margin-top: 0px;
+    background-color: #4472c4;
+}
+
+.filter-page-user {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    ;
+}
+
+.btn-light,
+.btn-primary,
+.btn-danger {
+    width: 80px;
+}
+
+.error {
+    color: red;
+    font-size: 10px;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.close {
+    color: #fff;
+}
+
+#table_left_paginate {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#table_right_paginate {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    background-image: url(/assets/search-3-16.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    outline: 0;
+}
+
+table.dataTable thead .sorting {
+    background-image: url(/assets/sort_both.png);
+}
+
+#table_user_management tr.odd>th {
+    background-image: url(/assets/sort_both.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    outline: 0;
+    border-color: #fff;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td.add_reviewer_name {
+    text-align: left;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td.add_reviewer_account {
+    text-align: left;
+}
+
+#table_user_management td,
+#table_user_management th {
+    border-color: #fff;
+}
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled {
+    border-color: #fff;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+    border-color: #fff;
+}
+
+.fa {
+    width: 13px;
+    height: 13px;
+    font-size: 19px;
+}

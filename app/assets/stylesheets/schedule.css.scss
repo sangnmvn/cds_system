@@ -1,19 +1,20 @@
-
-
 #scheduletable thead th {
   background-color: #4472c4;
   color: #fff;
   border: 1px solid white;
 }
+
 .icon {
-	width: 13px;
-	height: 13px;
+  width: 13px;
+  height: 13px;
   font-size: 19px;
   margin-right: 5px;
 }
+
 #scheduletable td {
-  border: 2px solid white ;
+  border: 2px solid white;
 }
+
 #scheduletable {
   border: 3px solid #4882bf;
 }
@@ -42,24 +43,27 @@
   display: none;
   position: absolute;
   height: 100%;
-  width: 100%; 
+  width: 100%;
   background-color: #000;
   bottom: 0;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9999;;
+  z-index: 9999;
+  ;
   opacity: 0.4;
+
   &.fixed {
     position: fixed;
   }
+
   &:before {
     content: '';
-    background-color: rgba(0,0,0,0);
-    border: 5px solid rgba(0,183,229,0.9);
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
     opacity: .9;
-    border-right: 5px solid rgba(0,0,0,0);
-    border-left: 5px solid rgba(0,0,0,0);
+    border-right: 5px solid rgba(0, 0, 0, 0);
+    border-left: 5px solid rgba(0, 0, 0, 0);
     border-radius: 50px;
     box-shadow: 0 0 35px #2187e7;
     width: 50px;
@@ -72,13 +76,14 @@
     top: 50%;
     left: 50%;
   }
+
   &:after {
     content: '';
-    background-color: rgba(0,0,0,0);
-    border: 5px solid rgba(0,183,229,0.9);
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(0, 183, 229, 0.9);
     opacity: .9;
-    border-left: 5px solid rgba(0,0,0,0);
-    border-right: 5px solid rgba(0,0,0,0);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-right: 5px solid rgba(0, 0, 0, 0);
     border-radius: 50px;
     box-shadow: 0 0 15px #2187e7;
     width: 30px;
@@ -95,46 +100,55 @@
 
 @-moz-keyframes spinPulse {
   0% {
-    -moz-transform:rotate(160deg);
+    -moz-transform: rotate(160deg);
     opacity: 0;
     box-shadow: 0 0 1px #2187e7;
   }
+
   50% {
     -moz-transform: rotate(145deg);
     opacity: 1;
   }
+
   100% {
     -moz-transform: rotate(-320deg);
     opacity: 0;
   }
 }
+
 @-moz-keyframes spinoffPulse {
   0% {
     -moz-transform: rotate(0deg);
   }
+
   100% {
     -moz-transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes spinPulse {
   0% {
     -webkit-transform: rotate(160deg);
     opacity: 0;
     box-shadow: 0 0 1px #2187e7;
   }
+
   50% {
     -webkit-transform: rotate(145deg);
     opacity: 1;
   }
+
   100% {
     -webkit-transform: rotate(-320deg);
     opacity: 0;
   }
 }
+
 @-webkit-keyframes spinoffPulse {
   0% {
     -webkit-transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
   }

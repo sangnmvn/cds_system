@@ -93,7 +93,6 @@ function myJS_data_event() {
       else {
         $this.closest('tr').css('background-color', "#E9ebf5");
       }
-
       $('#check_all_remove').prop("checked", false);
     }
   });
@@ -144,13 +143,13 @@ function myJS_data_event() {
     change_button_save(0);
   });
 
-  // $('.close_modal').click(function () {
-  //     if ($('#save').attr("disabled") != "disabled") {
-  //         save();
-  //     }
-  //     $('#table_left').DataTable().search('');
-  //     $('#table_right').DataTable().search('');
-  // });
+  $('.close_modal').click(function () {
+      if ($('#save').attr("disabled") != "disabled") {
+        save();
+      }
+      $('#table_left').DataTable().search('');
+      $('#table_right').DataTable().search('');
+  });
   // Add index column in table left
   $('#table_left').DataTable().on('order.dt search.dt', function () {
     $('#table_left').DataTable().column(0, {
@@ -192,7 +191,7 @@ function myJS() {
   // real code to setup table is at _add_reviewer.html.erb
   var table_left = $('#table_left').dataTable({
     bInfo: false, bDestroy: true,
-    
+
   });
   var table_right = $('#table_right').dataTable({
     bInfo: false, bDestroy: true
@@ -249,8 +248,6 @@ function save() {
       success("Assign user to this group has been successfully! ");
       $("#AssignModal").modal('hide');
       $('.bootbox-confirm').modal('hide');
-            $('.bootbox-confirm').modal('hide');	
-      $('.bootbox-confirm').modal('hide');
       var table = $("#table_group").DataTable();
       var dataLength = table.rows().data().length;
       for (var i = 0; i < dataLength; i++) {
@@ -297,8 +294,6 @@ function save() {
           myJS_data_event();
           myAjax();
           privilegeAjax();
-          privilegeAjax();	
-          privilegeAjax();
           privilegeJS();
 
         }
@@ -306,9 +301,7 @@ function save() {
     },
     error: function () {
       fails("Assign user to this group is ");
-      $('.bootbox-confirm').modal('hide');;
-            $('.bootbox-confirm').modal('hide');;						
-      $('.bootbox-confirm').modal('hide');;
+      $('.bootbox-confirm').modal('hide');
     }
   });
 }
@@ -339,12 +332,8 @@ function myAjax() {
           table = $("#table_right").dataTable();
           table.fnAddData([
             "<td style='text-align: right'></td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
-
           ]);
-
-        }
-
-        );
+        });
       }
     });
   });
@@ -421,10 +410,7 @@ function privilegeJS() {
         }
         $(this).closest('tr').css('background-color', "pink");
       } else {
-
-
         $(this).closest('tr').css('background-color', "#E9ebf5");
-
         $(`#modalPrivilege .selectAll1`).prop("checked", false)
       }
       if ($(`#modalPrivilege .table_left tbody :checkbox:checked`).length == 0) {
@@ -441,10 +427,7 @@ function privilegeJS() {
         }
         $(this).closest('tr').css('background-color', "pink");
       } else {
-
-
         $(this).closest('tr').css('background-color', "#E9ebf5");
-
         $(`#modalPrivilege .selectAll2`).prop("checked", false)
       }
       if ($(`#modalPrivilege .table_right tbody :checkbox:checked`).length == 0) {
@@ -462,8 +445,6 @@ function privilegeJS() {
         $(`#modalPrivilege .table_left tbody tr:nth-of-type(even) th`).css('background-color', "#cfd5ea");
         to_right_button(1)
       } else {
-
-
         $(`#modalPrivilege .table_left tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_right_button(0)
       }
@@ -472,11 +453,9 @@ function privilegeJS() {
       $(`#modalPrivilege .table_right tbody input[type=checkbox]`).prop('checked', $(this).prop('checked'))
       if ($(this).is(':checked')) {
         $(`#modalPrivilege .table_right tbody tr`).css('background-color', "pink")
-
         $(`#modalPrivilege .table_right tbody tr:nth-of-type(even) th`).css('background-color', "#cfd5ea");
         to_left_button(1)
       } else {
-
         $(`#modalPrivilege .table_right tbody tr:nth-of-type(even)`).css('background-color', "#E9ebf5");
         to_left_button(0)
       }
@@ -503,7 +482,6 @@ function LeftToRight(group_id) {
 
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('th').css('background-color', "#cfd5ea");
-
 
     to_right_button(0)
     if ($(`#modalPrivilege .table_left .${title}`).length == 1) {
@@ -543,9 +521,7 @@ function RightToLeft(group_id) {
 
     $(`#modalPrivilege .${title}#${name}`).insertAfter($(`#modalPrivilege .table_left tbody .privilege-name.${title}`).parent('tr'))
     $(`#modalPrivilege .selectAll2`).prop("checked", false)
-
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false)
-
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('tr').css('background-color', "#E9ebf5");
     $(`#modalPrivilege .${title}#${name}`).find(':checkbox').prop("checked", false).closest('th').css('background-color', "#cfd5ea");
     to_left_button(0)
@@ -573,12 +549,6 @@ function RightToLeft(group_id) {
   if ($(`#modalPrivilege .table_left tbody :checkbox:checked`).length > 0) {
     $(`#modalPrivilege .table_left tbody .notice`).remove()
   }
-  // var save_arr = []
-  // $(`#modalPrivilege .table_right tbody :checkbox`).each(function(key,value){
-  //   save_arr.push($(value).val())
-  // })
-  // save_group_privileges(group_id,save_arr)
-  // save_arr.length = 0
   save_button(1)
 }
 
@@ -633,36 +603,38 @@ function privilegeAjax() {
             return;
           }
           if (key == "left") {
+            if (value != null && value.length == 0) {
+              $(`#modalPrivilege .table_left tbody`).append('<tr class="notice" style="text-align:center;">\
+              <th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
+            }
             var old_name = []
             var num = 1
             $(value).each(function (k, v) {
               v = JSON.parse(v)
               if (old_name.includes(v.title_id) == false) {
-                $(`#modalPrivilege .table_${key} tbody`).append(`<tr><th class="privilege-name ${v.title_id}" colspan=3 style="text-align: left;">${v.title_name}</th></tr>`)
+                $(`#modalPrivilege .table_left tbody`).append(`<tr><th class="privilege-name ${v.title_id}" colspan=3 style="text-align: left;">${v.title_name}</th></tr>`)
               }
-              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              $(`#modalPrivilege .table_left tbody`).append(`<tr class="${v.title_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
               old_name.push(v.title_id)
               num += 1
             })
-            if (value != null && value.length == 0) {
-              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
-            }
           }
           if (key == "right") {
+            if (value != null && value.length == 0) {
+              $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;">\
+              <th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
+            }
             var old_name = []
             var num = 1
             $(value).each(function (k, v) {
               v = JSON.parse(v)
-              if (old_name.includes(v.title_name) == false) {
-                $(`#modalPrivilege .table_${key} tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_id}" style="background-color:#cfd5ea" colspan=3 style="text-align: left;">${v.title_name}</th></tr>`)
+              if (old_name.includes(v.title_id) == false) {
+                $(`#modalPrivilege .table_right tbody`).append(`<tr><th style="display:none"></th><th style="display:none"></th><th class="privilege-name ${v.title_id}" style="background-color:#cfd5ea" colspan=3 style="text-align: left;">${v.title_name}</th></tr>`)
               }
-              $(`#modalPrivilege .table_${key} tbody`).append(`<tr class="${v.title_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
+              $(`#modalPrivilege .table_right tbody`).append(`<tr class="${v.title_id}" id="${group_id}_${v.id}"><td scope="row" class="num">${num}</td><td><input type="checkbox" class="checkbox" value="${v.id}"></td><td style="text-align: left;">${v.name}</td></tr>`)
               old_name.push(v.title_id)
               num += 1
             })
-            if (value != null && value.length == 0) {
-              $(`#modalPrivilege .table_${key} tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name" style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
-            }
           }
           $(`#modalPrivilege`).on('click', `#to_left`, function () {
             LeftToRight(group_id)
