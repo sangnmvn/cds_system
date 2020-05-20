@@ -7,6 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #Delete all
+FormSlot.delete_all
 Form.delete_all
 Slot.delete_all
 Competency.delete_all
@@ -1160,8 +1161,8 @@ slot_create = [
     competency_id: "10", slot_id: 6,
   },
 ]
-slot_create.each do |s|
-  Slot.create!(desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
+slot_create.each_with_index do |s, i|
+  Slot.create!(id: i+1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
 #Create Title Privileges
@@ -1231,3 +1232,5 @@ Period.create!(id: 50, from_date: "2019-10-16", to_date: "2019-11-16")
 Schedule.create!(user_id: 34, company_id: 3, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
 Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done")
 Schedule.create!(user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New")
+
+(1..134).each { |i| FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0) }
