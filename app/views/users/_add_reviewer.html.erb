@@ -13,7 +13,7 @@
             <h5>Available Users</h5>
             <!-- Table header màu đậm hơn -->
             <div id="table_left_wrapper" style="overflow-x:auto;">
-              <% render "users_reviewer_list"%>
+              <% render "users_reviewer_list" %>
             </div>
           </div>
           <div class="col-2 button-center">
@@ -25,7 +25,7 @@
             <h5>Selected Users</h5>
             <!-- Table header màu đậm hơn -->
             <div id="table_right_wrapper" style="overflow-x:auto;">
-              <% render "users_selected_reviewer"%>
+              <% render "users_selected_reviewer" %>
             </div>
           </div>
         </div>
@@ -243,6 +243,10 @@
       "order": [[ 1, 'asc' ]], //sắp xếp giảm dần theo cột thứ 1
       "bDestroy": true,
       "bInfo" : false,
+      "fnDrawCallback": function()
+      {
+        set_data_event();
+      },
       "aoColumns": [
         { sClass: "add_reviewer_index" },
           null,
@@ -259,6 +263,10 @@
       "aLengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]], // danh sách số trang trên 1 lần hiển thị bảng
       "iDisplayLength": 10,
       "order": [[ 1, 'asc' ]] ,//sắp xếp giảm dần theo cột thứ 1
+      "fnDrawCallback": function()
+      {
+        set_data_event();
+      },
       "bInfo" : false,
       "aoColumns": [
         { sClass: "add_reviewer_index" },
@@ -268,7 +276,7 @@
         { sClass: "add_reviewer_id d-none"}]
   });
   
-  set_data_event();
+  //set_data_event();
   
   $('.dataTables_length').attr("style", "display:none");
   });

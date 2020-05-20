@@ -99,7 +99,6 @@ function myJS_data_event() {
   });
   // click button to right =>
   $('#to_right').click(function () {
-    debugger
     var checkboxes = $("#table_left tbody").find('input:checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked == true) {
@@ -190,8 +189,10 @@ function myJS_data_event() {
 }
 
 function myJS() {
+  // real code to setup table is at _add_reviewer.html.erb
   var table_left = $('#table_left').dataTable({
-    bInfo: false, bDestroy: true
+    bInfo: false, bDestroy: true,
+    
   });
   var table_right = $('#table_right').dataTable({
     bInfo: false, bDestroy: true
