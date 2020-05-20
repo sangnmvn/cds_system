@@ -6,8 +6,9 @@ class Schedule < ApplicationRecord
 
   delegate :first_name, :last_name, :email, to: :user
 
-  paginates_per 20
-  max_paginates_per 20
+  scope :search_schedule, ->(search) {
+          where("", search: "%#{search}%") if search.present?
+        }
 
   def sample
     Schedule.create!(user_id: 3, status: "New")

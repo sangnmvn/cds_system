@@ -5,6 +5,59 @@ class SchedulesController < ApplicationController
   layout "system_layout"
   ROLE_NAME = ["PM", "SM", "BOD"]
 
+  def get_schedule_data
+    if (@privilege_array & [13]).any?
+      company = Company.all
+      schedules = Schedule.includes(:user, :company).search_schedule(set_params[:search]).offset(set_params[:offset]).limit(LIMIT).order(id: :DESC)
+
+      render json: { iTotalRecords: schedules.count, iTotalDisplayRecords: schedules.unscope([:limit, :offset]).count, aaData: format_data(schedules) }
+    else
+      redirect_to root_path
+    end
+  end
+
+  def format_data(schedules)
+    schedules.map.with_index do |schedule, index|
+      current_schedule_data = []
+
+      if schedule.status == "New"
+        current_schedule_data.push("<input type='checkbox' name='checkbox' id='schedule_ids_' value='#{schedule.id}' class='selectable'>")
+      else
+        current_schedule_data.push("")
+      end
+
+      number = set_params[:offset] + index + 1
+      current_schedule_data.push("<td style='text-align:right'>#{number}</td>")
+      current_schedule_data.push("<td><a class='view_detail' data-schedule='#{schedule.id}' href='javascript:void(0)'>#{schedule.desc}</a></td>")
+      current_schedule_data.push(schedule.company.name)
+      current_schedule_data.push("#{schedule.period.from_date.strftime("%b %d, %Y")} - #{schedule.period.to_date.strftime("%b %d, %Y")}")
+      current_schedule_data.push(schedule.start_date.strftime("%b %d, %Y"))
+      current_schedule_data.push(schedule.end_date_hr.strftime("%b %d, %Y"))
+      current_schedule_data.push(schedule.status)
+
+      if schedule.status.downcase == "in-progress"
+        current_schedule_data.push("<td style='text-align: center;'>      
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+        </td>")
+      elsif schedule.status.downcase == "new"
+        current_schedule_data.push("<td style='text-align: center;'>      
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
+        </td>")
+      else
+        current_schedule_data.push("")
+      end
+    end
+  end
+
+  def set_params
+    {
+      offset: params[:iDisplayStart].to_i,
+      search: params[:sSearch],
+    }
+  end
+
   def index
     @fields = ["No.", "Schedule name", "Company name", "Assessment period", "Start date", "Status", "Action"]
     if (@privilege_array & [13]).any?
@@ -88,8 +141,8 @@ class SchedulesController < ApplicationController
       @period = Period.find(@schedule.period_id)
       user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
       ScheduleMailer.with(user: user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
-      if @schedule.destroy && @period.destroy
-        @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+      if @period.destroy && @schedule.destroy
+        #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         format.js { @status = true }
       else
         format.js { @status = false }

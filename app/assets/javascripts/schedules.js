@@ -67,15 +67,8 @@ function reset_datepicker(arr_date) {
 // end check
 
 function view_schedule() {
-  $('.view_detail').on('click', function () {
-    let schedule_param = $(this).data('schedule')
-
-    $.ajax({
-      url: "/schedules/" + schedule_param,
-      type: "GET",
-      headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }
-    });
-  })
+  var reload_table = false;
+  $('#schedule_table').dataTable().fnDraw(reload_table);
 }
 
 
@@ -90,7 +83,6 @@ $(document).ready(function () {
   action_add();
   action_edit();
   view_schedule();
-  on_click_btn();
   $(attr_id_notify).change(function () {
     check_notify(end_date_id, attr_id_notify)
   })
@@ -100,11 +92,29 @@ $(document).ready(function () {
     check_status(start, "#status")
   })
 
+  $("#schedule_table").dataTable({
+    bDestroy: true,
+    stripeClasses: ["even", "odd"],
+    pagingType: "full_numbers",
+    fnDrawCallback: function()
+    {
+      on_click_btn();
+    },
+    iDisplayLength: 20,
+    bProcessing: true,
+    bServerSide: true,
+    sAjaxSource: "schedule_data/",
+    
+
+  })
+
+  $("#schedule_table_length").remove();
+
 });
 
 function on_click_btn() {
   
-  $(document).on("click", ".del_btn", function () {
+  $(document).on("click", ".del_btn[enable='true']", function () {
     var schedule_param = $(this).data('schedule')
   
     $.ajax({
@@ -121,12 +131,11 @@ function on_click_btn() {
         datepicker_setup([attr_start_date_id, attr_end_date_id], [attr_from_date, attr_to_date]);
         change_status(attr_start_date_id, attr_status);
         change_notify(attr_end_date_id, attr_id_notify);
-        view_schedule();
         action_edit();
       }
     });
   });
-  $(document).on("click", ".edit_btn", function () {
+  $(document).on("click", ".edit_btn[enable='true']", function () {
   
     var schedule_param = $(this).data('schedule');
     $.ajax({
@@ -143,7 +152,6 @@ function on_click_btn() {
         datepicker_setup([attr_start_date_id, attr_end_date_id], [attr_from_date, attr_to_date]);
         change_status(attr_start_date_id, attr_status);
         change_notify(attr_end_date_id, attr_id_notify);
-        view_schedule();
         action_edit();
       }
     });
@@ -348,7 +356,6 @@ function action_edit() {
     }
 
     if (temp == true) {
-      $('.lmask').show();
       $.ajax({
         url: "/schedules/" + id_schedule,
         type: "PUT",
@@ -362,10 +369,11 @@ function action_edit() {
         },
         success: (res) => {
           $('.lmask').hide();
-          $('#form_edit_hr')[0].reset();
+          //$('#form_edit_hr')[0].reset();
           check_selectAll();
           action_edit();
           action_add();
+          
           view_schedule();
         },
         error: function () {

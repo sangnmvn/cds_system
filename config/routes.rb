@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   root to: "users#index2"
 
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
-
+  get "/schedule_data/" => "schedules#get_schedule_data", defaults: { format: "json" }
   # resources :users
 
   resources :schedules do

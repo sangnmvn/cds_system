@@ -591,6 +591,7 @@ function privilegeAjax() {
       url: `user_groups/show_privileges/${group_id}`,
       dataType: "json",
       success: function (response) {
+        // debugger
         $.each(response, function (key, value) {
           $('#check_all_choose').prop("checked", false);
           $('#to_left').prop("disabled", true);
@@ -643,6 +644,7 @@ function privilegeAjax() {
             }
           })
           $(`#modalPrivilege`).on('click', `#to_right`, function () {
+            //debugger
             RightToLeft(group_id)
             if ($(`#modalPrivilege .table_right tbody :checkbox`).length == 0 && $(`.table_right .notice`).length == 0) {
               $(`#modalPrivilege .table_right tbody`).append('<tr class="notice" style="text-align:center;"><th class="privilege-name"style="background-color:#cfd5ea" colspan=3>No data available in table</th></tr>')
