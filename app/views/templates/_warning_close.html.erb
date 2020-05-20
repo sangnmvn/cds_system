@@ -1,0 +1,19 @@
+<div class="modal fade" id="modal_warning_close" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title " style="text-align: left"><%= defined?(content) ? "Confirm Delete Template" : "Confirm Save Changes"%></h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= defined?(content) ? content : "You entered all required fields in this step. Do you want to save these values before doing this action?" %>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <a href=<%= defined?(content) ? "#" : templates_path %>><button type="button" class="btn btn-primary"><%= defined?(content) ? "Yes" : "Save" %></button></a>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal"><%= defined?(content) ? "No" : "Cancel" %></button>
+      </div>
+    </div>
+  </div>
+</div>

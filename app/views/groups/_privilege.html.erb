@@ -1,0 +1,63 @@
+<div class="modal fade modal-form-add-privilege" id="modalPrivilege">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <p class="modal-title" style="text-align:left;font-size:18px;background-color:">Assign Privileges To Group</p>
+        <button type="button" class="close" style="color:white"data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-5">
+              <div class="header_search">
+                <b>Available Privileges</b>
+              </div>
+              <div class="testScroll">
+                <table class="table table-responsive table-popup-privilege table_left" id="table_left">
+                  <thead>
+                    <tr >
+                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4">No</th>
+                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4"><input type="checkbox" class="selectAll1"></th>
+                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-sm-2 button-center privilege"> <!-- change two buttons, Data là .. -->
+              <button class="btn btn-secondary to_right" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
+              <button class="btn btn-secondary to_left" id="to_left"  disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
+            </div>
+            <div class="col-sm-5">
+              <div class="header_search">
+                <b>Selected Privileges</b>
+              </div>
+              <div class="testScroll">
+                <table class="table table-responsive table-popup-privilege table_right"  id="table_right">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4">No</th>
+                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4"><input type="checkbox" class="selectAll2"></th>
+                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="submit" class="btn btn-secondary save" id="save_group" disabled="disabled">Save</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

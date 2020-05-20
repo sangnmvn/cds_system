@@ -1,0 +1,46 @@
+<%= javascript_include_tag 'schedules', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'schedule', media: 'all', 'data-turbolinks-track': 'reload' %>
+<nav aria-label="breadcrumb" class="">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
+    <li class="breadcrumb-item active">Schedule Management</li>
+  </ol>
+</nav>
+<%= render 'delete_selected'%>
+<%= render 'add_hr'   %>
+<!-- Modal show -->
+<div id="modal_content" >
+  <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lmask">
+</div>
+<!-- end modal -->
+<table class="table" id="scheduletable">
+  <thead>
+    <tr>
+      <th data-sort-ignore="true" style="width:1%;"><input type="checkbox"  id="selectAll"></th>
+      <% @fields.each do |field| %>
+        <% if field == "No." %>
+          <th style="width:1%;text-align:right"><%= field %></th>
+        <% elsif field == "Action"  %>
+          <th style="width:4%;"><%= field %></th>
+        <% else %>
+          <th><%= field %></th>
+        <% end %>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody id="schedules">
+    <%= render partial: 'schedule_hr' , locals: { schedules: @schedules, type: 'PM' } %>
+  </tbody>
+</table>
+<div id="paginator" class="float-right">
+  <%= paginate(@schedules) if @schedules != nil %>
+</div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

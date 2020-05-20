@@ -1,0 +1,62 @@
+privileges:
+  {
+    1:
+      {
+        id: 1,
+        name: "Full Access on User Management",
+        title_name: "User Management",
+        title_id: 1,
+      },
+    2:
+      {
+        id: 2,
+        name: "View User Management",
+        title_name: "User Management",
+        title_id: 1,
+      },
+    4:
+      {
+        id: 4,
+        name: "Full Access on User Group Management",
+        title_name: "User Group Management",
+        title_id: 2,
+      },
+    5:
+      {
+        id: 5,
+        name: "View User Group Management",
+        title_name: "User Group Management",
+        title_id: 2,
+      },
+    7: { id: 7, name: "Review CDS-CDP Review", title_name: "CDS-CDP Review",
+        title_id: 3, },
+    9:
+      {
+        id: 9,
+        name: "Full Access on Template Management",
+        title_name: "Template Management",
+        title_id: 4,
+
+      },
+    10:
+      {
+        id: 10,
+        name: "View Template Management",
+        title_name: "Template Management",
+        title_id: 4,
+      },
+    13:
+      {
+        id: 13,
+        name: "Full Access on schedule company",
+        title_name: "Schedule Management",
+        title_id: 5,
+      },
+    14:
+      {
+        id: 14,
+        name: "Full Access on schedule project",
+        title_name: "Schedule Management",
+        title_id: 5,
+      },
+  }

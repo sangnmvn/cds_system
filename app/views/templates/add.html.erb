@@ -1,0 +1,62 @@
+<%= stylesheet_link_tag 'template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'template', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
+<script src='//cdn.ckeditor.com/4.14.0/basic/ckeditor.js'></script>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
+    <li class="breadcrumb-item active">Template Management</li>
+  </ol>
+</nav>
+
+<div class="container-fluid" id="grad1" style=" padding-right: 0px; padding-left: 0px;">
+  <div class="template-header">
+    <span class="title"><%= title %></span>
+  </div>
+  <div class="row justify-content-center mt-0">
+    <div class="col-12 col-sm-9 col-md-12 col-lg-12">
+      <div class="">
+        <div class="row">
+          <div class="col-md-12 mx-0">
+            <div id="msform">
+              <div class="row">
+                <div class="col-md-3 id-template" <%= 'value='+@template[:id].to_s if @template%>></div>
+                <div class="col-md-3 status-template" <%= 'value='+@template.status.to_s+'' if @template%> style='display:none'></div>
+                <div class="col-md-6" style=" padding-left: 0px; padding-right: 0px;">
+                  <div class="row steps" style="justify-content: center;">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step step-active">
+                      <span class="col-sm-8 col-md-8 step_number">1</span><a href="#">General Information</a>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step" style="white-space: norwrap;">
+                      <span class="col-sm-12 col-md-12 step_number">2</span>Add Competencies
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4 step">
+                      <span class="col-sm-12 col-md-12 step_number">3</span><a href="#">Add Slots</a>
+                    </div>
+                  </div>
+                </div>
+                <fieldset>
+                  <%= render 'step_1', roles: @roles %>
+                </fieldset>
+                <fieldset>
+                  <%= render 'step_2'  %>
+                </fieldset>
+                <fieldset>
+                  <%= render 'step_3', competencies: @competencies  %>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<%= render 'warning_close' %>
+<%= render 'warning_cancel' %>

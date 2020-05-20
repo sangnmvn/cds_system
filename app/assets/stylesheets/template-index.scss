@@ -1,0 +1,95 @@
+table {
+    table-layout: fixed;
+}
+
+#template-index th,
+td {
+    border: 1px solid #fff;
+}
+
+table#template-index {
+    border: 2px solid #3d7fbc;
+}
+
+table tbody tr:nth-of-type(odd) {
+    background-color: #cfd5ea;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #E9EBF5;
+}
+
+table thead {
+    text-align: center;
+    background-color: #4472c4;
+    color: #fff;
+    font-weight: bold;
+}
+
+.template-header {
+    background-color: #8da8db;
+    color: #fff;
+    font-weight: bold;
+    padding-left: 10px;
+    border: 2px solid #4882bf;
+}
+
+.table td {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+.action {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.num {
+    text-align: right;
+}
+
+.title {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 150%;
+}
+
+.add-template {
+    display: inline-block;
+    float: right;
+    padding-left: 10px;
+}
+
+.add-template button {
+    height: 100%;
+    border: 0;
+    background-color: #8da8db;
+    padding: 0 5px 0 0;
+}
+
+.breadcrumb a,
+.action a {
+    text-decoration: none;
+    padding: 0px 1px 0 1px;
+}
+
+.notice {
+    text-align: center;
+    font-weight: bold;
+}
+
+#alert-success,
+#alert-danger {
+    position: absolute;
+    z-index: 3400;
+    top: 10%;
+    left: 50%;
+    margin: 0px auto;
+    text-align: center;
+    display: none;
+}
+
+#add_template_button {
+    font-size: 80%;
+}

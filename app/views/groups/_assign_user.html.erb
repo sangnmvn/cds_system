@@ -1,0 +1,60 @@
+<div class="modal fade bs-example-modal-xl myModal" tabindex="-1" role="dialog" id="AssignModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+          <h4 class="modal-title" style="color: white" id="title_group"></h4>
+          <button type="button" class="close close_modal button-header" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" style="color:white">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+				<div class="row">
+				  <div class="col-5 mydiv" style="overflow-x:auto;">
+            <h5>Available Users</h5>
+            <table class="table table-primary table-responsive-sm table-mytable" id="table_left" style="width:100%;border: 3px solid #4882bf;">
+              <thead>
+                <tr>
+                  <td data-orderable="false">No.</td>
+                  <td data-orderable="false"><input type="checkbox" id="check_all_choose" value="all" class="mycontrol"/></td>
+                  <td>First Name</i></td>
+                  <td>Last Name</td>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <p></p>
+            </table>
+				  </div>
+				<div class="col-2 button-center mydiv" style="overflow-x:auto;" >
+            <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
+            <p></p>
+            <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
+          </div>
+          
+				<div class="col-5 mydiv"style="overflow-x:auto;" >
+					<h5>Selected Users</h5>
+            <table class="table table-primary table-responsive-sm table-mytable" id="table_right" style="width:100%;border: 3px solid #4882bf;">
+              <thead>
+                <tr>
+                  <td data-orderable="false">No.</td>
+                  <td data-orderable="false"><input type="checkbox" id="check_all_remove" value="all" class="mycontrol"/></td>
+                  <td>First Name</td>
+                  <td>Last Name</td>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <p></p>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-12 p-3 text-center">
+          <button id="save" type="button" class="btn btn-secondary" disabled="disabled">Save</button>
+          <button type="button" class="btn btn-light border-dark close_modal" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

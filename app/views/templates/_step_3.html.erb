@@ -1,0 +1,156 @@
+<div class="row"  style="justify-content: center;">
+  <div class="col-lg-6">
+    <%= form_with class: "step3 form-add-template" do %>
+      <div class="row">
+        <div class="col-sm-12">
+          <p style="color:red; text-align: left">(*) required fields</p>
+        </div>
+        <div class="col-sm-12">
+            <%# Choose competency %>
+            <div class="row">
+            <p id="hideIdSlot" style="display:none"></p>
+                <div class="col-md-3" style="text-align: left">
+                    <label>Competency: </label>
+                </div>
+                <div class="col-sm-9">
+                    <select class="form-control border-primary" onchange= "checkDataDesc()" id= "selectCompetency">
+                    </select>
+                </div>
+            </div>
+            <br/>
+            <%# Level %>
+            <div class="row">
+            <div class="col-md-3" style="text-align: left">
+                <label>Level</label>
+            </div>
+            <div class="col-sm-4">
+              <%= select_tag "type", raw('<option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>'),onchange: "checkDataDesc()", class: 'form-control border-primary', id: "selectLevel" %>
+            </div>
+          </div>
+          <br/>
+            <%# Evidence Guide %>
+            <div class="row">
+                <div class="col-md-3" style="text-align: left">
+                    <label>Slot Description(*)</label>
+                </div>
+                <div class="col-sm-9">
+                    <%= text_area_tag 'Slotdesc', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control border-primary', placeholder: "Please Enter Slot Description", id: "descSlot" %>
+                    <small id="ErrorDesc" class="text-danger error" style="display:none">Please enter slot description!</small>    
+                </div>
+            </div>  
+            <br>
+            <%# Description %>
+            <div class="row">
+            <div class="col-md-3" style="text-align: left">
+                <label>Evidence Guide</label>
+            </div>
+            <div class="col-sm-9" id="ckedit">
+              <%= text_area_tag 'evidence', nil, rows: 5, style: 'width:100%;',onkeyup: "checkDataDesc()", class: 'form-control border-primary', id: "editor" %>
+            </div>
+          </div>
+          <br>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<button class="btn btn-light border-primary previous action-button-previous" type="button" name="previous">Back</button>
+<button type="buttton" class="btn btn-primary" id="addSlot">Save</button>
+<button class="btn action-button  btn-primary" type="button" id="btnFinish">Finish</button>
+<button type="button" class="btn btn-light border-primary" id="btnCloseStep3">Cancel</button>
+<hr/>
+<div class="row divHeader">
+    <div class="col-8">
+        <div id="nameCompetency" style=""></div>
+    </div>
+    <div class="col-4">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text search">Search: </span>
+            </div>
+            <input type="search" id="txtSearch" class="form-control empty" placeholder="Search by slot's description"> 
+        </div>
+    </div>
+</div>
+<div class="row divTable">
+  <div class="col-lg-12">
+    <table class="table table-primary table-responsive-sm table-mytable" id="table_slot">
+      <thead>
+        <tr>
+          <th> Level</th>
+          <th data-orderable="false">&nbsp;&nbsp;&nbsp;&nbsp;Slot Description&nbsp;&nbsp;&nbsp;&nbsp;</th>
+          <th data-orderable="false">Evidence Guide</th>
+          <th data-orderable="false">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tbdTemplate">
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- The Finish Alert Modal -->
+<div class="modal fade" id="messageQuestionEnable">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header head-myheader">
+                <h4 class="modal-title">Enable Template</h4>
+                <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body divcontent" id="contentQuestionEnable">
+                You finished this template for role. Do you want to enable the template for user using ?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer" style="justify-content: center;">
+                <button id="btnEnable" type="button" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-light border-dark close_modal" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The Delete Alert Modal -->
+<div class="modal fade" id="messageDelete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title">Confirm Delete Slot</h4>
+        <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body divcontent" id="contentMessageDelete">
+        Are you sure you want to delete the slot 
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-light border-dark close_modal" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- The Delete Alert Modal -->
+<div class="modal fade" id="messageMove">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="color:white">Warning!</h4>
+        <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body divcontent" id="contentMessageMove">
+        <%# ajax %>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer divTable header-myheader">
+        <button type="button" class="btn btn-primary close_modal" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

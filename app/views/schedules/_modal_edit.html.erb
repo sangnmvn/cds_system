@@ -1,0 +1,99 @@
+<div class="modal-header head-myheader">
+  <h4 class="modal-title" style="text-align: center">Edit schedule</h4>
+  <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <form id="form_edit_hr">
+      <div class="row">
+        <div class="col-sm-12">
+          <p style="color:red">(*) required filelds</p>
+        </div>
+        <div class="col-sm-12">
+          <%# Schedule name %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Schedule Name (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <%= text_field_tag 'desc_edit', nil, class: 'form-control', value: schedule.desc %>
+              <input type="hidden" name="id" id="id" value="<%= schedule.id%>">
+            </div>
+          </div>
+          <br>
+          <%# project name %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Company Name (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: 'form-control' , disabled: 'disabled'%>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Assessment Period (*)</label>
+            </div>
+            <div class="col-sm-2">From</div>
+            <input type="text" class="col-sm-3 form-control" id="from_date_edit" disabled value="<%= schedule.period.from_date.strftime('%b %d, %Y') %>">
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-2">To</div>
+            <input type="text" id="to_date" class="form-control col-sm-3" disabled value="<%= schedule.period.to_date.strftime('%b %d, %Y') %>">
+          </div>
+          <br>
+          <%# start date %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Start date (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%b %d, %Y') %>" disabled>
+            </div>
+          </div>
+          <br>
+          <%# end date employee %>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>End date (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" id="end_date_edit" class="form-control" value="<%= schedule.end_date_hr.strftime('%b %d, %Y') %>">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Reminder (*)</label>
+            </div>
+            <div class="col-sm-6">
+              <input type="number" name="notify_hr_edit" min="1" id="notify_hr_edit" style="text-align: right;" value="<%= schedule.notify_hr %>">
+              <em>day(s) before</em>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <label>Status</label>
+            </div>
+            <div class="col-sm-6" >
+              <input type="text" class="form-control" id="status_id" value="<%= schedule.status %>" disabled >
+            </div>
+          </div>
+          <br>
+        </div>
+        <%# right  %>
+      </div>
+      <%# end container  %>
+    </div>
+    <div class="modal-footer justify-content-center">
+      <button type="button" class="btn btn-primary" id="btn_modal_edit_hr">Save</button>
+      <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </form>
+</div>

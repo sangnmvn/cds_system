@@ -1,0 +1,13 @@
+one:
+  desc: MyString
+  evidence: ""
+  level: 1
+  competency_id: 1
+  slot_id: 1
+
+two:
+  desc: MyString
+  evidence: ""
+  level: 2
+  competency_id: 1
+  slot_id: 2
