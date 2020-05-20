@@ -35,6 +35,10 @@ Rails.application.routes.draw do
       delete "destroy_multiple"
     end
   end
+  resources :form_slots do
+    collection do
+    end
+  end
   resources :templates do
     collection do
       get "add"

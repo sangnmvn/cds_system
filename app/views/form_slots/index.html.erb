@@ -1,0 +1,185 @@
+<nav aria-label="breadcrumb" class="">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
+    <li class="breadcrumb-item active">User Management</li>
+  </ol>
+</nav>
+<div class="container-fluid ">
+  <div class="container-fluid">
+    <div class="row" id="body-row">
+      <%= render 'left_panel'%>
+    
+      <div class="col p-4">
+        <%= render 'form_slot'%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+
+</div>
+
+
+
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+
+
+<script>
+
+$('.left-panel-competency').hide();
+$('#body-row .collapse').collapse('hide'); 
+
+// Collapse/Expand icon
+// $('#collapse-icon').addClass('fa-angle-double-left'); 
+
+// Collapse click
+$('[data-toggle=sidebar-colapse]').click(function() {
+    SidebarCollapse();
+});
+
+$('[data-toggle=collapse]').click(function() {
+  $(".card table thead tr").css("background-color", "#ccc");
+  $(this).closest("tr").css("background-color", "#8da8db");
+});
+
+function SidebarCollapse () {
+    $('.menu-collapsed').toggleClass('d-none');
+    $('.sidebar-submenu').toggleClass('d-none');
+    $('.submenu-icon').toggleClass('d-none');
+    $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
+    
+    if ($('.card').is(":visible") ){
+      $('.card').hide();
+      $('#accordion table').hide();
+      $('.left-panel-competency').show();
+    }else {
+      $('.card').show();
+      $('#accordion table').show();
+      $('.left-panel-competency').hide();
+    }
+    // Treating d-flex/d-none on separators with title
+    // var SeparatorTitle = $('.sidebar-separator-title');
+    // if ( SeparatorTitle.hasClass('d-flex') ) {
+    //     SeparatorTitle.removeClass('d-flex');
+    // } else {
+    //     SeparatorTitle.addClass('d-flex');
+    // }
+    
+    // Collapse/Expand icon
+    $('#collapse-icon').toggleClass('fa-angle-double-left fa-angle-double-right');
+}
+</script>
+
+
+<style>
+#body-row {
+    margin-left:0;
+    margin-right:0;
+}
+#sidebar-container {
+    /* min-height: 100vh;    */
+    /* background-color: #8da8db; */
+    padding: 0;
+}
+
+.card table tr a {
+  color: black;
+}
+
+#sidebar-container .list-group-item {
+  /* background-color: #8da8db; */
+}
+#sidebar-container a:hover {
+ text-decoration: none;
+}
+/* Sidebar sizes when expanded and expanded */
+.sidebar-expanded {
+    width: 270px;
+}
+.sidebar-collapsed {
+    width: 30px;
+}
+
+/* Menu item*/
+#sidebar-container .list-group a {
+    height: 50px;
+    color: white;
+}
+
+/* Submenu item*/
+#sidebar-container .list-group .sidebar-submenu a {
+    height: 45px;
+    padding-left: 30px;
+}
+.sidebar-submenu {
+    font-size: 0.9rem;
+}
+
+/* Separators */
+.sidebar-separator-title {
+    background-color: #333;
+    height: 35px;
+}
+.sidebar-separator {
+    background-color: #333;
+    height: 25px;
+}
+.list-group-item {
+  border: none;
+  padding: 0px;
+}
+
+.card .table-mytable thead {
+  background-color: #ccc;
+}
+
+/* Closed submenu icon */
+#sidebar-container .list-group .list-group-item[aria-expanded="false"] .submenu-icon::after {
+  content: " \f0d7";
+  font-family: FontAwesome;
+  display: inline;
+  text-align: right;
+  padding-left: 10px;
+}
+/* Opened submenu icon */
+#sidebar-container .list-group .list-group-item[aria-expanded="true"] .submenu-icon::after {
+  content: " \f0da";
+  font-family: FontAwesome;
+  display: inline;
+  text-align: right;
+  padding-left: 10px;
+}
+.card-body {
+  padding: 0px;
+}
+.card-header {
+  padding: 0px;
+}
+.competency table {
+  margin-bottom: 0px !important;
+}
+.container-fluid{
+  padding: 0px;
+}
+.table-mytable td {
+  color: black;
+}
+.btn {
+  padding: 0px;
+}
+.table-mytable {
+  margin-bottom: 0px;
+}
+.card table {
+  font-size: 15px;
+}
+.card table td {
+  padding; 0px;
+}
+table td {
+  border: 1px solid white!important;
+}
+
+</style>
