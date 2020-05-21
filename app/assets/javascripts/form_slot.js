@@ -2,6 +2,11 @@ $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
   StartLeftPanel();
+  drawColorTitleFormPreviewResult(3,9,"#93dba3");
+  drawColorTitleFormPreviewResult(10,16,"#d4f6ff");
+  drawColorTitleFormPreviewResult(17,23,"#feffd4");
+  drawColorTitleFormPreviewResult(24,30,"#d4f6ff");
+  drawColorTitleFormPreviewResult(31,37,"#93dba3");
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
   });
@@ -11,7 +16,7 @@ $(document).ready(function () {
   // });
   function drawColorTitleFormPreviewResult(start,end,color){
     for (i = start; i <= end; i++) {
-      $(".table-preview-result tr td:nth-child(5)").css("background-color", "#bbcbea");
+      $(".table-preview-result thead tr td:nth-child("+i+")").css("background-color", color);
     }
   }
 

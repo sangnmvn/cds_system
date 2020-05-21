@@ -1,22 +1,87 @@
 <div class="title-table-form-preview-result">CDS Assessment Point</div>
-
 <table class="table table-primary table-responsive-sm table-preview-result">
   <thead>
     <tr>
       <td>Competency</td>
       <td class="form-pr-level">Level</td>
-      <td class="form-slot-num-1">1A</td><td>1B</td><td>1C</td><td>1D</td><td>1E</td><td>1F</td><td>1G</td>
-      <td class="form-slot-num-2">2A</td><td>2B</td><td>2C</td><td>2D</td><td>2E</td><td>2F</td><td>2G</td>
-      <td class="form-slot-num-3">3A</td><td>3B</td><td>3C</td><td>3D</td><td>3E</td><td>3F</td><td>3G</td>
-      <td class="form-slot-num-4">4A</td><td>4B</td><td>4C</td><td>4D</td><td>4E</td><td>4F</td><td>4G</td>
-      <td class="form-slot-num-5">5A</td><td>5B</td><td>5C</td><td>5D</td><td>5E</td><td>5F</td><td>5G</td>
+      <td class="">1A</td>
+      <td>1B</td>
+      <td>1C</td>
+      <td>1D</td>
+      <td>1E</td>
+      <td>1F</td>
+      <td>1G</td>
+      <td class="">2A</td>
+      <td>2B</td>
+      <td>2C</td>
+      <td>2D</td>
+      <td>2E</td>
+      <td>2F</td>
+      <td>2G</td>
+      <td class="">3A</td>
+      <td>3B</td>
+      <td>3C</td>
+      <td>3D</td>
+      <td>3E</td>
+      <td>3F</td>
+      <td>3G</td>
+      <td class="">4A</td>
+      <td>4B</td>
+      <td>4C</td>
+      <td>4D</td>
+      <td>4E</td>
+      <td>4F</td>
+      <td>4G</td>
+      <td class="">5A</td>
+      <td>5B</td>
+      <td>5C</td>
+      <td>5D</td>
+      <td>5E</td>
+      <td>5F</td>
+      <td>5G</td>
     </tr>
   </thead>
   <tbody>
+    <% @competency.each do |c| %>
     <tr>
-      <td class="form-competency-name">Title</td>
+      <td class="form-competency-name"><%= c.name %></td>
       <td class="form-pr-level">++1</td>
-      <td >3</td>
-    </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
   </tbody>
 </table>

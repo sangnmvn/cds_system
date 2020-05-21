@@ -106,16 +106,22 @@
 }
 
 // preview result
-.table-preview-result thead {
+.table-statistic-preview-result thead tr {
+  background-color: #8da8db;
+}
+.table-statistic-preview-result, .table-preview-result thead {
   color: black;
 }
-.table-preview-result thead tr td {
+.table-statistic-preview-result, .table-preview-result thead tr td {
   text-align: center;
 }
 .td-expected {
   color: #42b6f5;
 }
-.table-preview-result td {
+.table-statistic-preview-result td {
+  border: 1px solid #7abaff;
+}
+.table-statistic-preview-result, .table-preview-result td {
   background-color: white;
   border: 1px solid #7abaff;
 }
@@ -152,8 +158,13 @@
 .title-table-form-preview-result {
   text-align:center; height: 40px; line-height: 40px; background-color: #8da8db; font-weight: bold; font-size: 20px;
 }
-.table-preview-result tbody td {
+.table-statistic-preview-result tbody td {
   background-color: white;
+}
+
+
+.table-preview-result tbody td {
+  background-color: #eee;
 }
 .table-preview-result thead tr{
   background-color: white;
@@ -166,6 +177,9 @@
 }
 .table-preview-result tbody .form-competency-name {
   text-align: left;
+}
+.table-preview-result tr td:nth-child(1) {
+  background-color: white!important;
 }
 .form-slot-num-1 {
   background-color: #93dba3!important;
@@ -182,6 +196,7 @@
 .form-slot-num-5 {
   background-color: #93dba3!important;
 }
+
 // end ngthuy
 
 //_form_slot

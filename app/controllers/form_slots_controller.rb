@@ -16,5 +16,7 @@ class FormSlotsController < ApplicationController
     @role_name = Role.find(current_user.role_id).name
     @first_name = current_user.first_name
     @last_name = current_user.last_name
+    form_id = Form.where(user_id: current_user.id, _type: "CDS").pluck(:id).first
+    @competency = Competency.select(:name).where(template_id: form_id)
   end
 end
