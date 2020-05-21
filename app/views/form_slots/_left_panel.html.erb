@@ -46,12 +46,10 @@
             <div class="card-header">
                 <table class="table table-primary table-responsive-sm table-mytable table<%= i %>">
                     <thead>
-                      <tr class="d-flex">
+                      <tr class="d-flex" data-target="#collapse<%= i %>">
                         <td class="col-2"><%= c._type %></td>
                         <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
-                          <a href="javascript:void(0)" data-toggle="collapse" data-target="#collapse<%= i %>" aria-expanded="true" aria-controls="collapse<%= i %>">
                           <%= c.name %>
-                        </a>
                           </td>
                         <td class="col-3">1</td>
                       </tr>

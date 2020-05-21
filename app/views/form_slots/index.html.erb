@@ -1,5 +1,7 @@
 <%= stylesheet_link_tag 'form_slot', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_slot', 'data-turbolinks-track': 'reload' %>
+<link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
+        <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
@@ -8,17 +10,26 @@
   </ol>
 </nav>
 
-<div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; padding: 0px 16px 0px 16px; color: white;">
-  <div class="col-md-4">
+<div class="container-fluid">
+<div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
+  <div class="col-md-3" >
     CDS Reviewer for 
   </div>
   <div class="col-md-2">
     Search
   </div>
-  <div class="col-md-2">
-    Filter
+  <div class="col-md-2 filter-slots">
+  Filter
+    <select id="filter-form-slots" multiple="multiple">
+      <option value="1" >Passed slots in previous periods</option>
+      <option value="2">Failed slots in previous periods</option>
+      <option value="3">No Assessments</option>
+      <option value="4">Need to update evidences</option>
+      <option value="5">Assessing in the current period</option>
+      <option value="6">Planned</option>
+    </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-2">
     Reviewer Result
   </div>
   <div class="col-md-1">
@@ -31,20 +42,17 @@
     Cancel
   </div>
 </div>
-
-
+</div>
 
 <div class="container-fluid">
-  <div class="container-fluid">
     <div class="row" id="body-row">
       <%= render 'left_panel'%>
     
-      <div class="col">
+      <div class="col" style="padding-right: 0px">
         <%= render 'form_slot'%>
       </div>
 
     </div>
-  </div>
 </div>
 
 <%= render 'modal_submit_cds'%>

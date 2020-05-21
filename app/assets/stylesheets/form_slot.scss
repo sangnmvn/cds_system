@@ -3,8 +3,6 @@
   margin-right: 0;
 }
 #sidebar-container {
-  /* min-height: 100vh;    */
-  /* background-color: #8da8db; */
   padding: 0;
 }
 
@@ -12,9 +10,6 @@
   color: black;
 }
 
-#sidebar-container .list-group-item {
-  /* background-color: #8da8db; */
-}
 #sidebar-container a:hover {
   text-decoration: none;
 }
@@ -86,15 +81,20 @@
   border-color: white;
 }
 .left_panel table th {
-  // border: 1px solid white !important;
-//   border-color: white;
   border-top: none;
 }
 
 .left_panel table td:nth-child(2) {
   text-align: left;
 }
-// end
+
+// filter 
+.filter-slots ul {
+  width: 350px;
+}
+
+
+// end ngthuy
 
 //_form_slot
 .csd-assesment-table {
