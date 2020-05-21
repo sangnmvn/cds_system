@@ -1,19 +1,19 @@
-
 <div class="csd-assesment-table">
   <table class="table table-responsive-sm">
     <thead>
       <tr>
-        <th style="width:5%" rowspan="2">Slot ID</th>
+        <th style="width:5%" rowspan="2" style="padding:0">Slot ID</th>
         <th style="width:20%" rowspan="2">Slot Description</th>
-        <th style="width:30%" colspan="7">Staff</th>
-        <th style="width:38%" colspan="5">Line Manager</th>
+        <th style="width:30%" colspan="11">Staff</th>
+        <th style="width:38%" colspan="4">Line Manager</th>
         <th style="width:7%;" rowspan="2">Action</th>
       </tr>
       <tr>
-        <th colspan="3" class="tr-staff">Self Assessment(*) </th>
-        <th colspan="4" class="tr-staff">Evidence(*)</th>
-        <th colspan="3" class="tr-linemanager">Recommend (*)</th>
-        <th colspan="1" class="tr-linemanager">Out(*)</th>
+        <th colspan="2" class="tr-staff" style="padding:0">Commit (*) </th>
+        <th colspan="4" class="tr-staff" style="padding:0">Self Assessment (*) </th>
+        <th colspan="5" class="tr-staff">Evidence (*)</th>
+        <th colspan="2" class="tr-linemanager">Recommend (*)</th>
+        <th colspan="1" class="tr-linemanager">Out (*)</th>
         <th colspan="1" class="tr-linemanager">Name</th>
       </tr>
     </thead>
@@ -24,12 +24,19 @@
         <% 10.times.each do|x| %>
           <tr>
             <td><%= x %></td>
-            <td>Slot Description</td>
-            <td colspan="3">Staff</td>
-            <td colspan="4">Evidence</td>
-            <td colspan="3">Recommend</td>
-            <td>OUT</td>
-            <td>Name</td>
+            <td style="position: relative;">
+            <%= "Slot Description" %>
+             <div id="slot_description_<%= x %>" style="display: block;">
+             <%= "Assessment Guidelines" %>
+             </div><br>
+             <a id="<%= x %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+             </td>
+            <td colspan="2"><textarea class="autoresizing"> </textarea></td>
+            <td colspan="4"><textarea class="autoresizing"></textarea></td>
+            <td colspan="5"><textarea class="autoresizing"></textarea></td>
+            <td colspan="2"><textarea class="autoresizing"></textarea></td>
+            <td><textarea class="autoresizing"></textarea></td>
+            <td><textarea class="autoresizing"></textarea></td>
             <td><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
           </tr>
         <% end %>
@@ -38,21 +45,25 @@
         <% 10.times.each do|x| %>
           <tr>
             <td rowspan="4"><%= x %></td>
-            <td rowspan="4">Slot Description</td>
-            <td rowspan="4" colspan="3">Staff</td>
-            <td rowspan="4" colspan="4">Evidence</td>
-            <td colspan="3">Recommend</td>
-            <td>OUT</td>
-            <td>Name</td>
+            <td rowspan="4" style="position: relative;"><%= "Slot Description" %>
+             <div id="slot_description_<%= x %>" style="display: none;">
+             <%= "Assessment Guidelines" %>
+             </div><br>
+             <a id="<%= x %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+            </td>
+            <td rowspan="4" colspan="2"><textarea class="autoresizing"></textarea></td>
+            <td rowspan="4" colspan="4"><textarea class="autoresizing"></textarea></td>
+            <td rowspan="4" colspan="5"><textarea class="autoresizing"></textarea></td>
+            <td colspan="2"><textarea class="autoresizing"></textarea></td>
+            <td><textarea class="autoresizing"></textarea></td>
+            <td><textarea class="autoresizing"></textarea></td>
             <td rowspan="4"><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
           </tr>
           <% 3.times do |x| %>
             <tr>
-              <td colspan="3">
-                <textarea></textarea>
-              </td>
-              <td scope="col" style="width:5%" >OUT</td>
-              <td>Name</td>
+              <td colspan="2"><textarea class="autoresizing"></textarea></td>
+              <td><textarea class="autoresizing"></textarea></td>
+              <td><textarea class="autoresizing"></textarea></td>
             </tr>
           <% end %>
         <% end %>

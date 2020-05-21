@@ -46,5 +46,25 @@ $(document).ready(function () {
   });
   // $('.filter-slots .multiselect-selected-text').hide();
   // $('.filter-slots ul li').addClass('active');
+
+
+
+
+  $(".line-slot").each(function (index) {
+    $(this).on('click', function () {
+      if (document.getElementById("slot_description_" + this.id).style.display == "block") {
+        document.getElementById("slot_description_" + this.id).style.display = "none";
+        document.getElementById(this.id).innerText = "ViewDetails";
+      }
+      else {
+        document.getElementById("slot_description_" + this.id).style.display = "block";
+        document.getElementById(this.id).innerText = "HideDetails";
+      }
+    });
+  });
+  $('.autoresizing').on('input', function () {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
 });
 // end

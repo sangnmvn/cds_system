@@ -113,9 +113,12 @@
     }
   }
   td {
+    height: 30px;
     text-align: center;
     vertical-align: middle;
     border: 2px solid #a1b5da;
+    padding: 0;
+    // position: relative;a
   }
   .tr-linemanager {
     background-color: #8da8db;
@@ -127,17 +130,23 @@
     color: #000;
     border: 2px solid #4472c4;
   }
-  textarea {
-    border: 0 none;
-    margin: -10px;
-    outline: 0 none;
-    padding: 0;
-    width: 100%;
 
-    display: inline-block;
-    overflow:hidden
+  textarea {
+    top:0;
+    left: 0;
+    border: 0 none;
+    outline: 0 none;
+    width: 100%;
+    height: 100%;
   }
-  .scroll::-webkit-scrollbar {
-    display: none;
+  // .scroll::-webkit-scrollbar {
+  //   display: none;
+  // }
+  .autoresizing { 
+    display: block; 
+    overflow: hidden; 
+    resize: none; 
   }
+  
+
 }
