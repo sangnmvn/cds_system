@@ -1,26 +1,62 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Firstname</th>
-      <th>Lastname</th>
-      <th>Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>John</td>
-      <td>Doe</td>
-      <td>john@example.com</td>
-    </tr>
-    <tr>
-      <td>Mary</td>
-      <td>Moe</td>
-      <td>mary@example.com</td>
-    </tr>
-    <tr>
-      <td>July</td>
-      <td>Dooley</td>
-      <td>july@example.com</td>
-    </tr>
-  </tbody>
-</table>
+
+<div class="csd-assesment-table">
+  <table class="table table-responsive-sm">
+    <thead>
+      <tr>
+        <th style="width:5%" rowspan="2">Slot ID</th>
+        <th style="width:20%" rowspan="2">Slot Description</th>
+        <th style="width:30%" colspan="7">Staff</th>
+        <th style="width:38%" colspan="5">Line Manager</th>
+        <th style="width:7%;" rowspan="2">Action</th>
+      </tr>
+      <tr>
+        <th colspan="3" class="tr-staff">Self Assessment(*) </th>
+        <th colspan="4" class="tr-staff">Evidence(*)</th>
+        <th colspan="3" class="tr-linemanager">Recommend (*)</th>
+        <th colspan="1" class="tr-linemanager">Out(*)</th>
+        <th colspan="1" class="tr-linemanager">Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%a=1%>
+      <% if a==1 %>
+        <%# //Option Reviewer %>
+        <% 10.times.each do|x| %>
+          <tr>
+            <td><%= x %></td>
+            <td>Slot Description</td>
+            <td colspan="3">Staff</td>
+            <td colspan="4">Evidence</td>
+            <td colspan="3">Recommend</td>
+            <td>OUT</td>
+            <td>Name</td>
+            <td><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <%# Option PM %>
+        <% 10.times.each do|x| %>
+          <tr>
+            <td rowspan="4"><%= x %></td>
+            <td rowspan="4">Slot Description</td>
+            <td rowspan="4" colspan="3">Staff</td>
+            <td rowspan="4" colspan="4">Evidence</td>
+            <td colspan="3">Recommend</td>
+            <td>OUT</td>
+            <td>Name</td>
+            <td rowspan="4"><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
+          </tr>
+          <% 3.times do |x| %>
+            <tr>
+              <td colspan="3">
+                <textarea></textarea>
+              </td>
+              <td scope="col" style="width:5%" >OUT</td>
+              <td>Name</td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -95,3 +95,49 @@
   text-align: left;
 }
 // end
+
+//_form_slot
+.csd-assesment-table {
+  table {
+    table-layout: fixed;
+  }
+  background-color: #fff;
+  thead {
+    background-color: #4472c4;
+    th {
+      border: solid #fff;
+      border-width: 2px 2px 0px 2px;
+      color: #fff;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+  td {
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #a1b5da;
+  }
+  .tr-linemanager {
+    background-color: #8da8db;
+    color: #000;
+    border: 3px solid #6f95db;
+  }
+  .tr-staff {
+    background-color: yellow;
+    color: #000;
+    border: 2px solid #4472c4;
+  }
+  textarea {
+    border: 0 none;
+    margin: -10px;
+    outline: 0 none;
+    padding: 0;
+    width: 100%;
+
+    display: inline-block;
+    overflow:hidden
+  }
+  .scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
