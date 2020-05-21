@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   end
   resources :form_slots do
     collection do
+      get "preview_result"
     end
   end
   resources :templates do

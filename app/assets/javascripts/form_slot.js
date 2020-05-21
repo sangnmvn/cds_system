@@ -9,6 +9,12 @@ $(document).ready(function () {
   //   $(".card table thead tr").css("background-color", "#ccc");
   //   $(this).closest("tr").css("background-color", "#bbcbea");
   // });
+  function drawColorTitleFormPreviewResult(start,end,color){
+    for (i = start; i <= end; i++) {
+      $(".table-preview-result tr td:nth-child(5)").css("background-color", "#bbcbea");
+    }
+  }
+
 
   function StartLeftPanel() {
     $("#collapse0").addClass("show");
@@ -41,10 +47,8 @@ $(document).ready(function () {
   }
   // filter
   $("#filter-form-slots").multiselect({
-    includeSelectAllOption: true,
-    selectAllValue: "select-all-value",
   });
-  // $('.filter-slots .multiselect-selected-text').hide();
+  $('.filter-slots .multiselect-selected-text').hide();
   // $('.filter-slots ul li').addClass('active');
 
 

@@ -11,4 +11,10 @@ class FormSlotsController < ApplicationController
       c._type = c._type == "General" ? "G" : "S"
     end
   end
+
+  def preview_result
+    @role_name = Role.find(current_user.role_id).name
+    @first_name = current_user.first_name
+    @last_name = current_user.last_name
+  end
 end

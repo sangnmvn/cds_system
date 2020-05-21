@@ -1,0 +1,88 @@
+<%= stylesheet_link_tag 'form_slot', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'form_slot', 'data-turbolinks-track': 'reload' %>
+<nav aria-label="breadcrumb" class="">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active">Preview CDS Result For <%= @role_name %> - <%= @first_name %> <%= @last_name %></li>
+  </ol>
+</nav>
+
+<div class="container-fluid illustration" style="padding-left: 0px;padding-right: 0px;">
+  <div class="row" style="margin-right: 0px;">
+    <div class="col-6">
+      <table class="table table-primary table-responsive-sm table-mytable table-preview-result">
+        <thead>
+          <tr>
+            <td ></td>
+            <td >Currently</td>
+            <td >Expected</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Level</td>
+            <td>1</td>
+            <td class="td-expected">1</td>
+          </td>
+          <tr>
+            <td>Rank</td>
+            <td>4</td>
+            <td class="td-expected">4</td>
+          </td>
+          <tr>
+            <td>Title</td>
+            <td>Associate Scrum Master</td>
+            <td class="td-expected">Associate Scrum Master</td>
+          </td>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-3">
+      <div class="row" style="margin-bottom: 10px">
+        <div class="col-2">
+          <button class="btn assessed-slots" disabled>&nbsp;</button>
+        </div>
+        <div class="col-10 title" style="padding-left: 10px">
+          Assessed in current period
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 10px">
+        <div class="col-2">
+          <button class="btn re-assessed-slots" disabled>&nbsp;</button>
+        </div>
+        <div class="col-10 title" style="padding-left: 10px">
+          Re-assessed slots
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 10px">
+        <div class="col-2">
+          <button class="btn new-slots" disabled>&nbsp;</button>
+        </div>
+        <div class="col-10 title" style="padding-left: 10px">
+          New/Passed slots
+        </div>
+      </div>
+    </div>
+    <div class="col-3" style="padding-right: 25px">
+      <div class="row" style="margin-bottom: 10px">
+        <div class="col-2">
+          <button class="btn assessed-slots pass-slot" disabled>3</button>
+        </div>
+        <div class="col-10 title" style="padding-left: 10px">
+          Can pass in current period
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 10px">
+        <div class="col-2">
+          <button class="btn assessed-slots fail-slot" disabled>2</button>
+        </div>
+        <div class="col-10 title" style="padding-left: 10px">
+          Can fail in current period
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-12" style="padding-right: 0px">
+      <%= render 'form_preview_result'%>
+    </div>
+  </div>
+</div>

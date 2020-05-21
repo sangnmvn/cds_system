@@ -92,8 +92,96 @@
 .filter-slots ul {
   width: 350px;
 }
+.filter-slots .multiselect-native-select ul li a{
+  color: black;
+}
+// action 
+.list-action a {
+  color: white;
+  text-decoration: none;
+  padding-left: 10px;
+}
+.list-action a li {
+  font-size: 120%;
+}
 
+// preview result
+.table-preview-result thead {
+  color: black;
+}
+.table-preview-result thead tr td {
+  text-align: center;
+}
+.td-expected {
+  color: #42b6f5;
+}
+.table-preview-result td {
+  background-color: white;
+  border: 1px solid #7abaff;
+}
 
+.assessed-slots {
+  background-color: #1aab0f;
+  border: 1px solid #7abaff;
+}
+.re-assessed-slots {
+  background-color: #00DCFF;
+  border: 1px solid #7abaff;
+}
+.new-slots {
+  background-color: white;
+  border: 1px solid #7abaff;
+}
+.fail-slot {
+  color: red;
+}
+.pass-slot {
+  color: white;
+}
+.pass-slot:hover {
+  color: white;
+}
+.fail-slot:hover {
+  color: red;
+}
+.illustration .title {
+  border: 1px solid #7abaff;
+  border-radius: 10px;
+  padding-top: 5px;
+}
+.title-table-form-preview-result {
+  text-align:center; height: 40px; line-height: 40px; background-color: #8da8db; font-weight: bold; font-size: 20px;
+}
+.table-preview-result tbody td {
+  background-color: white;
+}
+.table-preview-result thead tr{
+  background-color: white;
+}
+.table-preview-result .form-pr-level {
+  background-color: #edebab;
+}
+.table-preview-result tbody .form-pr-level {
+  text-align: right;
+}
+.table-preview-result tbody .form-competency-name {
+  text-align: left;
+}
+.form-slot-num-1 {
+  background-color: #93dba3!important;
+}
+.form-slot-num-2 {
+  background-color: #d4f6ff!important;
+}
+.form-slot-num-3 {
+  background-color: #feffd4!important;
+}
+.form-slot-num-4 {
+  background-color: #d4f6ff!important;
+}
+.form-slot-num-5 {
+  background-color: #93dba3!important;
+}
 // end ngthuy
 
 //_form_slot
