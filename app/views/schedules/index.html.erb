@@ -8,7 +8,8 @@
   </ol>
 </nav>
 <%= render "delete_selected" %>
-<%= render "add_hr" %>
+<%= render "add_hr", locals: { is_pm: @is_pm, is_qc: @is_qc } %>
+<input class='d-none' id="user_role" value="<%= if @is_pm then "PM" elsif @is_hr then "HR" else "" end %>" />
 <!-- Modal show -->
 <div id="modal_content" >
   <div class="modal fade modal-form-add" id="modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">

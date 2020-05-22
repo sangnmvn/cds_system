@@ -78,6 +78,7 @@ Rails.application.routes.draw do
   end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
+  get "/schedules/get_schedule_hr_info/:id", to: "schedules#get_schedule_hr_info"
 
   post "/admin/user_management/:id/edit" => "users#get_modal_edit_users_management", as: :edit_user_management
   post "/admin/user_management/add_reviewer/:id" => "users#add_reviewer", as: :add_reviewer_user_management

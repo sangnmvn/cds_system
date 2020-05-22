@@ -7,7 +7,7 @@ class Schedule < ApplicationRecord
   delegate :first_name, :last_name, :email, to: :user
 
   scope :search_schedule, ->(search) {
-          where("", search: "%#{search}%") if search.present?
+          where("`desc` LIKE :search OR companies.name LIKE :search", search: "%#{search}%") if search.present?
         }
 
   def sample

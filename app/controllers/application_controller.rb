@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     def get_privilege_id
       current_user.id
       group = Group.joins(:user_group).where(user_groups: { user_id: current_user.id }).first
-      @privilege_array = group.list_privileges
+      @privilege_array = group.nil? ? Array.new : group.list_privileges
     end
   end
 end
