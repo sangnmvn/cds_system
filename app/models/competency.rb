@@ -7,4 +7,12 @@ class Competency < ApplicationRecord
   validates :desc, length: { in: 0..100 }
   validates :name, format: { with: /\A[\w\.,\s\&]+\z/ }
   validates :_type, inclusion: { in: %w(General Specialized) }
+
+  def type
+    self._type
+  end
+
+  def sort_type
+    self._type == "General" ? "G" : "S"
+  end
 end

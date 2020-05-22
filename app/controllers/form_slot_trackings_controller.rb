@@ -1,2 +1,0 @@
-class FormSlotTrackingsController < ApplicationController
-end

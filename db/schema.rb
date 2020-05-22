@@ -23,7 +23,9 @@ ActiveRecord::Schema.define(version: 2020_05_15_064431) do
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "added_by"
-    t.text "contents"
+    t.text "evidence"
+    t.integer "point", limit: 1
+    t.boolean "is_commit"
     t.bigint "form_slot_id"
     t.bigint "period_id"
     t.datetime "created_at", precision: 6, null: false
@@ -61,18 +63,6 @@ ActiveRecord::Schema.define(version: 2020_05_15_064431) do
     t.index ["form_id"], name: "index_form_histories_on_form_id"
   end
 
-  create_table "form_slot_trackings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.integer "self_assert_point"
-    t.integer "given_point"
-    t.bigint "period_id"
-    t.bigint "form_slot_id"
-    t.integer "is_commit"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["form_slot_id"], name: "index_form_slot_trackings_on_form_slot_id"
-    t.index ["period_id"], name: "index_form_slot_trackings_on_period_id"
-  end
-
   create_table "form_slots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "form_id"
     t.bigint "slot_id"
@@ -103,6 +93,18 @@ ActiveRecord::Schema.define(version: 2020_05_15_064431) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "privileges"
+  end
+
+  create_table "line_managers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "given_point", limit: 1
+    t.text "recommend"
+    t.integer "user_id"
+    t.bigint "period_id"
+    t.bigint "form_slot_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["form_slot_id"], name: "index_line_managers_on_form_slot_id"
+    t.index ["period_id"], name: "index_line_managers_on_period_id"
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -234,12 +236,12 @@ ActiveRecord::Schema.define(version: 2020_05_15_064431) do
   add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"
   add_foreign_key "form_histories", "forms"
-  add_foreign_key "form_slot_trackings", "form_slots"
-  add_foreign_key "form_slot_trackings", "periods"
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
   add_foreign_key "forms", "periods"
   add_foreign_key "forms", "users"
+  add_foreign_key "line_managers", "form_slots"
+  add_foreign_key "line_managers", "periods"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "companies"
   add_foreign_key "schedules", "periods"

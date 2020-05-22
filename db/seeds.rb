@@ -14,11 +14,7 @@ Competency.delete_all
 Template.delete_all
 Title.delete_all
 Approver.delete_all
-# GroupPrivilege.delete_all
-# Privilege.delete_all
-# TitlePrivilege.delete_all
 UserGroup.delete_all
-# Privilege.delete_all
 Schedule.delete_all
 Period.delete_all
 User.delete_all
@@ -1165,36 +1161,6 @@ slot_create.each_with_index do |s, i|
   Slot.create!(id: i+1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
-#Create Title Privileges
-# TitlePrivilege.create!(id: 1, name: "User Management")
-# TitlePrivilege.create!(id: 2, name: "User Group Management")
-# TitlePrivilege.create!(id: 3, name: "CDS-CDP Review")
-# TitlePrivilege.create!(id: 4, name: "Template Management")
-# TitlePrivilege.create!(id: 5, name: "CDS Assessment")
-# TitlePrivilege.create!(id: 6, name: "CDP Assessment")
-# TitlePrivilege.create!(id: 7, name: "Schedule Management")
-
-# #Create Privilges
-# privilege = [
-#   { id: 1, name: "Full Access on User Management", title_id: 1 },
-#   { id: 2, name: "View User Management", title_id: 1 },
-#   { id: 3, name: "Export Users", title_id: 1 },
-#   { id: 4, name: "Full Access on User Group Management", title_id: 2 },
-#   { id: 5, name: "View User Group Management", title_id: 2 },
-#   { id: 6, name: "Full Access on CDS-CDP Review", title_id: 3 },
-#   { id: 7, name: "Review CDS-CDP Review", title_id: 3 },
-#   { id: 8, name: "View CDS-CDP Review", title_id: 3 },
-#   { id: 9, name: "Full Access on Template Management", title_id: 4 },
-#   { id: 10, name: "View Template Management", title_id: 4 },
-#   { id: 11, name: "Full Access on CDS Assessment", title_id: 5 },
-#   { id: 12, name: "Full Access on CDP Assessment", title_id: 6 },
-#   { id: 13, name: "Full Access on schedule company", title_id: 7 },
-#   { id: 14, name: "Full Access on schedule project", title_id: 7 },
-# ]
-# privilege.each do |s|
-#   Privilege.create!(id: s[:id], name: s[:name], title_privilege_id: s[:title_id])
-# end
-#  test template
 Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,3,4,5,6,7,8,9,10,11,12,13,14")
 Group.create!(id: 32, name: "BOD", description: "BOD", status: 1, privileges: "10")
 Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
