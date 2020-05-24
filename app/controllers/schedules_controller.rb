@@ -1,5 +1,4 @@
 class SchedulesController < ApplicationController
-  include Authorize
   before_action :get_privilege_id
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
   layout "system_layout"

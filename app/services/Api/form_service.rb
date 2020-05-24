@@ -19,19 +19,20 @@ module Api
       template_id = Template.find_by(role_id: role_id, status: true)&.id
       return [] if template_id.nil?
       competency_ids = get_competencies(1).map(&:id)
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots).where(competency_id: competency_ids).order(:competency_id, :level, :slot_id)
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
+        .where(competency_id: competency_ids).order(:competency_id, :level, :slot_id)
 
+      create_form_slot(slots.pluck(:id), form.template_id)
       format_data_for_slot(slots)
     end
 
     def load_old_form(form)
-      user_id = current_user.id
-      form = Form.includes(:template).where(user_id: user_id, _type: "CDS").order(created_at: :desc).first
-
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
+                  .joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
 
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id)
 
+      create_form_slot(slots.pluck(:id), form.template_id)
       format_data_for_slot(slots, form_slots)
     end
 
@@ -44,6 +45,11 @@ module Api
       else
         false
       end
+    end
+
+    def get_list_cds_assessment(user_id = nil)
+      user_id ||= current_user.id
+      Form.where(user_id: user_id).includes(:period)
     end
 
     private
@@ -65,7 +71,7 @@ module Api
             slots: [],
           }
         end
-        
+
         hash[key][:slots] << slot_to_hash(slot, dumy_hash[key_slot_id].count, form_slots)
       end
 

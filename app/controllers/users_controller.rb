@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   layout "system_layout"
-  include Authorize
   before_action :set_user, only: [:edit, :update, :status, :destroy]
   before_action :get_privilege_id
   before_action :redirect_to_index, except: [:index2]

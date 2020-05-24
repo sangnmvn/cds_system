@@ -4,13 +4,10 @@ class ApplicationController < ActionController::Base
   LIMIT = 20
   PASSWORD_DEFAULT = "123QWEasd"
 
-  module Authorize
-    private
+  private
 
-    def get_privilege_id
-      current_user.id
-      group = Group.joins(:user_group).where(user_groups: { user_id: current_user.id }).first
-      @privilege_array = group.list_privileges
-    end
+  def get_privilege_id
+    group = Group.joins(:user_group).where(user_groups: { user_id: current_user.id }).first
+    @privilege_array = group.list_privileges
   end
 end

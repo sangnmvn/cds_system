@@ -1,6 +1,5 @@
 class CompetenciesController < ApplicationController
   layout "system_layout"
-  include Authorize
   before_action :get_privilege_id
   before_action :set_competency, :check_edit, only: [:show, :edit, :update, :edit, :destroy]
   before_action :redirect_to_index

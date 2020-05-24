@@ -1,6 +1,5 @@
 class SlotsController < ApplicationController
   layout "system_layout"
-  include Authorize
   before_action :get_privilege_id
   def load
     if @privilege_array.include?(9) || @privilege_array.include?(10)
