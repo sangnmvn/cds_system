@@ -136,6 +136,29 @@ $(document).ready(function () {
 $(document).on("click", ".delete-cds", function () {
   var id = $(this).data("id");
   var delete_period_cds = $(this).data("period-cds");
+  $('#confirm_yes_delete_cds').val(id);
   $('#delete_period_cds').html(delete_period_cds);
   $('#modal_delete_cds').modal('show');
+});
+
+$(document).on("click", "#confirm_yes_delete_cds", function () {
+  form_id = $('#confirm_yes_delete_cds').val();
+  delete_period_cds = $('#delete_period_cds').text();
+  $.ajax({
+    type: "DELETE",
+    url: "/forms/"+form_id,
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        $('#modal_delete_cds').modal('hide');
+        success("The CDS for period "+ delete_period_cds +" has been deleted successfully.");
+      }else {
+        fails("Can't delete CDS for period "+ delete_period_cds + " .");
+      }
+
+    }
+  });
 });

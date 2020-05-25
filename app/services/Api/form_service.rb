@@ -50,7 +50,7 @@ module Api
     end
 
     def load_old_form(form)
-      competency_id = Competency.find_by(template_id: form.template_id).id
+      competency_id = Competency.where(template_id: form.template_id).order(:location).first.id
       param = {
         competency_id: competency_id,
         form_id: form.id,
