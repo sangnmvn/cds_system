@@ -3,12 +3,12 @@
 
 
 <div class="container-fluid">
-  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+  <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
     <div class="col-10" style="font-size: 150%;">
       CDS Assesssment List
     </div>
-    <div class="col-2" style="text-align: right">
-      123
+    <div class="col-2 button-add-cds-assessment" style="text-align: right">
+      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_asscessment_forms_path) %>
     </div>
     <div class="col-12" style="padding: 0px">
       <table class="table table-primary table-responsive-sm table-mytable table-cds-assessment-list">
@@ -25,6 +25,7 @@
           </tr>
         </thead>
         <tbody>
+          
           <tr>
             <td>1</td>
             <td>1</td>
@@ -33,17 +34,10 @@
             <td>1</td>
             <td>1</td>
             <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
+            <td>
+              <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "#") %>
+              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#") %> 
+            </td>
           </tr>
         </tbody>
       </table>
