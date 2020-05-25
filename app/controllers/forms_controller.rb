@@ -1,5 +1,6 @@
 class FormsController < ApplicationController
   before_action :form_service
+  before_action :set_form, only: [:destroy]
   layout "system_layout"
 
   def index
@@ -30,13 +31,26 @@ class FormsController < ApplicationController
     @competency = Competency.select(:name).where(template_id: form_id)
   end
 
+  def destroy
+    binding.pry
+    if @form.destroy
+      render json: { status: "success" }
+    else
+      render json: { status: "fail" }
+    end
+  end
+
   private
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)
   end
 
+  def set_form
+    @form = Form.find(params[:id])
+  end
+
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_ids)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend)
   end
 end

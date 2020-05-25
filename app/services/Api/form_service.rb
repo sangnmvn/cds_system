@@ -50,7 +50,7 @@ module Api
     end
 
     def load_old_form(form)
-      competency_id = Competency.find_by(template_id: form.template_id).id
+      competency_id = Competency.where(template_id: form.template_id).order(:location).first.id
       param = {
         competency_id: competency_id,
         form_id: form.id,
@@ -93,6 +93,30 @@ module Api
         end
         hash[slot.level] += 1
         slot_to_hash(slot, hash[slot.level], form_slots)
+      end
+    end
+
+    def save_cds_staff
+      if params[:is_commit] && params[:point] && params[:evidence] && params[:slot_id]
+        form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+        comment = Comment.where(form_slot_id: form_slot.id)
+        if comment.present?
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit])
+        else
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], added_by: current_user.id, form_slot_id: form_slot.id)
+        end
+      end
+    end
+
+    def save_cds_manager
+      if params[:recommend] && params[:given_point] && params[:slot_id]
+        form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+        line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
+        if line_manager.present?
+          line_manager.update(recomend: params[:recommend], given_point: params[:given_point])
+        else
+          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id)
+        end
       end
     end
 
