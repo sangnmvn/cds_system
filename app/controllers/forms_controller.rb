@@ -2,47 +2,24 @@ class FormsController < ApplicationController
   before_action :form_service
   layout "system_layout"
 
-  def cds_assessment
-    user_id = current_user.id
-    form = Form.includes(:template).where(user_id: user_id, _type: "CDS").order(created_at: :desc).first
-
-    # @slots = if form.nil? || form.template.role_id != current_user.role_id
-    #     @form_service.load_new_form
-    #   else
-    #     @form_service.load_old_form(form)
-    #   end
-    param = {
-      competency_id: 1,
-      form_id: 1,
-    }
-    @slots = Slot.joins(:form_slots).where(form_slots: { form_id: param[:form_id] }, competency_id: param[:competency_id]).order(:level, :slot_id)
-    hash = {}
-    arr_slots = []
-    form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: @slots.pluck(:id))
-    form_slots = @form_service.format_form_slot1(form_slots)
-    @slots = @slots.map do |slot|
-      if hash[slot.level].nil?
-        hash[slot.level] = -1
-      end
-      hash[slot.level] += 1
-
-      @form_service.slot_to_hash(slot, hash[slot.level], form_slots)
-    end
+  def index
   end
-
-  # def format_data_slots(param = nil)
-
-  # end
 
   def get_competencies
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
-  def get_list_cds_assessment
-    @form_service.get_list_cds_assessment(form_params[:user_ids])
+  def cds_assessment
+    form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+    @slots = if form.nil? || form.template.role_id != current_user.role_id
+        @form_service.load_new_form
+      else
+        @form_service.load_old_form(form)
+      end
   end
 
-  def index
+  def get_cds_assessment
+    reder json: @form_service.format_data_slots
   end
 
   def preview_result
@@ -60,6 +37,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :user_ids)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_ids)
   end
 end
