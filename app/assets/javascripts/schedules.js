@@ -174,10 +174,7 @@ function on_click_btn() {
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       success: function () {
         attr_start_date_id = "#start_date_edit";
-        if ($("#user_role").val() == "HR")
-          attr_end_date_id = "#end_date_edit";
-        else if  ($("#user_role").val() == "PM")
-          attr_end_date_id = "";
+        attr_end_date_id = "#end_date_edit";
         
         attr_from_date = "#from_date_edit";
         attr_to_date = "#to_date_edit";
@@ -584,6 +581,8 @@ function delete_schedule() {
 }
 
 function check_selectAll() {
+  if ($("#user_role").val() == "PM") return;
+
   $(".selectable").off('click.select_one_namespace')
   $(".selectable").on('click.select_one_namespace', function () {
     if ($(':checkbox:checked').length > 0) {

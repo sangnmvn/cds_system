@@ -28,12 +28,12 @@ class SchedulesController < ApplicationController
   end
 
   def check_pm?
-    return true if @privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY) && @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT)
+    return false if @privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY) && @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT)
     return true if @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT)
   end
 
   def check_hr?
-    return false if @privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY) && @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT)
+    return true if @privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY) && @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT)
     return true if @privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY)
   end
 
