@@ -10,7 +10,7 @@ class FormsController < ApplicationController
     @form_service.load_old_form(form)
   end
 
-  def get_competenies
+  def get_competencies
     @form_service.get_competencies(form_params[:template_id])
   end
 
@@ -26,11 +26,8 @@ class FormsController < ApplicationController
     @competency = Competency.select(:id, :name, :_type).where("id in (?)", arr_id_competency)
     @arr = []
     @competency.each do |c|
-      # binding.pry
-
       @arr << { name: c.name, type: c._type = c._type == "General" ? "G" : "S", level: convert_hash(c.id) }
     end
-    # binding.pry
   end
 
   def preview_result

@@ -7,18 +7,38 @@ module Api
       @params = ActiveSupport::HashWithIndifferentAccess.new params
     end
 
-    def get_competencies(template_id = nil)
-      template_id ||= Template.find_by(role_id: current_user.role_id, status: true)&.id
-      return [] if template_id.nil?
+    def get_competencies(form_id = nil)
+      return [] if form_id.nil?
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form_id }).order(:competency_id, :level, :slot_id)
+      hash = {}
+      form_slots = FormSlot.includes(:comments).where(form_id: form_id)
+      form_slots = format_form_slot(form_slots, true)
+      slots.map do |slot|
+        key = slot.competency.name
+        if hash[key].nil?
+          hash[key] = {
+            type: slot.competency.type,
+            levels: {},
+          }
+        end
+        if hash[key][:levels][slot.level].nil?
+          hash[key][:levels][slot.level] = {
+            total: 0,
+            current: 0,
+          }
+        end
+        hash[key][:levels][slot.level][:total] += 1
+        hash[key][:levels][slot.level][:current] += 1 if form_slots[slot.id]
+      end
 
-      Competency.select(:id, :name, :desc, :_type, :location).where(template_id: 1).order(:location)
+      hash
     end
 
     def load_new_form(role_id = nil)
       role_id ||= current_user.role_id
       template_id = Template.find_by(role_id: role_id, status: true)&.id
       return [] if template_id.nil?
-      competency_ids = get_competencies(1).map(&:id)
+      competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
         .where(competency_id: competency_ids).order(:competency_id, :level, :slot_id)
 
@@ -89,8 +109,14 @@ module Api
       h_slot
     end
 
-    def format_form_slot(form_slots)
+    def format_form_slot(form_slots, count = nil)
       hash = {}
+      if count
+        form_slots.map do |form_slot|
+          hash[form_slot.slot_id] = form_slot.comments.present? if hash[form_slot.slot_id].nil?
+        end
+        return hash
+      end
       form_slots.map do |form_slot|
         recommends = get_recommend(form_slot.line_managers.order(created_at: :desc))
         comments = form_slot.comments.order(created_at: :desc).first

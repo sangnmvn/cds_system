@@ -5,7 +5,6 @@ class UsersController < ApplicationController
   before_action :redirect_to_index, except: [:index2]
 
   def get_user_data
-    binding.pry
     filter = {
       is_delete: false,
     }
