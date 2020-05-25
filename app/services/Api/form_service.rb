@@ -1,7 +1,5 @@
 module Api
-  class FormService
-    LETTER_CAP = *("A".."Z")
-
+  class FormService < BaseService
     def initialize(params, current_user)
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
@@ -82,7 +80,7 @@ module Api
       form_slots = format_form_slot(form_slots) if form_slots.present?
       slots.map do |slot|
         key_slot_id = "#{slot.competency_id}_#{slot.level}"
-        dumy_hash[key_slot_id].nil? ? dumy_hash[key_slot_id] = [] : dumy_hash[key_slot_id] << 1
+        dumy_hash[key_slot_id].nil? ? dumy_hash[key_slot_id] = 0 : dumy_hash[key_slot_id] += 1
 
         key = slot.competency.name
         if hash[key].nil?
@@ -92,7 +90,7 @@ module Api
           }
         end
 
-        hash[key][:slots] << slot_to_hash(slot, dumy_hash[key_slot_id].count, form_slots)
+        hash[key][:slots] << slot_to_hash(slot, dumy_hash[key_slot_id], form_slots)
       end
 
       hash
