@@ -25,4 +25,34 @@ class ScheduleMailer < ApplicationMailer
     emails = @user.collect(&:email).join(", ")
     mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")} to #{@period.to_date.strftime("%b %d, %Y")}] - delete")
   end
+
+  def phase1_mailer
+    @user = params[:user]
+    @period = params[:period]
+    @schedule = params[:schedule]
+    @sender = params[:sender]
+    emails = @user.collect(&:email).join(", ")
+
+    mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")} to #{@period.to_date.strftime("%b %d, %Y")}] for team member")
+  end
+
+  def phase2_mailer
+    @user = params[:user]
+    @period = params[:period]
+    @schedule = params[:schedule]
+    @sender = params[:sender]
+    emails = @user.collect(&:email).join(", ")
+
+    mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")} to #{@period.to_date.strftime("%b %d, %Y")}]")
+  end
+
+  def phase3_mailer
+    @user = params[:user]
+    @period = params[:period]
+    @schedule = params[:schedule]
+    @sender = params[:sender]
+    emails = @user.collect(&:email).join(", ")
+
+    mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")} to #{@period.to_date.strftime("%b %d, %Y")}] for Reviewer")
+  end
 end
