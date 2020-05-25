@@ -50,11 +50,12 @@ module Api
     end
 
     def load_old_form(form)
+      competency_id = Competency.find_by(template_id: form.template_id).id
       param = {
-        competency_id: form.competency_id,
+        competency_id: competency_id,
         form_id: form.id,
       }
-      format_data_slots(slots, form_slots)
+      format_data_slots(param)
     end
 
     def create_form_slot(slot_ids, template_id)

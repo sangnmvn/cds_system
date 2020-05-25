@@ -11,10 +11,6 @@ $(document).ready(function () {
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
   });
-  // $("[data-toggle=collapse]").click(function () {
-  //   $(".card table thead tr").css("background-color", "#ccc");
-  //   $(this).closest("tr").css("background-color", "#bbcbea");
-  // });
   function drawColorTitleFormPreviewResult(start, end, color) {
     for (i = start; i <= end; i++) {
       $(".table-preview-result thead tr td:nth-child(" + i + ")").css(
@@ -23,9 +19,6 @@ $(document).ready(function () {
       );
     }
   }
-
-
-  
   function SidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
 
@@ -47,6 +40,8 @@ $(document).ready(function () {
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
 
+  
+
   function loadDataPanel(form_id) {
     $.ajax({
       type: "POST",
@@ -59,10 +54,10 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        var a = '';
+        var temp = '';
         var i = 0;
         for ( competency in response){
-          a += ` <div class="card">
+          temp += ` <div class="card">
           <div class="card-header">
               <table class="table table-primary table-responsive-sm table-mytable table${i}">
                   <thead>
@@ -90,8 +85,8 @@ $(document).ready(function () {
                       <td class="col-3">${levels[level].current}/${levels[level].total}</td>
                     </tr>`
                   }
-                  a += l
-                  a += `</tbody>
+                  temp += l
+                  temp += `</tbody>
                 </table>
               </div>
             </div>
@@ -99,7 +94,7 @@ $(document).ready(function () {
         </div>`
         i += 1;
         };
-        $('#competency_panel').html(a);
+        $('#competency_panel').html(temp);
         $(".card table thead tr").click(function () {
           $(".collapse").removeClass("show");
           $(".card-header table tr").css("background-color", "#ccc");
@@ -135,3 +130,12 @@ $(document).ready(function () {
   });
 });
 // end
+
+// delete cds 
+  
+$(document).on("click", ".delete-cds", function () {
+  var id = $(this).data("id");
+  var delete_period_cds = $(this).data("period-cds");
+  $('#delete_period_cds').html(delete_period_cds);
+  $('#modal_delete_cds').modal('show');
+});

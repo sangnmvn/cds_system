@@ -36,7 +36,7 @@
             <td>1</td>
             <td>
               <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "#") %>
-              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#") %> 
+              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", class: "delete-cds", "data-id": 1, "data-period-cds": "05/2020 – 10/2020" ) %> 
             </td>
           </tr>
         </tbody>
@@ -44,3 +44,7 @@
     </div>
   </div>
 </div>
+
+<%= render 'modal_delete_cds' %>
+<%= render 'modal_history' %>
+<%= render 'modal_submit_cds' %>
