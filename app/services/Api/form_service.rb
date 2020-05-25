@@ -102,7 +102,7 @@ module Api
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit])
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], added_by: current_user.id, form_slot_id: form_slot.id, period_id: params[:period_id])
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], added_by: current_user.id, form_slot_id: form_slot.id)
         end
       end
     end
@@ -114,8 +114,7 @@ module Api
         if line_manager.present?
           line_manager.update(recomend: params[:recommend], given_point: params[:given_point])
         else
-          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: params[:23QWEasd
-            ])
+          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id)
         end
       end
     end

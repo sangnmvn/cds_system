@@ -8,7 +8,6 @@ class CreateComments < ActiveRecord::Migration[6.0]
       t.boolean :is_commit
 
       t.belongs_to :form_slot, foreign_key: true
-      t.belongs_to :period, foreign_key: true
 
       t.timestamps
     end
