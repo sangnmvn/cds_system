@@ -4,7 +4,6 @@ class FormsController < ApplicationController
   layout "system_layout"
 
   def index
-    binding.pry
   end
 
   def get_competencies
@@ -61,12 +60,5 @@ class FormsController < ApplicationController
 
   def form_params
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend)
-    {
-      slot_id: 1,
-      evidence: "111111",
-      point: 3,
-      is_commit: true,
-      form_id: 1,
-    }
   end
 end
