@@ -6,7 +6,7 @@ module Api
     end
 
     def get_competencies(form_id = nil)
-      return [] if form_id.nil?
+      form_id = Form.select(:id).find_by(user_id: current_user.id).id if form_id.nil?
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form_id }).order(:competency_id, :level, :slot_id)
       hash = {}
       form_slots = FormSlot.includes(:comments).where(form_id: form_id)
@@ -38,21 +38,24 @@ module Api
       template_id = Template.find_by(role_id: role_id, status: true)&.id
       return [] if template_id.nil?
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
-        .where(competency_id: competency_ids).order(:competency_id, :level, :slot_id)
+      slots = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
+      form_id = create_form_slot(slots, template_id)
 
-      create_form_slot(slots.pluck(:id), template_id)
-      format_data_for_slot(slots)
+      param = {
+        competency_id: competency_ids.first,
+        form_id: form_id,
+      }
+
+      format_data_slots(param)
     end
 
     def load_old_form(form)
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
-                  .joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
-
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id)
-
-      create_form_slot(slots.pluck(:id), form.template_id)
-      format_data_for_slot(slots, form_slots)
+      competency_id = Competency.find_by(template_id: form.template_id).id
+      param = {
+        competency_id: competency_id,
+        form_id: form.id,
+      }
+      format_data_slots(param)
     end
 
     def create_form_slot(slot_ids, template_id)
@@ -61,9 +64,9 @@ module Api
         slot_ids.map do |id|
           FormSlot.create!(form_id: form.id, slot_id: id, is_passed: 0)
         end
-      else
-        false
       end
+
+      form.id
     end
 
     def get_list_cds_assessment(user_id = nil)
@@ -71,31 +74,31 @@ module Api
       Form.where(user_id: user_id).includes(:period)
     end
 
+    
+    def format_data_slots(param = nil)
+      param ||= params
+      filter = {
+        form_slots: { form_id: param[:form_id] },
+        competency_id: param[:competency_id],
+      }
+      filter[:level] = param[:level] if param[:level].present?
+
+      slots = Slot.joins(:form_slots).where(filter).order(:level, :slot_id)
+      hash = {}
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
+      form_slots = format_form_slot(form_slots)
+      slots.map do |slot|
+        if hash[slot.level].nil?
+          hash[slot.level] = -1
+        end
+        hash[slot.level] += 1
+        slot_to_hash(slot, hash[slot.level], form_slots)
+      end
+    end
+
     private
 
     attr_reader :params, :current_user
-
-    def format_data_for_slot(slots, form_slots = nil)
-      hash = {}
-      dumy_hash = {} # count slot of level
-      form_slots = format_form_slot(form_slots) if form_slots.present?
-      slots.map do |slot|
-        key_slot_id = "#{slot.competency_id}_#{slot.level}"
-        dumy_hash[key_slot_id].nil? ? dumy_hash[key_slot_id] = 0 : dumy_hash[key_slot_id] += 1
-
-        key = slot.competency.name
-        if hash[key].nil?
-          hash[key] = {
-            type: slot.competency.type,
-            slots: [],
-          }
-        end
-
-        hash[key][:slots] << slot_to_hash(slot, dumy_hash[key_slot_id], form_slots)
-      end
-
-      hash
-    end
 
     def slot_to_hash(slot, location, form_slots)
       h_slot = {
@@ -116,6 +119,7 @@ module Api
         end
         return hash
       end
+
       form_slots.map do |form_slot|
         recommends = get_recommend(form_slot.line_managers.order(created_at: :desc))
         comments = form_slot.comments.order(created_at: :desc).first
@@ -140,10 +144,8 @@ module Api
         recommends: [],
         name: [],
       }
-      user = []
       line_managers.map do |line|
-        unless user.include?(line.user_id)
-          user << line.user_id
+        unless hash[:name].include?(line.user_id)
           hash[:given_point] << line.given_point
           hash[:recommends] << line.recommend
           hash[:name] << line.user_id

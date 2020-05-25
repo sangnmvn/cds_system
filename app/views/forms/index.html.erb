@@ -8,7 +8,7 @@
       CDS Assesssment List
     </div>
     <div class="col-2 button-add-cds-assessment" style="text-align: right">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_asscessment_forms_path) %>
+      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path) %>
     </div>
     <div class="col-12" style="padding: 0px">
       <table class="table table-primary table-responsive-sm table-mytable table-cds-assessment-list">
@@ -36,7 +36,7 @@
             <td>1</td>
             <td>
               <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "#") %>
-              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#") %> 
+              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", class: "delete-cds", "data-id": 1, "data-period-cds": "05/2020 – 10/2020" ) %> 
             </td>
           </tr>
         </tbody>
@@ -44,3 +44,7 @@
     </div>
   </div>
 </div>
+
+<%= render 'modal_delete_cds' %>
+<%= render 'modal_history' %>
+<%= render 'modal_submit_cds' %>

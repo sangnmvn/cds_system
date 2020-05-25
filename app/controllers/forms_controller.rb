@@ -2,27 +2,24 @@ class FormsController < ApplicationController
   before_action :form_service
   layout "system_layout"
 
-  def create
-    user_id = current_user.id
-    form = Form.includes(:template).where(user_id: user_id, _type: "CDS").order(created_at: :desc).first
-    @form_service.load_new_form if form.nil? || form.template.role_id != current_user.role_id
+  def index
+  end
 
-    @form_service.load_old_form(form)
+  def get_list_cds_assessment
+    render json: @form_service.get_list_cds_assessment(current_user.id)
   end
 
   def get_competencies
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
-  def get_list_cds_assessment
-    @form_service.get_list_cds_assessment(form_params[:user_ids])
-  end
-
-  def index
-    @cds_assessment_data = User.joins(forms: [form_slots: [slot: [competency: [title_competency_mappings: [:title]]]]])
-  end
-
-  def cds_asscessment
+  def cds_assessment
+    form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+    @slots = if form.nil? || form.template.role_id != current_user.role_id
+        @form_service.load_new_form
+      else
+        @form_service.load_old_form(form)
+      end
   end
 
   def preview_result
@@ -40,6 +37,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :user_ids)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_ids)
   end
 end
