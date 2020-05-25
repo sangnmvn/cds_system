@@ -81,15 +81,29 @@ class SchedulesController < ApplicationController
       if schedule.status.nil?
         # avoid error if status is nil
       elsif schedule.status.downcase == "in-progress"
-        current_schedule_data.push("<td style='text-align: center;'>      
+        if schedule._type == "HR"
+          current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
         </td>")
+        elsif schedule._type == "PM"
+          current_schedule_data.push("<td style='text-align: center;'>      
+            <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+            <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+          </td>")
+        end
       elsif schedule.status.downcase == "new"
-        current_schedule_data.push("<td style='text-align: center;'>      
+        if schedule._type == "HR"
+          current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
+        elsif schedule._type == "PM"
+          current_schedule_data.push("<td style='text-align: center;'>      
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+        </td>")
+        end
       else
         current_schedule_data.push("")
       end
@@ -126,7 +140,7 @@ class SchedulesController < ApplicationController
 
     project_ids = ProjectMember.where(user_id: current_user.id, is_managent: 1).pluck(:project_id)
     @project = Project.where(id: project_ids)
-    @parent_schedules = Schedule.joins(:period).select(:id, "(CONCAT(DATE_FORMAT(from_date, '%b %d, %Y') , ' - ' , DATE_FORMAT(to_date, '%b %d, %Y'))) AS parent_period").where(_type: "HR", status: "New")
+    @parent_schedules = Schedule.joins(:period).select(:id, "(CONCAT(DATE_FORMAT(from_date, '%b %d, %Y') , ' - ' , DATE_FORMAT(to_date, '%b %d, %Y'))) AS parent_period").where(_type: "HR", status: ["New", "In-Progress"])
   end
 
   def new
@@ -177,8 +191,7 @@ class SchedulesController < ApplicationController
       end
     elsif check_pm?
       temp_params[:end_date_employee] = temp_params[:end_date_member]
-      temp_params[:end_date_reviewer] = temp_params[:end_date_member]
-      
+
       temp_params.delete(:end_date_member)
       temp_params[:notify_employee] = temp_params[:notify_member]
       temp_params[:notify_reviewer] = temp_params[:notify_member]

@@ -130,8 +130,8 @@ $(document).ready(function () {
       type: "GET",
       headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
       success: function (result) {
-        $("#start_date").datepicker("setDate", result['start_date_hr']);
-        $("#end_date").datepicker("setDate", result['end_date_hr']);
+        $("#start_date").datepicker("setDate", new Date(Date.parse(result['start_date_hr'])));
+        $("#end_date").datepicker("setDate", new Date(Date.parse(result['end_date_hr'])));
       }
     });
   });
@@ -280,6 +280,8 @@ function action_add() {
     temp = true;
     $(".error").remove();
 
+    
+
     // check date start and end
     
     if (Date.parse(start_date) >= Date.parse(end_date)) {
@@ -292,7 +294,7 @@ function action_add() {
       $('#to_date').after('<span class="error">Period end date must be greater than period start date.</span>')
     }
 
-    if (Date.parse(start_date) <= Date.parse(from_date)) {
+    if (Date.parse(start_date) < Date.parse(from_date)) {
       temp = false;
       $('#start_date').after('<span class="error">Start date must be greater than period from date.</span>')
     }
@@ -399,7 +401,7 @@ function action_add() {
                   company_id: company, 
                   project_id: project,
                   end_date_member: end_date_member,
-                  end_date_revACiewer: end_date_reviewer,
+                  end_date_reviewer: end_date_reviewer,
                   notify_member: notify_member,
                   start_date: start_date,
                   end_date_hr: end_date,
@@ -450,7 +452,8 @@ function action_edit() {
     to_date = $("#to_date_edit").val();
     notify_hr = $('#notify_hr_edit').val();
     status_hr = $('#status_id').val()
-
+    end_date_member_id = "#end_date_member_edit"
+    end_date_reviewer_id = "#end_date_reviewer_edit" 
     end_date_member   = $("#end_date_member_edit").val();
     end_date_reviewer = $("#end_date_reviewer_edit").val();
     notify_member     = $("#notify_member_edit").val();
@@ -471,6 +474,47 @@ function action_edit() {
     if (notify_hr == "") {
       temp = false;
       $('#notify_hr_edit').closest('div').children('em').after('<br><span class="error">Please enter notify date.</span>')
+    }
+
+    if (user_role == "PM")
+    {
+      if (Date.parse(end_date_member) < Date.parse(start_date))
+      {
+        temp = false;
+        $(end_date_member_id).after('<span class="error">Start date must be lower than End date for member.</span>');
+      }
+      else if (Date.parse(end_date_member) > Date.parse(end_date))
+      {
+        temp = false;
+        $(end_date_member_id).after('<span class="error">End date for member must be lower than End date .</span>');
+      }
+      else if (end_date_member == "")
+      {
+        temp = false;
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
+      }
+
+
+      if (Date.parse(end_date_reviewer) < Date.parse(start_date))
+      {
+        temp = false;
+        $(end_date_reviewer_id).after('<span class="error">Start date must be lower than End date for reviewer.</span>');
+      }
+      else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member))
+      {
+        temp = false;
+        $(end_date_reviewer_id).after('<span class="error">End date of Member must be lower than End date for reviewer.</span>')
+      }
+      else if (Date.parse(end_date_reviewer) > Date.parse(end_date))
+      {
+        temp = false;
+        $(end_date_reviewer_id).after('<span class="error">End date for reviewer must be lower than End date.</span>')
+      }
+      else if (end_date_reviewer == "")
+      {
+        temp = false;
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for previewer.</span></div>')
+      } 
     }
 
 

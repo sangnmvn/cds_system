@@ -11,6 +11,40 @@ class Schedule < ApplicationRecord
           where("`desc` LIKE :search OR companies.name LIKE :search", search: "%#{search}%") if search.present?
         }
 
+  validate :happened_at_is_valid_datetime
+
+  def happened_at_is_valid_datetime
+    if start_date > end_date_hr
+      errors.add(:end_date_hr, "End Date HR must be greater than Start Date")
+    end
+
+    if _type == "PM"
+      if start_date > end_date_employee
+        errors.add(:end_date_employee, "End Date Employee must be greater than Start Date")
+      end
+
+      if end_date_employee > end_date_reviewer
+        errors.add(:end_date_reviewer, "End Date Reviewer must be greater than End Date Member")
+      end
+
+      if (end_date_employee - notify_employee.days) < start_date
+        errors.add(:notify_employee, "Notify Member Date must be greater than Start Date")
+      end
+
+      if (end_date_reviewer - notify_reviewer.days) < end_date_employee
+        binding.pry
+
+        errors.add(:notify_reviewer, "Notify Reviewer Date must be greater than Notify Member Date")
+      end
+    end
+
+    if _type == "PM" && (end_date_hr - notify_hr.days) < end_date_reviewer
+      errors.add(:notify_hr, "Notify HR Date must be greater than Notify Reviewer Date")
+    elsif _type == "HR" && (end_date_hr - notify_hr.days) < start_date
+      errors.add(:notify_hr, "Notify HR Date must be greater than Notify Reviewer Date")
+    end
+  end
+
   def sample
     Schedule.create!(user_id: 3, status: "New")
   end
@@ -23,6 +57,7 @@ class Schedule < ApplicationRecord
       end_date1 = schedule.end_date_employee.midnight unless schedule.end_date_employee.nil?
       end_date2 = schedule.end_date_reviewer.midnight unless schedule.end_date_reviewer.nil?
       end_date3 = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
+      # reset hours, minutes, seconds to 00:00 for exact day compare
       today = Date.today.midnight
 
       period = Period.find(schedule.period_id)
