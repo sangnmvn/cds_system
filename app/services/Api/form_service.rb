@@ -51,7 +51,6 @@ module Api
 
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id)
 
-      create_form_slot(slots.pluck(:id), form.template_id)
       format_data_for_slot(slots, form_slots)
     end
 
@@ -69,6 +68,21 @@ module Api
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
       Form.where(user_id: user_id).includes(:period)
+    end
+
+    def format_form_slot1(form_slots, count = nil)
+      format_form_slot(form_slots, count)
+    end
+
+    def slot_to_hash(slot, location, form_slots)
+      h_slot = {
+        slot_id: slot.level + LETTER_CAP[location],
+        desc: slot.desc,
+        evidence: slot.evidence,
+      }
+      h_slot[:tracking] = form_slots[slot.id] if form_slots.present?
+
+      h_slot
     end
 
     private
@@ -95,17 +109,6 @@ module Api
       end
 
       hash
-    end
-
-    def slot_to_hash(slot, location, form_slots)
-      h_slot = {
-        slot_id: slot.level + LETTER_CAP[location],
-        desc: slot.desc,
-        evidence: slot.evidence,
-      }
-      h_slot[:tracking] = form_slots[slot.id] if form_slots.present?
-
-      h_slot
     end
 
     def format_form_slot(form_slots, count = nil)

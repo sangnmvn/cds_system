@@ -176,7 +176,7 @@ Title.create!(name: "SM Test", desc: "SM Test", role_id: "5")
 Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
-Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", user_id: 1)
+Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", user_id: 1, status: true)
 Template.create!(id: 2, name: "CDS/CDP HR", description: "Template Career Development Plan / Career Development System For HR", role_id: "2", user_id: 1)
 Template.create!(id: 3, name: "CDS/CDP BA", description: "Template Career Development Plan / Career Development System For BA", role_id: "3", user_id: 2)
 Template.create!(id: 4, name: "CDS/CDP DEV", description: "Template Career Development Plan / Career Development System For DEV", role_id: "4", user_id: 2)
@@ -1158,7 +1158,7 @@ slot_create = [
   },
 ]
 slot_create.each_with_index do |s, i|
-  Slot.create!(id: i+1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
+  Slot.create!(id: i + 1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
 Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,3,4,5,6,7,8,9,10,11,12,13,14")

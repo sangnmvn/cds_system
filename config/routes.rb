@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     collection do
       get "preview_result"
       post "get_competencies"
-      get "cds_asscessment"
+      get "cds_assessment"
     end
   end
   resources :templates do
