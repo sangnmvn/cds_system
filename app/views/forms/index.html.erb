@@ -1,47 +1,52 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
-<link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
-<script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-<nav aria-label="breadcrumb" class="">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
-    <li class="breadcrumb-item active">User Management</li>
-  </ol>
-</nav>
+
+
 <div class="container-fluid">
-  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
-    <div class="col-md-4" >
-      CDS Reviewer for 
+  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+    <div class="col-10" style="font-size: 150%;">
+      CDS Assesssment List
     </div>
-    <div class="col-md-3">
-      Search
+    <div class="col-2" style="text-align: right">
+      123
     </div>
-    <div class="col-md-5 list-action filter-slots" style="text-align:right">
-      Filter
-      <select id="filter-form-slots" multiple="multiple">
-        <option value="1">Passed slots in previous periods</option>
-        <option value="2" selected>Failed slots in previous periods</option>
-        <option value="3" selected>No Assessments</option>
-        <option value="4" selected>Need to update evidences</option>
-        <option value="5" selected>Assessing in the current period</option>
-        <option value="6" selected>Planned</option>
-      </select>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path, target: :_blank %>
-      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)" %>
-      <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)" %>
-      <%= link_to '<i class="far fa-thumbs-down" style="color: red"></i> Reject'.html_safe, "javascript:void(0)" %>
+    <div class="col-12" style="padding: 0px">
+      <table class="table table-primary table-responsive-sm table-mytable table-cds-assessment-list">
+        <thead>
+          <tr>
+            <td>No.</td>
+            <td>Period</td>
+            <td>Role</td>
+            <td>Cấp</td>
+            <td>Bậc</td>
+            <td>Title</td>
+            <td>Status</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
-<div class="container-fluid">
-  <div class="row" id="body-row">
-    <%= render 'left_panel'%>
-    <div class="col" style="padding-right: 0px">
-      <%= render 'form_slot'%>
-    </div>
-  </div>
-</div>
-<%= render 'modal_submit_cds'%>
-<%= render 'modal_delete_cds'%>
-<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

@@ -11,7 +11,6 @@ class FormsController < ApplicationController
   end
 
   def get_competencies
-    # binding.pry
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
@@ -20,16 +19,10 @@ class FormsController < ApplicationController
   end
 
   def index
-    form_id = Form.where(user_id: current_user.id, _type: "CDS").pluck(:id).first
-    arr_id_slot = FormSlot.where(form_id: form_id).pluck(:slot_id)
-    arr_id_competency = Slot.where("id in (?)", arr_id_slot).pluck(:competency_id).uniq
-    # Competency.select(:id, :name).where(template_id: form_id)
-    @competency = Competency.select(:id, :name, :_type).where("id in (?)", arr_id_competency)
-    @arr = []
     
-    @competency.each do |c|
-      @arr << { name: c.name, type: c._type = c._type == "General" ? "G" : "S", level: convert_hash(c.id) }
-    end
+  end
+  def cds_asscessment
+
   end
 
   def preview_result
@@ -40,13 +33,7 @@ class FormsController < ApplicationController
     @competency = Competency.select(:name).where(template_id: form_id)
   end
 
-  def convert_hash(id)
-    arr = Slot.where(competency_id: id).pluck(:level)
-    hash = {}
-    arr_uniq = arr.uniq
-    arr_uniq.each { |x| hash[x] = arr.count x }
-    hash
-  end
+  
 
   private
 

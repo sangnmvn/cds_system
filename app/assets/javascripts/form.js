@@ -2,7 +2,6 @@ $(document).ready(function () {
   loadDataPanel(1);
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  StartLeftPanel();
   drawColorTitleFormPreviewResult(3, 9, "#93dba3");
   drawColorTitleFormPreviewResult(10, 16, "#d4f6ff");
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
@@ -113,10 +112,7 @@ $(document).ready(function () {
       }
     });
   }
-  function StartLeftPanel() {
-    $("#collapse0").addClass("show");
-    $(".table0 tr").css("background-color", "#bbcbea");
-  }
+
   $(".line-slot").each(function (index) {
     $(this).on("click", function () {
       if (
