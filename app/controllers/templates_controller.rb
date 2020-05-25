@@ -7,6 +7,7 @@ class TemplatesController < ApplicationController
   FILE_CLEANUP_TIME_IN_SECONDS = 10 * 60
   FULL_ACCESS_RIGHT = 9
   VIEW_ACCESS_RIGHT = 10
+  include TemplatesHelper
 
   def index
     redirect_to index2_admin_users_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)

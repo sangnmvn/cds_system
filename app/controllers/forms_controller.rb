@@ -19,10 +19,10 @@ class FormsController < ApplicationController
   end
 
   def index
-    
+    @cds_assessment_data = User.joins(forms: [form_slots: [slot: [competency: [title_competency_mappings: [:title]]]]])
   end
-  def cds_asscessment
 
+  def cds_asscessment
   end
 
   def preview_result
@@ -32,8 +32,6 @@ class FormsController < ApplicationController
     form_id = Form.where(user_id: current_user.id, _type: "CDS").pluck(:id).first
     @competency = Competency.select(:name).where(template_id: form_id)
   end
-
-  
 
   private
 
