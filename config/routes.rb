@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   resources :forms do
     collection do
       get "preview_result"
+      post "get_competencies"
     end
   end
   resources :templates do

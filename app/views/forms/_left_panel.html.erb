@@ -22,64 +22,10 @@
           </tr>
         </thead>
       </table>
-
-      <% if @competency.empty?%>
-        <div class="card">
-            <div class="card-header">
-                <table class="table table-primary table-responsive-sm table-mytable table">
-                      <tr class="d-flex">
-                        <td class="col-12">No data available in table</td>
-                      </tr>
-                  </table>
-            </div>
-            <div id="collapse" class="collapse" data-parent="#accordion">
-              <div class="card-body">
-                <div class="competency">
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-      <% else %>
-        <% @competency.each_with_index do |c,i|%>
-          <div class="card">
-            <div class="card-header">
-                <table class="table table-primary table-responsive-sm table-mytable table<%= i %>">
-                    <thead>
-                      <tr class="d-flex" data-target="#collapse<%= i %>">
-                        <td class="col-2"><%= c._type %></td>
-                        <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
-                          <%= c.name %>
-                          </td>
-                        <td class="col-3">1</td>
-                      </tr>
-                    </thead>
-                  </table>
-            </div>
-            <div id="collapse<%= i %>" class="collapse" data-parent="#accordion">
-              <div class="card-body">
-                <div class="competency">
-                  <table class="table table-primary table-responsive-sm table-mytable">
-                    <tbody>
-                      <tr class="d-flex">
-                        <td class="col-2"></td>
-                        <td class="col-7">Level 2</td>
-                        <td class="col-3">2/3</td>
-                      </tr>
-                      <tr class="d-flex">
-                        <td class="col-2"></td>
-                        <td class="col-7">Level 2</td>
-                        <td class="col-3">2/3</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
+      <div id="competency_panel">
+      </div>
       
     </div>
   
 </div>
+

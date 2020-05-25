@@ -15,7 +15,8 @@ module Api
         key = slot.competency.name
         if hash[key].nil?
           hash[key] = {
-            type: slot.competency.type,
+            type: slot.competency.sort_type,
+            id: slot.competency_id,
             levels: {},
           }
         end
@@ -40,7 +41,7 @@ module Api
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency, :form_slots)
         .where(competency_id: competency_ids).order(:competency_id, :level, :slot_id)
 
-      create_form_slot(slots.pluck(:id), form.template_id)
+      create_form_slot(slots.pluck(:id), template_id)
       format_data_for_slot(slots)
     end
 

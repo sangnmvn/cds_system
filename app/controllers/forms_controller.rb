@@ -11,7 +11,8 @@ class FormsController < ApplicationController
   end
 
   def get_competencies
-    @form_service.get_competencies(form_params[:template_id])
+    # binding.pry
+    render json: @form_service.get_competencies(form_params[:form_id])
   end
 
   def get_list_cds_assessment
@@ -25,6 +26,7 @@ class FormsController < ApplicationController
     # Competency.select(:id, :name).where(template_id: form_id)
     @competency = Competency.select(:id, :name, :_type).where("id in (?)", arr_id_competency)
     @arr = []
+    
     @competency.each do |c|
       @arr << { name: c.name, type: c._type = c._type == "General" ? "G" : "S", level: convert_hash(c.id) }
     end
