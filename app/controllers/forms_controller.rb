@@ -11,6 +11,7 @@ class FormsController < ApplicationController
   end
 
   def get_competencies
+    binding.pry
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
@@ -21,6 +22,11 @@ class FormsController < ApplicationController
       else
         @form_service.load_old_form(form)
       end
+  end
+
+  def get_cds_assessment
+    render json: @form_service.format_data_slots
+    # binding.pry
   end
 
   def preview_result

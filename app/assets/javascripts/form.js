@@ -10,6 +10,7 @@ $(document).ready(function () {
 
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
+    
   });
   function drawColorTitleFormPreviewResult(start, end, color) {
     for (i = start; i <= end; i++) {
@@ -66,7 +67,7 @@ $(document).ready(function () {
           <div class="card-header">
               <table class="table table-primary table-responsive-sm table-mytable table${i}">
                   <thead>
-                    <tr class="d-flex" data-target="#collapse${i}" id="card${i}">
+                    <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
                       <td class="col-2">${response[competency].type}</td>
                       <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
                       ${competency}
@@ -163,6 +164,32 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
       }else {
         fails("Can't delete CDS for period "+ delete_period_cds + " .");
       }
+
+    }
+  });
+});
+
+
+// left panel 
+$(document).on("click", ".card table thead tr", function () {
+  var competency_id = $(this).data("id-competency");
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_cds_assessment",
+    data: {
+      competency_id: competency_id
+    },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      // if (response.status == "success") {
+      //   $('#modal_delete_cds').modal('hide');
+      //   success("The CDS for period "+ delete_period_cds +" has been deleted successfully.");
+      // }else {
+      //   fails("Can't delete CDS for period "+ delete_period_cds + " .");
+      // }
 
     }
   });
