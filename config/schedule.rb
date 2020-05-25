@@ -2,6 +2,7 @@
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
+require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 set :environment, "development"
 set :output, "../log/log_task.log"
 # Example:
@@ -19,6 +20,8 @@ set :output, "../log/log_task.log"
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 1.minutes do
-  rake "reminder:send_mail"
+# whenever --update-crontab
+# to update task
+every 1.day, at: "0:00 am" do
+  runner "Schedule.deliver_reminder", :environment => Rails.env, :output => "log/cron.log"
 end
