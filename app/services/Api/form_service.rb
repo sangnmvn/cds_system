@@ -4,7 +4,7 @@ module Api
 
     def initialize(params, current_user)
       @current_user = current_user
-      @params = ActiveSupport::HashWithIndifferentAccess.new params.symbolize_keys
+      @params = ActiveSupport::HashWithIndifferentAccess.new params
     end
 
     def get_competencies(template_id = nil)

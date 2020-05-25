@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       delete "destroy_multiple"
     end
   end
-  resources :form_slots do
+  resources :forms do
     collection do
       get "preview_result"
     end
