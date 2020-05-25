@@ -108,12 +108,14 @@
 // preview result
 .table-statistic-preview-result thead tr {
   background-color: #8da8db;
+  font-weight: bold;
 }
 .table-statistic-preview-result, .table-preview-result thead {
   color: black;
 }
 .table-statistic-preview-result, .table-preview-result thead tr td {
   text-align: center;
+  font-weight: bold;
 }
 .td-expected {
   color: #42b6f5;
@@ -127,15 +129,15 @@
 }
 
 .assessed-slots {
-  background-color: #1aab0f;
+  background-color: #1aab0f!important;
   border: 1px solid #7abaff;
 }
 .re-assessed-slots {
-  background-color: #00DCFF;
+  background-color: #00DCFF!important;
   border: 1px solid #7abaff;
 }
 .new-slots {
-  background-color: white;
+  background-color: white!important;
   border: 1px solid #7abaff;
 }
 .fail-slot {
@@ -195,6 +197,10 @@
 }
 .form-slot-num-5 {
   background-color: #93dba3!important;
+}
+.breadcrumb-preview-result {
+  font-weight: bold;
+  font-size: 20px;
 }
 
 // end ngthuy
