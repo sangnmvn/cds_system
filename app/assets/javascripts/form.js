@@ -35,7 +35,8 @@ function LoadDataAssessmentList() {
 }
 
 $(document).ready(function () {
-  loadDataPanel(1);
+  var form_id = parseInt(findGetParameter("form_id"));
+  loadDataPanel(form_id);
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
   drawColorTitleFormPreviewResult(3, 9, "#93dba3");
@@ -264,11 +265,18 @@ $(document).on("click", ".card table thead tr", function () {
           <td colspan="2"><textarea class="autoresizing"></textarea></td>
           <td><textarea class="autoresizing"></textarea></td>
           <td><textarea class="autoresizing"></textarea></td>
-          <td><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
+          <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
         </tr>
           `;
       });
       $('.csd-assessment-table table tbody').html(temp);
     }
   });
+});
+
+
+$(document).on("click", ".modal-view-assessment-history", function () {
+  $('#modal_history_assessment').modal('show');
+  // var competency_id = $(this).data("id-competency");
+
 });
