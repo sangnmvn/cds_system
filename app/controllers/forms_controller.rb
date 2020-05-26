@@ -14,7 +14,13 @@ class FormsController < ApplicationController
   end
 
   def cds_assessment
-    form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+    params = cds_assessment_params
+    if params.include?(:form_id)
+      form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
+    else
+      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+    end
+
     if form.nil? || form.template.role_id != current_user.role_id
       @form_service.create_form_slot
     else
@@ -54,6 +60,10 @@ class FormsController < ApplicationController
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)
+  end
+
+  def cds_assessment_params
+    params.permit(:form_id)
   end
 
   def form_params

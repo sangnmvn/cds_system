@@ -21,7 +21,7 @@ function LoadDataAssessmentList() {
             <td>{title}</td> 
             <td>{status}</td> 
             <td> 
-              <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
+              <a data-id='{id}' href='/forms/cds_assessment?form_id={id}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
               <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
                 <i class='fa fa-trash icon' style='color:red'></i>
               </a> 
