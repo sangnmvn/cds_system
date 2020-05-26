@@ -30,7 +30,3 @@
 yarn-debug.log*
 .yarn-integrity
 Gemfile.lock
-<<<<<<< Updated upstream
-=======
-config/routes.rb
->>>>>>> Stashed changes

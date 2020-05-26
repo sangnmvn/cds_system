@@ -25,7 +25,14 @@ class FormsController < ApplicationController
 
   def get_cds_assessment
     render json: @form_service.format_data_slots
-    # binding.pry
+  end
+
+  def save_cds_assessment_staff
+    @form_service.save_cds_staff
+  end
+
+  def save_cds_assessment_manager
+    @form_service.save_cds_manager
   end
 
   def preview_result
