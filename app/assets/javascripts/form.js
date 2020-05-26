@@ -14,7 +14,7 @@ function LoadDataAssessmentList() {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
             <td>{no}</td> 
-            <td><a href='#'>{period}</a></td> 
+            <td><a href='/forms/cds_assessment?form_id={id}'>{period}</a></td> 
             <td>{role}</td> 
             <td>{level}</td> 
             <td>{rank}</td> 
@@ -199,8 +199,8 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
     },
     dataType: "json",
     success: function (response) {
+      $('#modal_delete_cds').modal('hide');
       if (response.status == "success") {
-        $('#modal_delete_cds').modal('hide');
         LoadDataAssessmentList();
         success("The CDS for period " + delete_period_cds + " has been deleted successfully.");
       } else {

@@ -70,23 +70,41 @@ module Api
 
     def format_data_slots(param = nil)
       param ||= params
+      filter_slots = filter_cds
       filter = {
         form_slots: { form_id: param[:form_id] },
         competency_id: param[:competency_id],
       }
       filter[:level] = param[:level] if param[:level].present?
 
-      slots = Slot.joins(:form_slots).where(filter).order(:level, :slot_id)
+      slots = Slot.search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id)
       hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
+      arr = []
       slots.map do |slot|
         if hash[slot.level].nil?
           hash[slot.level] = -1
         end
         hash[slot.level] += 1
-        slot_to_hash(slot, hash[slot.level], form_slots)
+        s = slot_to_hash(slot, hash[slot.level], form_slots)
+        if filter_slots["passed"] && s[:tracking][:given_point].present? && s[:tracking][:given_point].max > 2
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        end
+        if filter_slots["failed"] && s[:tracking][:given_point].present? && s[:tracking][:given_point].max < 3
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        end
+        if filter_slots["no_assessment"] && s[:tracking][:evidence].empty?
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        end
+        if filter_slots["need_to_update"] && s[:tracking][:need_to_update]
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        end
+        if filter_slots["assessing"] && s[:tracking][:is_commit]
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        end
       end
+      arr
     end
 
     def save_cds_staff
@@ -173,6 +191,14 @@ module Api
       end
       hash[:name] = User.where(id: hash[:name]).pluck(:account)
 
+      hash
+    end
+
+    def filter_cds
+      hash = {}
+      "failed,no_assessment,need_to_update,assessing".split(",").map do |p|
+        hash[p] = true
+      end
       hash
     end
   end

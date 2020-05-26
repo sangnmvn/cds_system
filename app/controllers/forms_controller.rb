@@ -17,15 +17,16 @@ class FormsController < ApplicationController
     params = cds_assessment_params
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
+      return if form.nil?
     else
-      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS", status: "New").order(created_at: :desc).first
     end
 
     @form_id = if form.nil? || form.template.role_id != current_user.role_id
-      @form_service.create_form_slot
-    else
-      form.id
-    end
+        @form_service.create_form_slot
+      else
+        form.id
+      end
   end
 
   def get_cds_assessment
@@ -49,7 +50,9 @@ class FormsController < ApplicationController
   end
 
   def destroy
-    if Form.find(params[:id]).destroy
+    form = Form.find(params[:id])
+    return render json: { status: "can't delete form" } if current_user.role_id == form.id
+    if form.destroy
       render json: { status: "success" }
     else
       render json: { status: "fail" }
