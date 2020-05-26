@@ -43,45 +43,45 @@
       </tr>
     </thead>
     <tbody>
-      <% @competency.each do |c| %>
+      <% @competencies.each_with_index do |c, i| %>
         <tr>
-          <td class="form-competency-name"><%= c.name %></td>
+          <td class="form-competency-name"><%= c %></td>
           <td class="form-pr-level">++1</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= @result[c]["1A"].nil? ? "x" : @result[c]["1A"][:value] %></td>
+          <td><%= @result[c]["1B"].nil? ? "x" : @result[c]["1B"][:value] %></td>
+          <td><%= @result[c]["1C"].nil? ? "x" : @result[c]["1C"][:value] %></td>
+          <td><%= @result[c]["1D"].nil? ? "x" : @result[c]["1D"][:value] %></td>
+          <td><%= @result[c]["1E"].nil? ? "x" : @result[c]["1E"][:value] %></td>
+          <td><%= @result[c]["1F"].nil? ? "x" : @result[c]["1F"][:value] %></td>
+          <td><%= @result[c]["1G"].nil? ? "x" : @result[c]["1G"][:value] %></td>
+          <td><%= @result[c]["2A"].nil? ? "x" : @result[c]["2A"][:value] %></td>
+          <td><%= @result[c]["2B"].nil? ? "x" : @result[c]["2B"][:value] %></td>
+          <td><%= @result[c]["2C"].nil? ? "x" : @result[c]["2C"][:value] %></td>
+          <td><%= @result[c]["2D"].nil? ? "x" : @result[c]["2D"][:value] %></td>
+          <td><%= @result[c]["2E"].nil? ? "x" : @result[c]["2E"][:value] %></td>
+          <td><%= @result[c]["2F"].nil? ? "x" : @result[c]["2F"][:value] %></td>
+          <td><%= @result[c]["2G"].nil? ? "x" : @result[c]["2G"][:value] %></td>
+          <td><%= @result[c]["3A"].nil? ? "x" : @result[c]["3A"][:value] %></td>
+          <td><%= @result[c]["3B"].nil? ? "x" : @result[c]["3B"][:value] %></td>
+          <td><%= @result[c]["3C"].nil? ? "x" : @result[c]["3C"][:value] %></td>
+          <td><%= @result[c]["3D"].nil? ? "x" : @result[c]["3D"][:value] %></td>
+          <td><%= @result[c]["3E"].nil? ? "x" : @result[c]["3E"][:value] %></td>
+          <td><%= @result[c]["3F"].nil? ? "x" : @result[c]["3F"][:value] %></td>
+          <td><%= @result[c]["3G"].nil? ? "x" : @result[c]["3G"][:value] %></td>
+          <td><%= @result[c]["4A"].nil? ? "x" : @result[c]["4A"][:value] %></td>
+          <td><%= @result[c]["4B"].nil? ? "x" : @result[c]["4B"][:value] %></td>
+          <td><%= @result[c]["4C"].nil? ? "x" : @result[c]["4C"][:value] %></td>
+          <td><%= @result[c]["4D"].nil? ? "x" : @result[c]["4D"][:value] %></td>
+          <td><%= @result[c]["4E"].nil? ? "x" : @result[c]["4E"][:value] %></td>
+          <td><%= @result[c]["4F"].nil? ? "x" : @result[c]["4F"][:value] %></td>
+          <td><%= @result[c]["4G"].nil? ? "x" : @result[c]["4G"][:value] %></td>
+          <td><%= @result[c]["5A"].nil? ? "x" : @result[c]["5A"][:value] %></td>
+          <td><%= @result[c]["5B"].nil? ? "x" : @result[c]["5B"][:value] %></td>
+          <td><%= @result[c]["5C"].nil? ? "x" : @result[c]["5C"][:value] %></td>
+          <td><%= @result[c]["5D"].nil? ? "x" : @result[c]["5D"][:value] %></td>
+          <td><%= @result[c]["5E"].nil? ? "x" : @result[c]["5E"][:value] %></td>
+          <td><%= @result[c]["5F"].nil? ? "x" : @result[c]["5F"][:value] %></td>
+          <td><%= @result[c]["5G"].nil? ? "x" : @result[c]["5G"][:value] %></td>
         </tr>
       <% end %>
     </tbody>

@@ -47,8 +47,11 @@ class FormsController < ApplicationController
     @role_name = Role.find(current_user.role_id).name
     @first_name = current_user.first_name
     @last_name = current_user.last_name
-    form_id = Form.where(user_id: current_user.id, _type: "CDS").pluck(:id).first
-    @competency = Competency.select(:name).where(template_id: form_id)
+    form_id = Form.where(user_id: current_user.id, _type: "CDS").where.not(status: "Done").order(:id).last
+
+    @competencies = Competency.where(template_id: form_id.template_id).pluck(:name)
+
+    @result = @form_service.preview_result
   end
 
   def destroy
@@ -59,6 +62,12 @@ class FormsController < ApplicationController
     else
       render json: { status: "fail" }
     end
+  end
+
+  def submit
+    form = Form.find(params[:id])
+    form.update(period_id: params[:period_id], status: "Awaiting Review")
+    #send mail if updated
   end
 
   private

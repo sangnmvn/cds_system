@@ -36,12 +36,12 @@ module Api
     def create_form_slot(role_id = nil)
       role_id ||= current_user.role_id
       template_id = Template.find_by(role_id: role_id, status: true)&.id
-      return [] if template_id.nil?
+      return 0 if template_id.nil?
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
       form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, level: 2, rank: 2, title_id: 1002, role_id: 1, status: "New")
-      form.clone
+
       if form.save
         slot_ids.map do |id|
           FormSlot.create!(form_id: form.id, slot_id: id, is_passed: 0)
@@ -54,7 +54,6 @@ module Api
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
       forms = Form.where(user_id: user_id, _type: "CDS").includes(:period, :role, :title).order(id: :desc)
-      # binding.pry
       forms.map do |form|
         {
           id: form.id,
@@ -130,6 +129,38 @@ module Api
       end
     end
 
+    def preview_result
+      form_id = Form.where(user_id: current_user.id, _type: "CDS").where.not(status: "Done").order(:id).last
+      competencies = Competency.where(template_id: form_id.template_id).order(:location).pluck(:id)
+
+      filter = {
+        form_slots: { form_id: form_id.id },
+        competency_id: competencies,
+      }
+
+      slots = Slot.includes(:competency).joins(:form_slots).where(filter).order(:level, :slot_id)
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form_id.id, slot_id: slots.pluck(:id))
+      form_slots = format_form_slot(form_slots)
+      hash = {}
+      dumy_hash = {}
+      slots.map do |slot|
+        key = slot.competency.name + slot.level.to_s
+        if dumy_hash[key].nil?
+          dumy_hash[key] = -1
+        end
+        dumy_hash[key] += 1
+        if hash[slot.competency.name].nil?
+          hash[slot.competency.name] = {}
+        end
+        check = form_slots[slot.id][:point].present? && form_slots[slot.id][:given_point].empty?
+        hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = {
+          value: form_slots[slot.id][:point],
+          type: check ? "assessed" : "new",
+        }
+      end
+      hash
+    end
+
     private
 
     attr_reader :params, :current_user
@@ -162,7 +193,7 @@ module Api
         if hash[form_slot.slot_id].nil?
           hash[form_slot.slot_id] = {
             evidence: comments&.evidence || "",
-            point: comments&.point || "",
+            point: comments&.point || 0,
             is_commit: comments&.is_commit,
             given_point: recommends[:given_point],
             recommends: recommends[:recommends],
