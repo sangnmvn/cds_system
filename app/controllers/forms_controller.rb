@@ -6,7 +6,7 @@ class FormsController < ApplicationController
   end
 
   def get_list_cds_assessment
-    render json: @form_service.get_list_cds_assessment(current_user.id), :include => [:role, :title, :period]
+    render json: @form_service.get_list_cds_assessment(current_user.id)
   end
 
   def get_competencies

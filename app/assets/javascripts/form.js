@@ -1,38 +1,38 @@
-function LoadDataAssessmentList()
-  {
-    $.ajax({
-      type: "GET",
-      url: "/forms/get_list_cds_assessment/",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      data: {
-      },
-      dataType: "json",
-      success: function (response) {
-        var temp = '';
-        for (var i=0; i<response.length; i++){
-          var form = response[i];
-          var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0] + ' - ' + form.period.to_date.split("-")[1] + '/' + form.period.to_date.split("-")[0];
-          var this_element = "<tr id='period_id_{id}'> \
-            <td>{no}</td> \
-            <td><a href='{period_link}'>{period}</a></td> \
-            <td>{role}</td> \
-            <td>{level}</td> \
-            <td>{rank}</td> \
-            <td>{title}</td> \
-            <td>{status}</td> \
-            <td> \
-              <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
-              <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
-            </td> \
-          </tr>".formatUnicorn({no: i+1, id: form.id, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status, period_link: "periods/" + form.period.id + '/'});
-          temp += this_element;
-        };
-        $(".table-cds-assessment-list tbody").html(temp);
-      }
-    });
-  }
+function LoadDataAssessmentList() {
+  $.ajax({
+    type: "GET",
+    url: "/forms/get_list_cds_assessment/",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+    },
+    dataType: "json",
+    success: function (response) {
+      var temp = '';
+      for (var i = 0; i < response.length; i++) {
+        var form = response[i];
+        var this_element = `<tr id='period_id_{id}'> 
+            <td>{no}</td> 
+            <td><a href='#'>{period}</a></td> 
+            <td>{role}</td> 
+            <td>{level}</td> 
+            <td>{rank}</td> 
+            <td>{title}</td> 
+            <td>{status}</td> 
+            <td> 
+              <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
+              <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
+                <i class='fa fa-trash icon' style='color:red'></i>
+              </a> 
+            </td> 
+          </tr>`.formatUnicorn({ no: i + 1, id: form.id, period: form.period_name, role: form.role_name, level: form.level, rank: form.rank, title: form.title, status: form.status });
+        temp += this_element;
+      };
+      $(".table-cds-assessment-list tbody").html(temp);
+    }
+  });
+}
 
 $(document).ready(function () {
   loadDataPanel(1);
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
-    
+
   });
   function drawColorTitleFormPreviewResult(start, end, color) {
     for (i = start; i <= end; i++) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
       );
     }
   }
-  
+
   function SidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
 
@@ -79,8 +79,6 @@ $(document).ready(function () {
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
 
-  
-
   function loadDataPanel(form_id) {
     $.ajax({
       type: "POST",
@@ -95,7 +93,7 @@ $(document).ready(function () {
       success: function (response) {
         var temp = '';
         var i = 0;
-        for ( competency in response){
+        for (competency in response) {
           temp += ` <div class="card">
           <div class="card-header">
               <table class="table table-primary table-responsive-sm table-mytable table${i}">
@@ -115,23 +113,23 @@ $(document).ready(function () {
               <div class="competency">
                 <table class="table table-primary table-responsive-sm table-mytable">
                   <tbody>`
-                  var l = '';
-                  var levels = response[competency].levels
-                  for ( level in levels){
-                    l += ` <tr class="d-flex">
+          var l = '';
+          var levels = response[competency].levels
+          for (level in levels) {
+            l += ` <tr class="d-flex">
                       <td class="col-2"></td>
                       <td class="col-7">Level ${level}</td>
                       <td class="col-3">${levels[level].current}/${levels[level].total}</td>
                     </tr>`
-                  }
-                  temp += l
-                  temp += `</tbody>
+          }
+          temp += l
+          temp += `</tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>`
-        i += 1;
+          i += 1;
         };
         $('#competency_panel').html(temp);
         $(".card table thead tr").click(function () {
@@ -147,14 +145,14 @@ $(document).ready(function () {
     });
   }
 
-  
-    
+
+
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
 
-  
+
 });
 
 $(document).on("click", ".line-slot", function () {
@@ -174,14 +172,14 @@ $(document).on("click", ".line-slot", function () {
 
 
 function SelectPoint(point_val) {
-  if (point_val.length > 1 ) {
+  if (point_val.length > 1) {
     // && document.getElementById("").value
   }
 }
 // end
 
 // delete cds 
-  
+
 $(document).on("click", ".delete-cds", function () {
   var id = $(this).data("id");
   var delete_period_cds = $(this).data("period-cds");
@@ -195,7 +193,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
   delete_period_cds = $('#delete_period_cds').text();
   $.ajax({
     type: "DELETE",
-    url: "/forms/"+form_id,
+    url: "/forms/" + form_id,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -204,9 +202,9 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
       if (response.status == "success") {
         $('#modal_delete_cds').modal('hide');
         LoadDataAssessmentList();
-        success("The CDS for period "+ delete_period_cds +" has been deleted successfully.");
-      }else {
-        fails("Can't delete CDS for period "+ delete_period_cds + " .");
+        success("The CDS for period " + delete_period_cds + " has been deleted successfully.");
+      } else {
+        fails("Can't delete CDS for period " + delete_period_cds + " .");
       }
 
     }
@@ -230,7 +228,7 @@ $(document).on("click", ".card table thead tr", function () {
     },
     dataType: "json",
     success: function (response) {
-      
+
       var temp = "";
       $(response).each(function (i, e) {
         // debugger

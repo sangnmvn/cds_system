@@ -52,7 +52,19 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      Form.where(user_id: user_id, _type: "CDS").joins(:period).order(:from_date => :desc, :to_date => :desc)
+      forms = Form.where(user_id: user_id, _type: "CDS").includes(:period, :role, :title).order(id: :desc)
+
+      forms.map do |form|
+        {
+          id: form.id,
+          period_name: form.period&.format_name || "New",
+          role_name: form.role&.name,
+          level: form.level,
+          rank: form.rank,
+          title: form.title&.name,
+          status: form.status,
+        }
+      end
     end
 
     def format_data_slots(param = nil)
