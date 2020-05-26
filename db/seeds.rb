@@ -10,6 +10,7 @@
 FormSlot.delete_all
 Form.delete_all
 Slot.delete_all
+TitleCompetencyMapping.delete_all
 Competency.delete_all
 Template.delete_all
 Title.delete_all
@@ -1196,15 +1197,16 @@ Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03
 Schedule.create!(user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New")
 
 # Create Form
-Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1")
+Title.create!(id: 1001, name: "QC Level 1", desc: "QC Level 1", role_id: "1")
+Title.create!(id: 1002, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
+Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
+Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
+
+Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1")
 
 (1..134).each { |i| FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0) }
 
-Title.create!(id: 1, name: "QC Level 1", desc: "QC Level 1", role_id: "1")
-Title.create!(id: 2, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
-Title.create!(id: 3, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
-Title.create!(id: 4, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
 TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1, competency_id: 1)
 TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1, competency_id: 2)

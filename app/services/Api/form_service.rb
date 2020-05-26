@@ -71,7 +71,7 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      Form.where(user_id: user_id).includes(:period)
+      Form.where(user_id: user_id).joins(:period)
     end
 
     

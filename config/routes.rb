@@ -43,7 +43,7 @@ Rails.application.routes.draw do
       get "cds_assessment"
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
-      post "save_cds_assessment_manager"
+      post "save_cds_assessment_manager"      
     end
   end
   resources :templates do

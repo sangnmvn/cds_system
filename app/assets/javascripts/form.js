@@ -1,3 +1,40 @@
+function LoadDataAssessmentList()
+  {
+    $.ajax({
+      type: "GET",
+      url: "/forms/get_list_cds_assessment/",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {
+      },
+      dataType: "json",
+      success: function (response) {
+        var temp = '';
+        for (var i=0; i<response.length; i++){
+          var form = response[i];
+          debugger;
+          
+          var this_element = "<tr> \
+            <td>{id}</td> \
+            <td>1</td> \
+            <td>1</td> \
+            <td>1</td> \
+            <td>1</td> \
+            <td>1</td> \
+            <td>1</td> \
+            <td> \
+              <a href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
+              <a class='delete-cds' data-id='1' data-period-cds='05/2020 – 10/2020' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
+            </td> \
+          </tr>".formatUnicorn({id: i+1});
+          temp += this_element;
+        };
+        $(".table-cds-assessment-list tbody").html(temp);
+      }
+    });
+  }
+
 $(document).ready(function () {
   loadDataPanel(1);
   $(".left-panel-competency").hide();
@@ -7,6 +44,7 @@ $(document).ready(function () {
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
   drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
   drawColorTitleFormPreviewResult(31, 37, "#93dba3");
+  LoadDataAssessmentList();
 
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
@@ -20,11 +58,7 @@ $(document).ready(function () {
       );
     }
   }
-
-  function loadDataAssessmentList()
-  {
-    
-  }
+  
   function SidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
 
@@ -134,6 +168,8 @@ $(document).ready(function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
+
+  
 });
 // end
 
@@ -193,4 +229,6 @@ $(document).on("click", ".card table thead tr", function () {
 
     }
   });
+
+  
 });
