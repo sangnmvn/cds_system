@@ -1,6 +1,5 @@
 class FormsController < ApplicationController
   before_action :form_service
-  before_action :set_form, only: [:destroy]
   layout "system_layout"
 
   def index
@@ -44,7 +43,7 @@ class FormsController < ApplicationController
   end
 
   def destroy
-    if @form.destroy
+    if Form.find(params[:id]).destroy
       render json: { status: "success" }
     else
       render json: { status: "fail" }
@@ -55,10 +54,6 @@ class FormsController < ApplicationController
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)
-  end
-
-  def set_form
-    @form = Form.find(params[:id])
   end
 
   def form_params

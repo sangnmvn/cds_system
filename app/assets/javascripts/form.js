@@ -24,7 +24,7 @@ function LoadDataAssessmentList()
             <td>{status}</td> \
             <td> \
               <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
-              <a class='delete-cds' data-id='{id}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
+              <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
             </td> \
           </tr>".formatUnicorn({no: i+1, id: form.id, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status, period_link: "periods/" + form.period.id + '/'});
           temp += this_element;
@@ -203,6 +203,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
     success: function (response) {
       if (response.status == "success") {
         $('#modal_delete_cds').modal('hide');
+        LoadDataAssessmentList();
         success("The CDS for period "+ delete_period_cds +" has been deleted successfully.");
       }else {
         fails("Can't delete CDS for period "+ delete_period_cds + " .");
