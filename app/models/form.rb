@@ -6,4 +6,5 @@ class Form < ApplicationRecord
   belongs_to :role, optional: true
   belongs_to :title, optional: true
   has_many :form_histories
+  validates :status, inclusion: { in: ["New", "Awaiting Review", "Awaiting Approval", "Pending", "Done"] }
 end

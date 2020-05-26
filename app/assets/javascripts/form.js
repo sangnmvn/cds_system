@@ -13,10 +13,8 @@ function LoadDataAssessmentList()
         var temp = '';
         for (var i=0; i<response.length; i++){
           var form = response[i];
-          //debugger;
-          
           var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0] + ' - ' + form.period.to_date.split("-")[1] + '/' + form.period.to_date.split("-")[0];
-          var this_element = "<tr> \
+          var this_element = "<tr id='period_id_{id}'> \
             <td>{no}</td> \
             <td><a href='{period_link}'>{period}</a></td> \
             <td>{role}</td> \

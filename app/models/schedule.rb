@@ -5,7 +5,7 @@ class Schedule < ApplicationRecord
   belongs_to :period, optional: true
 
   delegate :first_name, :last_name, :email, to: :user
-  validates :_type, inclusion: { in: ["HR", "PM"] }
+  #validates :_type, inclusion: { in: ["HR", "PM"] }
 
   paginates_per 20
   max_paginates_per 20

@@ -1203,14 +1203,13 @@ Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
 Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending")
-Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1")
+Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Pending")
 
 (1..134).each { |i| FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0) }
 
-
-TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1, competency_id: 1)
-TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1, competency_id: 2)
-TitleCompetencyMapping.create!(id: 3, min_level_ranking: 1, title_id: 1, competency_id: 3)
-TitleCompetencyMapping.create!(id: 4, min_level_ranking: 3, title_id: 1, competency_id: 4)
-TitleCompetencyMapping.create!(id: 5, min_level_ranking: 2, title_id: 1, competency_id: 1)
-TitleCompetencyMapping.create!(id: 6, min_level_ranking: 2, title_id: 1, competency_id: 1)
+TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)
+TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1001, competency_id: 2)
+TitleCompetencyMapping.create!(id: 3, min_level_ranking: 1, title_id: 1001, competency_id: 3)
+TitleCompetencyMapping.create!(id: 4, min_level_ranking: 3, title_id: 1002, competency_id: 4)
+TitleCompetencyMapping.create!(id: 5, min_level_ranking: 2, title_id: 1002, competency_id: 1)
+TitleCompetencyMapping.create!(id: 6, min_level_ranking: 2, title_id: 1002, competency_id: 1)

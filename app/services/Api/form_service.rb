@@ -71,10 +71,9 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      Form.where(user_id: user_id).joins(:period)
+      Form.where(user_id: user_id, _type: "CDS").joins(:period).order(:from_date => :desc, :to_date => :desc)
     end
 
-    
     def format_data_slots(param = nil)
       param ||= params
       filter = {
