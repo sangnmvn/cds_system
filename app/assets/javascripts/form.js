@@ -110,15 +110,70 @@ $(document).ready(function () {
     });
   }
 
-
-
+});
+function resize_textarea(){  
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
 
+  $(".autoresizing").each((i,el) => {
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+  })
+  
+}
 
-});
+function loadDataSlots(response){
+  var temp = "";
+  $(response).each(function (i, e) {
+    temp += `
+    <tr id="${e.id}" class="tr_slot">
+      <td style="text-align:center">${e.slot_id}</td>
+      <td style="position: relative;">
+        <div>${e.desc}</div>
+        <br>
+        <div id="slot_description_${e.slot_id}" style="display: none;">
+        ${e.evidence}
+        </div><br>
+        <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
+      </td>
+      <td colspan="2">
+        <select class="commit-select">
+          <option value="true">Commit</option>
+          <option value="fasle" selected>Uncommit</option>
+        </select>
+      </td>
+      <td colspan="4">
+        <select class="point-select">
+          <option></option> 
+          <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
+        </select>
+      </td>
+      <td colspan="5"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
+      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends}</textarea></td>
+      <td>
+        <select style="background-color: #ebebe4;" class="given-point-select" disabled>
+          <option></option>
+          <option value="5" ${check(e.tracking.given_point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.given_point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.given_point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.given_point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+        </select>
+      </td>
+      <td><textarea style="resize:none" disabled>${e.tracking.name}</textarea></td>
+      <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
+      </tr>
+      `;
+  });
+  $('.csd-assessment-table table tbody').html(temp);
+  resize_textarea();
+}
 
 $(document).on("click", ".line-slot", function () {
   if (

@@ -27,9 +27,11 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.integer "point", limit: 1
     t.boolean "is_commit"
     t.bigint "form_slot_id"
+    t.bigint "period_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["form_slot_id"], name: "index_comments_on_form_slot_id"
+    t.index ["period_id"], name: "index_comments_on_period_id"
   end
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -106,10 +108,12 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.integer "given_point", limit: 1
     t.text "recommend"
     t.integer "user_id"
+    t.bigint "period_id"
     t.bigint "form_slot_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["form_slot_id"], name: "index_line_managers_on_form_slot_id"
+    t.index ["period_id"], name: "index_line_managers_on_period_id"
   end
 
   create_table "periods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -238,6 +242,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
 
   add_foreign_key "approvers", "users"
   add_foreign_key "comments", "form_slots"
+  add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"
   add_foreign_key "form_histories", "forms"
   add_foreign_key "form_slots", "forms"
@@ -247,6 +252,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
   add_foreign_key "forms", "titles"
   add_foreign_key "forms", "users"
   add_foreign_key "line_managers", "form_slots"
+  add_foreign_key "line_managers", "periods"
   add_foreign_key "projects", "companies"
   add_foreign_key "schedules", "companies"
   add_foreign_key "schedules", "periods"
