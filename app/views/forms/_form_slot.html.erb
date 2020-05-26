@@ -23,24 +23,24 @@
         <% # //Option Reviewer %>
          <% @slots.each do |x| %>
           <tr>
-            <td><%= x["slot_id".to_sym] %></td>
+            <td style="text-align:center"> <%= x["slot_id".to_sym] %></td>
             <td style="position: relative;">
               <div><%= x["desc".to_sym] %></div>
               <br>
               <div id="slot_description_<%= x["slot_id".to_sym] %>" style="display: none;">
-              <%= x["evidence".to_sym] %>
+              <%= x["evidence".to_sym].html_safe %>
               </div><br>
               <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
             </td>
             <td colspan="2">
-              <select class="custom-select" style="border:none; height:100%;">
+              <select>
                 <option></option>
                 <option value="2">Commit</option>
                 <option value="1">Uncommit</option>
               </select>
             </td>
             <td colspan="4">
-              <select class="custom-select" style="border:none; height:100%;" onchange="SelectPoint(this.value)">
+              <select id="point_select">
                 <option></option>
                 <option value="5">5 - Outstanding</option>
                 <option value="4">4 - Exceeds Expectations</option> 
@@ -60,7 +60,7 @@
         <% # Option PM %>
         <% @slots.each do |x| %>
           <tr>
-            <td rowspan="4"><%= x["slot_id".to_sym] %></td>
+            <td rowspan="4" style="text-align:center"><%= x["slot_id".to_sym] %></td>
             <td rowspan="4" style="position: relative;">
               <div><%= x["desc".to_sym] %></div>
               <br>
@@ -69,8 +69,21 @@
               </div><br>
               <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
             </td>
-            <td rowspan="4" colspan="2"><textarea class="autoresizing"></textarea></td>
-            <td rowspan="4" colspan="4"><textarea class="autoresizing"></textarea></td>
+            <td rowspan="4" colspan="2">
+              <select>
+                <option></option>
+                <option value="2">Commit</option>
+                <option value="1">Uncommit</option>
+              </select></td>
+            <td rowspan="4" colspan="4"> 
+              <select id="point_select" onchange= "pointselect()">
+                <option></option>
+                <option value="5">5 - Outstanding</option>
+                <option value="4">4 - Exceeds Expectations</option> 
+                <option value="3">3 - Meets Expectations</option>
+                <option value="2">2 - Needs Improvement</option>
+                <option value="1">1 - Does Not Meet Minimun Standards</option>
+              </select></td>
             <td rowspan="4" colspan="5"><textarea class="autoresizing"><%= x["tracking".to_sym]["comment".to_sym] %></textarea></td>
             <td colspan="2"><textarea class="autoresizing"></textarea></td>
             <td><textarea class="autoresizing"></textarea></td>

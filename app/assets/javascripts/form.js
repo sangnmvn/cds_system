@@ -144,6 +144,7 @@ $(document).ready(function () {
         $('#card0').click()
       }
     });
+
   }
 
   
@@ -153,15 +154,14 @@ $(document).ready(function () {
     this.style.height = this.scrollHeight + "px";
   });
 
-
 });
 
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
     temp += `
-    <tr>
-      <td>${e.slot_id}</td>
+    <tr id="${e.id}" class="tr_slot">
+      <td style="text-align:center">${e.slot_id}</td>
       <td style="position: relative;">
         <div>${e.desc}</div>
         <br>
@@ -171,28 +171,36 @@ function loadDataSlots(response){
         <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
       </td>
       <td colspan="2">
-        <select class="custom-select" style="border:none; height:100%;">
-          <option></option>
-          <option value="2">Commit</option>
-          <option value="1">Uncommit</option>
+        <select class="commit-select">
+          <option value="true">Commit</option>
+          <option value="fasle" selected>Uncommit</option>
         </select>
       </td>
       <td colspan="4">
-        <select class="custom-select" style="border:none; height:100%;" onchange="SelectPoint(this.value)">
-          <option></option>
-          <option value="5">5 - Outstanding</option>
-          <option value="4">4 - Exceeds Expectations</option> 
-          <option value="3">3 - Meets Expectations</option>
-          <option value="2">2 - Needs Improvement</option>
-          <option value="1">1 - Does Not Meet Minimun Standards</option>
+        <select class="point-select">
+          <option></option> 
+          <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td colspan="5"><textarea class="autoresizing">${e.tracking.evidence}</textarea></td>
-      <td colspan="2"><textarea class="autoresizing"></textarea></td>
-      <td><textarea class="autoresizing"></textarea></td>
-      <td><textarea class="autoresizing"></textarea></td>
+      <td colspan="5"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
+      <td colspan="2"><textarea class="autoresizing" disabled>${e.tracking.recommends}</textarea></td>
+      <td>
+        <select class="given-point-select" disabled>
+          <option></option>
+          <option value="5" ${check(e.tracking.given_point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.given_point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.given_point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.given_point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+        </select>
+      </td>
+      <td><textarea class="autoresizing" disabled>${e.tracking.name}</textarea></td>
       <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
-    </tr>
+      </tr>
       `;
   });
   $('.csd-assessment-table table tbody').html(temp);
@@ -214,11 +222,6 @@ $(document).on("click", ".line-slot", function () {
 });
 
 
-function SelectPoint(point_val) {
-  if (point_val.length > 1) {
-    // && document.getElementById("").value
-  }
-}
 // end
 
 // delete cds 
@@ -254,7 +257,13 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 });
 
 
-// form slot 
+
+function check(x, y) {
+  if (x == y)
+    return "selected"
+  return ""
+}
+// left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
   $.ajax({
@@ -270,6 +279,7 @@ $(document).on("click", ".card table thead tr", function () {
     dataType: "json",
     success: function (response) {
       loadDataSlots(response);
+
     }
   });
 });
@@ -279,7 +289,7 @@ $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');
   var slot_id = $(this).data("slot-id");
   id = $(".card").find('.show').attr('id').split("collapse");
-  competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
+  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
   competency_name = $.trim(competency_name);
   $('#assessment_history_competency_name').text(competency_name);
   $('#assessment_history_slot_id').text(slot_id);
@@ -344,3 +354,29 @@ $(document).on("change", "#filter-form-slots", function () {
 
 
 
+
+$(document).on("change", ".csd-assessment-table table tbody .tr_slot", function () {
+
+  if ($(this).find('.point-select').val().length > 0 && $(this).find('.evidence').val().length > 0) {
+    var slot_id = $(this)[0].id;
+    var is_commit = $(this).find('.commit-select').val();
+    var point = $(this).find('.point-select').val();
+    var evidence = $(this).find('.evidence').val();
+    $.ajax({
+      type: "POST",
+      url: "/forms/save_cds_assessment_staff",
+      data: {
+        form_id: form_id,
+        is_commit: is_commit,
+        point: parseInt(point),
+        evidence: evidence,
+        slot_id: slot_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      success: function (response) {
+      }
+    });
+  }
+});

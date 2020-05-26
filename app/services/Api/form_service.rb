@@ -136,6 +136,7 @@ module Api
 
     def slot_to_hash(slot, location, form_slots)
       h_slot = {
+        id: slot.id,
         slot_id: slot.level + LETTER_CAP[location],
         desc: slot.desc,
         evidence: slot.evidence,
@@ -162,6 +163,7 @@ module Api
           hash[form_slot.slot_id] = {
             evidence: comments&.evidence || "",
             point: comments&.point || "",
+            is_commit: comments&.is_commit,
             given_point: recommends[:given_point],
             recommends: recommends[:recommends],
             name: recommends[:name],

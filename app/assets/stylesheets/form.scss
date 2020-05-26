@@ -266,6 +266,7 @@
 .csd-assessment-table {
   table {
     table-layout: fixed;
+    border:  solid #a1b5da;
   }
   background-color: #fff;
   thead {
@@ -312,4 +313,20 @@
     overflow: hidden;
     resize: none;
   }
+  select {
+    padding: 0px 2px;
+    border:none;
+    height:100%;
+    width:100%;
+    background-color:#fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    white-space: pre-wrap;
+  }
+  .disabled {
+    cursor: not-allowed;
+  }
 }
+

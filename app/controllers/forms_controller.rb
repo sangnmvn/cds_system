@@ -34,11 +34,13 @@ class FormsController < ApplicationController
   end
 
   def save_cds_assessment_staff
-    @form_service.save_cds_staff
+    return render json: { status: "success" } if @form_service.save_cds_staff
+    render json: { status: "fail" }
   end
 
   def save_cds_assessment_manager
-    @form_service.save_cds_manager
+    return render json: { status: "success" } if @form_service.save_cds_manager
+    render json: { status: "fail" }
   end
 
   def preview_result
@@ -70,6 +72,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id)
   end
 end
