@@ -21,7 +21,7 @@ class FormsController < ApplicationController
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
 
-    if form.nil? || form.template.role_id != current_user.role_id
+    @form_id = if form.nil? || form.template.role_id != current_user.role_id
       @form_service.create_form_slot
     else
       form.id

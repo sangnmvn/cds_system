@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
 <script>
-  var form_id = 0;
+  var form_id = <%= @form_id %>;
 </script>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
@@ -16,10 +16,10 @@
     <div class="col-md-4" >
       CDS Reviewer for 
     </div>
-    <div class="col-md-3">
-      Search
+    <div class="col-md-4">
+      Search: <input type="text" class="form-control" placeholder="Search by slot's description">
     </div>
-    <div class="col-md-5 list-action filter-slots" style="text-align:right">
+    <div class="col-md-4 list-action filter-slots" style="text-align:right">
       Filter
       <select id="filter-form-slots" multiple="multiple">
         <option value="1">Passed slots in previous periods</option>

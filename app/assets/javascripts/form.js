@@ -35,7 +35,7 @@ function LoadDataAssessmentList() {
 }
 
 $(document).ready(function () {
-  var form_id = parseInt(findGetParameter("form_id"));
+  // var form_id = parseInt(findGetParameter("form_id"));
   loadDataPanel(form_id);
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
@@ -190,11 +190,10 @@ $(document).on("click", ".delete-cds", function () {
 });
 
 $(document).on("click", "#confirm_yes_delete_cds", function () {
-  form_id = $('#confirm_yes_delete_cds').val();
   delete_period_cds = $('#delete_period_cds').text();
   $.ajax({
     type: "DELETE",
-    url: "/forms/" + form_id,
+    url: "/forms/" + $('#confirm_yes_delete_cds').val(),
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -216,7 +215,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
-  var form_id = 1;
+  // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
@@ -277,6 +276,11 @@ $(document).on("click", ".card table thead tr", function () {
 
 $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');
-  // var competency_id = $(this).data("id-competency");
+  var slot_id = $(this).data("slot-id");
+  id = $(".card").find('.show').attr('id').split("collapse");
+  competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
+  competency_name = $.trim(competency_name);
+  $('#assessment_history_competency_name').text(competency_name);
+  $('#assessment_history_slot_id').text(slot_id);
 
 });
