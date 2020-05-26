@@ -13,21 +13,23 @@ function LoadDataAssessmentList()
         var temp = '';
         for (var i=0; i<response.length; i++){
           var form = response[i];
-          debugger;
+          //debugger;
           
+          var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0];
           var this_element = "<tr> \
-            <td>{id}</td> \
-            <td>1</td> \
-            <td>1</td> \
-            <td>1</td> \
-            <td>1</td> \
-            <td>1</td> \
-            <td>1</td> \
+            <td>{no}</td> \
+            <td>{period}</td> \
+            <td>{role}</td> \
+            <td>{level}</td> \
+            <td>{rank}</td> \
+            <td>{title}</td> \
+            <td>{status}</td> \
             <td> \
-              <a href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
-              <a class='delete-cds' data-id='1' data-period-cds='05/2020 – 10/2020' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
+              <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
+              <a class='delete-cds' data-id='{id}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
             </td> \
-          </tr>".formatUnicorn({id: i+1});
+          </tr>".formatUnicorn({no: i+1, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status
+          });
           temp += this_element;
         };
         $(".table-cds-assessment-list tbody").html(temp);
