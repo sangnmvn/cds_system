@@ -147,14 +147,18 @@ $(document).ready(function () {
 
   }
 
+});
+function resize_textarea(){
+  $(".autoresizing").on("change", function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
   
-
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
-
-});
+}
 
 function loadDataSlots(response){
   var temp = "";
@@ -204,6 +208,7 @@ function loadDataSlots(response){
       `;
   });
   $('.csd-assessment-table table tbody').html(temp);
+  resize_textarea();
 }
 
 $(document).on("click", ".line-slot", function () {
