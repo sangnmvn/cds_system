@@ -19,9 +19,9 @@
     </thead>
     <tbody>
       <% a = 0 %>
-      <% if a == 0 %>
+      <% if 1 == 0 %>
         <% # //Option Reviewer %>
-        <% @slots.each do |x| %>
+         <% @slots.each do |x| %>
           <tr>
             <td><%= x["slot_id".to_sym] %></td>
             <td style="position: relative;">
@@ -30,7 +30,7 @@
               <div id="slot_description_<%= x["slot_id".to_sym] %>" style="display: none;">
               <%= x["evidence".to_sym] %>
               </div><br>
-              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
             </td>
             <td colspan="2">
               <select class="custom-select" style="border:none; height:100%;">
@@ -56,7 +56,7 @@
             <td><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
           </tr>
         <% end %>
-      <% else %>
+      <% elsif 1 == 0 %>
         <% # Option PM %>
         <% @slots.each do |x| %>
           <tr>
@@ -67,7 +67,7 @@
               <div id="slot_description_<%= x["slot_id".to_sym] %>" style="display: none;">
               <%= x["evidence".to_sym] %>
               </div><br>
-              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
             </td>
             <td rowspan="4" colspan="2"><textarea class="autoresizing"></textarea></td>
             <td rowspan="4" colspan="4"><textarea class="autoresizing"></textarea></td>

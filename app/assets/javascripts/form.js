@@ -147,22 +147,8 @@ $(document).ready(function () {
     });
   }
 
-  $(".line-slot").each(function (index) {
-    $(this).on("click", function () {
-      if (
-        document.getElementById("slot_description_" + this.id).style.display ==
-        "block"
-      ) {
-        document.getElementById("slot_description_" + this.id).style.display =
-          "none";
-        document.getElementById(this.id).innerText = "ViewDetails";
-      } else {
-        document.getElementById("slot_description_" + this.id).style.display =
-          "block";
-        document.getElementById(this.id).innerText = "HideDetails";
-      }
-    });
-  });
+  
+    
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
@@ -170,6 +156,22 @@ $(document).ready(function () {
 
   
 });
+
+$(document).on("click", ".line-slot", function () {
+  if (
+    document.getElementById("slot_description_" + this.id).style.display ==
+    "block"
+  ) {
+    document.getElementById("slot_description_" + this.id).style.display =
+      "none";
+    document.getElementById(this.id).innerText = "ViewDetails";
+  } else {
+    document.getElementById("slot_description_" + this.id).style.display =
+      "block";
+    document.getElementById(this.id).innerText = "Hide Details";
+  }
+});
+
 
 function SelectPoint(point_val) {
   if (point_val.length > 1 ) {
@@ -214,10 +216,12 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
+  var form_id = 1;
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
     data: {
+      form_id: form_id,
       competency_id: competency_id
     },
     headers: {
@@ -225,15 +229,47 @@ $(document).on("click", ".card table thead tr", function () {
     },
     dataType: "json",
     success: function (response) {
-      // if (response.status == "success") {
-      //   $('#modal_delete_cds').modal('hide');
-      //   success("The CDS for period "+ delete_period_cds +" has been deleted successfully.");
-      // }else {
-      //   fails("Can't delete CDS for period "+ delete_period_cds + " .");
-      // }
-
+      
+      var temp = "";
+      $(response).each(function (i, e) {
+        // debugger
+        temp += `
+        <tr>
+          <td>${e.slot_id}</td>
+          <td style="position: relative;">
+            <div>${e.desc}</div>
+            <br>
+            <div id="slot_description_${e.slot_id}" style="display: none;">
+            ${e.evidence}
+            </div><br>
+            <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
+          </td>
+          <td colspan="2">
+            <select class="custom-select" style="border:none; height:100%;">
+              <option></option>
+              <option value="2">Commit</option>
+              <option value="1">Uncommit</option>
+            </select>
+          </td>
+          <td colspan="4">
+            <select class="custom-select" style="border:none; height:100%;" onchange="SelectPoint(this.value)">
+              <option></option>
+              <option value="5">5 - Outstanding</option>
+              <option value="4">4 - Exceeds Expectations</option> 
+              <option value="3">3 - Meets Expectations</option>
+              <option value="2">2 - Needs Improvement</option>
+              <option value="1">1 - Does Not Meet Minimun Standards</option>
+            </select>
+          </td>
+          <td colspan="5"><textarea class="autoresizing">${e.tracking.evidence}</textarea></td>
+          <td colspan="2"><textarea class="autoresizing"></textarea></td>
+          <td><textarea class="autoresizing"></textarea></td>
+          <td><textarea class="autoresizing"></textarea></td>
+          <td><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
+        </tr>
+          `;
+      });
+      $('.csd-assessment-table table tbody').html(temp);
     }
   });
-
-  
 });

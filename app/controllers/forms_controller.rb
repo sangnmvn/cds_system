@@ -16,15 +16,16 @@ class FormsController < ApplicationController
 
   def cds_assessment
     form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
-    @slots = if form.nil? || form.template.role_id != current_user.role_id
-        @form_service.load_new_form
-      else
-        @form_service.load_old_form(form)
-      end
+    if form.nil? || form.template.role_id != current_user.role_id
+      @form_service.create_form_slot
+    else
+      form.id
+    end
   end
 
   def get_cds_assessment
     render json: @form_service.format_data_slots
+    # binding.pry
   end
 
   def preview_result

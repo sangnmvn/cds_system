@@ -33,32 +33,13 @@ module Api
       hash
     end
 
-    def load_new_form(role_id = nil)
+    def create_form_slot(role_id = nil)
       role_id ||= current_user.role_id
       template_id = Template.find_by(role_id: role_id, status: true)&.id
       return [] if template_id.nil?
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
-      slots = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
-      form_id = create_form_slot(slots, template_id)
+      slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
-      param = {
-        competency_id: competency_ids.first,
-        form_id: form_id,
-      }
-
-      format_data_slots(param)
-    end
-
-    def load_old_form(form)
-      competency_id = Competency.where(template_id: form.template_id).order(:location).first.id
-      param = {
-        competency_id: competency_id,
-        form_id: form.id,
-      }
-      format_data_slots(param)
-    end
-
-    def create_form_slot(slot_ids, template_id)
       form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id)
       if form.save
         slot_ids.map do |id|
@@ -149,11 +130,12 @@ module Api
 
         if hash[form_slot.slot_id].nil?
           hash[form_slot.slot_id] = {
-            comment: comments&.evidence || "",
+            evidence: comments&.evidence || "",
             point: comments&.point || "",
             given_point: recommends[:given_point],
             recommends: recommends[:recommends],
             name: recommends[:name],
+            count: recommends[:count],
           }
         end
       end
@@ -166,12 +148,14 @@ module Api
         given_point: [],
         recommends: [],
         name: [],
+        count: 0,
       }
       line_managers.map do |line|
         unless hash[:name].include?(line.user_id)
           hash[:given_point] << line.given_point
           hash[:recommends] << line.recommend
           hash[:name] << line.user_id
+          hash[:count] += 1
         end
       end
       hash[:name] = User.where(id: hash[:name]).pluck(:account)
