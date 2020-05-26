@@ -15,7 +15,7 @@ function LoadDataAssessmentList()
           var form = response[i];
           //debugger;
           
-          var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0];
+          var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0] + ' - ' + form.period.to_date.split("-")[1] + '/' + form.period.to_date.split("-")[0];
           var this_element = "<tr> \
             <td>{no}</td> \
             <td>{period}</td> \
