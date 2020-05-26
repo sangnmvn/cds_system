@@ -171,6 +171,12 @@ $(document).ready(function () {
 
   
 });
+
+function SelectPoint(point_val) {
+  if (point_val.length > 1 ) {
+    // && document.getElementById("").value
+  }
+}
 // end
 
 // delete cds 

@@ -18,23 +18,38 @@
       </tr>
     </thead>
     <tbody>
-
-      <%a=1%>
-      <% if a==0 %>
-        <%# //Option Reviewer %>
-        <% 10.times.each do|x| %>
+      <% a = 0 %>
+      <% if a == 0 %>
+        <% # //Option Reviewer %>
+        <% @slots.each do |x| %>
           <tr>
-            <td><%= x %></td>
+            <td><%= x["slot_id".to_sym] %></td>
             <td style="position: relative;">
-            <%= "Slot Description" %>
-             <div id="slot_description_<%= x %>" style="display: block;">
-             <%= "Assessment Guidelines" %>
-             </div><br>
-             <a id="<%= x %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
-             </td>
-            <td colspan="2"><textarea class="autoresizing"> </textarea></td>
-            <td colspan="4"><textarea class="autoresizing"></textarea></td>
-            <td colspan="5"><textarea class="autoresizing"></textarea></td>
+              <div><%= x["desc".to_sym] %></div>
+              <br>
+              <div id="slot_description_<%= x["slot_id".to_sym] %>" style="display: none;">
+              <%= x["evidence".to_sym] %>
+              </div><br>
+              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+            </td>
+            <td colspan="2">
+              <select class="custom-select" style="border:none; height:100%;">
+                <option></option>
+                <option value="2">Commit</option>
+                <option value="1">Uncommit</option>
+              </select>
+            </td>
+            <td colspan="4">
+              <select class="custom-select" style="border:none; height:100%;" onchange="SelectPoint(this.value)">
+                <option></option>
+                <option value="5">5 - Outstanding</option>
+                <option value="4">4 - Exceeds Expectations</option> 
+                <option value="3">3 - Meets Expectations</option>
+                <option value="2">2 - Needs Improvement</option>
+                <option value="1">1 - Does Not Meet Minimun Standards</option>
+              </select>
+            </td>
+            <td colspan="5"><textarea class="autoresizing"><%= x["tracking".to_sym]["comment".to_sym] %></textarea></td>
             <td colspan="2"><textarea class="autoresizing"></textarea></td>
             <td><textarea class="autoresizing"></textarea></td>
             <td><textarea class="autoresizing"></textarea></td>
@@ -42,24 +57,25 @@
           </tr>
         <% end %>
       <% else %>
-        <%# Option PM %>
-        <% 10.times.each do|x| %>
+        <% # Option PM %>
+        <% @slots.each do |x| %>
           <tr>
-            <td rowspan="4"><%= x %></td>
-            <td rowspan="4" style="position: relative;"><%= "Slot Description" %>
-             <div id="slot_description_<%= x %>" style="display: none;">
-             <%= "Assessment Guidelines" %>
-             </div><br>
-             <a id="<%= x %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
+            <td rowspan="4"><%= x["slot_id".to_sym] %></td>
+            <td rowspan="4" style="position: relative;">
+              <div><%= x["desc".to_sym] %></div>
+              <br>
+              <div id="slot_description_<%= x["slot_id".to_sym] %>" style="display: none;">
+              <%= x["evidence".to_sym] %>
+              </div><br>
+              <a id="<%= x["slot_id".to_sym] %>" class="line-slot" href="#" style="bottom:0; left:0; position: absolute;">ViewDetails</a>
             </td>
             <td rowspan="4" colspan="2"><textarea class="autoresizing"></textarea></td>
             <td rowspan="4" colspan="4"><textarea class="autoresizing"></textarea></td>
-            <td rowspan="4" colspan="5"><textarea class="autoresizing"></textarea></td>
+            <td rowspan="4" colspan="5"><textarea class="autoresizing"><%= x["tracking".to_sym]["comment".to_sym] %></textarea></td>
             <td colspan="2"><textarea class="autoresizing"></textarea></td>
             <td><textarea class="autoresizing"></textarea></td>
             <td><textarea class="autoresizing"></textarea></td>
-            <td rowspan="4"><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a>
-            <a style="color:green; font-size:25px"><i class="fas fa-pennant"></i></a></td>
+            <td rowspan="4"><a style="color:green; font-size:25px"><i class="fas fa-history"></i></a></td>
           </tr>
           <% 3.times do |x| %>
             <tr>
