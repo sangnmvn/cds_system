@@ -21,6 +21,7 @@ class FormsController < ApplicationController
   end
 
   def cds_assessment
+    @period = Period.order(:id).last
     params = cds_assessment_params
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
@@ -72,7 +73,7 @@ class FormsController < ApplicationController
   end
 
   def submit
-    form = Form.find(params[:id])
+    form = Form.find(params[:form_id])
     form.update(period_id: params[:period_id], status: "Awaiting Review")
     #send mail if updated
   end

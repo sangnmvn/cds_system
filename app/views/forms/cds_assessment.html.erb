@@ -30,7 +30,7 @@
         <option value="planned" selected>Planned</option>
       </select>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path, target: :_blank %>
-      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)" %>
+      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>
       <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)" %>
       <%= link_to '<i class="far fa-thumbs-down" style="color: red"></i> Reject'.html_safe, "javascript:void(0)" %>
     </div>
@@ -46,5 +46,6 @@
 </div>
 <%= render 'modal_submit_cds'%>
 <div><%= render 'modal_history' %></div>
+<div><%= render 'modal_period' %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

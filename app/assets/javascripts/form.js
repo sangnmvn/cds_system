@@ -341,3 +341,26 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
     });
   }
 });
+
+$(document).on("click", ".submit-assessment", function () {
+  $('#modal_period').modal('show');
+});
+
+$(document).on("click", "#confirm_submit_cds", function () {
+  
+  $.ajax({
+    type: "POST",
+    url: "/forms/submit",
+    data: {
+      form_id: form_id,
+      period_id: $(this).val()
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_period').modal('hide');
+    }
+  });
+});

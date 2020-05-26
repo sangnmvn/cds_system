@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       post "save_cds_assessment_staff"
       post "save_cds_assessment_manager"
       get "cds_review"
+      post "submit"
     end
   end
   resources :templates do
