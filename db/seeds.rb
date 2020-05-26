@@ -51,9 +51,9 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 # Create users
 
 User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
-User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "1")
+User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "4")
 User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: "1")
-User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "1")
+User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "4")
 User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
 User.create!(id: 6, email: "hoanphungthe@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
 User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
@@ -1164,7 +1164,7 @@ Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,1
 Group.create!(id: 34, name: "Manager", description: "Manager", status: 1, privileges: "1")
 Group.create!(id: 35, name: "Reviewer", description: "Reviewer", status: 1, privileges: "7")
 Group.create!(id: 36, name: "Staff", description: "Staff", status: 1, privileges: "")
-
+Group.create!(id: 37, name: "PM", description: "PM", status: 1, privileges: "14")
 #  template HR
 User.create!(id: 32, email: "nguyenvana@bestarion.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3")
 UserGroup.create!(group_id: 33, user_id: 32)
@@ -1213,3 +1213,12 @@ TitleCompetencyMapping.create!(id: 3, min_level_ranking: 1, title_id: 1001, comp
 TitleCompetencyMapping.create!(id: 4, min_level_ranking: 3, title_id: 1002, competency_id: 4)
 TitleCompetencyMapping.create!(id: 5, min_level_ranking: 2, title_id: 1002, competency_id: 1)
 TitleCompetencyMapping.create!(id: 6, min_level_ranking: 2, title_id: 1002, competency_id: 1)
+Schedule.create!(user_id: 34, company_id: 4, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done", _type: "HR")
+Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done", _type: "HR")
+Schedule.create!(user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New", _type: "HR")
+
+#70.times { |i|
+#status = ["New", "In-Progress", "Done"].sample
+#Period.create!(id: 60 + i, from_date: "2020-06-16", to_date: "2020-07-16")
+#Schedule.create!(user_id: 34, company_id: 3, period_id: 60 + i, start_date: "2020-01-01", end_date_hr: "2020-04-02", notify_hr: 5, desc: "Period {#{i}}", status: status)
+#}

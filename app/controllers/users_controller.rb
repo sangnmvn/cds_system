@@ -34,7 +34,6 @@ class UsersController < ApplicationController
   end
 
   def format_data(users)
-    datas = []
     users.map.with_index do |user, index|
       current_user_data = []
       current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
@@ -70,10 +69,7 @@ class UsersController < ApplicationController
           <a #{"class='action_icon status_icon'" if pri} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
             <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless pri}'></i>
           </a></div>")
-
-      datas << current_user_data
     end
-    datas
   end
 
   def index
