@@ -28,7 +28,7 @@ function LoadDataAssessmentList()
               <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
               <a class='delete-cds' data-id='{id}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
             </td> \
-          </tr>".formatUnicorn({no: i+1, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status
+          </tr>".formatUnicorn({no: i+1, id: form.id, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status
           });
           temp += this_element;
         };
