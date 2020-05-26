@@ -15,4 +15,13 @@ class User < ApplicationRecord
   scope :search_user, ->(search) {
           where("email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
         }
+
+  def format_name
+    first_name + " " + last_name
+  end
+
+  def get_project
+    project_ids = ProjectMember.distinct.where(user_id: id).pluck(:project_id)
+    Project.where(id: project_ids).pluck(:desc).join(", ")
+  end
 end

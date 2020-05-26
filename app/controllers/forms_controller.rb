@@ -5,6 +5,10 @@ class FormsController < ApplicationController
   def index
   end
 
+  def get_list_cds_assessment_manager
+    render json: @form_service.get_list_cds_assessment_manager
+  end
+
   def get_list_cds_assessment
     render json: @form_service.get_list_cds_assessment(current_user.id)
   end

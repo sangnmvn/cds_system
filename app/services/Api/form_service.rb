@@ -51,6 +51,26 @@ module Api
       form.id
     end
 
+    def get_list_cds_assessment_manager
+      forms = Form.where(_type: "CDS").includes(:period, :role, :title).order(id: :desc)
+      forms.map do |form|
+        {
+          id: form.id,
+          period_name: form.period&.format_name || "New",
+          user_name: form.user&.format_name,
+          project: form.user&.get_project,
+          email: form.user&.email,
+          role_name: form.role&.name,
+          level: form.level,
+          rank: form.rank,
+          title: form.title&.name,
+          submit_date: form.submit_date,
+          review_date: form.review_date,
+          status: form.status,
+        }
+      end
+    end
+
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
       forms = Form.where(user_id: user_id, _type: "CDS").includes(:period, :role, :title).order(id: :desc)

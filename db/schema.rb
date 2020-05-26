@@ -83,6 +83,8 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.bigint "title_id"
     t.bigint "role_id"
     t.string "status"
+    t.date "submit_date"
+    t.date "review_date"
     t.index ["period_id"], name: "index_forms_on_period_id"
     t.index ["role_id"], name: "index_forms_on_role_id"
     t.index ["template_id"], name: "index_forms_on_template_id"

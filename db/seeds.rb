@@ -1189,7 +1189,7 @@ UserGroup.create!(group_id: 35, user_id: 36)
 # GroupPrivilege.create!(group_id: 35, privilege_id: 2)
 ProjectMember.create!(user_id: 36, project_id: 3, is_managent: "0")
 
-Period.create!(id: 30, from_date: "2019-06-16", to_date: "2019-07-16")
+Period.create!(id: 30, from_date: "2019-06-16", to_date: "2019-12-16")
 Period.create!(id: 40, from_date: "2019-07-16", to_date: "2019-8-16")
 Period.create!(id: 50, from_date: "2019-10-16", to_date: "2019-11-16")
 Schedule.create!(user_id: 34, company_id: 3, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
@@ -1202,7 +1202,7 @@ Title.create!(id: 1002, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
 Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
-Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending")
+Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending", submit_date: "2019-06-20", review_date: "2019-06-30")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Pending")
 
 (1..134).each { |i| FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0) }

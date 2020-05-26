@@ -5,5 +5,7 @@ class AddColumnsToForms < ActiveRecord::Migration[6.0]
     add_reference :forms, :title, foreign_key: true
     add_reference :forms, :role, foreign_key: true
     add_column :forms, :status, :string
+    add_column :forms, :submit_date, :date
+    add_column :forms, :review_date, :date
   end
 end

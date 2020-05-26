@@ -34,3 +34,4 @@
 //= link form.css
 //= link form.js
 //= link form_assessment_list.js
+//= link form_cds_review.js
