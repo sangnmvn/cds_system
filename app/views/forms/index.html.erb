@@ -1,7 +1,5 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
-
-
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
     <div class="col-10" style="font-size: 150%;">
@@ -17,15 +15,14 @@
             <td>No.</td>
             <td>Period</td>
             <td>Role</td>
-            <td>Cấp</td>
-            <td>Bậc</td>
+            <td>Level</td>
+            <td>Rank</td>
             <td>Title</td>
             <td>Status</td>
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
-          
           <tr>
             <td>1</td>
             <td>1</td>
@@ -36,7 +33,7 @@
             <td>1</td>
             <td>
               <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, "#") %>
-              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", class: "delete-cds", "data-id": 1, "data-period-cds": "05/2020 – 10/2020" ) %> 
+              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", class: "delete-cds", "data-id": 1, "data-period-cds": "05/2020 – 10/2020" ) %>
             </td>
           </tr>
         </tbody>
@@ -44,11 +41,8 @@
     </div>
   </div>
 </div>
-
-
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
-
 <%= render 'modal_delete_cds' %>
 <%= render 'modal_history' %>
 <%= render 'modal_submit_cds' %>

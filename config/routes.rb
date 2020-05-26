@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'periods/show'
   devise_for :users
   resources :user_groups do
     collection do
@@ -29,6 +30,11 @@ Rails.application.routes.draw do
       post "enable_multiple_users"
     end
   end
+
+  resources :periods do
+    collection do
+    end
+  end
   resources :groups do
     collection do
       get "get_data"
@@ -43,7 +49,7 @@ Rails.application.routes.draw do
       get "cds_assessment"
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
-      post "save_cds_assessment_manager"      
+      post "save_cds_assessment_manager"
     end
   end
   resources :templates do

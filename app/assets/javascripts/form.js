@@ -18,7 +18,7 @@ function LoadDataAssessmentList()
           var period_str = form.period.from_date.split("-")[1] + '/' + form.period.from_date.split("-")[0] + ' - ' + form.period.to_date.split("-")[1] + '/' + form.period.to_date.split("-")[0];
           var this_element = "<tr> \
             <td>{no}</td> \
-            <td>{period}</td> \
+            <td><a href='{period_link}'>{period}</a></td> \
             <td>{role}</td> \
             <td>{level}</td> \
             <td>{rank}</td> \
@@ -28,8 +28,7 @@ function LoadDataAssessmentList()
               <a data-id='{id}' href='#'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> \
               <a class='delete-cds' data-id='{id}' href='#'><i class='fa fa-trash icon' style='color:red'></i></a> \
             </td> \
-          </tr>".formatUnicorn({no: i+1, id: form.id, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status
-          });
+          </tr>".formatUnicorn({no: i+1, id: form.id, period: period_str, role: form.role.name, level: form.level, rank: form.rank, title: form.title.name, status: form.status, period_link: "periods/" + form.period.id + '/'});
           temp += this_element;
         };
         $(".table-cds-assessment-list tbody").html(temp);
