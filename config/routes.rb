@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'periods/show'
+  get "periods/show"
   devise_for :users
   resources :user_groups do
     collection do
@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
       post "save_cds_assessment_manager"
+      get "cds_review"
     end
   end
   resources :templates do

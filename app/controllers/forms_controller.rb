@@ -13,6 +13,9 @@ class FormsController < ApplicationController
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
+  def cds_review
+  end
+
   def cds_assessment
     params = cds_assessment_params
     if params.include?(:form_id)

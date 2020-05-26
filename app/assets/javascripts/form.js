@@ -1,41 +1,6 @@
-function LoadDataAssessmentList() {
-  $.ajax({
-    type: "GET",
-    url: "/forms/get_list_cds_assessment/",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    data: {
-    },
-    dataType: "json",
-    success: function (response) {
-      var temp = '';
-      for (var i = 0; i < response.length; i++) {
-        var form = response[i];
-        var this_element = `<tr id='period_id_{id}'> 
-            <td>{no}</td> 
-            <td><a href='/forms/cds_assessment?form_id={id}'>{period}</a></td> 
-            <td>{role}</td> 
-            <td>{level}</td> 
-            <td>{rank}</td> 
-            <td>{title}</td> 
-            <td>{status}</td> 
-            <td> 
-              <a data-id='{id}' href='/forms/cds_assessment?form_id={id}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
-              <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
-                <i class='fa fa-trash icon' style='color:red'></i>
-              </a> 
-            </td> 
-          </tr>`.formatUnicorn({ no: i + 1, id: form.id, period: form.period_name, role: form.role_name, level: form.level, rank: form.rank, title: form.title, status: form.status });
-        temp += this_element;
-      };
-      $(".table-cds-assessment-list tbody").html(temp);
-    }
-  });
-}
 
 $(document).ready(function () {
-  // var form_id = parseInt(findGetParameter("form_id"));
+  var form_id = parseInt(findGetParameter("form_id"));
   loadDataPanel(form_id);
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
@@ -44,8 +9,7 @@ $(document).ready(function () {
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
   drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
   drawColorTitleFormPreviewResult(31, 37, "#93dba3");
-  LoadDataAssessmentList();
-
+  
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
 
@@ -144,72 +108,17 @@ $(document).ready(function () {
         $('#card0').click()
       }
     });
-
   }
 
-});
-function resize_textarea(){
-  $(".autoresizing").on("change", function () {
-    this.style.height = "auto";
-    this.style.height = this.scrollHeight + "px";
-  });
-  
+
+
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
-}
 
-function loadDataSlots(response){
-  var temp = "";
-  $(response).each(function (i, e) {
-    temp += `
-    <tr id="${e.id}" class="tr_slot">
-      <td style="text-align:center">${e.slot_id}</td>
-      <td style="position: relative;">
-        <div>${e.desc}</div>
-        <br>
-        <div id="slot_description_${e.slot_id}" style="display: none;">
-        ${e.evidence}
-        </div><br>
-        <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
-      </td>
-      <td colspan="2">
-        <select class="commit-select">
-          <option value="true">Commit</option>
-          <option value="fasle" selected>Uncommit</option>
-        </select>
-      </td>
-      <td colspan="4">
-        <select class="point-select">
-          <option></option> 
-          <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
-          <option value="4" ${check(e.tracking.point, 4)}>4 - Exceeds Expectations</option>
-          <option value="3" ${check(e.tracking.point, 3)}>3 - Meets Expectations</option>
-          <option value="2" ${check(e.tracking.point, 2)}>2 - Needs Improvement</option>
-          <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
-        </select>
-      </td>
-      <td colspan="5"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
-      <td colspan="2"><textarea class="autoresizing" disabled>${e.tracking.recommends}</textarea></td>
-      <td>
-        <select class="given-point-select" disabled>
-          <option></option>
-          <option value="5" ${check(e.tracking.given_point, 5)}>5 - Outstanding</option>
-          <option value="4" ${check(e.tracking.given_point, 4)}>4 - Exceeds Expectations</option>
-          <option value="3" ${check(e.tracking.given_point, 3)}>3 - Meets Expectations</option>
-          <option value="2" ${check(e.tracking.given_point, 2)}>2 - Needs Improvement</option>
-          <option value="1" ${check(e.tracking.given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
-        </select>
-      </td>
-      <td><textarea class="autoresizing" disabled>${e.tracking.name}</textarea></td>
-      <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
-      </tr>
-      `;
-  });
-  $('.csd-assessment-table table tbody').html(temp);
-  resize_textarea();
-}
+
+});
 
 $(document).on("click", ".line-slot", function () {
   if (
@@ -227,6 +136,11 @@ $(document).on("click", ".line-slot", function () {
 });
 
 
+function SelectPoint(point_val) {
+  if (point_val.length > 1) {
+    // && document.getElementById("").value
+  }
+}
 // end
 
 // delete cds 
@@ -262,15 +176,10 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 });
 
 
-
-function check(x, y) {
-  if (x == y)
-    return "selected"
-  return ""
-}
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
+  // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
@@ -283,8 +192,46 @@ $(document).on("click", ".card table thead tr", function () {
     },
     dataType: "json",
     success: function (response) {
-      loadDataSlots(response);
 
+      var temp = "";
+      $(response).each(function (i, e) {
+        temp += `
+        <tr>
+          <td>${e.slot_id}</td>
+          <td style="position: relative;">
+            <div>${e.desc}</div>
+            <br>
+            <div id="slot_description_${e.slot_id}" style="display: none;">
+            ${e.evidence}
+            </div><br>
+            <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
+          </td>
+          <td colspan="2">
+            <select class="custom-select" style="border:none; height:100%;">
+              <option></option>
+              <option value="2">Commit</option>
+              <option value="1">Uncommit</option>
+            </select>
+          </td>
+          <td colspan="4">
+            <select class="custom-select" style="border:none; height:100%;" onchange="SelectPoint(this.value)">
+              <option></option>
+              <option value="5">5 - Outstanding</option>
+              <option value="4">4 - Exceeds Expectations</option> 
+              <option value="3">3 - Meets Expectations</option>
+              <option value="2">2 - Needs Improvement</option>
+              <option value="1">1 - Does Not Meet Minimun Standards</option>
+            </select>
+          </td>
+          <td colspan="5"><textarea class="autoresizing">${e.tracking.evidence}</textarea></td>
+          <td colspan="2"><textarea class="autoresizing"></textarea></td>
+          <td><textarea class="autoresizing"></textarea></td>
+          <td><textarea class="autoresizing"></textarea></td>
+          <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
+        </tr>
+          `;
+      });
+      $('.csd-assessment-table table tbody').html(temp);
     }
   });
 });
@@ -294,94 +241,9 @@ $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');
   var slot_id = $(this).data("slot-id");
   id = $(".card").find('.show').attr('id').split("collapse");
-  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
+  competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
   competency_name = $.trim(competency_name);
   $('#assessment_history_competency_name').text(competency_name);
   $('#assessment_history_slot_id').text(slot_id);
 
-});
-
-function get_data_filter() {
-  filter = "";
-  $('#filter-form-slots :selected').each(function(i, sel){ 
-    filter += $(sel).val()
-    filter += "," 
-  });
-  return filter.substring(0, filter.length - 1);;
-}
-function get_id_competency_current() {
-  index = $(".card").find('.show').attr('id').split("collapse");
-  return competency_id = $('.card .card-header .table'+ index[1] +' thead tr').data('id-competency');
-}
-
-$(document).on("change", ".search-assessment", function () {
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      loadDataSlots(response);
-    }
-  });
-});
-
-
-
-$(document).on("change", "#filter-form-slots", function () {
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      // search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      loadDataSlots(response);
-    }
-  });
-});
-
-
-
-
-
-$(document).on("change", ".csd-assessment-table table tbody .tr_slot", function () {
-
-  if ($(this).find('.point-select').val().length > 0 && $(this).find('.evidence').val().length > 0) {
-    var slot_id = $(this)[0].id;
-    var is_commit = $(this).find('.commit-select').val();
-    var point = $(this).find('.point-select').val();
-    var evidence = $(this).find('.evidence').val();
-    $.ajax({
-      type: "POST",
-      url: "/forms/save_cds_assessment_staff",
-      data: {
-        form_id: form_id,
-        is_commit: is_commit,
-        point: parseInt(point),
-        evidence: evidence,
-        slot_id: slot_id,
-      },
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      success: function (response) {
-      }
-    });
-  }
 });

@@ -33,3 +33,4 @@
 
 //= link form.css
 //= link form.js
+//= link form_assessment_list.js
