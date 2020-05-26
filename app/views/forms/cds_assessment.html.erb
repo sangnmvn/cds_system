@@ -17,17 +17,17 @@
       CDS Reviewer for 
     </div>
     <div class="col-md-4">
-      Search: <input type="text" class="form-control" placeholder="Search by slot's description">
+      Search: <input type="text" class="search-assessment" placeholder="Search by slot's description">
     </div>
     <div class="col-md-4 list-action filter-slots" style="text-align:right">
       Filter
       <select id="filter-form-slots" multiple="multiple">
-        <option value="1">Passed slots in previous periods</option>
-        <option value="2" selected>Failed slots in previous periods</option>
-        <option value="3" selected>No Assessments</option>
-        <option value="4" selected>Need to update evidences</option>
-        <option value="5" selected>Assessing in the current period</option>
-        <option value="6" selected>Planned</option>
+        <option value="passed">Passed slots in previous periods</option>
+        <option value="failed" selected>Failed slots in previous periods</option>
+        <option value="no_assessment" selected>No Assessments</option>
+        <option value="need_to_update" selected>Need to update evidences</option>
+        <option value="assessing" selected>Assessing in the current period</option>
+        <option value="planned" selected>Planned</option>
       </select>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path, target: :_blank %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)" %>

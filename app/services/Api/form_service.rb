@@ -76,7 +76,6 @@ module Api
         competency_id: param[:competency_id],
       }
       filter[:level] = param[:level] if param[:level].present?
-
       slots = Slot.search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id)
       hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
@@ -196,7 +195,8 @@ module Api
 
     def filter_cds
       hash = {}
-      "failed,no_assessment,need_to_update,assessing".split(",").map do |p|
+      params[:filter] = "failed,no_assessment,need_to_update,assessing" unless params[:filter].present?
+      params[:filter].split(",").map do |p|
         hash[p] = true
       end
       hash
