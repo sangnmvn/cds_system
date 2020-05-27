@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  point: 1
+  evidence: MyText
+  form_slot_id: 1
+  title_history: one
+  slot: one
+  competency_id: 1
+  slot_position: MyString
+
+two:
+  point: 1
+  evidence: MyText
+  form_slot_id: 1
+  title_history: two
+  slot: two
+  competency_id: 1
+  slot_position: MyString

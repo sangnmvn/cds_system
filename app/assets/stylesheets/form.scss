@@ -1,67 +1,55 @@
 // index
 
-.table-cds-assessment-manager-list tr td:nth-child(1)
-{
+.table-cds-assessment-manager-list tr td:nth-child(1) {
   width: 1%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(2)
-{
+.table-cds-assessment-manager-list tr td:nth-child(2) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(3)
-{
+.table-cds-assessment-manager-list tr td:nth-child(3) {
   width: 13%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(4)
-{
+.table-cds-assessment-manager-list tr td:nth-child(4) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(5)
-{
+.table-cds-assessment-manager-list tr td:nth-child(5) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(6)
-{
+.table-cds-assessment-manager-list tr td:nth-child(6) {
   width: 4%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(7)
-{
+.table-cds-assessment-manager-list tr td:nth-child(7) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(8)
-{
+.table-cds-assessment-manager-list tr td:nth-child(8) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(9)
-{
+.table-cds-assessment-manager-list tr td:nth-child(9) {
   width: 9%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(10)
-{
+.table-cds-assessment-manager-list tr td:nth-child(10) {
   width: 13%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(11)
-{
+.table-cds-assessment-manager-list tr td:nth-child(11) {
   width: 13%;
 }
 
-.table-cds-assessment-manager-list tr td:nth-child(13)
-{
+.table-cds-assessment-manager-list tr td:nth-child(13) {
   width: 1%;
 }
 
-.table-cds-assessment-manager-list tr td{
-  text-align: center; 
+.table-cds-assessment-manager-list tr td {
+  text-align: center;
   vertical-align: middle;
   border: 1px solid white;
   padding: 0px 10px 0px 10px;
@@ -70,18 +58,22 @@
   padding: 0px 10px 0px 10px;
   border: 1px solid white;
 }
-.table-cds-assessment-list thead tr td{
+.table-cds-assessment-list thead tr td {
   text-align: left;
 }
 .table-cds-assessment-list tbody tr td:nth-child(1) {
   width: 4%;
   text-align: right;
 }
-.table-cds-assessment-list tbody tr td:nth-child(2),td:nth-child(6) {
+.table-cds-assessment-list tbody tr td:nth-child(2),
+.table-cds-assessment-list tbody tr td:nth-child(6) {
   width: 25%;
   text-align: left;
 }
-.table-cds-assessment-list tbody tr td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
+.table-cds-assessment-list tbody tr td:nth-child(3),
+.table-cds-assessment-list tbody tr td:nth-child(4),
+.table-cds-assessment-list tbody tr td:nth-child(5),
+.table-cds-assessment-list tbody tr td:nth-child(7) {
   width: 8%;
   text-align: left;
 }
@@ -89,10 +81,10 @@
   text-align: center;
   // width: 12%;
 }
-.button-add-cds-assessment button{
+.button-add-cds-assessment button {
   font-size: 90%;
-    background-color: #8da8db;
-    border: none;
+  background-color: #8da8db;
+  border: none;
 }
 .icon {
   width: 13px;
@@ -198,11 +190,11 @@
 .filter-slots .multiselect-native-select ul li a {
   color: black;
 }
-.filter-slots .multiselect-native-select ul li a label{
+.filter-slots .multiselect-native-select ul li a label {
   padding-left: 5px;
 }
 
-//search 
+//search
 .search-assessment {
   // height: 80%;
   width: 50%;
@@ -244,15 +236,15 @@
   border: 1px solid #7abaff;
 }
 
-.assessed-slots {
-  background-color: #1aab0f !important;
+.assessed {
+  background-color: #007a00 !important;
   border: 1px solid #7abaff;
 }
 .re-assessed-slots {
   background-color: #00dcff !important;
   border: 1px solid #7abaff;
 }
-.new-slots {
+.new {
   background-color: white !important;
   border: 1px solid #7abaff;
 }
@@ -260,7 +252,7 @@
   color: red;
 }
 .pass-slot {
-  color: white;
+  color: yellow;
 }
 .pass-slot:hover {
   color: white;
@@ -326,6 +318,36 @@
 .view-assessment-history__title--bold {
   font-weight: bold;
 }
+.table-view-assessment-history thead tr td {
+  border: 1px solid #7abaff;
+  vertical-align: middle;
+}
+.table-view-assessment-history tbody tr td {
+  border: 1px solid #7abaff;
+  text-align: left;
+}
+.table-view-assessment-history tbody tr td:nth-child(1),
+.table-view-assessment-history tbody tr td:nth-child(7) {
+  width: 10%;
+}
+.table-view-assessment-history tbody tr td:nth-child(2),
+.table-view-assessment-history tbody tr td:nth-child(5) {
+  width: 15%;
+}
+.table-view-assessment-history tbody tr td:nth-child(3),
+.table-view-assessment-history tbody tr td:nth-child(4) {
+  width: 25%;
+}
+// flag
+.flag--icon__red {
+  color: red!important;
+}
+.icon {
+  font-size: 25px;
+}
+.icon:hover {
+  font-size: 25px;
+}
 
 // end ngthuy
 
@@ -333,7 +355,7 @@
 .csd-assessment-table {
   table {
     table-layout: fixed;
-    border:  solid #a1b5da;
+    border: solid #a1b5da;
   }
   background-color: #fff;
   thead {
@@ -382,18 +404,20 @@
   }
   select {
     padding: 0px 2px;
-    border:none;
-    height:100%;
-    width:100%;
-    background-color:#fff;
+    border: none;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
     -webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 1px;
-    text-overflow: '';
+    text-overflow: "";
     white-space: pre-wrap;
   }
   .disabled {
     cursor: not-allowed;
   }
 }
-
+.csd-assessment-table table tbody tr td:nth-child(9) {
+  text-align: center;
+}

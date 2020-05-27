@@ -132,7 +132,7 @@ module Api
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit])
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], added_by: current_user.id, form_slot_id: form_slot.id)
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], form_slot_id: form_slot.id)
         end
       end
     end
@@ -149,17 +149,15 @@ module Api
       end
     end
 
-    def preview_result
-      form_id = Form.where(user_id: current_user.id, _type: "CDS").where.not(status: "Done").order(:id).last
-      competencies = Competency.where(template_id: form_id.template_id).order(:location).pluck(:id)
-
+    def preview_result(form)
+      competencies = Competency.where(template_id: form.template_id).order(:location).pluck(:id)
       filter = {
-        form_slots: { form_id: form_id.id },
+        form_slots: { form_id: form.id },
         competency_id: competencies,
       }
 
       slots = Slot.includes(:competency).joins(:form_slots).where(filter).order(:level, :slot_id)
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form_id.id, slot_id: slots.pluck(:id))
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
       hash = {}
       dumy_hash = {}
@@ -172,13 +170,38 @@ module Api
         if hash[slot.competency.name].nil?
           hash[slot.competency.name] = {}
         end
-        check = form_slots[slot.id][:point].present? && form_slots[slot.id][:given_point].empty?
-        hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = {
+        check = !form_slots[slot.id][:point].zero? && form_slots[slot.id][:given_point].empty?
+        h_slot = {
           value: form_slots[slot.id][:point],
           type: check ? "assessed" : "new",
+          class: "",
         }
+        if check
+          h_slot[:class] = form_slots[slot.id][:point] > 2 ? "pass-slot" : "fail-slot"
+        end
+        hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = h_slot
       end
       hash
+    end
+
+    def get_form
+      user_id
+      period_id
+
+#       FormSlotHistory.where(user_id, period_id).pluck(:competency_id)
+#       list_com = Competency.where(id: ids) 
+#       form_slot_his = FormSlotHistory.includes(:slot, :tracking).where(competency_id, user_id, period)
+#       form_slot_his.map do |xxx|
+# tracking.where(period, slot.form_slot)
+#         {
+#           xxx.slot.evidence,
+#           xxx.slot.desc,
+#           xxx.evidence,
+#           slot.point,
+#           tracking: slot.tracking,
+#         }
+#       end
+
     end
 
     private
