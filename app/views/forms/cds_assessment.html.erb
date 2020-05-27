@@ -1,10 +1,12 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
-<script>
-  var form_id = <%= @form_id %>;
-</script>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+<script>
+  var form_id = <%= @form_id %>;
+  loadDataPanel(form_id);
+</script>
+
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
@@ -29,7 +31,7 @@
         <option value="assessing" selected>Assessing in the current period</option>
         <option value="planned" selected>Planned</option>
       </select>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path, target: :_blank %>
+      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>
       <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)" %>
       <%= link_to '<i class="far fa-thumbs-down" style="color: red"></i> Reject'.html_safe, "javascript:void(0)" %>

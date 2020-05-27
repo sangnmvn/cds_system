@@ -1,6 +1,5 @@
 
 $(document).ready(function () {
-  loadDataPanel(form_id);
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
   drawColorTitleFormPreviewResult(3, 9, "#93dba3");
@@ -43,73 +42,74 @@ $(document).ready(function () {
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
 
-  function loadDataPanel(form_id) {
-    $.ajax({
-      type: "POST",
-      url: "/forms/get_competencies/",
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      data: {
-        form_id: form_id,
-      },
-      dataType: "json",
-      success: function (response) {
-        var temp = '';
-        var i = 0;
-        for (competency in response) {
-          temp += ` <div class="card">
-          <div class="card-header">
-              <table class="table table-primary table-responsive-sm table-mytable table${i}">
-                  <thead>
-                    <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
-                      <td class="col-2">${response[competency].type}</td>
-                      <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
-                      ${competency}
-                        </td>
-                      <td class="col-3">1</td>
-                    </tr>
-                  </thead>
-                </table>
-          </div>
-          <div id="collapse${i}" class="collapse" data-parent="#accordion">
-            <div class="card-body">
-              <div class="competency">
-                <table class="table table-primary table-responsive-sm table-mytable">
-                  <tbody>`
-          var l = '';
-          var levels = response[competency].levels
-          for (level in levels) {
-            l += ` <tr class="d-flex">
-                      <td class="col-2"></td>
-                      <td class="col-7">Level ${level}</td>
-                      <td class="col-3">${levels[level].current}/${levels[level].total}</td>
-                    </tr>`
-          }
-          temp += l
-          temp += `</tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>`
-          i += 1;
-        };
-        $('#competency_panel').html(temp);
-        $(".card table thead tr").click(function () {
-          $(".collapse").removeClass("show");
-          $(".card-header table tr").css("background-color", "#ccc");
-          id = $(this).data("target");
-          $(id).addClass("show");
-          num = id.split("#collapse");
-          $(".table" + Number(num[1]) + " tr").css("background-color", "#bbcbea");
-        });
-        $('#card0').click()
-      }
-    });
-  }
+  
 
 });
+function loadDataPanel(form_id) {
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_competencies/",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      form_id: form_id,
+    },
+    dataType: "json",
+    success: function (response) {
+      var temp = '';
+      var i = 0;
+      for (competency in response) {
+        temp += ` <div class="card">
+        <div class="card-header">
+            <table class="table table-primary table-responsive-sm table-mytable table${i}">
+                <thead>
+                  <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
+                    <td class="col-2">${response[competency].type}</td>
+                    <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
+                    ${competency}
+                      </td>
+                    <td class="col-3">1</td>
+                  </tr>
+                </thead>
+              </table>
+        </div>
+        <div id="collapse${i}" class="collapse" data-parent="#accordion">
+          <div class="card-body">
+            <div class="competency">
+              <table class="table table-primary table-responsive-sm table-mytable">
+                <tbody>`
+        var l = '';
+        var levels = response[competency].levels
+        for (level in levels) {
+          l += ` <tr class="d-flex">
+                    <td class="col-2"></td>
+                    <td class="col-7">Level ${level}</td>
+                    <td class="col-3">${levels[level].current}/${levels[level].total}</td>
+                  </tr>`
+        }
+        temp += l
+        temp += `</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>`
+        i += 1;
+      };
+      $('#competency_panel').html(temp);
+      $(".card table thead tr").click(function () {
+        $(".collapse").removeClass("show");
+        $(".card-header table tr").css("background-color", "#ccc");
+        id = $(this).data("target");
+        $(id).addClass("show");
+        num = id.split("#collapse");
+        $(".table" + Number(num[1]) + " tr").css("background-color", "#bbcbea");
+      });
+      $('#card0').click()
+    }
+  });
+}
 function resize_textarea(){  
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";

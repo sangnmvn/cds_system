@@ -77,11 +77,12 @@
   width: 4%;
   text-align: right;
 }
-.table-cds-assessment-list tbody tr td:nth-child(2),td:nth-child(6) {
+.table-cds-assessment-list tbody tr td:nth-child(2),.table-cds-assessment-list tbody tr td:nth-child(6) {
   width: 25%;
   text-align: left;
 }
-.table-cds-assessment-list tbody tr td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
+.table-cds-assessment-list tbody tr td:nth-child(3),.table-cds-assessment-list tbody tr td:nth-child(4)
+,.table-cds-assessment-list tbody tr td:nth-child(5),.table-cds-assessment-list tbody tr td:nth-child(7) {
   width: 8%;
   text-align: left;
 }
@@ -244,15 +245,15 @@
   border: 1px solid #7abaff;
 }
 
-.assessed-slots {
-  background-color: #1aab0f !important;
+.assessed {
+  background-color: #007A00 !important;
   border: 1px solid #7abaff;
 }
 .re-assessed-slots {
   background-color: #00dcff !important;
   border: 1px solid #7abaff;
 }
-.new-slots {
+.new {
   background-color: white !important;
   border: 1px solid #7abaff;
 }
@@ -260,7 +261,7 @@
   color: red;
 }
 .pass-slot {
-  color: white;
+  color: yellow;
 }
 .pass-slot:hover {
   color: white;

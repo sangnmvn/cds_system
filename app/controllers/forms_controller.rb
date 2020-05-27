@@ -1,6 +1,7 @@
 class FormsController < ApplicationController
   before_action :form_service
   layout "system_layout"
+  LEVEL_SLOTS = ["1A", "1B", "1C", "1D", "1E", "1F", "1G", "2A", "2B", "2C", "2D", "2E", "2F", "2G", "3A", "3B", "3C", "3D", "3E", "3F", "3G", "4A", "4B", "4C", "4D", "4E", "4F", "4G", "5A", "5B", "5C", "5D", "5E", "5F", "5G"]
 
   def index
   end
@@ -29,7 +30,6 @@ class FormsController < ApplicationController
     else
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS", status: "New").order(created_at: :desc).first
     end
-
     @form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
@@ -55,11 +55,12 @@ class FormsController < ApplicationController
     @role_name = Role.find(current_user.role_id).name
     @first_name = current_user.first_name
     @last_name = current_user.last_name
-    form_id = Form.where(user_id: current_user.id, _type: "CDS").where.not(status: "Done").order(:id).last
+    form = Form.find(params[:form_id])
+    return "fail" if form.nil?
+    @competencies = Competency.where(template_id: form.template_id).pluck(:name)
 
-    @competencies = Competency.where(template_id: form_id.template_id).pluck(:name)
-
-    @result = @form_service.preview_result
+    @result = @form_service.preview_result(form)
+    @slots = LEVEL_SLOTS
   end
 
   def destroy
