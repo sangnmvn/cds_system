@@ -338,6 +338,17 @@
 .table-view-assessment-history tbody tr td:nth-child(4) {
   width: 25%;
 }
+// flag
+.flag--icon__red {
+  color: red!important;
+}
+.icon {
+  font-size: 25px;
+}
+.icon:hover {
+  font-size: 25px;
+}
+
 // end ngthuy
 
 //_form_slot
@@ -406,4 +417,7 @@
   .disabled {
     cursor: not-allowed;
   }
+}
+.csd-assessment-table table tbody tr td:nth-child(9) {
+  text-align: center;
 }

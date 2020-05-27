@@ -171,7 +171,14 @@ function loadDataSlots(response){
         </select>
       </td>
       <td><textarea style="resize:none" disabled>${e.tracking.name}</textarea></td>
-      <td><a href="javascript:void(0)" style="color:green; font-size:25px" class="modal-view-assessment-history" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a></td>
+      <td>
+        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-slot-id="${e.slot_id}">
+          <i class="fas fa-history"></i>
+        </a>
+        <a href="javascript:void(0)" class="flag--icon__red icon" data-slot-id="${e.slot_id}">
+        <i class="far fa-flag"></i>
+        </a>
+      </td>
       </tr>
       `;
   });

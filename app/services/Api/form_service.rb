@@ -132,7 +132,7 @@ module Api
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit])
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], added_by: current_user.id, form_slot_id: form_slot.id)
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], form_slot_id: form_slot.id)
         end
       end
     end
@@ -182,6 +182,26 @@ module Api
         hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = h_slot
       end
       hash
+    end
+
+    def get_form
+      user_id
+      period_id
+
+#       FormSlotHistory.where(user_id, period_id).pluck(:competency_id)
+#       list_com = Competency.where(id: ids) 
+#       form_slot_his = FormSlotHistory.includes(:slot, :tracking).where(competency_id, user_id, period)
+#       form_slot_his.map do |xxx|
+# tracking.where(period, slot.form_slot)
+#         {
+#           xxx.slot.evidence,
+#           xxx.slot.desc,
+#           xxx.evidence,
+#           slot.point,
+#           tracking: slot.tracking,
+#         }
+#       end
+
     end
 
     private
