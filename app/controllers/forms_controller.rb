@@ -55,10 +55,10 @@ class FormsController < ApplicationController
     @role_name = Role.find(current_user.role_id).name
     @first_name = current_user.first_name
     @last_name = current_user.last_name
-    form = Form.find(params[:form_id])
+    form = Form.where(id: params[:form_id], user_id: current_user.id).first
     return "fail" if form.nil?
+    # check form.template_id nil
     @competencies = Competency.where(template_id: form.template_id).pluck(:name)
-
     @result = @form_service.preview_result(form)
     @slots = LEVEL_SLOTS
   end
