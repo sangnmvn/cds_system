@@ -473,6 +473,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
 });
 // approve cds
 $(document).on("click", "#confirm_yes_approve_cds", function () {
+  $('#modal_approve_cds').modal('hide');
   $.ajax({
     type: "POST",
     url: "/forms/approve_cds",
@@ -484,7 +485,6 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     },
     dataType: "json",
     success: function (response) {
-      $('#modal_approve_cds').modal('hide');
       if (response.status == "success") {
         success("This CDS has been approve successfully..");
       } else {

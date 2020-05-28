@@ -12,7 +12,7 @@ function LoadDataAssessmentList() {
         var temp = '';
         for (var i = 0; i < response.length; i++) {
           var form = response[i];
-          link = `/forms/cds_assessment?form_id=${form.id || ""}`
+          link = `/forms/cds_assessment`
           if(form.status == "Done")
             link = `/forms/cds_assessment?title_history_id=${form.id}`
 

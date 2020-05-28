@@ -59,4 +59,25 @@ privileges:
         title_name: "Schedule Management",
         title_id: 5,
       },
+    15: 
+      {
+        id: 15,
+        name: "Assessment CDS",
+        title_name: "Assessment CDS",
+        title_id: 6,
+      },
+    16: 
+      {
+        id: 16,
+        name: "Review Assessment CDS",
+        title_name: "Assessment CDS",
+        title_id: 6,
+      },
+    17: 
+      {
+        id: 17,
+        name: "Approve Assessment CDS",
+        title_name: "Assessment CDS",
+        title_id: 6,
+      }
   }
