@@ -94,7 +94,7 @@ class FormsController < ApplicationController
 
   def get_cds_histories
     # binding.pry
-    render json:  @form_service.get_data_view_history
+    render json: @form_service.get_data_view_history
   end
 
   private

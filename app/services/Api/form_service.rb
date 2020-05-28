@@ -184,7 +184,8 @@ module Api
         if hash[slot.competency.name].nil?
           hash[slot.competency.name] = {}
         end
-        check = !form_slots[slot.id][:point].zero? && form_slots[slot.id][:given_point].empty?
+        check = !form_slots[slot.id][:point].zero? && form_slots[slot.id][:recommends].empty?
+        check = !form_slots[slot.id][:point].zero?
         h_slot = {
           value: form_slots[slot.id][:point],
           type: check ? "assessed" : "new",
@@ -239,7 +240,6 @@ module Api
         hash[h.title_history.period.format_name] = {
           evidence: h.evidence || "",
           point: h.point || 0,
-
           recommends: recommends,
         }
       end
@@ -304,17 +304,16 @@ module Api
     end
 
     def get_recommend_by_period(line_managers)
-      hash = {}
+      arr = []
       line_managers.map do |line|
-        hash[line.period.format_name] = [] if hash[line.period.format_name].nil?
-        hash[line.period.format_name] << {
+        arr << {
           given_point: line.given_point,
           recommends: line.recommend,
           reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
           name: User.find(line.user_id).account,
         }
       end
-      hash
+      arr
     end
 
     def filter_cds

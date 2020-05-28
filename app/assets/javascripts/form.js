@@ -2,11 +2,11 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(3, 9, "#93dba3");
+  drawColorTitleFormPreviewResult(3, 9, "#FAD7A0");
   drawColorTitleFormPreviewResult(10, 16, "#d4f6ff");
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
   drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
-  drawColorTitleFormPreviewResult(31, 37, "#93dba3");
+  drawColorTitleFormPreviewResult(31, 37, "#FAD7A0");
   
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
@@ -23,7 +23,6 @@ $(document).ready(function () {
 
   function SidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
-
     if ($(".card").is(":visible")) {
       $(".card").hide();
       $("#accordion table").hide();
@@ -41,9 +40,6 @@ $(document).ready(function () {
   $("#filter-form-slots").multiselect({});
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
-
-  
-
 });
 function loadDataPanel(form_id) {
   $.ajax({
@@ -138,6 +134,21 @@ function checkUncommmit(is_commit) {
   return ""
 }
 
+function getValueStringPoint(point){
+  switch(point) {
+    case 1:
+      return "1 - Does Not Meet Minimun Standards";
+    case 2:
+      return "2 - Needs Improvement";
+    case 3:
+      return "3 - Meets Expectations";
+    case 4:
+      return "4 - Exceeds Expectations";
+    case 5:
+      return "5 - Outstanding";
+  }
+}
+
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
@@ -183,7 +194,7 @@ function loadDataSlots(response){
       </td>
       <td><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>
       <td rowspan="${length}">
-        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-slot-id="${e.slot_id}">
+        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}">
           <i class="fas fa-history"></i>
         </a>
         <a href="javascript:void(0)" class="flag--icon__red icon" data-slot-id="${e.slot_id}">
@@ -285,10 +296,10 @@ $(document).on("click", ".card table thead tr", function () {
   });
 });
 
-
 $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');
   var slot_id = $(this).data("slot-id");
+  var id = $(this).data("id");
   id = $(".card").find('.show').attr('id').split("collapse");
   competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
   competency_name = $.trim(competency_name);
@@ -298,7 +309,7 @@ $(document).on("click", ".modal-view-assessment-history", function () {
     type: "POST",
     url: "/forms/get_cds_histories",
     data: {
-      
+      slot_id: id
     },  
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -306,31 +317,29 @@ $(document).on("click", ".modal-view-assessment-history", function () {
     dataType: "json",
     success: function (response) {
       temp = '';
-      for (i in response) { 
-        debugger
+      for (i in response) {
+      length = response[i].recommends.length;
       temp += `
         <tr>
-        <td rowspan="3">${e}</td>
-        <td rowspan="3">3 - Meets Expectations</td>
-        <td rowspan="3">I word very hard, have many good idea</td>
-        <td>Ok</td>
-        <td>1 - Does Not Meet Minimun Standards</td>
-        <td>PhungNV</td>
-        <td>23/03/2020  08:00:00</td>
-      </tr>
-      <tr>
-        <td>Ok</td>
-        <td>1 - Does Not Meet Minimun Standards</td>
-        <td>PhungNV</td>
-        <td>23/03/2020  08:00:00</td>
-      </tr>
-      <tr>
-        <td>Ok</td>
-        <td>1 - Does Not Meet Minimun Standards</td>
-        <td>PhungNV</td>
-        <td>23/03/2020  08:00:00</td>
+        <td rowspan="${length}">${i}</td>
+        <td rowspan="${length}">${getValueStringPoint(response[i].point)}</td>
+        <td rowspan="${length}">${response[i].evidence}</td>
+        <td>${response[i].recommends[0].recommends}</td>
+        <td>${getValueStringPoint(response[i].recommends[0].given_point)}</td>
+        <td>${response[i].recommends[0].name}</td>
+        <td>${response[i].recommends[0].reviewed_date}</td>
       </tr>
         `;
+      for (x = 1; x < length; x++) {
+        temp += `
+        <tr>
+        <td>${response[i].recommends[x].recommends}</td>
+        <td>${getValueStringPoint(response[i].recommends[x].given_point)}</td>
+        <td>${response[i].recommends[x].name}</td>
+        <td>${response[i].recommends[x].reviewed_date}</td>
+        </tr>
+        `;
+      }
       };
       $('.table-view-assessment-history tbody').html(temp);
     }
@@ -425,12 +434,13 @@ $(document).on("click", ".submit-assessment", function () {
 });
 
 $(document).on("click", "#confirm_submit_cds", function () {
+  debugger
   $.ajax({
     type: "POST",
     url: "/forms/submit",
     data: {
       form_id: form_id,
-      period_id: $(this).val()
+      period_id: parseInt($('#modal_period #period_id').val())
     },  
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -439,7 +449,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $(this).val() + " has been submit successfully..");
+        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully..");
       } else {
         fails("Can't submit CDS.");
       }
