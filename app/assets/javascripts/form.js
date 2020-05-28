@@ -247,6 +247,7 @@ function loadDataSlots(response){
     }
 
   });
+  
   $('.csd-assessment-table table tbody').html(temp);
   resize_textarea();
 }
