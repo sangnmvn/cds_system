@@ -5,7 +5,7 @@ class CreateLineManagers < ActiveRecord::Migration[6.0]
       t.text :recommend
       t.integer :user_id
       t.integer :final
-
+      t.string :flag
       t.belongs_to :period, foreign_key: true
       t.belongs_to :form_slot, foreign_key: true
 

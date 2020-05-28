@@ -1,5 +1,5 @@
-<%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag "form", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <script>
@@ -40,9 +40,9 @@
 </div>
 <div class="container-fluid">
   <div class="row" id="body-row">
-    <%= render 'left_panel'%>
+    <%= render "left_panel" %>
     <div class="col" style="padding-right: 0px">
-      <%= render 'form_slot'%>
+      <%= render "form_slot" %>
     </div>
   </div>
 </div>
@@ -50,5 +50,6 @@
 <div><%= render 'modal_history' %></div>
 <div><%= render 'modal_period' %></div>
 <div><%= render 'modal_approve_cds' %></div>
+<div><%= render "modal_add_more_evidence" %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

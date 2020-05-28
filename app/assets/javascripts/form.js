@@ -136,6 +136,27 @@ function checkUncommmit(is_commit) {
     return "selected"
   return ""
 }
+function checkReviewer(reviewers) {
+  for (i = 0; i < reviewers.length; i++) {
+    if (reviewers[i].flag == "yellow") 
+    {
+      var a = "";
+      if(reviewers[i].given_point == 5)
+        a= "Outstanding";
+      if(reviewers[i].given_point == 4)
+        a= "Exceeds Expectations";
+      if(reviewers[i].given_point == 3)
+        a= "Meets Expectations";
+      if(reviewers[i].given_point == 2)
+        a= "Needs Improvement";
+      if(reviewers[i].given_point == 1)
+        a= "Does Not Meet Minimun Standards";
+      
+      return [reviewers[i].name,a,reviewers[i].recommends]
+    }
+  }
+  return ""
+}
 
 function getValueStringPoint(point){
   switch(point) {
@@ -200,8 +221,8 @@ function loadDataSlots(response){
         <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}">
           <i class="fas fa-history"></i>
         </a>
-        <a href="javascript:void(0)" class="flag--icon__red icon" data-slot-id="${e.slot_id}">
-        <i class="far fa-flag"></i>
+        <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" >
+          <i style="color: ${e.tracking.flag};" class="far fa-flag"></i>
         </a>
       </td>
       </tr>
@@ -497,6 +518,70 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
       } else {
         fails("Can't approve CDS.");
       }
+    }
+  });
+});
+$(document).on("click", ".flag-cds-assessment", function () {
+  if ($(this).data("click") != "yellow")
+    return;
+  var form_slot_id = $(this).data("form-slot-id");
+  var slot_id = $(this).data("slot-id");
+
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_data_slot",
+    data: {
+      form_slot_id: form_slot_id,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_add_more_evidence').modal('show');
+
+      $('#add_more_evidence_competency_name').text(response.competency_name);
+      $('#add_more_evidence_slot_id').text(response.slot_id);
+      $('#add_more_evidence_slot_desc').text(response.slot_desc);
+      $('#add_more_evidence_evidence_guildeline').text(response.slot_evidence);
+      $('#add_more_evidence_reviewer').text(response.reviewer_name);
+      $('#add_more_evidence_out').text(response.line_given_point);
+      $('#add_more_evidence_recommends').text(response.line_recommends);
+      $('#add_more_evidence_commit option[value='+response.comment_is_commit +']').prop("selected", true);
+      $('#add_more_evidence_self_assessment option[value='+response.comment_point+']').prop("selected", true);
+      $('#add_more_evidence_evidence').text(response.comment_evidence);
+      $('#add_more_evidence_id').val(slot_id);
+    }
+  });
+});
+
+$(document).on("click", "#btn_save", function () {
+  if ($('#add_more_evidence_commit').find('.commit-select').val() =="0")
+    is_commit = false
+    else
+    is_commit = true
+  point = $('#add_more_evidence_self_assessment').find('.point-select').val();
+  evidence = $('#add_more_evidence_evidence').val();
+  slot_id =  $('#add_more_evidence_id').val();
+  competancename =  $('#add_more_evidence_competency_name').text();
+  $.ajax({
+    type: "POST",
+    url: "/forms/save_add_more_evidence",
+    data: {
+      form_id: form_id,
+      is_commit: is_commit,
+      point: parseInt(point),
+      evidence: evidence,
+      slot_id: slot_id,
+      competance_name: competancename,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_add_more_evidence').modal('hide');
+      loadDataPanel(form_id);
     }
   });
 });

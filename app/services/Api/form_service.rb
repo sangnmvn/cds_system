@@ -191,6 +191,24 @@ module Api
       end
     end
 
+    def save_add_more_evidence
+      if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
+        form_slot = FormSlot.includes(:line_managers, :comments).find_by(slot_id: params[:slot_id], form_id: params[:form_id])
+        comment = form_slot.comments.first
+        line_manager = form_slot.line_managers.find_by_flag("yellow")
+        approver = User.find(line_manager.user_id)
+        is_commit = params[:is_commit] == "true"
+        if comment.present?
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, flag: "green")
+          line_manager.update(flag: "green")
+          period = Form.includes(:period).find(params[:form_id]).period
+          CdsAssessmentMailer.with(slot_id: params[:slot_id], competance_name: params[:competance_name], user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_now
+        else
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
+        end
+      end
+    end
+
     def save_cds_manager
       if params[:recommend] && params[:given_point] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
@@ -286,6 +304,27 @@ module Api
       hash
     end
 
+    def get_data_form_slot
+      line = LineManager.find_by(form_slot_id: params[:form_slot_id], flag: "yellow")
+      return if line.nil?
+      slot = Slot.includes(:competency).joins(:form_slots).find_by(form_slots: { id: params[:form_slot_id] })
+      reviewer = User.find(line.user_id)
+      comment = Comment.find_by(form_slot_id: params[:form_slot_id])
+
+      {
+        competency_name: slot.competency.name,
+        slot_id: slot.id,
+        slot_desc: slot.desc,
+        slot_evidence: slot.evidence,
+        reviewer_name: reviewer.account,
+        line_given_point: line.given_point,
+        line_recommends: line.recommend,
+        comment_is_commit: comment.is_commit ? 1 : 0,
+        comment_point: comment.point,
+        comment_evidence: comment.evidence,
+      }
+    end
+
     private
 
     attr_reader :params, :current_user
@@ -319,6 +358,7 @@ module Api
             id: form_slot.id,
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
+            flag: comments.flag,
             is_commit: comments&.is_commit,
             recommends: recommends,
           }
@@ -338,6 +378,8 @@ module Api
           given_point: line.given_point,
           recommends: line.recommend,
           name: User.find(line.user_id).account,
+          flag: line.flag,
+          user_id: line.user_id,
         }
       end
       recommends

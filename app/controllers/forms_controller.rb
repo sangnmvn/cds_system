@@ -54,9 +54,18 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def save_add_more_evidence
+    return render json: { status: "success" } if @form_service.save_add_more_evidence
+    render json: { status: "fail" }
+  end
+
   def save_cds_assessment_manager
     return render json: { status: "success" } if @form_service.save_cds_manager
     render json: { status: "fail" }
+  end
+
+  def get_data_slot
+    return render json: @form_service.get_data_form_slot
   end
 
   def preview_result
@@ -81,7 +90,10 @@ class FormsController < ApplicationController
   def submit
     form = Form.find(params[:form_id])
     if form.update(period_id: params[:period_id], status: "Awaiting Review")
-      #send mail if updated
+      approvers = Approver.where(user_id: form.user_id).includes(:approver)
+      user = form.user
+      period = form.period
+      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
       render json: { status: "success" }
     else
       render json: { status: "fail" }
@@ -104,6 +116,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name)
   end
 end
