@@ -50,9 +50,13 @@ Rails.application.routes.draw do
       get "cds_assessment"
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
+      post "save_add_more_evidence"
       post "save_cds_assessment_manager"
       get "cds_review"
       post "submit"
+      post "approve_cds"
+      post "get_cds_histories"
+      post "get_data_slot"
     end
   end
   resources :templates do

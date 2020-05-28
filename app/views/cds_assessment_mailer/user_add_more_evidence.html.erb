@@ -1,0 +1,12 @@
+<ul>
+    <li> From: CDS system </li>
+    <li> To: <%= @emails %> </li>
+    <li> Subject: [CDS system] Notify to review CDS assessment updates - competency  <%= @competancename %> "/slot"<%= @slot_id %> </li>
+    <li> Content</li>
+</ul>
+<p>Dear <%= @reviewername %> ,</p>
+
+<p>The CDS assessment period [<%= @from_date %> - <%= @to_date %>] of <%= @firstname %> <%= @lastname %> has been updated on competency  <%= @competancename %> "/slot"<%= @slot_id %> . Please access CDS system to review.</p>
+
+<p>Thank you,</p>
+<p>CDS System</p>

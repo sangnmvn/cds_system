@@ -22,17 +22,25 @@ class FormsController < ApplicationController
   end
 
   def cds_assessment
-    @period = Period.order(:id).last
-    params = cds_assessment_params
+    params = form_params
+    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
+    @period = schedules.map do |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    end
+    return @title_history_id = params[:title_history_id] if params[:title_history_id].present?
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
     else
-      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS", status: "New").order(created_at: :desc).first
+      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
     @form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
+        form.update(status: "New", period_id: nil) if form.status == "Done"
         form.id
       end
   end
@@ -46,21 +54,27 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def save_add_more_evidence
+    return render json: { status: "success" } if @form_service.save_add_more_evidence
+    render json: { status: "fail" }
+  end
+
   def save_cds_assessment_manager
     return render json: { status: "success" } if @form_service.save_cds_manager
     render json: { status: "fail" }
   end
 
+  def get_data_slot
+    return render json: @form_service.get_data_form_slot
+  end
+
   def preview_result
-    @role_name = Role.find(current_user.role_id).name
-    @first_name = current_user.first_name
-    @last_name = current_user.last_name
     form = Form.where(id: params[:form_id], user_id: current_user.id).first
     return "fail" if form.nil?
-    # check form.template_id nil
+
+    @slots = LEVEL_SLOTS
     @competencies = Competency.where(template_id: form.template_id).pluck(:name)
     @result = @form_service.preview_result(form)
-    @slots = LEVEL_SLOTS
   end
 
   def destroy
@@ -75,8 +89,24 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find(params[:form_id])
-    form.update(period_id: params[:period_id], status: "Awaiting Review")
-    #send mail if updated
+    if form.update(period_id: params[:period_id], status: "Awaiting Review")
+      approvers = Approver.where(user_id: form.user_id).includes(:approver)
+      user = form.user
+      period = form.period
+      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
+      render json: { status: "success" }
+    else
+      render json: { status: "fail" }
+    end
+  end
+
+  def approve_cds
+    status = @form_service.approve_cds
+    render json: { status: status }
+  end
+
+  def get_cds_histories
+    render json: @form_service.get_data_view_history
   end
 
   private
@@ -85,11 +115,7 @@ class FormsController < ApplicationController
     @form_service ||= Api::FormService.new(form_params, current_user)
   end
 
-  def cds_assessment_params
-    params.permit(:form_id)
-  end
-
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name)
   end
 end

@@ -7,6 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #Delete all
+FormSlotHistory.delete_all
+TitleHistory.delete_all
 LineManager.delete_all
 Comment.delete_all
 FormSlot.delete_all
@@ -1205,9 +1207,14 @@ Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
 Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending", submit_date: "2019-06-20", review_date: "2019-06-30")
-Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Pending")
-
-(1..134).each { |i| FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0) }
+Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done")
+(1..134).each do |i|
+  FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)
+  Comment.create!(id: i, evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: i)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", final: "", form_slot_id: i, period_id: 30)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", final: "", form_slot_id: i, period_id: 30)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: "", form_slot_id: i, period_id: 30)
+end
 
 TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)
 TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1001, competency_id: 2)

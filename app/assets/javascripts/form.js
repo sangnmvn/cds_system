@@ -2,11 +2,11 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(3, 9, "#93dba3");
+  drawColorTitleFormPreviewResult(3, 9, "#FAD7A0");
   drawColorTitleFormPreviewResult(10, 16, "#d4f6ff");
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
   drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
-  drawColorTitleFormPreviewResult(31, 37, "#93dba3");
+  drawColorTitleFormPreviewResult(31, 37, "#FAD7A0");
   
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
@@ -23,7 +23,6 @@ $(document).ready(function () {
 
   function SidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
-
     if ($(".card").is(":visible")) {
       $(".card").hide();
       $("#accordion table").hide();
@@ -41,20 +40,20 @@ $(document).ready(function () {
   $("#filter-form-slots").multiselect({});
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
-
-  
-
 });
 function loadDataPanel(form_id) {
+  data = {}
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
   $.ajax({
     type: "POST",
     url: "/forms/get_competencies/",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    data: {
-      form_id: form_id,
-    },
+    data: data,
     dataType: "json",
     success: function (response) {
       var temp = '';
@@ -110,31 +109,78 @@ function loadDataPanel(form_id) {
     }
   });
 }
-function resize_textarea(){  
+function resize_textarea() {
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
 
-  $(".autoresizing").each((i,el) => {
+  $(".autoresizing").each((i, el) => {
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   })
-  
+
 }
 function check(x, y) {
   if (x == y)
     return "selected"
   return ""
 }
+function checkCommmit(is_commit) {
+  if (is_commit)
+    return "selected"
+  return ""
+}
+function checkUncommmit(is_commit) {
+  if (!is_commit)
+    return "selected"
+  return ""
+}
+function checkReviewer(reviewers) {
+  for (i = 0; i < reviewers.length; i++) {
+    if (reviewers[i].flag == "yellow") 
+    {
+      var a = "";
+      if(reviewers[i].given_point == 5)
+        a= "Outstanding";
+      if(reviewers[i].given_point == 4)
+        a= "Exceeds Expectations";
+      if(reviewers[i].given_point == 3)
+        a= "Meets Expectations";
+      if(reviewers[i].given_point == 2)
+        a= "Needs Improvement";
+      if(reviewers[i].given_point == 1)
+        a= "Does Not Meet Minimun Standards";
+      
+      return [reviewers[i].name,a,reviewers[i].recommends]
+    }
+  }
+  return ""
+}
+
+function getValueStringPoint(point){
+  switch(point) {
+    case 1:
+      return "1 - Does Not Meet Minimun Standards";
+    case 2:
+      return "2 - Needs Improvement";
+    case 3:
+      return "3 - Meets Expectations";
+    case 4:
+      return "4 - Exceeds Expectations";
+    case 5:
+      return "5 - Outstanding";
+  }
+}
 
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
+    length = e.tracking.recommends.length;
     temp += `
     <tr id="${e.id}" class="tr_slot">
-      <td style="text-align:center">${e.slot_id}</td>
-      <td style="position: relative;">
+      <td style="text-align:center" rowspan="${length}">${e.slot_id}</td>
+      <td style="position: relative;" rowspan="${length}">
         <div>${e.desc}</div>
         <br>
         <div id="slot_description_${e.slot_id}" style="display: none;">
@@ -142,13 +188,13 @@ function loadDataSlots(response){
         </div><br>
         <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
       </td>
-      <td colspan="2">
+      <td colspan="2" rowspan="${length}">
         <select class="commit-select">
-          <option value="true">Commit</option>
-          <option value="fasle" selected>Uncommit</option>
+          <option value="true" ${checkCommmit(e.tracking.is_commit)}>Commit</option>
+          <option value="fasle" ${checkUncommmit(e.tracking.is_commit)}>Uncommit</option>
         </select>
       </td>
-      <td colspan="4">
+      <td colspan="4" rowspan="${length}">
         <select class="point-select">
           <option></option> 
           <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
@@ -158,29 +204,48 @@ function loadDataSlots(response){
           <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td colspan="5"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
-      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends}</textarea></td>
+      <td colspan="5" rowspan="${length}"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
+      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[0].recommends}</textarea></td>
       <td>
         <select style="background-color: #ebebe4;" class="given-point-select" disabled>
           <option></option>
-          <option value="5" ${check(e.tracking.given_point, 5)}>5 - Outstanding</option>
-          <option value="4" ${check(e.tracking.given_point, 4)}>4 - Exceeds Expectations</option>
-          <option value="3" ${check(e.tracking.given_point, 3)}>3 - Meets Expectations</option>
-          <option value="2" ${check(e.tracking.given_point, 2)}>2 - Needs Improvement</option>
-          <option value="1" ${check(e.tracking.given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+          <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.recommends[0].given_point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.recommends[0].given_point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td><textarea style="resize:none" disabled>${e.tracking.name}</textarea></td>
-      <td>
-        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-slot-id="${e.slot_id}">
+      <td><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>
+      <td rowspan="${length}">
+        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}">
           <i class="fas fa-history"></i>
         </a>
-        <a href="javascript:void(0)" class="flag--icon__red icon" data-slot-id="${e.slot_id}">
-        <i class="far fa-flag"></i>
+        <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" >
+          <i style="color: ${e.tracking.flag};" class="far fa-flag"></i>
         </a>
       </td>
       </tr>
       `;
+    for (i = 1; i < length; i++) {
+      temp += `
+        <tr>
+        <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[i].recommends}</textarea></td>
+        <td>
+          <select style="background-color: #ebebe4;" class="given-point-select" disabled>
+            <option></option>
+            <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
+            <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
+            <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
+            <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
+            <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+          </select>
+        </td>
+        <td><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+        </tr>
+        `;
+    }
+
   });
   $('.csd-assessment-table table tbody').html(temp);
   resize_textarea();
@@ -237,14 +302,17 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
+  var data = { competency_id: competency_id };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      competency_id: competency_id
-    },
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -255,41 +323,93 @@ $(document).on("click", ".card table thead tr", function () {
   });
 });
 
-
 $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');
   var slot_id = $(this).data("slot-id");
+  var id = $(this).data("id");
   id = $(".card").find('.show').attr('id').split("collapse");
-  competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
+  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
   competency_name = $.trim(competency_name);
   $('#assessment_history_competency_name').text(competency_name);
   $('#assessment_history_slot_id').text(slot_id);
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_cds_histories",
+    data: {
+      slot_id: id
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      temp = '';
+      if (response.length == undefined){
+        temp = `
+        <tr>
+          <td colspan="7" style="text-align:center">No data available in table</td>
+        </tr>`;
+        $("#modal_history_assessment table").removeClass("table-responsive");
+      }
+      for (i in response) {
+      length = response[i].recommends.length;
+      temp += `
+        <tr>
+        <td rowspan="${length}">${i}</td>
+        <td rowspan="${length}">${getValueStringPoint(response[i].point)}</td>
+        <td rowspan="${length}">${response[i].evidence}</td>
+        <td>${response[i].recommends[0].recommends}</td>
+        <td>${getValueStringPoint(response[i].recommends[0].given_point)}</td>
+        <td>${response[i].recommends[0].name}</td>
+        <td>${response[i].recommends[0].reviewed_date}</td>
+      </tr>
+        `;
+      for (x = 1; x < length; x++) {
+        temp += `
+        <tr>
+        <td>${response[i].recommends[x].recommends}</td>
+        <td>${getValueStringPoint(response[i].recommends[x].given_point)}</td>
+        <td>${response[i].recommends[x].name}</td>
+        <td>${response[i].recommends[x].reviewed_date}</td>
+        </tr>
+        `;
+      }
+      };
+      $('.table-view-assessment-history tbody').html(temp);
+    }
+  });
+
 
 });
 
 function get_data_filter() {
   filter = "";
-  $('#filter-form-slots :selected').each(function(i, sel){ 
+  $('#filter-form-slots :selected').each(function (i, sel) {
     filter += $(sel).val()
-    filter += "," 
+    filter += ","
   });
   return filter.substring(0, filter.length - 1);;
 }
 function get_id_competency_current() {
   index = $(".card").find('.show').attr('id').split("collapse");
-  return competency_id = $('.card .card-header .table'+ index[1] +' thead tr').data('id-competency');
+  return competency_id = $('.card .card-header .table' + index[1] + ' thead tr').data('id-competency');
 }
 
 $(document).on("change", ".search-assessment", function () {
+  var data = {
+    search: $(this).val(),
+    filter: get_data_filter(),
+    competency_id: get_id_competency_current()
+  };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -303,15 +423,20 @@ $(document).on("change", ".search-assessment", function () {
 
 
 $(document).on("change", "#filter-form-slots", function () {
+  var data = {
+    // search: $(this).val(),
+    filter: get_data_filter(),
+    competency_id: get_id_competency_current()
+  };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      // search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -324,7 +449,6 @@ $(document).on("change", "#filter-form-slots", function () {
 
 
 $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function () {
-
   if ($(this).find('.point-select').val().length > 0 && $(this).find('.evidence').val().length > 0) {
     var slot_id = $(this)[0].id;
     var is_commit = $(this).find('.commit-select').val();
@@ -354,13 +478,12 @@ $(document).on("click", ".submit-assessment", function () {
 });
 
 $(document).on("click", "#confirm_submit_cds", function () {
-  
   $.ajax({
     type: "POST",
     url: "/forms/submit",
     data: {
       form_id: form_id,
-      period_id: $(this).val()
+      period_id: parseInt($('#modal_period #period_id').val())
     },  
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -368,6 +491,97 @@ $(document).on("click", "#confirm_submit_cds", function () {
     dataType: "json",
     success: function (response) {
       $('#modal_period').modal('hide');
+      if (response.status == "success") {
+        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully..");
+      } else {
+        fails("Can't submit CDS.");
+      }
+    }
+  });
+});
+// approve cds
+$(document).on("click", "#confirm_yes_approve_cds", function () {
+  $('#modal_approve_cds').modal('hide');
+  $.ajax({
+    type: "POST",
+    url: "/forms/approve_cds",
+    data: {
+      form_id: form_id,
+    },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        success("This CDS has been approve successfully..");
+      } else {
+        fails("Can't approve CDS.");
+      }
+    }
+  });
+});
+$(document).on("click", ".flag-cds-assessment", function () {
+  if ($(this).data("click") != "yellow")
+    return;
+  var form_slot_id = $(this).data("form-slot-id");
+  var slot_id = $(this).data("slot-id");
+
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_data_slot",
+    data: {
+      form_slot_id: form_slot_id,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_add_more_evidence').modal('show');
+
+      $('#add_more_evidence_competency_name').text(response.competency_name);
+      $('#add_more_evidence_slot_id').text(response.slot_id);
+      $('#add_more_evidence_slot_desc').text(response.slot_desc);
+      $('#add_more_evidence_evidence_guildeline').text(response.slot_evidence);
+      $('#add_more_evidence_reviewer').text(response.reviewer_name);
+      $('#add_more_evidence_out').text(response.line_given_point);
+      $('#add_more_evidence_recommends').text(response.line_recommends);
+      $('#add_more_evidence_commit option[value='+response.comment_is_commit +']').prop("selected", true);
+      $('#add_more_evidence_self_assessment option[value='+response.comment_point+']').prop("selected", true);
+      $('#add_more_evidence_evidence').text(response.comment_evidence);
+      $('#add_more_evidence_id').val(slot_id);
+    }
+  });
+});
+
+$(document).on("click", "#btn_save", function () {
+  if ($('#add_more_evidence_commit').find('.commit-select').val() =="0")
+    is_commit = false
+    else
+    is_commit = true
+  point = $('#add_more_evidence_self_assessment').find('.point-select').val();
+  evidence = $('#add_more_evidence_evidence').val();
+  slot_id =  $('#add_more_evidence_id').val();
+  competancename =  $('#add_more_evidence_competency_name').text();
+  $.ajax({
+    type: "POST",
+    url: "/forms/save_add_more_evidence",
+    data: {
+      form_id: form_id,
+      is_commit: is_commit,
+      point: parseInt(point),
+      evidence: evidence,
+      slot_id: slot_id,
+      competance_name: competancename,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_add_more_evidence').modal('hide');
+      loadDataPanel(form_id);
     }
   });
 });

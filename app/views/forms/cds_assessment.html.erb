@@ -1,12 +1,12 @@
-<%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag "form", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <script>
-  var form_id = <%= @form_id %>;
+  var form_id = <%= @form_id || 0 %>;
+  var title_history_id = <%= @title_history_id || 0 %>;
   loadDataPanel(form_id);
 </script>
-
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
@@ -33,21 +33,23 @@
       </select>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>
-      <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)" %>
+      <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)", "data-toggle": "modal", "data-target": "#modal_approve_cds" %>
       <%= link_to '<i class="far fa-thumbs-down" style="color: red"></i> Reject'.html_safe, "javascript:void(0)" %>
     </div>
   </div>
 </div>
 <div class="container-fluid">
   <div class="row" id="body-row">
-    <%= render 'left_panel'%>
+    <%= render "left_panel" %>
     <div class="col" style="padding-right: 0px">
-      <%= render 'form_slot'%>
+      <%= render "form_slot" %>
     </div>
   </div>
 </div>
-<%= render 'modal_submit_cds'%>
+<div><%= render 'modal_submit_cds'%></div>
 <div><%= render 'modal_history' %></div>
 <div><%= render 'modal_period' %></div>
+<div><%= render 'modal_approve_cds' %></div>
+<div><%= render "modal_add_more_evidence" %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

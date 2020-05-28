@@ -5,7 +5,7 @@ class CreateTitleHistories < ActiveRecord::Migration[6.0]
       t.string :title
       t.integer :level
       t.integer :user_id
-      t.integer :role_id
+      t.string :role_name
 
       t.belongs_to :period, foreign_key: true
       t.timestamps

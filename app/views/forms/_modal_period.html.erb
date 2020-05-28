@@ -8,10 +8,24 @@
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
-        Are you sure you want to submit CDS for period <%= @period.format_name %> ?
+      <p>Please select period for this CDS assessment.</p>
+      <div class="row">
+        <div class="col-2">
+          Period:
+        </div>
+        <div class="col-10 form-group">
+          <select class="form-control" id="period_id">
+            <% @period.each do |pe|%>
+              <option value="<%= pe[:id] %>"><%= pe[:name] %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+        
+        <p>Are you sure you want to submit this CDS for review / approval ?</p>
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <button type="button" value="<%=  @period.id %>" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
+        <button type="button" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>
