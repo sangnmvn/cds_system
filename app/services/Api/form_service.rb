@@ -202,9 +202,9 @@ module Api
       form = Form.find(params[:form_id])
       title_history = TitleHistory.new(rank: form.rank, title: form.title, level: form.level, role_id: form.role_id, user_id: form.user_id, period_id: form.period_id)
       render json: { status: "fail" } unless title_history.save
-
-      slots = Slot.includes(:competency).joins(:form_slots).where({ form_slots: { form_id: params[:form_id] } }).order(:competency, :level, :slot_id)
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: params[:form_id])
+
+      slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
       form_slots = format_form_slot(form_slots)
       hash = {}
       slots.map do |slot|
@@ -217,7 +217,7 @@ module Api
           competency_id: slot.competency_id,
           title_history_id: title_history.id,
           slot_id: slot.id,
-          slot_position: slot.level.to_s + LETTER_CAP[dumy_hash[key]],
+          slot_position: slot.level.to_s + LETTER_CAP[hash[key]],
         }
         form_slot_history = FormSlotHistory.new(data)
         render json: { status: "fail" } unless form_slot_history.save
