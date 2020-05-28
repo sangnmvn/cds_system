@@ -323,6 +323,13 @@ $(document).on("click", ".modal-view-assessment-history", function () {
     dataType: "json",
     success: function (response) {
       temp = '';
+      if (response.length == undefined){
+        temp = `
+        <tr>
+          <td colspan="7" style="text-align:center">No data available in table</td>
+        </tr>`;
+        $("#modal_history_assessment table").removeClass("table-responsive");
+      }
       for (i in response) {
       length = response[i].recommends.length;
       temp += `
