@@ -8,10 +8,10 @@
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
-        Are you sure you want to submit CDS for period <%= @period.format_name %> ?
+        Are you sure you want to submit CDS for period <%= @period[0][:name] %> ?
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <button type="button" value="<%=  @period.id %>" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
+        <button type="button" value="<%=  @period[0][:id] %>" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>

@@ -39,7 +39,7 @@ class FormsController < ApplicationController
     @form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
-        form.update(status: "New") if form.status == "Done"
+        form.update(status: "New", period_id: nil) if form.status == "Done"
         form.id
       end
   end
@@ -79,12 +79,22 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find(params[:form_id])
-    form.update(period_id: params[:period_id], status: "Awaiting Review")
-    #send mail if updated
+    if form.update(period_id: params[:period_id], status: "Awaiting Review")
+      #send mail if updated
+      render json: { status: "success" }
+    else
+      render json: { status: "fail" }
+    end
   end
 
   def approve
-    @form_service.approve_cds
+    status = @form_service.approve_cds
+    render json: { status: status }
+  end
+
+  def get_cds_histories
+    # binding.pry
+    render json:  @form_service.get_data_view_history
   end
 
   private

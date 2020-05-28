@@ -29,7 +29,6 @@ module Api
         hash[key][:levels][slot.level][:total] += 1
         hash[key][:levels][slot.level][:current] += 1 if form_slots[slot.id]
       end
-      # binding.pry
       hash
     end
 
@@ -74,12 +73,13 @@ module Api
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
       form = Form.where(user_id: user_id, _type: "CDS").where.not(status: "Done").includes(:period, :role, :title).order(:id).last
-      title_histories = TitleHistory.includes(:period, :role).where(user_id: user_id).order(period_id: :desc)
-      list_form = title_histories.map do |title|
-        {
+      title_histories = TitleHistory.includes(:period).where(user_id: user_id).order(period_id: :desc)
+      list_form = []
+      title_histories.each do |title|
+        list_form << {
           id: title.id,
           period_name: title.period&.format_name,
-          role_name: title.role.name,
+          role_name: title.role_name,
           level: title.level,
           rank: title.rank,
           title: title.title,
@@ -200,8 +200,9 @@ module Api
 
     def approve_cds
       form = Form.find(params[:form_id])
-      title_history = TitleHistory.new(rank: form.rank, title: form.title, level: form.level, role_id: form.role_id, user_id: form.user_id, period_id: form.period_id)
-      render json: { status: "fail" } unless title_history.save
+      return "fail" if form.status == "Done" || form.period_id == nil
+      title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
+      return "fail" unless title_history.save
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: params[:form_id])
 
       slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
@@ -220,32 +221,29 @@ module Api
           slot_position: slot.level.to_s + LETTER_CAP[hash[key]],
         }
         form_slot_history = FormSlotHistory.new(data)
-        render json: { status: "fail" } unless form_slot_history.save
+        return "fail" unless form_slot_history.save
         hash[key] += 1
       end
       form.update(status: "Done")
       # sent email
-      render json: { status: "success" }
+      return "success"
     end
 
-    def get_form
-      user_id
-      period_id
+    def get_data_view_history
+      line_managers = LineManager.where(form_slot_id: 13).where("period_id <= ?", 50)
 
-      #       FormSlotHistory.where(user_id, period_id).pluck(:competency_id)
-      #       list_com = Competency.where(id: ids)
-      #       form_slot_his = FormSlotHistory.includes(:slot, :tracking).where(competency_id, user_id, period)
-      #       form_slot_his.map do |xxx|
-      # tracking.where(period, slot.form_slot)
-      #         {
-      #           xxx.slot.evidence,
-      #           xxx.slot.desc,
-      #           xxx.evidence,
-      #           slot.point,
-      #           tracking: slot.tracking,
-      #         }
-      #       end
+      recommends = get_recommend_by_period(line_managers)
+      slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: 13).where("title_histories.period_id <= ?", 50)
+      hash = {}
+      slot_histories.map do |h|
+        hash[h.title_history.period.format_name] = {
+          evidence: h.evidence || "",
+          point: h.point || 0,
 
+          recommends: recommends,
+        }
+      end
+      hash
     end
 
     private
@@ -272,13 +270,13 @@ module Api
         end
         return hash
       end
-      # binding.pry
       form_slots.map do |form_slot|
         recommends = get_recommend(form_slot.line_managers.order(period_id: :desc))
         comments = form_slot.comments.order(created_at: :desc).first
 
         if hash[form_slot.slot_id].nil?
           hash[form_slot.slot_id] = {
+            id: form_slot.id,
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
             is_commit: comments&.is_commit,
@@ -303,6 +301,20 @@ module Api
         }
       end
       recommends
+    end
+
+    def get_recommend_by_period(line_managers)
+      hash = {}
+      line_managers.map do |line|
+        hash[line.period.format_name] = [] if hash[line.period.format_name].nil?
+        hash[line.period.format_name] << {
+          given_point: line.given_point,
+          recommends: line.recommend,
+          reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
+          name: User.find(line.user_id).account,
+        }
+      end
+      hash
     end
 
     def filter_cds

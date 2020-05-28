@@ -141,7 +141,6 @@ function checkUncommmit(is_commit) {
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
-    // debugger
     length = e.tracking.recommends.length;
     temp += `
     <tr id="${e.id}" class="tr_slot">
@@ -295,6 +294,48 @@ $(document).on("click", ".modal-view-assessment-history", function () {
   competency_name = $.trim(competency_name);
   $('#assessment_history_competency_name').text(competency_name);
   $('#assessment_history_slot_id').text(slot_id);
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_cds_histories",
+    data: {
+      
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      temp = '';
+      for (i in response) { 
+        debugger
+      temp += `
+        <tr>
+        <td rowspan="3">${e}</td>
+        <td rowspan="3">3 - Meets Expectations</td>
+        <td rowspan="3">I word very hard, have many good idea</td>
+        <td>Ok</td>
+        <td>1 - Does Not Meet Minimun Standards</td>
+        <td>PhungNV</td>
+        <td>23/03/2020  08:00:00</td>
+      </tr>
+      <tr>
+        <td>Ok</td>
+        <td>1 - Does Not Meet Minimun Standards</td>
+        <td>PhungNV</td>
+        <td>23/03/2020  08:00:00</td>
+      </tr>
+      <tr>
+        <td>Ok</td>
+        <td>1 - Does Not Meet Minimun Standards</td>
+        <td>PhungNV</td>
+        <td>23/03/2020  08:00:00</td>
+      </tr>
+        `;
+      };
+      $('.table-view-assessment-history tbody').html(temp);
+    }
+  });
+
 
 });
 
@@ -355,7 +396,6 @@ $(document).on("change", "#filter-form-slots", function () {
 
 
 $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function () {
-  debugger
   if ($(this).find('.point-select').val().length > 0 && $(this).find('.evidence').val().length > 0) {
     var slot_id = $(this)[0].id;
     var is_commit = $(this).find('.commit-select').val();
@@ -385,7 +425,6 @@ $(document).on("click", ".submit-assessment", function () {
 });
 
 $(document).on("click", "#confirm_submit_cds", function () {
-  
   $.ajax({
     type: "POST",
     url: "/forms/submit",
@@ -399,6 +438,33 @@ $(document).on("click", "#confirm_submit_cds", function () {
     dataType: "json",
     success: function (response) {
       $('#modal_period').modal('hide');
+      if (response.status == "success") {
+        success("This CDS for " + $(this).val() + " has been submit successfully..");
+      } else {
+        fails("Can't submit CDS.");
+      }
+    }
+  });
+});
+// approve cds
+$(document).on("click", "#confirm_yes_approve_cds", function () {
+  $.ajax({
+    type: "POST",
+    url: "/forms/approve",
+    data: {
+      form_id: form_id,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modal_approve_cds').modal('hide');
+      if (response.status == "success") {
+        success("This CDS has been approve successfully..");
+      } else {
+        fails("Can't approve CDS.");
+      }
     }
   });
 });

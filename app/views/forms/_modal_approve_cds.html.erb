@@ -1,18 +1,18 @@
-<div class="modal fade" id="modal_submit_cds" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_approve_cds" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title " style="text-align: center">Confirm Submit CDS</h4>
+        <h4 class="modal-title " style="text-align: center">Confirm Approve CDS for </h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
-        <p>Please select</p>
-        Are you sure you want to submit this CDS for review / approval ?
+        <p>Your are reviewing CDS assessment for <%= current_user.first_name %> <%= current_user.last_name %>.</p>
+        <p>Are you sure want to approve it?</p>
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary" id="confirm_yes_delete_competency">Yes</button>
+        <button type="button" class="btn btn-primary" id="confirm_yes_approve_cds">Yes</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>

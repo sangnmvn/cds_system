@@ -7,6 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #Delete all
+FormSlotHistory.delete_all
+TitleHistory.delete_all
 LineManager.delete_all
 Comment.delete_all
 FormSlot.delete_all
