@@ -29,7 +29,7 @@ module Api
         hash[key][:levels][slot.level][:total] += 1
         hash[key][:levels][slot.level][:current] += 1 if form_slots[slot.id]
       end
-
+      # binding.pry
       hash
     end
 
@@ -118,7 +118,7 @@ module Api
         if filter_slots["need_to_update"] && s[:tracking][:need_to_update]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
-        if filter_slots["assessing"] && s[:tracking][:is_commit]
+        if filter_slots["assessing"]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
       end
@@ -126,13 +126,14 @@ module Api
     end
 
     def save_cds_staff
-      if params[:is_commit] && params[:point] && params[:evidence] && params[:slot_id]
+      if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         comment = Comment.where(form_slot_id: form_slot.id)
+        is_commit = params[:is_commit] == "true"
         if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit])
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: params[:is_commit], form_slot_id: form_slot.id)
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
       end
     end
@@ -188,19 +189,19 @@ module Api
       user_id
       period_id
 
-#       FormSlotHistory.where(user_id, period_id).pluck(:competency_id)
-#       list_com = Competency.where(id: ids) 
-#       form_slot_his = FormSlotHistory.includes(:slot, :tracking).where(competency_id, user_id, period)
-#       form_slot_his.map do |xxx|
-# tracking.where(period, slot.form_slot)
-#         {
-#           xxx.slot.evidence,
-#           xxx.slot.desc,
-#           xxx.evidence,
-#           slot.point,
-#           tracking: slot.tracking,
-#         }
-#       end
+      #       FormSlotHistory.where(user_id, period_id).pluck(:competency_id)
+      #       list_com = Competency.where(id: ids)
+      #       form_slot_his = FormSlotHistory.includes(:slot, :tracking).where(competency_id, user_id, period)
+      #       form_slot_his.map do |xxx|
+      # tracking.where(period, slot.form_slot)
+      #         {
+      #           xxx.slot.evidence,
+      #           xxx.slot.desc,
+      #           xxx.evidence,
+      #           slot.point,
+      #           tracking: slot.tracking,
+      #         }
+      #       end
 
     end
 
@@ -228,9 +229,9 @@ module Api
         end
         return hash
       end
-
+      # binding.pry
       form_slots.map do |form_slot|
-        recommends = get_recommend(form_slot.line_managers.order(created_at: :desc))
+        recommends = get_recommend(form_slot.line_managers.order(period_id: :desc))
         comments = form_slot.comments.order(created_at: :desc).first
 
         if hash[form_slot.slot_id].nil?
@@ -238,10 +239,7 @@ module Api
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
             is_commit: comments&.is_commit,
-            given_point: recommends[:given_point],
-            recommends: recommends[:recommends],
-            name: recommends[:name],
-            count: recommends[:count],
+            recommends: recommends,
           }
         end
       end
@@ -250,23 +248,18 @@ module Api
     end
 
     def get_recommend(line_managers)
-      hash = {
-        given_point: [],
-        recommends: [],
-        name: [],
-        count: 0,
-      }
+      recommends = []
+      period_id = 0
       line_managers.map do |line|
-        unless hash[:name].include?(line.user_id)
-          hash[:given_point] << line.given_point
-          hash[:recommends] << line.recommend
-          hash[:name] << line.user_id
-          hash[:count] += 1
-        end
+        break if !period_id.zero? && period_id != line.period_id
+        period_id = line.period_id
+        recommends << {
+          given_point: line.given_point,
+          recommends: line.recommend,
+          name: User.find(line.user_id).account,
+        }
       end
-      hash[:name] = User.where(id: hash[:name]).pluck(:account)
-
-      hash
+      recommends
     end
 
     def filter_cds

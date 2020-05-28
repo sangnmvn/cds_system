@@ -127,14 +127,26 @@ function check(x, y) {
     return "selected"
   return ""
 }
+function checkCommmit(is_commit) {
+  if (is_commit) 
+    return "selected"
+  return ""
+}
+function checkUncommmit(is_commit) {
+  if (!is_commit) 
+    return "selected"
+  return ""
+}
 
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
+    // debugger
+    length = e.tracking.recommends.length;
     temp += `
     <tr id="${e.id}" class="tr_slot">
-      <td style="text-align:center">${e.slot_id}</td>
-      <td style="position: relative;">
+      <td style="text-align:center" rowspan="${length}">${e.slot_id}</td>
+      <td style="position: relative;" rowspan="${length}">
         <div>${e.desc}</div>
         <br>
         <div id="slot_description_${e.slot_id}" style="display: none;">
@@ -142,13 +154,13 @@ function loadDataSlots(response){
         </div><br>
         <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
       </td>
-      <td colspan="2">
+      <td colspan="2" rowspan="${length}">
         <select class="commit-select">
-          <option value="true">Commit</option>
-          <option value="fasle" selected>Uncommit</option>
+          <option value="true" ${checkCommmit(e.tracking.is_commit)}>Commit</option>
+          <option value="fasle" ${checkUncommmit(e.tracking.is_commit)}>Uncommit</option>
         </select>
       </td>
-      <td colspan="4">
+      <td colspan="4" rowspan="${length}">
         <select class="point-select">
           <option></option> 
           <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
@@ -158,20 +170,20 @@ function loadDataSlots(response){
           <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td colspan="5"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
-      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends}</textarea></td>
+      <td colspan="5" rowspan="${length}"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
+      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[0].recommends}</textarea></td>
       <td>
         <select style="background-color: #ebebe4;" class="given-point-select" disabled>
           <option></option>
-          <option value="5" ${check(e.tracking.given_point, 5)}>5 - Outstanding</option>
-          <option value="4" ${check(e.tracking.given_point, 4)}>4 - Exceeds Expectations</option>
-          <option value="3" ${check(e.tracking.given_point, 3)}>3 - Meets Expectations</option>
-          <option value="2" ${check(e.tracking.given_point, 2)}>2 - Needs Improvement</option>
-          <option value="1" ${check(e.tracking.given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+          <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
+          <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
+          <option value="3" ${check(e.tracking.recommends[0].given_point, 3)}>3 - Meets Expectations</option>
+          <option value="2" ${check(e.tracking.recommends[0].given_point, 2)}>2 - Needs Improvement</option>
+          <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td><textarea style="resize:none" disabled>${e.tracking.name}</textarea></td>
-      <td>
+      <td><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>
+      <td rowspan="${length}">
         <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-slot-id="${e.slot_id}">
           <i class="fas fa-history"></i>
         </a>
@@ -181,6 +193,25 @@ function loadDataSlots(response){
       </td>
       </tr>
       `;
+    for (i = 1; i < length; i++){
+      temp += `
+        <tr>
+        <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[i].recommends}</textarea></td>
+        <td>
+          <select style="background-color: #ebebe4;" class="given-point-select" disabled>
+            <option></option>
+            <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
+            <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
+            <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
+            <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
+            <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+          </select>
+        </td>
+        <td><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+        </tr>
+        `;
+    }
+    
   });
   $('.csd-assessment-table table tbody').html(temp);
   resize_textarea();
@@ -324,7 +355,7 @@ $(document).on("change", "#filter-form-slots", function () {
 
 
 $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function () {
-
+  debugger
   if ($(this).find('.point-select').val().length > 0 && $(this).find('.evidence').val().length > 0) {
     var slot_id = $(this)[0].id;
     var is_commit = $(this).find('.commit-select').val();

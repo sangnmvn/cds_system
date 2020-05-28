@@ -79,6 +79,10 @@ class FormsController < ApplicationController
     #send mail if updated
   end
 
+  def approve
+    
+  end
+
   private
 
   def form_service
@@ -90,6 +94,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id)
   end
 end
