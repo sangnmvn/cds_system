@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       post "save_cds_assessment_manager"
       get "cds_review"
       post "submit"
-      post "approve"
+      post "approve_cds"
       post "get_cds_histories"
     end
   end

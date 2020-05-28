@@ -6,6 +6,7 @@ module Api
     end
 
     def get_competencies(form_id = nil)
+      return get_old_competencies if params[:title_history_id].present?
       form_id = Form.select(:id).find_by(user_id: current_user.id).id if form_id.nil?
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form_id }).order(:competency_id, :level, :slot_id)
       hash = {}
@@ -28,6 +29,20 @@ module Api
         end
         hash[key][:levels][slot.level][:total] += 1
         hash[key][:levels][slot.level][:current] += 1 if form_slots[slot.id]
+      end
+      hash
+    end
+
+    def get_old_competencies
+      competency_ids = FormSlotHistory.where(title_history_id: params[:title_history_id]).pluck(:competency_id).uniq
+      competencies = Competency.where(id: competency_ids)
+      hash = {}
+      competencies.map do |competency|
+        hash[competency.name] = {
+          type: competency.sort_type,
+          id: competency.id,
+          levels: {},
+        }
       end
       hash
     end
@@ -88,7 +103,6 @@ module Api
       end
       if form
         list_form.unshift({
-          id: form.id,
           period_name: form.period&.format_name || "New",
           role_name: form.role&.name,
           level: form.level,
@@ -102,6 +116,7 @@ module Api
 
     def format_data_slots(param = nil)
       param ||= params
+      return format_data_old_slots if params[:title_history_id].present?
       filter_slots = filter_cds
       filter = {
         form_slots: { form_id: param[:form_id] },
@@ -136,6 +151,31 @@ module Api
         end
       end
       arr
+    end
+
+    def format_data_old_slots
+      period = TitleHistory.find(params[:title_history_id]).period_id
+      slot_histories = FormSlotHistory.includes(:slot).where(title_history_id: params[:title_history_id], competency_id: params[:competency_id])
+      line_managers = LineManager.where(period_id: period, form_slot_id: slot_histories.pluck(:form_slot_id))
+
+      form_slots = get_recommend_by_form_slot(line_managers)
+      slot_histories.map do |slot_history|
+        h_slot = {
+          id: slot_history.slot.id,
+          slot_id: slot_history.slot_position,
+          desc: slot_history.slot.desc,
+          evidence: slot_history.slot.evidence,
+        }
+        h_slot[:tracking] = {
+          id: slot_history.form_slot_id,
+          evidence: slot_history.evidence || "",
+          point: slot_history.point || 0,
+          is_commit: false,
+        }
+        h_slot[:tracking][:recommends] = form_slots[slot_history.form_slot_id] if form_slots.present?
+
+        h_slot
+      end
     end
 
     def save_cds_staff
@@ -314,6 +354,20 @@ module Api
         }
       end
       arr
+    end
+
+    def get_recommend_by_form_slot(line_managers)
+      hash = {}
+      line_managers.map do |line|
+        hash[line.form_slot_id] = [] if hash[line.form_slot_id].nil?
+        hash[line.form_slot_id] << {
+          given_point: line.given_point,
+          recommends: line.recommend,
+          reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
+          name: User.find(line.user_id).account,
+        }
+      end
+      hash
     end
 
     def filter_cds

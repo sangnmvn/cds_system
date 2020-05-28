@@ -42,15 +42,18 @@ $(document).ready(function () {
   // $('.filter-slots ul li').addClass('active');
 });
 function loadDataPanel(form_id) {
+  data = {}
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
   $.ajax({
     type: "POST",
     url: "/forms/get_competencies/",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    data: {
-      form_id: form_id,
-    },
+    data: data,
     dataType: "json",
     success: function (response) {
       var temp = '';
@@ -106,17 +109,17 @@ function loadDataPanel(form_id) {
     }
   });
 }
-function resize_textarea(){  
+function resize_textarea() {
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
 
-  $(".autoresizing").each((i,el) => {
+  $(".autoresizing").each((i, el) => {
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   })
-  
+
 }
 function check(x, y) {
   if (x == y)
@@ -124,12 +127,12 @@ function check(x, y) {
   return ""
 }
 function checkCommmit(is_commit) {
-  if (is_commit) 
+  if (is_commit)
     return "selected"
   return ""
 }
 function checkUncommmit(is_commit) {
-  if (!is_commit) 
+  if (!is_commit)
     return "selected"
   return ""
 }
@@ -203,7 +206,7 @@ function loadDataSlots(response){
       </td>
       </tr>
       `;
-    for (i = 1; i < length; i++){
+    for (i = 1; i < length; i++) {
       temp += `
         <tr>
         <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[i].recommends}</textarea></td>
@@ -221,7 +224,7 @@ function loadDataSlots(response){
         </tr>
         `;
     }
-    
+
   });
   $('.csd-assessment-table table tbody').html(temp);
   resize_textarea();
@@ -278,14 +281,17 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
+  var data = { competency_id: competency_id };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      competency_id: competency_id
-    },
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -301,7 +307,7 @@ $(document).on("click", ".modal-view-assessment-history", function () {
   var slot_id = $(this).data("slot-id");
   var id = $(this).data("id");
   id = $(".card").find('.show').attr('id').split("collapse");
-  competency_name = $('.card .card-header .table'+ id[1] +' thead tr td:nth-child(2)').text();
+  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
   competency_name = $.trim(competency_name);
   $('#assessment_history_competency_name').text(competency_name);
   $('#assessment_history_slot_id').text(slot_id);
@@ -350,27 +356,32 @@ $(document).on("click", ".modal-view-assessment-history", function () {
 
 function get_data_filter() {
   filter = "";
-  $('#filter-form-slots :selected').each(function(i, sel){ 
+  $('#filter-form-slots :selected').each(function (i, sel) {
     filter += $(sel).val()
-    filter += "," 
+    filter += ","
   });
   return filter.substring(0, filter.length - 1);;
 }
 function get_id_competency_current() {
   index = $(".card").find('.show').attr('id').split("collapse");
-  return competency_id = $('.card .card-header .table'+ index[1] +' thead tr').data('id-competency');
+  return competency_id = $('.card .card-header .table' + index[1] + ' thead tr').data('id-competency');
 }
 
 $(document).on("change", ".search-assessment", function () {
+  var data = {
+    search: $(this).val(),
+    filter: get_data_filter(),
+    competency_id: get_id_competency_current()
+  };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -384,15 +395,20 @@ $(document).on("change", ".search-assessment", function () {
 
 
 $(document).on("change", "#filter-form-slots", function () {
+  var data = {
+    // search: $(this).val(),
+    filter: get_data_filter(),
+    competency_id: get_id_competency_current()
+  };
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+
   $.ajax({
     type: "POST",
     url: "/forms/get_cds_assessment",
-    data: {
-      form_id: form_id,
-      // search: $(this).val(),
-      filter: get_data_filter(),
-      competency_id: get_id_competency_current()
-    },  
+    data: data,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -434,7 +450,6 @@ $(document).on("click", ".submit-assessment", function () {
 });
 
 $(document).on("click", "#confirm_submit_cds", function () {
-  debugger
   $.ajax({
     type: "POST",
     url: "/forms/submit",
@@ -460,10 +475,10 @@ $(document).on("click", "#confirm_submit_cds", function () {
 $(document).on("click", "#confirm_yes_approve_cds", function () {
   $.ajax({
     type: "POST",
-    url: "/forms/approve",
+    url: "/forms/approve_cds",
     data: {
       form_id: form_id,
-    },  
+    },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },

@@ -3,10 +3,10 @@
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <script>
-  var form_id = <%= @form_id %>;
+  var form_id = <%= @form_id || 0 %>;
+  var title_history_id = <%= @title_history_id || 0 %>;
   loadDataPanel(form_id);
 </script>
-
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>

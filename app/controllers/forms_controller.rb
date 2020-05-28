@@ -22,6 +22,7 @@ class FormsController < ApplicationController
   end
 
   def cds_assessment
+    params = form_params
     schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
@@ -29,7 +30,7 @@ class FormsController < ApplicationController
         name: schedule.period.format_name,
       }
     end
-    params = form_params
+    return @title_history_id = params[:title_history_id] if params[:title_history_id].present?
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
@@ -87,7 +88,7 @@ class FormsController < ApplicationController
     end
   end
 
-  def approve
+  def approve_cds
     status = @form_service.approve_cds
     render json: { status: status }
   end
@@ -104,6 +105,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id)
   end
 end
