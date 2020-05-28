@@ -22,17 +22,24 @@ class FormsController < ApplicationController
   end
 
   def cds_assessment
-    @period = Period.order(:id).last
-    params = cds_assessment_params
+    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
+    @period = schedules.map do |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    end
+    params = form_params
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
     else
-      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS", status: "New").order(created_at: :desc).first
+      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
     @form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
+        form.update(status: "New") if form.status == "Done"
         form.id
       end
   end
@@ -52,15 +59,12 @@ class FormsController < ApplicationController
   end
 
   def preview_result
-    @role_name = Role.find(current_user.role_id).name
-    @first_name = current_user.first_name
-    @last_name = current_user.last_name
     form = Form.where(id: params[:form_id], user_id: current_user.id).first
     return "fail" if form.nil?
-    # check form.template_id nil
+
+    @slots = LEVEL_SLOTS
     @competencies = Competency.where(template_id: form.template_id).pluck(:name)
     @result = @form_service.preview_result(form)
-    @slots = LEVEL_SLOTS
   end
 
   def destroy
@@ -80,17 +84,13 @@ class FormsController < ApplicationController
   end
 
   def approve
-    
+    @form_service.approve_cds
   end
 
   private
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)
-  end
-
-  def cds_assessment_params
-    params.permit(:form_id)
   end
 
   def form_params

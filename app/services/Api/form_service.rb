@@ -73,9 +73,21 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      forms = Form.where(user_id: user_id, _type: "CDS").includes(:period, :role, :title).order(id: :desc)
-      forms.map do |form|
+      form = Form.where(user_id: user_id, _type: "CDS").where.not(status: "Done").includes(:period, :role, :title).order(:id).last
+      title_histories = TitleHistory.includes(:period, :role).where(user_id: user_id).order(period_id: :desc)
+      list_form = title_histories.map do |title|
         {
+          id: title.id,
+          period_name: title.period&.format_name,
+          role_name: title.role.name,
+          level: title.level,
+          rank: title.rank,
+          title: title.title,
+          status: "Done",
+        }
+      end
+      if form
+        list_form.unshift({
           id: form.id,
           period_name: form.period&.format_name || "New",
           role_name: form.role&.name,
@@ -83,8 +95,9 @@ module Api
           rank: form.rank,
           title: form.title&.name,
           status: form.status,
-        }
+        })
       end
+      list_form
     end
 
     def format_data_slots(param = nil)
@@ -183,6 +196,36 @@ module Api
         hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = h_slot
       end
       hash
+    end
+
+    def approve_cds
+      form = Form.find(params[:form_id])
+      title_history = TitleHistory.new(rank: form.rank, title: form.title, level: form.level, role_id: form.role_id, user_id: form.user_id, period_id: form.period_id)
+      render json: { status: "fail" } unless title_history.save
+
+      slots = Slot.includes(:competency).joins(:form_slots).where({ form_slots: { form_id: params[:form_id] } }).order(:competency, :level, :slot_id)
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: params[:form_id])
+      form_slots = format_form_slot(form_slots)
+      hash = {}
+      slots.map do |slot|
+        key = slot.competency.name + slot.level.to_s
+        hash[key] = 0 if hash[key].nil?
+        data = {
+          point: form_slots[slot.id][:point],
+          evidence: form_slots[slot.id][:evidence],
+          form_slot_id: form_slots[slot.id][:id],
+          competency_id: slot.competency_id,
+          title_history_id: title_history.id,
+          slot_id: slot.id,
+          slot_position: slot.level.to_s + LETTER_CAP[dumy_hash[key]],
+        }
+        form_slot_history = FormSlotHistory.new(data)
+        render json: { status: "fail" } unless form_slot_history.save
+        hash[key] += 1
+      end
+      form.update(status: "Done")
+      # sent email
+      render json: { status: "success" }
     end
 
     def get_form
