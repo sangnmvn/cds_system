@@ -171,7 +171,7 @@ function postCreateTemplate(name, role, description) {
       dataType: "json",
       success: function (response) {
         if(response.status == 'fail'){
-          fails("The template hasn't been created successfully..");
+          fails("The template hasn't been created successfully.");
         }else{
           $('#msform .row .id-template').attr("value", response)
           success("The template has been created successfully.")
