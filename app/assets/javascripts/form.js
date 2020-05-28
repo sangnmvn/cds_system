@@ -343,14 +343,14 @@ $(document).on("click", ".modal-view-assessment-history", function () {
     },
     dataType: "json",
     success: function (response) {
-      temp = '';
-      if (response.length == undefined){
+      if (response == undefined){
         temp = `
         <tr>
           <td colspan="7" style="text-align:center">No data available in table</td>
         </tr>`;
         $("#modal_history_assessment table").removeClass("table-responsive");
       }
+      temp = '';
       for (i in response) {
       length = response[i].recommends.length;
       temp += `
@@ -492,7 +492,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully..");
+        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
       } else {
         fails("Can't submit CDS.");
       }
@@ -514,7 +514,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        success("This CDS has been approve successfully..");
+        success("This CDS has been approve successfully.");
       } else {
         fails("Can't approve CDS.");
       }
