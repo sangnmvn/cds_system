@@ -142,15 +142,15 @@ function checkReviewer(reviewers) {
     {
       var a = "";
       if(reviewers[i].given_point == 5)
-        a= "Outstanding";
+        a = "Outstanding";
       if(reviewers[i].given_point == 4)
-        a= "Exceeds Expectations";
+        a = "Exceeds Expectations";
       if(reviewers[i].given_point == 3)
-        a= "Meets Expectations";
+        a = "Meets Expectations";
       if(reviewers[i].given_point == 2)
-        a= "Needs Improvement";
+        a = "Needs Improvement";
       if(reviewers[i].given_point == 1)
-        a= "Does Not Meet Minimun Standards";
+        a = "Does Not Meet Minimun Standards";
       
       return [reviewers[i].name,a,reviewers[i].recommends]
     }
@@ -172,15 +172,37 @@ function getValueStringPoint(point){
       return "5 - Outstanding";
   }
 }
+function checkDisableFormSlotsStaff(is_reviewer,user_id){
+  if (is_reviewer == false)
+    return "disabled"
+  else
+    return checkDisableFormSlotsUser(user_id);
+}
+
+function checkDisableFormSlotsReviewer(is_reviewer){
+  if (is_reviewer == true)
+    return "disabled"
+  else
+    return ""
+}
+function checkDisableFormSlotsUser(user_id){
+  if (user_id != user_current)
+    return "disabled"
+  else 
+    return ""
+}
 
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
     length = e.tracking.recommends.length;
+    rowspan = length;
+    if (length == 0)
+      rowspan = 1;
     temp += `
     <tr id="${e.id}" class="tr_slot">
-      <td style="text-align:center" rowspan="${length}">${e.slot_id}</td>
-      <td style="position: relative;" rowspan="${length}">
+      <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>
+      <td style="position: relative;" rowspan="${rowspan}">
         <div>${e.desc}</div>
         <br>
         <div id="slot_description_${e.slot_id}" style="display: none;">
@@ -188,14 +210,14 @@ function loadDataSlots(response){
         </div><br>
         <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
       </td>
-      <td colspan="2" rowspan="${length}">
-        <select class="commit-select">
+      <td colspan="2" rowspan="${rowspan}">
+        <select class="commit-select" ${checkDisableFormSlotsReviewer(is_reviewer)}>
           <option value="true" ${checkCommmit(e.tracking.is_commit)}>Commit</option>
           <option value="fasle" ${checkUncommmit(e.tracking.is_commit)}>Uncommit</option>
         </select>
       </td>
-      <td colspan="4" rowspan="${length}">
-        <select class="point-select">
+      <td colspan="4" rowspan="${rowspan}">
+        <select class="point-select" ${checkDisableFormSlotsReviewer(is_reviewer)}>
           <option></option> 
           <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
           <option value="4" ${check(e.tracking.point, 4)}>4 - Exceeds Expectations</option>
@@ -204,50 +226,64 @@ function loadDataSlots(response){
           <option value="1" ${check(e.tracking.point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
       </td>
-      <td colspan="5" rowspan="${length}"><textarea class="evidence autoresizing">${e.tracking.evidence}</textarea></td>
-      <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[0].recommends}</textarea></td>
-      <td>
-        <select style="background-color: #ebebe4;" class="given-point-select" disabled>
-          <option></option>
-          <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
-          <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
-          <option value="3" ${check(e.tracking.recommends[0].given_point, 3)}>3 - Meets Expectations</option>
-          <option value="2" ${check(e.tracking.recommends[0].given_point, 2)}>2 - Needs Improvement</option>
-          <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
-        </select>
-      </td>
-      <td><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>
-      <td rowspan="${length}">
-        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}">
-          <i class="fas fa-history"></i>
-        </a>
-        <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" >
-          <i style="color: ${e.tracking.flag};" class="far fa-flag"></i>
-        </a>
+      <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="5" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer)}>${e.tracking.evidence}</textarea></td>`;
+      if (length != 0){
+        temp += `
+        <td colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea></td>
+        <td style="padding-top: 2px;padding-bottom: 2px;">
+          <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>
+            <option></option>
+            <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
+            <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
+            <option value="3" ${check(e.tracking.recommends[0].given_point, 3)}>3 - Meets Expectations</option>
+            <option value="2" ${check(e.tracking.recommends[0].given_point, 2)}>2 - Needs Improvement</option>
+            <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+          </select>
+        </td>
+        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+      }else {
+        temp += `
+        <td class="disabled" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" disabled></textarea></td>
+        <td style="padding-top: 2px;padding-bottom: 2px;">
+          <select class="given-point-select" disabled>
+            <option></option>
+          </select>
+        </td>
+        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled></textarea></td>`;
+      }
+      
+      temp += `<td rowspan="${rowspan}">
+        <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
+        <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
       </td>
       </tr>
       `;
-    for (i = 1; i < length; i++) {
-      temp += `
+
+    if (length > 1){
+      for (i = 1; i < length; i++) {
+        temp += `
         <tr>
-        <td colspan="2"><textarea style="resize:none"  disabled>${e.tracking.recommends[i].recommends}</textarea></td>
-        <td>
-          <select style="background-color: #ebebe4;" class="given-point-select" disabled>
-            <option></option>
-            <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
-            <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
-            <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
-            <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
-            <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
-          </select>
+        <td colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+        <td style="padding-top: 2px;padding-bottom: 2px;">
+        <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>
+        <option></option>
+        <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
+        <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
+        <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
+        <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
+        <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+        </select>
         </td>
-        <td><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
         </tr>
         `;
+      }
     }
 
   });
-  
+  if (jQuery.isEmptyObject(response)){
+    temp = '<td colspan="18" style="text-align:center">No data available in table</td>';
+  }
   $('.csd-assessment-table table tbody').html(temp);
   resize_textarea();
 }
@@ -396,6 +432,29 @@ function get_id_competency_current() {
   return competency_id = $('.card .card-header .table' + index[1] + ' thead tr').data('id-competency');
 }
 
+function checkStatusFormStaff(status){
+  switch(status) {
+    case "New":
+      // $('a.submit-assessment').addClass('submit-assessment');
+      break;
+    case "Awaiting Review":
+      $("a.submit-assessment .fa-file-import").css("color","#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
+      break;
+  }
+}
+function checkStatusFormReview(status){
+  switch(status) {
+    case "New":
+      // $('a.submit-assessment').addClass('submit-assessment');
+      break;
+    case "Awaiting Review":
+      $("a.submit-assessment .fa-file-import").css("color","#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
+      break;
+  }
+}
+
 $(document).on("change", ".search-assessment", function () {
   var data = {
     search: $(this).val(),
@@ -540,7 +599,6 @@ $(document).on("click", ".flag-cds-assessment", function () {
     dataType: "json",
     success: function (response) {
       $('#modal_add_more_evidence').modal('show');
-
       $('#add_more_evidence_competency_name').text(response.competency_name);
       $('#add_more_evidence_slot_id').text(response.slot_id);
       $('#add_more_evidence_slot_desc').text(response.slot_desc);

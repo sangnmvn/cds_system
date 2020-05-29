@@ -2,6 +2,7 @@
 <%= javascript_include_tag "form", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
@@ -14,7 +15,7 @@
       CDS Reviewer for 
     </div>
     <div class="col-md-4">
-      Search: <input type="text" class="search-assessment" placeholder="Search by slot's description" style="height: 88%">
+      Search: <input type="text" class="search-assessment" placeholder="Search by slot's description">
     </div>
     <div class="col-md-4 list-action filter-slots" style="text-align:right">
       Filter
@@ -26,8 +27,10 @@
         <option value="assessing" selected>Assessing in the current period</option>
         <option value="planned" selected>Planned</option>
       </select>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank, "data-tooltip": true, "data-placement": "top", title: "Preview Result" %>
+      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>
+      <%= link_to '<i class="far fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)", "data-toggle": "modal", "data-target": "#modal_approve_cds" %>
+      <%= link_to '<i class="far fa-thumbs-down" style="color: red"></i> Reject'.html_safe, "javascript:void(0)" %>
     </div>
   </div>
 </div>
@@ -49,8 +52,9 @@
 <script>
   var form_id = <%= @hash[:form_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
-  var status = "<%= @hash[:status].to_s %>";
-  var is_reviewer = false;
-  checkStatusFormStaff(status);
-  loadDataPanel(form_id);
+  var status = "<%= @hash[:status] %>";
+  var is_reviewer = true;
+  var user_current = <%= current_user.id %>;
+  checkStatusFormReview(status);
+  loadDataPanel(form_id,true);
 </script>

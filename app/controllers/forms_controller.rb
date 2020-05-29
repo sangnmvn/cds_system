@@ -23,6 +23,7 @@ class FormsController < ApplicationController
 
   def cds_assessment
     params = form_params
+    @hash = {}
     schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
@@ -30,19 +31,22 @@ class FormsController < ApplicationController
         name: schedule.period.format_name,
       }
     end
-    return @title_history_id = params[:title_history_id] if params[:title_history_id].present?
+    return title_history_id = params[:title_history_id] if params[:title_history_id].present?
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
     else
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
-    @form_id = if form.nil? || form.template.role_id != current_user.role_id
+    @hash[:title_history_id] = title_history_id
+    form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
         form.update(status: "New", period_id: nil) if form.status == "Done"
         form.id
       end
+    @hash[:form_id] = form_id
+    @hash[:status] = form.status
   end
 
   def get_cds_assessment
@@ -69,7 +73,7 @@ class FormsController < ApplicationController
   end
 
   def preview_result
-    form = Form.where(id: params[:form_id], user_id: current_user.id).first
+    form = Form.find_by(_type: "CDS", user_id: current_user.id)
     return "fail" if form.nil?
 
     @slots = LEVEL_SLOTS
@@ -107,6 +111,34 @@ class FormsController < ApplicationController
 
   def get_cds_histories
     render json: @form_service.get_data_view_history
+  end
+
+  def review_cds_assessment
+    params = form_params
+    @hash = {}
+    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
+    @period = schedules.map do |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    end
+    return title_history_id = params[:title_history_id] if params[:title_history_id].present?
+    if params.include?(:form_id)
+      form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
+      return if form.nil?
+    else
+      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+    end
+    @hash[:title_history_id] = title_history_id
+    form_id = if form.nil? || form.template.role_id != current_user.role_id
+        @form_service.create_form_slot
+      else
+        form.update(status: "New", period_id: nil) if form.status == "Done"
+        form.id
+      end
+    @hash[:form_id] = form_id
+    @hash[:status] = form.status
   end
 
   private

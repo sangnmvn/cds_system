@@ -1162,7 +1162,7 @@ slot_create.each_with_index do |s, i|
   Slot.create!(id: i + 1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
-Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17")
+Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17")
 Group.create!(id: 32, name: "BOD", description: "BOD", status: 1, privileges: "10")
 Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
 Group.create!(id: 34, name: "Manager", description: "Manager", status: 1, privileges: "1")
@@ -1206,7 +1206,7 @@ Title.create!(id: 1002, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
 Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
-Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "Pending", submit_date: "2019-06-20", review_date: "2019-06-30")
+Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", submit_date: "2019-06-20", review_date: "2019-06-30")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done")
 (1..134).each do |i|
   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)

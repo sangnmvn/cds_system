@@ -358,7 +358,7 @@ module Api
             id: form_slot.id,
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
-            flag: comments.flag,
+            # flag: comments.flag,
             is_commit: comments&.is_commit,
             recommends: recommends,
           }

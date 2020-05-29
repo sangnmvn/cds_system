@@ -352,7 +352,6 @@ function myAjax() {
         //xoa du lieu cũ của table
         $(response).each(
           function (i, e) { //duyet mang doi tuong
-            console.log(i + ' - ' + e);
             $("#table_left").dataTable().fnAddData([
               "<td style='text-align: right'></td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
             ]);
