@@ -195,10 +195,9 @@ function checkDisableFormSlotsUser(user_id){
 function loadDataSlots(response){
   var temp = "";
   $(response).each(function (i, e) {
-    length = e.tracking.recommends.length;
-    rowspan = length;
-    if (length == 0)
-      rowspan = 1;
+    length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
+    rowspan = length || 1;
+    
     temp += `
     <tr id="${e.id}" class="tr_slot">
       <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>

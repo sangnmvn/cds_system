@@ -1206,7 +1206,7 @@ Title.create!(id: 1002, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
 Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
-Form.create!(id: 1, user_id: "1", _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", submit_date: "2019-06-20", review_date: "2019-06-30")
+Form.create!(id: 1, user_id: "1", _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", is_delete: false, submit_date: "2019-06-20", review_date: "2019-06-30")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done")
 (1..134).each do |i|
   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)

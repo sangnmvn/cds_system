@@ -14,11 +14,14 @@ function LoadDataAssessmentList() {
         link = `/forms/cds_assessment`;
         if (form.status == "Done")
           link = `/forms/cds_assessment?title_history_id=${form.id}`;
-        var color = "red";
+        var color_delete = "red";
+        var color_edit = "#fc9803";
         var status_class = "delete-cds";
         if (form.status == "Done") {
-          color = "black";
+          color_delete = "gray";
           status_class = "";
+          color_edit = "gray";
+          link = "#";
         }
         var this_element = `<tr id='period_id_{id}'> 
               <td>{no}</td> 
@@ -28,13 +31,15 @@ function LoadDataAssessmentList() {
               <td>{rank}</td> 
               <td>{title}</td> 
               <td>{status}</td> 
-              <td class="{}"> 
-                <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
+              <td> 
+                <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}'></i></a>
+                &nbsp;
                 <a class='{status_class}' data-id='{id}' data-period-cds='{period}' href='#'>
-                  <i class='fa fa-trash icon' style='color: {color}'></i>
+                  <i class='fa fa-trash icon' style='color: {color_delete}'></i>
                 </a> 
               </td> 
             </tr>`.formatUnicorn({
+          id: form.id,
           no: i + 1,
           link: link,
           period: form.period_name,
@@ -43,7 +48,8 @@ function LoadDataAssessmentList() {
           rank: form.rank,
           title: form.title,
           status: form.status,
-          color: color,
+          color_delete: color_delete,
+          color_edit: color_edit,
           status_class: status_class,
         });
         temp += this_element;
@@ -68,9 +74,10 @@ $(document).on("click", ".delete-cds", function () {
 
 $(document).on("click", "#confirm_yes_delete_cds", function () {
   delete_period_cds = $("#delete_period_cds").text();
+  var id = $("#confirm_yes_delete_cds").val();
   $.ajax({
     type: "DELETE",
-    url: "/forms/" + $("#confirm_yes_delete_cds").val(),
+    url: "/forms/" + id,
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
     },
@@ -81,8 +88,8 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
         LoadDataAssessmentList();
         success(
           "The CDS for period " +
-            delete_period_cds +
-            " has been deleted successfully."
+          delete_period_cds +
+          " has been deleted successfully."
         );
       } else {
         fails("Can't delete CDS for period " + delete_period_cds + " .");

@@ -46,7 +46,7 @@ class FormsController < ApplicationController
     form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
-        form.update(status: "New", period_id: nil) if form.status == "Done"
+        form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
         form.id
       end
     @hash[:form_id] = form_id
@@ -89,7 +89,7 @@ class FormsController < ApplicationController
   def destroy
     form = Form.find(params[:id])
     return render json: { status: "can't delete form" } if current_user.role_id == form.id
-    if form.destroy
+    if form.update(is_delete: true)
       render json: { status: "success" }
     else
       render json: { status: "fail" }

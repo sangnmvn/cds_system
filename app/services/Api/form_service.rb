@@ -7,7 +7,7 @@ module Api
 
     def get_competencies(form_id = nil)
       return get_old_competencies if params[:title_history_id].present?
-      form_id = Form.select(:id).find_by(user_id: current_user.id).id if form_id.nil?
+      form_id = Form.select(:id).find_by(user_id: current_user.id, is_delete: false).id if form_id.nil?
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form_id }).order(:competency_id, :level, :slot_id)
       hash = {}
       form_slots = FormSlot.includes(:comments).where(form_id: form_id)
@@ -54,7 +54,7 @@ module Api
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
-      form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, level: 2, rank: 2, title_id: 1002, role_id: 1, status: "New")
+      form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, level: 2, rank: 2, title_id: 1002, role_id: 1, status: "New", is_delete: false)
 
       if form.save
         slot_ids.map do |id|
@@ -88,7 +88,7 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      form = Form.where(user_id: user_id, _type: "CDS").where.not(status: "Done").includes(:period, :role, :title).order(:id).last
+      form = Form.where(user_id: user_id, _type: "CDS", is_delete: false).where.not(status: "Done").includes(:period, :role, :title).order(:id).last
       title_histories = TitleHistory.includes(:period).where(user_id: user_id).order(period_id: :desc)
       list_form = []
       title_histories.each do |title|
@@ -104,6 +104,7 @@ module Api
       end
       if form
         list_form.unshift({
+          id: form.id,
           period_name: form.period&.format_name || "New",
           role_name: form.role&.name,
           level: form.level,
