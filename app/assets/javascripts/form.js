@@ -322,6 +322,7 @@ $(document).on("click", ".card table thead tr", function () {
     dataType: "json",
     success: function (response) {
       loadDataSlots(response);
+      checkStatusFormStaff(status);
     }
   });
 });
@@ -401,7 +402,6 @@ function get_id_competency_current() {
 function checkStatusFormStaff(status){
   switch(status) {
     case "New":
-      // $('a.submit-assessment').addClass('submit-assessment');
       break;
     case "Done":
       $("a.preview-result i").css("color","#ccc");
@@ -409,10 +409,16 @@ function checkStatusFormStaff(status){
       $('a.preview-result')[0].target = "";
       $("a.submit-assessment .fa-file-import").css("color","#ccc");
       $('a.submit-assessment').removeClass('submit-assessment');
+      $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
+      $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
+      $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
       break;
     case "Awaiting Review":
       $("a.submit-assessment .fa-file-import").css("color","#ccc");
       $('a.submit-assessment').removeClass('submit-assessment');
+      $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
+      $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
+      $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
       break;
   }
 }
@@ -422,8 +428,8 @@ function checkStatusFormReview(status){
       // $('a.submit-assessment').addClass('submit-assessment');
       break;
     case "Awaiting Review":
-      $("a.submit-assessment .fa-file-import").css("color","#ccc");
-      $('a.submit-assessment').removeClass('submit-assessment');
+      // $("a.submit-assessment .fa-file-import").css("color","#ccc");
+      // $('a.submit-assessment').removeClass('submit-assessment');
       break;
   }
 }
@@ -528,6 +534,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
         success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
         $("a.submit-assessment .fa-file-import").css("color","#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
+        checkStatusFormStaff(status)
       } else {
         fails("Can't submit CDS.");
       }
@@ -618,9 +625,4 @@ $(document).on("click", "#btn_save", function () {
       loadDataPanel(form_id);
     }
   });
-});
-
-
-$(document).on("click", "#btn_save", function () {
-  
 });

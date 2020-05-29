@@ -49,6 +49,6 @@
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = false;
-  checkStatusFormStaff(status);
   loadDataPanel(form_id);
+  // checkStatusFormStaff(status);
 </script>
