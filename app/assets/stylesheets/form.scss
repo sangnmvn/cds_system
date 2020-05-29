@@ -1,7 +1,21 @@
 // index
 
+.filter-title{
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.filter-input{
+  width: 250px;
+}
+
+.table-cds-assessment-manager-list
+{
+  margin: 0 auto;
+}
 .table-cds-assessment-manager-list tr td:nth-child(1) {
   width: 1%;
+  height: 42px;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(2) {
@@ -29,7 +43,7 @@
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(8) {
-  width: 9%;
+  width: 6%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(9) {
@@ -53,6 +67,11 @@
   vertical-align: middle;
   border: 1px solid white;
   padding: 0px 10px 0px 10px;
+}
+
+.table-cds-assessment-manager-list tr td {
+  padding: 0px 10px 0px 10px;
+  border: 1px solid white;
 }
 .table-cds-assessment-list tr td {
   padding: 0px 10px 0px 10px;
