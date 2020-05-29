@@ -31,14 +31,13 @@ class FormsController < ApplicationController
         name: schedule.period.format_name,
       }
     end
-    return title_history_id = params[:title_history_id] if params[:title_history_id].present?
+    return @hash[:title_history_id] = params[:title_history_id] if params[:title_history_id].present?
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
     else
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
-    @hash[:title_history_id] = title_history_id
     form_id = if form.nil? || form.template.role_id != current_user.role_id
         @form_service.create_form_slot
       else
