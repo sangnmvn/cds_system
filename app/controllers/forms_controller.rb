@@ -31,7 +31,12 @@ class FormsController < ApplicationController
         name: schedule.period.format_name,
       }
     end
-    return @hash[:title_history_id] = params[:title_history_id] if params[:title_history_id].present?
+    if params[:title_history_id].present?
+      @hash[:status] = "Done"
+      @hash[:title_history_id] = params[:title_history_id]
+      @hash[:title] = "CDS Assessment for " + TitleHistory.find(params[:title_history_id]).period.format_name
+      return @hash
+    end
     if params.include?(:form_id)
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
@@ -46,6 +51,7 @@ class FormsController < ApplicationController
       end
     @hash[:form_id] = form_id
     @hash[:status] = form.status
+    @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
   end
 
   def get_cds_assessment

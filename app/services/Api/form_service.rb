@@ -261,7 +261,6 @@ module Api
 
     def approve_cds
       form = Form.find(params[:form_id])
-      binding.pry
       return "fail" if form.status == "Done" || form.period_id == nil
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
