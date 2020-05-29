@@ -212,12 +212,13 @@ module Api
 
     def save_cds_manager
       if params[:recommend] && params[:given_point] && params[:slot_id]
+        period_id = Form.find(form_id: params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
         if line_manager.present?
-          line_manager.update(recomend: params[:recommend], given_point: params[:given_point])
+          line_manager.update(recomend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
-          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id)
+          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
         end
       end
     end
@@ -260,10 +261,11 @@ module Api
 
     def approve_cds
       form = Form.find(params[:form_id])
+      binding.pry
       return "fail" if form.status == "Done" || form.period_id == nil
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: params[:form_id])
+      form_slots = FormSlot.joins(:line_managers).includes(:comments, :line_managers).where(form_id: params[:form_id]).where.not(line_managers: { id: nil })
 
       slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
       form_slots = format_form_slot(form_slots)
@@ -359,7 +361,7 @@ module Api
             id: form_slot.id,
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
-            # flag: comments.flag,
+            flag: comments.flag,
             is_commit: comments&.is_commit,
             recommends: recommends,
           }

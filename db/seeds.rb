@@ -1195,7 +1195,7 @@ ProjectMember.create!(user_id: 36, project_id: 3, is_managent: "0")
 
 Period.create!(id: 30, from_date: "2019-06-16", to_date: "2019-12-16")
 Period.create!(id: 40, from_date: "2019-07-16", to_date: "2019-8-16")
-Period.create!(id: 50, from_date: "2019-10-16", to_date: "2019-11-16")
+Period.create!(id: 50, from_date: "2020-10-16", to_date: "2020-12-16")
 Schedule.create!(user_id: 34, company_id: 3, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
 Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done")
 Schedule.create!(user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-18", end_date_hr: "2020-06-18", notify_hr: 3, desc: "Period 3", status: "New")
@@ -1206,14 +1206,14 @@ Title.create!(id: 1002, name: "QC Level 2", desc: "QC Level 2", role_id: "1")
 Title.create!(id: 1003, name: "QC Level 3", desc: "QC Level 3", role_id: "1")
 Title.create!(id: 1004, name: "QC Level 4", desc: "QC Level 4", role_id: "1")
 
-Form.create!(id: 1, user_id: "1", _type: "CDS", period_id: "30", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", submit_date: "2019-06-20", review_date: "2019-06-30")
+Form.create!(id: 1, user_id: "1", _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", submit_date: "2019-06-20", review_date: "2019-06-30")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done")
 (1..134).each do |i|
   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)
   Comment.create!(id: i, evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: i)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", final: "", form_slot_id: i, period_id: 30)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", final: "", form_slot_id: i, period_id: 30)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: "", form_slot_id: i, period_id: 30)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", final: "", form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", final: "", form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: "", form_slot_id: i, period_id: 50)
 end
 
 TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)

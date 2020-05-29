@@ -210,13 +210,13 @@ function loadDataSlots(response){
         </div><br>
         <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
       </td>
-      <td colspan="2" rowspan="${rowspan}">
+      <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="2" rowspan="${rowspan}">
         <select class="commit-select" ${checkDisableFormSlotsReviewer(is_reviewer)}>
           <option value="true" ${checkCommmit(e.tracking.is_commit)}>Commit</option>
           <option value="fasle" ${checkUncommmit(e.tracking.is_commit)}>Uncommit</option>
         </select>
       </td>
-      <td colspan="4" rowspan="${rowspan}">
+      <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="4" rowspan="${rowspan}">
         <select class="point-select" ${checkDisableFormSlotsReviewer(is_reviewer)}>
           <option></option> 
           <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
@@ -229,8 +229,8 @@ function loadDataSlots(response){
       <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="5" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer)}>${e.tracking.evidence}</textarea></td>`;
       if (length != 0){
         temp += `
-        <td colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea></td>
-        <td style="padding-top: 2px;padding-bottom: 2px;">
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}">
           <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>
             <option></option>
             <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
@@ -240,16 +240,16 @@ function loadDataSlots(response){
             <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
           </select>
         </td>
-        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+        <td class="disabled" style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
       }else {
         temp += `
         <td class="disabled" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" disabled></textarea></td>
-        <td style="padding-top: 2px;padding-bottom: 2px;">
+        <td class="disabled" >
           <select class="given-point-select" disabled>
             <option></option>
           </select>
         </td>
-        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled></textarea></td>`;
+        <td style="padding-bottom: 0px;" class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
       }
       
       temp += `<td rowspan="${rowspan}">
@@ -263,8 +263,8 @@ function loadDataSlots(response){
       for (i = 1; i < length; i++) {
         temp += `
         <tr>
-        <td colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-        <td style="padding-top: 2px;padding-bottom: 2px;">
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" style="padding-top: 2px;padding-bottom: 2px;">
         <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>
         <option></option>
         <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
@@ -274,7 +274,7 @@ function loadDataSlots(response){
         <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
         </td>
-        <td style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
         </tr>
         `;
       }
@@ -303,39 +303,6 @@ $(document).on("click", ".line-slot", function () {
   }
 });
 
-// delete cds 
-
-$(document).on("click", ".delete-cds", function () {
-  var id = $(this).data("id");
-  var delete_period_cds = $(this).data("period-cds");
-  $('#confirm_yes_delete_cds').val(id);
-  $('#delete_period_cds').html(delete_period_cds);
-  $('#modal_delete_cds').modal('show');
-});
-
-$(document).on("click", "#confirm_yes_delete_cds", function () {
-  delete_period_cds = $('#delete_period_cds').text();
-  $.ajax({
-    type: "DELETE",
-    url: "/forms/" + $('#confirm_yes_delete_cds').val(),
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      $('#modal_delete_cds').modal('hide');
-      if (response.status == "success") {
-        LoadDataAssessmentList();
-        success("The CDS for period " + delete_period_cds + " has been deleted successfully.");
-      } else {
-        fails("Can't delete CDS for period " + delete_period_cds + " .");
-      }
-
-    }
-  });
-});
-
-
 // left panel 
 $(document).on("click", ".card table thead tr", function () {
   var competency_id = $(this).data("id-competency");
@@ -344,7 +311,7 @@ $(document).on("click", ".card table thead tr", function () {
     data.form_id = form_id;
   else if (title_history_id)
     data.title_history_id = title_history_id;
-
+  // debugger
   // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
@@ -553,6 +520,8 @@ $(document).on("click", "#confirm_submit_cds", function () {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
         success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
+        $("a.submit-assessment .fa-file-import").css("color","#ccc");
+        $('a.submit-assessment').removeClass('submit-assessment');
       } else {
         fails("Can't submit CDS.");
       }
@@ -643,4 +612,9 @@ $(document).on("click", "#btn_save", function () {
       loadDataPanel(form_id);
     }
   });
+});
+
+
+$(document).on("click", "#btn_save", function () {
+  
 });
