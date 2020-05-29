@@ -66,7 +66,8 @@ module Api
     end
 
     def get_list_cds_assessment_manager
-      forms = Form.where(_type: "CDS").includes(:period, :role, :title).order(id: :desc)
+      user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
+      forms = Form.where(_type: "CDS").includes(:period, :role, :title).order(id: :desc).where.not(user_id: current_user.id).where(user_id: user_to_approve_ids)
       forms.map do |form|
         {
           id: form.id,
