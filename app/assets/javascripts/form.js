@@ -254,6 +254,7 @@ function loadDataSlots(response){
       
       temp += `<td rowspan="${rowspan}">
         <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
+        </br>
         <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
       </td>
       </tr>
@@ -311,7 +312,6 @@ $(document).on("click", ".card table thead tr", function () {
     data.form_id = form_id;
   else if (title_history_id)
     data.title_history_id = title_history_id;
-  // debugger
   // var form_id = parseInt(findGetParameter("form_id"));
   $.ajax({
     type: "POST",
@@ -403,6 +403,13 @@ function checkStatusFormStaff(status){
   switch(status) {
     case "New":
       // $('a.submit-assessment').addClass('submit-assessment');
+      break;
+    case "Done":
+      $("a.preview-result i").css("color","#ccc");
+      $('a.preview-result')[0].href = "#";
+      $('a.preview-result')[0].target = "";
+      $("a.submit-assessment .fa-file-import").css("color","#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
       break;
     case "Awaiting Review":
       $("a.submit-assessment .fa-file-import").css("color","#ccc");

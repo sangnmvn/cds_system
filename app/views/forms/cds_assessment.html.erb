@@ -10,9 +10,7 @@
 </nav>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
-    <div class="col-md-4" >
-      CDS Reviewer for 
-    </div>
+    <div class="col-md-4" ><%= @hash[:title] %></div>
     <div class="col-md-4">
       Search: <input type="text" class="search-assessment" placeholder="Search by slot's description" style="height: 88%">
     </div>
@@ -26,8 +24,8 @@
         <option value="assessing" selected>Assessing in the current period</option>
         <option value="planned" selected>Planned</option>
       </select>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank, "data-tooltip": true, "data-placement": "top", title: "Preview Result" %>
-      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>
+      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
+      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment",title: "Submit CDS" %>
     </div>
   </div>
 </div>
