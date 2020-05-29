@@ -2,8 +2,7 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
   before_action :get_privilege_id
-  before_action :redirect_to_index
-
+  before_action :redirect_to_index, :if => :check_privelege
   # GET /groups
   # GET /groups.json
   def index
@@ -94,7 +93,7 @@ class GroupsController < ApplicationController
 
   private
 
-  def redirect_to_index
+  def check_privelege
     redirect_to index2_users_path if !(@privilege_array.include?(4) || @privilege_array.include?(5))
   end
 
