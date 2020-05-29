@@ -385,7 +385,6 @@ $(document).on('change','.form-add-competency #name,#desc,#type', function(){
 
 $(document).on('click','#table_add_competency .btnUp', function(){
   var row_id = $(this).closest('tr').index();
-  console.log(row_id);
   var id = $(this).data("id");
   if (row_id > 0) {
     $.ajax({
@@ -423,7 +422,6 @@ $(document).on('click','#table_add_competency .btnUp', function(){
             current_row_data[4] = previous_row_data[4];
             previous_row_data[4] = temp;
 
-            console.log(current_row_data);
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id - 1).data(previous_row_data).draw();
             disableButtonMove();
@@ -476,7 +474,6 @@ $(document).on('click','#table_add_competency .btnDown', function(){
             current_row_data[4] = next_row_data[4];
             next_row_data[4] = temp;
 
-            console.log(next_row_data);
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id + 1).data(next_row_data).draw();
             disableButtonMove();

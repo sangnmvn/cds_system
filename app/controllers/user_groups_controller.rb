@@ -54,7 +54,6 @@ class UserGroupsController < ApplicationController
     group_pri = Group.find_by_id(params[:id]).privileges&.split(",") || []
     table_right = group_pri.uniq.map { |pri_id| Settings.privileges[pri_id].to_json }
     table_left = Settings.privileges.map { |k, value| value.to_json } - table_right
-
     render json: { left: table_left, right: table_right }
   end
 

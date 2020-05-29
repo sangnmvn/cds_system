@@ -144,6 +144,9 @@
   border: none;
   padding: 0px;
 }
+.card {
+  border: none;
+}
 .card .table-mytable thead {
   background-color: #ccc;
 }
@@ -414,10 +417,10 @@
     text-overflow: "";
     white-space: pre-wrap;
   }
-  .disabled {
-    cursor: not-allowed;
-  }
 }
 .csd-assessment-table table tbody tr td:nth-child(9) {
   text-align: center;
+}
+td.disabled,textarea:disabled,select:disabled{
+  background-color: rgb(169, 169, 169);
 }
