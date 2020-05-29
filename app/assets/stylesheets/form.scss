@@ -204,6 +204,9 @@
 .left_panel table td:nth-child(2) {
   text-align: left;
 }
+.table-left-panel tbody tr:nth-of-type(odd),.table-left-panel tbody tr:nth-of-type(even){
+  background-color: #bbcbea!important;
+}
 
 // filter
 .filter-slots ul {
@@ -377,13 +380,13 @@
 .csd-assessment-table {
   table {
     table-layout: fixed;
-    border: solid #a1b5da;
+    // border: solid #a1b5da;
   }
   background-color: #fff;
   thead {
     background-color: #4472c4;
     th {
-      border: solid #fff;
+      border: 1px solid #a1b5da;
       border-width: 2px 2px 0px 2px;
       color: #fff;
       text-align: center;
@@ -393,7 +396,7 @@
   td {
     height: 30px;
     vertical-align: middle;
-    border: 2px solid #a1b5da;
+    border: 1px solid #a1b5da;
     padding: 5px;
     // position: relative;a
   }

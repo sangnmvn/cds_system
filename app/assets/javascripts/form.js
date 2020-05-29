@@ -76,7 +76,7 @@ function loadDataPanel(form_id) {
         <div id="collapse${i}" class="collapse" data-parent="#accordion">
           <div class="card-body">
             <div class="competency">
-              <table class="table table-primary table-responsive-sm table-mytable">
+              <table class="table table-primary table-responsive-sm table-mytable table-left-panel">
                 <tbody>`
         var l = '';
         var levels = response[competency].levels
@@ -99,11 +99,11 @@ function loadDataPanel(form_id) {
       $('#competency_panel').html(temp);
       $(".card table thead tr").click(function () {
         $(".collapse").removeClass("show");
-        $(".card-header table tr").css("background-color", "#ccc");
+        $(".card-header table tr").css("background-color", "#bbcbea");
         id = $(this).data("target");
         $(id).addClass("show");
         num = id.split("#collapse");
-        $(".table" + Number(num[1]) + " tr").css("background-color", "#bbcbea");
+        $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
       });
       $('#card0').click()
     }
@@ -228,7 +228,7 @@ function loadDataSlots(response){
       <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="5" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer)}>${e.tracking.evidence}</textarea></td>`;
       if (length != 0){
         temp += `
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" ><textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea></td>
         <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}">
           <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>
             <option></option>
@@ -239,16 +239,16 @@ function loadDataSlots(response){
             <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
           </select>
         </td>
-        <td class="disabled" style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+        <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
       }else {
         temp += `
-        <td class="disabled" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none" disabled></textarea></td>
+        <td class="disabled" colspan="2" ><textarea style="resize:none" disabled></textarea></td>
         <td class="disabled" >
           <select class="given-point-select" disabled>
             <option></option>
           </select>
         </td>
-        <td style="padding-bottom: 0px;" class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
+        <td class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
       }
       
       temp += `<td rowspan="${rowspan}">
@@ -263,8 +263,8 @@ function loadDataSlots(response){
       for (i = 1; i < length; i++) {
         temp += `
         <tr>
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" style="padding-bottom: 0px;"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" style="padding-top: 2px;padding-bottom: 2px;">
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" ><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" >
         <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>
         <option></option>
         <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
@@ -274,7 +274,7 @@ function loadDataSlots(response){
         <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
         </select>
         </td>
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" style="padding-bottom: 0px;"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" ><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
         </tr>
         `;
       }
