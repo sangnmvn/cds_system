@@ -1211,9 +1211,9 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
 (1..134).each do |i|
   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)
   Comment.create!(id: i, evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: i)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", final: "", form_slot_id: i, period_id: 50)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", final: "", form_slot_id: i, period_id: 50)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: "", form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
 
 TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)

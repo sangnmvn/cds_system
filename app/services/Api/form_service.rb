@@ -338,10 +338,8 @@ module Api
         slot_id: slot.level + LETTER_CAP[location],
         desc: slot.desc,
         evidence: slot.evidence,
-        is_passed: false,
       }
       h_slot[:tracking] = form_slots[slot.id] if form_slots.present?
-
       h_slot
     end
 
@@ -362,9 +360,10 @@ module Api
             id: form_slot.id,
             evidence: comments&.evidence || "",
             point: comments&.point || 0,
-            flag: comments.flag,
+            flag: comments&.flag || "red",
             is_commit: comments&.is_commit,
-            recommends: recommends,
+            is_passed: recommends[:is_passed],
+            recommends: recommends[:recommends],
           }
         end
       end
@@ -373,34 +372,37 @@ module Api
     end
 
     def get_recommend(line_managers)
-      recommends = []
+      hash = {
+        is_passed: false,
+        recommends: [],
+      }
       period_id = 0
       line_managers.map do |line|
         break if !period_id.zero? && period_id != line.period_id
         period_id = line.period_id
-        recommends << {
+        hash[:is_passed] = true if line.final && line.given_point > 2
+        hash[:recommends] << {
           given_point: line.given_point,
           recommends: line.recommend,
           name: User.find(line.user_id).account,
-          flag: line.flag,
+          flag: line.flag || "red",
           user_id: line.user_id,
-
+          is_final: line.final,
         }
       end
-      recommends
+
+      hash
     end
 
     def get_recommend_by_period(line_managers)
-      arr = []
       line_managers.map do |line|
-        arr << {
+        {
           given_point: line.given_point,
           recommends: line.recommend,
           reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
           name: User.find(line.user_id).account,
         }
       end
-      arr
     end
 
     def get_recommend_by_form_slot(line_managers)
@@ -419,9 +421,8 @@ module Api
 
     def filter_cds
       hash = {}
-      params[:filter] = "failed,no_assessment,need_to_update,assessing" unless params[:filter].present?
-      params[:filter].split(",").map do |p|
-        hash[p] = true
+      params[:filter].split(",").map do |filter|
+        hash[filter] = true
       end
       hash
     end
