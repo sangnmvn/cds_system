@@ -197,10 +197,22 @@ function loadDataSlots(response){
   $(response).each(function (i, e) {
     length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
     rowspan = length || 1;
-    
+    flag = ""
+    class_flag = "flag-red"
+    for ( i in e.tracking.recommends){
+      if (e.tracking.recommends[i].flag == "yellow"){
+        flag = "yellow";
+        class_flag = "flag-yellow";
+        break
+      }else if (e.tracking.recommends[i].flag == "green"){
+        flag = "green";
+        class_flag = "flag-green";
+        break
+      }
+    }
     temp += `
     <tr id="${e.id}" class="tr_slot">
-      <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>
+      <td style="text-align:cent<Slot ID>er" rowspan="${rowspan}">${e.slot_id}</td>
       <td style="position: relative;" rowspan="${rowspan}">
         <div>${e.desc}</div>
         <br>
@@ -216,9 +228,9 @@ function loadDataSlots(response){
         </select>
       </td>
       <td class="${checkDisableFormSlotsReviewer(is_reviewer)}" colspan="4" rowspan="${rowspan}">
-        <select class="point-select" ${checkDisableFormSlotsReviewer(is_reviewer)}>
-          <option></option> 
-          <option value="5" ${check(e.tracking.point, 5)}>5 - Outstanding</option>
+        <select class="point-sery tbody').html(temp);
+      }
+    });heck(e.tracking.point, 5)}>5 - Outstanding</option>
           <option value="4" ${check(e.tracking.point, 4)}>4 - Exceeds Expectations</option>
           <option value="3" ${check(e.tracking.point, 3)}>3 - Meets Expectations</option>
           <option value="2" ${check(e.tracking.point, 2)}>2 - Needs Improvement</option>
@@ -238,9 +250,9 @@ function loadDataSlots(response){
             <option value="2" ${check(e.tracking.recommends[0].given_point, 2)}>2 - Needs Improvement</option>
             <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
           </select>
-        </td>
+        </td>flag
         <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
-      }else {
+      }else {e.tracking.flag
         temp += `
         <td class="disabled" colspan="2" ><textarea style="resize:none" disabled></textarea></td>
         <td class="disabled" >
@@ -250,11 +262,16 @@ function loadDataSlots(response){
         </td>
         <td class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
       }
-      
       temp += `<td rowspan="${rowspan}">
         <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
         </br>
-        <a href="javascript:void(0)" class="flag-cds-assessment icon" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
+        <a href="javascript:void(0)" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
+        </br>`;
+      if (e.is_passed)
+        temp += `<a href="javascript:void(0)" style="color:gray;" class="icon"><i class="fas fa-redo-alt"></i></a>`
+      else
+        temp += `<a href="javascript:void(0)" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-redo-alt"></i></a>`;
+      temp += `
       </td>
       </tr>
       `;
@@ -340,7 +357,7 @@ $(document).on("click", ".modal-view-assessment-history", function () {
     type: "POST",
     url: "/forms/get_cds_histories",
     data: {
-      slot_id: id
+      form_slot_id: $(this).data("id")
     },  
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -382,8 +399,6 @@ $(document).on("click", ".modal-view-assessment-history", function () {
       $('.table-view-assessment-history tbody').html(temp);
     }
   });
-
-
 });
 
 function get_data_filter() {
@@ -599,7 +614,7 @@ $(document).on("click", ".flag-cds-assessment", function () {
 $(document).on("click", "#btn_save", function () {
   if ($('#add_more_evidence_commit').find('.commit-select').val() =="0")
     is_commit = false
-    else
+  else
     is_commit = true
   point = $('#add_more_evidence_self_assessment').find('.point-select').val();
   evidence = $('#add_more_evidence_evidence').val();
@@ -625,4 +640,18 @@ $(document).on("click", "#btn_save", function () {
       loadDataPanel(form_id);
     }
   });
+});
+// re assess slot
+$(document).on("click", ".modal-view-re-assess", function () {
+  $('#modal_re_assess_slots').modal('show');
+  var slot_id = $(this).data("slot-id");
+  var id = $(this).data("id");
+  id = $(".card").find('.show').attr('id').split("collapse");
+  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
+  competency_name = $.trim(competency_name);
+  $('#competency_name_re_assess').text(competency_name);
+  $('#slot_id_re_assess').text(slot_id);
+});
+$(document).on("click", ".confirm_yes_re_assess_slot", function () {
+
 });

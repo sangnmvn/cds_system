@@ -167,6 +167,7 @@ module Api
           slot_id: slot_history.slot_position,
           desc: slot_history.slot.desc,
           evidence: slot_history.slot.evidence,
+
         }
         h_slot[:tracking] = {
           id: slot_history.form_slot_id,
@@ -292,10 +293,9 @@ module Api
     end
 
     def get_data_view_history
-      line_managers = LineManager.where(form_slot_id: 13).where("period_id <= ?", 50)
-
+      line_managers = LineManager.where(form_slot_id: params[:form_slot_id])
       recommends = get_recommend_by_period(line_managers)
-      slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: 13).where("title_histories.period_id <= ?", 50)
+      slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
       slot_histories.map do |h|
         hash[h.title_history.period.format_name] = {
@@ -338,6 +338,7 @@ module Api
         slot_id: slot.level + LETTER_CAP[location],
         desc: slot.desc,
         evidence: slot.evidence,
+        is_passed: false,
       }
       h_slot[:tracking] = form_slots[slot.id] if form_slots.present?
 
@@ -383,6 +384,7 @@ module Api
           name: User.find(line.user_id).account,
           flag: line.flag,
           user_id: line.user_id,
+
         }
       end
       recommends

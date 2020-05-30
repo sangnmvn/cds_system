@@ -88,7 +88,7 @@ class FormsController < ApplicationController
 
   def destroy
     form = Form.find(params[:id])
-    return render json: { status: "can't delete form" } if current_user.role_id == form.id
+    return render json: { status: "can't delete form" } if current_user.role_id == form.role_id || form.status != "New"
     if form.update(is_delete: true)
       render json: { status: "success" }
     else
