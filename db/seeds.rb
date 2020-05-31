@@ -57,7 +57,7 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "1") if Rails.env.development?
 User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "1")
 User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: "1")
-User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "1")
+User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "4")
 User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
 User.create!(id: 6, email: "hoanphungthe@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
 User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
@@ -1168,7 +1168,7 @@ Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,1
 Group.create!(id: 34, name: "Manager", description: "Manager", status: 1, privileges: "1")
 Group.create!(id: 35, name: "Reviewer", description: "Reviewer", status: 1, privileges: "7")
 Group.create!(id: 36, name: "Staff", description: "Staff", status: 1, privileges: "")
-
+Group.create!(id: 37, name: "PM", description: "PM", status: 1, privileges: "14")
 #  template HR
 User.create!(id: 32, email: "nguyenvana@bestarion.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3")
 UserGroup.create!(group_id: 33, user_id: 32)
