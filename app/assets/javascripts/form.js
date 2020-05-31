@@ -261,7 +261,6 @@ function loadDataSlots(response) {
                 </td>flag
                 <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
         } else {
-            e.tracking.flag
             temp += `
                 <td class="disabled" colspan="2" ><textarea style="resize:none" disabled></textarea></td>
                 <td class="disabled" >
@@ -276,10 +275,10 @@ function loadDataSlots(response) {
                     </br>
                     <a href="javascript:void(0)" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
                     </br>`;
-        if (e.is_passed)
-            temp += `<a href="javascript:void(0)" style="color:gray;" class="icon"><i class="fas fa-redo-alt"></i></a>`
-        else
+        if (e.tracking.is_passed)
             temp += `<a href="javascript:void(0)" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-redo-alt"></i></a>`;
+        else
+            temp += `<a href="javascript:void(0)" style="color:gray;" class="icon"><i class="fas fa-redo-alt"></i></a>`
         temp += `</td></tr>`;
 
         if (length > 1) {
@@ -352,6 +351,7 @@ $(document).on("click", ".modal-view-assessment-history", function() {
     competency_name = $.trim(competency_name);
     $('#assessment_history_competency_name').text(competency_name);
     $('#assessment_history_slot_id').text(slot_id);
+    debugger
     $.ajax({
         type: "POST",
         url: "/forms/get_cds_histories",
@@ -500,6 +500,7 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function(
         var is_commit = $(this).find('.commit-select').val();
         var point = $(this).find('.point-select').val();
         var evidence = $(this).find('.evidence').val();
+        temp = $(this).children('td:nth-child(1)').text();
         $.ajax({
             type: "POST",
             url: "/forms/save_cds_assessment_staff",
@@ -513,7 +514,24 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function(
             headers: {
                 "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
             },
-            success: function(response) {}
+            success: function(response) {
+                
+                current = $('div.show table tr:nth-child('+temp.charAt(0)+') td:nth-child(3)').text().split('/');
+                max = parseInt(current[1]);
+                current_change = 0
+                $('div.csd-assessment-table table tbody tr.tr_slot').each(function(i, sel) {
+                    level = $(this).children('td:nth-child(1)').text();
+                    index = i + 1
+                    val = $('div.csd-assessment-table table tbody tr:nth-child('+index+') td:nth-child(4) select option:selected').val();
+                    if (level.charAt(0) == temp.charAt(0) && val != "") 
+                        current_change += 1;
+                });
+                if (current_change <= max)
+                    current_change = current_change;
+                else 
+                    current = max;
+                $('div.show table tr:nth-child('+temp.charAt(0)+') td:nth-child(3)').text(current_change + '/' + max);
+            }
         });
     }
 });
@@ -632,17 +650,34 @@ $(document).on("click", "#btn_save", function() {
         }
     });
 });
-// re assess slot
-$(document).on("click", ".modal-view-re-assess", function() {
-    $('#modal_re_assess_slots').modal('show');
-    var slot_id = $(this).data("slot-id");
-    var id = $(this).data("id");
-    id = $(".card").find('.show').attr('id').split("collapse");
-    competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
-    competency_name = $.trim(competency_name);
-    $('#competency_name_re_assess').text(competency_name);
-    $('#slot_id_re_assess').text(slot_id);
+// re-assess slot
+$(document).on("click", ".modal-view-re-assess", function () {
+  $('#modal_re_assess_slots').modal('show');
+  var slot_id = $(this).data("slot-id");
+  var id = $(this).data("id");
+  id = $(".card").find('.show').attr('id').split("collapse");
+  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
+  competency_name = $.trim(competency_name);
+  $('#competency_name_re_assess').text(competency_name);
+  $('#slot_id_re_assess').text(slot_id);
+  $('#confirm_yes_re_assess_slot').val($(this).data("id"));
 });
-$(document).on("click", ".confirm_yes_re_assess_slot", function() {
-
+$(document).on("click", "#confirm_yes_re_assess_slot", function () {
+  slot_id = $(this).val();
+  debugger
+  $.ajax({
+    type: "POST",
+    url: "/forms/re_assess_slot",
+    data: {
+      form_id: form_id,
+      slot_id: slot_id,
+    },  
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+     
+    }
+  });
 });

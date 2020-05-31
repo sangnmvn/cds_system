@@ -62,7 +62,7 @@ module Api
         end
       end
 
-      form.id
+      form
     end
 
     def get_list_cds_assessment_manager
@@ -351,10 +351,10 @@ module Api
         end
         return hash
       end
+
       form_slots.map do |form_slot|
         recommends = get_recommend(form_slot.line_managers.order(period_id: :desc))
         comments = form_slot.comments.order(created_at: :desc).first
-
         if hash[form_slot.slot_id].nil?
           hash[form_slot.slot_id] = {
             id: form_slot.id,
