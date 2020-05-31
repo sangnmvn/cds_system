@@ -10,7 +10,11 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     reviewers.each_with_index do |reviewer, index|
+<<<<<<< 427ca8b0a3c8bb632a5aa13c0ca6b0f4bdeca458
       @reviewer_name += reviewer.approver.first_name + reviewer.approver.last_name.split(" ").map { |x| x.chr }.join
+=======
+      @reviewer_name += reviewer.approver.first_name + " " + reviewer.approver.last_name
+>>>>>>> refactor code, re-assess
       if index == 0
         @emails += reviewer.approver.email
       else

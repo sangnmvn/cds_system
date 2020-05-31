@@ -105,7 +105,6 @@ function loadDataPanel(form_id) {
         $(id).addClass("show");
         num = id.split("#collapse");
         $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
-        
       });
       $('#card0').click()
     }
@@ -524,7 +523,6 @@ $(document).on("change", "#filter-form-slots", function () {
     dataType: "json",
     success: function (response) {
       loadDataSlots(response);
-      
     }
   });
 });
