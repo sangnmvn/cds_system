@@ -1,7 +1,4 @@
 class SchedulesController < ApplicationController
-  respond_to :html
-
-  include Authorize
   before_action :get_privilege_id
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
@@ -132,8 +129,7 @@ class SchedulesController < ApplicationController
 
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
     @parent_schedules = Schedule.includes(:period).select(:period_id).where(_type: "HR", status: ["New", "In-Progress"])
-    # @schedule = Schedule.new
-    respond_modal_with Schedule.new()
+    @schedule = Schedule.new
   end
 
   def show
