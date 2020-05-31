@@ -146,7 +146,6 @@ class FormsController < ApplicationController
   end
 
   def re_assess_slot
-    binding.pry
   end
 
   private

@@ -9,6 +9,8 @@ function LoadDataAssessmentList() {
     dataType: "json",
     success: function (response) {
       var temp = "";
+      if (response.length == 0)
+        temp = `<tr><td colspan="8" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         link = `/forms/cds_assessment`;

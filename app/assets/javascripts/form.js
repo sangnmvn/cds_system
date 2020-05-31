@@ -351,7 +351,6 @@ $(document).on("click", ".modal-view-assessment-history", function() {
     competency_name = $.trim(competency_name);
     $('#assessment_history_competency_name').text(competency_name);
     $('#assessment_history_slot_id').text(slot_id);
-    debugger
     $.ajax({
         type: "POST",
         url: "/forms/get_cds_histories",
@@ -664,7 +663,6 @@ $(document).on("click", ".modal-view-re-assess", function () {
 });
 $(document).on("click", "#confirm_yes_re_assess_slot", function () {
   slot_id = $(this).val();
-  debugger
   $.ajax({
     type: "POST",
     url: "/forms/re_assess_slot",
