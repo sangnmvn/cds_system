@@ -1,0 +1,98 @@
+<div class="modal fade modal-form-add" id="add_schedule_button">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Add a New Schedule</h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <form id="form_add_hr">
+            <div class="row">
+              <div class="col-sm-12">
+                <p style="color:red">(*) required filelds</p>
+              </div>
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Schedule Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= text_field_tag "desc", nil, class: "form-control", placeholder: "Please enter schedule name" %>
+                    <input type="hidden" name="schedule" id="schedule" value="schedule">
+                    <input type="hidden" name="id" id="schedule_id">
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Company Name (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <%= select_tag "company", options_for_select(@company), class: "form-control", include_blank: "Please select a company" %>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Assessment Period (*)</label>
+                  </div>
+                    <div class="col-sm-2"> From</div>
+                    <input type="text" id="from_date" class="form-control col-sm-3">
+                    <div class="col-sm-12" style="margin-bottom: 25px;"></div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-2">To</div>
+                    <input type="text" id="to_date" class="form-control col-sm-3">
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                      <label>Start date (*)</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" id="start_date" class="form-control">
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                      <label>End date (*)</label>
+                  </div>
+                  <div class="col-sm-6 date">
+                    <input type="text" id="end_date" class="form-control">
+                  </div>
+                </div>
+                <br>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>Reminder (*)</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input type="number" name="notify_hr" id="notify_hr" min="1" value="1" style="text-align: right;">
+                      <em>day(s) before</em>
+                    </div>
+                  </div>
+                  <br>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Status</label>
+                  </div>
+                  <div class="col-sm-6" >
+                    <input type="text" class="form-control" id="status" disabled >
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary" id="btn_modal_add_hr">Save</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

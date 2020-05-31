@@ -1,0 +1,48 @@
+<%= content_for :id, 'add_schedule_button' %>
+<%= render partial: 'form_hr' %>
+
+<script>
+  $(document).ready(function() {
+    var current_date = new Date();
+    $("#start_date, #to_date, #from_date , #end_date").datepicker('destroy');
+    $("#start_date, #to_date, #from_date , #end_date").datepicker({
+      todayBtn: "linked",
+      todayHighlight: true,
+      startDate: current_date,
+      autoclose: true,
+      format: "M dd, yyyy"
+    });
+  
+    $('#from_date').on("change", function(){
+      $("#start_date, #to_date, #end_date").datepicker('destroy');
+      $("#start_date, #to_date, #end_date").datepicker({
+        startDate: new Date($(this).val()),
+        todayBtn: "linked",
+        todayHighlight: true,
+        autoclose: true,
+        format: "M dd, yyyy"
+      });
+    });
+    $('#to_date').on("change", function(){
+      $("#end_date, #start_date").datepicker('destroy');
+      $("#end_date, #start_date").datepicker({
+        startDate: new Date($('#from_date').val()),
+        endDate: new Date($(this).val()),
+        todayBtn: "linked",
+        todayHighlight: true,
+        autoclose: true,
+        format: "M dd, yyyy"
+      });
+    });
+    $("#start_date").on("change", function(){
+      $("#end_date").datepicker('destroy');
+      $("#end_date").datepicker({
+        startDate: new Date($(this).val()),
+        todayBtn: "linked",
+        todayHighlight: true,
+        autoclose: true,
+        format: "M dd, yyyy"
+      });
+    });
+  });
+</script>
