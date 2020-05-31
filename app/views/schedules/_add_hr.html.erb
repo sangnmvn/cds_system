@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-light float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;background:#8da8db"><%= image_tag("Add.png") %> Add</button>
+<button type="button" id="add_schedule_button" class="btn btn-light float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;background:#8da8db"><%= image_tag("Add.png") %> Add</button>
 <div class="modal fade modal-form-add" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -16,72 +16,129 @@
                 <p style="color:red">(*) required filelds</p>
               </div>
               <div class="col-sm-12">
-                <%# Schedule name %>
+                <% # Schedule name %>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Schedule Name (*)</label>
                   </div>
                   <div class="col-sm-6">
-                    <%= text_field_tag 'desc', nil, class: 'form-control', placeholder: 'Please enter schedule name' %>
+                    <%= text_field_tag "desc", nil, class: "form-control", placeholder: "Please enter schedule name" %>
                     <input type="hidden" name="schedule" id="schedule" value="schedule">
                     <input type="hidden" name="user" id="user" value="<%= current_user.id %>">
+                    <input type="hidden" name="id" id="schedule_id">
                   </div>
                 </div>
                 <br>
-                <%# project name %>
+                <% # project name %>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Company Name (*)</label>
                   </div>
                   <div class="col-sm-6">
-                    <%= select_tag "company", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a company" %>
+                    <%= select_tag "company", options_for_select(@company), class: "form-control", include_blank: "Please select a company" %>
                   </div>
                 </div>
                 <br>
+                <% # project name %>
+                <% if @is_pm.nil? == false && @is_pm %>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>Project Name (*)</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <%= select_tag "project", options_from_collection_for_select(@project, "id", "desc"), class: "form-control", include_blank: "Please select a project" %>
+                    </div>
+                  </div>
+                  <br>
+                <% end %>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Assessment Period (*)</label>
                   </div>
-                  <div class="col-sm-2">From</div>
-                  <input type="text" id="from_date" class="form-control col-sm-3">
+                  <% if @is_hr%>
+                    <div class="col-sm-2"> From</div>
+                    <input type="text" id="from_date" class="form-control col-sm-3">
+                    <div class="col-sm-12" style="margin-bottom: 25px;"></div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-2">To</div>
+                    <input type="text" id="to_date" class="form-control col-sm-3">
+                  <% elsif @is_pm %>
+                    <div class="col-sm-6">
+                      <%= select_tag "schedule_hr_parent", options_from_collection_for_select(@parent_schedules, "period_id", "parent_period"), name: "schedule_hr_parent", class: "form-control", include_blank: "Please select an assessment period" %>
+                    </div>
+                  <% end %>
                 </div>
                 <br>
-                <div class="row">
-                  <div class="col-sm-4"></div>
-                  <div class="col-sm-2">To</div>
-                  <input type="text" id="to_date" class="form-control col-sm-3">
-                </div>
-                <br>
-                <%# start date %>
+                <% # start date %>
                 <div class="row">
                   <div class="col-sm-4">
-                    <label>Start date (*)</label>
+                    <% if @is_hr %>
+                      <label>Start date (*)</label>
+                    <% elsif @is_pm %>
+                      <label>Start date HR (*)</label>
+                    <% end %>
                   </div>
                   <div class="col-sm-6">
                     <input type="text" id="start_date" class="form-control">
                   </div>
                 </div>
                 <br>
-                <%# end date employee %>
+                <% # end date employee %>
                 <div class="row">
                   <div class="col-sm-4">
-                    <label>End date (*)</label>
+                    <% if @is_hr %>
+                      <label>End date (*)</label>
+                    <% elsif @is_pm %>
+                      <label>End date HR (*)</label>
+                    <% end %>
                   </div>
-                  <div class="col-sm-6 input-group date">
+                  <div class="col-sm-6 date">
                     <input type="text" id="end_date" class="form-control">
                   </div>
                 </div>
                 <br>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <label>Reminder (*)</label>
+                <% if @is_hr %>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>Reminder (*)</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input type="number" name="notify_hr" id="notify_hr" min="1" value="0" style="text-align: right;">
+                      <em>day(s) before</em>
+                    </div>
                   </div>
-                  <div class="col-sm-6">
-                    <input type="number" name="notify_hr" id="notify_hr" min="1" value="0" style="text-align: right;">
-                    <em>day(s) before</em>
+                  <br>
+                <% end %>
+                <% if @is_pm %>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>End date for Member(*)</label>
+                    </div>
+                    <div class="col-sm-6 input-group date" style='display: inline;'>
+                      <input type="text" name="end_date_member" id="end_date_member" class="form-control">
+                    </div>
                   </div>
-                </div>
-                <br>
+                  <br>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>End date for Reviewer(*)</label>
+                    </div>
+                    <div class="col-sm-6 input-group date" style='display: inline;'>
+                      <input type="text" name="end_date_reviewer" id="end_date_reviewer" class="form-control">
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label>Reminder of Member/ Reviewer (*)</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input type="number" name="notify_member" id="notify_member" min="1" value="0" style="text-align: right;">
+                      <em id="notify_member_content">day(s) before</em>
+                    </div>
+                    <br>
+                  </div>
+                <% end %>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Status</label>
@@ -92,9 +149,9 @@
                 </div>
                 <br>
               </div>
-              <%# right  %>
+              <% # right %>
             </div>
-            <%# end container  %>
+            <% # end container %>
           </div>
           <div class="modal-footer justify-content-center">
             <button type="button" class="btn btn-primary" id="btn_modal_add_hr">Save</button>

@@ -9,7 +9,7 @@
 </nav>
 <%= render 'modal_destroy'%>
 <%= render "delete_selected" %>
-<%= link_to image_tag("Add.png") + " Add", new_schedule_path, id: "add_schedule_button", class: "btn btn-light float-right", style: "margin: 5px; background: #8da8db", data: { modal: true } %>
+<%= render "add_hr" %>
 <input class='d-none' id="user" value="<%= current_user.id %>">
 <input class='d-none' id="user_role" value="<%= if @is_pm then "PM" elsif @is_hr then "HR" else "" end %>">
 <input class='d-none' id="schedule_task">

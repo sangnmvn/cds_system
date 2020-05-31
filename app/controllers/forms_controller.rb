@@ -49,8 +49,6 @@ class FormsController < ApplicationController
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
     end
     
-    return if form.zero?
-    
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
