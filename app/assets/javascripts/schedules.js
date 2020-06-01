@@ -26,7 +26,7 @@ function check_status(start, end, status_id) {
   let toDay = new Date()
   toDay = toDay.setHours(0, 0, 0, 0);
   if (start <= toDay && end >= toDay)  {
-    $(status_id).val("In-progress")
+    $(status_id).val("In-progress");
   }
   if (start > toDay) {
     $(status_id).val("New");
@@ -44,7 +44,7 @@ function check_status_end(end, status_id) {
     $(status_id).val("Done")
   }
   if(toDay > end) {
-    $(status_id).val("Done")
+    $(status_id).val("Done");
   }
 }
 
@@ -55,7 +55,6 @@ function check_status_end(end, status_id) {
   if (toDay > end) {
     $(status_id).val("Done")
   }
-
 }
 
 function check_notify(end_date, notify) {
@@ -457,7 +456,6 @@ function on_click_btn() {
 
         action_edit();                
       }
-        
     });
   });
 
