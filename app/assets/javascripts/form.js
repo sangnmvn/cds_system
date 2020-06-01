@@ -305,6 +305,7 @@ function loadDataSlots(response) {
     temp = '<td colspan="18" style="text-align:center">No data available in table</td>';
   }
   $('.csd-assessment-table table tbody').html(temp);
+  checkStatusFormStaff(status);
   resize_textarea();
 }
 

@@ -2,7 +2,7 @@
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
 <nav aria-label="breadcrumb" class="breadcrumb-preview-result">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active">Preview CDS Result For <%= @role_name %> - <%= @first_name %> <%= @last_name %></li>
+    <li class="breadcrumb-item active">Preview CDS Result For <%= @role_name %> - <%= current_user.first_name %> <%= current_user.last_name %></li>
   </ol>
 </nav>
 
