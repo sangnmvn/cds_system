@@ -1196,9 +1196,9 @@ ProjectMember.create!(user_id: 36, project_id: 3, is_managent: "0")
 Period.create!(id: 30, from_date: "2019-06-16", to_date: "2019-12-16")
 Period.create!(id: 40, from_date: "2019-07-16", to_date: "2019-08-16")
 Period.create!(id: 50, from_date: "2020-05-15", to_date: "2020-09-30")
-Schedule.create!(user_id: 34, company_id: 3, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done")
-Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done")
-Schedule.create!(user_id: 34, company_id: 1, period_id: 50, start_date: "2020-05-20", end_date_hr: "2020-09-20", notify_hr: 3, desc: "Period 3", status: "In-progress")
+Schedule.create!(user_id: 34, company_id: 1, period_id: 30, start_date: "2020-01-01", end_date_hr: "2020-02-02", notify_hr: 5, desc: "Period 1", status: "Done", _type: "HR")
+Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done", _type: "HR")
+Schedule.create!(user_id: 34, company_id: 3, period_id: 50, start_date: "2020-05-20", end_date_hr: "2020-09-20", notify_hr: 3, desc: "Period 3", status: "In-progress", _type: "HR")
 
 # Create Form
 Title.create!(id: 1001, name: "QC Level 1", desc: "QC Level 1", role_id: "1")
@@ -1215,10 +1215,3 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
-
-TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)
-TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1001, competency_id: 2)
-TitleCompetencyMapping.create!(id: 3, min_level_ranking: 1, title_id: 1001, competency_id: 3)
-TitleCompetencyMapping.create!(id: 4, min_level_ranking: 3, title_id: 1002, competency_id: 4)
-TitleCompetencyMapping.create!(id: 5, min_level_ranking: 2, title_id: 1002, competency_id: 1)
-TitleCompetencyMapping.create!(id: 6, min_level_ranking: 2, title_id: 1002, competency_id: 1)
