@@ -43,7 +43,6 @@ function check_status_end(end, status_id) {
   if (toDay > end) {
     $(status_id).val("Done")
   }
-
 }
 
 function check_notify(end_date, notify) {
@@ -268,7 +267,6 @@ $(document).ready(function () {
           format: "M dd, yyyy"
         });
 
-
         $("#start_date").datepicker("setDate", start_date);
         $("#end_date").datepicker("setDate", end_date);
 
@@ -285,7 +283,6 @@ function on_click_btn() {
 
   $(document).on("click", ".del_btn[enable='true']", function () {
     var schedule_param = $(this).data('schedule')
-
     $.ajax({
       url: "/schedules/" + schedule_param + "/destroy_page",
       type: "GET",
@@ -294,9 +291,7 @@ function on_click_btn() {
       },
       success: function (res) {
         $("#schedule_id").val(res.id);
-
         $('#modalDeleteSchedule').modal('show');
-
         attr_start_date_id = "#start_date_edit";
         attr_end_date_id = "#end_date_edit";
         attr_from_date = "#from_date_edit";
@@ -392,15 +387,13 @@ function on_click_btn() {
           $("#from_date").attr("disabled", "disabled");
           $("#to_date").attr("disabled", "disabled");
           $("#start_date").attr("disabled", "disabled");
-          
         }
         $("#start_date").datepicker("setDate", start_date);
         $("#end_date").datepicker("setDate", end_date);
 
         
         $("select[name=company]").html(
-          ' \
-          <option value="">Please select a company</option> \
+          '<option value="">Please select a company</option> \
           <option value="{company_id}" selected="selected">{company_name}</option> \
           '.formatUnicorn({
             company_id: result.company_id,
@@ -409,12 +402,11 @@ function on_click_btn() {
 
           
         $("select[name=project]").html(
-          '\
-            <option value="">Please select a project</option> \
-            <option value="{project_id}" selected="selected">{project_name}</option> \
-            '.formatUnicorn({
-            project_id: result.project_id,
-            project_name: result.project_name
+          '<option value="">Please select a project</option> \
+          <option value="{project_id}" selected="selected">{project_name}</option> \
+          '.formatUnicorn({
+          project_id: result.project_id,
+          project_name: result.project_name
           }))
         $("select[name=schedule_hr_parent]").html(
           '<option value="">Please select an assessment period</option> \
@@ -448,20 +440,15 @@ function on_click_btn() {
           $("#desc").attr("disabled", "true");
 
         }
-
         datepicker_setup([attr_start_date_id, attr_end_date_id, attr_end_date_member_id, attr_end_date_reviewer_id], [attr_from_date, attr_to_date]);
         change_notify(attr_end_date_id, attr_id_notify);
 
         action_edit();                
       }
-        
     });
-
   });
 
-
   $("#selectAll").off("click.select_all_check");
-
   $("#selectAll").on("click.select_all_check", function () {
     $("tbody > tr > td > input[type=checkbox]").prop(
       "checked",
@@ -473,7 +460,6 @@ function on_click_btn() {
     $("#modalDeleteS").modal("hide");
 
     var schedule_ids = new Array();
-
     $.each($("input[name='checkbox']:checked"), function () {
       schedule_ids.push($(this).val());
     });
@@ -515,7 +501,6 @@ function datepicker_setup(arr_date, period_date) {
 
   from_date = "#from_date"
   to_date = "#to_date"
-
   $('#end_date_member, #end_date_reviewer').datepicker({
     todayBtn: "linked",
     todayHighlight: true,
@@ -568,13 +553,10 @@ function datepicker_setup(arr_date, period_date) {
      })
     }
   }
-
-  
 }
 
 // btn add new schedule of HR 
 function action_add() {
-
   $("[type='number']").keypress(function (evt) {
     evt.preventDefault();
   });
@@ -602,11 +584,7 @@ function action_add() {
     schedule_task = $("#schedule_task").val();
     temp = true;
     $(".error").remove();
-
-
-
     // check date start and end
-
     if (project_id == '' && user_role == "PM") {
       temp = false;
       $('#project').after('<div class="offset-sm-12 col-sm-12"><span class="error">Project ID cannot be blank.</span></div>');
@@ -644,7 +622,6 @@ function action_add() {
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
       }
 
-
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start date must be lower than End date for reviewer.</span></div>');
@@ -680,7 +657,6 @@ function action_add() {
       temp = false;
       $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member Reminder must be greater than End Date Member Reminder.</span></div>')
     }
-
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
@@ -728,8 +704,6 @@ function action_add() {
 
     if (temp == true) {
       $('.lmask').show();
-
-
       if (schedule_task == "add") {
         if (user_role == "HR") {
           params = {
@@ -782,7 +756,6 @@ function action_add() {
             } else {
               fails("Failed to create this schedule");
             }
-
           },
           error: function () {
             $('.lmask').hide();
@@ -801,17 +774,12 @@ function action_add() {
             end_date_hr: end_date,
             notify_hr: notify_hr,
           };
-
-
-
         } else if (user_role == "PM") {
           params = {
             end_date_member: end_date_member,
             end_date_reviewer: end_date_reviewer,
             notify_member: notify_member,
           };
-
-
         }
 
         $.ajax({
@@ -827,7 +795,6 @@ function action_add() {
             check_selectAll();
             action_edit();
             action_add();
-
             view_schedule();
           },
           error: function () {
@@ -870,7 +837,6 @@ function action_edit() {
     user_role = $("#user_role").val();
     temp = true;
     $(".error").remove();
-
     // check date start and end
     var end_date_member_reminder = new Date(Date.parse(end_date_member));;
     end_date_member_reminder.setDate(end_date_member_reminder.getDate() - notify_member);
@@ -920,7 +886,6 @@ function action_edit() {
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
       }
 
-
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
         $(end_date_reviewer_id).after('<span class="error">Start date must be lower than End date for reviewer.</span>');
@@ -935,7 +900,6 @@ function action_edit() {
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')
       }
     }
-
 
     if (from_date == "") {
       temp = false;
@@ -974,7 +938,6 @@ function action_edit() {
       temp = false;
       $('#notify_hr').closest('div').children('em').after('<br><span class="error">Notice date must be greater than current date.</span>')
     }
-
 
     if (temp == true) {
       if (user_role == "HR") {
@@ -1030,11 +993,8 @@ function action_edit() {
   $('select[name=company_edit]').attr("disabled", "true");
 }
 
-
 function delete_schedule() {
   var id = $("#schedule_id").val();
-
-  //alert( 'admin/user_management/'  + user_id + '/')
   $('.lmask').show();
   $.ajax({
     url: "/schedules/" + id,
@@ -1054,14 +1014,12 @@ function delete_schedule() {
       } else {
         fails("Failed to delete all schedule(s)");
       }
-
     },
   });
 }
 
 function check_selectAll() {
   if ($("#user_role").val() == "PM") return;
-
   $(".selectable").off('click.select_one_namespace')
   $(".selectable").on('click.select_one_namespace', function () {
     if ($(':checkbox:checked').length > 0) {
@@ -1084,8 +1042,6 @@ function check_selectAll() {
       $('#delete_schedule_button').prop("disabled", true);
     }
   })
-
-
 
   if ($('.table tbody :checkbox').length == 0) {
     $('#selectAll').prop("disabled", true);
