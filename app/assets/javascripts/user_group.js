@@ -144,9 +144,6 @@ function myJS_data_event() {
   });
 
   $('.close_modal').click(function () {
-      if ($('#save').attr("disabled") != "disabled") {
-        save();
-      }
       $('#table_left').DataTable().search('');
       $('#table_right').DataTable().search('');
   });
