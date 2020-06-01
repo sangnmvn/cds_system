@@ -1,14 +1,63 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
 <div class="container-fluid">
-  <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
     <div class="col-10" style="font-size: 150%;">
       CDS & CDP Review List
     </div>
-    <div class="col-2 button-add-cds-assessment" style="text-align: right">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path) %>
+  </div>
+  <div class="row">
+    <div class="col-2 filter-title">
+      Company:
     </div>
-    <div class="col-12" style="padding: 0px">
+    <div class="col-4">
+      <select name="company_filter" id="company_filter" class="filter-input"></select>
+    </div>
+    <div class="col-4" class="company_token">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2 filter-title">
+      Project:
+    </div>
+    <div class="col-4">
+      <select name="project_filter" id="project_filter" class="filter-input"></select>
+    </div>
+    <div class="col-4" class="project_token">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2 filter-title">
+      Role:
+    </div>
+    <div class="col-4">
+      <select name="role_filter" id="role_filter" class="filter-input"></select>
+    </div>
+    <div class="col-4" class="role_token">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2 filter-title">
+      User:
+    </div>
+    <div class="col-4">
+      <select name="user_filter" id="user_filter" class="filter-input"></select>
+    </div>
+    <div class="col-4" class="user_token">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2 filter-title">
+      Period:
+    </div>
+    <div class="col-4">
+      <select name="period_filter" id="period_filter" class="filter-input"></select>
+    </div>
+    <div class="col-4" class="period_token">
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-12" style="">
       <table class="table table-primary table-responsive-sm table-cds-assessment-manager-list table-mytable">
         <thead>
           <tr>

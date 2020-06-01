@@ -9,20 +9,22 @@ function LoadDataAssessmentList() {
     dataType: "json",
     success: function (response) {
       var temp = "";
+      if (response.length == 0)
+        temp = `<tr><td colspan="8" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         link = `/forms/cds_assessment`;
         if (form.status == "Done")
-          link = `/forms/cds_assessment?title_history_id=${form.id}`;
+        link = `/forms/cds_assessment?title_history_id=${form.id}`;
         var color_delete = "red";
         var color_edit = "#fc9803";
         var status_class = "delete-cds";
-        if (form.status == "Done") {
-          color_delete = "gray";
-          status_class = "";
-          color_edit = "gray";
-          link = "#";
-        }
+        // if (form.status == "Done") {
+        //   color_delete = "gray";
+        //   status_class = "";
+        //   color_edit = "gray";
+        //   link = "#";
+        // }
         var this_element = `<tr id='period_id_{id}'> 
               <td>{no}</td> 
               <td><a href='{link}'>{period}</a></td> 

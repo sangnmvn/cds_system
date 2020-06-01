@@ -24,7 +24,7 @@ class FormsController < ApplicationController
   def cds_assessment
     params = form_params
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -43,13 +43,12 @@ class FormsController < ApplicationController
     else
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
-    form_id = if form.nil? || form.template.role_id != current_user.role_id
-        @form_service.create_form_slot
-      else
-        form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
-        form.id
-      end
-    @hash[:form_id] = form_id
+    if form.nil? || form.template.role_id != current_user.role_id
+      form = @form_service.create_form_slot
+    else
+      form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
+    end
+    @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
   end
@@ -88,7 +87,7 @@ class FormsController < ApplicationController
 
   def destroy
     form = Form.find(params[:id])
-    return render json: { status: "can't delete form" } if current_user.role_id == form.id
+    return render json: { status: "can't delete form" } if current_user.role_id == form.role_id || form.status != "New"
     if form.update(is_delete: true)
       render json: { status: "success" }
     else
@@ -144,6 +143,9 @@ class FormsController < ApplicationController
       end
     @hash[:form_id] = form_id
     @hash[:status] = form.status
+  end
+
+  def re_assess_slot
   end
 
   private

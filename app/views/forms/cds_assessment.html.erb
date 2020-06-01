@@ -12,7 +12,7 @@
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
     <div class="col-md-4" ><%= @hash[:title] %></div>
     <div class="col-md-4">
-      Search: <input type="text" class="search-assessment" placeholder="Search by slot's description" style="height: 88%">
+      Search: <input type="text" class="search-assessment" placeholder="Enter ID, Description" style="height: 88%">
     </div>
     <div class="col-md-4 list-action filter-slots" style="text-align:right">
       Filter
@@ -42,6 +42,7 @@
 <div><%= render 'modal_period' %></div>
 <div><%= render 'modal_approve_cds' %></div>
 <div><%= render "modal_add_more_evidence" %></div>
+<div><%= render "modal_re_assess" %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <script>
@@ -49,6 +50,6 @@
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = false;
-  checkStatusFormStaff(status);
   loadDataPanel(form_id);
+  checkStatusFormStaff(status);
 </script>

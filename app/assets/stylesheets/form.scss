@@ -1,7 +1,21 @@
 // index
 
+.filter-title{
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.filter-input{
+  width: 250px;
+}
+
+.table-cds-assessment-manager-list
+{
+  margin: 0 auto;
+}
 .table-cds-assessment-manager-list tr td:nth-child(1) {
   width: 1%;
+  height: 42px;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(2) {
@@ -29,7 +43,7 @@
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(8) {
-  width: 9%;
+  width: 6%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(9) {
@@ -53,6 +67,11 @@
   vertical-align: middle;
   border: 1px solid white;
   padding: 0px 10px 0px 10px;
+}
+
+.table-cds-assessment-manager-list tr td {
+  padding: 0px 10px 0px 10px;
+  border: 1px solid white;
 }
 .table-cds-assessment-list tr td {
   padding: 0px 10px 0px 10px;
@@ -185,6 +204,7 @@
 .left_panel table td:nth-child(2) {
   text-align: left;
 }
+
 
 // filter
 .filter-slots ul {
@@ -358,13 +378,13 @@
 .csd-assessment-table {
   table {
     table-layout: fixed;
-    border: solid #a1b5da;
+    // border: solid #a1b5da;
   }
   background-color: #fff;
   thead {
     background-color: #4472c4;
     th {
-      border: solid #fff;
+      border: 1px solid #a1b5da;
       border-width: 2px 2px 0px 2px;
       color: #fff;
       text-align: center;
@@ -374,7 +394,7 @@
   td {
     height: 30px;
     vertical-align: middle;
-    border: 2px solid #a1b5da;
+    border: 1px solid #a1b5da;
     padding: 5px;
     // position: relative;a
   }
@@ -426,4 +446,13 @@ td.disabled,textarea:disabled,select:disabled{
 }
 .line-slot {
   padding-left: 5px;
+}
+.flag-yellow {
+  color: yellow!important;
+}
+.flag-green {
+  color: green!important;
+}
+.flag-red {
+  color: red!important;
 }
