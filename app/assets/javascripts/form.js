@@ -315,9 +315,9 @@ function HightLightChangeSlot(id)
   for (var i = 0; i < list_tr.length; i++) {
     if(list_tr[i].id == id)
     {
-      list_tr[i].children[0].style.color = '#FF6633';
-      //list_tr[i].children[3].style.color = '#33CCFF';
-      //list_tr[i].children[4].style.color = '#33CCFF';
+      list_tr[i].children[2].children[0].style.color = '#3366CC'
+      list_tr[i].children[3].children[0].style.color = '#3366CC'
+      list_tr[i].children[4].children[0].style.color = '#3366CC'
     }
   }
 }
@@ -534,7 +534,6 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
     var point = $(this).find('.point-select').val();
     var evidence = $(this).find('.evidence').val();
     temp = $(this).children('td:nth-child(1)').text();
-    column_ID = $(this).children('td:nth-child(1)')
     column_commit = $(this).children('td:nth-child(3)');
     column_point = $(this).children('td:nth-child(4)');
     column_evidence = $(this).children('td:nth-child(5)');
@@ -567,10 +566,9 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         else
           current = max;
         $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-        column_ID.css('color','#FF6633');
-        // column_commit.css('color','#33CCFF');
-        // column_point.css('color','#33CCFF');
-        // column_evidence.css('color','#33CCFF');
+        column_commit.children()[0].style.color = '#3366CC'
+        column_evidence.children()[0].style.color = '#3366CC'
+        column_point.children()[0].style.color = '#3366CC'
       }
     });
   }
