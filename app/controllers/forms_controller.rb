@@ -109,7 +109,6 @@ class FormsController < ApplicationController
       user = form.user
       period = form.period
       CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
-      @form_service.unchange_slot
       render json: { status: "success" }
     else
       render json: { status: "fail" }

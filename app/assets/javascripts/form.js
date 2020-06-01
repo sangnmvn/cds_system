@@ -569,11 +569,10 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         else
           current = max;
         $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-        column_ID.css('color','#33CCFF');
+        column_ID.css('color','#FF6633');
         // column_commit.css('color','#33CCFF');
         // column_point.css('color','#33CCFF');
         // column_evidence.css('color','#33CCFF');
-        $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#FBE5D6';
       }
     });
   }
