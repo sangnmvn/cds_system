@@ -551,7 +551,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
         success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
-        checkStatusFormStaff(status)
+        checkStatusFormStaff("Awaiting Review")
       } else {
         fails("Can't submit CDS.");
       }

@@ -54,7 +54,7 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
 
-User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "3") if Rails.env.development?
+User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "1") if Rails.env.development?
 User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "1")
 User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: "1")
 User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "1")
