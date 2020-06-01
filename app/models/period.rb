@@ -1,6 +1,6 @@
 class Period < ApplicationRecord
   has_many :forms
-  has_one :schedule, :dependent => :destroy
+  has_many :schedules, dependent: :destroy
   has_many :title_histories
 
   def format_name

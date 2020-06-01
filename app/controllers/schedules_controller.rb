@@ -8,17 +8,10 @@ class SchedulesController < ApplicationController
   FULL_ACCESS_SCHEDULE_PROJECT = 14
 
   def get_schedule_data
-    redirect_to root_path unless (@privilege_array & [FULL_ACCESS_SCHEDULE_COMPANY, FULL_ACCESS_SCHEDULE_PROJECT]).any?
-    company = Company.all
-
-    current_user_role_name = Role.find(current_user.role_id).name
-
-    company_id = current_user.company_id
-
     if check_hr?
-      schedules = Schedule.joins(:user, :company).where(_type: "HR").search_schedule(set_params[:search]).offset(set_params[:offset]).limit(LIMIT).order(id: :DESC)
+      schedules = Schedule.joins(:user, :company).where(_type: "HR").search_schedule(set_params[:search]).offset(set_params[:offset]).limit(LIMIT).order(get_sort_params)
     elsif check_pm?
-      schedules = Schedule.joins(:user, :company).where(_type: "PM").search_schedule(set_params[:search]).where(:"companies.id" => company_id).offset(set_params[:offset]).limit(LIMIT).order(id: :DESC)
+      schedules = Schedule.joins(:user, :company).where(_type: "PM").search_schedule(set_params[:search]).where(company_id: current_user.company_id).offset(set_params[:offset]).limit(LIMIT).order(get_sort_params)
     end
 
     render json: { iTotalRecords: schedules.count, iTotalDisplayRecords: schedules.unscope([:limit, :offset]).count, aaData: format_data(schedules) }
@@ -48,7 +41,7 @@ class SchedulesController < ApplicationController
 
       number = set_params[:offset] + index + 1
       current_schedule_data.push("<td style='text-align:right'>#{number}</td>")
-      current_schedule_data.push("<td><a class='view_detail' data-schedule='#{schedule.id}' href='javascript:void(0)'>#{schedule.desc}</a></td>")
+      current_schedule_data.push(schedule.desc)
 
       current_schedule_data.push(schedule.company.name)
 
@@ -212,65 +205,60 @@ class SchedulesController < ApplicationController
   end
 
   def edit_page
-    @schedule = Schedule.find(params[:id])
-    @company = Company.where(id: current_user.company_id)
-
-    @schedule[:end_date_hr] = DateTime.strptime(@schedule[:end_date_hr].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
-    @schedule[:start_date] = DateTime.strptime(@schedule[:start_date].to_s, "%Y-%m-%d").strftime("%Y-%m-%d")
-
+    schedule = Schedule.find(params[:id])
     @is_pm = check_pm?
     @is_hr = check_hr?
     project_ids = ProjectMember.where(user_id: current_user.id, is_managent: 1).pluck(:project_id)
-    @project = Project.where(id: project_ids)
 
-    @parent_schedules = Schedule.joins(:period, :company, :project).select(:period_id, :from_date, :to_date).where(_type: "HR", status: ["New", "In-Progress"], end_date_hr: @schedule[:end_date_hr], start_date: @schedule[:start_date]).limit(1)
+    @parent_schedules = Schedule.joins(:period, :company, :project).select(:period_id, :from_date, :to_date).where(_type: "HR", status: ["New", "In-Progress"], end_date_hr: schedule[:end_date_hr], start_date: schedule[:start_date]).limit(1)
     if @is_pm
       render json: {
-               schedule_id: @schedule.id,
-               schedule_name: @schedule.desc,
-               company_id: @schedule.company.id,
-               company_name: @schedule.company.name,
-               project_id: @schedule.project.id,
-               project_name: @schedule.project.desc,
-               assessment_period: @schedule.period.format_long_date,
-               period_id: @schedule.period_id,
-               start_date: @schedule.start_date.strftime("%b %d, %Y"),
-               end_date_hr: @schedule.end_date_hr.strftime("%b %d, %Y"),
-               end_date_employee: @schedule.end_date_employee.strftime("%b %d, %Y"),
-               end_date_reviewer: @schedule.end_date_reviewer.strftime("%b %d, %Y"),
-               notify_employee: @schedule.notify_employee,
-               status: @schedule.status,
+               schedule_id: schedule.id,
+               schedule_name: schedule.desc,
+               company_id: schedule.company.id,
+               company_name: schedule.company.name,
+               project_id: schedule.project.id,
+               project_name: schedule.project.desc,
+               assessment_period: schedule.period.format_long_date,
+               period_id: schedule.period_id,
+               start_date: schedule.start_date.strftime("%b %d, %Y"),
+               end_date_hr: schedule.end_date_hr.strftime("%b %d, %Y"),
+               end_date_employee: schedule.end_date_employee.strftime("%b %d, %Y"),
+               end_date_reviewer: schedule.end_date_reviewer.strftime("%b %d, %Y"),
+               notify_employee: schedule.notify_employee,
+               status: schedule.status,
              }
     elsif @is_hr
       render json: {
-        schedule_id: @schedule.id,
-        schedule_name: @schedule.desc,
-        company_id: @schedule.company.id,
-        company_name: @schedule.company.name,
-        assessment_period_from_date: @schedule.period.from_date.strftime("%b %d, %Y"),
-        assessment_period_to_date: @schedule.period.to_date.strftime("%b %d, %Y"),
-        start_date: @schedule.start_date.strftime("%b %d, %Y"),
-        end_date_hr: @schedule.end_date_hr.strftime("%b %d, %Y"),
-        notify_hr: @schedule.notify_hr,
-        status: @schedule.status,
+        schedule_id: schedule.id,
+        schedule_name: schedule.desc,
+        company_id: schedule.company.id,
+        company_name: schedule.company.name,
+        assessment_period_from_date: schedule.period.from_date.strftime("%b %d, %Y"),
+        assessment_period_to_date: schedule.period.to_date.strftime("%b %d, %Y"),
+        start_date: schedule.start_date.strftime("%b %d, %Y"),
+        end_date_hr: schedule.end_date_hr.strftime("%b %d, %Y"),
+        notify_hr: schedule.notify_hr,
+        status: schedule.status,
       }
     end
   end
 
   def destroy_page
-    @schedule = Schedule.find(params[:id])
+    schedule = Schedule.find(params[:id])
 
-    render json: { status: true, id: @schedule.id }
+    render json: { status: true, id: schedule.id }
   end
 
   def destroy
-    @schedule = Schedule.find(params[:id])
-    @period = Period.find(@schedule.period_id)
-    user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
-    ScheduleMailer.with(user: user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
+    schedule = Schedule.find_by(id: params[:id], status: "New")
+    return render json: { status: false } if schedule.nil?
+    period = Period.find(schedule.period_id)
+    user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
+    ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
 
     if check_hr?
-      if @period.destroy && @schedule.destroy
+      if period.destroy && schedule.destroy
         #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
         render json: { status: true }
       else
@@ -291,7 +279,6 @@ class SchedulesController < ApplicationController
         ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
         schedule.destroy
       end
-      @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
       render json: { status: true }
     else
       render json: { status: false }
@@ -348,6 +335,20 @@ class SchedulesController < ApplicationController
   end
 
   # Only allow a list of trusted parameters through.
+  def get_sort_params
+    return { id: :desc } if params[:iSortCol_0] == "0"
+    sort = case params[:iSortCol_0]
+      when "1"
+        :id
+      when "2"
+        :desc
+      when "3"
+        :"companies.name"
+      end
+
+    { sort => params[:sSortDir_0] || :desc }
+  end
+
   def schedule_params
     params.permit(:id, :project_id, :period_id, :schedule_hr_parent, :start_date, :end_date_hr, :end_date_member, :end_date_reviewer, :notify_reviewer, :company_id, :user_id, :desc, :status, :notify_employee, :notify_member, :is_delete, :notify_hr)
   end

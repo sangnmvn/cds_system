@@ -2,10 +2,9 @@
 <%= javascript_include_tag 'form', 'data-turbolinks-track': 'reload' %>
 <nav aria-label="breadcrumb" class="breadcrumb-preview-result">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active">Preview CDS Result For <%= @role_name %> - <%= @first_name %> <%= @last_name %></li>
+    <li class="breadcrumb-item active">Preview CDS Result For <%= Role.find(current_user.role_id).name %> - <%= current_user.first_name %> <%= current_user.last_name %></li>
   </ol>
 </nav>
-
 <div class="container-fluid illustration" style="padding-left: 0px;padding-right: 0px;">
   <div class="row" style="margin-right: 0px;">
     <div class="col-6">
@@ -79,7 +78,6 @@
           Can fail in the current period
         </div>
       </div>
-      
     </div>
     <div class="col-12" style="padding-right: 0px">
       <%= render 'form_preview_result'%>

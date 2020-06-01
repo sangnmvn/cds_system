@@ -48,8 +48,55 @@ class Schedule < ApplicationRecord
     end
   end
 
-  def sample
-    Schedule.create!(user_id: 3, status: "New")
+  # run this command to create task, see config/schedule.rb
+  # whenever --update-crontab
+
+  def self.update_status
+    Schedule.find_each do |schedule|
+      start_date = schedule.start_date.midnight unless schedule.start_date.nil?
+      end_date = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
+      today = Date.today.midnight
+      if start_date <= today && end_date >= today
+        schedule.status = "In-Progress"
+      elsif today > start_date
+        schedule.status = "New"
+      elsif today > end_date
+        schedule.status = "Done"
+      end
+      schedule.save
+    end
+  end
+  def self.deliver_reminder
+    Schedule.find_each do |schedule|
+      current_user = User.find(schedule.user_id)
+      end_date1 = schedule.end_date_employee.midnight unless schedule.end_date_employee.nil?
+      end_date2 = schedule.end_date_reviewer.midnight unless schedule.end_date_reviewer.nil?
+      end_date3 = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
+      # reset hours, minutes, seconds to 00:00 for exact day compare
+      today = Date.today.midnight
+
+      period = Period.find(schedule.period_id)
+      sender = current_user
+
+      if !end_date3.nil? && today == end_date3 && schedule._type == "HR"
+        # Phase 2
+        # * Assumpt: PM chỉ tạo schedule cho 1 company, nên khi tạo sẽ gửi email inform cho tất cả SDD/PM/SM của company đó theo email group
+        # HR to PM
+        user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
+        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase2_mailer.deliver_later(wait: 1.minute)
+      elsif !end_date2.nil? && today == end_date2 && schedule._type == "PM"
+        # Phase 3
+        # from PM to Reviewer
+        user_id = User.joins(:project_members, :company).where("project_members.project_id": schedule.project_id, "project_members.is_managent": 0, is_delete: false, "companies.id": schedule.company_id).pluck(:id)
+        user = Approver.distinct.where(user_id: user_id).pluck(:approver_id)
+        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase3_mailer.deliver_later(wait: 1.minute)
+      elsif !end_date1.nil? && today == end_date1 && schedule._type == "PM"
+        # Phase 1
+        # Assumpt: PM chỉ tạo schedule cho 1 project, nên khi tạo sẽ gửi email inform cho tất cả member của project theo email group
+        user = User.joins(:project_members, :company).where("project_members.project_id": schedule.project_id, "project_members.is_managent": 0, is_delete: false, "companies.id": schedule.company_id)
+        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase1_mailer.deliver_later(wait: 1.minute)
+      end
+    end
   end
 
   # run this command to create task, see config/schedule.rb
