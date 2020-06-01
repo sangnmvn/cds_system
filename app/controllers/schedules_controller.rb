@@ -141,7 +141,6 @@ class SchedulesController < ApplicationController
   end
 
   def create
-    # format date from schedule
     temp_params = schedule_params
     temp_params.delete(:id)
     if check_hr?

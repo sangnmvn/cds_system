@@ -6,7 +6,6 @@ $(document).ready(function () {
   drawColorTitleFormPreviewResult(17, 23, "#feffd4");
   drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
   drawColorTitleFormPreviewResult(31, 37, "#FAD7A0");
-
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
   });
@@ -99,6 +98,7 @@ function loadDataPanel(form_id) {
       };
       $('#competency_panel').html(temp);
       $(".card table thead tr").click(function () {
+        checkChangeSlot();
         $(".collapse").removeClass("show");
         $(".card-header table tr").css("background-color", "#bbcbea");
         id = $(this).data("target");
@@ -326,8 +326,47 @@ function loadDataSlots(response) {
   $('.csd-assessment-table table tbody').html(temp);
   checkStatusFormStaff(status);
   resize_textarea();
+  checkChangeSlot();
 }
-
+function HightLightChangeSlot(id)
+{
+  var list_tr = $('.csd-assessment-table table tbody').find('.tr_slot');
+  for (var i = 0; i < list_tr.length; i++) {
+    if(list_tr[i].id == id)
+    {
+      list_tr[i].children[0].style.color = '#FF6633';
+      //list_tr[i].children[3].style.color = '#33CCFF';
+      //list_tr[i].children[4].style.color = '#33CCFF';
+    }
+  }
+}
+function HightLightChangeCompetency(id)
+{
+  var list_tr = $('#competency_panel').find('.card-header').find('tr');
+  for (var i = 0; i < list_tr.length; i++) {
+    if(list_tr[i].attributes["data-id-competency"].value == id)
+      list_tr[i].style.backgroundColor = '#FBE5D6'
+  }
+}
+function checkChangeSlot()
+{
+  $.ajax({
+    type: "GET",
+    url: "/forms/get_slot_is_change",
+    data: {form_id : form_id},
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      $.each(response, function (i, e) {
+        HightLightChangeSlot(e.slot_id);
+        HightLightChangeCompetency(e.competency_id);
+      });
+      $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
+    }
+  });
+}
 $(document).on("click", ".line-slot", function () {
   if (document.getElementById("slot_description_" + this.id).style.display == "block") {
     document.getElementById("slot_description_" + this.id).style.display = "none";
@@ -543,6 +582,10 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
     var point = $(this).find('.point-select').val();
     var evidence = $(this).find('.evidence').val();
     temp = $(this).children('td:nth-child(1)').text();
+    column_ID = $(this).children('td:nth-child(1)')
+    column_commit = $(this).children('td:nth-child(3)');
+    column_point = $(this).children('td:nth-child(4)');
+    column_evidence = $(this).children('td:nth-child(5)');
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_staff",
@@ -572,6 +615,10 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         else
           current = max;
         $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
+        column_ID.css('color','#FF6633');
+        // column_commit.css('color','#33CCFF');
+        // column_point.css('color','#33CCFF');
+        // column_evidence.css('color','#33CCFF');
       }
     });
   }
@@ -599,7 +646,8 @@ $(document).on("click", "#confirm_submit_cds", function () {
         success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
-        checkStatusFormStaff("Awaiting Review")
+        checkStatusFormStaff(status)
+        checkChangeSlot();
       } else {
         fails("Can't submit CDS.");
       }

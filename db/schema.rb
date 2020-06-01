@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_25_093224) do
+ActiveRecord::Schema.define(version: 2020_06_01_065301) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
@@ -22,16 +22,14 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
   end
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "added_by"
     t.text "evidence"
     t.integer "point", limit: 1
     t.boolean "is_commit"
+    t.string "flag"
     t.bigint "form_slot_id"
-    t.bigint "period_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["form_slot_id"], name: "index_comments_on_form_slot_id"
-    t.index ["period_id"], name: "index_comments_on_period_id"
   end
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -63,12 +61,27 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.index ["form_id"], name: "index_form_histories_on_form_id"
   end
 
+  create_table "form_slot_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "point"
+    t.text "evidence"
+    t.integer "form_slot_id"
+    t.integer "competency_id"
+    t.string "slot_position"
+    t.bigint "title_history_id", null: false
+    t.bigint "slot_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["slot_id"], name: "index_form_slot_histories_on_slot_id"
+    t.index ["title_history_id"], name: "index_form_slot_histories_on_title_history_id"
+  end
+
   create_table "form_slots", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "form_id"
     t.bigint "slot_id"
     t.integer "is_passed"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_change"
     t.index ["form_id"], name: "index_form_slots_on_form_id"
     t.index ["slot_id"], name: "index_form_slots_on_slot_id"
   end
@@ -85,6 +98,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.bigint "title_id"
     t.bigint "role_id"
     t.string "status"
+    t.boolean "is_delete", default: false
     t.date "submit_date"
     t.date "review_date"
     t.index ["period_id"], name: "index_forms_on_period_id"
@@ -108,6 +122,8 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.integer "given_point", limit: 1
     t.text "recommend"
     t.integer "user_id"
+    t.boolean "final", default: false
+    t.string "flag"
     t.bigint "period_id"
     t.bigint "form_slot_id"
     t.datetime "created_at", precision: 6, null: false
@@ -202,6 +218,18 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
     t.index ["title_id"], name: "index_title_competency_mappings_on_title_id"
   end
 
+  create_table "title_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "rank"
+    t.string "title"
+    t.integer "level"
+    t.integer "user_id"
+    t.string "role_name"
+    t.bigint "period_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["period_id"], name: "index_title_histories_on_period_id"
+  end
+
   create_table "titles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "desc"
@@ -242,9 +270,10 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
 
   add_foreign_key "approvers", "users"
   add_foreign_key "comments", "form_slots"
-  add_foreign_key "comments", "periods"
   add_foreign_key "competencies", "templates"
   add_foreign_key "form_histories", "forms"
+  add_foreign_key "form_slot_histories", "slots"
+  add_foreign_key "form_slot_histories", "title_histories"
   add_foreign_key "form_slots", "forms"
   add_foreign_key "form_slots", "slots"
   add_foreign_key "forms", "periods"
@@ -263,6 +292,7 @@ ActiveRecord::Schema.define(version: 2020_05_25_093224) do
   add_foreign_key "templates", "users"
   add_foreign_key "title_competency_mappings", "competencies"
   add_foreign_key "title_competency_mappings", "titles"
+  add_foreign_key "title_histories", "periods"
   add_foreign_key "titles", "roles"
   add_foreign_key "user_groups", "groups"
   add_foreign_key "user_groups", "users"
