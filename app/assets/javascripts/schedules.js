@@ -26,13 +26,13 @@ function check_status(start, end, status_id) {
   let toDay = new Date()
   toDay = toDay.setHours(0, 0, 0, 0);
   if (start <= toDay && end >= toDay)  {
-    $(status_id).val("In-progress")
+    $(status_id).val("In-progress");
   }
   if (start > toDay) {
-    $(status_id).val("New")
+    $(status_id).val("New");
   }
   if(toDay > end) {
-    $(status_id).val("Done")
+    $(status_id).val("Done");
   }
 }
 
@@ -144,7 +144,7 @@ $(document).ready(function () {
       $("#to_date").removeAttr("disabled");
       $("#start_date").removeAttr("disabled");
       $('select[name=company]').removeAttr("disabled");
-      datepicker_setup(["#end_date"], []);
+      datepicker_setup(["#end_date"], ["#from_date", "#to_date"]);
     } else if (user_role == "PM") {
       $("#schedule_hr_parent").removeAttr("disabled");
       $("#project").removeAttr("disabled");
@@ -542,15 +542,34 @@ function datepicker_setup(arr_date, period_date) {
       });
     }
   }
-  for (i = 0; i <= period_date.length; i++) {
-    $(period_date[i]).datepicker({
-      todayBtn: "linked",
-      todayHighlight: true,
-      startDate: toDay,
-      autoclose: true,
-      format: "M dd, yyyy"
-    })
+
+  if ($("#schedule_task").val() == "edit")
+  {
+    for (i = 0; i <= period_date.length; i++) {
+      $(period_date[i]).datepicker('destroy');
+      $(period_date[i]).datepicker({
+        todayBtn: "linked",
+        todayHighlight: true,
+        autoclose: true,
+        format: "M dd, yyyy"
+     })
+    }
   }
+  else
+  {
+    for (i = 0; i <= period_date.length; i++) {
+      $(period_date[i]).datepicker('destroy');
+      $(period_date[i]).datepicker({
+        todayBtn: "linked",
+        todayHighlight: true,
+        startDate: toDay,
+        autoclose: true,
+        format: "M dd, yyyy"
+     })
+    }
+  }
+
+  
 }
 
 // btn add new schedule of HR 
