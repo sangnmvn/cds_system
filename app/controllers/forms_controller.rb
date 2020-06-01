@@ -41,6 +41,8 @@ class FormsController < ApplicationController
       form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
       return if form.nil?
     else
+      template_id = Template.find_by(role_id: current_user.role_id, status: true)&.id
+      return if template_id.nil?
       form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
     end
     if form.nil? || form.template.role_id != current_user.role_id
@@ -48,9 +50,7 @@ class FormsController < ApplicationController
     else
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
     end
-    
-    return if form.zero?
-    
+
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"

@@ -15,19 +15,25 @@ function LoadDataAssessmentList() {
         var form = response[i];
         link = `/forms/cds_assessment`;
         if (form.status == "Done")
-        link = `/forms/cds_assessment?title_history_id=${form.id}`;
+          link = `/forms/cds_assessment?title_history_id=${form.id}`;
+        link_view = link;
         var color_delete = "red";
         var color_edit = "#fc9803";
         var status_class = "delete-cds";
-        // if (form.status == "Done") {
-        //   color_delete = "gray";
-        //   status_class = "";
-        //   color_edit = "gray";
-        //   link = "#";
-        // }
+        if (form.status == "Done") {
+          color_delete = "gray";
+          status_class = "";
+          color_edit = "gray";
+        }
+        if (!["Done", "New"].includes(form.status)) {
+          color_delete = "gray";
+          status_class = "";
+          color_edit = "gray";
+          link = "#";
+        }
         var this_element = `<tr id='period_id_{id}'> 
               <td>{no}</td> 
-              <td><a href='{link}'>{period}</a></td> 
+              <td><a href='{link_view}'>{period}</a></td> 
               <td>{role}</td> 
               <td>{level}</td> 
               <td>{rank}</td> 
@@ -44,6 +50,7 @@ function LoadDataAssessmentList() {
           id: form.id,
           no: i + 1,
           link: link,
+          link_view: link_view,
           period: form.period_name,
           role: form.role_name,
           level: form.level,
