@@ -59,6 +59,10 @@ class FormsController < ApplicationController
     render json: @form_service.format_data_slots
   end
 
+  def get_slot_is_change
+    render json: @form_service.get_slot_change
+  end
+
   def save_cds_assessment_staff
     return render json: { status: "success" } if @form_service.save_cds_staff
     render json: { status: "fail" }

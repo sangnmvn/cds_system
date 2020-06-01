@@ -38,6 +38,18 @@ module Api
       hash
     end
 
+    def get_slot_change
+      slots = FormSlot.includes(:slot).where(is_change: true, form_id: params[:form_id])
+      arr = Array.new
+      slots.each { |slot|
+        arr << {
+          slot_id: slot.id,
+          competency_id: slot.slot.competency_id,
+        }
+      }
+      arr
+    end
+
     def get_old_competencies
       competency_ids = FormSlotHistory.where(title_history_id: params[:title_history_id]).pluck(:competency_id).uniq
       competencies = Competency.where(id: competency_ids)
@@ -175,6 +187,11 @@ module Api
       end
     end
 
+    def unchange_slot
+      form_slots = FormSlot.where(form_id: params[:form_id])
+      form_slots.each { |form_slot| form_slot.update(is_change: false) }
+    end
+
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
@@ -182,8 +199,10 @@ module Api
         is_commit = params[:is_commit] == 'true'
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
+          form_slot.update(is_change: true)
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
+          form_slot.update(is_change: true)
         end
       end
     end
