@@ -9,6 +9,7 @@ class SchedulesController < ApplicationController
 
   def get_schedule_data
     redirect_to root_path unless (@privilege_array & [FULL_ACCESS_SCHEDULE_COMPANY, FULL_ACCESS_SCHEDULE_PROJECT]).any?
+    binding.pry
     company = Company.all
 
     current_user_role_name = Role.find(current_user.role_id).name
@@ -48,7 +49,7 @@ class SchedulesController < ApplicationController
 
       number = set_params[:offset] + index + 1
       current_schedule_data.push("<td style='text-align:right'>#{number}</td>")
-      current_schedule_data.push("<td><a class='view_detail' data-schedule='#{schedule.id}' href='javascript:void(0)'>#{schedule.desc}</a></td>")
+      current_schedule_data.push(schedule.desc)
 
       current_schedule_data.push(schedule.company.name)
 
