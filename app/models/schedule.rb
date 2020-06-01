@@ -3,16 +3,22 @@ class Schedule < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :project, optional: true
   belongs_to :company, optional: true
-  belongs_to :period, optional: true
+  belongs_to :period
 
   delegate :first_name, :last_name, :email, to: :user
-  #validates :_type, inclusion: { in: ["HR", "PM"] }
 
   scope :search_schedule, ->(search) {
           where("`desc` LIKE :search OR companies.name LIKE :search", search: "%#{search}%") if search.present?
         }
 
   validate :happened_at_is_valid_datetime
+  validate :pm_validation
+
+  def pm_validation
+    if _type == "PM" && project_id.nil?
+      errors.add(:project_id, "Project must exist for schedule type PM")
+    end
+  end
 
   def happened_at_is_valid_datetime
     if start_date > end_date_hr
@@ -33,15 +39,11 @@ class Schedule < ApplicationRecord
       end
 
       if (end_date_reviewer - notify_reviewer.days) < end_date_employee
-        binding.pry
-
         errors.add(:notify_reviewer, "Notify Reviewer Date must be greater than Notify Member Date")
       end
     end
 
-    if _type == "PM" && (end_date_hr - notify_hr.days) < end_date_reviewer
-      errors.add(:notify_hr, "Notify HR Date must be greater than Notify Reviewer Date")
-    elsif _type == "HR" && (end_date_hr - notify_hr.days) < start_date
+    if _type == "HR" && (end_date_hr - notify_hr.days) < start_date
       errors.add(:notify_hr, "Notify HR Date must be greater than Notify Reviewer Date")
     end
   end

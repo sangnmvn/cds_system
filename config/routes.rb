@@ -98,9 +98,11 @@ Rails.application.routes.draw do
   resources :schedules do
     collection do
       delete "destroy_multiple"
+      get "add_page"
     end
     get "view_pm"
   end
+  #get "/schedules/:id/add_page", to: "schedules#add_page"
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
   get "/schedules/get_schedule_hr_info/:id", to: "schedules#get_schedule_hr_info"
