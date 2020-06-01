@@ -9,7 +9,8 @@ class SchedulesController < ApplicationController
 
   def get_schedule_data
     redirect_to root_path unless (@privilege_array & [FULL_ACCESS_SCHEDULE_COMPANY, FULL_ACCESS_SCHEDULE_PROJECT]).any?
-    binding.pry
+
+    #"sSortDir_0"=>"asc", "iSortingCols"=>"1"
     company = Company.all
 
     current_user_role_name = Role.find(current_user.role_id).name
@@ -17,9 +18,9 @@ class SchedulesController < ApplicationController
     company_id = current_user.company_id
 
     if check_hr?
-      schedules = Schedule.joins(:user, :company).where(_type: "HR").search_schedule(set_params[:search]).offset(set_params[:offset]).limit(LIMIT).order(id: :DESC)
+      schedules = Schedule.joins(:user, :company).where(_type: "HR").search_schedule(set_params[:search]).offset(set_params[:offset]).limit(LIMIT).order(get_sort_params)
     elsif check_pm?
-      schedules = Schedule.joins(:user, :company).where(_type: "PM").search_schedule(set_params[:search]).where(:"companies.id" => company_id).offset(set_params[:offset]).limit(LIMIT).order(id: :DESC)
+      schedules = Schedule.joins(:user, :company).where(_type: "PM").search_schedule(set_params[:search]).where(:"companies.id" => company_id).offset(set_params[:offset]).limit(LIMIT).order(get_sort_params)
     end
 
     render json: { iTotalRecords: schedules.count, iTotalDisplayRecords: schedules.unscope([:limit, :offset]).count, aaData: format_data(schedules) }
@@ -349,6 +350,20 @@ class SchedulesController < ApplicationController
   end
 
   # Only allow a list of trusted parameters through.
+  def get_sort_params
+    return { id: :desc } if params[:iSortCol_0] == "0"
+    sort = case params[:iSortCol_0]
+      when "1"
+        :id
+      when "2"
+        :desc
+      when "3"
+        :"companies.name"
+      end
+
+    { sort => params[:sSortDir_0] || :desc }
+  end
+
   def schedule_params
     params.permit(:id, :project_id, :period_id, :schedule_hr_parent, :start_date, :end_date_hr, :end_date_member, :end_date_reviewer, :notify_reviewer, :company_id, :user_id, :desc, :status, :notify_employee, :notify_member, :is_delete, :notify_hr)
   end

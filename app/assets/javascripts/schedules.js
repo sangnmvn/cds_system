@@ -178,15 +178,15 @@ $(document).ready(function () {
         "targets": 0
       },
       {
-        "orderable": false,
+        "orderable": true,
         "targets": 1
       },
       {
-        "orderable": false,
+        "orderable": true,
         "targets": 2
       },
       {
-        "orderable": false,
+        "orderable": true,
         "targets": 3
       },
       {
