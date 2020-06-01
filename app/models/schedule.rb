@@ -50,6 +50,22 @@ class Schedule < ApplicationRecord
 
   # run this command to create task, see config/schedule.rb
   # whenever --update-crontab
+
+  def self.update_status
+    Schedule.find_each do |schedule|
+      start_date = schedule.start_date.midnight unless schedule.start_date.nil?
+      end_date = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
+      today = Date.today.midnight
+      if start_date <= today && end_date >= today
+        schedule.status = "In-Progress"
+      elsif today > start_date
+        schedule.status = "New"
+      elsif today > end_date
+        schedule.status = "Done"
+      end
+      schedule.save
+    end
+  end
   def self.deliver_reminder
     Schedule.find_each do |schedule|
       current_user = User.find(schedule.user_id)
