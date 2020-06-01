@@ -1215,8 +1215,6 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 TitleCompetencyMapping.create!(id: 1, min_level_ranking: 2, title_id: 1001, competency_id: 1)
 TitleCompetencyMapping.create!(id: 2, min_level_ranking: 3, title_id: 1001, competency_id: 2)
