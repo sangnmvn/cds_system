@@ -23,5 +23,6 @@ set :output, "../log/log_task.log"
 # whenever --update-crontab
 # to update task
 every 1.day, at: "0:00 am" do
+  runner "Schedule.update_status", :environment => Rails.env, :output => "log/cron.log"
   runner "Schedule.deliver_reminder", :environment => Rails.env, :output => "log/cron.log"
 end

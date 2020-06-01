@@ -64,7 +64,7 @@
                     <input type="text" id="to_date" class="form-control col-sm-3">
                   <% elsif @is_pm %>
                     <div class="col-sm-6">
-                      <%= select_tag "schedule_hr_parent", options_from_collection_for_select(@parent_schedules, "period_id", "parent_period"), name: "schedule_hr_parent", class: "form-control", include_blank: "Please select an assessment period" %>
+                      <%= select_tag "schedule_hr_parent", options_for_select(@period), name: "schedule_hr_parent", class: "form-control", include_blank: "Please select an assessment period" %>
                     </div>
                   <% end %>
                 </div>
@@ -103,7 +103,7 @@
                       <label>Reminder (*)</label>
                     </div>
                     <div class="col-sm-6">
-                      <input type="number" name="notify_hr" id="notify_hr" min="1" value="0" style="text-align: right;">
+                      <input type="number" value="1" name="notify_hr" id="notify_hr" min="1" value="0" style="text-align: right;">
                       <em>day(s) before</em>
                     </div>
                   </div>
@@ -133,7 +133,7 @@
                       <label>Reminder of Member/ Reviewer (*)</label>
                     </div>
                     <div class="col-sm-6">
-                      <input type="number" name="notify_member" id="notify_member" min="1" value="0" style="text-align: right;">
+                      <input type="number" value="1" name="notify_member" id="notify_member" min="1" value="0" style="text-align: right;">
                       <em id="notify_member_content">day(s) before</em>
                     </div>
                     <br>

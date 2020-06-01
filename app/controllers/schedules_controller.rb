@@ -1,5 +1,6 @@
 class SchedulesController < ApplicationController
   before_action :get_privilege_id
+  before_action :check_privilege
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
   ROLE_NAME = ["PM", "SM", "BOD"]
@@ -93,24 +94,28 @@ class SchedulesController < ApplicationController
   end
 
   def add_page
-    # incomplete
-    user = User.find(current_user.id)
-    if role_name == "HR"
-      company = Company.all
-    elsif role_name == "PM"
-      company = Company.where(id: user.company_id)
+    if check_hr?
+      company = Company.pluck(:name, :id)
+    elsif check_pm?
+      company = Company.where(id: current_user.company_id).pluck(:name, :id)
     end
+    render json: company
   end
 
   def index
-    # binding.pry
-
     if check_hr?
       @company = Company.pluck(:name, :id)
       @fields = ["No.", "Schedule name", "Company name", "Assessment period", "Start date", "End date", "Status", "Action"]
     else
-      @company = Company.pluck(:name, :id).where(id: current_user.company_id)
+      @company = Company.where(id: current_user.company_id).pluck(:name, :id)
       @fields = ["No.", "Schedule name", "Company name", "Project Name", "Assessment period", "Start date", "End date", "Status", "Action"]
+      parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-Progress"], company_id: current_user.company_id)
+      @period = parent_schedules.map do |schedule|
+        [
+          schedule.period.format_long_date,
+          schedule.period_id,
+        ]
+      end
     end
 
     @schedules = Schedule.includes(:user, :company).order(id: :desc).page(params[:page]).per(20)
@@ -118,7 +123,6 @@ class SchedulesController < ApplicationController
     @is_hr = check_hr?
 
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
-    @parent_schedules = Schedule.includes(:period).select(:period_id).where(_type: "HR", status: ["New", "In-Progress"])
   end
 
   def new
@@ -128,7 +132,7 @@ class SchedulesController < ApplicationController
     @company = Company.where(filter).order(:name).pluck(:name, :id)
 
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
-    @parent_schedules = Schedule.includes(:period).select(:period_id).where(_type: "HR", status: ["New", "In-Progress"])
+    @parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-Progress"])
     @schedule = Schedule.new
   end
 
@@ -218,7 +222,8 @@ class SchedulesController < ApplicationController
     @is_hr = check_hr?
     project_ids = ProjectMember.where(user_id: current_user.id, is_managent: 1).pluck(:project_id)
     @project = Project.where(id: project_ids)
-    @parent_schedules = Schedule.joins(:period).select(:period_id, "(CONCAT(DATE_FORMAT(periods.from_date, '%b %d, %Y') , ' - ' , DATE_FORMAT(periods.to_date, '%b %d, %Y'))) AS parent_period").where(_type: "HR", status: "New", end_date_hr: @schedule[:end_date_hr], start_date: @schedule[:start_date]).limit(1)
+
+    @parent_schedules = Schedule.joins(:period, :company, :project).select(:period_id, :from_date, :to_date).where(_type: "HR", status: ["New", "In-Progress"], end_date_hr: @schedule[:end_date_hr], start_date: @schedule[:start_date]).limit(1)
     if @is_pm
       render json: {
                schedule_id: @schedule.id,
@@ -260,8 +265,6 @@ class SchedulesController < ApplicationController
 
   def destroy
     @schedule = Schedule.find(params[:id])
-    @period = Period.find(@schedule.period_id)
-
     @period = Period.find(@schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
     ScheduleMailer.with(user: user.to_a, period: @period).del_mailer.deliver_later(wait: 1.minute)
