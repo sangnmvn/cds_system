@@ -1,12 +1,12 @@
 <ul>
     <li> From: CDS system </li>
     <li> To: <%= @emails %> </li>
-    <li> Subject: [CDS system] Request to review CDS assessment for <%= @firstname %><%= @firstcharacter %> </li>
+    <li> Subject: [CDS system] Request to review CDS assessment for <%= @firstname %><%= @firstcharacters %> </li>
     <li> Content</li>
 </ul>
 <p>Dear <%= @reviewer_name %> ,</p>
 
-<p>The CDS assessment period [<%= @from_date %> - <%= @to_date %>] of <%= @firstname %> <%= @lastname %> has been sent to you. Please access CDS system to review.</p>
+<p>The CDS assessment period [<%= @from_date %> - <%= @to_date %>] of <%= @firstname %><%= @firstcharacters %>  has been sent to you. Please access CDS system to review.</p>
 
 <p>Thank you,</p>
 <p>CDS System</p>

@@ -109,7 +109,7 @@ module Api
         }
       end
       if form
-        list_form.unshift({ id: form.id, period_name: form.period&.format_name || 'New', role_name: form.role&.name, rank: form.rank, title: form.title&.name, status: form.status })
+        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank, title: form.title&.name, status: form.status, level: form.level })
       end
       list_form
     end
@@ -139,7 +139,7 @@ module Api
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:no_assessment] && s[:tracking][:point].zero?
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:need_to_update] && s[:tracking][:flag] == 'yellow'
+        elsif filter_slots[:need_to_update] && s[:tracking][:flag] == "yellow"
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:assessing] && !s[:tracking][:point].zero? && s[:tracking][:recommends].empty?
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
@@ -162,10 +162,10 @@ module Api
           evidence: slot_history.slot.evidence,
           tracking: {
             id: slot_history.form_slot_id,
-            evidence: slot_history.evidence || '',
+            evidence: slot_history.evidence || "",
             point: slot_history.point || 0,
-            is_commit: false
-          }
+            is_commit: false,
+          },
         }
         if form_slots.present?
           h_slot[:tracking][:recommends] = form_slots[slot_history.form_slot_id]
@@ -252,10 +252,10 @@ module Api
 
     def approve_cds
       form = Form.find(params[:form_id])
-      return 'fail' if form.status == 'Done' || form.period_id.nil?
+      return "fail" if form.status == "Done" || form.period_id.nil?
 
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
-      return 'fail' unless title_history.save
+      return "fail" unless title_history.save
 
       form_slots = FormSlot.joins(:line_managers).includes(:comments, :line_managers).where(form_id: params[:form_id]).where.not(line_managers: { id: nil })
       slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
@@ -274,13 +274,13 @@ module Api
           slot_position: slot.level.to_s + LETTER_CAP[hash[key]]
         }
         form_slot_history = FormSlotHistory.new(data)
-        return 'fail' unless form_slot_history.save
+        return "fail" unless form_slot_history.save
 
         hash[key] += 1
       end
       form.update(status: 'Done')
       # sent email
-      'success'
+      "success"
     end
 
     def get_data_view_history
@@ -353,12 +353,12 @@ module Api
 
         hash[form_slot.slot_id] = {
           id: form_slot.id,
-          evidence: comments&.evidence || '',
+          evidence: comments&.evidence || "",
           point: comments&.point || 0,
-          flag: comments&.flag || 'red',
+          flag: comments&.flag || "red",
           is_commit: comments&.is_commit,
           is_passed: recommends[:is_passed],
-          recommends: recommends[:recommends]
+          recommends: recommends[:recommends],
         }
       end
 
@@ -416,7 +416,7 @@ module Api
 
     def filter_cds
       hash = {}
-      params[:filter].split(',').map do |filter|
+      params[:filter].split(",").map do |filter|
         hash[filter.to_sym] = true
       end
       hash

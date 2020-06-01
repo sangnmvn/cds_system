@@ -9,8 +9,4 @@ class Schedule < ApplicationRecord
 
   paginates_per 20
   max_paginates_per 20
-
-  def sample
-    Schedule.create!(user_id: 3, status: "New")
-  end
 end

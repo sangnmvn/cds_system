@@ -10,7 +10,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     reviewers.each_with_index do |reviewer, index|
-      @reviewer_name += reviewer.approver.first_name + " " + reviewer.approver.last_name
+      @reviewer_name += reviewer.approver.first_name + reviewer.approver.last_name.split(" ").map { |x| x.chr }.join
       if index == 0
         @emails += reviewer.approver.email
       else
@@ -26,14 +26,14 @@ class CdsAssessmentMailer < ApplicationMailer
     @competency_name = params[:competance_name]
     user = params[:user]
     @firstname = user.first_name
-    @lastname = user.last_name
+    @lastname = user.last_name.split(" ").map { |x| x.chr }.join
     reviewer = params[:reviewer]
     @reviewer_name = ""
     @emails = ""
     @from_date = params[:from_date]
     @to_date = params[:to_date]
 
-    @reviewer_name = reviewer.first_name + " " + reviewer.last_name
+    @reviewer_name = reviewer.first_name + reviewer.last_name.split(" ").map { |x| x.chr }.join
     @emails = reviewer.email
 
     mail(to: @emails, subject: "[CDS system] Notify to review CDS assessment updates - competency #{@competency_name}/slot #{@slot_id}")
