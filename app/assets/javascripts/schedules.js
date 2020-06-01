@@ -214,9 +214,9 @@ $(document).ready(function () {
     asStripeClasses: ["even", "odd"],
     pagingType: "full_numbers",
     fnDrawCallback: function () {
-      $("#schedule_table thead th").removeClass("sorting_asc");
-      $("#schedule_table thead th").removeClass("sorting_desc");
-      $("#schedule_table thead th").addClass("sorting_disabled");
+      //$("#schedule_table thead th").removeClass("sorting_asc");
+      //$("#schedule_table thead th").removeClass("sorting_desc");
+      //$("#schedule_table thead th").addClass("sorting_disabled");
       on_click_btn();
       check_selectAll();
     },
@@ -1030,11 +1030,12 @@ function delete_schedule() {
       view_schedule();
       var status = res.status;
       if (status == true) {
-        $("#modal").modal("hide");
+        $("#modalDeleteSchedule").modal("hide");
         success("The schedule(s) has been deleted successfully");
       } else {
         fails("Failed to delete all schedule(s)");
       }
+
     },
   });
 }

@@ -26,6 +26,13 @@
   font-weight: bold;
 }
 
+#schedule_table tbody tr td:nth-child(1){
+  text-align: center;
+}
+
+#schedule_table tbody tr td:nth-child(2){
+  text-align: center;
+}
 #schedule_table tbody tr:nth-of-type(odd) {
   background-color: #cfd5ea;
 }
