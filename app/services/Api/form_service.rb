@@ -83,7 +83,8 @@ module Api
 
     def get_list_cds_assessment_manager
       user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
-      forms = Form.where(_type: "CDS").includes(:period, :role, :title).order(id: :desc).where.not(user_id: current_user.id).where(user_id: user_to_approve_ids)
+      forms = Form.where(_type: "CDS", status: "Awaiting Review", user_id: user_to_approve_ids).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+
       forms.map do |form|
         {
           id: form.id,
@@ -95,11 +96,46 @@ module Api
           level: form.level,
           rank: form.rank,
           title: form.title&.name,
-          submit_date: form.submit_date,
-          review_date: form.review_date,
+          submit_date: form.submit_date || "",
+          review_date: form.review_date || "",
           status: form.status,
         }
       end
+    end
+
+    def data_filter_cds_assessment_manager
+      user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+      hash = {
+        companies: [["All", 0]],
+        projects: [["All", 0]],
+        roles: [["All", 0]],
+        users: [["All", 0]],
+        periods: [["All", 0]],
+      }
+
+      users = User.where(id: user_ids).includes(:company, :role)
+      users.each do |user|
+        company = [user.company.name, user.company_id]
+        user_arr = [user.format_name, user.id]
+        role = [user.role.name, user.role_id]
+        hash[:companies] << company unless hash[:companies].include?(company)
+        hash[:roles] << role unless hash[:roles].include?(role)
+        hash[:users] << user_arr
+      end
+
+      project_members = ProjectMember.where(user_id: user_ids).includes(:project)
+      project_members.each do |project_member|
+        project = [project_member.project.desc, project_member.project_id]
+        hash[:projects] << project unless hash[:projects].include?(project)
+      end
+
+      forms = Form.where(_type: "CDS", status: "Awaiting Review", user_id: user_ids).includes(:period)
+      forms.each do |form|
+        period = [form.period.format_name, form.period_id]
+        hash[:periods] << period unless hash[:periods].include?(period)
+      end
+
+      hash
     end
 
     def get_list_cds_assessment(user_id = nil)
