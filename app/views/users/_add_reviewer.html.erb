@@ -308,6 +308,12 @@
       reviewer_ids.push(current_approver_id);
     }
   
+    if (reviewer_ids.length > 3)
+    {
+      fails("The number of reviewer can't be higher 3<br>");
+      return;
+    }
+  
     // convert to string
     if (reviewer_ids.length == 0)
     {
