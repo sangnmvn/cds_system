@@ -1,18 +1,18 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(3, 9, "#FAD7A0");
-  drawColorTitleFormPreviewResult(10, 16, "#d4f6ff");
-  drawColorTitleFormPreviewResult(17, 23, "#feffd4");
-  drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
-  drawColorTitleFormPreviewResult(31, 37, "#FAD7A0");
+  drawColorTitleFormPreviewResult(4, 10, "#FAD7A0");
+  drawColorTitleFormPreviewResult(11, 17, "#d4f6ff");
+  drawColorTitleFormPreviewResult(18, 24, "#feffd4");
+  drawColorTitleFormPreviewResult(25, 31, "#d4f6ff");
+  drawColorTitleFormPreviewResult(32, 38, "#FAD7A0");
   $("[data-toggle=sidebar-colapse]").click(function () {
     SidebarCollapse();
   });
 
   function drawColorTitleFormPreviewResult(start, end, color) {
     for (i = start; i <= end; i++) {
-      $(".table-preview-result thead tr td:nth-child(" + i + ")").css(
+      $(".table-preview-result thead tr th:nth-child(" + i + ")").css(
         "background-color",
         color
       );
