@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'level_mappings.js', media: 'all', 'data-turbolinks-track': 'reload' %>
+<div class="container-fluid">
+  <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+    <div class="col-10" style="font-size: 150%;">
+      Level Mapping List
+    </div>
+    <div class="col-2 button-level-mapping" style="text-align: right">
+      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path) %>
+    </div>
+    <div class="col-12" style="padding: 0px">
+      <table class="table table-primary table-responsive-sm table-mytable table-level-mapping">
+        <thead>
+          <tr>
+            <td>No.</td>
+            <td>Role</td>
+            <td>No. Rank</td>
+            <td>Level</td>
+            <td>Latest Update</td>
+            <td>Updated by</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

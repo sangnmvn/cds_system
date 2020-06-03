@@ -90,6 +90,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :level_mappings do
+    collection do
+      get "index"
+      get "get_data_level_mapping"
+    end
+  end
+
   root to: "users#index2"
 
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }

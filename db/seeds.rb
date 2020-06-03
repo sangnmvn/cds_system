@@ -17,6 +17,7 @@ Slot.delete_all
 TitleCompetencyMapping.delete_all
 Competency.delete_all
 Template.delete_all
+LevelMapping.delete_all
 Title.delete_all
 Approver.delete_all
 UserGroup.delete_all
@@ -28,6 +29,7 @@ Project.delete_all
 Company.delete_all
 Group.delete_all
 ProjectMember.delete_all
+
 # Create role
 role_create = [
   { id: 1, name: "QC", desc: "Quality Assurance" },
@@ -156,29 +158,29 @@ ProjectMember.create!(user_id: 19, project_id: 2, is_managent: "0")
 
 # Create Title
 # QC
-Title.create!(name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1")
-Title.create!(name: "QC", desc: "QC", rank: 2, role_id: "1")
-Title.create!(name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1")
+Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1")
+Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1")
+Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1")
 # Dev
-Title.create!(name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2")
-Title.create!(name: "Developer", desc: "Developer", rank: 2, role_id: "2")
-Title.create!(name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2")
-Title.create!(name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2")
-Title.create!(name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2")
-Title.create!(name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2")
-Title.create!(name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2")
+Title.create!(id: 4, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2")
+Title.create!(id: 5, name: "Developer", desc: "Developer", rank: 2, role_id: "2")
+Title.create!(id: 6, name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2")
+Title.create!(id: 7, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2")
+Title.create!(id: 8, name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2")
+Title.create!(id: 9, name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2")
+Title.create!(id: 10, name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2")
 # BA
-Title.create!(name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3")
-Title.create!(name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3")
-Title.create!(name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3")
+Title.create!(id: 11, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3")
+Title.create!(id: 12, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3")
+Title.create!(id: 13, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3")
 # PM
-Title.create!(name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4")
-Title.create!(name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4")
-Title.create!(name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4")
+Title.create!(id: 14, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4")
+Title.create!(id: 15, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4")
+Title.create!(id: 16, name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4")
 # SM
-Title.create!(name: "SM Test", desc: "SM Test", role_id: "5")
+Title.create!(id: 17, name: "SM Test", desc: "SM Test", role_id: "5")
 # HR
-Title.create!(name: "HR Test", desc: "HR Test", role_id: "6")
+Title.create!(id: 18, name: "HR Test", desc: "HR Test", role_id: "6")
 
 # Create Template
 Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", user_id: 1, status: true)
@@ -1200,8 +1202,6 @@ Schedule.create!(user_id: 34, company_id: 1, period_id: 30, start_date: "2020-01
 Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date: "2020-03-01", end_date_hr: "2020-04-02", notify_hr: 6, desc: "Period 2", status: "Done", _type: "HR")
 Schedule.create!(user_id: 34, company_id: 3, period_id: 50, start_date: "2020-05-20", end_date_hr: "2020-09-20", notify_hr: 3, desc: "Period 3", status: "In-progress", _type: "HR")
 
-
-
 Form.create!(id: 1, user_id: "1", _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1", role_id: "1", status: "New", is_delete: false, submit_date: "2019-06-20", review_date: "2019-06-30")
 Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done")
 (1..134).each do |i|
@@ -1212,4 +1212,8 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
 
-#create Title Mapping
+LevelMapping.create!(id: 1, level: 1, quantity: 3, competency_type: "General", rank_number: 1, title_id: 1001, updated_by: 2)
+LevelMapping.create!(id: 2, level: 1, quantity: 3, competency_type: "General", rank_number: 2, title_id: 1001, updated_by: 2)
+LevelMapping.create!(id: 3, level: 1, quantity: 3, competency_type: "General", rank_number: 3, title_id: 1001, updated_by: 2)
+
+#TitleMapping.create!(id: 1, title_id: 1001, competency_id: 1, value: "0-1")

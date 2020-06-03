@@ -1,0 +1,61 @@
+// Place all the styles related to the LevelMapping controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+.table-cds-assessment-manager-list {
+    margin: 0 auto;
+}
+
+.table-level-mapping tr td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid white;
+    padding: 0px 10px 0px 10px;
+}
+
+.table-level-mapping tbody tr td:nth-child(1) {
+    text-align: right;    
+    width: 1%;
+}
+
+.table-level-mapping tbody tr td:nth-child(2) {
+    text-align: left;    
+    width: 18%;
+}
+
+.table-level-mapping tbody tr td:nth-child(3) {
+    text-align: right;    
+    width: 7%;
+}
+
+.table-level-mapping tbody tr td:nth-child(4) {
+    text-align: right;    
+    width: 7%;
+}
+
+.table-level-mapping tbody tr td:nth-child(5) {
+    text-align: left;    
+}
+
+.table-level-mapping tbody tr td:nth-child(6) {
+    text-align: left;    
+}
+
+
+
+
+.table-level-mapping tr td {
+    padding: 0px 10px 0px 10px;
+    border: 1px solid white;
+}
+
+.button-level-mapping button {
+    font-size: 90%;
+    background-color: #8da8db;
+    border: none;
+}
+
+.table-level-mapping tr td:nth-child(1) {
+    width: 1%;
+    height: 42px;
+  }
+  
