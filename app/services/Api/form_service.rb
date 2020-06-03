@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Api
   class FormService < BaseService
     def initialize(params, current_user)
@@ -39,13 +37,12 @@ module Api
     end
 
     def get_slot_change
-      slots = FormSlot.includes(:slot).where(is_change: true, form_id: params[:form_id])
+      form_slots = FormSlot.includes(:slot).where(is_change: true, form_id: params[:form_id])
       arr = Array.new
-      slots.each { |slot|
+      form_slots.each { |form_slot|
         arr << {
-          slot_id: slot.slot.id,
-          level: slot.slot.level.to_i - 1,
-          competency_id: slot.slot.competency_id,
+          slot_id: form_slot.slot.id,
+          competency_id: form_slot.slot.competency_id,
         }
       }
       arr

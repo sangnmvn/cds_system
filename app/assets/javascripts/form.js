@@ -7,7 +7,7 @@ $(document).ready(function () {
   drawColorTitleFormPreviewResult(25, 31, "#d4f6ff");
   drawColorTitleFormPreviewResult(32, 38, "#FAD7A0");
   $("[data-toggle=sidebar-colapse]").click(function () {
-    SidebarCollapse();
+    sidebarCollapse();
   });
 
   function drawColorTitleFormPreviewResult(start, end, color) {
@@ -19,7 +19,7 @@ $(document).ready(function () {
     }
   }
 
-  function SidebarCollapse() {
+  function sidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
     if ($(".card").is(":visible")) {
       $(".card").hide();
@@ -111,7 +111,7 @@ function loadDataPanel(form_id) {
   });
 }
 
-function resize_textarea() {
+function resizeTextarea() {
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
@@ -219,8 +219,8 @@ function loadDataSlots(response) {
     }
     temp += ` 
       <tr id="${e.id}" class="tr_slot">
-        <td style="text-align:cent<Slot ID>er" rowspan="${rowspan}">${e.slot_id}</td>
-        <td style="position: relative;" rowspan="${rowspan}">
+        <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>
+        <td style="position: relative; vertical-align: top" rowspan="${rowspan}">
           <div>${e.desc}</div>
           <br>
           <div id="slot_description_${e.slot_id}" style="display: none;">${e.evidence}</div>
@@ -306,22 +306,21 @@ function loadDataSlots(response) {
   }
   $('.csd-assessment-table table tbody').html(temp);
   checkStatusFormStaff(status);
-  resize_textarea();
+  resizeTextarea();
   checkChangeSlot();
 }
-function HightLightChangeSlot(id)
-{
+
+function hightlightChangeSlot(id) {
   var list_tr = $('.csd-assessment-table table tbody').find('.tr_slot');
   for (var i = 0; i < list_tr.length; i++) {
-    if(list_tr[i].id == id)
-    {
+    if(list_tr[i].id == id) {
       list_tr[i].children[2].children[0].style.color = '#3366CC'
       list_tr[i].children[3].children[0].style.color = '#3366CC'
       list_tr[i].children[4].children[0].style.color = '#3366CC'
     }
   }
 }
-function HightLightChangeCompetency(id,level)
+function hightlightChangeCompetency(id, level)
 {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
@@ -344,8 +343,8 @@ function checkChangeSlot()
     dataType: "json",
     success: function (response) {
       $.each(response, function (i, e) {
-        HightLightChangeSlot(e.slot_id);
-        HightLightChangeCompetency(e.competency_id,e.level);
+        hightlightChangeSlot(e.slot_id);
+        hightlightChangeCompetency(e.competency_id,e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
     }
