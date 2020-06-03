@@ -571,6 +571,7 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         column_commit.children()[0].style.color = '#3366CC'
         column_evidence.children()[0].style.color = '#3366CC'
         column_point.children()[0].style.color = '#3366CC'
+        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor','#99CCFF')
       }
     });
   }
