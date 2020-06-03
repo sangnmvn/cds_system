@@ -78,6 +78,10 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def get_data_filter_cds_assessment_manager
+    render json: @form_service.data_filter_cds_assessment_manager
+  end
+
   def get_data_slot
     return render json: @form_service.get_data_form_slot
   end
@@ -161,6 +165,7 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name)
+    params[:offset] = params[:iDisplayStart].to_i || 0
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name, :offset)
   end
 end
