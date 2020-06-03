@@ -271,14 +271,14 @@ function loadDataSlots(response) {
         <td class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
     }
     temp += `<td rowspan="${rowspan}">
-              <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
+              <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
               </br>
-              <a href="javascript:void(0)" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
+              <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
               </br>`;
     if (e.tracking.is_passed)
-      temp += `<a href="javascript:void(0)" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-redo-alt"></i></a>`;
+      temp += `<a href="javascript:void(0)" title="Re-Assessment" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fa fa-edit"></i></a>`;
     else
-      temp += `<a href="javascript:void(0)" style="color:gray;" class="icon"><i class="fas fa-redo-alt"></i></a>`
+      temp += `<a href="javascript:void(0)" title="Re-Assessment" style="color:gray;" class="icon"><i class="fa fa-edit"></i></a>`
     temp += `</td></tr>`;
 
     if (length > 1) {
@@ -321,12 +321,15 @@ function HightLightChangeSlot(id)
     }
   }
 }
-function HightLightChangeCompetency(id)
+function HightLightChangeCompetency(id,level)
 {
-  var list_tr = $('#competency_panel').find('.card-header').find('tr');
-  for (var i = 0; i < list_tr.length; i++) {
-    if(list_tr[i].attributes["data-id-competency"].value == id)
-      list_tr[i].style.backgroundColor = '#FBE5D6'
+  var list_competency = $('#competency_panel').find('.card');
+  for (var i = 0; i < list_competency.length; i++) {
+    if($("#card" + i).attr("data-id-competency") == id)
+    {
+      $("#card" + i).css('backgroundColor','#FBE5D6')
+      $("#collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
+    }
   }
 }
 function checkChangeSlot()
@@ -342,7 +345,7 @@ function checkChangeSlot()
     success: function (response) {
       $.each(response, function (i, e) {
         HightLightChangeSlot(e.slot_id);
-        HightLightChangeCompetency(e.competency_id);
+        HightLightChangeCompetency(e.competency_id,e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
     }
@@ -593,7 +596,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
+        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
         checkStatusFormStaff(status)
