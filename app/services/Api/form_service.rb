@@ -299,14 +299,22 @@ module Api
     end
 
     def save_cds_manager
-      if params[:recommend] && params[:given_point] && params[:slot_id]
-        period_id = Form.find(form_id: params[:form_id]).period_id
+      if params[:recommend] && params[:given_point] && params[:slot_id] && params[:user_id]
+        period_id = Form.find(params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
         if line_manager.present?
-          line_manager.update(recomend: params[:recommend], given_point: params[:given_point], period_id: period_id)
+          line_manager.update(recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
-          LineManager.create!(recomend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
+          approver = Approver.includes(:approver).where(user_id: params[:user_id])
+          all_line_manager = LineManager.where(form_slot_id: form_slot.id)
+          approver.each do |line, i|
+            if line.approver.id == current_user.id
+              LineManager.create!(recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
+            else
+              LineManager.create!(recommend: "", user_id: line.approver.id, form_slot_id: form_slot.id, period_id: period_id)
+            end
+          end
         end
       end
     end
@@ -437,9 +445,8 @@ module Api
         end
         return hash
       end
-
       form_slots.map do |form_slot|
-        recommends = get_recommend(form_slot.line_managers.order(period_id: :desc))
+        recommends = get_recommend(form_slot)
         comments = form_slot.comments.order(created_at: :desc).first
         next unless hash[form_slot.slot_id].nil?
 
@@ -453,31 +460,45 @@ module Api
           recommends: recommends[:recommends],
         }
       end
-
       hash
     end
 
-    def get_recommend(line_managers)
+    def get_recommend(form_slot)
+      line_managers = form_slot.line_managers.order(period_id: :desc)
       hash = {
         is_passed: false,
         recommends: [],
       }
       period_id = 0
-      line_managers.map do |line|
-        break if !period_id.zero? && period_id != line.period_id
-
-        period_id = line.period_id
-        hash[:is_passed] = true if line.final && line.given_point > 2
-        hash[:recommends] << {
-          given_point: line.given_point,
-          recommends: line.recommend,
-          name: User.find(line.user_id).account,
-          flag: line.flag || "red",
-          user_id: line.user_id,
-          is_final: line.final,
-        }
+      approver = []
+      form = Form.find(form_slot.form_id)
+      user = User.find(form.user_id)
+      approver = Approver.includes(:approver).where(user_id: user.id)
+      approver.each_with_index do |approv, i|
+        line = line_managers[i]
+        if (line.blank?)
+          hash[:recommends] << {
+            given_point: "",
+            recommends: "",
+            name: User.find(approv.approver.id).account,
+            flag: "red",
+            user_id: User.find(approv.approver.id).id,
+            is_final: "",
+          }
+        else
+          break if !period_id.zero? && period_id != line.period_id
+          period_id = line.period_id
+          hash[:is_passed] = true if line.final && line.given_point > 2
+          hash[:recommends] << {
+            given_point: line.given_point,
+            recommends: line.recommend,
+            name: User.find(line.user_id).account,
+            flag: line.flag || "red",
+            user_id: line.user_id,
+            is_final: line.final,
+          }
+        end
       end
-
       hash
     end
 
@@ -520,6 +541,7 @@ module Api
         submit_date: form.submit_date || "",
         review_date: form.review_date || "",
         status: form.status,
+        user_id: form.user&.id,
       }
     end
 

@@ -59,7 +59,7 @@ User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password
 User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: 3)
 User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: 3)
 User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
-User.create!(id: 6, email: "hoanphungthe@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
+User.create!(id: 6, email: "hoanpt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
 User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
 User.create!(id: 8, email: "phungnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phung", last_name: "Nguyen Van", account: "phungnv", role_id: "1", company_id: "2")
 User.create!(id: 9, email: "locnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Loc", last_name: "Nguyen Van", account: "locnv", role_id: "2", company_id: "2")
@@ -1218,3 +1218,12 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
+
+Form.create!(id: 3, user_id: 2, _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", is_delete: false, submit_date: "2019-06-20", review_date: "2019-06-30", period_id: 50)
+(1..134).each do |i|
+  form_slot = FormSlot.create!(form_id: 3, slot_id: i, is_passed: 0)
+  Comment.create!(evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: form_slot.id)
+end
+Approver.create!(user_id: 2, approver_id: 3)
+Approver.create!(user_id: 2, approver_id: 1)
+Approver.create!(user_id: 2, approver_id: 11)
