@@ -81,31 +81,34 @@ module Api
       form
     end
 
-    def get_list_cds_assessment_manager
-      user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
-      forms = Form.where(_type: "CDS", status: "Awaiting Review", user_id: user_to_approve_ids).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+    def get_list_cds_review
+      filter = filter_cds_review_list
+      user_ids = User.where(filter[:filter_users]).pluck(:id)
+      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq
+      user_ids = Approver.where(approver_id: current_user.id, user_id: user_ids).pluck(:user_id).uniq
+
+      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
 
       forms.map do |form|
-        {
-          id: form.id,
-          period_name: form.period&.format_name || "New",
-          user_name: form.user&.format_name,
-          project: form.user&.get_project,
-          email: form.user&.email,
-          role_name: form.role&.name,
-          level: form.level,
-          rank: form.rank,
-          title: form.title&.name,
-          submit_date: form.submit_date || "",
-          review_date: form.review_date || "",
-          status: form.status,
-        }
+        format_form_cds_review(form)
       end
     end
 
-    def data_filter_cds_assessment_manager
+    def get_list_cds_approve
+      filter = filter_cds_review_list
+      user_ids = User.where(filter[:filter_users]).pluck(:id)
+      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq
+
+      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+
+      forms.map do |form|
+        format_form_cds_review(form)
+      end
+    end
+
+    def data_filter_cds_review
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
-      hash = {
+      data_filter = {
         companies: [["All", 0]],
         projects: [["All", 0]],
         roles: [["All", 0]],
@@ -118,24 +121,60 @@ module Api
         company = [user.company.name, user.company_id]
         user_arr = [user.format_name, user.id]
         role = [user.role.name, user.role_id]
-        hash[:companies] << company unless hash[:companies].include?(company)
-        hash[:roles] << role unless hash[:roles].include?(role)
-        hash[:users] << user_arr
+        data_filter[:companies] << company unless data_filter[:companies].include?(company)
+        data_filter[:roles] << role unless data_filter[:roles].include?(role)
+        data_filter[:users] << user_arr
       end
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
         project = [project_member.project.desc, project_member.project_id]
-        hash[:projects] << project unless hash[:projects].include?(project)
+        data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(_type: "CDS", status: "Awaiting Review", user_id: user_ids).includes(:period)
+      forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
         period = [form.period.format_name, form.period_id]
-        hash[:periods] << period unless hash[:periods].include?(period)
+        data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
-      hash
+      data_filter
+    end
+
+    def data_filter_cds_approve
+      project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
+      user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
+
+      data_filter = {
+        companies: [["All", 0]],
+        projects: [["All", 0]],
+        roles: [["All", 0]],
+        users: [["All", 0]],
+        periods: [["All", 0]],
+      }
+
+      users = User.where(id: user_ids).includes(:company, :role)
+      users.each do |user|
+        company = [user.company.name, user.company_id]
+        user_arr = [user.format_name, user.id]
+        role = [user.role.name, user.role_id]
+        data_filter[:companies] << company unless data_filter[:companies].include?(company)
+        data_filter[:roles] << role unless data_filter[:roles].include?(role)
+        data_filter[:users] << user_arr
+      end
+
+      project_members.each do |project_member|
+        project = [project_member.project.desc, project_member.project_id]
+        data_filter[:projects] << project unless data_filter[:projects].include?(project)
+      end
+
+      forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
+      forms.each do |form|
+        period = [form.period.format_name, form.period_id]
+        data_filter[:periods] << period unless data_filter[:periods].include?(period)
+      end
+
+      data_filter
     end
 
     def get_list_cds_assessment(user_id = nil)
@@ -467,12 +506,58 @@ module Api
       hash
     end
 
+    def format_form_cds_review(form)
+      {
+        id: form.id,
+        period_name: form.period&.format_name || "New",
+        user_name: form.user&.format_name,
+        project: form.user&.get_project,
+        email: form.user&.email,
+        role_name: form.role&.name,
+        level: form.level,
+        rank: form.rank,
+        title: form.title&.name,
+        submit_date: form.submit_date || "",
+        review_date: form.review_date || "",
+        status: form.status,
+      }
+    end
+
     def filter_cds
       hash = {}
       params[:filter].split(",").map do |filter|
         hash[filter.to_sym] = true
       end
       hash
+    end
+
+    def filter_cds_review_list
+      filter_users = {}
+      filter = {}
+
+      unless params[:user_ids].zero?
+        filter_users[:user_id] = params[:user_ids].split(",").map(&:to_i)
+      end
+
+      # unless params[:role_ids].zero?
+      filter_users[:role_id] = params[:role_ids].split(",").map(&:to_i)
+      # end
+
+      # unless params[:company_ids].zero?
+      filter_users[:company_id] = params[:company_ids].split(",").map(&:to_i)
+      # end
+
+      # unless params[:period_ids].zero?
+      filter[:period_id] = params[:period_ids].split(",").map(&:to_i || 0)
+      # end
+
+      # unless params[:project_ids].zero?
+      filter[:project_id] = params[:project_ids].split(",").map(&:to_i || 0)
+      # end
+
+      filter[:filter_users] = filter_users
+
+      filter
     end
   end
 end
