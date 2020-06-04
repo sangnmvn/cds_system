@@ -15,9 +15,11 @@
         </div>
         <div class="col-10 form-group">
           <select class="form-control" id="period_id">
-            <% @period.each do |pe|%>
+          <% unless @period.nil? %>
+            <% @period.each do |pe| %>
               <option value="<%= pe[:id] %>"><%= pe[:name] %></option>
             <% end %>
+          <% end %>
           </select>
         </div>
       </div>

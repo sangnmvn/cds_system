@@ -1,16 +1,17 @@
 <%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
-<%= javascript_include_tag "form", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag "form_cds_cdp_review", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <nav aria-label="breadcrumb" class="">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
-    <li class="breadcrumb-item active">CDS Assessment</li>
+    <li class="breadcrumb-item active">CDS & CDP Reviewer</li>
+    <input type="hidden" value="<%= current_user.id %>" id="get_current_user_inview">
   </ol>
 </nav>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
-    <div class="col-md-5" ><%= @hash[:title] %></div>
+    <div class="col-md-5" ><%= @hash[:title] unless @hash.nil? %></div>
     <div class="col-md-4" style="text-align:right">
       Search: <input type="text" class="search-assessment" placeholder="Enter ID, Description" style="height: 88%">
     </div>
@@ -45,8 +46,10 @@
 <div><%= render "modal_re_assess" %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+
 <script>
   var form_id = <%= @hash[:form_id] || 0 %>;
+  var user_id = <%= @hash[:user_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = false;
