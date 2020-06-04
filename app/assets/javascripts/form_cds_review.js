@@ -1,6 +1,10 @@
 
 function LoadDataAssessmentListManager()  
 {
+  var data = {
+    search: $('.search-review').val(),
+    filter: ""
+  }
   $.ajax({
     type: "GET",
     url: "/forms/get_list_cds_assessment_manager",
@@ -8,10 +12,13 @@ function LoadDataAssessmentListManager()
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     data: {
+
     },
     dataType: "json",
     success: function (response) {
       var temp = '';
+      if (response.length == 0)
+        temp = `<tr><td colspan="13" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
@@ -41,9 +48,25 @@ function LoadDataAssessmentListManager()
   })
     
 }
-$(document).ready(function()
-{
+function loadFilterReview(){
+  $(".filter_review").click(function() {
+    $(".filter-condition").toggle();
+    if ( $('a.filter_review i').hasClass('fa-chevron-down') )
+      $('a.filter_review i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    else
+      $('a.filter_review i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+  });
+}
+$(document).ready(function(){
   LoadDataAssessmentListManager();
-} 
-
-)
+  loadFilterReview();
+  $("#company_filter").multiselect({
+    enableFiltering: true,
+    filterPlaceholder: 'Search for something...',
+    includeSelectAllOption: true,
+    selectAllValue: 0
+  });
+  $(".search-review").change(function() {
+    LoadDataAssessmentListManager();
+  });
+});

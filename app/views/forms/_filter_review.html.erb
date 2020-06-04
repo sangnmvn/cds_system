@@ -1,0 +1,17 @@
+<div class="row filter-condition">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-1" style="line-height: 200%">
+        Company:
+      </div>
+      <div class="col-4">
+        <select name="company_filter" id="company_filter" class="filter-input" multiple="multiple">
+          <option selected>All</option>
+          <% @companies.each do |c| %>
+            <option value="<%= c.id %>"><%= c.name%></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
