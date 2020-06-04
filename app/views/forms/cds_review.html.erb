@@ -1,60 +1,23 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
+<link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
+<script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
-    <div class="col-10" style="font-size: 150%;">
+    <div class="col-6" style="font-size: 150%;">
       CDS & CDP Review List
     </div>
-  </div>
-  <div class="row">
-    <div class="col-2 filter-title">
-      Company:
-    </div>
-    <div class="col-4">
-      <select name="company_filter" id="company_filter" class="filter-input"></select>
-    </div>
-    <div class="col-4" class="company_token">
+    <div class="col-6" style="text-align:right">
+      Search:
+      <input type="text" class="search-review" placeholder="Enter User Name, Email" style="height: 88%">
+      <a href="javascript:void(0);" style="color:black" class="filter_review">
+        <i class="fas fa-chevron-down"></i>
+        Filter
+      </a>
     </div>
   </div>
-  <div class="row">
-    <div class="col-2 filter-title">
-      Project:
-    </div>
-    <div class="col-4">
-      <select name="project_filter" id="project_filter" class="filter-input"></select>
-    </div>
-    <div class="col-4" class="project_token">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-2 filter-title">
-      Role:
-    </div>
-    <div class="col-4">
-      <select name="role_filter" id="role_filter" class="filter-input"></select>
-    </div>
-    <div class="col-4" class="role_token">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-2 filter-title">
-      User:
-    </div>
-    <div class="col-4">
-      <select name="user_filter" id="user_filter" class="filter-input"></select>
-    </div>
-    <div class="col-4" class="user_token">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-2 filter-title">
-      Period:
-    </div>
-    <div class="col-4">
-      <select name="period_filter" id="period_filter" class="filter-input"></select>
-    </div>
-    <div class="col-4" class="period_token">
-    </div>
+  <div class="col-12 filter-assessment-review">
+    <%= render "filter_review" %>
   </div>
   <div class="row" >
     <div class="col-12" style="">

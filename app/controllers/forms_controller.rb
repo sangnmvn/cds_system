@@ -20,6 +20,7 @@ class FormsController < ApplicationController
   end
 
   def cds_review
+    @companies = Company.select(:id, :name)
   end
 
   def cds_assessment
