@@ -13,10 +13,23 @@ class LevelMappingsController < ApplicationController
   def index
   end
 
+  def add_level
+    title = Title.where(role_id: 1)
+    @list_title = {
+      data: title,
+      no_rank: title.count,
+    }
+  end
+
+  def save_level_mapping
+    return render json: { status: "success" } if @level_mapping_service.save_level_mapping
+    render json: { status: "fail" }
+  end
+
   private
 
   def check_privilege
-    redirect_to root_path unless (@privilege_array & [FULL_ACCESS_ON_LEVEL_MAPPING, VIEW_LEVEL_MAPPING]).any?
+    # redirect_to root_path unless (@privilege_array & [FULL_ACCESS_ON_LEVEL_MAPPING, VIEW_LEVEL_MAPPING]).any?
   end
 
   def level_mapping_service
@@ -24,6 +37,7 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit([:id])
+    params.permit(:id, :title_id, :level, :quantity, :type, :rank)
   end
+
 end

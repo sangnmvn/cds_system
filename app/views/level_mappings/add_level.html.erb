@@ -1,0 +1,91 @@
+<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
+<div class='row'>
+  <div class='col-12'>
+    <table class="table table-responsive-sm table-mytable" id="table_level_mapping">
+      <thead>
+          <tr>
+            <th>Title</th>
+            <th>Rank</th>
+            <th>Level</th>
+            <th class="tr-staff">Required Competencies</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @list_title[:data].each do |item| %>
+          <tr id='<%= item.id %>'>
+            <td><%= item.name %></td>
+            <td><%= item.rank %></td>
+            <td>1</td>
+            <td>
+            <div class="row">
+              <div class='col-3'>
+                <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+              </div>
+              <div class='col-5'>
+                <select class="form-control" id="selectType">
+                  <option value='-1' disabled selected>Competency type</option>
+                  <option value='0'>All</option>
+                  <option value='1'>General</option>
+                  <option value='2'>Special</option>
+                </select>
+              </div>
+              <div class='col-2'>
+                <select class="form-control" id="selectRank">
+                  <option value='-1' disabled selected>Rank</option>
+                  <% @list_title[:no_rank].times do |counter| %>
+                    <option><%= counter+1 %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class='col-2 divIcon'>
+                <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
+                <a type='button' class='btnAction' title='Remove Required' style="display:none" id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+              </div>
+            </div>
+            </td>
+            <td>
+              <a type='button' class='btnAction' title='Add more levels' id="btnAddLevel"><i class='fa fa-plus btnAdd'></i></a>
+              <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel" style="display:none"><i class='fas fa-times btnDel'></i></a>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+    </table>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-12 divButton'>
+    <button class='btn btn-primary btnSave' id="btnSave">Save</button>
+    <button class='btn btn-light border-dark'>Cancel</button>
+  </div>
+</div>
+<!-- The Validate Alert Modal -->
+<div class="modal fade" id="messageValidate">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="color:white">Stop!</h4>
+        <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body divcontent" id="contentMessageValidate">
+          
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer divTable header-myheader">
+        <button type="button" class="btn btn-primary close_modal" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var listRank =[]
+  <% @list_title[:no_rank].times do |counter| %>
+    listRank.push(<%= counter + 1 %>)
+  <% end %>
+</script>

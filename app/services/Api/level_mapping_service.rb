@@ -1,5 +1,5 @@
 module Api
-  class LevelMappingService
+  class LevelMappingService < BaseService
     def initialize(params, current_user)
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
@@ -22,6 +22,26 @@ module Api
           role_id: level_mapping.title&.role&.id,
         }
       end
+    end
+
+    def save_level_mapping
+      @level_mapping = LevelMapping.create(table_level_mapping_params)
+    end
+
+
+    private
+
+    attr_reader :params, :current_user
+
+    def table_level_mapping_params
+      {
+        title_id: params[:title_id].to_i,
+        level: params[:level].to_i,
+        quantity: params[:quantity].to_i,
+        competency_type: params[:type].to_i,
+        rank_number: params[:rank].to_i,
+        updated_by: @current_user.id,
+      }
     end
   end
 end
