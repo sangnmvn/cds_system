@@ -23,7 +23,7 @@ function LoadDataAssessmentListManager()
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
             <td>{no}</td> 
-            <td><a href='#'>{period}</a></td> 
+            <td><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>{period}</a></td> 
             <td>{user_name}</td>
             <td>{project}</td>
             <td>{email}</td>
