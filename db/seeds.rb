@@ -153,9 +153,9 @@ ProjectMember.create!(user_id: 19, project_id: 2, is_managent: "0")
 # Approver.create!(user_id: 4, approver_id: 5)
 # Approver.create!(user_id: 6, approver_id: 1)
 
-Approver.create!(approver_id: 1, user_id: 2)
-Approver.create!(approver_id: 3, user_id: 2)
-Approver.create!(approver_id: 4, user_id: 2)
+# Approver.create!(approver_id: 1, user_id: 2)
+# Approver.create!(approver_id: 3, user_id: 2)
+# Approver.create!(approver_id: 4, user_id: 2)
 
 # Create Title
 # QC

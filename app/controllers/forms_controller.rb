@@ -27,6 +27,7 @@ class FormsController < ApplicationController
   end
 
   def cds_review
+    @companies = Company.all
     @data_filter = if @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
