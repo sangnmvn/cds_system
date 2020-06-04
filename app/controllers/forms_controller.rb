@@ -1,6 +1,7 @@
 class FormsController < ApplicationController
-  before_action :form_service
   layout "system_layout"
+  before_action :form_service
+  before_action :get_privilege_id
   LEVEL_SLOTS = []
   REVIEW_CDS = 16
   APPROVE_CDS = 17
@@ -125,6 +126,21 @@ class FormsController < ApplicationController
       user = form.user
       period = form.period
       CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
+      render json: { status: "success" }
+    else
+      render json: { status: "fail" }
+    end
+  end
+
+  def reviewer_submit
+    approver = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    if approver.update(is_submit_cds: true)
+      approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
+      if approvers.where(is_submit_cds: false).count.zero?
+        return render json: { status: "fail" } unless Form.find(params[:form_id]).update(status: "Awaiting Approval")
+      end
+      user = User.find(params[:user_id])
+      # mail submit
       render json: { status: "success" }
     else
       render json: { status: "fail" }

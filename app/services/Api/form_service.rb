@@ -343,8 +343,8 @@ module Api
     end
 
     def approve_cds
-      form = Form.find(params[:form_id])
-      return "fail" if form.status == "Done" || form.period_id.nil?
+      form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
+      return "fail" if form.nil?
 
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
@@ -370,9 +370,9 @@ module Api
 
         hash[key] += 1
       end
-      form.update(status: "Done")
+      return "success" if form.update(status: "Done")
       # sent email
-      "success"
+      "fail"
     end
 
     def get_data_view_history

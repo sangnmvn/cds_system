@@ -57,10 +57,10 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
 
-User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: "1") if Rails.env.development?
-User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: "1")
-User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: "1")
-User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: "4")
+User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3) if Rails.env.development?
+User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: 3)
+User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: 3)
+User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: 3)
 User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1")
 User.create!(id: 6, email: "hoanphungthe@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1")
 User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1")
@@ -83,6 +83,10 @@ User.create!(id: 23, email: "vuvotruong@bestarion.com", password: "password", pa
 User.create!(id: 24, email: "ninhnguyenthi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ninh", last_name: "Nguyen Thi", account: "ninhnt", role_id: "5", company_id: "4")
 User.create!(id: 25, email: "thangnguyentat@bestarion.com", password: "password", password_confirmation: "password", first_name: "Thang", last_name: "Nguyen Tat", account: "thangnt", role_id: "6", company_id: "4")
 
+ProjectMember.create!(user_id: 1, project_id: 1, is_managent: "0")
+ProjectMember.create!(user_id: 2, project_id: 1, is_managent: "0")
+ProjectMember.create!(user_id: 3, project_id: 1, is_managent: "0")
+ProjectMember.create!(user_id: 4, project_id: 1, is_managent: "0")
 ProjectMember.create!(user_id: 8, project_id: 3, is_managent: "0")
 ProjectMember.create!(user_id: 9, project_id: 3, is_managent: "0")
 ProjectMember.create!(user_id: 10, project_id: 3, is_managent: "0")
@@ -152,10 +156,9 @@ ProjectMember.create!(user_id: 19, project_id: 2, is_managent: "0")
 # Approver.create!(user_id: 4, approver_id: 5)
 # Approver.create!(user_id: 6, approver_id: 1)
 
-# Approver.create!(approver_id: 1, user_id: 6)
-# Approver.create!(approver_id: 1, user_id: 2)
-# Approver.create!(approver_id: 2, user_id: 4)
-# Approver.create!(approver_id: 3, user_id: 5)
+Approver.create!(approver_id: 1, user_id: 2)
+Approver.create!(approver_id: 3, user_id: 2)
+Approver.create!(approver_id: 4, user_id: 2)
 
 # Create Title
 # QC
