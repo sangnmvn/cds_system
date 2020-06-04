@@ -69,6 +69,18 @@ class FormsController < ApplicationController
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
   end
 
+  def cds_cdp_review
+    # binding.pry
+    return if params[:user_id].nil?
+    form = Form.where(id: params[:form_id]).first
+    user = User.includes(:role).find(params[:user_id])
+    @hash = {}
+    @hash[:user_id] = params[:user_id]
+    @hash[:form_id] = form.id
+    @hash[:status] = form.status
+    @hash[:title] = "CDS Review for " + user.role.name + "-" + user.format_name
+  end
+
   def get_cds_assessment
     render json: @form_service.format_data_slots
   end
