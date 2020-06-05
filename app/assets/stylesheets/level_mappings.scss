@@ -8,15 +8,28 @@
     width: 100%;
 }
 
+tr > .static_title_header_col:nth-child(1){
+    width: 200px;
+}
+
+tr > .static_title_header_col:nth-child(2){
+    width: 20px;
+}
+
+tr > .static_title_header_col:nth-child(3){
+    width: 20px;
+}
+
 .table-cds-assessment-manager-list {
     margin: 0 auto;
 }
 
-.table-level-mapping tr td {
+table tr td {
     text-align: center;
     vertical-align: middle;
     border: 1px solid white;
     padding: 0px 10px 0px 10px;
+    width: 100%;
 }
 
 .table-level-mapping tbody tr td:nth-child(1) {
@@ -46,9 +59,6 @@
 .table-level-mapping tbody tr td:nth-child(6) {
     text-align: left;    
 }
-
-
-
 
 .table-level-mapping tr td {
     padding: 0px 10px 0px 10px;

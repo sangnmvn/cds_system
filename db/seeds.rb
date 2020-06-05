@@ -14,6 +14,7 @@ Comment.delete_all
 FormSlot.delete_all
 Form.delete_all
 Slot.delete_all
+TitleMapping.delete_all
 TitleCompetencyMapping.delete_all
 Competency.delete_all
 Template.delete_all
@@ -1216,4 +1217,9 @@ LevelMapping.create!(id: 1, level: 1, quantity: 3, competency_type: "General", r
 LevelMapping.create!(id: 2, level: 1, quantity: 3, competency_type: "General", rank_number: 2, title_id: 1, updated_by: 2)
 LevelMapping.create!(id: 3, level: 1, quantity: 3, competency_type: "General", rank_number: 3, title_id: 1, updated_by: 2)
 
-#TitleMapping.create!(id: 1, title_id: 1001, competency_id: 1, value: "0-1")
+TitleMapping.create!(id: 1, title_id: 1, competency_id: 1, value: 1)
+TitleMapping.create!(id: 2, title_id: 1, competency_id: 2, value: 99)
+TitleMapping.create!(id: 3, title_id: 1, competency_id: 3, value: 100)
+TitleMapping.create!(id: 4, title_id: 1, competency_id: 4, value: 101)
+# edge case
+TitleMapping.create!(id: 5, title_id: 1, competency_id: 5, value: 45)

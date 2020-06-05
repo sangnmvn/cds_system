@@ -18,6 +18,10 @@ class LevelMappingsController < ApplicationController
     @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
   end
 
+  def get_title_mapping_for_new_level_mapping
+    render json: @level_mapping_service.get_title_mapping_for_new_level_mapping
+  end
+
   def add
     title = Title.where(role_id: 1)
     @list_title = {

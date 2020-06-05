@@ -1,6 +1,7 @@
 class Competency < ApplicationRecord
   has_many :slots, dependent: :destroy
   has_many :title_competency_mappings
+  has_many :title_mappings
   belongs_to :template
   validates :name, :_type, presence: true
   validates :name, length: { in: 2..100 }

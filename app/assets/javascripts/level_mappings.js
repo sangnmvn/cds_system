@@ -1,3 +1,14 @@
+function go_to_add_page()
+{
+  role_id = $("#role_select").val();
+  if (role_id == "")
+  {
+    // vang loi
+    return;
+  }
+
+  window.location.href = "/level_mappings/add?role_id=" + role_id;
+}
 function load_role_without_level_mapping()
 {
   var can_edit = $("#can_edit_level_mapping").val() == "true";

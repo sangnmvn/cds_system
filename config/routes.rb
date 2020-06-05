@@ -93,8 +93,11 @@ Rails.application.routes.draw do
   resources :level_mappings do
     collection do
       get "index"
+      get "add"
+      post "save_level_mapping"
       get "get_data_level_mapping"
       get "get_role_without_level_mapping"
+      get "get_title_mapping_for_new_level_mapping"
     end
   end
 

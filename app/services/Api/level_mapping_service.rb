@@ -15,6 +15,22 @@ module Api
       end
     end
 
+    def get_title_mapping_for_new_level_mapping
+      title_mappings = TitleMapping.joins([title: [:level_mappings]], :competency).select("titles.name", "titles.rank", "level_mappings.level", "competencies.name as competency_name", "competencies.id as competency_id", "value")
+
+      title_mappings.map do |title_mapping|
+        {
+          title: title_mapping.name,
+          rank: title_mapping.rank,
+          level: title_mapping.level,
+          competency_name: title_mapping.competency_name,
+          competency_id: title_mapping.competency_id,
+          value: title_mapping.value,
+
+        }
+      end
+    end
+
     def get_data_level_mapping
       level_mappings = Role.joins([titles: [level_mappings: [:user]]])
         .select(:id, :level, :name, :first_name, :last_name, :title_id,

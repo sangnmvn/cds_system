@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'level_mappings.js', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'level_mappings_add.js', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= @can_edit %>>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
@@ -26,6 +27,7 @@
         </tbody>
       </table>
     </div>
+    <%= render "new_table_title_mapping.html"%>
   </div>
 </div>
 <%= render "add_modal" %>
