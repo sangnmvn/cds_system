@@ -77,3 +77,17 @@
   color: #FFF;
   font-size: x-large;
 }
+
+.vr {
+  display: block;
+  width:3px;
+  position: absolute;
+  background-color:#336699;
+  top:0;
+  bottom:0;
+  left:2.5%;
+  z-index: -1;
+}
+.div-table{
+  padding-left: 5%;
+}

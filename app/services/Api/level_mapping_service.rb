@@ -31,38 +31,40 @@ module Api
       end
     end
 
+    # def get_data_level_mapping
+    #   level_mappings = Role.joins([titles: [level_mappings: [:user]]])
+    #     .select(:id, :level, :name, :first_name, :last_name, :title_id,
+    #             "max(rank_number) as no_rank", "MAX(level_mappings.updated_at) as updated_at_max")
+    #     .group(:id, :level, :name, :first_name, :last_name, :title_id, :updated_by)
+    #     .order("MAX(level_mappings.updated_at)")
+
+    #   level_mappings.map.each_with_index do |level_mapping, index|
+    #     title_mapping = Title.joins([title_mappings: [:user]])
+    #       .where(id: level_mapping.title_id)
+    #       .select(:id, :name, :first_name, :last_name,
+    #               "title_mappings.updated_at as updated_at_max")
+    #       .order("title_mappings.updated_at": :desc).limit(1).first
+
+    #     if !title_mapping.nil? && title_mapping.updated_at_max > level_mapping.updated_at_max
+    #       final_updated_at_max = title_mapping.updated_at_max
+    #       updated_by_person_name = title_mapping.first_name + " " + title_mapping.last_name
+    #     else
+    #       final_updated_at_max = level_mapping.updated_at_max
+    #       updated_by_person_name = level_mapping.first_name + " " + level_mapping.last_name
+    #     end
+    #     {
+    #       no: index + 1,
+    #       role: level_mapping.name,
+    #       no_rank: level_mapping.no_rank,
+    #       level: level_mapping.level,
+    #       latest_update: final_updated_at_max&.strftime("%b %d %Y"),
+    #       updated_by: updated_by_person_name,
+    #       role_id: level_mapping.id,
+    #     }
+    #   end
+    # end
     def get_data_level_mapping
-      level_mappings = Role.joins([titles: [level_mappings: [:user]]])
-        .select(:id, :level, :name, :first_name, :last_name, :title_id,
-                "max(rank_number) as no_rank", "MAX(level_mappings.updated_at) as updated_at_max")
-        .group(:id, :level, :name, :first_name, :last_name, :title_id, :updated_by)
-        .order("MAX(level_mappings.updated_at)")
-
-      level_mappings.map.each_with_index do |level_mapping, index|
-        title_mapping = Title.joins([title_mappings: [:user]])
-          .where(id: level_mapping.title_id)
-          .select(:id, :name, :first_name, :last_name,
-                  "title_mappings.updated_at as updated_at_max")
-          .order("title_mappings.updated_at": :desc).limit(1).first
-
-        if !title_mapping.nil? && title_mapping.updated_at_max > level_mapping.updated_at_max
-          final_updated_at_max = title_mapping.updated_at_max
-          updated_by_person_name = title_mapping.first_name + " " + title_mapping.last_name
-        else
-          final_updated_at_max = level_mapping.updated_at_max
-          updated_by_person_name = level_mapping.first_name + " " + level_mapping.last_name
-        end
-
-        {
-          no: index + 1,
-          role: level_mapping.name,
-          no_rank: level_mapping.no_rank,
-          level: level_mapping.level,
-          latest_update: final_updated_at_max&.strftime("%b %d %Y"),
-          updated_by: updated_by_person_name,
-          role_id: level_mapping.id,
-        }
-      end
+      level_mapping = Role.joins(:titles).select(:id, :name, 'count(titles.id) as no_rank').group(:id, :name)
     end
 
     def save_level_mapping
