@@ -3,7 +3,8 @@ function go_to_add_page()
   role_id = $("#role_select").val();
   if (role_id == "")
   {
-    // vang loi
+    $(".error").remove();
+    $("#role_select").after("<div style='margin-left: -8px; font-size: 15px;' class='col-sm-12 error text-danger'>You have to select a Role to continue</div>")
     return;
   }
 
@@ -21,6 +22,8 @@ function load_role_without_level_mapping()
       data: {},
       dataType: "json",
       success: function (response) {
+        $(".error").remove();
+    
         final_html = "<option value=''>Please select a Role</option>";
         
         if (!can_edit) return;
@@ -32,6 +35,7 @@ function load_role_without_level_mapping()
         }
                 
         $("#role_select").html(final_html);
+        
       }
   })
 }
