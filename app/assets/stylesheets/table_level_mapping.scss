@@ -56,3 +56,24 @@
 .row{
   padding: 2px;
 }
+.col-num{
+  padding-left: 2%;
+  .col-title{
+    padding-left: 1%;
+    font-size: x-large ;
+    width: 80%;
+    padding-top: 0.3%;
+  }
+}
+.circle-div {
+	width: 45px;
+	height: 45px;
+	background: #FF6600;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+  border-radius: 25px;
+  text-align: center;
+  padding-top: 5px;
+  color: #FFF;
+  font-size: x-large;
+}

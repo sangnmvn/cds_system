@@ -23,7 +23,7 @@ class LevelMappingsController < ApplicationController
   end
 
   def add
-    title = Title.where(role_id: 1)
+    title = Title.where(role_id: params[:role_id])
     @list_title = {
       data: title,
       no_rank: title.count,
