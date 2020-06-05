@@ -18,7 +18,7 @@ class LevelMappingsController < ApplicationController
     @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
   end
 
-  def add_level
+  def add
     title = Title.where(role_id: 1)
     @list_title = {
       data: title,
@@ -42,6 +42,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit(:id, :title_id, :level, :quantity, :type, :rank)
+    params.permit(:id, :id_level, :title_id, :level, :quantity, :type, :rank)
   end
 end

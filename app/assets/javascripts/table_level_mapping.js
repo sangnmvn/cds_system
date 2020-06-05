@@ -74,7 +74,6 @@ $(document).ready(function () {
     checkData()
   });
   $('#table_level_mapping').on('blur', 'input', function () {
-    debugger
     var num = parseInt($(this).val())
     if(num < 1)
       $(this).val(1)
@@ -99,17 +98,7 @@ $(document).ready(function () {
         list.push(tr[i].children[2].innerHTML)
         list = getDatainRow(listLevelMapping[j].children, list)
         if(list != "")
-        {
-          if(list[3] == "0")
-          {
-            list[3] = "1"
-            saveLevelMapping(list)
-            list[3] = "2"
-            saveLevelMapping(list)
-          }
-          else
-            saveLevelMapping(list)
-        }
+          saveLevelMapping(list)
         else
         {
           $("#contentMessageValidate").html("Has a empty field!");
@@ -118,6 +107,8 @@ $(document).ready(function () {
         }
       }
     }
+    $("#contentMessageValidate").html("Add level mapping has been successed");
+    $("#messageValidate").modal('show');
   })
 });
 function createNewRowLevel (arr)
@@ -216,7 +207,6 @@ function saveLevelMapping (arr)
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      alert("success")
     }
   });
 }

@@ -50,7 +50,13 @@ module Api
     end
 
     def save_level_mapping
-      @level_mapping = LevelMapping.create(table_level_mapping_params)
+      
+      if params[:id_level]
+        level_mapping = LevelMapping.find(params[:id_level])
+        level_mapping.update(table_level_mapping_params)
+      else
+        LevelMapping.create!(table_level_mapping_params)
+      end
     end
 
     private
