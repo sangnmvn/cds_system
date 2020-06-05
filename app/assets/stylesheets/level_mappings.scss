@@ -1,6 +1,13 @@
 // Place all the styles related to the LevelMapping controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.modal-header{
+    padding-top: 9px;
+}
+#role_select{
+    width: 100%;
+}
+
 .table-cds-assessment-manager-list {
     margin: 0 auto;
 }

@@ -1213,7 +1213,7 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
 end
 
 LevelMapping.create!(id: 1, level: 1, quantity: 3, competency_type: "General", rank_number: 1, title_id: 1, updated_by: 2)
-LevelMapping.create!(id: 2, level: 1, quantity: 3, competency_type: "General", rank_number: 2, title_id: 2, updated_by: 2)
-LevelMapping.create!(id: 3, level: 1, quantity: 3, competency_type: "General", rank_number: 3, title_id: 3, updated_by: 2)
+LevelMapping.create!(id: 2, level: 1, quantity: 3, competency_type: "General", rank_number: 2, title_id: 1, updated_by: 2)
+LevelMapping.create!(id: 3, level: 1, quantity: 3, competency_type: "General", rank_number: 3, title_id: 1, updated_by: 2)
 
 #TitleMapping.create!(id: 1, title_id: 1001, competency_id: 1, value: "0-1")

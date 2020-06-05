@@ -94,6 +94,7 @@ Rails.application.routes.draw do
     collection do
       get "index"
       get "get_data_level_mapping"
+      get "get_role_without_level_mapping"
     end
   end
 

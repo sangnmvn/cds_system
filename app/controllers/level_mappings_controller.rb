@@ -10,7 +10,12 @@ class LevelMappingsController < ApplicationController
     render json: @level_mapping_service.get_data_level_mapping
   end
 
+  def get_role_without_level_mapping
+    render json: @level_mapping_service.get_role_without_level_mapping
+  end
+
   def index
+    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
   end
 
   def add_level
@@ -29,7 +34,7 @@ class LevelMappingsController < ApplicationController
   private
 
   def check_privilege
-    # redirect_to root_path unless (@privilege_array & [FULL_ACCESS_ON_LEVEL_MAPPING, VIEW_LEVEL_MAPPING]).any?
+    redirect_to root_path unless (@privilege_array & [FULL_ACCESS_ON_LEVEL_MAPPING, VIEW_LEVEL_MAPPING]).any?
   end
 
   def level_mapping_service
@@ -39,5 +44,4 @@ class LevelMappingsController < ApplicationController
   def level_mapping_params
     params.permit(:id, :title_id, :level, :quantity, :type, :rank)
   end
-
 end
