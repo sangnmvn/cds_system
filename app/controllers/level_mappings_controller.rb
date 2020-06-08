@@ -19,11 +19,14 @@ class LevelMappingsController < ApplicationController
   end
 
   def get_title_mapping_for_new_level_mapping
-    render json: @level_mapping_service.get_title_mapping_for_new_level_mapping
+    params = level_mapping_params
+    role_id = params[:role_id]
+    render json: @level_mapping_service.get_title_mapping_for_new_level_mapping(role_id)
   end
 
   def add
-    title = Title.where(role_id: params[:role_id])
+    @role_id = params[:role_id]
+    title = Title.where(role_id: @role_id)
     @list_title = {
       data: title,
       no_rank: title.count,
@@ -46,6 +49,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit(:id, :id_level, :title_id, :level, :quantity, :type, :rank)
+    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank)
   end
 end

@@ -1,5 +1,7 @@
 module Api
   class LevelMappingService < BaseService
+    include TitleMappingsHelper
+
     def initialize(params, current_user)
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
@@ -15,9 +17,10 @@ module Api
       end
     end
 
-    def get_title_mapping_for_new_level_mapping
-      title_mappings = TitleMapping.joins([title: [:level_mappings]], :competency).select("titles.name", "titles.rank", "level_mappings.level", "competencies.name as competency_name", "competencies.id as competency_id", "value")
-
+    def get_title_mapping_for_new_level_mapping(role_id)
+      title_mappings = TitleMapping.joins([title: [:level_mappings, :role]], :competency)
+        .select("titles.name", "titles.rank", "level_mappings.level", "competencies.name as competency_name", "competencies.id as competency_id", "value", "titles.id as title_id")
+        .where("roles.id": role_id).distinct
       title_mappings.map do |title_mapping|
         {
           title: title_mapping.name,
@@ -25,8 +28,8 @@ module Api
           level: title_mapping.level,
           competency_name: title_mapping.competency_name,
           competency_id: title_mapping.competency_id,
-          value: title_mapping.value,
-
+          value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
+          title_id: title_mapping.title_id,
         }
       end
     end
@@ -63,9 +66,8 @@ module Api
         }
       end
     end
-        
+
     def save_level_mapping
-      
       if params[:id_level]
         level_mapping = LevelMapping.find(params[:id_level])
         level_mapping.update(table_level_mapping_params)

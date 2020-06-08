@@ -20,6 +20,16 @@ tr > .static_title_header_col:nth-child(3){
     width: 20px;
 }
 
+.competency_value
+{
+    width: 70px;
+}
+.dynamic_title_header_col
+{
+    background-color: #FFFF00;
+    color: #000;
+}
+
 .table-cds-assessment-manager-list {
     margin: 0 auto;
 }
@@ -29,7 +39,7 @@ table tr td {
     vertical-align: middle;
     border: 1px solid white;
     padding: 0px 10px 0px 10px;
-    width: 100%;
+    white-space: nowrap;
 }
 
 .table-level-mapping tbody tr td:nth-child(1) {
@@ -39,7 +49,7 @@ table tr td {
 
 .table-level-mapping tbody tr td:nth-child(2) {
     text-align: left;    
-    width: 18%;
+    width: 15%;
 }
 
 .table-level-mapping tbody tr td:nth-child(3) {
