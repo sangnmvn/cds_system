@@ -81,12 +81,17 @@ class FormsController < ApplicationController
     end
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find(params[:user_id])
-    @hash = {}
-    @hash[:user_id] = params[:user_id]
-    @hash[:user_name] = user.format_name
-    @hash[:form_id] = form.id
-    @hash[:status] = form.status
-    @hash[:title] = "CDS Review for " + user.role.name + "-" + user.format_name
+    is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds
+
+    @hash = {
+      user_id: params[:user_id],
+      user_name: user.format_name,
+      form_id: form.id,
+      status: form.status,
+      title: "CDS Review for " + user.role.name + "-" + user.format_name,
+      is_submit: is_submit,
+      is_approval: @privilege_array.include?(APPROVE_CDS),
+    }
   end
 
   def get_cds_assessment
@@ -173,15 +178,16 @@ class FormsController < ApplicationController
           CdsAssessmentMailer.with(staff: user, pm: user_group.user).email_to_pm.deliver_later(wait: 1.minute)
         end
       end
-      render json: { status: "success" }
+      render json: { status: "success", user_name: user.format_name }
     else
       render json: { status: "fail" }
     end
   end
 
   def approve_cds
+    user_name = User.find(params[:user_id]).format_name
     status = @form_service.approve_cds
-    render json: { status: status }
+    render json: { status: status, user_name: user_name }
   end
 
   def reject_cds
