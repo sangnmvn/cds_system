@@ -184,6 +184,12 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
   else
     return;
 }
+function checkTitle(flag) {
+  var title = "Add more evidences";
+  if (flag == "yellow")
+    title = "Cancel request more evidences";
+  return title
+}
 
 // function checkDisableFormSlotsReviewer(is_reviewer) {
 //   if (is_reviewer == true)
@@ -274,7 +280,7 @@ function loadDataSlots(response) {
     temp += `<td rowspan="${rowspan}">
                 <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
                 </br>
-                <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.slot_id}" ><i id="${e.tracking.id}" style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>`;
+                <a id="${e.tracking.id}" href="javascript:void(0)" title="${checkTitle(e.tracking.flag)}" class="flag-cds-assessment icon ${class_flag}" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.slot_id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>`;
 
     temp += `</td></tr>`;
 
@@ -666,7 +672,9 @@ $(document).on("click", ".confirm_yes_request_add_more_evidence", function () {
         fails_message = "Can not cancelled request"
       }
       if (response.status == "success") {
-        $('#' + $(_this).val()).css("color", response.color)
+        $('#' + $(_this).val() + " i").css('color', response.color)
+        $('#' + $(_this).val()).data("click", response.color);
+        $('#' + $(_this).val()).attr("title", checkTitle(response.color))
         warning(success_message)
       } else {
         fails(fails_message);
