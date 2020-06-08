@@ -25,7 +25,7 @@ module Api
       title_mappings.map do |title_mapping|
         {
           title: title_mapping.name,
-          rank: title_mapping.rank,          
+          rank: title_mapping.rank,
           competency_name: title_mapping.competency_name,
           competency_id: title_mapping.competency_id,
           value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
@@ -35,17 +35,17 @@ module Api
     end
 
     def get_data_level_mapping_list
-      level_mappings = Role.joins([titles: [:level_mappings]], :user)
+      roles_with_level_mapping_list = Role.joins([titles: [:level_mappings]], :user)
         .select(:id, :name, :first_name, :last_name,
                 "max(rank_number) as no_rank", :updated_by, "max(roles.updated_at) as updated_at_max")
         .group(:id, :name, :first_name, :last_name, :updated_by)
-      level_mappings.map.each_with_index do |level_mapping, index|
-        final_updated_at_max = level_mapping.updated_at_max
+      roles_with_level_mapping_list.map.each_with_index do |level_mapping, index|
+        final_updated_at = level_mapping.updated_at_max
         {
           no: index + 1,
           role: level_mapping.name,
           no_rank: level_mapping.no_rank,
-          latest_update: final_updated_at_max&.strftime("%b %d %Y"),
+          latest_update: final_updated_at&.strftime("%b %d %Y"),
           updated_by: level_mapping.first_name + " " + level_mapping.last_name,
           role_id: level_mapping.id,
         }
