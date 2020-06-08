@@ -42,35 +42,37 @@ table tr td {
     white-space: nowrap;
 }
 
-.table-level-mapping tbody tr td:nth-child(1) {
+.table-level-mapping_list tbody tr td:nth-child(1) {
     text-align: right;    
-    width: 1%;
+    width: 50px;
 }
 
-.table-level-mapping tbody tr td:nth-child(2) {
+.table-level-mapping_list tbody tr td:nth-child(2) {
     text-align: left;    
-    width: 15%;
+    width: 200px;
 }
 
-.table-level-mapping tbody tr td:nth-child(3) {
+.table-level-mapping_list tbody tr td:nth-child(3) {
     text-align: right;    
-    width: 7%;
+    width: 100px;
 }
 
-.table-level-mapping tbody tr td:nth-child(4) {
+.table-level-mapping_list tbody tr td:nth-child(4) {
     text-align: right;    
-    width: 7%;
+    width: 250px;
 }
 
-.table-level-mapping tbody tr td:nth-child(5) {
+.table-level-mapping_list tbody tr td:nth-child(5) {
     text-align: left;    
+    width: 300px;
 }
 
-.table-level-mapping tbody tr td:nth-child(6) {
-    text-align: left;    
+.table-level-mapping_list tbody tr td:nth-child(6) {
+    text-align: left;  
+    width: 100px;  
 }
 
-.table-level-mapping tr td {
+.table-level-mapping_list tr td {
     padding: 0px 10px 0px 10px;
     border: 1px solid white;
 }
@@ -81,7 +83,7 @@ table tr td {
     border: none;
 }
 
-.table-level-mapping tr td:nth-child(1) {
+.table-level-mapping_list tr td:nth-child(1) {
     width: 1%;
     height: 42px;
   }
