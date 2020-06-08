@@ -280,7 +280,7 @@ function loadDataSlots(response) {
     temp += `<td rowspan="${rowspan}">
                 <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
                 </br>
-                <a id="${e.tracking.id}" href="javascript:void(0)" title="${checkTitle(e.tracking.flag)}" class="flag-cds-assessment icon ${class_flag}" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.slot_id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>`;
+                <a id="${e.tracking.id}" href="javascript:void(0)" title="${checkTitle(e.tracking.flag)}" class="flag-cds-assessment icon ${class_flag}" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.slot_id}" data-recommend="${e.tracking.recommends[i].recommends}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>`;
 
     temp += `</td></tr>`;
 
@@ -468,7 +468,7 @@ function checkStatusFormStaff(status) {
       $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
       $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
       break;
-    case "Awaiting Review":
+    case "Awaiting Approval":
       $("a.submit-assessment .fa-file-import").css("color", "#ccc");
       $('a.submit-assessment').removeClass('submit-assessment');
       $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
@@ -603,6 +603,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
         $('a.submit-assessment').removeClass('submit-assessment');
         checkStatusFormStaff(status)
         checkChangeSlot();
+        checkSubmit();
       } else {
         fails("Can't submit CDS.");
       }
@@ -641,7 +642,8 @@ $(document).on("click", ".flag-cds-assessment", function () {
     $('#modal_request_add_more_evidence').modal('show');
   var form_slot_id = $(this).data("form-slot-id");
   var slot_id = $(this).data("slot-id");
-
+  var recommend = $(this).data("recommend");
+  $('#request_more_evidence_recommend').val(recommend);
   $('.slot_id').html(slot_id);
   $('.confirm_yes_request_add_more_evidence').data("click", $(this).data("click"))
   $('.confirm_yes_request_add_more_evidence').val(form_slot_id);
@@ -656,6 +658,9 @@ $(document).on("click", ".confirm_yes_request_add_more_evidence", function () {
     data: {
       form_slot_id: $(_this).val(),
       form_id: form_id,
+      slot_id: $('#modal_request_add_more_evidence').find(".slot_id").text(),
+      user_id: user_id,
+      recommend: $('#request_more_evidence_recommend').val(),
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")

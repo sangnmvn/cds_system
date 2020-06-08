@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       post "get_cds_histories"
       post "get_data_slot"
       get "get_filter"
+      post "reviewer_submit"
     end
   end
   resources :templates do

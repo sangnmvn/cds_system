@@ -72,6 +72,13 @@ class FormsController < ApplicationController
 
   def cds_cdp_review
     return if params[:user_id].nil?
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
+    @period = schedules.map do |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    end
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find(params[:user_id])
     @hash = {}
@@ -145,7 +152,7 @@ class FormsController < ApplicationController
     if form.update(period_id: params[:period_id], status: "Awaiting Review")
       user = form.user
       period = form.period
-      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
+      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_later(wait: 1.minute)
       render json: { status: "success" }
     else
       render json: { status: "fail" }
@@ -154,13 +161,18 @@ class FormsController < ApplicationController
 
   def reviewer_submit
     approver = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
+    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
     if approver.update(is_submit_cds: true)
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
-      if approvers.where(is_submit_cds: false).count.zero?
-        return render json: { status: "fail" } unless Form.find(params[:form_id]).update(status: "Awaiting Approval")
-      end
       user = User.find(params[:user_id])
-      # mail submit
+      if approvers.where(is_submit_cds: false).where.not(approver_id: user_groups.pluck(:user_id)).count.zero?
+        return render json: { status: "fail" } unless Form.find(params[:form_id]).update(status: "Awaiting Approval")
+        user_groups.each do |user_group|
+          CdsAssessmentMailer.with(staff: user, pm: user_group.user).email_to_pm.deliver_later(wait: 1.minute)
+        end
+      end
       render json: { status: "success" }
     else
       render json: { status: "fail" }
@@ -241,7 +253,7 @@ class FormsController < ApplicationController
 
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
-                  :period_id, :title_history_id, :form_slot_id, :competance_name, :offset,
+                  :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
                   :user_ids, :company_ids, :project_ids, [:period_ids], :role_ids)
   end
 end
