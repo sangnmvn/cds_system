@@ -115,7 +115,9 @@ $(document).ready(function () {
         }
       }
     }
+    saveTitleMapping()
     success("Add level mapping has been successed")
+    window.location.href = "/level_mappings/";
   })
 });
 function createNewRowRequire (count)
