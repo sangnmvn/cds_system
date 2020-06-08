@@ -310,7 +310,7 @@ function loadDataSlots(response) {
     temp = '<td colspan="18" style="text-align:center">No data available in table</td>';
   }
   $('.csd-assessment-table table tbody').html(temp);
-  checkStatusFormStaff(status);
+  checkStatusFormReview(status);
   resizeTextarea();
   checkChangeSlot();
 }
@@ -380,7 +380,7 @@ $(document).on("click", ".card table thead tr", function () {
     dataType: "json",
     success: function (response) {
       loadDataSlots(response);
-      checkStatusFormStaff(status);
+      checkStatusFormReview(status);
     }
   });
 });
@@ -454,11 +454,29 @@ function getParams() {
   return data;
 }
 
-function checkStatusFormStaff(status) {
+function checkStatusFormReview(status) {
+  if (is_approval) {
+    $('a.submit-assessment').css("display", "none");
+    $('a.reject-assessment i').css("color", "#ccc");
+    return;
+  }
+  else {
+    if (is_submit) {
+      $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
+      return;
+    }
+    $('a.approval-assessment').css("display", "none");
+    $('a.reject-assessment').css("display", "none");
+  }
   switch (status) {
-    case "New":
+    case "Awaiting Review":
       break;
     case "Done":
+      $('a.reject-assessment i').css("color", "#ccc");
+      $('a.approval-assessment i').css("color", "#ccc");
+      $('a.reject-assessment').removeClass('reject-assessment');
+      $('a.approval-assessment').removeClass('approval-assessment');
       $("a.preview-result i").css("color", "#ccc");
       $('a.preview-result')[0].href = "#";
       $('a.preview-result')[0].target = "";
@@ -468,27 +486,22 @@ function checkStatusFormStaff(status) {
       $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
       $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
       break;
-    case "Awaiting Approval":
+    case "New":
+      $("a.preview-result i").css("color", "#ccc");
+      $('a.preview-result')[0].href = "#";
+      $('a.preview-result')[0].target = "";
       $("a.submit-assessment .fa-file-import").css("color", "#ccc");
       $('a.submit-assessment').removeClass('submit-assessment');
       $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
       $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
       $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
       break;
+      break;
+    case "Awaiting Approval":
+      break;
   }
 }
 
-function checkStatusFormReview(status) {
-  switch (status) {
-    case "New":
-      // $('a.submit-assessment').addClass('submit-assessment');
-      break;
-    case "Awaiting Review":
-      // $("a.submit-assessment .fa-file-import").css("color","#ccc");
-      // $('a.submit-assessment').removeClass('submit-assessment');
-      break;
-  }
-}
 
 $(document).on("change", ".search-assessment", function () {
   var data = getParams();
@@ -580,30 +593,22 @@ $(document).on("change", ".tr_slot", function () {
 });
 
 $(document).on("click", ".submit-assessment", function () {
-  $('#modal_period').modal('show');
-});
-
-$(document).on("click", "#confirm_submit_cds", function () {
   $.ajax({
     type: "POST",
-    url: "/forms/submit",
+    url: "/forms/reviewer_submit",
     data: {
       form_id: form_id,
-      period_id: parseInt($('#modal_period #period_id').val())
+      user_id: user_id,
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     dataType: "json",
     success: function (response) {
-      $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+        warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
-        checkStatusFormStaff(status)
-        checkChangeSlot();
-        checkSubmit();
       } else {
         fails("Can't submit CDS.");
       }
@@ -611,7 +616,10 @@ $(document).on("click", "#confirm_submit_cds", function () {
   });
 });
 
-// approve cds
+$(document).on("click", ".approval-assessment", function () {
+  $('#modal_approve_cds').modal('show');
+});
+
 $(document).on("click", "#confirm_yes_approve_cds", function () {
   $('#modal_approve_cds').modal('hide');
   $.ajax({
@@ -619,6 +627,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     url: "/forms/approve_cds",
     data: {
       form_id: form_id,
+      user_id: user_id,
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -626,7 +635,9 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        success("This CDS has been approve successfully.");
+        warning(`The CDS assessment of ${response.user_name} has been approved successfully.`);
+        $("a.approval-assessment i").css("color", "#ccc");
+        $('a.approval-assessment').removeClass('approval-assessment');
       } else {
         fails("Can't approve CDS.");
       }

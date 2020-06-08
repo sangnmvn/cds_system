@@ -417,7 +417,7 @@ module Api
       form = Form.where(id: params[:form_id], status: "Done").where.not(period: nil).first
       return "fail" if form.nil?
 
-      title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
+      title_history = TitleHistory.find(params[:title_history_id])
       return "fail" unless title_history.destroy
       return "fail" unless form.update(status: "Awaiting Approval")
       #send mail
