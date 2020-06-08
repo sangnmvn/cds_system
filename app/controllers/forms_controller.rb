@@ -103,7 +103,7 @@ class FormsController < ApplicationController
 
   def request_add_more_evidence
     data = @form_service.request_add_more_evidence
-    return render json: { status: "fail", color: data } if data.present?
+    return render json: { status: "success", color: data } if data.present?
     render json: { status: "fail" }
   end
 
@@ -233,13 +233,16 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params[:offset] = params[:iDisplayStart] || 0
-    params[:user_ids] = params[:user_ids] || 0
-    params[:company_ids] = params[:company_ids] || 0
-    params[:project_ids] = params[:project_ids] || 0
-    params[:period_ids] = params[:period_ids] || 50
-    params[:role_ids] = params[:role_ids] || 0
+    params[:offset] = params[:iDisplayStart] || "0"
+    params[:user_ids] = params[:user_ids] || "0"
+    params[:company_ids] = params[:company_ids] || "0"
+    params[:project_ids] = params[:project_ids] || "0"
+    params[:period_ids] = params[:period_ids] || "50"
+    params[:role_ids] = params[:role_ids] || "0"
 
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name, :offset, :user_ids, :company_ids, :project_ids, [:period_ids], :role_ids)
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
+                  :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
+                  :period_id, :title_history_id, :form_slot_id, :competance_name, :offset,
+                  :user_ids, :company_ids, :project_ids, [:period_ids], :role_ids)
   end
 end

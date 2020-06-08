@@ -629,20 +629,20 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
 
 // request add more evidence
 $(document).on("click", ".flag-cds-assessment", function () {
-  if($(this).data("click") == "yellow")
+  if ($(this).data("click") == "yellow")
     $('#modal_cancel_request_add_more_evidence').modal('show');
-  else 
+  else
     $('#modal_request_add_more_evidence').modal('show');
   var form_slot_id = $(this).data("form-slot-id");
   var slot_id = $(this).data("slot-id");
 
   $('.slot_id').html(slot_id);
-  $('#confirm_yes_request_add_more_evidence').data("click", $(this).data("click"))
-  $('#confirm_yes_request_add_more_evidence').val(form_slot_id);
+  $('.confirm_yes_request_add_more_evidence').data("click", $(this).data("click"))
+  $('.confirm_yes_request_add_more_evidence').val(form_slot_id);
 });
 
-$(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
-  $('#modal_request_add_more_evidence').modal('hide');
+$(document).on("click", ".confirm_yes_request_add_more_evidence", function () {
+  $('#modal_cancel_request_add_more_evidence, #modal_request_add_more_evidence').modal('hide');
   var _this = this;
   $.ajax({
     type: "POST",
