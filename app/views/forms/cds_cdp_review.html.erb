@@ -27,6 +27,8 @@
       </select>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
+      <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approval'.html_safe, "javascript:void(0)", class: "approval-assessment", title: "Approve CDS" %>
+      <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)", class: "reject-assessment", title: "Reject CDS" %>
     </div>
   </div>
 </div>
@@ -52,7 +54,9 @@
   var user_id = <%= @hash[:user_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
-  var is_reviewer = false;
+  var is_submit = "<%= @hash[:is_submit].to_s %>";
+  var is_approval = "<%= @hash[:is_approval].to_s %>";
+  var is_reviewer = true;
   loadDataPanel(form_id);
-  checkStatusFormStaff(status);
+  checkStatusFormReview(status);
 </script>
