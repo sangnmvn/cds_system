@@ -95,4 +95,7 @@ $(document).ready(function () {
   loadDataLevelMapping();
   loadRoleWithoutLevelMapping();
 
+  $("#add_new_level_mapping").on("click", function(){
+    $(".error").remove();
+  });
 })
