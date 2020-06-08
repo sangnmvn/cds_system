@@ -37,7 +37,8 @@ function loadDataAssessment()
             <td>{review_date}</td>
             <td>{status}</td> 
             <td> 
-              <a data-id='{id}' href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a> 
+              <a data-id='{id}' href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+              &nbsp;
               <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
                 <i class='fa fa-trash icon' style='color:red'></i>
               </a> 
@@ -102,6 +103,8 @@ function loadDataFilter() {
       });
       $("#company_filter,#project_filter,#role_filter,#user_filter,#period_filter").bsMultiSelect({});
       customizeFilter();
+      data_filter = apllyFilter();
+      loadDataAssessment(data_filter)
     }
   });
 }
@@ -276,13 +279,8 @@ function customizeFilter() {
 }
 
 $(document).ready(function () {
-  data_filter = {};
-  loadDataAssessment(data_filter);
   loadFilterReview();
   loadDataFilter();
-  // $(".search-review").change(function () {
-    // loadDataAssessment(data_filter);
-  // });
   $(".apply-filter").click(function () {
     data_filter = apllyFilter();
     loadDataAssessment(data_filter);
