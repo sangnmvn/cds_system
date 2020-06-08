@@ -1,0 +1,99 @@
+// Place all the styles related to the LevelMappings controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+#table_level_mapping tbody td {
+  padding: 5px 10px 5px 10px;
+}
+
+#table_level_mapping tbody td:nth-child(1) {
+  width: 30%;
+  text-align: left;
+}
+
+#table_level_mapping tbody td:nth-child(2) {
+  width: 7%;
+  text-align: right;
+}
+
+#table_level_mapping tbody td:nth-child(3) {
+  width: 7%;
+  text-align: right;
+}
+
+#table_level_mapping tbody td:nth-child(4) {
+  width: 45%;
+  text-align: center;
+}
+
+#table_level_mapping tbody td:nth-child(5) {
+  width: 10%;
+  text-align: center;
+}
+
+.tr-staff {
+  background-color: yellow;
+  color: #000;
+  border: 2px solid #4472c4;
+}
+.divButton{
+  text-align: center;
+}
+.btnAdd {
+  color: green;
+  font-size: 20px;
+}
+.btnDel {
+  color: red;
+  font-size: 20px;
+}
+.divIcon{
+  padding: 0px;
+  text-align: left;
+  .a{
+    vertical-align: middle;
+  }
+}
+.row{
+  padding: 2px;
+}
+.col-num{
+  padding-left: 2%;
+  .col-title{
+    padding-left: 1%;
+    font-size: x-large ;
+    width: 80%;
+    padding-top: 0.3%;
+  }
+}
+.circle-div {
+	width: 45px;
+	height: 45px;
+	background: #FF6600;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+  border-radius: 25px;
+  text-align: center;
+  padding-top: 5px;
+  color: #FFF;
+  font-size: x-large;
+}
+
+.vr {
+  display: block;
+  width:3px;
+  position: absolute;
+  background-color:#336699;
+  top:0;
+  bottom:0;
+  left:2.5%;
+  z-index: -1;
+}
+.div-table{
+  padding-left: 5%;
+}
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+}

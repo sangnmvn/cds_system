@@ -35,3 +35,10 @@
 //= link form.js
 //= link form_assessment_list.js
 //= link form_cds_review.js
+//= link level_mappings.css
+//= link level_mappings_list.js
+//= link table_title_mapping.js
+
+//= link table_level_mapping.js
+//= link table_level_mapping.css
+

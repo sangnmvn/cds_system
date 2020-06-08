@@ -99,8 +99,9 @@ class UsersController < ApplicationController
       approver_ids = params[:approver_ids].split(",").map(&:to_i)
     end
     user_id = params[:id].to_i
-    # delete approver not in list
-    Approver.where(user_id: user_id).where.not(approver_id: approver_ids).destroy_all
+
+    Approver.where(user_id: user_id).destroy_all
+
     # add approver in list
     approver_ids.each { |approver_id|
       Approver.create!(user_id: user_id, approver_id: approver_id)

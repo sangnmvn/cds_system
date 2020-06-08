@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'level_mappings_list.js', media: 'all', 'data-turbolinks-track': 'reload' %>
+<input class="d-none" id="can_edit_level_mapping" value=<%= @can_edit %>>
+<div class="container-fluid">
+  <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+    <div class="col-10" style="font-size: 150%;">
+      Level Mapping List
+    </div>
+    <div class="col-2 button-level-mapping" style="text-align: right">
+      <%= link_to(('<button id="add_new_level_mapping" data-toggle="modal" data-target="#addModal" ><img src="../assets/Add.png"> Add</button>').html_safe, 'javascript:void(0)') %>
+    </div>
+    <div class="col-12" style="padding: 0px">
+      <table class="table table-primary table-responsive-sm table-mytable border-table table-level-mapping_list" id="level_mapping_list">
+        <thead>
+          <tr>
+            <td>No.</td>
+            <td>Role</td>
+            <td>No. Rank</td>
+            <td>Latest Update</td>
+            <td>Updated by</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%= render "add_modal" %>

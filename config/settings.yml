@@ -79,5 +79,21 @@ privileges:
         name: "Approve Assessment CDS",
         title_name: "Assessment CDS",
         title_id: 6,
-      }
+      },
+
+    18:
+    {
+      id: 18,
+      name: "Full Access on Level Mapping Management",
+      title_name: "Level Mapping",
+      title_id: 7      
+    },
+
+    19:
+    {
+      id: 19,
+      name: "View Level Mapping Management",
+      title_name: "Level Mapping",
+      title_id: 7      
+    },
   }

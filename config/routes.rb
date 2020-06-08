@@ -90,6 +90,19 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :level_mappings do
+    collection do
+      get "index"
+      get "add"
+      get "edit"
+      post "save_level_mapping"
+      post "save_title_mapping"
+      get "get_data_level_mapping_list"
+      get "get_role_without_level_mapping"
+      get "get_title_mapping_for_new_level_mapping/:role_id", action: "get_title_mapping_for_new_level_mapping"
+    end
+  end
+
   root to: "users#index2"
 
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }

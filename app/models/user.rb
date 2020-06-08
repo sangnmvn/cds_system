@@ -8,6 +8,8 @@ class User < ApplicationRecord
   belongs_to :company
   has_many :forms, :dependent => :destroy
   has_many :user_group, :dependent => :destroy
+  has_many :level_mappings
+  has_many :title_mappings
 
   has_many :approvers, :class_name => "Approver", :foreign_key => "approver_id", :dependent => :destroy
   has_many :approvees, :class_name => "Approver", :foreign_key => "user_id", :dependent => :destroy
@@ -15,6 +17,8 @@ class User < ApplicationRecord
   scope :search_user, ->(search) {
           where("email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
         }
+
+  has_many :roles, :class_name => "Role", :foreign_key => "updated_by", :dependent => :destroy
 
   def format_name
     first_name + " " + last_name

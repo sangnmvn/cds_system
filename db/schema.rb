@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_065301) do
+ActiveRecord::Schema.define(version: 2020_06_05_093224) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
@@ -118,6 +118,18 @@ ActiveRecord::Schema.define(version: 2020_06_01_065301) do
     t.string "privileges"
   end
 
+  create_table "level_mappings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "level"
+    t.integer "quantity"
+    t.string "competency_type"
+    t.integer "rank_number"
+    t.integer "updated_by"
+    t.bigint "title_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["title_id"], name: "index_level_mappings_on_title_id"
+  end
+
   create_table "line_managers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "given_point", limit: 1
     t.text "recommend"
@@ -163,6 +175,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_065301) do
     t.text "desc"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "updated_by"
   end
 
   create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -181,6 +194,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_065301) do
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "_type"
     t.index ["company_id"], name: "index_schedules_on_company_id"
     t.index ["period_id"], name: "index_schedules_on_period_id"
     t.index ["project_id"], name: "index_schedules_on_project_id"
@@ -230,9 +244,21 @@ ActiveRecord::Schema.define(version: 2020_06_01_065301) do
     t.index ["period_id"], name: "index_title_histories_on_period_id"
   end
 
+  create_table "title_mappings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "value"
+    t.integer "updated_by"
+    t.bigint "title_id"
+    t.bigint "competency_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["competency_id"], name: "index_title_mappings_on_competency_id"
+    t.index ["title_id"], name: "index_title_mappings_on_title_id"
+  end
+
   create_table "titles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "desc"
+    t.integer "rank"
     t.bigint "role_id"
     t.index ["role_id"], name: "index_titles_on_role_id"
   end

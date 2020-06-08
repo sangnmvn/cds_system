@@ -307,7 +307,7 @@
   background-color: white;
 }
 .table-preview-result .form-pr-level {
-  background-color: #edebab;
+  background-color: #edebab !important;
 }
 .table-preview-result tbody .form-pr-level {
   text-align: right;
@@ -455,4 +455,47 @@ td.disabled,textarea:disabled,select:disabled{
 }
 .flag-red {
   color: red!important;
+}
+
+
+
+.horizontal-scroll-except-first-column {
+  width: 100%;
+  overflow: auto;
+}
+
+.horizontal-scroll-except-first-column > table {
+  margin-left: 520px;
+}
+
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child{
+  position: absolute;
+  margin-left: -520px;
+  background: #ccc;
+}
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child+th,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child+td{
+  position: absolute;
+  width: 60px;
+  margin-left: -120px;
+  background: #ccc;
+}
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child+th+th,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child+td+td{
+  position: absolute;
+  width: 60px;
+  margin-left: -60px;
+  background: #ccc;
+}
+
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child, 
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child + th, 
+.horizontal-scroll-except-first-column > table > * > tr > th:first-child + th + th,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child + td,
+.horizontal-scroll-except-first-column > table > * > tr > td:first-child + td + td{
+  /* Without this, if a cell wraps onto two lines, the first column
+   * will look bad, and may need padding. */
+  white-space: nowrap;
 }

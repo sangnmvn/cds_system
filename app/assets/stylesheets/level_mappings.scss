@@ -1,0 +1,98 @@
+// Place all the styles related to the LevelMapping controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.modal-header{
+    padding-top: 9px;
+}
+#role_select{
+    width: 100%;
+}
+
+tr > .static_title_header_col:nth-child(1){
+    width: 400px;
+}
+
+tr > .static_title_header_col:nth-child(2){
+    width: 20px;
+}
+
+tr > .static_title_header_col:nth-child(3){
+    width: 20px;
+}
+
+.competency_value
+{
+    width: 150px;
+    text-align: right;
+}
+
+.competency_value > option
+{
+    text-align: right;
+}
+.dynamic_title_header_col
+{
+    background-color: #FFFF00;
+    color: #000;
+}
+
+.table-cds-assessment-manager-list {
+    margin: 0 auto;
+}
+
+table tr td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid white;
+    padding: 0px 10px 0px 10px;
+    white-space: nowrap;
+
+}
+
+.table-level-mapping_list tbody tr td:nth-child(1) {
+    text-align: right;    
+    width: 50px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(2) {
+    text-align: left;    
+    width: 200px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(3) {
+    text-align: right;    
+    width: 100px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(4) {
+    text-align: right;    
+    width: 250px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(5) {
+    text-align: left;    
+    width: 300px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(6) {
+    text-align: left;  
+    width: 100px;  
+}
+
+.table-level-mapping_list tr td {
+    padding: 0px 10px 0px 10px;
+    border: 1px solid white;
+}
+
+.button-level-mapping button {
+    font-size: 90%;
+    background-color: #8da8db;
+    border: none;
+}
+
+.table-level-mapping_list tr td:nth-child(1) {
+    width: 1%;
+    height: 42px;
+  }
+  

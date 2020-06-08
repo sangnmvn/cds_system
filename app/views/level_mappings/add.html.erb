@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
+<div class='row'>
+  <div class='col-12'>
+    <div class='row col-num'>
+      <div class='circle-div'>1</div>
+      <div class='col-title'><b>Title Mapping</b></div>
+    </div>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-12 div-table'><%= render 'new_table_title_mapping'%></div>
+</div>
+<div class='row'>
+  <div class='col-12'>
+    <div class='row col-num'>
+      <div class='circle-div'>2</div>
+      <div class='col-title'><b>Level Mapping</b></div>
+    </div>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-12 div-table'><%= render 'level_mapping'%></div>
+</div>
+<input class='d-none' id="role_id" value='<%= @role_id %>'>

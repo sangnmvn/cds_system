@@ -1,25 +1,25 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(3, 9, "#FAD7A0");
-  drawColorTitleFormPreviewResult(10, 16, "#d4f6ff");
-  drawColorTitleFormPreviewResult(17, 23, "#feffd4");
-  drawColorTitleFormPreviewResult(24, 30, "#d4f6ff");
-  drawColorTitleFormPreviewResult(31, 37, "#FAD7A0");
+  drawColorTitleFormPreviewResult(4, 10, "#FAD7A0");
+  drawColorTitleFormPreviewResult(11, 17, "#d4f6ff");
+  drawColorTitleFormPreviewResult(18, 24, "#feffd4");
+  drawColorTitleFormPreviewResult(25, 31, "#d4f6ff");
+  drawColorTitleFormPreviewResult(32, 38, "#FAD7A0");
   $("[data-toggle=sidebar-colapse]").click(function () {
-    SidebarCollapse();
+    sidebarCollapse();
   });
 
   function drawColorTitleFormPreviewResult(start, end, color) {
     for (i = start; i <= end; i++) {
-      $(".table-preview-result thead tr td:nth-child(" + i + ")").css(
+      $(".table-preview-result thead tr th:nth-child(" + i + ")").css(
         "background-color",
         color
       );
     }
   }
 
-  function SidebarCollapse() {
+  function sidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
     if ($(".card").is(":visible")) {
       $(".card").hide();
@@ -111,7 +111,7 @@ function loadDataPanel(form_id) {
   });
 }
 
-function resize_textarea() {
+function resizeTextarea() {
   $(".autoresizing").on("input", function () {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
@@ -238,8 +238,8 @@ function loadDataSlots(response) {
     }
     temp += ` 
       <tr id="${e.id}" class="tr_slot">
-        <td style="text-align:cent<Slot ID>er" rowspan="${rowspan}">${e.slot_id}</td>
-        <td style="position: relative;" rowspan="${rowspan}">
+        <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>
+        <td style="position: relative; vertical-align: top" rowspan="${rowspan}">
           <div>${e.desc}</div>
           <br>
           <div id="slot_description_${e.slot_id}" style="display: none;">${e.evidence}</div>
@@ -290,14 +290,14 @@ function loadDataSlots(response) {
         <td class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
     }
     temp += `<td rowspan="${rowspan}">
-              <a href="javascript:void(0)" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
+              <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
               </br>
-              <a href="javascript:void(0)" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
+              <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
               </br>`;
     if (e.tracking.is_passed)
-      temp += `<a href="javascript:void(0)" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-redo-alt"></i></a>`;
+      temp += `<a href="javascript:void(0)" title="Re-Assessment" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fa fa-edit"></i></a>`;
     else
-      temp += `<a href="javascript:void(0)" style="color:gray;" class="icon"><i class="fas fa-redo-alt"></i></a>`
+      temp += `<a href="javascript:void(0)" title="Re-Assessment" style="color:gray;" class="icon"><i class="fa fa-edit"></i></a>`
     temp += `</td></tr>`;
 
     if (length > 1) {
@@ -325,27 +325,29 @@ function loadDataSlots(response) {
   }
   $('.csd-assessment-table table tbody').html(temp);
   checkStatusFormStaff(status);
-  resize_textarea();
+  resizeTextarea();
   checkChangeSlot();
 }
-function HightLightChangeSlot(id)
-{
+
+function hightlightChangeSlot(id) {
   var list_tr = $('.csd-assessment-table table tbody').find('.tr_slot');
   for (var i = 0; i < list_tr.length; i++) {
-    if(list_tr[i].id == id)
-    {
-      list_tr[i].children[0].style.color = '#FF6633';
-      //list_tr[i].children[3].style.color = '#33CCFF';
-      //list_tr[i].children[4].style.color = '#33CCFF';
+    if(list_tr[i].id == id) {
+      list_tr[i].children[2].children[0].style.color = '#3366CC'
+      list_tr[i].children[3].children[0].style.color = '#3366CC'
+      list_tr[i].children[4].children[0].style.color = '#3366CC'
     }
   }
 }
-function HightLightChangeCompetency(id)
+function hightlightChangeCompetency(id, level)
 {
-  var list_tr = $('#competency_panel').find('.card-header').find('tr');
-  for (var i = 0; i < list_tr.length; i++) {
-    if(list_tr[i].attributes["data-id-competency"].value == id)
-      list_tr[i].style.backgroundColor = '#FBE5D6'
+  var list_competency = $('#competency_panel').find('.card');
+  for (var i = 0; i < list_competency.length; i++) {
+    if($("#card" + i).attr("data-id-competency") == id)
+    {
+      $("#card" + i).css('backgroundColor','#FBE5D6')
+      $("#collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
+    }
   }
 }
 function checkChangeSlot()
@@ -360,8 +362,8 @@ function checkChangeSlot()
     dataType: "json",
     success: function (response) {
       $.each(response, function (i, e) {
-        HightLightChangeSlot(e.slot_id);
-        HightLightChangeCompetency(e.competency_id);
+        hightlightChangeSlot(e.slot_id);
+        hightlightChangeCompetency(e.competency_id,e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
     }
@@ -582,7 +584,6 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
     var point = $(this).find('.point-select').val();
     var evidence = $(this).find('.evidence').val();
     temp = $(this).children('td:nth-child(1)').text();
-    column_ID = $(this).children('td:nth-child(1)')
     column_commit = $(this).children('td:nth-child(3)');
     column_point = $(this).children('td:nth-child(4)');
     column_evidence = $(this).children('td:nth-child(5)');
@@ -615,10 +616,10 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         else
           current = max;
         $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-        column_ID.css('color','#FF6633');
-        // column_commit.css('color','#33CCFF');
-        // column_point.css('color','#33CCFF');
-        // column_evidence.css('color','#33CCFF');
+        column_commit.children()[0].style.color = '#3366CC'
+        column_evidence.children()[0].style.color = '#3366CC'
+        column_point.children()[0].style.color = '#3366CC'
+        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor','#99CCFF')
       }
     });
   }
@@ -643,7 +644,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submit successfully.");
+        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
         checkStatusFormStaff(status)

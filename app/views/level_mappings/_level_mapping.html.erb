@@ -1,0 +1,71 @@
+<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
+<div class='row'>
+  <div class='col-12'>
+    <table class="table table-responsive-sm table-mytable border-table" id="table_level_mapping">
+      <thead>
+          <tr>
+            <th>Title</th>
+            <th>Rank</th>
+            <th>Level</th>
+            <th class="tr-staff">Required Competencies</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @list_title[:data].each do |item| %>
+          <tr data-title-id='<%= item.id %>'>
+            <td><%= item.name %></td>
+            <td><%= item.rank %></td>
+            <td>1</td>
+            <td>
+            <div class="row">
+              <div class='col-3'>
+                <input type="number" class="form-control" min="1" max="20" placeholder='Quantity'>
+              </div>
+              <div class='col-5'>
+                <select class="form-control" id="selectType">
+                  <option value='-1' disabled selected>Competency type</option>
+                  <option value='0'>All</option>
+                  <option value='1'>General</option>
+                  <option value='2'>Special</option>
+                </select>
+              </div>
+              <div class='col-2'>
+                <select class="form-control" id="selectRank">
+                  <option value='-1' disabled selected>Rank</option>
+                  <% @list_title[:no_rank].times do |counter| %>
+                    <option><%= counter+1 %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class='col-2 divIcon'>
+                <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired">
+                  <i class='fas fa-plus-circle btnAdd'></i>
+                </a>
+                <a type='button' class='btnAction invisible' title='Remove Required' id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+              </div>
+            </div>
+            </td>
+            <td>
+              <a type='button' class='btnAction' title='Add more levels' id="btnAddLevel"><i class='fa fa-plus btnAdd'></i></a>
+              <a type='button' class='btnAction invisible' title='Remove level' id="btnRemoveLevel"><i class='fas fa-times btnDel'></i></a>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+    </table>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-12 divButton'>
+    <button class='btn btn-primary btnSave' id="btnSave">Save</button>
+    <a type='button' class='btn btn-light border-dark' href="/level_mappings/">Cancel</a>
+  </div>
+</div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
+<script>
+  var count = <%= @list_title[:no_rank] %>
+</script>
