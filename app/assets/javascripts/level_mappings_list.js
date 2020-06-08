@@ -45,7 +45,7 @@ function load_data_level_mapping()
     var can_edit = $("#can_edit_level_mapping").val() == "true";
     $.ajax({
         type: "GET",
-        url: "/level_mappings/get_data_level_mapping/",
+        url: "/level_mappings/get_data_level_mapping_list/",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
         },

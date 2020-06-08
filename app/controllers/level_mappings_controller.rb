@@ -6,8 +6,8 @@ class LevelMappingsController < ApplicationController
   FULL_ACCESS_ON_LEVEL_MAPPING = 18
   VIEW_LEVEL_MAPPING = 19
 
-  def get_data_level_mapping
-    render json: @level_mapping_service.get_data_level_mapping
+  def get_data_level_mapping_list
+    render json: @level_mapping_service.get_data_level_mapping_list
   end
 
   def get_role_without_level_mapping

@@ -18,6 +18,8 @@ class User < ApplicationRecord
           where("email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
         }
 
+  has_many :roles, :class_name => "Role", :foreign_key => "updated_by", :dependent => :destroy
+
   def format_name
     first_name + " " + last_name
   end

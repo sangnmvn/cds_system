@@ -36,8 +36,8 @@
 //= link form_assessment_list.js
 //= link form_cds_review.js
 //= link level_mappings.css
-//= link level_mappings.js
-//= link level_mappings_add.js
+//= link level_mappings_list.js
+//= link level_mappings_list_add.js
 
 //= link table_level_mapping.js
 //= link table_level_mapping.css
