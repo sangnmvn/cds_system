@@ -516,3 +516,23 @@ td.disabled,textarea:disabled,select:disabled{
 .badge button span {
   color: red;
 }
+
+.table-cds-assessment-manager-list tbody tr td:nth-child(1) {
+  text-align: right;
+}
+.table-cds-assessment-manager-list tbody tr td:nth-child(2),
+.table-cds-assessment-manager-list tbody tr td:nth-child(3),
+.table-cds-assessment-manager-list tbody tr td:nth-child(4),
+.table-cds-assessment-manager-list tbody tr td:nth-child(5),
+.table-cds-assessment-manager-list tbody tr td:nth-child(6),
+.table-cds-assessment-manager-list tbody tr td:nth-child(7),
+.table-cds-assessment-manager-list tbody tr td:nth-child(8),
+.table-cds-assessment-manager-list tbody tr td:nth-child(9),
+.table-cds-assessment-manager-list tbody tr td:nth-child(10),
+.table-cds-assessment-manager-list tbody tr td:nth-child(11),
+.table-cds-assessment-manager-list tbody tr td:nth-child(12) {
+  text-align: left;
+}
+.table-cds-assessment-manager-list tbody tr td:nth-child(13) {
+  text-align: center;
+}
