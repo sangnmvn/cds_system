@@ -294,7 +294,7 @@ module Api
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, flag: "green")
           line_manager.update(flag: "green")
           period = Form.includes(:period).find(params[:form_id]).period
-          CdsAssessmentMailer.with(slot_id: params[:slot_id], competance_name: params[:competance_name], user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_now
+          CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_later(wait: 1.minute)
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
@@ -303,12 +303,15 @@ module Api
 
     def request_add_more_evidence
       line = LineManager.where(form_slot_id: params[:form_slot_id], user_id: current_user.id).first
+      form = Form.includes(:period).find(params[:form_id])
+      form_slot = FormSlot.includes(:slot).find(params[:form_slot_id])
+      competency_name = Competency.find(form_slot.slot.competency_id).name
+      user = User.find(params[:user_id])
       if line.nil?
-        period_id = Form.find(params[:form_id]).period_id
-        LineManager.create!(form_slot_id: params[:form_slot_id], flag: "yellow", period_id: period_id, user_id: current_user.id)
+        LineManager.create!(form_slot_id: params[:form_slot_id], flag: "yellow", period_id: form.period_id, user_id: current_user.id)
         comment = Comment.find_by(form_slot_id: params[:form_slot_id])
         comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: "yellow") : comment.update(flag: "yellow")
-        # mail request
+        CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, from_date: form.period.from_date, to_date: form.period.to_date).reviewer_requested_more_evidences.deliver_now
         return "yellow"
       end
 
@@ -318,9 +321,9 @@ module Api
       comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: status) : comment.update(flag: status)
 
       if status == "yellow"
-        # mail request
+        CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, from_date: form.period.from_date, to_date: form.period.to_date).reviewer_requested_more_evidences.deliver_now
       else
-        # mail cancel request
+        CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, recommend: params[:recommend]).reviewer_cancelled_request_more_evidences.deliver_now
       end
       status
     end

@@ -677,7 +677,7 @@ $(document).on("click", "#btn_save", function () {
       point: parseInt(point),
       evidence: evidence,
       slot_id: slot_id,
-      competance_name: competency_name,
+      competency_name: competency_name,
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")

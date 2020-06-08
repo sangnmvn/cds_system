@@ -55,6 +55,6 @@
   var status = "<%= @hash[:status] %>";
   var is_reviewer = true;
   var user_current = <%= current_user.id %>;
-  checkStatusFormReview(status);
+  checkStatusFormStaff(status);
   loadDataPanel(form_id,true);
 </script>
