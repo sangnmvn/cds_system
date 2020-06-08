@@ -1,18 +1,20 @@
 
 function LoadDataAssessmentListManager()  
 {
-  var data = {
-    search: $('.search-review').val(),
-    filter: ""
-  }
+  var search = $('.search-review').val();
   $.ajax({
-    type: "GET",
+    type: "POST",
     url: "/forms/get_list_cds_assessment_manager",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     data: {
-
+      search_ids: search,
+      company_ids: data_filter.company,
+      project_ids: data_filter.project,
+      role_ids: data_filter.role,
+      user_ids: data_filter.user,
+      period_ids: data_filter.period,
     },
     dataType: "json",
     success: function (response) {
@@ -57,16 +59,161 @@ function loadFilterReview(){
       $('a.filter_review i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
   });
 }
-$(document).ready(function(){
-  LoadDataAssessmentListManager();
-  loadFilterReview();
-  $("#company_filter").multiselect({
-    enableFiltering: true,
-    filterPlaceholder: 'Search for something...',
-    includeSelectAllOption: true,
-    selectAllValue: 0
+
+function loadDataFilter(){
+  $.ajax({
+    type: "GET",
+    url: "/forms/get_filter",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {},
+    dataType: "json",
+    success: function (response) {
+      $('<option value="0" selected>All</option>').appendTo("#company_filter");
+      $('<option value="0" selected>All</option>').appendTo("#role_filter");
+      if (response.projects.length > 1)
+        $('<option value="0" selected>All</option>').appendTo("#project_filter");
+      $.each(response.companies, function (k,v) {
+        $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");
+      });
+      $.each(response.projects, function (k,v) {
+        if ( k == 0 && response.projects.length == 1)
+          $('<option value="' + v.id + '" selected>' + v.desc + "</option>").appendTo("#project_filter");
+        else
+          $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo("#project_filter");
+      });
+      $.each(response.roles, function (k,v) {
+        $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
+      });
+      $.each(response.users, function (k,v) {
+        $('<option value="' + v.id + '">' + v.last_name + " " + v.first_name + "</option>").appendTo("#user_filter");
+      });
+      $.each(response.periods, function (k,v) {
+        if ( k == 0 )
+          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#period_filter");
+        else 
+          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#period_filter");
+      });
+      $("#company_filter,#project_filter,#role_filter,#user_filter,#period_filter").bsMultiSelect({});
+      customizeFilter();
+    }
   });
+}
+function apllyFilter() {
+  var data = {
+    company: "",
+    project: "",
+    role: "",
+    user: "",
+    period: "",
+  }
+  company = [];
+  project = [];
+  role = [];
+  user = [];
+  period = [];
+  $('#company_filter :selected').each(function (i, sel) {
+    company.push($(sel).val())
+  });
+  data.company = company.join();
+  $('#project_filter :selected').each(function (i, sel) {
+    project.push($(sel).val())
+  });
+  data.project = project.join();
+  $('#role_filter :selected').each(function (i, sel) {
+    role.push($(sel).val())
+  });
+  data.role = role.join();
+  $('#user_filter :selected').each(function (i, sel) {
+    user.push($(sel).val())
+  });
+  data.user = user.join();
+  $('#period_filter :selected').each(function (i, sel) {
+    period.push($(sel).val())
+  });
+  data.period = period.join();
+  return data
+}
+function customizeFilter(){
+  $(".company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function() {
+    max = $('.company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
+    length = $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
+    arr = [];
+    locate_all = 0;
+    all = false;
+    current = $(this).text();
+    for (i = 1 ; i <= length ; i++){
+      text = $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+i+') span').text().slice(0,-1);
+      if (text != "All")
+        arr.push(i)
+      else if ( text == "All") {
+        all = true
+        locate_all = i
+      }
+    }
+    if ( current == "All" ) {
+      $.each(arr, function( index, value ) {
+        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+      });
+      return ""
+    }else if ( current != "All" && locate_all != 0 ) {
+      $.each(arr, function( index, value ) {
+        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+locate_all+') .close').click();
+      });
+    }
+    if (arr.length == max-1 && all == false) {
+      $.each(arr, function( index, value ) {
+        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+      });
+      $('.company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
+    }
+  });
+  $(".role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function() {
+    max = $('.role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
+    length = $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
+    arr = [];
+    locate_all = 0;
+    all = false;
+    current = $(this).text();
+    for (i = 1 ; i <= length ; i++){
+      text = $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+i+') span').text().slice(0,-1);
+      if (text != "All")
+        arr.push(i)
+      else if ( text == "All") {
+        all = true
+        locate_all = i
+      }
+    }
+    if ( current == "All" ) {
+      $.each(arr, function( index, value ) {
+        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+      });
+      return ""
+    }else if ( current != "All" && locate_all != 0 ) {
+      $.each(arr, function( index, value ) {
+        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+locate_all+') .close').click();
+      });
+    }
+    if (arr.length == max-1 && all == false) {
+      $.each(arr, function( index, value ) {
+        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+      });
+      $('.role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
+    }
+  });
+}
+
+$(document).ready(function(){
+  data_filter = {}
+  LoadDataAssessmentListManager(data_filter);
+  loadFilterReview();
+  loadDataFilter();
   $(".search-review").change(function() {
-    LoadDataAssessmentListManager();
+    LoadDataAssessmentListManager(data_filter);
+  });
+  $(".apply-filter").click(function() {
+    data_filter = apllyFilter();
+    LoadDataAssessmentListManager(data_filter);
   });
 });
