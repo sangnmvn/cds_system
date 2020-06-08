@@ -39,10 +39,12 @@ module Api
     def get_slot_change
       form_slots = FormSlot.includes(:slot).where(is_change: true, form_id: params[:form_id])
       arr = Array.new
+
       form_slots.each { |form_slot|
         arr << {
           slot_id: form_slot.slot.id,
           competency_id: form_slot.slot.competency_id,
+          level: form_slot.slot.level.to_i - 1,
         }
       }
       arr
@@ -285,6 +287,7 @@ module Api
         form_slot = FormSlot.includes(:line_managers, :comments).find_by(slot_id: params[:slot_id], form_id: params[:form_id])
         comment = form_slot.comments.first
         line_manager = form_slot.line_managers.find_by_flag("yellow")
+        return false if line_manager.nil?
         approver = User.find(line_manager.user_id)
         is_commit = params[:is_commit] == "true"
         if comment.present?
@@ -296,6 +299,30 @@ module Api
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
       end
+    end
+
+    def request_add_more_evidence
+      line = LineManager.where(form_slot_id: params[:form_slot_id], user_id: current_user.id).first
+      if line.nil?
+        period_id = Form.find(params[:form_id]).period_id
+        LineManager.create!(form_slot_id: params[:form_slot_id], flag: "yellow", period_id: period_id, user_id: current_user.id)
+        comment = Comment.find_by(form_slot_id: params[:form_slot_id])
+        comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: "yellow") : comment.update(flag: "yellow")
+        # mail request
+        return "yellow"
+      end
+
+      status = line.flag == "yellow" ? "red" : "yellow"
+      line.update(flag: status)
+      comment = Comment.find_by(form_slot_id: params[:form_slot_id])
+      comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: status) : comment.update(flag: status)
+
+      if status == "yellow"
+        # mail request
+      else
+        # mail cancel request
+      end
+      status
     end
 
     def save_cds_manager
@@ -378,9 +405,20 @@ module Api
 
         hash[key] += 1
       end
-      return "success" if form.update(status: "Done")
-      # sent email
-      "fail"
+      return "fail" unless form.update(status: "Done")
+      #send mail
+      "success"
+    end
+
+    def reject_cds
+      form = Form.where(id: params[:form_id], status: "Done").where.not(period: nil).first
+      return "fail" if form.nil?
+
+      title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
+      return "fail" unless title_history.destroy
+      return "fail" unless form.update(status: "Awaiting Approval")
+      #send mail
+      "success"
     end
 
     def get_data_view_history
@@ -490,8 +528,8 @@ module Api
           period_id = line.period_id
           hash[:is_passed] = true if line.final && line.given_point > 2
           hash[:recommends] << {
-            given_point: line.given_point,
-            recommends: line.recommend,
+            given_point: line.given_point || 0,
+            recommends: line.recommend || "",
             name: User.find(line.user_id).account,
             flag: line.flag || "red",
             user_id: line.user_id,

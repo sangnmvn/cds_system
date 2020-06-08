@@ -70,12 +70,12 @@ class FormsController < ApplicationController
   end
 
   def cds_cdp_review
-    # binding.pry
     return if params[:user_id].nil?
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find(params[:user_id])
     @hash = {}
     @hash[:user_id] = params[:user_id]
+    @hash[:user_name] = user.format_name
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = "CDS Review for " + user.role.name + "-" + user.format_name
@@ -96,6 +96,12 @@ class FormsController < ApplicationController
 
   def save_add_more_evidence
     return render json: { status: "success" } if @form_service.save_add_more_evidence
+    render json: { status: "fail" }
+  end
+
+  def request_add_more_evidence
+    data = @form_service.request_add_more_evidence
+    return render json: { status: "fail", color: data } if data.present?
     render json: { status: "fail" }
   end
 
@@ -133,8 +139,9 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find(params[:form_id])
+    approvers = Approver.where(user_id: form.user_id).includes(:approver)
+    return render json: { status: "fail" } if approvers.empty?
     if form.update(period_id: params[:period_id], status: "Awaiting Review")
-      approvers = Approver.where(user_id: form.user_id).includes(:approver)
       user = form.user
       period = form.period
       CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
@@ -161,6 +168,11 @@ class FormsController < ApplicationController
 
   def approve_cds
     status = @form_service.approve_cds
+    render json: { status: status }
+  end
+
+  def reject_cds
+    status = @form_service.reject_cds
     render json: { status: status }
   end
 

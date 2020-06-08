@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
       post "save_add_more_evidence"
+      post "request_add_more_evidence"
       post "save_cds_assessment_manager"
       get "cds_review"
       post "submit"
