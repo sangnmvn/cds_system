@@ -229,6 +229,7 @@ function checkDuplicateRequired (td)
       fails('The field is duplicate!')
       td.find('option[value="-1"]').prop('selected', true)
       td.css('color','red')
+      td.find('option').css('color','black')
     }
 }
 function changeBtnSave (bool)
