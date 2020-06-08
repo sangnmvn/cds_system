@@ -34,6 +34,18 @@ class FormsController < ApplicationController
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
       end
+    @companies = Company.select(:id, :name)
+    project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+    @projects = Project.select(:id, :desc).where(id: project_ids)
+    @roles = Role.select(:id, :name)
+    user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
+    @users = User.select(:id, :first_name, :last_name).where(id: user_to_approve_ids)
+    @periods = Period.order(id: :desc).map do |p|
+      {
+        id: p.id,
+        name: p.format_name,
+      }
+    end
   end
 
   def cds_assessment
@@ -42,6 +54,7 @@ class FormsController < ApplicationController
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
+
         id: schedule.period_id,
         name: schedule.period.format_name,
       }
@@ -82,7 +95,7 @@ class FormsController < ApplicationController
     @hash[:title] = "CDS Review for " + user.role.name + "-" + user.format_name
   end
 
-  def get_cds_assessment
+  def get_cds_assessmentbinding.pry
     render json: @form_service.format_data_slots
   end
 
@@ -209,7 +222,20 @@ class FormsController < ApplicationController
     @hash[:status] = form.status
   end
 
-  def re_assess_slot
+  def get_filter
+    companies = Company.select(:id, :name)
+    project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+    projects = Project.select(:id, :desc).where(id: project_ids)
+    roles = Role.select(:id, :name)
+    user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
+    users = User.select(:id, :first_name, :last_name).where(id: user_to_approve_ids)
+    periods = Period.order(id: :desc).map do |p|
+      {
+        id: p.id,
+        name: p.format_name,
+      }
+    end
+    render json: { companies: companies, projects: projects, roles: roles, users: users, periods: periods }
   end
 
   private
@@ -221,10 +247,10 @@ class FormsController < ApplicationController
   def form_params
     params[:offset] = params[:iDisplayStart] || 0
     params[:user_ids] = params[:user_ids] || 0
-    params[:company_ids] = params[:company_ids] || "3"
-    params[:project_ids] = params[:project_ids] || "1"
-    params[:period_ids] = params[:period_ids] || "50"
-    params[:role_ids] = params[:role_ids] || "1"
+    params[:company_ids] = params[:company_ids] || 0
+    params[:project_ids] = params[:project_ids] || 0
+    params[:period_ids] = params[:period_ids] || 50
+    params[:role_ids] = params[:role_ids] || 0
 
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name, :offset, :user_ids, :company_ids, :project_ids, [:period_ids], :role_ids)
   end
