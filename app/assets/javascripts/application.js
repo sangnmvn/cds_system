@@ -53,6 +53,14 @@ function fails(content) {
     $("#alert-danger").fadeOut(1000);
   }, 5000);
 }
+// alert warning
+function warning(content) {
+  $("#content-alert-warning").html(content);
+  $("#alert-warning").fadeIn();
+  window.setTimeout(function () {
+    $("#alert-warning").fadeOut(1000);
+  }, 5000);
+}
 // get parameter
 function findGetParameter(parameterName) {
   var result = null,

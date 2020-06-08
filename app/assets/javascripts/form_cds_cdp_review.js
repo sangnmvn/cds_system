@@ -274,8 +274,7 @@ function loadDataSlots(response) {
     temp += `<td rowspan="${rowspan}">
                 <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
                 </br>
-                <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
-                `;
+                <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${e.tracking.flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.slot_id}" ><i id="${e.tracking.id}" style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>`;
 
     temp += `</td></tr>`;
 
@@ -535,7 +534,7 @@ $(document).on("change", ".tr_slot", function () {
     column_commit = $(this).children('td:nth-child(3)');
     column_point = $(this).children('td:nth-child(4)');
     column_recommend = $(this).children('td:nth-child(5)');
- 
+
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_manager",
@@ -604,6 +603,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     }
   });
 });
+
 // approve cds
 $(document).on("click", "#confirm_yes_approve_cds", function () {
   $('#modal_approve_cds').modal('hide');
@@ -627,88 +627,50 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
   });
 });
 
+// request add more evidence
 $(document).on("click", ".flag-cds-assessment", function () {
-  if ($(this).data("click") != "yellow")
-    return;
+  if($(this).data("click") == "yellow")
+    $('#modal_cancel_request_add_more_evidence').modal('show');
+  else 
+    $('#modal_request_add_more_evidence').modal('show');
   var form_slot_id = $(this).data("form-slot-id");
   var slot_id = $(this).data("slot-id");
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_data_slot",
-    data: {
-      form_slot_id: form_slot_id,
-    },
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      $('#modal_add_more_evidence').modal('show');
-      $('#add_more_evidence_competency_name').text(response.competency_name);
-      $('#add_more_evidence_slot_id').text(response.slot_id);
-      $('#add_more_evidence_slot_desc').text(response.slot_desc);
-      $('#add_more_evidence_evidence_guildeline').text(response.slot_evidence);
-      $('#add_more_evidence_reviewer').text(response.reviewer_name);
-      $('#add_more_evidence_out').text(response.line_given_point);
-      $('#add_more_evidence_recommends').text(response.line_recommends);
-      $('#add_more_evidence_commit option[value=' + response.comment_is_commit + ']').prop("selected", true);
-      $('#add_more_evidence_self_assessment option[value=' + response.comment_point + ']').prop("selected", true);
-      $('#add_more_evidence_evidence').text(response.comment_evidence);
-      $('#add_more_evidence_id').val(slot_id);
-    }
-  });
+
+  $('.slot_id').html(slot_id);
+  $('#confirm_yes_request_add_more_evidence').data("click", $(this).data("click"))
+  $('#confirm_yes_request_add_more_evidence').val(form_slot_id);
 });
 
-$(document).on("click", "#btn_save", function () {
-  is_commit = $('#add_more_evidence_commit').find('.commit-select').val() != "0"
-  point = $('#add_more_evidence_self_assessment').find('.point-select').val();
-  evidence = $('#add_more_evidence_evidence').val();
-  slot_id = $('#add_more_evidence_id').val();
-  competency_name = $('#add_more_evidence_competency_name').text();
+$(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
+  $('#modal_request_add_more_evidence').modal('hide');
+  var _this = this;
   $.ajax({
     type: "POST",
-    url: "/forms/save_add_more_evidence",
+    url: "/forms/request_add_more_evidence",
     data: {
+      form_slot_id: $(_this).val(),
       form_id: form_id,
-      is_commit: is_commit,
-      point: parseInt(point),
-      evidence: evidence,
-      slot_id: slot_id,
-      competance_name: competency_name,
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     dataType: "json",
     success: function (response) {
-      $('#modal_add_more_evidence').modal('hide');
-      loadDataPanel(form_id);
+      var success_message = ""
+      var fails_message = ""
+      if (response.color == "yellow") {
+        success_message = "This slot has been requested more evidence successfully.";
+        fails_message = "Can not requested"
+      } else {
+        success_message = "This slot has been cancelled requesting more evidence successfully.";
+        fails_message = "Can not cancelled request"
+      }
+      if (response.status == "success") {
+        $('#' + $(_this).val()).css("color", response.color)
+        warning(success_message)
+      } else {
+        fails(fails_message);
+      }
     }
   });
-});
-// re-assess slot
-$(document).on("click", ".modal-view-re-assess", function () {
-  $('#modal_re_assess_slots').modal('show');
-  var slot_id = $(this).data("slot-id");
-  var id = $(this).data("id");
-  id = $(".card").find('.show').attr('id').split("collapse");
-  competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
-  competency_name = $.trim(competency_name);
-
-  $('#competency_name_re_assess').text(competency_name);
-  $('#slot_id_re_assess').text(slot_id);
-  $('#confirm_yes_re_assess_slot').val($(this).data("id"));
-});
-
-$(document).on("click", "#confirm_yes_re_assess_slot", function () {
-  $('#modal_re_assess_slots').modal('hide');
-  slot_id = $(this).val();
-  $('#' + slot_id).find('.modal-view-re-assess').css('color', 'gray')
-  $('#' + slot_id).find('.modal-view-re-assess').removeClass('modal-view-re-assess')
-  $($('#' + slot_id).children()[2]).removeClass('disabled')
-  $($('#' + slot_id).children()[2]).find('select').prop('disabled', false);
-  $($('#' + slot_id).children()[3]).removeClass('disabled')
-  $($('#' + slot_id).children()[3]).find('select').prop('disabled', false);
-  $($('#' + slot_id).children()[4]).removeClass('disabled')
-  $($('#' + slot_id).children()[4]).find('textarea').prop('disabled', false);
 });
