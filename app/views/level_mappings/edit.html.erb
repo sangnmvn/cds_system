@@ -1,5 +1,4 @@
 <%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <div class='row'>
   <div class='col-12'>
     <div class='row col-num'>
@@ -20,6 +19,7 @@
   </div>
 </div>
 <div class='row'>
-  <div class='col-12 div-table'><%= render 'level_mapping'%></div>
+  <div class='col-12 div-table'><%= render 'edit_level_mapping'%></div>
 </div>
-<input class='d-none' id="role_id" value='<%= @role_id %>'>
+<div class="vr"></div>
+

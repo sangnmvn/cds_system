@@ -10,15 +10,16 @@
         text-align: center;
     }
 
-    thead {
+    thead{
         color: #fff;
         font-size: large;
         font-weight: bold;
         background-color: #3A5FCD;
+        border: 2px solid #0066CC;
     }
 
     table {
-        border: 2px solid #000;
+        border: 2px solid #0066CC;
     }
 
     th,

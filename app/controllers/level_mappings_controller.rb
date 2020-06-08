@@ -33,6 +33,11 @@ class LevelMappingsController < ApplicationController
     }
   end
 
+  def edit
+    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id])
+    @level_mappings = level_mappings.order("titles.rank",:level)
+  end
+
   def save_level_mapping
     return render json: { status: "success" } if @level_mapping_service.save_level_mapping
     render json: { status: "fail" }
