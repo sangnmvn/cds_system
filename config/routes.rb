@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   resources :forms do
     collection do
       get "get_list_cds_assessment"
-      get "get_list_cds_assessment_manager"
+      post "get_list_cds_assessment_manager"
       get "preview_result"
       post "get_competencies"
       get "cds_assessment"
@@ -62,6 +62,7 @@ Rails.application.routes.draw do
       post "approve_cds"
       post "get_cds_histories"
       post "get_data_slot"
+      get "get_filter"
     end
   end
   resources :templates do

@@ -499,3 +499,20 @@ td.disabled,textarea:disabled,select:disabled{
    * will look bad, and may need padding. */
   white-space: nowrap;
 }
+
+// cds review
+.item-filter-review {
+  margin: 10px 0 10px 0;
+}
+.badge {
+  border: 1px solid black;
+  padding-left: 5px!important;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+.badge span {
+  padding-right: 5px;
+}
+.badge button span {
+  color: red;
+}
