@@ -23,7 +23,7 @@ class CdsAssessmentMailer < ApplicationMailer
 
   def user_add_more_evidence
     @slot_id = params[:slot_id]
-    @competency_name = params[:competance_name]
+    @competency_name = params[:competency_name]
     user = params[:user]
     @firstname = user.first_name
     @lastname = user.last_name.split(" ").map { |x| x.chr }.join
@@ -40,10 +40,8 @@ class CdsAssessmentMailer < ApplicationMailer
   end
 
   def reviewer_requested_more_evidences
-    CdsAssessmentMailer.with(slot_id: params[:slot_id], competance_name: params[:competance_name], staff: current_user, from_date: period.from_date, to_date: period.to_date).reviewer_requested_more_evidences.deliver_now
-
     @slot_id = params[:slot_id]
-    @competency_name = params[:competance_name]
+    @competency_name = params[:competency_name]
     staff = params[:staff]
     @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
     @from_date = params[:from_date]
@@ -54,15 +52,23 @@ class CdsAssessmentMailer < ApplicationMailer
   end
 
   def reviewer_cancelled_request_more_evidences
-    CdsAssessmentMailer.with(slot_id: params[:slot_id], competance_name: params[:competance_name], staff: current_user, recommend: recommend).reviewer_cancelled_request_more_evidences.deliver_now
-
     @slot_id = params[:slot_id]
-    @competency_name = params[:competance_name]
+    @competency_name = params[:competency_name]
     staff = params[:staff]
     @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
     @recommend = params[:recommend]
     @emails = staff.email
 
     mail(to: @emails, subject: "[CDS system] Cancel the request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+  end
+
+  def email_to_pm
+    pm = params[:pm]
+    @pm_name = pm.first_name + pm.last_name.split(" ").map { |x| x.chr }.join
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @emails = pm.email
+
+    mail(to: @emails, subject: "[CDS system] Notify to approve CDS for#{@staff_name}")
   end
 end
