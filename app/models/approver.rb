@@ -8,7 +8,7 @@ class Approver < ApplicationRecord
 
   def check_3_reviewers
     reviewer_count = Approver.where(user_id: user_id).length
-    if reviewer_count >= 3
+    if reviewer_count > 3
       errors.add(:approver_id, "An user can only have 3 reviewers")
     end
   end

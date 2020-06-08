@@ -595,23 +595,23 @@ module Api
       filter_users = {}
       filter = {}
 
-      unless params[:user_ids].zero?
+      unless params[:user_ids] == "0"
         filter_users[:id] = params[:user_ids].split(",").map(&:to_i)
       end
 
-      unless params[:role_ids].zero?
+      unless params[:role_ids] == "0"
         filter_users[:role_id] = params[:role_ids].split(",").map(&:to_i)
       end
 
-      unless params[:company_ids].zero?
+      unless params[:company_ids] == "0"
         filter_users[:company_id] = params[:company_ids].split(",").map(&:to_i)
       end
 
-      unless params[:period_ids].zero?
+      unless params[:period_ids] == "0"
         filter[:period_id] = params[:period_ids].split(",").map(&:to_i || 0)
       end
 
-      unless params[:project_ids].zero?
+      unless params[:project_ids] == "0"
         filter[:project_id] = params[:project_ids].split(",").map(&:to_i || 0)
       end
 
