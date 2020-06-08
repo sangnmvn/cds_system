@@ -67,19 +67,12 @@ function loadTitleMappingForAdd() {
                         // find competency data suitable for competency column cell
                         if (data_list[k].competency_name == current_cell_competency_name) {
                             value_dropdown = `<select class='competency_value'> 
-                            <option value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
+                            <option selected value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
                             <option value='1-2'>1-2</option><option value='++2'>++2</option><option value='2'>2</option>
                             <option value='2-3'>2-3</option><option value='++3'>++3</option><option value='3'>3</option>
                             <option value='4-5'>4-5</option><option value='++4'>++4</option><option value='4'>4</option>
-                            <option value='5-6'>0-1</option><option value='++5'>++5</option><option value='5'>5</option>
+                            <option value='5-6'>5-6</option><option value='++5'>++5</option><option value='5'>5</option>
                             </select>`;
-                            competency_value = data_list[k].value;
-                            // select value from drop down
-                            position_to_insert = value_dropdown.indexOf(" value='{value}'".formatUnicorn({
-                                value: competency_value
-                            }))
-                            value_dropdown = value_dropdown.slice(0, position_to_insert) + " selected " + value_dropdown.slice(position_to_insert)
-                            //
                             final_html += "<td>{value_dropdown}</td>".formatUnicorn({
                                 value_dropdown: value_dropdown
                             });

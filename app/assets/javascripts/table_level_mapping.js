@@ -264,6 +264,49 @@ function saveLevelMapping (arr)
     }
   });
 }
+
+function saveTitleMapping()
+{
+  record = [];
+  $(".table-new-title-mapping > tbody > tr").each(function()
+  {
+    current_row = $(this);
+    title_id = current_row.data("title_id");
+    competency_ids = []
+    $(".dynamic_title_header_col").each(function(){
+      competency_ids.push($(this).data("competency-id"));
+    })
+    
+    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value'.formatUnicorn({title_id: title_id})
+
+    for (i=0; i < competency_ids.length; i++)
+    {
+      var current_competency_id = competency_ids[i];      
+            
+      value = $(element_to_read)[i].value;
+      current_data = {value: value, title_id: title_id, competency_id: current_competency_id};
+      record.push(current_data);      
+    }
+    
+  }  
+  );  
+  
+  var status;
+  $.ajax({    
+    type: "POST",
+    url: "/level_mappings/save_title_mapping/" ,
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+    },
+    data: {records: record},
+    dataType: "json",
+    success: function (response) {
+      status = response['status']
+    }
+  })
+
+  return status;
+}
 function getDatainRow (lst,list)
 {
   var length = lst.length;

@@ -43,6 +43,11 @@ class LevelMappingsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def save_title_mapping
+    return render json: { status: "success" } if @level_mapping_service.save_title_mapping(params)
+    render json: { status: "fail" }
+  end
+
   private
 
   def check_privilege

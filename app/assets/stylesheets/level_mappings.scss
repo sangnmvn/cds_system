@@ -1,6 +1,7 @@
 // Place all the styles related to the LevelMapping controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
 .modal-header{
     padding-top: 9px;
 }
@@ -9,7 +10,7 @@
 }
 
 tr > .static_title_header_col:nth-child(1){
-    width: 200px;
+    width: 400px;
 }
 
 tr > .static_title_header_col:nth-child(2){
@@ -22,7 +23,13 @@ tr > .static_title_header_col:nth-child(3){
 
 .competency_value
 {
-    width: 70px;
+    width: 150px;
+    text-align: right;
+}
+
+.competency_value > option
+{
+    text-align: right;
 }
 .dynamic_title_header_col
 {
@@ -40,6 +47,7 @@ table tr td {
     border: 1px solid white;
     padding: 0px 10px 0px 10px;
     white-space: nowrap;
+    overflow: scroll;
 }
 
 .table-level-mapping_list tbody tr td:nth-child(1) {

@@ -8,7 +8,6 @@ module Api
     end
 
     def get_role_without_level_mapping
-      #roles = Role.left_joins([titles: [:level_mappings]]).select(:id, :name).distinct.where("level_mappings.id": nil)
       roles = Role.select(:id, :name).where(updated_by: nil)
       roles.map do |role|
         {
@@ -19,17 +18,18 @@ module Api
     end
 
     def get_title_mapping_for_new_level_mapping(role_id)
-      title_mappings = TitleMapping.joins([title: [:role]], :competency)
-        .select("titles.name", "titles.rank", "competencies.name as competency_name", "competencies.id as competency_id", "value", "titles.id as title_id")
-        .where("roles.id": role_id).distinct
+      title_mappings = Title.joins(role: [templates: [:competencies]])
+        .select(:id, :name, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "max(templates.updated_at)")
+        .group(:id, :name, :rank, "competencies.name", "competencies.id")
+        .where(role_id: role_id)
+
       title_mappings.map do |title_mapping|
         {
           title: title_mapping.name,
           rank: title_mapping.rank,
           competency_name: title_mapping.competency_name,
           competency_id: title_mapping.competency_id,
-          value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
-          title_id: title_mapping.title_id,
+          title_id: title_mapping.id,
         }
       end
     end
@@ -50,6 +50,32 @@ module Api
           role_id: level_mapping.id,
         }
       end
+    end
+
+    def save_title_mapping(params)
+      #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
+      current_user_id = current_user.id
+
+      records = params["records"]
+      all_title_ids = []
+      all_title_ids = records.keys.collect { |key| records[key]["title_id"] }.uniq
+      TitleMapping.where(title_id: all_title_ids).destroy_all
+      records.each do |key, hash|
+        processed_params = {
+          value: TitleMappingsHelper.convert_value_title_mapping(hash["value"]),
+          updated_by: current_user_id,
+          title_id: hash["title_id"],
+          competency_id: hash["competency_id"],
+        }
+        TitleMapping.create!(processed_params)
+      end
+
+      # update updated_by
+      parent_role_id = Title.find(records["0"]["title_id"]).role_id
+      role = Role.find(parent_role_id)
+      role.updated_by = current_user_id
+      role.save!
+      true
     end
 
     def save_level_mapping
