@@ -42,3 +42,5 @@
 //= link table_level_mapping.js
 //= link table_level_mapping.css
 
+
+//= link form_cds_cdp_review.js

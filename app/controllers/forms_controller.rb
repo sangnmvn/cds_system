@@ -1,14 +1,22 @@
 class FormsController < ApplicationController
-  before_action :form_service
   layout "system_layout"
-  LEVEL_SLOTS = ["1A", "1B", "1C", "1D", "1E", "1F", "1G", "2A", "2B", "2C", "2D", "2E", "2F", "2G", "3A", "3B", "3C", "3D", "3E", "3F", "3G", "4A", "4B", "4C", "4D", "4E", "4F", "4G", "5A", "5B", "5C", "5D", "5E", "5F", "5G"]
+  before_action :form_service
+  before_action :get_privilege_id
+  LEVEL_SLOTS = []
+  REVIEW_CDS = 16
+  APPROVE_CDS = 17
 
   def index
     
   end
 
   def get_list_cds_assessment_manager
-    render json: @form_service.get_list_cds_assessment_manager
+    data = if @privilege_array.include?(APPROVE_CDS)
+        @form_service.get_list_cds_approve
+      elsif @privilege_array.include?(REVIEW_CDS)
+        @form_service.get_list_cds_review
+      end
+    render json: data
   end
 
   def get_list_cds_assessment
@@ -20,6 +28,12 @@ class FormsController < ApplicationController
   end
 
   def cds_review
+    @companies = Company.all
+    @data_filter = if @privilege_array.include?(APPROVE_CDS)
+        @form_service.data_filter_cds_approve
+      elsif @privilege_array.include?(REVIEW_CDS)
+        @form_service.data_filter_cds_review
+      end
   end
 
   def cds_assessment
@@ -28,6 +42,7 @@ class FormsController < ApplicationController
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
+
         id: schedule.period_id,
         name: schedule.period.format_name,
       }
@@ -56,6 +71,30 @@ class FormsController < ApplicationController
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
   end
 
+  def cds_cdp_review
+    return if params[:user_id].nil?
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
+    @period = schedules.map do |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    end
+    form = Form.where(id: params[:form_id]).first
+    user = User.includes(:role).find(params[:user_id])
+    is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds
+
+    @hash = {
+      user_id: params[:user_id],
+      user_name: user.format_name,
+      form_id: form.id,
+      status: form.status,
+      title: "CDS Review for " + user.role.name + "-" + user.format_name,
+      is_submit: is_submit,
+      is_approval: @privilege_array.include?(APPROVE_CDS),
+    }
+  end
+
   def get_cds_assessment
     render json: @form_service.format_data_slots
   end
@@ -74,9 +113,19 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def request_add_more_evidence
+    data = @form_service.request_add_more_evidence
+    return render json: { status: "success", color: data } if data.present?
+    render json: { status: "fail" }
+  end
+
   def save_cds_assessment_manager
     return render json: { status: "success" } if @form_service.save_cds_manager
     render json: { status: "fail" }
+  end
+
+  def get_data_filter_cds_assessment_manager
+    render json: @form_service.data_filter_cds_assessment_manager
   end
 
   def get_data_slot
@@ -104,19 +153,46 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find(params[:form_id])
+    approvers = Approver.where(user_id: form.user_id).includes(:approver)
+    return render json: { status: "fail" } if approvers.empty?
     if form.update(period_id: params[:period_id], status: "Awaiting Review")
-      approvers = Approver.where(user_id: form.user_id).includes(:approver)
       user = form.user
       period = form.period
-      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_now
+      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_later(wait: 1.minute)
       render json: { status: "success" }
     else
       render json: { status: "fail" }
     end
   end
 
+  def reviewer_submit
+    approver = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
+    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
+    if approver.update(is_submit_cds: true)
+      approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
+      user = User.find(params[:user_id])
+      if approvers.where(is_submit_cds: false).where.not(approver_id: user_groups.pluck(:user_id)).count.zero?
+        return render json: { status: "fail" } unless Form.find(params[:form_id]).update(status: "Awaiting Approval")
+        user_groups.each do |user_group|
+          CdsAssessmentMailer.with(staff: user, pm: user_group.user).email_to_pm.deliver_later(wait: 1.minute)
+        end
+      end
+      render json: { status: "success", user_name: user.format_name }
+    else
+      render json: { status: "fail" }
+    end
+  end
+
   def approve_cds
+    user_name = User.find(params[:user_id]).format_name
     status = @form_service.approve_cds
+    render json: { status: status, user_name: user_name }
+  end
+
+  def reject_cds
+    status = @form_service.reject_cds
     render json: { status: status }
   end
 
@@ -152,7 +228,20 @@ class FormsController < ApplicationController
     @hash[:status] = form.status
   end
 
-  def re_assess_slot
+  def get_filter
+    companies = Company.select(:id, :name)
+    project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+    projects = Project.select(:id, :desc).where(id: project_ids)
+    roles = Role.select(:id, :name)
+    user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
+    users = User.select(:id, :first_name, :last_name).where(id: user_to_approve_ids)
+    periods = Period.order(id: :desc).map do |p|
+      {
+        id: p.id,
+        name: p.format_name,
+      }
+    end
+    render json: { companies: companies, projects: projects, roles: roles, users: users, periods: periods }
   end
 
   private
@@ -162,6 +251,16 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit, :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id, :period_id, :title_history_id, :form_slot_id, :competance_name)
+    params[:offset] = params[:iDisplayStart] || "0"
+    params[:user_ids] = params[:user_ids] || "0"
+    params[:company_ids] = params[:company_ids] || "0"
+    params[:project_ids] = params[:project_ids] || "0"
+    params[:period_ids] = params[:period_ids] || "50"
+    params[:role_ids] = params[:role_ids] || "0"
+
+    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
+                  :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
+                  :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
+                  :user_ids, :company_ids, :project_ids, [:period_ids], :role_ids)
   end
 end

@@ -39,11 +39,11 @@
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(7) {
-  width: 9%;
+  width: 5%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(8) {
-  width: 6%;
+  width: 5%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(9) {
@@ -51,11 +51,11 @@
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(10) {
-  width: 13%;
+  width: 10%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(11) {
-  width: 13%;
+  width: 10%;
 }
 
 .table-cds-assessment-manager-list tr td:nth-child(13) {
@@ -401,12 +401,12 @@
   .tr-linemanager {
     background-color: #8da8db;
     color: #000;
-    border: 3px solid #6f95db;
+    border: 2px solid #6f95db;
   }
   .tr-staff {
     background-color: yellow;
     color: #000;
-    border: 2px solid #4472c4;
+    border: 1px solid #4472c4;
   }
 
   textarea {
@@ -498,4 +498,41 @@ td.disabled,textarea:disabled,select:disabled{
   /* Without this, if a cell wraps onto two lines, the first column
    * will look bad, and may need padding. */
   white-space: nowrap;
+}
+
+// cds review
+.item-filter-review {
+  margin: 10px 0 10px 0;
+}
+.badge {
+  border: 1px solid black;
+  padding-left: 5px!important;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+.badge span {
+  padding-right: 5px;
+}
+.badge button span {
+  color: red;
+}
+
+.table-cds-assessment-manager-list tbody tr td:nth-child(1),
+.table-cds-assessment-manager-list tbody tr td:nth-child(7),
+.table-cds-assessment-manager-list tbody tr td:nth-child(8),
+.table-cds-assessment-manager-list tbody tr td:nth-child(10),
+.table-cds-assessment-manager-list tbody tr td:nth-child(11) {
+  text-align: right;
+}
+.table-cds-assessment-manager-list tbody tr td:nth-child(2),
+.table-cds-assessment-manager-list tbody tr td:nth-child(3),
+.table-cds-assessment-manager-list tbody tr td:nth-child(4),
+.table-cds-assessment-manager-list tbody tr td:nth-child(5),
+.table-cds-assessment-manager-list tbody tr td:nth-child(6),
+.table-cds-assessment-manager-list tbody tr td:nth-child(9),
+.table-cds-assessment-manager-list tbody tr td:nth-child(12) {
+  text-align: left;
+}
+.table-cds-assessment-manager-list tbody tr td:nth-child(13) {
+  text-align: center;
 }

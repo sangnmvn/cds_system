@@ -44,21 +44,26 @@ Rails.application.routes.draw do
   resources :forms do
     collection do
       get "get_list_cds_assessment"
-      # get "get_list_cds_assessment_manager"
+      post "get_list_cds_assessment_manager"
       get "preview_result"
       post "get_competencies"
       get "cds_assessment"
+      get "cds_cdp_review"
       get "get_slot_is_change"
       get "review_cds_assessment"
       post "get_cds_assessment"
       post "save_cds_assessment_staff"
       post "save_add_more_evidence"
-      # post "save_cds_assessment_manager"
-      # get "cds_review"
+      post "request_add_more_evidence"
+      post "save_cds_assessment_manager"
+      get "cds_review"
       post "submit"
-      # post "approve_cds"
+      post "get_data_filter_cds_assessment_manager"
+      post "approve_cds"
       post "get_cds_histories"
       post "get_data_slot"
+      get "get_filter"
+      post "reviewer_submit"
     end
   end
   resources :templates do

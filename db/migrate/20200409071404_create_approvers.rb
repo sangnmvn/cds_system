@@ -4,6 +4,8 @@ class CreateApprovers < ActiveRecord::Migration[6.0]
     create_table :approvers do |t|
       t.belongs_to :user, foreign_key: true
       t.references :approver, references: :users
+      t.boolean :is_submit_cds, default: false
+      t.boolean :is_submit_cdp, default: false
 
       t.timestamps
     end

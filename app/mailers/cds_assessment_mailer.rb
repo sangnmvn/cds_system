@@ -10,7 +10,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     reviewers.each_with_index do |reviewer, index|
-      @reviewer_name += reviewer.approver.first_name + reviewer.approver.last_name.split(" ").map { |x| x.chr }.join
+      @reviewer_name += reviewer.approver.first_name + reviewer.approver.last_name.split(" ").map { |x| x.chr }.join + ", "
       if index == 0
         @emails += reviewer.approver.email
       else
@@ -23,7 +23,7 @@ class CdsAssessmentMailer < ApplicationMailer
 
   def user_add_more_evidence
     @slot_id = params[:slot_id]
-    @competency_name = params[:competance_name]
+    @competency_name = params[:competency_name]
     user = params[:user]
     @firstname = user.first_name
     @lastname = user.last_name.split(" ").map { |x| x.chr }.join
@@ -37,5 +37,38 @@ class CdsAssessmentMailer < ApplicationMailer
     @emails = reviewer.email
 
     mail(to: @emails, subject: "[CDS system] Notify to review CDS assessment updates - competency #{@competency_name}/slot #{@slot_id}")
+  end
+
+  def reviewer_requested_more_evidences
+    @slot_id = params[:slot_id]
+    @competency_name = params[:competency_name]
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @from_date = params[:from_date]
+    @to_date = params[:to_date]
+    @emails = staff.email
+
+    mail(to: @emails, subject: "[CDS system] Request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+  end
+
+  def reviewer_cancelled_request_more_evidences
+    @slot_id = params[:slot_id]
+    @competency_name = params[:competency_name]
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @recommend = params[:recommend]
+    @emails = staff.email
+
+    mail(to: @emails, subject: "[CDS system] Cancel the request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+  end
+
+  def email_to_pm
+    pm = params[:pm]
+    @pm_name = pm.first_name + pm.last_name.split(" ").map { |x| x.chr }.join
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @emails = pm.email
+
+    mail(to: @emails, subject: "[CDS system] Notify to approve CDS for#{@staff_name}")
   end
 end

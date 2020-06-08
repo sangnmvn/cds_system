@@ -655,29 +655,6 @@ $(document).on("click", "#confirm_submit_cds", function () {
     }
   });
 });
-// approve cds
-$(document).on("click", "#confirm_yes_approve_cds", function () {
-  $('#modal_approve_cds').modal('hide');
-  $.ajax({
-    type: "POST",
-    url: "/forms/approve_cds",
-    data: {
-      form_id: form_id,
-    },
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      if (response.status == "success") {
-        success("This CDS has been approve successfully.");
-      } else {
-        fails("Can't approve CDS.");
-      }
-    }
-  });
-});
-
 $(document).on("click", ".flag-cds-assessment", function () {
   if ($(this).data("click") != "yellow")
     return;
@@ -725,7 +702,7 @@ $(document).on("click", "#btn_save", function () {
       point: parseInt(point),
       evidence: evidence,
       slot_id: slot_id,
-      competance_name: competency_name,
+      competency_name: competency_name,
     },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")

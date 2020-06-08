@@ -10,7 +10,8 @@
 @import "bootstrap-datepicker";
 
 #alert-success,
-#alert-danger {
+#alert-danger,
+#alert-warning {
     position: absolute;
     z-index: 3400;
     top: 10%;
