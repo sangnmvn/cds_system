@@ -197,6 +197,10 @@ function checkTitle(flag) {
 //   else
 //     return ""
 // }
+function checkPM(is_pm) {
+  if (is_pm)
+    return "border: 2px solid rgb(0, 110, 255);"
+}
 
 function checkDisableFormSlotsUser(user_id) {
   if (user_id != user_current)
@@ -253,11 +257,11 @@ function loadDataSlots(response) {
           <td class="disabled" colspan="5" rowspan="${rowspan}"><textarea class="autoresizing" disabled>${e.tracking.evidence}</textarea></td>`;
     if (length != 0) {
       temp += `
-          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="2" >
+          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[0].is_pm)}" >
             <textarea class="recommend autoresizing"  style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
           </td>
-          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}">
-            <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}>
+          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[0].is_pm)}">
+            <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)} >
               <option></option>
               <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
               <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
@@ -266,7 +270,7 @@ function loadDataSlots(response) {
               <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
             </select>
           </td>flag
-          <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+          <td class="disabled" style="${checkPM(e.tracking.recommends[0].is_pm)}" colspan="1"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
     } else {
       temp += `
           <td colspan="2" ><textarea style="resize:none"></textarea></td>
@@ -288,8 +292,8 @@ function loadDataSlots(response) {
       for (i = 1; i < length; i++) {
         temp += `
             <tr data-id="${e.id}" class="tr_slot">
-              <td colspan="2" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}"><textarea class="recommend autoresizing" style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-              <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}">
+              <td colspan="4" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea class="recommend autoresizing" style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+              <td colspan="2" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}" style="${checkPM(e.tracking.recommends[i].is_pm)}">
                 <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>
                   <option></option>
                   <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
@@ -299,7 +303,7 @@ function loadDataSlots(response) {
                   <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
                 </select>
               </td>
-              <td class="disabled">
+              <td colspan="1" class="disabled" style="${checkPM(e.tracking.recommends[i].is_pm)}">
                 <textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea>
               </td>
             </tr>`;

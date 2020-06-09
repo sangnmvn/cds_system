@@ -228,10 +228,10 @@ function loadDataSlots(response) {
         <td class="${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}" colspan="5" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea></td>`;
     if (length != 0) {
       temp += `
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" >
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[0].is_pm)}">
           <textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
         </td>
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}">
+        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[0].is_pm)}">
           <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>
             <option></option>
             <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
@@ -241,7 +241,7 @@ function loadDataSlots(response) {
             <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
           </select>
         </td>flag
-        <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+        <td class="disabled" ><textarea style="resize:none" disabled colspan="1" style="${checkPM(e.tracking.recommends[0].is_pm)}">${e.tracking.recommends[0].name}</textarea></td>`;
     } else {
       temp += `
         <td class="disabled" colspan="2" ><textarea style="resize:none" disabled></textarea></td>
@@ -267,8 +267,8 @@ function loadDataSlots(response) {
       for (i = 1; i < length; i++) {
         temp += `
           <tr>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" ><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" >
+            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[i].is_pm)}">
               <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>
                 <option></option>
                 <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
@@ -278,7 +278,7 @@ function loadDataSlots(response) {
                 <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
               </select>
             </td>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" ><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="1" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
           </tr>`;
       }
     }
@@ -457,7 +457,10 @@ function checkStatusFormStaff(status) {
       break;
   }
 }
-
+function checkPM(is_pm) {
+  if (is_pm)
+    return "border: 2px solid rgb(0, 110, 255);"
+}
 function checkStatusFormReview(status) {
   switch (status) {
     case "New":

@@ -259,7 +259,7 @@ module TemplatesHelper
     cds_sheet.merge_cells "E8:G8"
     cds_sheet.merge_cells "H8:I8"
 
-    cds_sheet.add_row ["", "", "", "", "Self assessment / Tự đánh giá", "To exhibit a piece of evidence / Bằng chứng kèm theo", "Score point of slots / Điểm số đạt được từng slot", "Recommend / Nhận xét", "Out / Kết quả", "Score point of slots /  Điểm số đạt được từng slot"]
+    cds_sheet.add_row ["", "", "", "", "Self assessment / Tự đánh giá", "To exhibit a piece of evidence / Bằng chứng kèm theo", "Score point of slots / Điểm số đạt được từng slot", "Recommend / Nhận xét", "Assessment / Kết quả", "Score point of slots /  Điểm số đạt được từng slot"]
 
     cds_sheet.rows[8].cells[0].style = format2
     cds_sheet.rows[8].cells[1].style = format2

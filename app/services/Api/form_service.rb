@@ -520,20 +520,20 @@ module Api
         recommends: [],
       }
       period_id = 0
-      approver = []
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
-      approver = Approver.includes(:approver).where(user_id: user.id)
-      approver.each_with_index do |approv, i|
+      approvers = Approver.includes(:approver).where(user_id: user.id)
+      approvers.each_with_index do |approver, i|
         line = line_managers[i]
         if (line.blank?)
           hash[:recommends] << {
             given_point: "",
             recommends: "",
-            name: User.find(approv.approver.id).account,
+            name: User.find(approver.approver.id).account,
             flag: "red",
-            user_id: User.find(approv.approver.id).id,
+            user_id: User.find(approver.approver.id).id,
             is_final: "",
+            is_pm: false,
           }
         else
           break if !period_id.zero? && period_id != line.period_id
@@ -549,6 +549,46 @@ module Api
             flag: line.flag || "red",
             user_id: line.user_id,
             is_final: line.final,
+            is_pm: false,
+          }
+        end
+      end
+      hash = get_recommend_appover(hash, form_slot)
+    end
+
+    def get_recommend_appover(hash, form_slot)
+      period_id = 0
+      user_id = Form.where(id: form_slot.form_id).pluck(:user_id)
+      project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
+      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+      user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
+      user_groups.each do |user|
+        line = LineManager.find_by(form_slot_id: form_slot, user_id: user.user_id)
+        if (line.blank?)
+          hash[:recommends] << {
+            given_point: "",
+            recommends: "",
+            name: User.find(user.user_id).account,
+            flag: "red",
+            user_id: User.find(user.user_id).id,
+            is_final: "",
+            is_pm: true,
+          }
+        else
+          break if !period_id.zero? && period_id != line.period_id
+          period_id = line.period_id
+          if line.final && line.given_point > 2
+            hash[:is_passed] = true
+            hash[:final_point] = line.given_point
+          end
+          hash[:recommends] << {
+            given_point: line.given_point || 0,
+            recommends: line.recommend || "",
+            name: User.find(line.user_id).account,
+            flag: line.flag || "red",
+            user_id: line.user_id,
+            is_final: line.final,
+            is_pm: true,
           }
         end
       end
