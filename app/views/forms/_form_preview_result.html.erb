@@ -19,7 +19,7 @@
             <td style="width:60px" class="form-pr-level">rank</td>
             <td style="width:60px"class="form-pr-level">++1</td>
             <% @slots.each do |s| %>
-              <td class="<%= @result[c][s][:type] + " " + @result[c][s][:class] unless @result[c][s].nil? %>"><%= @result[c][s].nil? ? "" : @result[c][s][:value] %></td>
+              <td style="text-align:center" class="<%= @result[c][s][:type] + " " + @result[c][s][:class] unless @result[c][s].nil? %>"><%= @result[c][s].nil? ? "" : @result[c][s][:value] %></td>
             <% end %>
           </tr>
         <% end %>
