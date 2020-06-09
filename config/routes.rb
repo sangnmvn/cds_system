@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       get "index"
       get "add"
       get "edit"
+      post "clear_level_mapping"
       post "save_level_mapping"
       post "save_title_mapping"
       get "get_data_level_mapping_list"

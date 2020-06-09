@@ -1,9 +1,9 @@
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
-<%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'edit_level_mapping', 'data-turbolinks-track': 'reload' %>
 <div class='row'>
   <div class='col-12'>
-    <table class="table table-responsive-sm table-mytable" id="table_level_mapping">
+    <table class="table table-responsive-sm table-mytable border-table" id="table_edit_level_mapping">
       <thead>
           <tr>
             <th>Title</th>
@@ -15,34 +15,44 @@
         </thead>
         <tbody>
         <% @level_mappings.each do |item| %>
-          <tr id='<%= item.id %>'>
+          <tr data-title-id='<%= item.title_id %>'>
             <td><%= item.title.name %></td>
             <td><%= item.title.rank %></td>
             <td><%= item.level %></td>
             <td>
             <div class="row">
               <div class='col-3'>
-                <input type="number" class="form-control" min="1" max="10" placeholder='Quantity' value="<%= item.quantity%>">
+                <input type="number" class="form-control" min="1" max="20" placeholder='Quantity' value="<%= item.quantity%>">
               </div>
               <div class='col-5'>
                 <select class="form-control" id="selectType">
-                  <option value=''selected><%= item.competency_type %></option>
+                  <option value='<%= item.competency_type %>'selected>
+                    <%= item.competency_type %>
+                  </option>
                 </select>
               </div>
               <div class='col-2'>
                 <select class="form-control" id="selectRank">
-                  <option value=''selected><%= item.rank_number %></option>
+                  <option value='<%= item.rank_number %>'selected><%= item.rank_number %></option>
                 </select>
               </div>
               <div class='col-2 divIcon'>
-                <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
-                <a type='button' class='btnAction' title='Remove Required' style="display:none" id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+                <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired">
+                  <i class='fas fa-plus-circle btnAdd'></i>
+                </a>
+                <a type='button' class='btnAction invisible' title='Remove Required' id="btnRemoveRequired">
+                  <i class='fas fa-times btnDel'></i>
+                </a>
               </div>
             </div>
             </td>
             <td>
-              <a type='button' class='btnAction' title='Add more levels' id="btnAddLevel"><i class='fa fa-plus btnAdd'></i></a>
-              <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel" style="display:none"><i class='fas fa-times btnDel'></i></a>
+              <a type='button' class='btnAction invisible' title='Add more levels' id="btnAddLevel">
+                <i class='fa fa-plus btnAdd'></i>
+              </a>
+              <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel">
+                <i class='fas fa-times btnDel'></i>
+              </a>
             </td>
           </tr>
         <% end %>
@@ -53,28 +63,12 @@
 <div class='row'>
   <div class='col-12 divButton'>
     <button class='btn btn-primary btnSave' id="btnSave">Save</button>
-    <button class='btn btn-light border-dark'>Cancel</button>
+    <a type='button' class='btn btn-light border-dark' href="/level_mappings/">Cancel</a>
   </div>
 </div>
-<!-- The Validate Alert Modal -->
-<div class="modal fade" id="messageValidate">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header head-myheader">
-        <h4 class="modal-title" style="color:white">Stop!</h4>
-        <button type="button" style="color:white" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <!-- Modal body -->
-      <div class="modal-body divcontent" id="contentMessageValidate">
-          
-      </div>
-      <!-- Modal footer -->
-      <div class="modal-footer divTable header-myheader">
-        <button type="button" class="btn btn-primary close_modal" data-dismiss="modal">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
 <script>
+  var count = <%= @level_mappings.last.title.rank %>
+  var length =  <%= @level_mappings.count %>
 </script>

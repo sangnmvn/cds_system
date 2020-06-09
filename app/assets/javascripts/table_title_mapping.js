@@ -66,7 +66,7 @@ function loadTitleMappingForAdd() {
                     for (k = 0; k < data_list.length; k++) {
                         // find competency data suitable for competency column cell
                         if (data_list[k].competency_name == current_cell_competency_name) {
-                            value_dropdown = `<select class='competency_value'> 
+                            value_dropdown = `<select class='form-control competency_value'> 
                             <option selected value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
                             <option value='1-2'>1-2</option><option value='++2'>++2</option><option value='2'>2</option>
                             <option value='2-3'>2-3</option><option value='++3'>++3</option><option value='3'>3</option>

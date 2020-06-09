@@ -78,13 +78,15 @@ module Api
       true
     end
 
+    def clear_level_mapping
+      temp = LevelMapping.includes(:title).find_by(title_id: params[:title_id])
+      role_id = temp.title.role_id
+      titles = Title.where(role_id: role_id)
+      LevelMapping.where(title_id: titles).destroy_all
+    end
+
     def save_level_mapping
-      if params[:id_level]
-        level_mapping = LevelMapping.find(params[:id_level])
-        level_mapping.update(table_level_mapping_params)
-      else
-        LevelMapping.create!(table_level_mapping_params)
-      end
+      LevelMapping.create!(table_level_mapping_params)
     end
 
     private

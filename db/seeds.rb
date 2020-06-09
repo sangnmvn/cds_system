@@ -1165,7 +1165,7 @@ slot_create.each_with_index do |s, i|
   Slot.create!(id: i + 1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
-Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17")
+Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18")
 Group.create!(id: 32, name: "BOD", description: "BOD", status: 1, privileges: "10")
 Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
 Group.create!(id: 34, name: "Manager", description: "Manager", status: 1, privileges: "1")
@@ -1212,10 +1212,6 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
   LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
 end
-
-LevelMapping.create!(id: 1, level: 1, quantity: 3, competency_type: "General", rank_number: 1, title_id: 1, updated_by: 2)
-LevelMapping.create!(id: 2, level: 1, quantity: 3, competency_type: "General", rank_number: 2, title_id: 1, updated_by: 2)
-LevelMapping.create!(id: 3, level: 1, quantity: 3, competency_type: "General", rank_number: 3, title_id: 1, updated_by: 2)
 
 TitleMapping.create!(id: 1, title_id: 1, competency_id: 1, value: 1)
 TitleMapping.create!(id: 2, title_id: 1, competency_id: 2, value: 99)

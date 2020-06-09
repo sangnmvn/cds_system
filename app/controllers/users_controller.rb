@@ -104,7 +104,6 @@ class UsersController < ApplicationController
     end
     user_id = params[:id].to_i
     # delete all approvers
-    binding.pry
 
     Approver.where(user_id: user_id).destroy_all
 

@@ -26,7 +26,7 @@ class LevelMappingsController < ApplicationController
 
   def add
     @role_id = params[:role_id]
-    title = Title.where(role_id: @role_id)
+    title = Title.where(role_id: @role_id).order(:rank)
     @list_title = {
       data: title,
       no_rank: title.count,
@@ -34,12 +34,17 @@ class LevelMappingsController < ApplicationController
   end
 
   def edit
-    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id])
-    @level_mappings = level_mappings.order("titles.rank",:level)
+    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank",:level,:rank_number,:competency_type)
+    @level_mappings = level_mappings
   end
 
   def save_level_mapping
     return render json: { status: "success" } if @level_mapping_service.save_level_mapping
+    render json: { status: "fail" }
+  end
+
+  def clear_level_mapping
+    return render json: { status: "success" } if @level_mapping_service.clear_level_mapping
     render json: { status: "fail" }
   end
 

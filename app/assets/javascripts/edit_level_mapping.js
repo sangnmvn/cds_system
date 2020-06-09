@@ -1,6 +1,7 @@
 $(document).ready(function () {
+  loadLevelMapping(count)
   changeBtnSave(false)
-  $('#table_level_mapping').on('click', '#btnAddRequired', function () {
+  $('#table_edit_level_mapping').on('click', '#btnAddRequired', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
     var quantity = row.find('input')[0].value
@@ -17,8 +18,8 @@ $(document).ready(function () {
         $(this).addClass("invisible").removeClass("visible")
       }
   });
-  $('#table_level_mapping').on('click', '#btnRemoveRequired', function () {
-    if($(this).parent().parent().next().length == 0)
+  $('#table_edit_level_mapping').on('click', '#btnRemoveRequired', function () {
+    if($(this).parent().parent().nextAll().length == 0)
     {
       if($(this).parent().parent().prevAll().length == 1)
       {
@@ -26,9 +27,13 @@ $(document).ready(function () {
       }
       $(this).parent().parent().prev().children()[3].children[0].classList.remove('invisible')
     }
+    if($(this).parent().parent().nextAll().length == 1 && $(this).parent().parent().prevAll().length == 0)
+    {
+      $(this).parent().parent().next().children()[3].children[1].classList.add('invisible')
+    }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('click', '#btnAddLevel', function () {
+  $('#table_edit_level_mapping').on('click', '#btnAddLevel', function () {
     changeBtnSave(false)
     var tr = $(this).closest('tr')
     var title = tr.children()[0].textContent
@@ -37,7 +42,7 @@ $(document).ready(function () {
     var row = createNewRowLevel(count)
     var title_id = tr.data('title-id')
     $(this).addClass("invisible").removeClass("visible")
-    var newRow= document.getElementById("table_level_mapping").insertRow(tr.index() + 2);
+    var newRow= document.getElementById("table_edit_level_mapping").insertRow(tr.index() + 2);
     newRow.setAttribute("data-title-id", title_id)
     newRow.insertCell(0);
     newRow.cells[0].innerHTML= title;
@@ -54,7 +59,7 @@ $(document).ready(function () {
 ;
 
   });
-  $('#table_level_mapping').on('click', '#btnRemoveLevel', function () {
+  $('#table_edit_level_mapping').on('click', '#btnRemoveLevel', function () {
     var current_tr = $(this).parent().parent()
     
     var nextRow = current_tr.next()
@@ -75,27 +80,28 @@ $(document).ready(function () {
     }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('change', '#selectType', function () {
+  $('#table_edit_level_mapping').on('change', '#selectType', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
-  $('#table_level_mapping').on('keyup', 'input', function () {
+  $('#table_edit_level_mapping').on('keyup', 'input', function () {
     checkData()
   });
-  $('#table_level_mapping').on('blur', 'input', function () {
+  $('#table_edit_level_mapping').on('blur', 'input', function () {
     var num = parseInt($(this).val())
     if(num < 1)
       $(this).val(1)
     if(num > 20)
     $(this).val(20)
   });
-  $('#table_level_mapping').on('change', '#selectRank', function () {
+  $('#table_edit_level_mapping').on('change', '#selectRank', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
   $('#btnSave').on('click', function () {
-    var tr = $("#table_level_mapping").find("tr")
+    var tr = $("#table_edit_level_mapping").find("tr")
     var lenght = tr.length
+    clearLevelMapping(tr[1].getAttribute('data-title-id')) //xóa bản ghi cũ
     for(var i = 1; i < lenght; i++)
     {
       var listLevelMapping = tr[i].children[3].children
@@ -110,13 +116,13 @@ $(document).ready(function () {
           saveLevelMapping(list)
         else
         {
-          success("Has a empty field!")
+          fails("Has a empty field!")
           return
         }
       }
     }
     saveTitleMapping()
-    window.location.href = "/level_mappings/";
+    window.location.replace("/level_mappings/");
   })
 });
 function createNewRowRequire (count)
@@ -185,7 +191,7 @@ function createNewRowLevel (count)
 }
 function checkData ()
 {
-  var row = $("#table_level_mapping").find('.row').children()
+  var row = $("#table_edit_level_mapping").find('.row').children()
   var count = row.length
   for(var i = 0; i < count; i++)
   {
@@ -265,6 +271,21 @@ function saveLevelMapping (arr)
     }
   });
 }
+function clearLevelMapping (title_id)
+{
+  $.ajax({
+    url: "/level_mappings/clear_level_mapping",
+    data: {
+      title_id: title_id
+    },
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+    }
+  });
+}
 
 function saveTitleMapping()
 {
@@ -320,7 +341,53 @@ function getDatainRow (lst,list)
   }
   return list
 }
-// alert success
+//-------------- Edit --------------------------
+function loadLevelMapping (count)
+{
+  $("#table_edit_level_mapping tbody tr").each(function (index, value){
+    var tr = $(this)
+    fillSelectType(tr.find('#selectType'),tr.find('#selectType').val())
+    fillSelectRank(tr.find('#selectRank'),tr.find('#selectRank').val(), count)
+    if(tr.data('title-id') == tr.prev().data('title-id') && tr.children()[2].innerHTML == tr.prev().children()[2].innerHTML)
+    {
+      tr.prev().children()[3].append(tr.children()[3].children[0]) //gộp các level mapping cùng 1 bậc
+      tr.remove()
+    }
+  })
+  $("#table_edit_level_mapping tbody tr").each(function (index, value){
+    var rows = $(this).find('.row')
+    if(rows.length > 1)
+    {
+      rows.each(function(){
+        $(this).children()[3].children[1].classList.remove('invisible')
+        $(this).children()[3].children[0].classList.add('invisible')
+      })
+      rows.last().find('#btnAddRequired').addClass('visible').removeClass('invisible')
+    }
+    var tr = $(this)
+    if(tr.data('title-id') != tr.next().data('title-id'))
+      tr.children()[4].children[0].classList.remove('invisible')
+    if(tr.data('title-id') != tr.prev().data('title-id'))
+      tr.children()[4].children[1].classList.add('invisible')
+  })
+}
+function fillSelectType (select, value)
+{
+  select.find("option").remove()
+  $('<option value="0"/>').html("All").appendTo(select)
+  $('<option value="1"/>').html("General").appendTo(select)
+  $('<option value="2"/>').html("Special").appendTo(select)
+  select.find("option[value='" + value + "']").prop('selected', true)
+}
+function fillSelectRank (select,value,count)
+{
+  select.find("option").remove()
+  for(var i = 1; i <= count; i++)
+  {
+    $("<option value='" + i + "'/>").html(i).appendTo(select)
+  }
+  select.find("option[value='" + value + "']").prop('selected', true)
+}
 function success(content) {
   $("#content-alert-success").html(content);
   $("#alert-success").fadeIn();
