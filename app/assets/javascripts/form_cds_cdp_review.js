@@ -179,7 +179,7 @@ function getValueStringPoint(point) {
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
-  if (is_reviewer != user_id)
+  if ((is_reviewer != user_id) || (is_submit == "true"))
     return "disabled"
   else
     return;
@@ -455,19 +455,22 @@ function getParams() {
 }
 
 function checkStatusFormReview(status) {
-  if (is_approval) {
+  if (is_approval == "true") {
     $('a.submit-assessment').css("display", "none");
     $('a.reject-assessment i').css("color", "#ccc");
     return;
   }
   else {
-    if (is_submit) {
-      $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-      $('a.submit-assessment').removeClass('submit-assessment');
-      return;
-    }
     $('a.approval-assessment').css("display", "none");
     $('a.reject-assessment').css("display", "none");
+    if (is_submit == "true") {
+      $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
+      // $('given-point-select').css("display", "none"); 
+      // $('recommend').css("n", "none");
+     
+      return;
+    }
   }
   switch (status) {
     case "Awaiting Review":
@@ -495,7 +498,6 @@ function checkStatusFormReview(status) {
       $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
       $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
       $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
-      break;
       break;
     case "Awaiting Approval":
       break;

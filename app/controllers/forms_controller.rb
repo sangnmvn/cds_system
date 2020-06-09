@@ -83,7 +83,6 @@ class FormsController < ApplicationController
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find(params[:user_id])
     is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds
-
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
