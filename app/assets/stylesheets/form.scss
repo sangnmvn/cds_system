@@ -1,4 +1,5 @@
 // index
+$color-disable: #afaaaa;
 
 .filter-title{
   margin-left: 20px;
@@ -167,7 +168,7 @@
   border: none;
 }
 .card .table-mytable thead {
-  background-color: #ccc;
+  background-color: $color-disable;
 }
 .card-body {
   padding: 0px;
@@ -256,20 +257,20 @@
 .table-statistic-preview-result,
 .table-preview-result td {
   background-color: white;
-  border: 1px solid #7abaff;
+  border: 1px solid #42719a;
 }
 
 .assessed {
   background-color: #239B56 !important;
-  border: 1px solid #7abaff;
+  border: 1px solid #42719a;
 }
 .re-assessed-slots {
-  background-color: #00dcff !important;
-  border: 1px solid #7abaff;
+  background-color: #4daae8 !important;
+  border: 1px solid #42719a;
 }
 .new {
   background-color: white !important;
-  border: 1px solid #7abaff;
+  border: 1px solid #42719a;
 }
 .fail-slot {
   color: red;
@@ -284,7 +285,7 @@
   color: red;
 }
 .illustration .title {
-  border: 1px solid #7abaff;
+  border: 1px solid #42719a;
   border-radius: 10px;
   padding-top: 5px;
 }
@@ -301,7 +302,7 @@
 }
 
 .table-preview-result tbody td {
-  background-color: #ccc;
+  background-color: $color-disable;
 }
 .table-preview-result thead tr {
   background-color: white;
@@ -472,21 +473,21 @@ td.disabled,textarea:disabled,select:disabled{
 .horizontal-scroll-except-first-column > table > * > tr > td:first-child{
   position: absolute;
   margin-left: -520px;
-  background: #ccc;
+  background: $color-disable;
 }
 .horizontal-scroll-except-first-column > table > * > tr > th:first-child+th,
 .horizontal-scroll-except-first-column > table > * > tr > td:first-child+td{
   position: absolute;
   width: 60px;
   margin-left: -120px;
-  background: #ccc;
+  background: $color-disable;
 }
 .horizontal-scroll-except-first-column > table > * > tr > th:first-child+th+th,
 .horizontal-scroll-except-first-column > table > * > tr > td:first-child+td+td{
   position: absolute;
   width: 60px;
   margin-left: -60px;
-  background: #ccc;
+  background: $color-disable;
 }
 
 .horizontal-scroll-except-first-column > table > * > tr > th:first-child, 
@@ -535,4 +536,37 @@ td.disabled,textarea:disabled,select:disabled{
 }
 .table-cds-assessment-manager-list tbody tr td:nth-child(13) {
   text-align: center;
+}
+
+.slot-header {
+  &1 {
+    background-color: #c5e0b4;
+  }
+  &2 {
+    background-color: #deecf7;
+  }
+  &3 {
+    background-color: #fcf2cc;
+  }
+  &4 {
+    background-color: #dae4f3;
+  }
+  &5 {
+    background-color: #f3d5f3;
+  }
+  &6 {
+    background-color: #b4e0ca;
+  }
+  &7 {
+    background-color: #aed6ee;
+  }
+  &8 {
+    background-color: #b3a5e0;
+  }
+  &9 {
+    background-color: #dde0b3;
+  }
+  &10 {
+    background-color: #d8b8b1;
+  }
 }

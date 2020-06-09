@@ -1,64 +1,29 @@
 <div class="title-table-form-preview-result">CDS Assessment Point</div>
 <div style="overflow-x:auto;">
-<div class="horizontal-scroll-except-first-column">
- 
-  <table class="table table-striped table-primary table-responsive-sm table-preview-result">
-    <thead>
-      <tr>
-        <th style="width:400px">Competency</th>
-        <th style="width:60px" class="form-pr-level">Rank</th>
-        <th style="width:60px"class="form-pr-level">Level</th>
-        <th>1A</th>
-        <th>1B</th>
-        <th>1C</th>
-        <th>1D</th>
-        <th>1E</th>
-        <th>1F</th>
-        <th>1G</th>
-        <th>2A</th>
-        <th>2B</th>
-        <th>2C</th>
-        <th>2D</th>
-        <th>2E</th>
-        <th>2F</th>
-        <th>2G</th>
-        <th>3A</th>
-        <th>3B</th>
-        <th>3C</th>
-        <th>3D</th>
-        <th>3E</th>
-        <th>3F</th>
-        <th>3G</th>
-        <th>4A</th>
-        <th>4B</th>
-        <th>4C</th>
-        <th>4D</th>
-        <th>4E</th>
-        <th>4F</th>
-        <th>4G</th>
-        <th>5A</th>
-        <th>5B</th>
-        <th>5C</th>
-        <th>5D</th>
-        <th>5E</th>
-        <th>5F</th>
-        <th>5G</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @competencies.each_with_index do |c, i| %>
+  <div class="horizontal-scroll-except-first-column">
+    <table class="table table-striped table-primary table-responsive-sm table-preview-result">
+      <thead>
         <tr>
-          <td style="width:400px" class="form-competency-name"><%= c %></td>
-          <td style="width:60px" class="form-pr-level">rank</td>
-          <td style="width:60px"class="form-pr-level">++1</td>
+          <th style="width:400px">Competency</th>
+          <th style="width:60px" class="form-pr-level">Rank</th>
+          <th style="width:60px"class="form-pr-level">Level</th>
           <% @slots.each do |s| %>
-            <td class="<%= @result[c][s][:type] + " " + @result[c][s][:class] unless @result[c][s].nil? %>"><%= @result[c][s].nil? ? "" : @result[c][s][:value] %></td>
+            <th class="slot-header<%= s.to_i %>"><%= s %></th>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @competencies.each_with_index do |c, i| %>
+          <tr>
+            <td style="width:400px" class="form-competency-name"><%= c %></td>
+            <td style="width:60px" class="form-pr-level">rank</td>
+            <td style="width:60px"class="form-pr-level">++1</td>
+            <% @slots.each do |s| %>
+              <td class="<%= @result[c][s][:type] + " " + @result[c][s][:class] unless @result[c][s].nil? %>"><%= @result[c][s].nil? ? "" : @result[c][s][:value] %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
-
-

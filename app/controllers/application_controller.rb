@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   LIMIT = 20
   PASSWORD_DEFAULT = "123QWEasd"
-
+  LETTER_CAP = *("A".."Z")
   private
 
   def get_privilege_id

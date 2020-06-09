@@ -1212,16 +1212,15 @@ Form.create!(id: 2, user_id: "1", _type: "CDP", template_id: "1", status: "Done"
 (1..134).each do |i|
   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)
   Comment.create!(id: i, evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: i)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "2", form_slot_id: i, period_id: 50)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "3", form_slot_id: i, period_id: 50)
-  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: "11", final: true, form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: 11, form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: 3, form_slot_id: i, period_id: 50)
+  LineManager.create!(recommend: "ok", given_point: rand(1..5), user_id: 1, final: true, form_slot_id: i, period_id: 50)
 end
 
-Form.create!(id: 3, user_id: 2, _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", is_delete: false, submit_date: "2019-06-20", review_date: "2019-06-30", period_id: 50)
-(1..134).each do |i|
-  form_slot = FormSlot.create!(form_id: 3, slot_id: i, is_passed: 0)
-  Comment.create!(evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: form_slot.id)
-end
+# Form.create!(id: 3, user_id: 2, _type: "CDS", level: 3, rank: 2, template_id: "1", title_id: "1002", role_id: "1", status: "New", is_delete: false, submit_date: "2019-06-20", review_date: "2019-06-30", period_id: 50)
+# (1..134).each do |i|
+#   form_slot = FormSlot.create!(form_id: 3, slot_id: i, is_passed: 0)
+#   Comment.create!(evidence: "ok", point: rand(1..5), is_commit: 1, form_slot_id: form_slot.id)
+# end
 Approver.create!(user_id: 2, approver_id: 3)
-Approver.create!(user_id: 2, approver_id: 1)
 Approver.create!(user_id: 2, approver_id: 11)

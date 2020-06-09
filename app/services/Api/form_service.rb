@@ -366,9 +366,9 @@ module Api
         dumy_hash[key] = -1 if dumy_hash[key].nil?
         dumy_hash[key] += 1
         hash[slot.competency.name] = {} if hash[slot.competency.name].nil?
-        check = !form_slots[slot.id][:point].zero? && form_slots[slot.id][:recommends].empty?
+        check = (!form_slots[slot.id][:point].zero? && form_slots[slot.id][:recommends].empty?) || form_slots[slot.id][:is_change]
         h_slot = {
-          value: form_slots[slot.id][:point],
+          value: form_slots[slot.id][:final_point] || form_slots[slot.id][:point],
           type: check ? "assessed" : "new",
           class: "",
         }
@@ -504,6 +504,8 @@ module Api
           point: comments&.point || 0,
           flag: comments&.flag || "red",
           is_commit: comments&.is_commit,
+          is_change: form_slot.is_change,
+          final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
         }
@@ -536,7 +538,10 @@ module Api
         else
           break if !period_id.zero? && period_id != line.period_id
           period_id = line.period_id
-          hash[:is_passed] = true if line.final && line.given_point > 2
+          if line.final && line.given_point > 2
+            hash[:is_passed] = true
+            hash[:final_point] = line.given_point
+          end
           hash[:recommends] << {
             given_point: line.given_point || 0,
             recommends: line.recommend || "",

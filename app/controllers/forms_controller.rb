@@ -2,7 +2,6 @@ class FormsController < ApplicationController
   layout "system_layout"
   before_action :form_service
   before_action :get_privilege_id
-  LEVEL_SLOTS = []
   REVIEW_CDS = 16
   APPROVE_CDS = 17
 
@@ -135,9 +134,24 @@ class FormsController < ApplicationController
     form = Form.find_by(_type: "CDS", user_id: current_user.id)
     return "fail" if form.nil?
 
-    @slots = LEVEL_SLOTS
     @competencies = Competency.where(template_id: form.template_id).pluck(:name)
     @result = @form_service.preview_result(form)
+
+    @slots = @result.values.map(&:keys).flatten.uniq.sort
+
+    # slot_ids = @result.values.map(&:keys).flatten.uniq.sort
+    # check = 1
+    # count = 0
+    # @slots = []
+    # slot_ids.each do |s|
+    #   if check != s.to_i
+    #     @slots << (check.to_s + LETTER_CAP[count])
+    #     count = 1
+    #   end
+    #   @slots << s
+    #   check = s.to_i
+    #   count += 1
+    # end
   end
 
   def destroy
@@ -229,10 +243,10 @@ class FormsController < ApplicationController
 
   def get_filter
     data = if @privilege_array.include?(APPROVE_CDS)
-      @form_service.data_filter_cds_approve
-    elsif @privilege_array.include?(REVIEW_CDS)
-      @form_service.data_filter_cds_review
-    end
+        @form_service.data_filter_cds_approve
+      elsif @privilege_array.include?(REVIEW_CDS)
+        @form_service.data_filter_cds_review
+      end
     render json: data
   end
 
