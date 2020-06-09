@@ -98,8 +98,8 @@ module Api
 
     def get_list_cds_approve
       filter = filter_cds_review_list
-      user_ids = User.where(filter[:filter_users]).pluck(:id)
-      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq
+      user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
+      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
       forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
 
@@ -111,18 +111,18 @@ module Api
     def data_filter_cds_review
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
       data_filter = {
-        companies: [["All", 0]],
-        projects: [["All", 0]],
-        roles: [["All", 0]],
-        users: [["All", 0]],
-        periods: [["All", 0]],
+        companies: [],
+        projects: [],
+        roles: [],
+        users: [],
+        periods: [],
       }
 
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
-        company = [user.company.name, user.company_id]
-        user_arr = [user.format_name, user.id]
-        role = [user.role.name, user.role_id]
+        company = format_filter(user.company.name, user.company_id)
+        user_arr = format_filter(user.format_name, user.id)
+        role = format_filter(user.role.name, user.role_id)
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
@@ -130,13 +130,13 @@ module Api
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
-        project = [project_member.project.desc, project_member.project_id]
+        project = format_filter(project_member.project.desc, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
       forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
-        period = [form.period.format_name, form.period_id]
+        period = format_filter(form.period.format_name, form.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
@@ -148,31 +148,31 @@ module Api
       user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
 
       data_filter = {
-        companies: [["All", 0]],
-        projects: [["All", 0]],
-        roles: [["All", 0]],
-        users: [["All", 0]],
-        periods: [["All", 0]],
+        companies: [],
+        projects: [],
+        roles: [],
+        users: [],
+        periods: [],
       }
 
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
-        company = [user.company.name, user.company_id]
-        user_arr = [user.format_name, user.id]
-        role = [user.role.name, user.role_id]
+        company = format_filter(user.company.name, user.company_id)
+        user_arr = format_filter(user.format_name, user.id)
+        role = format_filter(user.role.name, user.role_id)
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
 
       project_members.each do |project_member|
-        project = [project_member.project.desc, project_member.project_id]
+        project = format_filter(project_member.project.desc, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
       forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
-        period = [form.period.format_name, form.period_id]
+        period = format_filter(form.period.format_name, form.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
@@ -464,6 +464,13 @@ module Api
     private
 
     attr_reader :params, :current_user
+
+    def format_filter(name, id)
+      {
+        id: id,
+        name: name,
+      }
+    end
 
     def slot_to_hash(slot, location, form_slots)
       h_slot = {
