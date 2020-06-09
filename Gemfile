@@ -52,6 +52,10 @@ gem "cancancan"
 gem "pry"
 gem "chartkick"
 gem "ransack", "~> 2.3.0"
+group :development, :test do
+  gem "byebug", platform: :mri
+  gem "rspec-rails", "~> 3.4"
+end
 # gem "activeadmin_addons"
 # gem "bootstrap-sass"
 ###################################
@@ -70,6 +74,8 @@ group :development do
 end
 
 group :test do
+  gem 'shoulda-matchers', '~> 3.0', require: false
+  gem 'database_cleaner', '~> 1.5'
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 2.15"
   gem "selenium-webdriver"
