@@ -229,19 +229,7 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    companies = Company.select(:id, :name)
-    project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
-    projects = Project.select(:id, :desc).where(id: project_ids)
-    roles = Role.select(:id, :name)
-    user_to_approve_ids = Approver.where(approver_id: current_user.id).distinct.pluck(:user_id)
-    users = User.select(:id, :first_name, :last_name).where(id: user_to_approve_ids)
-    periods = Period.order(id: :desc).map do |p|
-      {
-        id: p.id,
-        name: p.format_name,
-      }
-    end
-    render json: { companies: companies, projects: projects, roles: roles, users: users, periods: periods }
+    render json: @form_service.data_filter_cds_review
   end
 
   private

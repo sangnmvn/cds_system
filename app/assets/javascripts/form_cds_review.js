@@ -1,7 +1,5 @@
 
-function loadDataAssessment()  
-{
-  // var search = $('.search-review').val();
+function loadDataAssessment(data_filter) {
   $.ajax({
     type: "POST",
     url: "/forms/get_list_cds_assessment_manager",
@@ -9,7 +7,6 @@ function loadDataAssessment()
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     data: {
-      // search_ids: search,
       company_ids: data_filter.company,
       project_ids: data_filter.project,
       role_ids: data_filter.role,
@@ -37,7 +34,9 @@ function loadDataAssessment()
             <td>{review_date}</td>
             <td>{status}</td> 
             <td> 
-              <a data-id='{id}' href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+              <a data-id='{id}' href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>
+                <i class='fa fa-pencil icon' style='color:#fc9803'></i>
+              </a>
               &nbsp;
               <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
                 <i class='fa fa-trash icon' style='color:red'></i>
@@ -49,8 +48,8 @@ function loadDataAssessment()
       $(".table-cds-assessment-manager-list tbody").html(temp);
     }
   })
-
 }
+
 function loadFilterReview() {
   $(".filter_review").click(function () {
     $(".filter-condition").toggle();
@@ -71,29 +70,38 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
-      $('<option value="0" selected>All</option>').appendTo("#company_filter");
-      $('<option value="0" selected>All</option>').appendTo("#role_filter");
+      if (response.companies.length > 1)
+        $('<option value="0" selected>All</option>').appendTo("#company_filter");
+      if (response.roles.length > 1)
+        $('<option value="0" selected>All</option>').appendTo("#role_filter");
       if (response.projects.length > 1)
         $('<option value="0" selected>All</option>').appendTo("#project_filter");
       if (response.users.length > 1)
         $('<option value="0" selected>All</option>').appendTo("#user_filter");
+
       $.each(response.companies, function (k, v) {
-        $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");
+        if (k == 0 && response.projects.length == 1)
+          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#company_filter");
+        else
+          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");
       });
       $.each(response.projects, function (k, v) {
         if (k == 0 && response.projects.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.desc + "</option>").appendTo("#project_filter");
+          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#project_filter");
         else
-          $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo("#project_filter");
+          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#project_filter");
       });
       $.each(response.roles, function (k, v) {
-        $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
-      });
-      $.each(response.users, function (k,v) {
-        if ( k == 0 && response.users.length == 1 )
-          $('<option value="' + v.id + '" selected>' + v.last_name + " " + v.first_name + "</option>").appendTo("#user_filter");
+        if (k == 0 && response.projects.length == 1)
+          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
         else
-          $('<option value="' + v.id + '">' + v.last_name + " " + v.first_name + "</option>").appendTo("#user_filter");
+          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
+      });
+      $.each(response.users, function (k, v) {
+        if (k == 0 && response.users.length == 1)
+          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#user_filter");
+        else
+          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#user_filter");
       });
       $.each(response.periods, function (k, v) {
         if (k == 0)
@@ -110,37 +118,12 @@ function loadDataFilter() {
 }
 function apllyFilter() {
   var data = {
-    company: "",
-    project: "",
-    role: "",
-    user: "",
-    period: "",
+    company: $('#company_filter').val().join(),
+    project: $('#project_filter').val().join(),
+    role: $('#role_filter').val().join(),
+    user: $('#user_filter').val().join(),
+    period: $('#period_filter').val().join(),
   }
-  company = [];
-  project = [];
-  role = [];
-  user = [];
-  period = [];
-  $('#company_filter :selected').each(function (i, sel) {
-    company.push($(sel).val())
-  });
-  data.company = company.join();
-  $('#project_filter :selected').each(function (i, sel) {
-    project.push($(sel).val())
-  });
-  data.project = project.join();
-  $('#role_filter :selected').each(function (i, sel) {
-    role.push($(sel).val())
-  });
-  data.role = role.join();
-  $('#user_filter :selected').each(function (i, sel) {
-    user.push($(sel).val())
-  });
-  data.user = user.join();
-  $('#period_filter :selected').each(function (i, sel) {
-    period.push($(sel).val())
-  });
-  data.period = period.join();
   return data
 }
 function customizeFilter() {
@@ -243,35 +226,35 @@ function customizeFilter() {
       $('.project-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
     }
   });
-  $(".user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function() {
+  $(".user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
     max = $('.user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
     length = $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
     arr = [];
     locate_all = 0;
     all = false;
     current = $(this).text();
-    for (i = 1 ; i <= length ; i++){
-      text = $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+i+') span').text().slice(0,-1);
+    for (i = 1; i <= length; i++) {
+      text = $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
       if (text != "All")
         arr.push(i)
-      else if ( text == "All") {
+      else if (text == "All") {
         all = true
         locate_all = i
       }
     }
-    if ( current == "All" ) {
-      $.each(arr, function( index, value ) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+    if (current == "All") {
+      $.each(arr, function (index, value) {
+        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
       });
       return ""
-    }else if ( current != "All" && locate_all != 0 ) {
-      $.each(arr, function( index, value ) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+locate_all+') .close').click();
+    } else if (current != "All" && locate_all != 0) {
+      $.each(arr, function (index, value) {
+        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
       });
     }
-    if (arr.length == max-1 && all == false) {
-      $.each(arr, function( index, value ) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child('+value+') .close').click();
+    if (arr.length == max - 1 && all == false) {
+      $.each(arr, function (index, value) {
+        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
       });
       $('.user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
     }
@@ -283,6 +266,17 @@ $(document).ready(function () {
   loadDataFilter();
   $(".apply-filter").click(function () {
     data_filter = apllyFilter();
+    loadDataAssessment(data_filter);
+  });
+
+  $(".reset-filter").click(function () {
+    data_filter = {
+      company: "0",
+      project: "0",
+      role: "0",
+      user: "0",
+      period: $("#period_filter").children()[0].value,
+    };
     loadDataAssessment(data_filter);
   });
 });
