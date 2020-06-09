@@ -92,7 +92,7 @@ function loadDataFilter() {
           $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#project_filter");
       });
       $.each(response.roles, function (k, v) {
-        if (k == 0 && response.projects.length == 1)
+        if (k == 0 && response.roles.length == 1)
           $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
         else
           $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");

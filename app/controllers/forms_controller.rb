@@ -229,11 +229,12 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    if @privilege_array.include?(APPROVE_CDS)
+    data = if @privilege_array.include?(APPROVE_CDS)
       @form_service.data_filter_cds_approve
     elsif @privilege_array.include?(REVIEW_CDS)
       @form_service.data_filter_cds_review
     end
+    render json: data
   end
 
   private
