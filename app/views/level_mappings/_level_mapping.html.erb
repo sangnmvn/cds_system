@@ -1,16 +1,15 @@
-<%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag "form", media: "all", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
 <div class='row'>
   <div class='col-12'>
-    <table class="table table-responsive-sm table-mytable border-table" id="table_level_mapping">
-      <thead>
+    <div class='basic-table-wrapper'>
+      <table class="table table-responsive-sm table-basic table-mytable border-table" id="table_level_mapping">
+        <thead>
           <tr>
-            <th>Title</th>
-            <th>Rank</th>
-            <th>Level</th>
+            <th class="th">Title</th>
+            <th class="th">Rank</th>
+            <th class="th" >Level</th>
             <th class="tr-staff">Required Competencies (*)</th>
-            <th>Action</th>
+            <th class="th">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -55,7 +54,8 @@
           </tr>
         <% end %>
         </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 </div>
 <div class='row'>

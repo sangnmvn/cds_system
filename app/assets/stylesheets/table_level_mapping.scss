@@ -1,6 +1,38 @@
 // Place all the styles related to the LevelMappings controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.table-basic {
+  text-align: left;
+  overflow: scroll;
+  thead {
+      color: #fff;
+      font-size: large;
+      font-weight: bold;
+  }
+  .th{
+      border: 1px solid #fff;
+      background-color: #3A5FCD;
+      text-align: center;
+      font-size: medium;
+  }
+  table {
+      border: 2px solid #0066CC;
+  }
+
+  td {
+      border: 1px solid #fff;
+  }
+
+  tbody .odd {
+      background-color: #CFD5EA;
+  }
+
+  tbody .even {
+      background-color: #E9EBF5;
+  }
+}
+
+
 #table_level_mapping tbody td {
   padding: 5px 10px 5px 10px;
 }
@@ -37,9 +69,10 @@
 .tr-staff {
   background-color: yellow;
   color: #000;
-  border: 2px solid #4472c4;
+  text-align: center;
 }
 .divButton{
+  padding-top: 25px;
   text-align: center;
 }
 .btnAdd {
@@ -100,4 +133,15 @@
 }
 .invisible {
   visibility: hidden;
+}
+.basic-table-wrapper {
+  max-height: 430px;
+  overflow: auto;
+  .table thead th { 
+    position: sticky;
+    top: 0;
+  }
+  .tr-staff{
+    z-index: 100;
+  }
 }

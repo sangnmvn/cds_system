@@ -1,6 +1,7 @@
 $(document).ready(function () {
   loadLevelMapping(count)
   changeBtnSave(false)
+  checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   $('#table_edit_level_mapping').on('click', '#btnAddRequired', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
@@ -402,4 +403,17 @@ function fails(content) {
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
   }, 4000);
+}
+function checkPrivilege (edit,view)
+{
+  if(!edit && !view)
+    window.location.replace = ""
+  else
+  {
+    if(view && edit == "false")
+    {
+      $(".btnAction").remove()
+      $(".btnSave").remove()
+    }
+  }
 }

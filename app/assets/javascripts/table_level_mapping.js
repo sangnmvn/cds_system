@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   changeBtnSave(false)
   $('#table_level_mapping').on('click', '#btnAddRequired', function () {
     changeBtnSave(false)
@@ -265,7 +266,6 @@ function saveLevelMapping (arr)
     }
   });
 }
-
 function saveTitleMapping()
 {
   record = [];
@@ -335,4 +335,17 @@ function fails(content) {
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
   }, 4000);
+}
+function checkPrivilege (edit,view)
+{
+  if(edit == "false" && !view)
+    window.location.replace = ""
+  else
+  {
+    if(view && edit == "false")
+    {
+      $(".btnAction").remove()
+      $(".btnSave").remove()
+    }
+  }
 }

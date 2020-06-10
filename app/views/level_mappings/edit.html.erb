@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
+<input class="d-none" id="can_edit_level_mapping" value=<%= @can_edit %>>
 <div class='row'>
   <div class='col-12'>
     <div class='row col-num'>
@@ -21,4 +22,6 @@
 <div class='row'>
   <div class='col-12 div-table'><%= render 'edit_level_mapping'%></div>
 </div>
-
+<script>
+  var global_can_view = <%= @can_view %>
+</script>

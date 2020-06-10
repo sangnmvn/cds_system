@@ -31,19 +31,25 @@ class LevelMappingsController < ApplicationController
       data: title,
       no_rank: title.count,
     }
+    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    @can_view = @privilege_array.include?(VIEW_LEVEL_MAPPING)
   end
 
   def edit
     level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank",:level,:rank_number,:competency_type)
     @level_mappings = level_mappings
+    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    @can_view = @privilege_array.include?(VIEW_LEVEL_MAPPING)
   end
 
   def save_level_mapping
+    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
     return render json: { status: "success" } if @level_mapping_service.save_level_mapping
     render json: { status: "fail" }
   end
 
   def clear_level_mapping
+    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
     return render json: { status: "success" } if @level_mapping_service.clear_level_mapping
     render json: { status: "fail" }
   end
