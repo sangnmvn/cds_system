@@ -348,7 +348,7 @@ function editTitleMapping()
   var startTime = Date.now();
   while ((Date.now() - startTime) < 15000) {
     if (status == "success" || status == "fail")
-    {
+    {      
       break;
     }
 }
