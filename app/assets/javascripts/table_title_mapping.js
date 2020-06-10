@@ -56,7 +56,7 @@ function loadTitleMappingForAdd() {
                 title_id = data_list[0].title_id;
                 final_html += "<tr data-title_id='" + title_id + "'>";
                 final_html += `<td style="text-align: left">{title_name}</td> 
-                               <td>{rank}</td>
+                               <td class="number">{rank}</td>
                                `.formatUnicorn({
                     title_name: title_name,
                     rank: rank
@@ -89,5 +89,5 @@ function loadTitleMappingForAdd() {
 }
 
 $(document).ready(function () {
-    loadTitleMappingForAdd();    
+    loadTitleMappingForAdd();
 });

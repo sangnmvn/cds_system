@@ -278,7 +278,7 @@ function saveTitleMapping()
       competency_ids.push($(this).data("competency-id"));
     })
     
-    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value[is_changed=true]'.formatUnicorn({title_id: title_id})
+    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value'.formatUnicorn({title_id: title_id})
 
     for (i=0; i < competency_ids.length; i++)
     {

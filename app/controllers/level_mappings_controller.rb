@@ -70,8 +70,7 @@ class LevelMappingsController < ApplicationController
 
   def edit_title_mapping
     return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
-    return render json: { status: "success" } if @level_mapping_service.edit_title_mapping(params)
-    render json: { status: "fail" }
+    render json: @level_mapping_service.edit_title_mapping(params)
   end
 
   private

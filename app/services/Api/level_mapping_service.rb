@@ -35,10 +35,6 @@ module Api
     end
 
     def get_title_mapping_for_edit_level_mapping(role_id)
-      #title_mappings = Title.joins([role: [templates: [:competencies]]], :title_mappings)
-      #.select(:id, :name, :value, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "max(templates.updated_at)")
-      #.group(:id, :name, :value, :rank, "competencies.name", "competencies.id")
-      #.where(role_id: role_id).order(rank: :asc)
       title_ids = Title.where(role_id: role_id).pluck(:id)
       title_mappings = TitleMapping.includes(title: [role: [templates: [:competencies]]]).where(title_id: title_ids).order("titles.rank")
 
@@ -47,7 +43,7 @@ module Api
           title: title_mapping.title.name,
           rank: title_mapping.title.rank,
           competency_name: title_mapping.competency.name,
-          competency_id: title_mapping.competency.id,
+          competency_id: title_mapping.competency_id,
           title_id: title_mapping.title.id,
           value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
         }
@@ -76,7 +72,7 @@ module Api
       #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
       current_user_id = current_user.id
 
-      records = params["records"]
+      records = params[:records]
       all_title_ids = []
       all_title_ids = records.keys.collect { |key| records[key]["title_id"] }.uniq
       TitleMapping.where(title_id: all_title_ids).destroy_all
@@ -133,7 +129,8 @@ module Api
     end
 
     def save_level_mapping
-      LevelMapping.create!(table_level_mapping_params)
+      return { status: "success" } if LevelMapping.create!(table_level_mapping_params)
+      { status: "success" }
     end
 
     private
