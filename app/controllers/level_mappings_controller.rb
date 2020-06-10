@@ -15,7 +15,7 @@ class LevelMappingsController < ApplicationController
   end
 
   def index
-    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    @can_edit = can_edit?
   end
 
   def get_title_mapping_for_new_level_mapping
@@ -37,8 +37,8 @@ class LevelMappingsController < ApplicationController
       data: title,
       no_rank: title.count,
     }
-    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
-    @can_view = @privilege_array.include?(VIEW_LEVEL_MAPPING)
+    @can_edit = can_edit?
+    @can_view = can_view?
   end
 
   def edit
@@ -46,33 +46,40 @@ class LevelMappingsController < ApplicationController
 
     level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
     @level_mappings = level_mappings
-    @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
-    @can_view = @privilege_array.include?(VIEW_LEVEL_MAPPING)
+    @can_edit = can_edit?
+    @can_view = can_view?
   end
 
   def save_level_mapping
-    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    return render json: { status: "fail" } unless can_edit?
     return render json: { status: "success" } if @level_mapping_service.save_level_mapping
     render json: { status: "fail" }
   end
 
   def clear_level_mapping
-    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    return render json: { status: "fail" } unless can_edit?
     return render json: { status: "success" } if @level_mapping_service.clear_level_mapping
     render json: { status: "fail" }
   end
 
   def save_title_mapping
-    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    return render json: { status: "fail" } unless can_edit?
     return render json: { status: "success" } if @level_mapping_service.save_title_mapping(params)
     render json: { status: "fail" }
   end
 
   def edit_title_mapping
-    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    return render json: { status: "fail" } unless can_edit?
     render json: @level_mapping_service.edit_title_mapping(params)
   end
 
+  def can_edit?
+    @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+  end
+
+  def can_view?
+    @privilege_array.include?(VIEW_LEVEL_MAPPING)
+  end
   private
 
   def check_privilege

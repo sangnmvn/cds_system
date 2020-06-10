@@ -96,8 +96,8 @@ function loadTitleMappingForEdit() {
 
       $('select.competency_value').change(function () {
         $(this).attr('data-is_changed', 'true');
-        $('#btnSave').removeAttr('disabled');
-        $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
+        // $('#btnSave').removeAttr('disabled');
+        // $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
       })
     }
   });

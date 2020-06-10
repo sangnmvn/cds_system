@@ -25,32 +25,32 @@
                 <input type="number" class="form-control" min="1" max="20" placeholder='Quantity' value="<%= item.quantity%>">
               </div>
               <div class='col-5'>
-                <select class="form-control" id="selectType">
+                <select class="form-control" id="select_type">
                   <option value='<%= item.competency_type %>'selected>
                     <%= item.competency_type %>
                   </option>
                 </select>
               </div>
               <div class='col-2'>
-                <select class="form-control" id="selectRank">
+                <select class="form-control" id="select_rank">
                   <option value='<%= item.rank_number %>'selected><%= item.rank_number %></option>
                 </select>
               </div>
               <div class='col-2 divIcon'>
-                <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired">
+                <a type='button' class='btnAction' title='Add more Required' id="btn_add_required">
                   <i class='fas fa-plus-circle btnAdd'></i>
                 </a>
-                <a type='button' class='btnAction invisible' title='Remove Required' id="btnRemoveRequired">
+                <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required">
                   <i class='fas fa-times btnDel'></i>
                 </a>
               </div>
             </div>
             </td>
             <td>
-              <a type='button' class='btnAction invisible' title='Add more levels' id="btnAddLevel">
+              <a type='button' class='btnAction invisible' title='Add more levels' id="btn_add_level">
                 <i class='fa fa-plus btnAdd'></i>
               </a>
-              <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel">
+              <a type='button' class='btnAction' title='Remove level' id="btn_remove_level">
                 <i class='fas fa-times btnDel'></i>
               </a>
             </td>
@@ -63,7 +63,7 @@
 </div>
 <div class='row'>
   <div class='col-12 divButton'>
-    <button class='btn btn-primary btnSave' id="btnSave">Save</button>
+    <button class='btn btn-primary btn-save' id="btn_save">Save</button>
     <a type='button' class='btn btn-light border-dark' href="/level_mappings/">Cancel</a>
   </div>
 </div>

@@ -115,14 +115,14 @@ module Api
 
       # update updated_by
       parent_role_id = Title.find(records["0"]["title_id"]).role_id
-      role = Role.find(parent_role_id)
+      role = Role.find_by_id(parent_role_id)
       role.updated_by = current_user_id
       role.save!
       true
     end
 
     def clear_level_mapping
-      temp = LevelMapping.includes(:title).find_by(title_id: params[:title_id])
+      temp = LevelMapping.includes(:title).find_by_title_id(params[:title_id])
       role_id = temp.title.role_id
       titles = Title.where(role_id: role_id)
       LevelMapping.where(title_id: titles).destroy_all

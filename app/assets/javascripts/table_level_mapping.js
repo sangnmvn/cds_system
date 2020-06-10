@@ -1,7 +1,7 @@
 $(document).ready(function () {
   checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   changeBtnSave(false)
-  $('#table_level_mapping').on('click', '#btnAddRequired', function () {
+  $('#btn_add_required').on('click', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
     var quantity = row.find('input')[0].value
@@ -18,7 +18,7 @@ $(document).ready(function () {
         $(this).addClass("invisible").removeClass("visible")
       }
   });
-  $('#table_level_mapping').on('click', '#btnRemoveRequired', function () {
+  $('#table_level_mapping').on('click', '#btn_remove_required', function () {
     if($(this).parent().parent().next().length == 0)
     {
       if($(this).parent().parent().prevAll().length == 1)
@@ -29,7 +29,7 @@ $(document).ready(function () {
     }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('click', '#btnAddLevel', function () {
+  $('#table_level_mapping').on('click', '#btn_add_level', function () {
     changeBtnSave(false)
     var tr = $(this).closest('tr')
     var title = tr.children()[0].textContent
@@ -50,18 +50,18 @@ $(document).ready(function () {
     newRow.cells[3].innerHTML=row;
     newRow.insertCell(4);
     newRow.cells[4].innerHTML=
-    `<a type='button' class='btnAction' title='Add more levels' id="btnAddLevel"><i class='fa fa-plus btnAdd'></i></a>
-    <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel"><i class='fas fa-times btnDel'></i></a>`
+    `<a type='button' class='btnAction' title='Add more levels' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
+    <a type='button' class='btnAction' title='Remove level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`
 ;
 
   });
-  $('#table_level_mapping').on('click', '#btnRemoveLevel', function () {
+  $('#table_level_mapping').on('click', '#btn_remove_level', function () {
     var current_tr = $(this).parent().parent()
     
     var nextRow = current_tr.next()
     var colNextRow = nextRow.children()[2]
     if(colNextRow == null || (parseInt(colNextRow.textContent)) - 1 < 1)
-      current_tr.prev().find('#btnAddLevel').addClass("visible").removeClass("invisible")
+      current_tr.prev().find('#btn_add_level').addClass("visible").removeClass("invisible")
     else
     {
       while(colNextRow != null)
@@ -76,7 +76,7 @@ $(document).ready(function () {
     }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('change', '#selectType', function () {
+  $('#table_level_mapping').on('change', '#select_type', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
@@ -90,11 +90,11 @@ $(document).ready(function () {
     if(num > 20)
     $(this).val(20)
   });
-  $('#table_level_mapping').on('change', '#selectRank', function () {
+  $('#table_level_mapping').on('change', '#select_rank', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
-  $('#btnSave').on('click', function () {
+  $('#btn_save').on('click', function () {
     var tr = $("#table_level_mapping").find("tr")
     var lenght = tr.length
     for(var i = 1; i < lenght; i++)
@@ -128,7 +128,7 @@ function createNewRowRequire (count)
       <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
     </div>
     <div class='col-5'>
-      <select class="form-control" id="selectType">
+      <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
         <option value='0'>All</option>
         <option value='1'>General</option>
@@ -136,7 +136,7 @@ function createNewRowRequire (count)
       </select>
     </div>
     <div class='col-2'>
-      <select class="form-control" id="selectRank">
+      <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
     for(var i = 1; i <= count; i++)
     {
@@ -146,8 +146,8 @@ function createNewRowRequire (count)
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction' title='Remove Required' id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -160,7 +160,7 @@ function createNewRowLevel (count)
       <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
     </div>
     <div class='col-5'>
-      <select class="form-control" id="selectType">
+      <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
         <option value='0'>All</option>
         <option value='1'>General</option>
@@ -168,7 +168,7 @@ function createNewRowLevel (count)
       </select>
     </div>
     <div class='col-2'>
-      <select class="form-control" id="selectRank">
+      <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
     for(var i = 1; i <= count; i++)
     {
@@ -178,8 +178,8 @@ function createNewRowLevel (count)
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction invisible' title='Remove Required' id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -237,13 +237,13 @@ function checkDuplicateRequired (td)
 function changeBtnSave (bool)
 {
   if (bool == true) {
-    $('#btnSave').attr("disabled", false);
-    $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
+    $('#btn_save').attr("disabled", false);
+    $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
   }
   else
   {
-    $('#btnSave').attr("disabled", true);
-    $('#btnSave').removeClass("btn-primary").addClass("btn-secondary")
+    $('#btn_save').attr("disabled", true);
+    $('#btn_save').removeClass("btn-primary").addClass("btn-secondary")
   }
   
 }
@@ -354,7 +354,7 @@ function checkPrivilege (edit,view)
     if(view && edit == "false")
     {
       $(".btnAction").remove()
-      $(".btnSave").remove()
+      $(".btn-save").remove()
     }
   }
 }
