@@ -24,6 +24,12 @@ class LevelMappingsController < ApplicationController
     render json: @level_mapping_service.get_title_mapping_for_new_level_mapping(role_id)
   end
 
+  def get_title_mapping_for_edit_level_mapping
+    params = level_mapping_params
+    role_id = params[:role_id]
+    render json: @level_mapping_service.get_title_mapping_for_edit_level_mapping(role_id)
+  end
+
   def add
     @role_id = params[:role_id]
     title = Title.where(role_id: @role_id).order(:rank)
@@ -36,7 +42,9 @@ class LevelMappingsController < ApplicationController
   end
 
   def edit
-    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank",:level,:rank_number,:competency_type)
+    @role_id = params[:role_id]
+
+    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
     @level_mappings = level_mappings
     @can_edit = @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
     @can_view = @privilege_array.include?(VIEW_LEVEL_MAPPING)
@@ -55,7 +63,14 @@ class LevelMappingsController < ApplicationController
   end
 
   def save_title_mapping
+    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
     return render json: { status: "success" } if @level_mapping_service.save_title_mapping(params)
+    render json: { status: "fail" }
+  end
+
+  def edit_title_mapping
+    return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_ON_LEVEL_MAPPING)
+    return render json: { status: "success" } if @level_mapping_service.edit_title_mapping(params)
     render json: { status: "fail" }
   end
 

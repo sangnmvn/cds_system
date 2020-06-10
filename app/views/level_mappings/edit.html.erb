@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= @can_edit %>>
+<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <div class='row'>
   <div class='col-12'>
     <div class='row col-num'>
@@ -9,7 +10,7 @@
   </div>
 </div>
 <div class='row'>
-  <div class='col-12 div-table'><%= render 'new_table_title_mapping'%></div>
+  <div class='col-12 div-table'><%= render 'edit_table_title_mapping'%></div>
 </div>
 <div class='row'>
   <div class='col-12'>
@@ -24,4 +25,5 @@
 </div>
 <script>
   var global_can_view = <%= @can_view %>
+  var global_role_id = <%= @role_id %>
 </script>

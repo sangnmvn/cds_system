@@ -1,8 +1,9 @@
-function loadTitleMappingForAdd() {
-    role_id = $("#role_id").val();
+function loadTitleMappingForEdit() {
+    role_id = global_role_id;
+    
     $.ajax({
         type: "GET",
-        url: "/level_mappings/get_title_mapping_for_new_level_mapping/" + role_id,
+        url: "/level_mappings/get_title_mapping_for_edit_level_mapping/" + role_id,
         headers: {
             "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
         },
@@ -48,6 +49,7 @@ function loadTitleMappingForAdd() {
             for (i = 0; i < key_of_title_list.length; i++) {
                 title_name = key_of_title_list[i];
                 data_list = title_list[title_name];
+                console.log(data_list);
                 if (data_list.length == 0) {
                     continue;
                 }
@@ -66,28 +68,40 @@ function loadTitleMappingForAdd() {
                     for (k = 0; k < data_list.length; k++) {
                         // find competency data suitable for competency column cell
                         if (data_list[k].competency_name == current_cell_competency_name) {
-                            value_dropdown = `<select class='form-control competency_value'> 
-                            <option selected value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
+                            value_dropdown = `<select data-is_changed='false' class='form-control competency_value'> 
+                            <option value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
                             <option value='1-2'>1-2</option><option value='++2'>++2</option><option value='2'>2</option>
                             <option value='2-3'>2-3</option><option value='++3'>++3</option><option value='3'>3</option>
                             <option value='4-5'>4-5</option><option value='++4'>++4</option><option value='4'>4</option>
                             <option value='5-6'>5-6</option><option value='++5'>++5</option><option value='5'>5</option>
                             </select>`;
+
+                            value = data_list[k].value;
+                            index_of_insert = value_dropdown.indexOf(" value='{value}'>".formatUnicorn({value: value}));
+                            value_dropdown = value_dropdown.substring(0, index_of_insert) + ' selected ' + value_dropdown.substring(index_of_insert);
                             final_html += "<td class='competency_row'>{value_dropdown}</td>".formatUnicorn({
                                 value_dropdown: value_dropdown
                             });
                             break;
+                            
                         }
                     }
                 }
                 final_html += "</tr>";
             }
 
-            $(".table-new-title-mapping tbody").html(final_html);
+            $(".table-edit-title-mapping tbody").html(final_html);
+
+            $('select.competency_value').change(function(){
+                $(this).attr('data-is_changed', 'true');
+                $('#btnSave').removeAttr('disabled');
+                $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
+            })
         }
     });
 }
 
 $(document).ready(function () {
-    loadTitleMappingForAdd();    
+    loadTitleMappingForEdit();   
+    
 });

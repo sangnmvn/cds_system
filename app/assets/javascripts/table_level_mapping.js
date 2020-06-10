@@ -111,7 +111,7 @@ $(document).ready(function () {
           saveLevelMapping(list)
         else
         {
-          success("Has a empty field!")
+          fails("Has an empty field!")
           return
         }
       }
@@ -278,7 +278,7 @@ function saveTitleMapping()
       competency_ids.push($(this).data("competency-id"));
     })
     
-    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value'.formatUnicorn({title_id: title_id})
+    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value[is_changed=true]'.formatUnicorn({title_id: title_id})
 
     for (i=0; i < competency_ids.length; i++)
     {
@@ -286,13 +286,15 @@ function saveTitleMapping()
             
       value = $(element_to_read)[i].value;
       current_data = {value: value, title_id: title_id, competency_id: current_competency_id};
+      console.log(current_data);
       record.push(current_data);      
     }
     
   }  
   );  
   
-  var status;
+  var status = null;
+  var keep_looping = true;
   $.ajax({    
     type: "POST",
     url: "/level_mappings/save_title_mapping/" ,
@@ -301,11 +303,18 @@ function saveTitleMapping()
     },
     data: {records: record},
     dataType: "json",
-    success: function (response) {
+    success: function (response) {      
       status = response['status']
     }
   })
 
+  var startTime = Date.now();
+  while ((Date.now() - startTime) < 15000) {
+    if (status != null)
+    {
+      break;
+    }
+}
   return status;
 }
 function getDatainRow (lst,list)

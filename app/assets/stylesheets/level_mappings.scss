@@ -2,23 +2,41 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+.table-new-title-mapping, .table-edit-title-mapping{
+    display: block;
+    overflow-x: auto;    
+
+    table {
+        border: 2px solid #0066CC;
+    }
+
+    th {
+        text-align: center;
+        font-size: medium;
+    }
+
+    tbody tr:nth-child(2n+1) td {
+        background-color: #CFD5EA;
+    }
+
+    tbody tr:nth-child(2n+0) td {
+        background-color: #E9EBF5;
+    }
+}
+.table-new-title-mapping tbody td:nth-child(1) {
+    width: 30%;  
+}
+
+.table-new-title-mapping tbody td:nth-child(2) {
+    width: 7%;  
+}
+
+
 .modal-header{
     padding-top: 9px;
 }
 #role_select{
     width: 100%;
-}
-
-tr > .static_title_header_col:nth-child(1){
-    width: 400px;
-}
-
-tr > .static_title_header_col:nth-child(2){
-    width: 20px;
-}
-
-tr > .static_title_header_col:nth-child(3){
-    width: 20px;
 }
 
 .competency_value
@@ -30,12 +48,25 @@ tr > .static_title_header_col:nth-child(3){
 {
     text-align: right;
 }
+
+
+.static_title_header_col
+{
+    background-color: #3A5FCD;
+    color: #fff;
+    font-weight: bold;
+}
 .dynamic_title_header_col
 {
     background-color: #FFFF00;
     color: #000;
+    font-weight: bold;        
 }
 
+.competency_row
+{
+    min-width: 90px;
+}
 .table-cds-assessment-manager-list {
     margin: 0 auto;
 }
@@ -44,9 +75,7 @@ table tr td {
     text-align: center;
     vertical-align: middle;
     border: 1px solid white;
-    padding: 0px 10px 0px 10px;
-    white-space: nowrap;
-
+    padding: 0px 10px 0px 10px;    
 }
 
 .table-level-mapping_list tbody tr td:nth-child(1) {
