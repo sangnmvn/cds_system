@@ -300,6 +300,14 @@ function editTitleMapping() {
       var current_competency_id = competency_ids[i];
 
       value = $(element_to_read)[i].value;
+      
+      is_changed = $(element_to_read)[i].getAttribute('data-is_changed');
+      
+      if (is_changed != "true")
+      {
+        continue;
+      }
+
       current_data = {
         value: value,
         title_id: title_id,
