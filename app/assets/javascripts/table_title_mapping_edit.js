@@ -49,7 +49,6 @@ function loadTitleMappingForEdit() {
       for (i = 0; i < key_of_title_list.length; i++) {
         title_name = key_of_title_list[i];
         data_list = title_list[title_name];
-        console.log(data_list);
         if (data_list.length == 0) {
           continue;
         }
@@ -96,8 +95,8 @@ function loadTitleMappingForEdit() {
 
       $('select.competency_value').change(function () {
         $(this).attr('data-is_changed', 'true');
-        // $('#btnSave').removeAttr('disabled');
-        // $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
+        $('#btn_save').attr("disabled", false);
+        $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
       })
     }
   });

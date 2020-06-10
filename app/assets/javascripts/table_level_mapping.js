@@ -1,7 +1,7 @@
 $(document).ready(function () {
   checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   changeBtnSave(false)
-  $('#btn_add_required').on('click', function () {
+  $('#table_level_mapping').on('click', '#btn_add_required', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
     var quantity = row.find('input')[0].value
@@ -240,8 +240,7 @@ function changeBtnSave (bool)
     $('#btn_save').attr("disabled", false);
     $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
   }
-  else
-  {
+  else{
     $('#btn_save').attr("disabled", true);
     $('#btn_save').removeClass("btn-primary").addClass("btn-secondary")
   }
@@ -286,7 +285,6 @@ function saveTitleMapping()
             
       value = $(element_to_read)[i].value;
       current_data = {value: value, title_id: title_id, competency_id: current_competency_id};
-      console.log(current_data);
       record.push(current_data);      
     }
     
@@ -308,13 +306,6 @@ function saveTitleMapping()
     }
   })
 
-  var startTime = Date.now();
-  while ((Date.now() - startTime) < 15000) {
-    if (status != null)
-    {
-      break;
-    }
-}
   return status;
 }
 function getDatainRow (lst,list)

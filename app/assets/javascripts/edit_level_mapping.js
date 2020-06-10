@@ -29,6 +29,7 @@ $(document).ready(function () {
       $(this).parent().parent().next().children()[3].children[1].classList.add('invisible')
     }
     $(this).parent().parent().remove()
+    checkData()
   });
   $('#table_edit_level_mapping').on('click', '#btn_add_level', function () {
     changeBtnSave(false)
@@ -58,7 +59,6 @@ $(document).ready(function () {
   });
   $('#table_edit_level_mapping').on('click', '#btn_remove_level', function () {
     var current_tr = $(this).parent().parent()
-
     var nextRow = current_tr.next()
     var colNextRow = nextRow.children()[2]
     if(colNextRow == null || (parseInt(colNextRow.textContent)) - 1 < 1)
@@ -76,6 +76,7 @@ $(document).ready(function () {
       }
     }
     $(this).parent().parent().remove()
+    checkData()
   });
   $('#table_edit_level_mapping').on('change', '#select_type', function () {
     checkData()
@@ -115,9 +116,7 @@ $(document).ready(function () {
         }
       }
     }
-
     editTitleMapping()
-    window.location.replace("/level_mappings/");
   })
 });
 
@@ -320,7 +319,7 @@ function editTitleMapping() {
 
   var status = null;
   var keep_looping = true;
-
+  
   $.ajax({
     type: "POST",
     url: "/level_mappings/edit_title_mapping/",
@@ -332,16 +331,11 @@ function editTitleMapping() {
     },
     dataType: "json",
     success: function (response) {
-      status = response['status']
+      status = response['status'];
+      window.location.replace("/level_mappings/");
     }
   })
 
-  var startTime = Date.now();
-  while ((Date.now() - startTime) < 15000) {
-    if (status == "success" || status == "fail") {
-      break;
-    }
-  }
   return status;
 }
 
