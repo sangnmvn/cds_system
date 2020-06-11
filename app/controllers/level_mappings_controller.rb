@@ -15,7 +15,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def index
-    @can_edit = can_edit?
   end
 
   def get_title_mapping_for_new_level_mapping
@@ -37,17 +36,12 @@ class LevelMappingsController < ApplicationController
       data: title,
       no_rank: title.count,
     }
-    @can_edit = can_edit?
-    @can_view = can_view?
   end
 
   def edit
     @role_id = params[:role_id]
 
-    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
-    @level_mappings = level_mappings
-    @can_edit = can_edit?
-    @can_view = can_view?
+    @level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
   end
 
   def save_level_mapping
@@ -80,6 +74,9 @@ class LevelMappingsController < ApplicationController
   def can_view?
     @privilege_array.include?(VIEW_LEVEL_MAPPING)
   end
+
+  helper_method :can_view?, :can_edit?
+
   private
 
   def check_privilege
