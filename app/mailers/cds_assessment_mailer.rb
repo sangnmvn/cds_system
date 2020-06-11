@@ -71,4 +71,30 @@ class CdsAssessmentMailer < ApplicationMailer
 
     mail(to: @emails, subject: "[CDS system] Notify to approve CDS for#{@staff_name}")
   end
+
+  def pm_approve_cds
+    @rank_number = params[:rank_number]
+    @level_number = params[:level_number]
+    @title_number = params[:title_number]
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @from_date = params[:from_date]
+    @to_date = params[:to_date]
+    @emails = staff.email
+
+    mail(to: @emails, subject: "[CDS system] Temporary CDS title in period [from #{@from_date} to #{@to_date}]")
+  end
+
+  def pm_re_approve_cds
+    @rank_number = params[:rank_number]
+    @level_number = params[:level_number]
+    @title_number = params[:title_number]
+    staff = params[:staff]
+    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @from_date = params[:from_date]
+    @to_date = params[:to_date]
+    @emails = staff.email
+
+    mail(to: @emails, subject: "[CDS system] Temporary CDS title in period [from #{@from_date} to #{@to_date}] (update)")
+  end
 end

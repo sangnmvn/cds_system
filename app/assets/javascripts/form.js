@@ -50,7 +50,7 @@ function loadDataPanel(form_id) {
                   <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
                   ${competency}
                   </td>
-                  <td class="col-3">1</td>
+                  <td class="col-3">1</td>  
                 </tr>
               </thead>
             </table>
@@ -184,6 +184,14 @@ function checkDisableFormSlotsUser(user_id) {
   else
     return ""
 }
+function checkTitle(flag) {
+  var title = "Request more evidences";
+  if (flag == "yellow")
+    title = "Need to add more evidences";
+  if (flag == "green")
+    title = "Evidences have been added and sent to Requester";
+  return title
+}
 
 function loadDataSlots(response) {
   var temp = "";
@@ -259,7 +267,9 @@ function loadDataSlots(response) {
     temp += `<td rowspan="${rowspan}">
               <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
               </br>
-              <a href="javascript:void(0)" title="Need to Update" class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
+              `;
+              if (e.tracking.flag != "red")
+              temp+=`<a href="javascript:void(0)" title="${checkTitle(e.tracking.flag)}"  class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
               </br>`;
     if (e.tracking.is_passed)
       temp += `<a href="javascript:void(0)" title="Re-Assessment" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fa fa-edit"></i></a>`;
@@ -294,6 +304,7 @@ function loadDataSlots(response) {
   checkStatusFormStaff(status);
   resizeTextarea();
   checkChangeSlot();
+  checkFlagTitle();
 }
 
 function hightlightChangeSlot(id) {
