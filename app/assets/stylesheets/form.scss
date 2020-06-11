@@ -239,14 +239,31 @@ $color-disable: #afaaaa;
   background-color: #8da8db;
   font-weight: bold;
 }
+
+.table-preview-result {
+  .slot-header {
+    padding: 10px;
+    text-align: center;
+  }
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+}
+
 .table-statistic-preview-result,
 .table-preview-result thead {
   color: black;
 }
 .table-statistic-preview-result,
-.table-preview-result thead tr td {
+.table-preview-result thead tr {
+  td {
   text-align: center;
   font-weight: bold;
+  }
+  th {
+    border: 1px solid #42719a;
+  }
 }
 .td-expected {
   color: #42b6f5;
@@ -539,34 +556,34 @@ td.disabled,textarea:disabled,select:disabled{
 }
 
 .slot-header {
-  &1 {
+  &.lv1 {
     background-color: #c5e0b4;
   }
-  &2 {
+  &.lv2 {
     background-color: #deecf7;
   }
-  &3 {
+  &.lv3 {
     background-color: #fcf2cc;
   }
-  &4 {
+  &.lv4 {
     background-color: #dae4f3;
   }
-  &5 {
+  &.lv5 {
     background-color: #f3d5f3;
   }
-  &6 {
+  &.lv6 {
     background-color: #b4e0ca;
   }
-  &7 {
+  &.lv7 {
     background-color: #aed6ee;
   }
-  &8 {
+  &.lv8 {
     background-color: #b3a5e0;
   }
-  &9 {
+  &.lv9 {
     background-color: #dde0b3;
   }
-  &10 {
+  &.lv10 {
     background-color: #d8b8b1;
   }
 }

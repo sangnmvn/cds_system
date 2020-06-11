@@ -49,7 +49,7 @@ class FormsController < ApplicationController
     if params[:title_history_id].present?
       @hash[:status] = "Done"
       @hash[:title_history_id] = params[:title_history_id]
-      @hash[:title] = "CDS Assessment for " + TitleHistory.find(params[:title_history_id]).period.format_name
+      @hash[:title] = "CDS Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
       return @hash
     end
     if params.include?(:form_id)
@@ -80,7 +80,7 @@ class FormsController < ApplicationController
       }
     end
     form = Form.where(id: params[:form_id]).first
-    user = User.includes(:role).find(params[:user_id])
+    user = User.includes(:role).find_by_id(params[:user_id])
     is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds
     @hash = {
       user_id: params[:user_id],
@@ -131,11 +131,19 @@ class FormsController < ApplicationController
   end
 
   def preview_result
-    form = Form.find_by(_type: "CDS", user_id: current_user.id)
-    return "fail" if form.nil?
+    return redirect_to forms_path if params[:form_id].nil?
 
-    @competencies = Competency.where(template_id: form.template_id).pluck(:name)
-    @result = @form_service.preview_result(form)
+    form = Form.find_by_id(params[:form_id])
+    return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
+
+    @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+    @result = @form_service.preview_result(form, @privilege_array)
+
+    @hash_level = {}
+    @competencies.map do |compentency|
+      @hash_level[compentency.id] = @form_service.calculate_level_rank(@result[compentency.name])
+    end
+    roles = Role.find_by_id(current_user.role_id)
 
     @slots = @result.values.map(&:keys).flatten.uniq.sort
 
@@ -155,7 +163,7 @@ class FormsController < ApplicationController
   end
 
   def destroy
-    form = Form.find(params[:id])
+    form = Form.find_by_id(params[:id])
     return render json: { status: "can't delete form" } if current_user.role_id == form.role_id || form.status != "New"
     if form.update(is_delete: true)
       render json: { status: "success" }
@@ -165,7 +173,7 @@ class FormsController < ApplicationController
   end
 
   def submit
-    form = Form.find(params[:form_id])
+    form = Form.find_by_id(params[:form_id])
     approvers = Approver.where(user_id: form.user_id).includes(:approver)
     return render json: { status: "fail" } if approvers.empty?
     if form.update(period_id: params[:period_id], status: "Awaiting Review")
@@ -185,9 +193,9 @@ class FormsController < ApplicationController
     user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
     if approver.update(is_submit_cds: true)
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
-      user = User.find(params[:user_id])
+      user = User.find_by_id(params[:user_id])
       if approvers.where(is_submit_cds: false).where.not(approver_id: user_groups.pluck(:user_id)).count.zero?
-        return render json: { status: "fail" } unless Form.find(params[:form_id]).update(status: "Awaiting Approval")
+        return render json: { status: "fail" } unless Form.find_by_id(params[:form_id]).update(status: "Awaiting Approval")
         user_groups.each do |user_group|
           CdsAssessmentMailer.with(staff: user, pm: user_group.user).email_to_pm.deliver_later(wait: 1.minute)
         end
@@ -199,7 +207,7 @@ class FormsController < ApplicationController
   end
 
   def approve_cds
-    user_name = User.find(params[:user_id]).format_name
+    user_name = User.find_by_id(params[:user_id]).format_name
     status = @form_service.approve_cds
     render json: { status: status, user_name: user_name }
   end

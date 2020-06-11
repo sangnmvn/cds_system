@@ -195,6 +195,10 @@ h2,
     border: 0.13em solid #0066CC;
 }
 
+.type-text {
+    text-align: left;
+}
+
 .header-breadcrumb {
     background-color: #DDDDDD;
     color: white !important;
@@ -202,8 +206,13 @@ h2,
     height: 40px;
     padding-top: 10px;;
 }
+
 .header{
     background-color: #DDDDDD;
+}
+
+.type-number {
+    text-align: right;
 }
 /*
   *= require_tree .
