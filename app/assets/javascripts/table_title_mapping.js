@@ -70,8 +70,8 @@ function loadTitleMappingForAdd() {
                             <option selected value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
                             <option value='1-2'>1-2</option><option value='++2'>++2</option><option value='2'>2</option>
                             <option value='2-3'>2-3</option><option value='++3'>++3</option><option value='3'>3</option>
-                            <option value='4-5'>4-5</option><option value='++4'>++4</option><option value='4'>4</option>
-                            <option value='5-6'>5-6</option><option value='++5'>++5</option><option value='5'>5</option>
+                            <option value='3-4'>3-4</option><option value='++4'>++4</option><option value='4'>4</option>
+                            <option value='4-5'>4-5</option><option value='++5'>++5</option><option value='5'>5</option>
                             </select>`;
                             final_html += "<td class='competency_row'>{value_dropdown}</td>".formatUnicorn({
                                 value_dropdown: value_dropdown
@@ -89,5 +89,5 @@ function loadTitleMappingForAdd() {
 }
 
 $(document).ready(function () {
-    loadTitleMappingForAdd();
+    //loadTitleMappingForAdd();
 });

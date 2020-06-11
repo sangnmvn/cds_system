@@ -119,11 +119,16 @@ module Api
       role.save!
     end
 
-    def clear_level_mapping
-      temp = LevelMapping.includes(:title).find_by_title_id(params[:title_id])
-      role_id = temp.title.role_id
-      titles = Title.where(role_id: role_id)
-      LevelMapping.where(title_id: titles).destroy_all
+    def delete_level_mapping
+      LevelMapping.where(id: params[:list]).destroy_all
+    end
+
+    def update_level_mapping
+      item = LevelMapping.find_by_id(id: params[:level_mapping_id])
+      item.quantity = params[:quantity]
+      item.competency_type = params[:type]
+      item.rank_number = params[:rank]
+      item.save
     end
 
     def save_level_mapping

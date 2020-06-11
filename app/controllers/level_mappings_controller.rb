@@ -32,17 +32,30 @@ class LevelMappingsController < ApplicationController
   def add
     @role = Role.find_by_id(params[:role_id])
     title = Title.where(role_id: @role.id).order(:rank)
+    count_competencies =  Competency.includes(:template).where("templates.role_id": @role.id).count
+    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
     @list_title = {
       data: title.where(status: 0),
+      data_real: title,
       no_rank: title.count,
+      count_competency: count_competencies,
+      competency: competencies,
     }
   end
 
   def edit
     @role = Role.find_by_id(params[:role_id])
-
-    @level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
-    @rank = Title.where(role_id: @role.id).count
+    level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
+    title = Title.where(role_id: @role.id).order(:rank)
+    count_competencies =  Competency.includes(:template).where("templates.role_id": @role.id).count
+    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
+    @list_level_mapping = {
+      data: level_mappings,
+      rank: title.count,
+      count_competency: count_competencies,
+      competency: competencies,
+      title: title,
+    }
   end
 
   def save_level_mapping
@@ -51,15 +64,21 @@ class LevelMappingsController < ApplicationController
     render json: { status: "fail" }
   end
 
-  def clear_level_mapping
+  def delete_level_mapping
     return render json: { status: "fail" } unless can_edit?
-    return render json: { status: "success" } if @level_mapping_service.clear_level_mapping
+    return render json: { status: "success" } if @level_mapping_service.delete_level_mapping(params)
     render json: { status: "fail" }
   end
 
   def save_title_mapping
     return render json: { status: "fail" } unless can_edit?
     return render json: { status: "success" } if @level_mapping_service.save_title_mapping(params)
+    render json: { status: "fail" }
+  end
+
+  def update_title_mapping
+    return render json: { status: "fail" } unless can_edit?
+    return render json: { status: "success" } if @level_mapping_service.update_title_mapping(params)
     render json: { status: "fail" }
   end
 
@@ -89,6 +108,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank)
+    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank,:list,:level_mapping_id)
   end
 end

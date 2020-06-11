@@ -87,8 +87,11 @@ $(document).ready(function () {
     var num = parseInt($(this).val())
     if(num < 1)
       $(this).val(1)
-    if(num > 20)
-    $(this).val(20)
+    if(num > max_quantity)
+    $(this).val(max_quantity)
+  });
+  $('#table_edit_level_mapping').on('change', 'input', function (e) {
+    checkData()
   });
   $('#table_level_mapping').on('change', '#select_rank', function () {
     checkData()
@@ -125,7 +128,7 @@ function createNewRowRequire (count)
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">
@@ -157,7 +160,7 @@ function createNewRowLevel (count)
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">

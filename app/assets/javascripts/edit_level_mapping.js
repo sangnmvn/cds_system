@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  var list_del = []
   loadLevelMapping(count)
   changeBtnSave(false)
   checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
@@ -28,6 +29,7 @@ $(document).ready(function () {
     if ($(this).parent().parent().nextAll().length == 1 && $(this).parent().parent().prevAll().length == 0) {
       $(this).parent().parent().next().children()[3].children[1].classList.add('invisible')
     }
+    list_del.push($(this).parent().parent().data("level-mapping-id"))
     $(this).parent().parent().remove()
     checkData()
   });
@@ -75,47 +77,87 @@ $(document).ready(function () {
         colNextRow = nextRow.children()[2]
       }
     }
+    var lst = $(this).closest('td').prev().children()
+    var count = lst.length
+    for(var i = 0; i < count; i++)
+    {
+      if(lst[i].getAttributeNames().includes("data-level-mapping-id") == true)
+      {
+        list_del.push(lst[i].attributes[1].value)
+      }
+    }
     $(this).parent().parent().remove()
     checkData()
   });
   $('#table_edit_level_mapping').on('change', '#select_type', function () {
     checkData()
     checkDuplicateRequired($(this))
+    $(this).parent().parent().attr('data-is_change', 'true');
   });
-  $('#table_edit_level_mapping').on('keyup', 'input', function () {
+  $('#table_edit_level_mapping').on('keyup', 'input', function (e) {
     checkData()
+    $(this).parent().parent().attr('data-is_change', 'true');
+  });
+  $('#table_edit_level_mapping').on('change', 'input', function (e) {
+    checkData()
+    $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#table_edit_level_mapping').on('blur', 'input', function () {
     var num = parseInt($(this).val())
-    if (num < 1)
+    if(num < 1)
       $(this).val(1)
-    if (num > 20)
-      $(this).val(20)
+    if(num > max_quantity)
+    $(this).val(max_quantity)
   });
   $('#table_edit_level_mapping').on('change', '#select_rank', function () {
     checkData()
     checkDuplicateRequired($(this))
+    $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#btn_save').on('click', function () {
     var tr = $("#table_edit_level_mapping").find("tr")
     var lenght = tr.length
-    clearLevelMapping(tr[1].getAttribute('data-title-id')) //xóa bản ghi cũ
     for (var i = 1; i < lenght; i++) {
       var listLevelMapping = tr[i].children[3].children
       var lenghtRow = listLevelMapping.length
       for (var j = 0; j < lenghtRow; j++) {
-        var list = []
-        list.push(tr[i].getAttribute('data-title-id'))
-        list.push(tr[i].children[2].innerHTML)
-        list = getDatainRow(listLevelMapping[j].children, list)
-        if (list != "")
-          saveLevelMapping(list)
-        else {
-          fails("Has a empty field!")
-          return
+        if(listLevelMapping[j].getAttributeNames().includes("data-level-mapping-id") == false)
+        {
+          var list = []
+          list.push(tr[i].getAttribute('data-title-id'))
+          list.push(tr[i].children[2].innerHTML)
+          list = getDatainRow(listLevelMapping[j].children, list)
+          if (list != "")
+            saveLevelMapping(list)
+          else {
+            fails("Has a empty field!")
+            return
+          }
+        }
+        else
+        {
+          if(listLevelMapping[j].attributes["data-is_change"].value == 'true')
+          {
+            var id_level_mapping = listLevelMapping[j].attributes[1].value
+            if(id_level_mapping)
+            {
+              var list = []
+              list.push(id_level_mapping)
+              list.push(listLevelMapping[j].children[0].children[0].value)
+              list.push(listLevelMapping[j].children[1].children[0].value)
+              list.push(listLevelMapping[j].children[2].children[0].value)
+              if (list[0] != "")
+                UpdateLevelMapping(list)
+              else {
+                fails("Has a empty field!")
+                return
+              }
+            }
+          }
         }
       }
     }
+    deleteLevelMapping(list_del)
     editTitleMapping()
   })
 });
@@ -254,12 +296,27 @@ function saveLevelMapping(arr) {
     success: function (response) {}
   });
 }
-
-function clearLevelMapping(title_id) {
+function UpdateLevelMapping(arr) {
   $.ajax({
-    url: "/level_mappings/clear_level_mapping",
+    url: "/level_mappings/update_level_mapping",
     data: {
-      title_id: title_id
+      level_mapping_id: arr[0],
+      quantity: arr[1],
+      type: arr[2],
+      rank: arr[3],
+    },
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {}
+  });
+}
+function deleteLevelMapping(arr) {
+  $.ajax({
+    url: "/level_mappings/delete_level_mapping",
+    data: {
+      list: arr
     },
     type: "POST",
     headers: {
@@ -318,7 +375,7 @@ function editTitleMapping() {
   });
   if(record.length > 0)
   {
-    //var status = null;
+    var status = null;
     //var keep_looping = true;
     $.ajax({
       type: "POST",
@@ -331,14 +388,15 @@ function editTitleMapping() {
       },
       dataType: "json",
       success: function (response) {
-        //status = response['status'];
+        status = response['status'];
         window.location.replace("/level_mappings/");
       }
     })
-    //return status;
+    return status;
   }
   else
-    window.location.replace("/level_mappings/");
+  {}
+    //window.location.replace("/level_mappings/");
 }
 
 function loadLevelMapping(count) {

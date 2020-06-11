@@ -175,6 +175,8 @@ Title.create!(id: 11, name: "Director of Technology", desc: "Director of Technol
 Title.create!(id: 12, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3",status: 0)
 Title.create!(id: 13, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3",status: 0)
 Title.create!(id: 14, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3",status: 0)
+Title.create!(id: 20, name: "Business Analyst Manager", desc: "Business Analyst Manager", rank: 4, role_id: "3",status: 1)
+# PM
 # PM
 Title.create!(id: 15, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4",status: 0)
 Title.create!(id: 16, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4",status: 0)

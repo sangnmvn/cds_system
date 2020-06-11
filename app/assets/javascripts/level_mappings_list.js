@@ -109,6 +109,18 @@ $(document).ready(function () {
   $("#add_new_level_mapping").on("click", function () {
     $(".error").remove();
   });
+  $("#role_select").on('change', function() {
+    if($(this).val() != "")
+    {
+      $('#btn-modal-add').attr("disabled", false);
+      $('#btn-modal-add').addClass("btn-primary").removeClass("btn-secondary")
+    }
+    else
+    {
+      $('#btn-modal-add').attr("disabled", true);
+      $('#btn-modal-add').addClass("btn-secondary").removeClass("btn-primary")
+    }
+  })
   $('#level_mapping_list').on('click', '.btn-edit-level-mapping', function () {
     role_id = $(this).attr('data-role_id')
     if (role_id != "") {

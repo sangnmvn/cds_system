@@ -14,15 +14,15 @@
           </tr>
         </thead>
         <tbody>
-        <% @level_mappings.each do |item| %>
+        <% @list_level_mapping[:data].each do |item| %>
           <tr data-title-id='<%= item.title_id %>'>
             <td><%= item.title.name %></td>
             <td><%= item.title.rank %></td>
             <td><%= item.level %></td>
             <td>
-            <div class="row">
+            <div class="row" data-level-mapping-id="<%= item.id %>" data-is_change='false'>
               <div class='col-3'>
-                <input type="number" class="form-control" min="1" max="20" placeholder='Quantity' value="<%= item.quantity%>">
+                <input type="number" class="form-control" min="1" max="<%= @list_level_mapping[:count_competency] %>" placeholder='Quantity' value="<%= item.quantity%>">
               </div>
               <div class='col-5'>
                 <select class="form-control" id="select_type">
@@ -70,6 +70,7 @@
 <div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
 <script>
-  var count = <%= @rank %>
-  var length =  <%= @level_mappings.count %>
+  var max_quantity = <%= @list_level_mapping[:count_competency] %>
+  var count = <%= @list_level_mapping[:rank] %>
+  var length =  <%= @list_level_mapping[:data].count %>
 </script>
