@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       post "submit"
       post "get_data_filter_cds_assessment_manager"
       post "approve_cds"
+      post "reject_cds"
       post "get_cds_histories"
       post "get_data_slot"
       get "get_filter"
