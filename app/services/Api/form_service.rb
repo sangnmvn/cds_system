@@ -75,8 +75,7 @@ module Api
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
-      form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, level: 2, rank: 2, title_id: 1002, role_id: 1, status: "New", is_delete: false)
-
+      form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, level: 2, rank: 2, title_id: 1, role_id: 1, status: "New", is_delete: false)
       if form.save
         slot_ids.map do |id|
           FormSlot.create!(form_id: form.id, slot_id: id, is_passed: 0)
@@ -89,7 +88,7 @@ module Api
     def get_list_cds_review
       filter = filter_cds_review_list
       user_ids = User.where(filter[:filter_users]).pluck(:id)
-      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq
+      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_ids = Approver.where(approver_id: current_user.id, user_id: user_ids).pluck(:user_id).uniq
 
       forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
@@ -339,15 +338,22 @@ module Api
         if line_manager.present?
           line_manager.update(recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
-          approver = Approver.includes(:approver).where(user_id: params[:user_id])
-          all_line_manager = LineManager.where(form_slot_id: form_slot.id)
-          approver.each do |line, i|
-            if line.approver.id == current_user.id
+          # user_id = Form.where(id: form.id).pluck(:user_id)
+          # project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
+          # user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+          # user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
+
+          # approver = Approver.includes(:approver).where(user_id: params[:user_id])
+          # all_line_manager = LineManager.where(form_slot_id: form_slot.id)
+          # approver.each do |line, i|
+          #   if line.approver.id == current_user.id
+          #     LineManager.create!(recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
+          #   else
+          #     LineManager.create!(recommend: "", user_id: line.approver.id, form_slot_id: form_slot.id, period_id: period_id)
+          #   end
+          # end
               LineManager.create!(recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
-            else
-              LineManager.create!(recommend: "", user_id: line.approver.id, form_slot_id: form_slot.id, period_id: period_id)
-            end
-          end
+          
         end
       end
     end
@@ -496,9 +502,14 @@ module Api
         hash[key] += 1
       end
       return "fail" unless form.update(status: "Done")
-      # user = User.find(form.user_id)
-      # period = Period.find(form.period_id)
-      # CdsAssessmentMailer.with(staff: user, rank_number:, level_number:, title_number:, from_date:period.from_date, to_date:period.to_date ).pm_approve_cds.deliver_later(wait: 1.minute)
+      user = User.find(form.user_id)
+      period = Period.find(form.period_id)
+      if form.is_approved
+        CdsAssessmentMailer.with(staff: user, rank_number:form.rank, level_number:form.level, title_number:form.title&.name, from_date:period.from_date, to_date:period.to_date ).pm_re_approve_cds.deliver_later(wait: 1.minute)
+      else 
+        CdsAssessmentMailer.with(staff: user, rank_number:form.rank, level_number:form.level, title_number:form.title&.name, from_date:period.from_date, to_date:period.to_date ).pm_approve_cds.deliver_later(wait: 1.minute)
+      end
+      return "fail" unless form.update(is_approved: true)
       "success"
     end
 
@@ -506,10 +517,9 @@ module Api
       form = Form.where(id: params[:form_id], status: "Done").where.not(period: nil).first
       return "fail" if form.nil?
 
-      title_history = TitleHistory.find(params[:title_history_id])
+      title_history = TitleHistory.where(user_id: params[:user_id]).order(period_id: :desc).first
       return "fail" unless title_history.destroy
       return "fail" unless form.update(status: "Awaiting Approval")
-      #send mail
       "success"
     end
 
