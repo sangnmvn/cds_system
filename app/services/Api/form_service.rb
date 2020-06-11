@@ -1,5 +1,8 @@
 module Api
   class FormService < BaseService
+    REVIEW_CDS = 16
+    APPROVE_CDS = 17
+
     def initialize(params, current_user)
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
@@ -349,7 +352,7 @@ module Api
       end
     end
 
-    def preview_result(form)
+    def preview_result(form, privilege_array)
       competencies = Competency.where(template_id: form.template_id).order(:location).pluck(:id)
       filter = {
         form_slots: { form_id: form.id },
@@ -366,18 +369,102 @@ module Api
         dumy_hash[key] = -1 if dumy_hash[key].nil?
         dumy_hash[key] += 1
         hash[slot.competency.name] = {} if hash[slot.competency.name].nil?
-        check = (!form_slots[slot.id][:point].zero? && form_slots[slot.id][:recommends].empty?) || form_slots[slot.id][:is_change]
+        data = form_slots[slot.id]
+        value = data[:final_point] || data[:point]
+        value = data[:point] if data[:is_change]
+        if privilege_array.include?(REVIEW_CDS)
+          data[:recommends].map do |d|
+            value = d[:given_point] || value if d[:user_id] == current_user.id
+          end
+        elsif privilege_array.include?(APPROVE_CDS)
+          value = data[:final_point] || value
+        end
         h_slot = {
-          value: form_slots[slot.id][:final_point] || form_slots[slot.id][:point],
-          type: check ? "assessed" : "new",
+          value: value,
+          type: data[:is_change] ? "assessed" : "new",
           class: "",
         }
-        if check
-          h_slot[:class] = form_slots[slot.id][:point] > 2 ? "pass-slot" : "fail-slot"
+        if data[:is_change]
+          h_slot[:class] = data[:point] > 2 ? "pass-slot" : "fail-slot"
+        end
+        unless data[:is_commit]
+          h_slot = {
+            value: 0,
+            type: "new",
+            class: "",
+          }
         end
         hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = h_slot
       end
       hash
+    end
+
+    def format_point(point)
+      case point
+      when 1
+        "0-1"
+      when 99
+        "++1"
+      when 100
+        "1"
+      when 101
+        "1-2"
+      when 199
+        "++2"
+      when 200
+        "2"
+      when 201
+        "2-3"
+      when 299
+        "++3"
+      when 300
+        "3"
+      when 301
+        "3-4"
+      when 399
+        "++4"
+      when 400
+        "4"
+      when 401
+        "4-5"
+      when 499
+        "++5"
+      when 500
+        "5"
+      end
+    end
+
+    def calculate_level_rank(hash_point)
+      level = 1
+      count = 0
+      sum = 0
+      count_fail = 0
+      s_level = ""
+      rank = ""
+      hash_point.map do |key, value|
+        if level != key.to_i
+          plp = (count * 5) / 2.0
+          if plp <= sum * 1.0
+            if count_fail.zero?
+              s_level = "#{level}"
+            else
+              s_level = "++#{level}"
+              break
+            end
+          elsif count_fail < count
+            s_level = "#{level - 1}-#{level}"
+            break
+          end
+          count = 0
+          sum = 0
+        end
+        count_fail += 1 if value[:value] < 3
+        count += 1
+        sum += value[:value]
+        level = key.to_i
+      end
+      return "0" if s_level.empty?
+      s_level
     end
 
     def approve_cds

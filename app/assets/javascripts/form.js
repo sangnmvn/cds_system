@@ -95,11 +95,15 @@ function loadDataPanel(form_id) {
 
 function resizeTextarea() {
   $(".autoresizing").on("input", function () {
+    if ($(this).height() < $(this).parent().height())
+      return;
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
 
   $(".autoresizing").each((i, el) => {
+    if (el.textLength == 0)
+      return;
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   })
@@ -228,11 +232,11 @@ function loadDataSlots(response) {
         <td class="${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}" colspan="5" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea></td>`;
     if (length != 0) {
       temp += `
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[0].is_pm)}">
-          <textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[0].is_pm)}">
+          <textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
         </td>
-        <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[0].is_pm)}">
-          <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[0].user_id)}>
+        <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[0].is_pm)}">
+          <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}>
             <option></option>
             <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
             <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
@@ -267,9 +271,9 @@ function loadDataSlots(response) {
       for (i = 1; i < length; i++) {
         temp += `
           <tr>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[i].is_pm)}">
-              <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}>
+            <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+            <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[i].is_pm)}">
+              <select class="given-point-select" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
                 <option></option>
                 <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
                 <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
@@ -278,7 +282,7 @@ function loadDataSlots(response) {
                 <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
               </select>
             </td>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer,e.tracking.recommends[i].user_id)}" colspan="1" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
+            <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}" colspan="1" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
           </tr>`;
       }
     }
@@ -295,30 +299,27 @@ function loadDataSlots(response) {
 function hightlightChangeSlot(id) {
   var list_tr = $('.csd-assessment-table table tbody').find('.tr_slot');
   for (var i = 0; i < list_tr.length; i++) {
-    if(list_tr[i].id == id) {
+    if (list_tr[i].id == id) {
       list_tr[i].children[2].children[0].style.color = '#3366CC'
       list_tr[i].children[3].children[0].style.color = '#3366CC'
       list_tr[i].children[4].children[0].style.color = '#3366CC'
     }
   }
 }
-function hightlightChangeCompetency(id, level)
-{
+function hightlightChangeCompetency(id, level) {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
-    if($("#card" + i).attr("data-id-competency") == id)
-    {
-      $("#card" + i).css('backgroundColor','#FBE5D6')
+    if ($("#card" + i).attr("data-id-competency") == id) {
+      $("#card" + i).css('backgroundColor', '#FBE5D6')
       $("#collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
     }
   }
 }
-function checkChangeSlot()
-{
+function checkChangeSlot() {
   $.ajax({
     type: "GET",
     url: "/forms/get_slot_is_change",
-    data: {form_id : form_id},
+    data: { form_id: form_id },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -326,7 +327,7 @@ function checkChangeSlot()
     success: function (response) {
       $.each(response, function (i, e) {
         hightlightChangeSlot(e.slot_id);
-        hightlightChangeCompetency(e.competency_id,e.level);
+        hightlightChangeCompetency(e.competency_id, e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
     }
@@ -556,7 +557,7 @@ $(document).on("change", ".csd-assessment-table table tbody .tr_slot", function 
         column_commit.children()[0].style.color = '#3366CC'
         column_evidence.children()[0].style.color = '#3366CC'
         column_point.children()[0].style.color = '#3366CC'
-        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor','#99CCFF')
+        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor', '#99CCFF')
       }
     });
   }

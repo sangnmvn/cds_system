@@ -555,11 +555,6 @@ $(document).on("change", ".tr_slot", function () {
     var slot_id = $(this).data("id");
     var point = $(this).find('.given-point-select').val();
     var recommend = $(this).find('.recommend').val();
-    temp = $(this).children('td:nth-child(1)').text();
-    column_commit = $(this).children('td:nth-child(3)');
-    column_point = $(this).children('td:nth-child(4)');
-    column_recommend = $(this).children('td:nth-child(5)');
-
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_manager",
@@ -573,27 +568,7 @@ $(document).on("change", ".tr_slot", function () {
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
-      success: function (response) {
-        current = $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text().split('/');
-        max = parseInt(current[1]);
-        current_change = 0
-        $('div.csd-assessment-table table tbody tr.tr_slot').each(function (i, sel) {
-          level = $(this).children('td:nth-child(1)').text();
-          index = i + 1
-          val = $('div.csd-assessment-table table tbody tr:nth-child(' + index + ') td:nth-child(4) select option:selected').val();
-          if (level.charAt(0) == temp.charAt(0) && val != "")
-            current_change += 1;
-        });
-        if (current_change <= max)
-          current_change = current_change;
-        else
-          current = max;
-        $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-        column_commit.children()[0].style.color = '#3366CC'
-        column_recommend.children()[0].style.color = '#3366CC'
-        column_point.children()[0].style.color = '#3366CC'
-        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor', '#99CCFF')
-      }
+      success: function (response) { }
     });
   }
 });

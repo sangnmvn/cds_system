@@ -193,6 +193,13 @@ h2,
 .border-table{
     border: 0.13em solid  #0066CC;
 }
+.type-text {
+    text-align: left;
+}
+
+.type-number {
+    text-align: right;
+}
 /*
   *= require_tree .
   *= require_self

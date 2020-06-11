@@ -7,19 +7,19 @@
           <th style="width:400px">Competency</th>
           <th style="width:60px" class="form-pr-level">Rank</th>
           <th style="width:60px"class="form-pr-level">Level</th>
-          <% @slots.each do |s| %>
-            <th class="slot-header<%= s.to_i %>"><%= s %></th>
+          <% @slots.each do |slot| %>
+            <th class="slot-header lv<%= slot.to_i %>"><%= slot %></th>
           <% end %>
         </tr>
       </thead>
       <tbody>
-        <% @competencies.each_with_index do |c, i| %>
+        <% @competencies.each do |competency| %>
           <tr>
-            <td style="width:400px" class="form-competency-name"><%= c %></td>
-            <td style="width:60px" class="form-pr-level">rank</td>
-            <td style="width:60px"class="form-pr-level">++1</td>
-            <% @slots.each do |s| %>
-              <td style="text-align:center" class="<%= @result[c][s][:type] + " " + @result[c][s][:class] unless @result[c][s].nil? %>"><%= @result[c][s].nil? ? "" : @result[c][s][:value] %></td>
+            <td style="width:400px" class="form-competency-name"><%= competency.name %></td>
+            <td style="width:60px" class="form-pr-rank">rank</td>
+            <td style="width:60px"class="form-pr-level"><%= @hash_level[competency.id] %></td>
+            <% @slots.each do |slot| %>
+              <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
             <% end %>
           </tr>
         <% end %>
