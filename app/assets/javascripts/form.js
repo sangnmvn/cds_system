@@ -244,13 +244,13 @@ function loadDataSlots(response) {
         <td class="disabled" ><textarea style="resize:none" disabled colspan="1" style="${checkPM(e.tracking.recommends[0].is_pm)}">${e.tracking.recommends[0].name}</textarea></td>`;
     } else {
       temp += `
-        <td class="disabled" colspan="2" ><textarea style="resize:none" disabled></textarea></td>
-        <td class="disabled" >
+        <td class="disabled" colspan="4" ><textarea style="resize:none" disabled></textarea></td>
+        <td class="disabled" colspan="2" >
           <select class="given-point-select" disabled>
             <option></option>
           </select>
         </td>
-        <td class="disabled"><textarea style="resize:none" disabled></textarea></td>`;
+        <td class="disabled" colspan="1"><textarea style="resize:none" disabled></textarea></td>`;
     }
     temp += `<td rowspan="${rowspan}">
               <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
