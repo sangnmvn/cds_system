@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_05_093224) do
+ActiveRecord::Schema.define(version: 2020_06_11_041416) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
@@ -260,6 +260,7 @@ ActiveRecord::Schema.define(version: 2020_06_05_093224) do
     t.text "desc"
     t.integer "rank"
     t.bigint "role_id"
+    t.boolean "status"
     t.index ["role_id"], name: "index_titles_on_role_id"
   end
 

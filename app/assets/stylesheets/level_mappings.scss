@@ -4,38 +4,17 @@
 .sticky-col {
     position: sticky;
     position: -webkit-sticky;    
-  }
-
-.table-new-title-mapping, .table-edit-title-mapping{
-    display: block;
-    overflow-x: auto;    
-    
-    table {
-        border: 2px solid #0066CC;
-    }
-
-    th {
-        text-align: center;
-        font-size: medium;
-    }
-
-    tbody tr:nth-child(2n+1) td {
-        background-color: #CFD5EA;
-    }
-
-    tbody tr:nth-child(2n+0) td {
-        background-color: #E9EBF5;
-    }
 }
+
 .table-new-title-mapping tbody td:nth-child(1) {
-    width: 30%;              
+    width: 20%;              
 }
 .table-new-title-mapping tbody td:nth-child(2) {
     width: 7%;  
 }
 
 .table-edit-title-mapping tbody td:nth-child(1) {
-    width: 15%;  
+    width: 20%;  
 }
 
 
@@ -70,7 +49,10 @@
     text-align: right;
 }
 
-
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
 .static_title_header_col
 {
     background-color: #3A5FCD;

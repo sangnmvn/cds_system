@@ -316,27 +316,29 @@ function editTitleMapping() {
     }
 
   });
-
-  var status = null;
-  var keep_looping = true;
-  
-  $.ajax({
-    type: "POST",
-    url: "/level_mappings/edit_title_mapping/",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {
-      records: record
-    },
-    dataType: "json",
-    success: function (response) {
-      status = response['status'];
-      window.location.replace("/level_mappings/");
-    }
-  })
-
-  return status;
+  if(record.length > 0)
+  {
+    //var status = null;
+    //var keep_looping = true;
+    $.ajax({
+      type: "POST",
+      url: "/level_mappings/edit_title_mapping/",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {
+        records: record
+      },
+      dataType: "json",
+      success: function (response) {
+        //status = response['status'];
+        window.location.replace("/level_mappings/");
+      }
+    })
+    //return status;
+  }
+  else
+    window.location.replace("/level_mappings/");
 }
 
 function loadLevelMapping(count) {

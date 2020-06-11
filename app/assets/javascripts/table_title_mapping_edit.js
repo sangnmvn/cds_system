@@ -104,5 +104,4 @@ function loadTitleMappingForEdit() {
 
 $(document).ready(function () {
   loadTitleMappingForEdit();
-
 });

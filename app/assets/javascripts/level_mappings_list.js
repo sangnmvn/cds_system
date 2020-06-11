@@ -71,7 +71,7 @@ function loadDataLevelMapping() {
         var data = response[i];
         final_html += `<tr> 
                            <td>{no}</td> 
-                           <td>{role}</td> 
+                           <td><a class='btn-edit-level-mapping' data-toggle='tooltip' title='View Level Mapping' data-role_id='{role_id}' href='javascript:void(0)'>{role}</a></td> 
                            <td>{no_rank}</td>                            
                            <td>{latest_update}</td> 
                            <td>{updated_by}</td> 
@@ -99,13 +99,13 @@ function loadDataLevelMapping() {
 
 $(document).ready(function () {
   var can_edit = $("#can_edit_level_mapping").val() == "true";
+  loadDataLevelMapping();
+  loadRoleWithoutLevelMapping();
   if (!can_edit) {
     $("#add_new_level_mapping").attr("disabled", "disabled");
     $("#add_new_level_mapping").closest("a").removeAttr("href");
+    $("#level_mapping_list").find(".btn-edit-level-mapping").addClass("disabled")
   }
-  loadDataLevelMapping();
-  loadRoleWithoutLevelMapping();
-
   $("#add_new_level_mapping").on("click", function () {
     $(".error").remove();
   });

@@ -95,6 +95,7 @@ $(document).ready(function () {
     checkDuplicateRequired($(this))
   });
   $('#btn_save').on('click', function () {
+    changeBtnSave(false)
     var tr = $("#table_level_mapping").find("tr")
     var lenght = tr.length
     for(var i = 1; i < lenght; i++)
@@ -117,7 +118,6 @@ $(document).ready(function () {
       }
     }
     saveTitleMapping()
-    window.location.href = "/level_mappings/";
   })
 });
 function createNewRowRequire (count)
@@ -290,23 +290,27 @@ function saveTitleMapping()
     
   }  
   );  
-  
-  var status = null;
-  var keep_looping = true;
-  $.ajax({    
-    type: "POST",
-    url: "/level_mappings/save_title_mapping/" ,
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {records: record},
-    dataType: "json",
-    success: function (response) {      
-      status = response['status']
-    }
-  })
-
-  return status;
+  if(record.length > 0)
+  {
+    // var status = null;
+    var keep_looping = true;
+    $.ajax({    
+      type: "POST",
+      url: "/level_mappings/save_title_mapping/" ,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {records: record},
+      dataType: "json",
+      success: function (response) {      
+        //status = response['status']
+        window.location.href = "/level_mappings/";
+      }
+    })
+  }
+  else
+    window.location.href = "/level_mappings/";
+  // return status;
 }
 function getDatainRow (lst,list)
 {

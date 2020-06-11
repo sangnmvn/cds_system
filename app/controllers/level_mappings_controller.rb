@@ -30,18 +30,19 @@ class LevelMappingsController < ApplicationController
   end
 
   def add
-    @role_id = params[:role_id]
-    title = Title.where(role_id: @role_id).order(:rank)
+    @role = Role.find_by_id(params[:role_id])
+    title = Title.where(role_id: @role.id).order(:rank)
     @list_title = {
-      data: title,
+      data: title.where(status: 0),
       no_rank: title.count,
     }
   end
 
   def edit
-    @role_id = params[:role_id]
+    @role = Role.find_by_id(params[:role_id])
 
     @level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
+    @rank = Title.where(role_id: @role.id).count
   end
 
   def save_level_mapping
