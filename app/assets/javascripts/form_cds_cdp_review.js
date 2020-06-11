@@ -185,9 +185,11 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
     return;
 }
 function checkTitle(flag) {
-  var title = "Add more evidences";
+  var title = "Request more evidences";
   if (flag == "yellow")
-    title = "Cancel request more evidences";
+    title = "Need to add more evidences";
+  if (flag == "green")
+    title = "Evidences have been added and sent to Requester";
   return title
 }
 
@@ -208,6 +210,16 @@ function checkDisableFormSlotsUser(user_id) {
   else
     return ""
 }
+// function checkFlagTitle() {
+//   $(".flag-cds-assessment").each((i, el) => {
+//     if(el.childNodes.item('i').style.color=="yellow")
+//       el.title = "Need to add more evidences";
+//     if(el.childNodes.item('i').style.color=="red")
+//       el.title = "Request more evidences";
+//     if(el.childNodes.item('i').style.color=="green")
+//       el.title = "Evidences have been added and sent to Requester";
+//   })
+// }
 
 function loadDataSlots(response) {
   var temp = "";
@@ -317,6 +329,7 @@ function loadDataSlots(response) {
   checkStatusFormReview(status);
   resizeTextarea();
   checkChangeSlot();
+  checkFlagTitle();
 }
 
 function hightlightChangeSlot(id) {

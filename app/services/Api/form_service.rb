@@ -496,7 +496,9 @@ module Api
         hash[key] += 1
       end
       return "fail" unless form.update(status: "Done")
-      #send mail
+      # user = User.find(form.user_id)
+      # period = Period.find(form.period_id)
+      # CdsAssessmentMailer.with(staff: user, rank_number:, level_number:, title_number:, from_date:period.from_date, to_date:period.to_date ).pm_approve_cds.deliver_later(wait: 1.minute)
       "success"
     end
 
@@ -611,14 +613,15 @@ module Api
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id)
       approvers.each_with_index do |approver, i|
-        line = line_managers[i]
-        if (line.blank?)
+        # line = line_managers[i]
+        line = LineManager.find_by(user_id: approver.approver_id,form_slot_id: form_slot.id)
+        if line.blank?
           hash[:recommends] << {
             given_point: "",
             recommends: "",
-            name: User.find(approver.approver.id).account,
+            name: User.find(approver.approver_id).account,
             flag: "red",
-            user_id: User.find(approver.approver.id).id,
+            user_id: User.find(approver.approver_id).id,
             is_final: "",
             is_pm: false,
           }
