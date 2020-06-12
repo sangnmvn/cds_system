@@ -48,7 +48,7 @@ class LevelMappingsController < ApplicationController
     level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
     title = Title.where(role_id: @role.id).order(:rank)
     count_competencies =  Competency.includes(:template).where("templates.role_id": @role.id).count
-    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
+    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)    
     @list_level_mapping = {
       data: level_mappings,
       rank: title.count,
