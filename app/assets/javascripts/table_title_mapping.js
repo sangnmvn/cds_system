@@ -89,5 +89,5 @@ function loadTitleMappingForAdd() {
 }
 
 $(document).ready(function () {
-    //loadTitleMappingForAdd();
+    loadTitleMappingForAdd();
 });
