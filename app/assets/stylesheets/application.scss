@@ -194,11 +194,11 @@ h2,
     border: 0.13em solid  #0066CC;
 }
 .type-text {
-    text-align: left;
+    text-align: left !important;
 }
 
 .type-number {
-    text-align: right;
+    text-align: right !important;
 }
 /*
   *= require_tree .

@@ -1,23 +1,9 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(4, 10, "#FAD7A0");
-  drawColorTitleFormPreviewResult(11, 17, "#d4f6ff");
-  drawColorTitleFormPreviewResult(18, 24, "#feffd4");
-  drawColorTitleFormPreviewResult(25, 31, "#d4f6ff");
-  drawColorTitleFormPreviewResult(32, 38, "#FAD7A0");
   $("[data-toggle=sidebar-colapse]").click(function () {
     sidebarCollapse();
   });
-
-  function drawColorTitleFormPreviewResult(start, end, color) {
-    for (i = start; i <= end; i++) {
-      $(".table-preview-result thead tr th:nth-child(" + i + ")").css(
-        "background-color",
-        color
-      );
-    }
-  }
 
   function sidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");

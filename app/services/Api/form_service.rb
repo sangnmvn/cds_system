@@ -296,7 +296,7 @@ module Api
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, flag: "green")
           line_manager.update(flag: "green")
           period = Form.includes(:period).find(params[:form_id]).period
-          CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_later(wait: 1.minute)
+          CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: params[:competency_name], user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_later(wait: 1.minute)
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
@@ -366,24 +366,23 @@ module Api
       }
 
       slots = Slot.includes(:competency).joins(:form_slots).where(filter).order(:level, :slot_id)
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id))
-      form_slots = format_form_slot(form_slots)
-      hash = {}
-      dumy_hash = {}
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
+      form_slots = get_point_for_result(form_slots)
+      h_point = {}
+      h_poisition_level = {}
       slots.map do |slot|
         key = slot.competency.name + slot.level.to_s
-        dumy_hash[key] = -1 if dumy_hash[key].nil?
-        dumy_hash[key] += 1
-        hash[slot.competency.name] = {} if hash[slot.competency.name].nil?
+        h_poisition_level[key] = 0 if h_poisition_level[key].nil?
+        h_point[slot.competency.name] = {} if h_point[slot.competency.name].nil?
         data = form_slots[slot.id]
         value = data[:final_point] || data[:point]
         value = data[:point] if data[:is_change]
-        if privilege_array.include?(REVIEW_CDS)
-          data[:recommends].map do |d|
-            value = d[:given_point] || value if d[:user_id] == current_user.id
+        if current_user.id != form.user_id
+          if privilege_array.include?(REVIEW_CDS)
+            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
+          elsif privilege_array.include?(APPROVE_CDS)
+            value = data[:final_point] || value
           end
-        elsif privilege_array.include?(APPROVE_CDS)
-          value = data[:final_point] || value
         end
         h_slot = {
           value: value,
@@ -400,75 +399,43 @@ module Api
             class: "",
           }
         end
-        hash[slot.competency.name][slot.level + LETTER_CAP[dumy_hash[key]]] = h_slot
+        h_point[slot.competency.name][slot.level + LETTER_CAP[h_poisition_level[key]]] = h_slot
+        h_poisition_level[key] += 1
       end
-      hash
-    end
-
-    def format_point(point)
-      case point
-      when 1
-        "0-1"
-      when 99
-        "++1"
-      when 100
-        "1"
-      when 101
-        "1-2"
-      when 199
-        "++2"
-      when 200
-        "2"
-      when 201
-        "2-3"
-      when 299
-        "++3"
-      when 300
-        "3"
-      when 301
-        "3-4"
-      when 399
-        "++4"
-      when 400
-        "4"
-      when 401
-        "4-5"
-      when 499
-        "++5"
-      when 500
-        "5"
-      end
+      h_point
     end
 
     def calculate_level_rank(hash_point)
-      level = 1
-      count = 0
-      sum = 0
-      count_fail = 0
       s_level = ""
-      rank = ""
-      hash_point.map do |key, value|
-        if level != key.to_i
-          plp = (count * 5) / 2.0
-          if plp <= sum * 1.0
-            if count_fail.zero?
-              s_level = "#{level}"
-            else
-              s_level = "++#{level}"
-              break
-            end
-          elsif count_fail < count
-            s_level = "#{level - 1}-#{level}"
+      hash = {}
+      hash_point.each do |key, value|
+        if hash[key.to_i].nil?
+          hash[key.to_i] = {
+            count: 0,
+            sum: 0,
+            fail: 0,
+          }
+        end
+        hash[key.to_i][:count] += 1
+        hash[key.to_i][:sum] += value[:value]
+        hash[key.to_i][:fail] += 1 if value[:value] < 3
+      end
+
+      hash.each do |k, v|
+        plp = v[:count] * 5 / 2.0
+        if plp <= v[:sum].to_f
+          if v[:fail].zero?
+            s_level = "#{k}"
+          else
+            s_level = "++#{k}"
             break
           end
-          count = 0
-          sum = 0
+        elsif v[:fail] < v[:count]
+          s_level = "#{k - 1}-#{k}"
+          break
         end
-        count_fail += 1 if value[:value] < 3
-        count += 1
-        sum += value[:value]
-        level = key.to_i
       end
+
       return "0" if s_level.empty?
       s_level
     end
@@ -773,6 +740,49 @@ module Api
       filter[:filter_users] = filter_users
 
       filter
+    end
+
+    def get_point_for_result(form_slots)
+      hash = {}
+      form_slots.map do |form_slot|
+        next unless hash[form_slot.slot_id].nil?
+        recommends = get_point_manager(form_slot)
+        comments = form_slot.comments.first
+
+        hash[form_slot.slot_id] = {
+          id: form_slot.id,
+          point: comments&.point || 0,
+          is_commit: comments&.is_commit,
+          is_change: form_slot.is_change,
+          final_point: recommends[:final_point],
+          is_passed: recommends[:is_passed],
+          recommends: recommends[:recommends],
+        }
+      end
+      hash
+    end
+
+    def get_point_manager(form_slot)
+      line_managers = form_slot.line_managers
+      hash = {
+        is_passed: false,
+        recommends: [],
+        final_point: 0,
+      }
+      period_id = 0
+      line_managers.each do |line|
+        break if !period_id.zero? && period_id != line.period_id
+        period_id = line.period_id
+        if line.final && line.given_point > 2
+          hash[:is_passed] = true
+          hash[:final_point] = line.given_point
+        end
+        hash[:recommends] << {
+          line.user_id => { given_point: line.given_point || 0,
+                            is_final: line.final },
+        }
+      end
+      hash
     end
   end
 end

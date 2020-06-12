@@ -1,3 +1,7 @@
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 $(document).ready(function () {
   checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   changeBtnSave(false)
@@ -108,8 +112,10 @@ $(document).ready(function () {
         list.push(tr[i].getAttribute('data-title-id'))
         list.push(tr[i].children[2].innerHTML)
         list = getDatainRow(listLevelMapping[j].children, list)
-        if(list != "")
+        if(list != "") {
           saveLevelMapping(list)
+          sleep(3000);
+        }
         else
         {
           fails("Has an empty field!")
