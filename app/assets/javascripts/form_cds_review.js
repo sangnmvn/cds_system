@@ -21,19 +21,19 @@ function loadDataAssessment(data_filter) {
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
-            <td>{no}</td> 
-            <td><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>{period}</a></td> 
-            <td>{user_name}</td>
-            <td>{project}</td>
-            <td>{email}</td>
-            <td>{role}</td> 
-            <td>{level}</td> 
-            <td>{rank}</td> 
-            <td>{title}</td> 
-            <td>{submit_date}</td>
-            <td>{review_date}</td>
-            <td>{status}</td> 
-            <td> 
+            <td class="type-number">{no}</td> 
+            <td class="type-text"><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>{period}</a></td> 
+            <td class="type-text">{user_name}</td>
+            <td class="type-text">{project}</td>
+            <td class="type-text">{email}</td>
+            <td class="type-text">{role}</td> 
+            <td class="type-number">{level}</td> 
+            <td class="type-number">{rank}</td> 
+            <td class="type-text">{title}</td> 
+            <td class="type-text">{submit_date}</td>
+            <td class="type-text">{review_date}</td>
+            <td class="type-text">{status}</td> 
+            <td class="type-icon"> 
               <a data-id='{id}' href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>
                 <i class='fa fa-pencil icon' style='color:#fc9803'></i>
               </a>

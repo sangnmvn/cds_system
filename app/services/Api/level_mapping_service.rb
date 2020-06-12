@@ -91,7 +91,6 @@ module Api
       role = Role.find(parent_role_id)
       role.updated_by = current_user_id
       role.save!
-      true
     end
 
     def edit_title_mapping(params)
@@ -118,7 +117,6 @@ module Api
       role = Role.find_by_id(parent_role_id)
       role.updated_by = current_user_id
       role.save!
-      true
     end
 
     def delete_level_mapping
