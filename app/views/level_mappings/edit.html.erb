@@ -1,25 +1,40 @@
 <%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
-<div class='row'>
-  <div class='col-12'>
-    <div class='row col-num'>
-      <div class='circle-div'>1</div>
-      <div class='col-title'><b>Title Mapping</b></div>
+<%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
+<input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
+<div class="container-fluid">
+  <div class="row col-num" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+    <div class="col-10" style="font-size: 150%;">
+    <% if can_edit? %>
+      Update Level Mapping for Role <%= @role.name %>
+    <% else %>
+      View Level Mapping for Role <%= @role.name %>
+    <% end %>
     </div>
   </div>
-</div>
-<div class='row'>
-  <div class='col-12 div-table'><%= render 'new_table_title_mapping'%></div>
-</div>
-<div class='row'>
-  <div class='col-12'>
-    <div class='row col-num'>
-      <div class='circle-div'>2</div>
-      <div class='col-title'><b>Level Mapping</b></div>
+  <div class='row'>
+    <div class='col-12'>
+      <div class='row col-num'>
+        <div class='circle-div'>1</div>
+        <div class='col-title'><b>Title Mapping</b></div>
+      </div>
     </div>
   </div>
+  <div class='row'>
+    <div class='col-12 div-table'><%= render 'edit_table_title_mapping'%></div>
+  </div>
+  <div class='row'>
+    <div class='col-12'>
+      <div class='row col-num'>
+        <div class='circle-div'>2</div>
+        <div class='col-title'><b>Level Mapping</b></div>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-12 div-table'><%= render 'edit_level_mapping'%></div>
+  </div>
 </div>
-<div class='row'>
-  <div class='col-12 div-table'><%= render 'edit_level_mapping'%></div>
-</div>
-<div class="vr"></div>
-
+<script>
+  var global_role_id = <%= @role.id %>
+  var global_can_view = <%= can_view? %>
+</script>

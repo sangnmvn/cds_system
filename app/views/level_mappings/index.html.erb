@@ -1,6 +1,7 @@
 <%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'level_mappings_list.js', media: 'all', 'data-turbolinks-track': 'reload' %>
-<input class="d-none" id="can_edit_level_mapping" value=<%= @can_edit %>>
+<input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
+<input class="d-none" id="can_view_level_mapping" value=<%= can_view? %>>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
     <div class="col-10" style="font-size: 150%;">

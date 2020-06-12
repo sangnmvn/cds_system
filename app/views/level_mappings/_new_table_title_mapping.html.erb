@@ -1,15 +1,29 @@
 <%= javascript_include_tag 'table_title_mapping.js', media: 'all', 'data-turbolinks-track': 'reload' %>
-<div class="row">
-  <div class="col-sm-12">
-    <table class="table table-primary table-responsive-sm table-mytable border-table table-new-title-mapping">
-      <thead>
-        <tr id="title_header_column">
-          <td class="static_title_header_col">Title</td>
-          <td class="static_title_header_col">Rank</td>
-        </tr>
-      </thead>
-      <tbody      >
-      </tbody>
-    </table>
+<div class='row'>
+  <div class='col-12'>
+    <div class='basic-table-wrapper'>
+      <table class="table table-responsive-sm table-basic table-mytable border-table table-new-title-mapping">
+        <thead>
+          <tr id="title_header_column">
+            <td class="th">Title</td>
+            <td class="th">Rank</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @list_title[:data_real].each do |item| %>
+            <tr data-title_id='<%= item.id %>'>
+              <td><%= item.name %></td>
+              <td class="number"><%= item.rank %></td>
+              <% @list_title[:competency].each do |item| %>
+                <td class="competency_row">
+                  <select class="form-control competency_value">
+                  </select>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -100,11 +100,15 @@ Rails.application.routes.draw do
       get "index"
       get "add"
       get "edit"
+      post "delete_level_mapping"
+      post "update_level_mapping"
       post "save_level_mapping"
       post "save_title_mapping"
+      post "edit_title_mapping"
       get "get_data_level_mapping_list"
       get "get_role_without_level_mapping"
       get "get_title_mapping_for_new_level_mapping/:role_id", action: "get_title_mapping_for_new_level_mapping"
+      get "get_title_mapping_for_edit_level_mapping/:role_id", action: "get_title_mapping_for_edit_level_mapping"
     end
   end
 

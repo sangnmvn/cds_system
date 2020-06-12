@@ -19,9 +19,9 @@ module Api
 
     def get_title_mapping_for_new_level_mapping(role_id)
       title_mappings = Title.joins(role: [templates: [:competencies]])
-        .select(:id, :name, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "max(templates.updated_at)")
-        .group(:id, :name, :rank, "competencies.name", "competencies.id")
-        .where(role_id: role_id)
+        .select(:id, :name, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "competencies.location as competency_location", "max(templates.updated_at)")
+        .group(:id, :name, :rank, "competencies.name", "competencies.id", "competencies.location")
+        .where(role_id: role_id).order(rank: :asc, "competencies.location": :asc)
 
       title_mappings.map do |title_mapping|
         {
@@ -29,7 +29,24 @@ module Api
           rank: title_mapping.rank,
           competency_name: title_mapping.competency_name,
           competency_id: title_mapping.competency_id,
+          competency_location: title_mapping.competency_location,
           title_id: title_mapping.id,
+        }
+      end
+    end
+
+    def get_title_mapping_for_edit_level_mapping(role_id)
+      title_ids = Title.where(role_id: role_id).pluck(:id)
+      title_mappings = TitleMapping.includes(title: [role: [templates: [:competencies]]]).where(title_id: title_ids).order("titles.rank")
+
+      title_mappings.map do |title_mapping|
+        {
+          title: title_mapping.title.name,
+          rank: title_mapping.title.rank,
+          competency_name: title_mapping.competency.name,
+          competency_id: title_mapping.competency_id,
+          title_id: title_mapping.title.id,
+          value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
         }
       end
     end
@@ -37,7 +54,7 @@ module Api
     def get_data_level_mapping_list
       roles_with_level_mapping_list = Role.joins([titles: [:level_mappings]], :user)
         .select(:id, :name, :first_name, :last_name,
-                "max(rank_number) as no_rank", :updated_by, "max(roles.updated_at) as updated_at_max")
+                "max(titles.rank) as no_rank", :updated_by, "max(roles.updated_at) as updated_at_max")
         .group(:id, :name, :first_name, :last_name, :updated_by)
       roles_with_level_mapping_list.map.each_with_index do |level_mapping, index|
         final_updated_at = level_mapping.updated_at_max
@@ -56,7 +73,7 @@ module Api
       #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
       current_user_id = current_user.id
 
-      records = params["records"]
+      records = params[:records]
       all_title_ids = []
       all_title_ids = records.keys.collect { |key| records[key]["title_id"] }.uniq
       TitleMapping.where(title_id: all_title_ids).destroy_all
@@ -75,16 +92,49 @@ module Api
       role = Role.find(parent_role_id)
       role.updated_by = current_user_id
       role.save!
-      true
+    end
+
+    def edit_title_mapping(params)
+      #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
+      current_user_id = current_user.id
+
+      records = params["records"]
+      records.each do |key, hash|
+        processed_params = {
+          value: TitleMappingsHelper.convert_value_title_mapping(hash["value"]),
+          updated_by: current_user_id,
+          title_id: hash["title_id"],
+          competency_id: hash["competency_id"],
+        }
+        current_title_mapping = TitleMapping.find_by(title_id: processed_params[:title_id], competency_id: processed_params[:competency_id])
+
+        current_title_mapping.value = processed_params[:value]
+        current_title_mapping.updated_by = processed_params[:updated_by]
+        current_title_mapping.save!
+      end
+
+      # update updated_by
+      parent_role_id = Title.find(records["0"]["title_id"]).role_id
+      role = Role.find_by_id(parent_role_id)
+      role.updated_by = current_user_id
+      role.save!
+    end
+
+    def delete_level_mapping
+      LevelMapping.where(id: params[:list]).destroy_all
+    end
+
+    def update_level_mapping
+      item = LevelMapping.find_by_id(id: params[:level_mapping_id])
+      item.quantity = params[:quantity]
+      item.competency_type = params[:type]
+      item.rank_number = params[:rank]
+      item.save
     end
 
     def save_level_mapping
-      if params[:id_level]
-        level_mapping = LevelMapping.find(params[:id_level])
-        level_mapping.update(table_level_mapping_params)
-      else
-        LevelMapping.create!(table_level_mapping_params)
-      end
+      return { status: "success" } if LevelMapping.create!(table_level_mapping_params)
+      { status: "success" }
     end
 
     private

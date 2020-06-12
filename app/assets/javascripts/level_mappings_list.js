@@ -7,11 +7,10 @@ function goToAddPage() {
   }
   window.location.href = "/level_mappings/add?role_id=" + role_id;
 }
-function go_to_edit_page()
-{
+
+function go_to_edit_page() {
   level_mapping_id = $("#role_select").val();
-  if (role_id == "")
-  {
+  if (role_id == "") {
     $(".error").remove();
     $("#role_select").after("<div style='margin-left: -8px; font-size: 15px;' class='col-sm-12 error text-danger'>You have to select a Role to continue</div>")
     return;
@@ -19,6 +18,7 @@ function go_to_edit_page()
 
   window.location.href = "/level_mappings/add?role_id=" + role_id;
 }
+
 function loadRoleWithoutLevelMapping() {
   var can_edit = $("#can_edit_level_mapping").val() == "true";
   $.ajax({
@@ -71,7 +71,7 @@ function loadDataLevelMapping() {
         var data = response[i];
         final_html += `<tr> 
                            <td>{no}</td> 
-                           <td>{role}</td> 
+                           <td><a class='btn-edit-level-mapping' data-toggle='tooltip' title='View Level Mapping' data-role_id='{role_id}' href='javascript:void(0)'>{role}</a></td> 
                            <td>{no_rank}</td>                            
                            <td>{latest_update}</td> 
                            <td>{updated_by}</td> 
@@ -99,20 +99,31 @@ function loadDataLevelMapping() {
 
 $(document).ready(function () {
   var can_edit = $("#can_edit_level_mapping").val() == "true";
+  loadDataLevelMapping();
+  loadRoleWithoutLevelMapping();
   if (!can_edit) {
     $("#add_new_level_mapping").attr("disabled", "disabled");
     $("#add_new_level_mapping").closest("a").removeAttr("href");
+    $("#level_mapping_list").find(".btn-edit-level-mapping").addClass("disabled")
   }
-  loadDataLevelMapping();
-  loadRoleWithoutLevelMapping();
-
-  $("#add_new_level_mapping").on("click", function(){
+  $("#add_new_level_mapping").on("click", function () {
     $(".error").remove();
   });
+  $("#role_select").on('change', function() {
+    if($(this).val() != "")
+    {
+      $('#btn-modal-add').attr("disabled", false);
+      $('#btn-modal-add').addClass("btn-primary").removeClass("btn-secondary")
+    }
+    else
+    {
+      $('#btn-modal-add').attr("disabled", true);
+      $('#btn-modal-add').addClass("btn-secondary").removeClass("btn-primary")
+    }
+  })
   $('#level_mapping_list').on('click', '.btn-edit-level-mapping', function () {
     role_id = $(this).attr('data-role_id')
-    if (role_id != "")
-    {
+    if (role_id != "") {
       window.location.href = "/level_mappings/edit?role_id=" + role_id;
     }
   });

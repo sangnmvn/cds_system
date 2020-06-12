@@ -27,6 +27,16 @@ String.prototype.formatUnicorn =
     return str;
   };
 
+// sort json arary by keys
+function sort_by_key(array, key)
+{
+ return array.sort(function(a, b)
+ {
+  var x = a[key]; var y = b[key];
+  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+ });
+}
+
 // alert success
 function success(content) {
   $("#content-alert-success").html(content);

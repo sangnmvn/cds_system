@@ -38,9 +38,10 @@
 //= link level_mappings.css
 //= link level_mappings_list.js
 //= link table_title_mapping.js
-
+//= link table_title_mapping_edit.js
 //= link table_level_mapping.js
 //= link table_level_mapping.css
-
-
 //= link form_cds_cdp_review.js
+//= link edit_level_mapping.js
+
+

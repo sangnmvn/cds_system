@@ -1,6 +1,7 @@
 $(document).ready(function () {
+  checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
   changeBtnSave(false)
-  $('#table_level_mapping').on('click', '#btnAddRequired', function () {
+  $('#table_level_mapping').on('click', '#btn_add_required', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
     var quantity = row.find('input')[0].value
@@ -17,7 +18,7 @@ $(document).ready(function () {
         $(this).addClass("invisible").removeClass("visible")
       }
   });
-  $('#table_level_mapping').on('click', '#btnRemoveRequired', function () {
+  $('#table_level_mapping').on('click', '#btn_remove_required', function () {
     if($(this).parent().parent().next().length == 0)
     {
       if($(this).parent().parent().prevAll().length == 1)
@@ -28,7 +29,7 @@ $(document).ready(function () {
     }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('click', '#btnAddLevel', function () {
+  $('#table_level_mapping').on('click', '#btn_add_level', function () {
     changeBtnSave(false)
     var tr = $(this).closest('tr')
     var title = tr.children()[0].textContent
@@ -49,18 +50,18 @@ $(document).ready(function () {
     newRow.cells[3].innerHTML=row;
     newRow.insertCell(4);
     newRow.cells[4].innerHTML=
-    `<a type='button' class='btnAction' title='Add more levels' id="btnAddLevel"><i class='fa fa-plus btnAdd'></i></a>
-    <a type='button' class='btnAction' title='Remove level' id="btnRemoveLevel"><i class='fas fa-times btnDel'></i></a>`
+    `<a type='button' class='btnAction' title='Add more levels' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
+    <a type='button' class='btnAction' title='Remove level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`
 ;
 
   });
-  $('#table_level_mapping').on('click', '#btnRemoveLevel', function () {
+  $('#table_level_mapping').on('click', '#btn_remove_level', function () {
     var current_tr = $(this).parent().parent()
     
     var nextRow = current_tr.next()
     var colNextRow = nextRow.children()[2]
     if(colNextRow == null || (parseInt(colNextRow.textContent)) - 1 < 1)
-      current_tr.prev().find('#btnAddLevel').addClass("visible").removeClass("invisible")
+      current_tr.prev().find('#btn_add_level').addClass("visible").removeClass("invisible")
     else
     {
       while(colNextRow != null)
@@ -75,7 +76,7 @@ $(document).ready(function () {
     }
     $(this).parent().parent().remove()
   });
-  $('#table_level_mapping').on('change', '#selectType', function () {
+  $('#table_level_mapping').on('change', '#select_type', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
@@ -86,14 +87,18 @@ $(document).ready(function () {
     var num = parseInt($(this).val())
     if(num < 1)
       $(this).val(1)
-    if(num > 20)
-    $(this).val(20)
+    if(num > max_quantity)
+    $(this).val(max_quantity)
   });
-  $('#table_level_mapping').on('change', '#selectRank', function () {
+  $('#table_edit_level_mapping').on('change', 'input', function (e) {
+    checkData()
+  });
+  $('#table_level_mapping').on('change', '#select_rank', function () {
     checkData()
     checkDuplicateRequired($(this))
   });
-  $('#btnSave').on('click', function () {
+  $('#btn_save').on('click', function () {
+    changeBtnSave(false)
     var tr = $("#table_level_mapping").find("tr")
     var lenght = tr.length
     for(var i = 1; i < lenght; i++)
@@ -110,14 +115,12 @@ $(document).ready(function () {
           saveLevelMapping(list)
         else
         {
-          success("Has a empty field!")
+          fails("Has an empty field!")
           return
         }
       }
     }
     saveTitleMapping()
-    success("Add level mapping has been successed")
-    window.location.href = "/level_mappings/";
   })
 });
 function createNewRowRequire (count)
@@ -125,10 +128,10 @@ function createNewRowRequire (count)
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
-      <select class="form-control" id="selectType">
+      <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
         <option value='0'>All</option>
         <option value='1'>General</option>
@@ -136,7 +139,7 @@ function createNewRowRequire (count)
       </select>
     </div>
     <div class='col-2'>
-      <select class="form-control" id="selectRank">
+      <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
     for(var i = 1; i <= count; i++)
     {
@@ -146,8 +149,8 @@ function createNewRowRequire (count)
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction' title='Remove Required' id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -157,10 +160,10 @@ function createNewRowLevel (count)
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
-      <select class="form-control" id="selectType">
+      <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
         <option value='0'>All</option>
         <option value='1'>General</option>
@@ -168,7 +171,7 @@ function createNewRowLevel (count)
       </select>
     </div>
     <div class='col-2'>
-      <select class="form-control" id="selectRank">
+      <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
     for(var i = 1; i <= count; i++)
     {
@@ -178,8 +181,8 @@ function createNewRowLevel (count)
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btnAddRequired"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction invisible' title='Remove Required' id="btnRemoveRequired"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -237,13 +240,12 @@ function checkDuplicateRequired (td)
 function changeBtnSave (bool)
 {
   if (bool == true) {
-    $('#btnSave').attr("disabled", false);
-    $('#btnSave').addClass("btn-primary").removeClass("btn-secondary")
+    $('#btn_save').attr("disabled", false);
+    $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
   }
-  else
-  {
-    $('#btnSave').attr("disabled", true);
-    $('#btnSave').removeClass("btn-primary").addClass("btn-secondary")
+  else{
+    $('#btn_save').attr("disabled", true);
+    $('#btn_save').removeClass("btn-primary").addClass("btn-secondary")
   }
   
 }
@@ -266,7 +268,6 @@ function saveLevelMapping (arr)
     }
   });
 }
-
 function saveTitleMapping()
 {
   record = [];
@@ -292,22 +293,27 @@ function saveTitleMapping()
     
   }  
   );  
-  
-  var status;
-  $.ajax({    
-    type: "POST",
-    url: "/level_mappings/save_title_mapping/" ,
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {records: record},
-    dataType: "json",
-    success: function (response) {
-      status = response['status']
-    }
-  })
-
-  return status;
+  if(record.length > 0)
+  {
+    // var status = null;
+    var keep_looping = true;
+    $.ajax({    
+      type: "POST",
+      url: "/level_mappings/save_title_mapping/" ,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      data: {records: record},
+      dataType: "json",
+      success: function (response) {      
+        //status = response['status']
+        window.location.href = "/level_mappings/";
+      }
+    })
+  }
+  else
+    window.location.href = "/level_mappings/";
+  // return status;
 }
 function getDatainRow (lst,list)
 {
@@ -320,10 +326,6 @@ function getDatainRow (lst,list)
     list.push(lst[i].children[0].value)
   }
   return list
-}
-function checkDataRowRequire (row)
-{
-
 }
 // alert success
 function success(content) {
@@ -340,4 +342,17 @@ function fails(content) {
   window.setTimeout(function () {
     $("#alert-danger").fadeOut(1000);
   }, 4000);
+}
+function checkPrivilege (edit,view)
+{
+  if(edit == "false" && !view)
+    window.location.replace = ""
+  else
+  {
+    if(view && edit == "false")
+    {
+      $(".btnAction").remove()
+      $(".btn-save").remove()
+    }
+  }
 }
