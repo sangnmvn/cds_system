@@ -163,8 +163,6 @@ class FormsController < ApplicationController
       @hash_rank[key] = "N/A" if @hash_rank[key].nil?
     end
 
-    binding.pry
-
     @slots = @result.values.map(&:keys).flatten.uniq.sort
 
     # slot_ids = @result.values.map(&:keys).flatten.uniq.sort
