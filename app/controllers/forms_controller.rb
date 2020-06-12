@@ -4,9 +4,9 @@ class FormsController < ApplicationController
   before_action :get_privilege_id
   REVIEW_CDS = 16
   APPROVE_CDS = 17
+  include TitleMappingsHelper
 
   def index
-    
   end
 
   def get_list_cds_assessment_manager
@@ -122,10 +122,6 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
-  def get_data_filter_cds_assessment_manager
-    render json: @form_service.data_filter_cds_assessment_manager
-  end
-
   def get_data_slot
     return render json: @form_service.get_data_form_slot
   end
@@ -144,6 +140,26 @@ class FormsController < ApplicationController
       @hash_level[compentency.id] = @form_service.calculate_level_rank(@result[compentency.name])
     end
     roles = Role.find_by_id(current_user.role_id)
+
+    title_mappings = TitleMapping.includes(:competency).joins(:title).where(titles: { role_id: 1 }).select(:competency_id, :value, "titles.rank").order(:competency_id, :value)
+    hash = {}
+    title_mappings.map do |title_mapping|
+      hash[title_mapping.competency_id] = { value: [], type: title_mapping.competency.type } if hash[title_mapping.competency_id].nil?
+      hash[title_mapping.competency_id][:value] << title_mapping.value
+    end
+    @hash_rank = {}
+    @hash_level.map do |key, value|
+      hash[key][:value].each_with_index do |x, i|
+        break if helpers.convert_value_title_mapping(value) < x
+        @hash_rank[key] = {
+          value: i + 1,
+          type: hash[key][:type],
+        }
+      end
+      @hash_rank[key] = "N/A" if @hash_rank[key].nil?
+    end
+
+    binding.pry
 
     @slots = @result.values.map(&:keys).flatten.uniq.sort
 

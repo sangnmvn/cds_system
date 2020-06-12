@@ -196,7 +196,7 @@ h2,
 }
 
 .type-text {
-    text-align: left;
+    text-align: left !important;
 }
 
 .header-breadcrumb {
@@ -212,7 +212,7 @@ h2,
 }
 
 .type-number {
-    text-align: right;
+    text-align: right !important;
 }
 /*
   *= require_tree .
