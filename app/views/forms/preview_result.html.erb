@@ -19,18 +19,18 @@
         <tbody>
           <tr>
             <td>Level</td>
-            <td>1</td>
-            <td class="td-expected">1</td>
+            <td><%= @h_title_current[:level]%></td>
+            <td class="td-expected"><%= @h_title_result[:level]%></td>
           </td>
           <tr>
             <td>Rank</td>
-            <td>4</td>
-            <td class="td-expected">4</td>
+            <td><%= @h_title_current[:rank] %></td>
+            <td class="td-expected"><%= @h_title_result[:rank]%></td>
           </td>
           <tr>
             <td>Title</td>
-            <td>Associate Scrum Master</td>
-            <td class="td-expected">Associate Scrum Master</td>
+            <td><%= @h_title_current[:title]%></td>
+            <td class="td-expected"><%= @h_title_result[:title]%></td>
           </td>
         </tbody>
       </table>

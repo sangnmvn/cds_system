@@ -1,13 +1,13 @@
 <div class="title-table-form-preview-result">CDS Assessment Point</div>
 <div style="overflow-x:auto;">
   <div class="horizontal-scroll-except-first-column">
-    <table class="table table-striped table-primary table-responsive-sm table-preview-result">
+    <table class="table table-striped table-responsive-sm table-preview-result">
       <thead>
         <tr>
-          <th style="width:400px">Competency</th>
-          <th style="width:60px" class="form-pr-rank">Rank</th>
-          <th style="width:60px"class="form-pr-level">Level</th>
-          <% @slots.each do |slot| %>
+          <th style="width:400px" class="fixed-header column-1">Competency</th>
+          <th style="width:60px" class="form-pr-rank fixed-header column-2">Rank</th>
+          <th style="width:60px"class="form-pr-level fixed-header column-3">Level</th>
+          <% @slots.each_with_index do |slot, i| %>
             <th class="slot-header lv<%= slot.to_i %>"><%= slot %></th>
           <% end %>
         </tr>
@@ -15,9 +15,9 @@
       <tbody>
         <% @competencies.each do |competency| %>
           <tr>
-            <td style="width:400px" class="form-competency-name"><%= competency.name %></td>
-            <td style="width:60px;" class="form-pr-rank type-number"><%= @hash_rank[competency.id][:value] %></td>
-            <td style="width:60px"class="form-pr-level"><%= @hash_level[competency.id] %></td>
+            <td style="width:400px" class="form-competency-name fixed-column column-1"><%= competency.name %></td>
+            <td style="width:60px;" class="form-pr-rank type-number fixed-column column-2"><%= @hash_rank[competency.id].zero? ? "N/A" : @hash_rank[competency.id] %></td>
+            <td style="width:60px"class="form-pr-level fixed-column column-3"><%= @hash_level[competency.id] %></td>
             <% @slots.each do |slot| %>
               <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
             <% end %>
