@@ -25,7 +25,7 @@
         <option value="assessing" selected>Assessing in the current period</option>
         <option value="planned" selected>Planned</option>
       </select>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @form_id), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
+      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
       <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approval'.html_safe, "javascript:void(0)", class: "approval-assessment", title: "Approve CDS" %>
       <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)", class: "reject-assessment", title: "Reject CDS" %>
@@ -58,5 +58,4 @@
   var is_approval = "<%= @hash[:is_approval].to_s %>";
   var is_reviewer = true;
   loadDataPanel(form_id);
-  checkStatusFormReview(status);
 </script>

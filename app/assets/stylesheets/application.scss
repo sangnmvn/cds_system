@@ -6,6 +6,7 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+$color-disable: #afaaaa;
 
 @import "bootstrap-datepicker";
 
@@ -191,6 +192,13 @@ h2,
 }
 .border-table{
     border: 0.13em solid  #0066CC;
+}
+.type-text {
+    text-align: left !important;
+}
+
+.type-number {
+    text-align: right !important;
 }
 /*
   *= require_tree .

@@ -1,23 +1,9 @@
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
-  drawColorTitleFormPreviewResult(4, 10, "#FAD7A0");
-  drawColorTitleFormPreviewResult(11, 17, "#d4f6ff");
-  drawColorTitleFormPreviewResult(18, 24, "#feffd4");
-  drawColorTitleFormPreviewResult(25, 31, "#d4f6ff");
-  drawColorTitleFormPreviewResult(32, 38, "#FAD7A0");
   $("[data-toggle=sidebar-colapse]").click(function () {
     sidebarCollapse();
   });
-
-  function drawColorTitleFormPreviewResult(start, end, color) {
-    for (i = start; i <= end; i++) {
-      $(".table-preview-result thead tr th:nth-child(" + i + ")").css(
-        "background-color",
-        color
-      );
-    }
-  }
 
   function sidebarCollapse() {
     $("#sidebar-container").toggleClass("sidebar-expanded sidebar-collapsed");
@@ -179,15 +165,17 @@ function getValueStringPoint(point) {
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
-  if (is_reviewer != user_id)
+  if ((is_reviewer != user_id) || (is_submit == "true") || status=="Done")
     return "disabled"
   else
     return;
 }
 function checkTitle(flag) {
-  var title = "Add more evidences";
+  var title = "Request more evidences";
   if (flag == "yellow")
-    title = "Cancel request more evidences";
+    title = "Need to add more evidences";
+  // if (flag == "green")
+  //   title = "Evidences have been added and sent to Requester";
   return title
 }
 
@@ -197,6 +185,10 @@ function checkTitle(flag) {
 //   else
 //     return ""
 // }
+function checkPM(is_pm) {
+  if (is_pm)
+    return "border: 2px solid rgb(0, 110, 255);"
+}
 
 function checkDisableFormSlotsUser(user_id) {
   if (user_id != user_current)
@@ -253,11 +245,11 @@ function loadDataSlots(response) {
           <td class="disabled" colspan="5" rowspan="${rowspan}"><textarea class="autoresizing" disabled>${e.tracking.evidence}</textarea></td>`;
     if (length != 0) {
       temp += `
-          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="2" >
+          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="4" style="${checkPM(e.tracking.recommends[0].is_pm)}" >
             <textarea class="recommend autoresizing"  style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
           </td>
-          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}">
-            <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}>
+          <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)}" colspan="2" style="${checkPM(e.tracking.recommends[0].is_pm)}">
+            <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[0].user_id)} >
               <option></option>
               <option value="5" ${check(e.tracking.recommends[0].given_point, 5)}>5 - Outstanding</option>
               <option value="4" ${check(e.tracking.recommends[0].given_point, 4)}>4 - Exceeds Expectations</option>
@@ -266,7 +258,7 @@ function loadDataSlots(response) {
               <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
             </select>
           </td>flag
-          <td class="disabled" ><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
+          <td class="disabled" style="${checkPM(e.tracking.recommends[0].is_pm)}" colspan="1"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
     } else {
       temp += `
           <td colspan="2" ><textarea style="resize:none"></textarea></td>
@@ -288,8 +280,8 @@ function loadDataSlots(response) {
       for (i = 1; i < length; i++) {
         temp += `
             <tr data-id="${e.id}" class="tr_slot">
-              <td colspan="2" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}"><textarea class="recommend autoresizing" style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-              <td class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}">
+              <td colspan="4" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}" style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea class="recommend autoresizing" style="resize:none" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
+              <td colspan="2" class="${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}" style="${checkPM(e.tracking.recommends[i].is_pm)}">
                 <select class="given-point-select" ${checkDisableFormSlotsStaff(current_user, e.tracking.recommends[i].user_id)}>
                   <option></option>
                   <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
@@ -299,7 +291,7 @@ function loadDataSlots(response) {
                   <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
                 </select>
               </td>
-              <td class="disabled">
+              <td colspan="1" class="disabled" style="${checkPM(e.tracking.recommends[i].is_pm)}">
                 <textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea>
               </td>
             </tr>`;
@@ -455,28 +447,38 @@ function getParams() {
 }
 
 function checkStatusFormReview(status) {
-  if (is_approval) {
+  if (is_approval == "true") {
     $('a.submit-assessment').css("display", "none");
     $('a.reject-assessment i').css("color", "#ccc");
+    if (status== "Done"){
+    $('a.reject-assessment i').css("color", "blue");
+    $('a.approval-assessment i').css("color", "#ccc");
+    // $('a.reject-assessment').removeClass('reject-assessment');
+    $('a.approval-assessment').removeClass('approval-assessment');
+    }
     return;
   }
   else {
-    if (is_submit) {
-      $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-      $('a.submit-assessment').removeClass('submit-assessment');
-      return;
-    }
     $('a.approval-assessment').css("display", "none");
     $('a.reject-assessment').css("display", "none");
+    if (is_submit == "true") {
+      $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+      $('a.submit-assessment').removeClass('submit-assessment');
+      // $('given-point-select').css("display", "none"); 
+      // $('recommend').css("n", "none");
+     
+      return;
+    }
   }
   switch (status) {
     case "Awaiting Review":
       break;
     case "Done":
-      $('a.reject-assessment i').css("color", "#ccc");
+      $('a.reject-assessment i').css("color", "blue");
       $('a.approval-assessment i').css("color", "#ccc");
-      $('a.reject-assessment').removeClass('reject-assessment');
+      // $('a.reject-assessment').removeClass('reject-assessment');
       $('a.approval-assessment').removeClass('approval-assessment');
+
       $("a.preview-result i").css("color", "#ccc");
       $('a.preview-result')[0].href = "#";
       $('a.preview-result')[0].target = "";
@@ -495,7 +497,6 @@ function checkStatusFormReview(status) {
       $('.tr_slot td:nth-child(3),.tr_slot td:nth-child(4),.tr_slot td:nth-child(5)').addClass('disabled');
       $('.tr_slot td:nth-child(3) select,.tr_slot td:nth-child(4) select').prop('disabled', 'disabled');
       $('.tr_slot td:nth-child(5) textarea').prop('disabled', 'disabled');
-      break;
       break;
     case "Awaiting Approval":
       break;
@@ -549,11 +550,6 @@ $(document).on("change", ".tr_slot", function () {
     var slot_id = $(this).data("id");
     var point = $(this).find('.given-point-select').val();
     var recommend = $(this).find('.recommend').val();
-    temp = $(this).children('td:nth-child(1)').text();
-    column_commit = $(this).children('td:nth-child(3)');
-    column_point = $(this).children('td:nth-child(4)');
-    column_recommend = $(this).children('td:nth-child(5)');
-
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_manager",
@@ -567,27 +563,7 @@ $(document).on("change", ".tr_slot", function () {
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
-      success: function (response) {
-        current = $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text().split('/');
-        max = parseInt(current[1]);
-        current_change = 0
-        $('div.csd-assessment-table table tbody tr.tr_slot').each(function (i, sel) {
-          level = $(this).children('td:nth-child(1)').text();
-          index = i + 1
-          val = $('div.csd-assessment-table table tbody tr:nth-child(' + index + ') td:nth-child(4) select option:selected').val();
-          if (level.charAt(0) == temp.charAt(0) && val != "")
-            current_change += 1;
-        });
-        if (current_change <= max)
-          current_change = current_change;
-        else
-          current = max;
-        $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-        column_commit.children()[0].style.color = '#3366CC'
-        column_recommend.children()[0].style.color = '#3366CC'
-        column_point.children()[0].style.color = '#3366CC'
-        $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor', '#99CCFF')
-      }
+      success: function (response) { }
     });
   }
 });
@@ -619,7 +595,31 @@ $(document).on("click", ".submit-assessment", function () {
 $(document).on("click", ".approval-assessment", function () {
   $('#modal_approve_cds').modal('show');
 });
+$(document).on("click", ".reject-assessment", function () {
 
+  $.ajax({
+    type: "POST",
+    url: "/forms/reject_cds",
+    data: {
+      form_id: form_id,
+      user_id: user_id,
+    },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        warning(`The CDS assessment of ${response.user_name} has been rejected successfully.`);
+        // $("a.reject-assessment i").css("color", "#ccc");
+        // $('a.reject-assessment').removeClass('reject-assessment');
+        location.reload();
+      } else {
+        fails("Can't rejected CDS.");
+      }
+    }
+  });
+});
 $(document).on("click", "#confirm_yes_approve_cds", function () {
   $('#modal_approve_cds').modal('hide');
   $.ajax({
@@ -636,8 +636,9 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     success: function (response) {
       if (response.status == "success") {
         warning(`The CDS assessment of ${response.user_name} has been approved successfully.`);
-        $("a.approval-assessment i").css("color", "#ccc");
-        $('a.approval-assessment').removeClass('approval-assessment');
+        // $("a.approval-assessment i").css("color", "#ccc");
+        // $('a.approval-assessment').removeClass('approval-assessment');
+        location.reload();
       } else {
         fails("Can't approve CDS.");
       }

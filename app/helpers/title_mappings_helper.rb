@@ -1,25 +1,15 @@
 module TitleMappingsHelper
-  POINT_LEVEL_MAP = [[1, "0-1"], [99, "++1"], [100, "1"], [101, "1-2"], [199, "++2"], [200, "2"], [201, "2-3"], [299, "++3"], [300, "3"], [301, "3-4"], [399, "++4"], [400, "4"], [401, "4-5"], [499, "++5"], [500, "5"], [501, "5-6"], [599, "++6"], [600, "6"]]
-  def self.convert_value_title_mapping(res)
-    if res.is_a? Integer
-      converted_value = POINT_LEVEL_MAP[0][1]
-      POINT_LEVEL_MAP.each_with_index do |point_level, index|
-        point, level = point_level
-        if res == point
-          return level
-        elsif res < point
-          return POINT_LEVEL_MAP[index - 1][1]
-        end
+  POINT_LEVEL_INTEGER = [1, 99, 100, 101, 199, 200, 201, 299, 300, 301, 399, 400, 401, 499, 500, 501, 599, 600, 601, 699, 700, 701, 799, 800]
+  POINT_LEVEL_STRING = ["0-1", "++1", "1", "1-2", "++2", "2", "2-3", "++3", "3", "3-4", "++4", "4", "4-5", "++5", "5", "5-6", "++6", "6", "6-7", "++7", "7", "7-8", "++8", "8"]
+
+  def convert_value_title_mapping(res)
+    data = if res.is_a? Integer
+        index = POINT_LEVEL_INTEGER.find_index(res)
+        POINT_LEVEL_STRING[index] if index.present?
+      elsif res.is_a? String
+        index = POINT_LEVEL_STRING.find_index(res)
+        POINT_LEVEL_INTEGER[index] if index.present?
       end
-    elsif res.is_a? String
-      converted_value = POINT_LEVEL_MAP[0][0]
-      POINT_LEVEL_MAP.each_with_index do |point_level, index|
-        point, level = point_level
-        if res == level
-          return point
-        end
-      end
-    end
-    converted_value
+    data || 0
   end
 end
