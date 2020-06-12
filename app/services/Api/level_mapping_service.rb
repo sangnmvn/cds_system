@@ -45,6 +45,7 @@ module Api
           rank: title_mapping.title.rank,
           competency_name: title_mapping.competency.name,
           competency_id: title_mapping.competency_id,
+          competency_location: title_mapping.competency.location,
           title_id: title_mapping.title.id,
           value: TitleMappingsHelper.convert_value_title_mapping(title_mapping.value),
         }
