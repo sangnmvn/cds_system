@@ -108,8 +108,6 @@ module Api
       forms.map do |form|
         format_form_cds_review(form)
       end
-
-      data_filter
     end
 
     def data_filter_cds_approve

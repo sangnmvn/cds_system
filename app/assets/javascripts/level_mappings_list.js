@@ -109,14 +109,11 @@ $(document).ready(function () {
   $("#add_new_level_mapping").on("click", function () {
     $(".error").remove();
   });
-  $("#role_select").on('change', function() {
-    if($(this).val() != "")
-    {
+  $("#role_select").on('change', function () {
+    if ($(this).val() != "") {
       $('#btn-modal-add').attr("disabled", false);
       $('#btn-modal-add').addClass("btn-primary").removeClass("btn-secondary")
-    }
-    else
-    {
+    } else {
       $('#btn-modal-add').attr("disabled", true);
       $('#btn-modal-add').addClass("btn-secondary").removeClass("btn-primary")
     }
@@ -127,4 +124,11 @@ $(document).ready(function () {
       window.location.href = "/level_mappings/edit?role_id=" + role_id;
     }
   });
+  
+  var role_name = localStorage.getItem("role_name");
+  var type = localStorage.getItem("type");
+  if (role_name && type)
+    success("The level mapping for role " + role_name + " has been " + type + " successfully.");
+  localStorage.removeItem("role_name");
+  localStorage.removeItem("type");
 })

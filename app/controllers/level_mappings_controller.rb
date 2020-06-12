@@ -59,15 +59,9 @@ class LevelMappingsController < ApplicationController
   end
 
   def save_level_mapping
-    return render json: { status: "fail" } unless can_edit?
-    return render json: { status: "success" } if @level_mapping_service.save_level_mapping
-    render json: { status: "fail" }
-  end
-
-  def delete_level_mapping
-    return render json: { status: "fail" } unless can_edit?
-    return render json: { status: "success" } if @level_mapping_service.delete_level_mapping(params)
-    render json: { status: "fail" }
+    return render json: {status: "fail"} unless can_edit?
+    status = @level_mapping_service.save_level_mapping(params)
+    render json: {status: status}
   end
 
   def save_title_mapping
@@ -76,15 +70,9 @@ class LevelMappingsController < ApplicationController
     render json: { status: "fail" }
   end
 
-  def update_title_mapping
-    return render json: { status: "fail" } unless can_edit?
-    return render json: { status: "success" } if @level_mapping_service.update_title_mapping(params)
-    render json: { status: "fail" }
-  end
-
   def edit_title_mapping
-    return render json: { status: "fail" } unless can_edit?
-    render json: @level_mapping_service.edit_title_mapping(params)
+    return render json: { status: "fail" } unless can_edit? && @level_mapping_service.edit_title_mapping(params)
+    render json: { status: "success" } 
   end
 
   def can_edit?
@@ -108,6 +96,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank,:list,:level_mapping_id)
+    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank,:list_del,:list_new,:list_edit,:level_mapping_id)
   end
 end

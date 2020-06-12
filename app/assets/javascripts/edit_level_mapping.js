@@ -2,7 +2,7 @@ $(document).ready(function () {
   var list_del = []
   loadLevelMapping(count)
   changeBtnSave(false)
-  checkPrivilege($("#can_edit_level_mapping").val(),global_can_view)
+  checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
   $('#table_edit_level_mapping').on('click', '#btn_add_required', function () {
     changeBtnSave(false)
     var row = $(this).parent().parent()
@@ -18,10 +18,8 @@ $(document).ready(function () {
     }
   });
   $('#table_edit_level_mapping').on('click', '#btn_remove_required', function () {
-    if($(this).parent().parent().nextAll().length == 0)
-    {
-      if($(this).parent().parent().prevAll().length == 1)
-      {
+    if ($(this).parent().parent().nextAll().length == 0) {
+      if ($(this).parent().parent().prevAll().length == 1) {
         $(this).parent().parent().prev().children()[3].children[1].classList.add('invisible')
       }
       $(this).parent().parent().prev().children()[3].children[0].classList.remove('invisible')
@@ -53,22 +51,19 @@ $(document).ready(function () {
     newRow.insertCell(3);
     newRow.cells[3].innerHTML = row;
     newRow.insertCell(4);
-    newRow.cells[4].innerHTML=
-    `<a type='button' class='btnAction' title='Add more levels' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
-    <a type='button' class='btnAction' title='Remove level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`
-;
+    newRow.cells[4].innerHTML =
+      `<a type='button' class='btnAction' title='Add more levels' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
+    <a type='button' class='btnAction' title='Remove level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`;
 
   });
   $('#table_edit_level_mapping').on('click', '#btn_remove_level', function () {
     var current_tr = $(this).parent().parent()
     var nextRow = current_tr.next()
     var colNextRow = nextRow.children()[2]
-    if(colNextRow == null || (parseInt(colNextRow.textContent)) - 1 < 1)
+    if (colNextRow == null || (parseInt(colNextRow.textContent)) - 1 < 1)
       current_tr.prev().find('#btn_add_level').addClass("visible").removeClass("invisible")
-    else
-    {
-      while(colNextRow != null)
-      {
+    else {
+      while (colNextRow != null) {
         var level = parseInt(colNextRow.textContent) - 1
         if (level < 1)
           break;
@@ -79,10 +74,8 @@ $(document).ready(function () {
     }
     var lst = $(this).closest('td').prev().children()
     var count = lst.length
-    for(var i = 0; i < count; i++)
-    {
-      if(lst[i].getAttributeNames().includes("data-level-mapping-id") == true)
-      {
+    for (var i = 0; i < count; i++) {
+      if (lst[i].getAttributeNames().includes("data-level-mapping-id") == true) {
         list_del.push(lst[i].attributes[1].value)
       }
     }
@@ -104,10 +97,10 @@ $(document).ready(function () {
   });
   $('#table_edit_level_mapping').on('blur', 'input', function () {
     var num = parseInt($(this).val())
-    if(num < 1)
+    if (num < 1)
       $(this).val(1)
-    if(num > max_quantity)
-    $(this).val(max_quantity)
+    if (num > max_quantity)
+      $(this).val(max_quantity)
   });
   $('#table_edit_level_mapping').on('change', '#select_rank', function () {
     checkData()
@@ -115,39 +108,37 @@ $(document).ready(function () {
     $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#btn_save').on('click', function () {
+    changeBtnSave(false)
+    var list_edit = []
+    var list_new = []
     var tr = $("#table_edit_level_mapping").find("tr")
     var lenght = tr.length
     for (var i = 1; i < lenght; i++) {
       var listLevelMapping = tr[i].children[3].children
       var lenghtRow = listLevelMapping.length
       for (var j = 0; j < lenghtRow; j++) {
-        if(listLevelMapping[j].getAttributeNames().includes("data-level-mapping-id") == false)
-        {
+        if (listLevelMapping[j].getAttributeNames().includes("data-level-mapping-id") == false) {
           var list = []
           list.push(tr[i].getAttribute('data-title-id'))
           list.push(tr[i].children[2].innerHTML)
           list = getDatainRow(listLevelMapping[j].children, list)
           if (list != "")
-            saveLevelMapping(list)
+            list_new.push(list)
           else {
             fails("Has a empty field!")
             return
           }
-        }
-        else
-        {
-          if(listLevelMapping[j].attributes["data-is_change"].value == 'true')
-          {
+        } else {
+          if (listLevelMapping[j].attributes["data-is_change"].value == 'true') {
             var id_level_mapping = listLevelMapping[j].attributes[1].value
-            if(id_level_mapping)
-            {
+            if (id_level_mapping) {
               var list = []
               list.push(id_level_mapping)
               list.push(listLevelMapping[j].children[0].children[0].value)
               list.push(listLevelMapping[j].children[1].children[0].value)
               list.push(listLevelMapping[j].children[2].children[0].value)
               if (list[0] != "")
-                UpdateLevelMapping(list)
+                list_edit.push(list)
               else {
                 fails("Has a empty field!")
                 return
@@ -157,8 +148,7 @@ $(document).ready(function () {
         }
       }
     }
-    deleteLevelMapping(list_del)
-    editTitleMapping()
+    saveLevelMapping(list_new, list_del, list_edit)
   })
 });
 
@@ -270,62 +260,33 @@ function changeBtnSave(bool) {
   if (bool == true) {
     $('#btn_save').attr("disabled", false);
     $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
-  }
-  else
-  {
+  } else {
     $('#btn_save').attr("disabled", true);
     $('#btn_save').removeClass("btn-primary").addClass("btn-secondary")
   }
 
 }
 
-function saveLevelMapping(arr) {
+function saveLevelMapping(list_new, list_del, list_edit) {
   $.ajax({
     url: "/level_mappings/save_level_mapping",
     data: {
-      title_id: arr[0],
-      level: arr[1],
-      quantity: arr[2],
-      type: arr[3],
-      rank: arr[4],
+      list_new: list_new,
+      list_del: list_del,
+      list_edit: list_edit,
     },
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    success: function (response) {}
+    success: function (response) {
+      if (response.status == "success")
+        editTitleMapping()
+      else
+        fails("The level mapping for role " + $("#role_name").val() + " has been updated fail.")
+    }
   });
 }
-function UpdateLevelMapping(arr) {
-  $.ajax({
-    url: "/level_mappings/update_level_mapping",
-    data: {
-      level_mapping_id: arr[0],
-      quantity: arr[1],
-      type: arr[2],
-      rank: arr[3],
-    },
-    type: "POST",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    success: function (response) {}
-  });
-}
-function deleteLevelMapping(arr) {
-  $.ajax({
-    url: "/level_mappings/delete_level_mapping",
-    data: {
-      list: arr
-    },
-    type: "POST",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    success: function (response) {}
-  });
-}
-
 
 function getDatainRow(lst, list) {
   var length = lst.length;
@@ -356,11 +317,10 @@ function editTitleMapping() {
       var current_competency_id = competency_ids[i];
 
       value = $(element_to_read)[i].value;
-      
+
       is_changed = $(element_to_read)[i].getAttribute('data-is_changed');
-      
-      if (is_changed != "true")
-      {
+
+      if (is_changed != "true") {
         continue;
       }
 
@@ -373,10 +333,7 @@ function editTitleMapping() {
     }
 
   });
-  if(record.length > 0)
-  {
-    var status = null;
-    //var keep_looping = true;
+  if (record.length > 0) {
     $.ajax({
       type: "POST",
       url: "/level_mappings/edit_title_mapping/",
@@ -388,24 +345,27 @@ function editTitleMapping() {
       },
       dataType: "json",
       success: function (response) {
-        status = response['status'];
-        window.location.replace("/level_mappings/");
+        if (response.status == "success") {
+          localStorage.setItem("role_name", $("#role_name").val());
+          localStorage.setItem("type", "updated");
+          $(location).attr('href', "/level_mappings/")
+        } else
+          fails("The level mapping for role " + $("#role_name").val() + " has been updated fail.")
       }
     })
-    return status;
+  } else {
+    localStorage.setItem("role_name", $("#role_name").val());
+    localStorage.setItem("type", "updated");
+    $(location).attr('href', "/level_mappings/")
   }
-  else
-  {}
-    //window.location.replace("/level_mappings/");
 }
 
 function loadLevelMapping(count) {
   $("#table_edit_level_mapping tbody tr").each(function (index, value) {
     var tr = $(this)
-    fillSelectType(tr.find('#select_type'),tr.find('#select_type').val())
-    fillSelectRank(tr.find('#select_rank'),tr.find('#select_rank').val(), count)
-    if(tr.data('title-id') == tr.prev().data('title-id') && tr.children()[2].innerHTML == tr.prev().children()[2].innerHTML)
-    {
+    fillSelectType(tr.find('#select_type'), tr.find('#select_type').val())
+    fillSelectRank(tr.find('#select_rank'), tr.find('#select_rank').val(), count)
+    if (tr.data('title-id') == tr.prev().data('title-id') && tr.children()[2].innerHTML == tr.prev().children()[2].innerHTML) {
       tr.prev().children()[3].append(tr.children()[3].children[0]) //gộp các level mapping cùng 1 bậc
       tr.remove()
     }
