@@ -129,7 +129,7 @@ class FormsController < ApplicationController
   def preview_result
     return redirect_to forms_path if params[:form_id].nil?
 
-    form = Form.find_by_id(params[:form_id])
+    form = Form.includes(:title).find_by_id(params[:form_id])
     return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
 
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
@@ -139,27 +139,58 @@ class FormsController < ApplicationController
     @competencies.map do |compentency|
       @hash_level[compentency.id] = @form_service.calculate_level_rank(@result[compentency.name])
     end
-    roles = Role.find_by_id(current_user.role_id)
-
-    title_mappings = TitleMapping.includes(:competency).joins(:title).where(titles: { role_id: 1 }).select(:competency_id, :value, "titles.rank").order(:competency_id, :value)
+    title_mappings = TitleMapping.includes(:competency).joins(:title).where(titles: { role_id: form.role_id }).select(:competency_id, :value, "titles.rank").order(:competency_id, :value)
     hash = {}
     title_mappings.map do |title_mapping|
       hash[title_mapping.competency_id] = { value: [], type: title_mapping.competency.type } if hash[title_mapping.competency_id].nil?
       hash[title_mapping.competency_id][:value] << title_mapping.value
     end
     @hash_rank = {}
+    h_competency_type = { "All" => [] }
     @hash_level.map do |key, value|
       hash[key][:value].each_with_index do |x, i|
         break if helpers.convert_value_title_mapping(value) < x
-        @hash_rank[key] = {
-          value: i + 1,
-          type: hash[key][:type],
-        }
+        @hash_rank[key] = i + 1
       end
-      @hash_rank[key] = "N/A" if @hash_rank[key].nil?
+      @hash_rank[key] = 0 if @hash_rank[key].nil?
+
+      h_competency_type[hash[key][:type]] = [] if h_competency_type[hash[key][:type]].nil?
+      h_competency_type[hash[key][:type]] << @hash_rank[key]
+      h_competency_type["All"] << @hash_rank[key]
     end
 
-    binding.pry
+    level_mappings = LevelMapping.joins(:title).where(titles: { role_id: form.role_id }).order("titles.rank", :level)
+
+    h_level_mapping = {}
+    level_mappings.each do |level_mapping|
+      key = "#{level_mapping.title_id}_#{level_mapping.level}"
+      h_level_mapping[key] = [] if h_level_mapping[key].nil?
+      h_level_mapping[key] << level_mapping
+    end
+
+    @h_title_current = {
+      level: form.level || "N/A",
+      rank: form.rank || "N/A",
+      title: form.title&.name || "N/A",
+    }
+
+    @h_title_result = {
+      level: "N/A",
+      rank: "N/A",
+      title: "N/A",
+    }
+    h_level_mapping.each do |key, value|
+      is_pass = true
+      value.each do |val|
+        count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
+        is_pass = count >= val.quantity
+      end
+      if is_pass
+        @h_title_result[:level] = value.first.level
+        @h_title_result[:rank] = value.first.title.rank
+        @h_title_result[:title] = value.first.title.name
+      end
+    end
 
     @slots = @result.values.map(&:keys).flatten.uniq.sort
 
