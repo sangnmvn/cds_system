@@ -69,54 +69,54 @@ module Api
 
     def save_title_mapping(params)
       #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
-      # current_user_id = current_user.id
+      current_user_id = current_user.id
 
-      # records = params[:records]
-      # all_title_ids = []
-      # all_title_ids = records.keys.collect { |key| records[key]["title_id"] }.uniq
-      # TitleMapping.where(title_id: all_title_ids).destroy_all
-      # records.each do |key, hash|
-      #   processed_params = {
-      #     value: convert_value_title_mapping(hash["value"]),
-      #     updated_by: current_user_id,
-      #     title_id: hash["title_id"],
-      #     competency_id: hash["competency_id"],
-      #   }
-      #   TitleMapping.create!(processed_params)
-      # end
+      records = params[:records]
+      all_title_ids = []
+      all_title_ids = records.keys.collect { |key| records[key]["title_id"] }.uniq
+      TitleMapping.where(title_id: all_title_ids).destroy_all
+      records.each do |key, hash|
+        processed_params = {
+          value: convert_value_title_mapping(hash["value"]),
+          updated_by: current_user_id,
+          title_id: hash["title_id"],
+          competency_id: hash["competency_id"],
+        }
+        TitleMapping.create!(processed_params)
+      end
 
-      # # update updated_by
-      # parent_role_id = Title.find(records["0"]["title_id"]).role_id
-      # role = Role.find(parent_role_id)
-      # role.updated_by = current_user_id
-      # role.save!
+      # update updated_by
+      parent_role_id = Title.find(records["0"]["title_id"]).role_id
+      role = Role.find(parent_role_id)
+      role.updated_by = current_user_id
+      role.save!
       true
     end
 
     def edit_title_mapping(params)
       #{"0"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"3"}, "1"=>{"value"=>"0-1", "title_id"=>"1", "competency_id"=>"4"}
-      # current_user_id = current_user.id
+      current_user_id = current_user.id
 
-      # records = params["records"]
-      # records.each do |key, hash|
-      #   processed_params = {
-      #     value: convert_value_title_mapping(hash["value"]),
-      #     updated_by: current_user_id,
-      #     title_id: hash["title_id"],
-      #     competency_id: hash["competency_id"],
-      #   }
-      #   current_title_mapping = TitleMapping.find_by(title_id: processed_params[:title_id], competency_id: processed_params[:competency_id])
+      records = params["records"]
+      records.each do |key, hash|
+        processed_params = {
+          value: convert_value_title_mapping(hash["value"]),
+          updated_by: current_user_id,
+          title_id: hash["title_id"],
+          competency_id: hash["competency_id"],
+        }
+        current_title_mapping = TitleMapping.find_by(title_id: processed_params[:title_id], competency_id: processed_params[:competency_id])
 
-      #   current_title_mapping.value = processed_params[:value]
-      #   current_title_mapping.updated_by = processed_params[:updated_by]
-      #   current_title_mapping.save!
-      # end
+        current_title_mapping.value = processed_params[:value]
+        current_title_mapping.updated_by = processed_params[:updated_by]
+        current_title_mapping.save!
+      end
 
-      # # update updated_by
-      # parent_role_id = Title.find(records["0"]["title_id"]).role_id
-      # role = Role.find_by_id(parent_role_id)
-      # role.updated_by = current_user_id
-      # role.save!
+      # update updated_by
+      parent_role_id = Title.find(records["0"]["title_id"]).role_id
+      role = Role.find_by_id(parent_role_id)
+      role.updated_by = current_user_id
+      role.save!
       true
     end
 
