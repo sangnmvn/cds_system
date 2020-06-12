@@ -14,8 +14,8 @@
     position: absolute;
     z-index: 3400;
     top: 10%;
-    left: 50%;
-    margin: 0px auto;
+    left: 40%;
+    margin: 0 auto;
     text-align: center;
     display: none;
 }
@@ -188,9 +188,11 @@ h2,
     // font-size: 120%;
     color: white;
 }
-.border-table{
-    border: 0.13em solid  #0066CC;
+
+.border-table {
+    border: 0.13em solid #0066CC;
 }
+
 /*
   *= require_tree .
   *= require_self

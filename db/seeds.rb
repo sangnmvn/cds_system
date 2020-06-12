@@ -159,32 +159,32 @@ ProjectMember.create!(user_id: 19, project_id: 2, is_managent: "0")
 
 # Create Title
 # QC
-Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1",status: 0)
-Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1",status: 0)
-Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1",status: 0)
-Title.create!(id: 4, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "1",status: 1)
+Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1", status: 0)
+Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1", status: 0)
+Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1", status: 0)
+Title.create!(id: 4, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "1", status: 1)
 # Dev
-Title.create!(id: 5, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2",status: 0)
-Title.create!(id: 6, name: "Developer", desc: "Developer", rank: 2, role_id: "2",status: 0)
-Title.create!(id: 7, name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2",status: 0)
-Title.create!(id: 8, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2",status: 0)
-Title.create!(id: 9, name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2",status: 0)
-Title.create!(id: 10, name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2",status: 0)
-Title.create!(id: 11, name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2",status: 0)
+Title.create!(id: 5, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2", status: 0)
+Title.create!(id: 6, name: "Developer", desc: "Developer", rank: 2, role_id: "2", status: 0)
+Title.create!(id: 7, name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2", status: 0)
+Title.create!(id: 8, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2", status: 0)
+Title.create!(id: 9, name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2", status: 0)
+Title.create!(id: 10, name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2", status: 0)
+Title.create!(id: 11, name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2", status: 0)
 # BA
-Title.create!(id: 12, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3",status: 0)
-Title.create!(id: 13, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3",status: 0)
-Title.create!(id: 14, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3",status: 0)
-Title.create!(id: 20, name: "Business Analyst Manager", desc: "Business Analyst Manager", rank: 4, role_id: "3",status: 1)
+Title.create!(id: 12, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3", status: 0)
+Title.create!(id: 13, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3", status: 0)
+Title.create!(id: 14, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3", status: 0)
+Title.create!(id: 20, name: "Business Analyst Manager", desc: "Business Analyst Manager", rank: 4, role_id: "3", status: 1)
 # PM
 # PM
-Title.create!(id: 15, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4",status: 0)
-Title.create!(id: 16, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4",status: 0)
-Title.create!(id: 17, name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4",status: 0)
+Title.create!(id: 15, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4", status: 0)
+Title.create!(id: 16, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4", status: 0)
+Title.create!(id: 17, name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4", status: 0)
 # SM
-Title.create!(id: 18, name: "SM Test", desc: "SM Test", role_id: "5",status: 0)
+Title.create!(id: 18, name: "SM Test", desc: "SM Test", role_id: "5", status: 0)
 # HR
-Title.create!(id: 19, name: "HR Test", desc: "HR Test", role_id: "6",status: 0)
+Title.create!(id: 19, name: "HR Test", desc: "HR Test", role_id: "6", status: 0)
 
 # Create Template
 Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", user_id: 1, status: true)

@@ -2,6 +2,8 @@
 <%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
 <div class="container-fluid">
+<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
   <div class="row col-num" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
     <div class="col-10" style="font-size: 150%;">
       New Level Mapping for Role <%= @role.name %>
@@ -33,4 +35,5 @@
 <input class='d-none' id="role_id" value='<%= @role.id %>'>
 <script>
   var global_can_view = <%= can_view? %>
+  var role_name =  "<%= @role.name %>"
 </script>

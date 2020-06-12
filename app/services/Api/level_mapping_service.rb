@@ -121,36 +121,41 @@ module Api
       role.save!
     end
 
-    def delete_level_mapping
-      LevelMapping.where(id: params[:list]).destroy_all
-    end
-
-    def update_level_mapping
-      item = LevelMapping.find_by_id(id: params[:level_mapping_id])
-      item.quantity = params[:quantity]
-      item.competency_type = params[:type]
-      item.rank_number = params[:rank]
-      item.save
-    end
-
-    def save_level_mapping
-      return { status: "success" } if LevelMapping.create!(table_level_mapping_params)
-      { status: "success" }
+    def save_level_mapping(params)
+      list_new = params[:list_new]
+      if list_new.present?
+        list_new.each do |item|
+          level_mapping = {
+            title_id: item[1][0],
+            level: item[1][1],
+            quantity: item[1][2],
+            competency_type: item[1][3],
+            rank_number: item[1][4],
+            updated_by: @current_user.id,
+          }
+          return "fail" unless LevelMapping.create!(level_mapping)
+        end
+      end
+      list_del = params[:list_del]
+      if list_del.present?
+          return "fail" unless LevelMapping.where(id: list_del).destroy_all
+      end
+      list_edit = params[:list_edit]
+      if list_edit.present?
+        list_edit.each do |item|
+          level_mapping = LevelMapping.find_by_id(item[1][0].to_i)
+          level_mapping.quantity = item[1][1].to_i
+          level_mapping.competency_type = item[1][2]
+          level_mapping.rank_number = item[1][3].to_i
+          return "fail" unless level_mapping.save
+        end
+      end
+      "success"
     end
 
     private
 
     attr_reader :params, :current_user
 
-    def table_level_mapping_params
-      {
-        title_id: params[:title_id].to_i,
-        level: params[:level].to_i,
-        quantity: params[:quantity].to_i,
-        competency_type: params[:type].to_i,
-        rank_number: params[:rank].to_i,
-        updated_by: @current_user.id,
-      }
-    end
   end
 end
