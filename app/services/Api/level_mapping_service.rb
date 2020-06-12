@@ -19,9 +19,9 @@ module Api
 
     def get_title_mapping_for_new_level_mapping(role_id)
       title_mappings = Title.joins(role: [templates: [:competencies]])
-        .select(:id, :name, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "max(templates.updated_at)")
-        .group(:id, :name, :rank, "competencies.name", "competencies.id")
-        .where(role_id: role_id).order(rank: :asc)
+        .select(:id, :name, :rank, "competencies.name as competency_name", "competencies.id as competency_id", "competencies.location as competency_location", "max(templates.updated_at)")
+        .group(:id, :name, :rank, "competencies.name", "competencies.id", "competencies.location")
+        .where(role_id: role_id).order(rank: :asc, "competencies.location": :asc)
 
       title_mappings.map do |title_mapping|
         {
@@ -29,6 +29,7 @@ module Api
           rank: title_mapping.rank,
           competency_name: title_mapping.competency_name,
           competency_id: title_mapping.competency_id,
+          competency_location: title_mapping.competency_location,
           title_id: title_mapping.id,
         }
       end

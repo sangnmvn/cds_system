@@ -18,19 +18,31 @@ function loadTitleMappingForEdit() {
       for (var i = 0; i < response.length; i++) {
         var data = response[i];
         var title_name = data.title;
+        title_list[title_name] = [];
         // convert to JSON because string is KEPT unique in set
         // while hash does NOT
-        competency_list.add(JSON.stringify({
-          name: data.competency_name,
-          id: data.competency_id
-        }))
-        if (title_name in title_list) {
-          title_list[title_name].push(data);
-        } else {
-          title_list[title_name] = [data];
+        for (var i = 0; i < response.length; i++) {
+          var data = response[i];
+          var title_name = data.title;
+          // convert to JSON because string is KEPT unique in set
+          // while hash does NOT
+          competency_list.add(JSON.stringify({
+            name: data.competency_name,
+            id: data.competency_id
+          }))
+          if (title_name in title_list) {
+            title_list[title_name].push(data);
+          } else {
+            title_list[title_name] = [data];
+          }
         }
       }
 
+      key_of_title_list = Object.keys(title_list)
+      for (i = 0; i < key_of_title_list.length; i++) {
+        title_name = key_of_title_list[i];
+        title_list[title_name] = sort_by_key(title_list[title_name], "competency_location");
+      }
       // step 2: append all of the competency column
       final_html = '';
       column_list = [];
@@ -45,7 +57,6 @@ function loadTitleMappingForEdit() {
       }
       $("#title_header_column").append(final_html);
       final_html = '';
-      key_of_title_list = Object.keys(title_list)
       for (i = 0; i < key_of_title_list.length; i++) {
         title_name = key_of_title_list[i];
         data_list = title_list[title_name];
