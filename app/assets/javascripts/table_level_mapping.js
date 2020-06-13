@@ -71,9 +71,11 @@ $(document).ready(function () {
   $('#table_level_mapping').on('change', '#select_type', function () {
     checkData()
     checkDuplicateRequired($(this))
+    checkRow($(this).parent().parent())
   });
   $('#table_level_mapping').on('keyup', 'input', function () {
     checkData()
+    checkRow($(this).parent().parent())
   });
   $('#table_level_mapping').on('blur', 'input', function () {
     var num = parseInt($(this).val())
@@ -84,9 +86,11 @@ $(document).ready(function () {
   });
   $('#table_edit_level_mapping').on('change', 'input', function (e) {
     checkData()
+    checkRow($(this).parent().parent())
   });
   $('#table_level_mapping').on('change', '#select_rank', function () {
     checkData()
+    checkRow($(this).parent().parent())
     checkDuplicateRequired($(this))
   });
   $('#btn_save').on('click', function () {
@@ -138,7 +142,7 @@ function createNewRowRequire(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
@@ -169,11 +173,20 @@ function createNewRowLevel(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
+}
+function checkRow (row)
+{
+  if(row.children()[0].children[0].value == "" || row.children()[1].children[0].value == "-1" || row.children()[2].children[0].value == "-1"){
+    row.children()[3].children[0].classList.add('invisible')
+  }
+  else{
+    row.children()[3].children[0].classList.remove('invisible')
+  }
 }
 
 function checkData() {

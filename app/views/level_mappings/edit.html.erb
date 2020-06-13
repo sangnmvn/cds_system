@@ -3,10 +3,8 @@
 <input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
 <input class="d-none" id="role_name" value=<%= @role.name %>>
 <div class="container-fluid">
-<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
-  <div class="row col-num" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
-    <div class="col-10" style="font-size: 150%;">
+  <div class="row row-header">
+    <div class="col-12 " style="font-size: 150%;">
       <% if can_edit? %>
         Update Level Mapping for Role <%= @role.name %>
       <% else %>

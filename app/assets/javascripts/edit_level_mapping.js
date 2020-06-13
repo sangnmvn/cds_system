@@ -86,13 +86,16 @@ $(document).ready(function () {
     checkData()
     checkDuplicateRequired($(this))
     $(this).parent().parent().attr('data-is_change', 'true');
+    checkRow($(this).parent().parent())
   });
   $('#table_edit_level_mapping').on('keyup', 'input', function (e) {
     checkData()
+    checkRow($(this).parent().parent())
     $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#table_edit_level_mapping').on('change', 'input', function (e) {
     checkData()
+    checkRow($(this).parent().parent())
     $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#table_edit_level_mapping').on('blur', 'input', function () {
@@ -105,6 +108,7 @@ $(document).ready(function () {
   $('#table_edit_level_mapping').on('change', '#select_rank', function () {
     checkData()
     checkDuplicateRequired($(this))
+    checkRow($(this).parent().parent())
     $(this).parent().parent().attr('data-is_change', 'true');
   });
   $('#btn_save').on('click', function () {
@@ -176,7 +180,7 @@ function createNewRowRequire(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
@@ -207,13 +211,21 @@ function createNewRowLevel(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
 }
-
+function checkRow (row)
+{
+  if(row.children()[0].children[0].value == "" || row.children()[1].children[0].value == "-1" || row.children()[2].children[0].value == "-1"){
+    row.children()[3].children[0].classList.add('invisible')
+  }
+  else{
+    row.children()[3].children[0].classList.remove('invisible')
+  }
+}
 function checkData() {
   var row = $("#table_edit_level_mapping").find('.row').children()
   var count = row.length

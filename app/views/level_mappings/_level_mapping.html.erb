@@ -1,4 +1,6 @@
 <%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
 <div class='row'>
   <div class='col-12'>
     <div class='basic-table-wrapper'>
@@ -40,7 +42,7 @@
                 </select>
               </div>
               <div class='col-2 divIcon'>
-                <a type='button' class='btnAction' title='Add more Required' id="btn_add_required">
+                <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required">
                   <i class='fas fa-plus-circle btnAdd'></i>
                 </a>
                 <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
