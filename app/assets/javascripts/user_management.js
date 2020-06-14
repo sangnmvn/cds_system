@@ -1,9 +1,7 @@
-
 // filter select company
 $(document).ready(function () {
   $("#filter-company").change(function () {
-    company = $("#filter-company").val();
-
+    company_id = $("#filter-company").val();
     $.ajax({
       url: "/users/get_filter_company",
       type: "GET",
@@ -11,28 +9,20 @@ $(document).ready(function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       data: {
-        company: company
+        company_id: company_id
       },
       dataType: "json",
       success: function (response) {
-
         $(response).each(function (i, e) {
-
           $("#filter-project").html("");
-
-
           $('<option value="all">All</option>').appendTo("#filter-project");
-
           $.each(e.projects, function (k, v) {
-            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo(
-              "#filter-project"
-            );
+            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo("#filter-project");
           });
+
           $('<option value="none">None</option>').appendTo("#filter-project");
           $("#filter-role").html("");
-         
-            $('<option value="all">All</option>').appendTo("#filter-role");
-          
+          $('<option value="all">All</option>').appendTo("#filter-role");
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
               "#filter-role"
@@ -46,8 +36,8 @@ $(document).ready(function () {
 // filter select project
 $(document).ready(function () {
   $("#filter-project").change(function () {
-    company = $("#filter-company").val();
-    project = $("#filter-project").val();
+    company_id = $("#filter-company").val();
+    project_id = $("#filter-project").val();
     $.ajax({
       url: "/users/get_filter_project",
       type: "GET",
@@ -55,16 +45,14 @@ $(document).ready(function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       data: {
-        company: company,
-        project: project
+        company_id: company_id,
+        project_id: project_id
       },
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
           $("#filter-role").html("");
-        
-            $('<option value="all">All</option>').appendTo("#filter-role");
-      
+          $('<option value="all">All</option>').appendTo("#filter-role");
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
               "#filter-role"
@@ -377,9 +365,18 @@ function setup_dataTable() {
         project = $("#filter-project").val();
         role = $("#filter-role").val();
 
-        aoData.push({ "name": "filter-company", "value": company });
-        aoData.push({ "name": "filter-project", "value": project });
-        aoData.push({ "name": "filter-role", "value": role });
+        aoData.push({
+          "name": "filter-company",
+          "value": company
+        });
+        aoData.push({
+          "name": "filter-project",
+          "value": project
+        });
+        aoData.push({
+          "name": "filter-role",
+          "value": role
+        });
 
       },
 
@@ -403,18 +400,61 @@ function setup_dataTable() {
         "info": " _START_ - _END_ of _TOTAL_",
         "infoFiltered": ""
       },
-      "columnDefs": [
-        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 0 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 1 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 2 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 3 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 4 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 5 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 6 },
-        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 7 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 8 },
-        { "orderable": true, "orderSequence": ["desc", "asc"], "targets": 9 },
-        { "orderable": false, "orderSequence": ["desc", "asc"], "targets": 10 },
+      "columnDefs": [{
+        "orderable": false,
+        "orderSequence": ["desc", "asc"],
+        "targets": 0
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 1
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 2
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 3
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 4
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 5
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 6
+      },
+      {
+        "orderable": false,
+        "orderSequence": ["desc", "asc"],
+        "targets": 7
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 8
+      },
+      {
+        "orderable": true,
+        "orderSequence": ["desc", "asc"],
+        "targets": 9
+      },
+      {
+        "orderable": false,
+        "orderSequence": ["desc", "asc"],
+        "targets": 10
+      },
       ],
     });
 
@@ -827,8 +867,7 @@ $(document).click(function (e) {
       $("#btn-delete-many-users").css('background-color', "#8da8db");
       $("#btn-enable-multiple-users").css('background-color', "#8da8db");
 
-    }
-    else {
+    } else {
 
       $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
       $("#btn-delete-many-users").css('background-color', "#dcdcdc");

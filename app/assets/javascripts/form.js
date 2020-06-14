@@ -614,7 +614,6 @@ $(document).on("click", "#confirm_submit_cds", function () {
   });
 });
 $(document).on("click", ".flag-cds-assessment", function () {
-  debugger
   if ($(this).data("click") != "yellow")
     return;
   var form_slot_id = $(this).data("form-slot-id");

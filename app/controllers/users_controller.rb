@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
-  before_action :get_privilege_id
+  before_action :get_privilege_id, :user_management_serviece
   before_action :redirect_to_index, except: [:index2]
 
   def get_user_data
@@ -14,66 +14,22 @@ class UsersController < ApplicationController
       filter[:id] = user_ids
     end
 
-    filter[:company_id] = set_params[:filter_company] if set_params[:filter_company] != "all"
+    filter[:company_id] = user_params[:filter_company] if user_params[:filter_company] != "all"
+    filter[:role_id] = user_params[:filter_role] if user_params[:filter_role] != "all"
 
-    filter[:role_id] = set_params[:filter_role] if set_params[:filter_role] != "all"
-
-    if set_params[:filter_project] != "all" && set_params[:filter_project] != "none"
-      user_ids = ProjectMember.where(project_id: set_params[:filter_project]).pluck(:user_id).uniq
+    if user_params[:filter_project] != "all" && user_params[:filter_project] != "none"
+      user_ids = ProjectMember.where(project_id: user_params[:filter_project]).pluck(:user_id).uniq
       filter[:id] = user_ids
     end
 
-    users = User.search_user(set_params[:search]).where(filter).offset(set_params[:offset]).limit(LIMIT).order(get_sort_params)
+    users = User.includes(:role, :company).search_user(user_params[:search]).where(filter).offset(user_params[:offset]).limit(LIMIT).order(get_sort_params)
 
-    if set_params[:filter_project] == "none"
+    if user_params[:filter_project] == "none"
       user_project_ids = ProjectMember.pluck(:user_id).uniq # user have project
       users = users.where.not(id: user_project_ids)
     end
 
-    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: format_data(users) }
-  end
-
-  def format_data(users)
-    datas = []
-    users.map.with_index do |user, index|
-      current_user_data = []
-      current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
-
-      number = set_params[:offset] + index + 1
-      current_user_data.push("<p class='number'>#{number}</p>")
-      current_user_data.push(user.first_name)
-      current_user_data.push(user.last_name)
-      current_user_data.push(user.email)
-      current_user_data.push(user.account)
-
-      role = user.role_id.nil? ? "" : Role.select(:name).find(user.role_id).name
-      current_user_data.push(role)
-      current_user_data.push(user.title)
-
-      project_ids = ProjectMember.where(user_id: user.id).pluck(:project_id)
-      project_name = Project.find(project_ids).pluck(:desc).join(", ")
-      current_user_data.push(project_name)
-      company = user.company_id.nil? ? "" : Company.select(:name).find(user.company_id).name
-      current_user_data.push(company)
-      # column action
-      pri = @privilege_array.include?(1)
-      current_user_data.push("<div style='text-align: center'>
-        <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
-          <i class='fa fa-pencil icon' style='color: #{pri ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
-        </a>
-          <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href='javascript:;'>
-            <i class='fa fa-trash icon' style='color: #{pri ? "red" : "rgb(77, 79, 78)"}'></i>
-          </a>
-          <a class='action_icon add_reviewer_icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='javascript:;'>
-            <img border='0' src='/assets/Assign_User.png' class='assign_user_img'>
-          </a>
-          <a #{"class='action_icon status_icon'" if pri} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
-            <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless pri}'></i>
-          </a></div>")
-
-      datas << current_user_data
-    end
-    datas
+    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_serviece.format_user_data(users) }
   end
 
   def index
@@ -87,13 +43,11 @@ class UsersController < ApplicationController
 
   def add_reviewer
     user_id = params[:id]
-    all_user_id_except_self = User.where.not(id: user_id).where(is_delete: false)
-    @existing_reviewers = all_user_id_except_self.where(id: Approver.where(user_id: user_id).distinct.pluck(:approver_id))
-    @available_users = all_user_id_except_self.where.not(id: @existing_reviewers.pluck(:id))
+    user = User.find_by_id(user_id)
+    @reviewers = Approver.includes(:approver).where(user_id: user_id)
+    @available_users = User.where.not(id: @reviewers.pluck(:approver_id)).where(company_id: user.company_id)
 
-    respond_to do |format|
-      format.js
-    end
+    respond_to :js
   end
 
   def add_reviewer_to_database
@@ -102,56 +56,28 @@ class UsersController < ApplicationController
     else
       approver_ids = params[:approver_ids].split(",").map(&:to_i)
     end
-    user_id = params[:id].to_i
-    # delete all approvers
 
-    Approver.where(user_id: user_id).destroy_all
+    # delete all approvers
+    Approver.where(user_id: params[:id]).destroy_all
 
     # add approver in list
-    approver_ids.each { |approver_id|
+    approver_ids.each do |approver_id|
       Approver.create!(user_id: user_id, approver_id: approver_id)
-    }
+    end
   end
 
-  def destroy
-    params[:is_delete] = true
-    return render json: { status: "success", deleted_id: params[:id] } if @user.update(user_params)
+  def destroys
+    return render json: { status: "success", deleted_id: params[:id] } if @user.update(is_delete: true)
 
     render json: { status: "fail" }
   end
 
   def get_filter_company
-    if params[:company] == "all"
-      projects = Project.select(:id, :desc).order(:desc)
-      roles = Role.select(:id, :name).order(:name)
-    else
-      projects = Project.select(:id, :desc).where(company_id: params[:company]).order(:desc)
-      user_ids = User.where(company_id: params[:company], is_delete: false).pluck(:role_id).uniq
-      roles = Role.select(:id, :name).where(id: user_ids).order(:name)
-    end
-
-    render json: { projects: projects, roles: roles }
+    render json: @user_management_serviece.get_filter_company
   end
 
   def get_filter_project
-    filter = {
-      is_delete: false,
-    }
-    filter[:company_id] = params[:company] if params[:company] != "all"
-    if params[:project] != "all" && params[:project] != "none"
-      user_ids = ProjectMember.where(project_id: params[:project]).pluck(:user_id).uniq
-      filter[:id] = user_ids
-    end
-
-    users = User.where(filter)
-
-    if params[:project] == "none"
-      user_ids = ProjectMember.pluck(:user_id).uniq
-      users = users.where.not(id: user_ids).pluck(:role_id)
-    end
-    roles = Role.select(:id, :name).where(id: users.pluck(:role_id)).order(:name)
-
-    render json: { roles: roles }
+    render json: { roles: @user_management_serviece.get_filter_project }
   end
 
   def create
@@ -224,7 +150,7 @@ class UsersController < ApplicationController
     status = "fail" if params[:list_users].nil?
 
     users = User.where(id: params[:list_users])
-    if users.count.zero?
+    if users.empty?
       status = "fail"
     else
       users.update(is_delete: true)
@@ -275,18 +201,19 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def user_params
-    params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete)
+  def user_management_serviece
+    @user_management_serviece = Api::UserManagementService.new(user_params, current_user, @privilege_array)
   end
 
-  def set_params
-    {
-      offset: params[:iDisplayStart].to_i,
-      search: params[:sSearch],
-      filter_company: params["filter-company"],
-      filter_role: params["filter-role"],
-      filter_project: params["filter-project"],
-    }
+  def user_params
+    params[:offset] = params[:iDisplayStart].to_i
+    params[:search] = params[:sSearch]
+    params[:filter_company] = params["filter-company"]
+    params[:filter_role] = params["filter-role"]
+    params[:filter_project] = params["filter-project"]
+    params.permit(:id, :first_name, :last_name, :email, :account,
+                  :company_id, :role_id, :status, :is_delete, :offset,
+                  :search, :filter_company, :filter_role, :filter_project, :project_id)
   end
 
   def get_sort_params

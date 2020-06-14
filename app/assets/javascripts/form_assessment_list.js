@@ -33,14 +33,14 @@ function LoadDataAssessmentList() {
           link = "#";          
         }
         var this_element = `<tr id='period_id_{id}'> 
-              <td>{no}</td> 
-              <td><a href='{link_view}'>{period}</a></td> 
-              <td>{role}</td> 
-              <td>{level}</td> 
-              <td>{rank}</td> 
-              <td>{title}</td> 
-              <td>{status}</td> 
-              <td> 
+              <td class="type-number">{no}</td> 
+              <td class="type-text"><a href='{link_view}'>{period}</a></td> 
+              <td class="type-text">{role}</td> 
+              <td class="type-text">{title}</td> 
+              <td class="type-number">{rank}</td> 
+              <td class="type-number">{level}</td> 
+              <td class="type-text">{status}</td>
+              <td class="type-icon"> 
                 <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}'></i></a>
                 &nbsp;
                 <a class='{status_class}' data-id='{id}' data-period-cds='{period}' href='#'>

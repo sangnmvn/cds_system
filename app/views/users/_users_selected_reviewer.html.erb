@@ -9,17 +9,17 @@
     </tr>
   </thead>
   <tbody>
-    <% unless @existing_reviewers.nil?%>
-      <% @existing_reviewers.each_with_index do |user, index| %>
-        <tr id="<%= user.id %>">
+    <% if @reviewers.present?%>
+      <% @reviewers.each_with_index do |user, index| %>
+        <tr id="<%= user.approver_id %>">
           <td><div style="text-align: right;"><%= index + 1%></div></td>
-          <td><input type="checkbox" class="mycontrol" id="<%= "#{user.id}_checkbox" %>" </td>
-            <td style="text-align: left"><%= "#{user.first_name} #{user.last_name}" %> </td>
-            <td style="text-align: left"><%= user.account %></td>
-            <td style="display:none;"><%= user.id %></td>
-          </tr>
-        <% end %>
+          <td><input type="checkbox" class="mycontrol" id="<%= "#{user.approver_id}_checkbox" %>"> </td>
+          <td style="text-align: left"><%= "#{user.approver.format_name}" %> </td>
+          <td style="text-align: left"><%= user.approver.account %></td>
+          <td style="display:none;"><%= user.approver_id %></td>
+        </tr>
       <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>
   

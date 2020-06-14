@@ -1,4 +1,6 @@
-// index
+// Place all the styles related to the LevelMappings controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
 $color-disable: #afaaaa;
 
 .filter-title {
@@ -85,26 +87,20 @@ $color-disable: #afaaaa;
 
 .table-cds-assessment-list tbody tr td:nth-child(1) {
     width: 4%;
-    text-align: right;
 }
 
-.table-cds-assessment-list tbody tr td:nth-child(2),
-.table-cds-assessment-list tbody tr td:nth-child(6) {
+.table-cds-assessment-list tbody tr td:nth-child(2) {
+    width: 20%;
+}
+.table-cds-assessment-list tbody tr td:nth-child(4) {
     width: 25%;
-    text-align: left;
 }
 
 .table-cds-assessment-list tbody tr td:nth-child(3),
-.table-cds-assessment-list tbody tr td:nth-child(4),
+.table-cds-assessment-list tbody tr td:nth-child(6),
 .table-cds-assessment-list tbody tr td:nth-child(5),
 .table-cds-assessment-list tbody tr td:nth-child(7) {
     width: 8%;
-    text-align: left;
-}
-
-.table-cds-assessment-list tbody tr td:nth-child(8) {
-    text-align: center;
-    // width: 12%;
 }
 
 .button-add-cds-assessment button {
@@ -263,11 +259,15 @@ $color-disable: #afaaaa;
 }
 
 // preview result
-.table-statistic-preview-result thead tr {
-    background-color: #8da8db;
-    font-weight: bold;
+.table-statistic-preview-result {
+    td {
+        border: 1px solid #42719a;
+    }
+    thead tr {
+        background-color: #8da8db;
+        font-weight: bold;
+    }
 }
-
 .fail-slot {
     color: red;
 }

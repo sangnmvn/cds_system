@@ -2,7 +2,7 @@ $('#table_left').remove();
 $('#table_left_wrapper').html("<%= j (render partial: "users_reviewer_list", locals: { available_users: @available_users} )%>");
 
 $('#table_right').remove();
-$('#table_right_wrapper').html("<%= j (render partial: "users_selected_reviewer", locals: {existing_reviewers: @existing_reviewers} )%>");
+$('#table_right_wrapper').html("<%= j (render partial: "users_selected_reviewer", locals: {reviewers: @reviewers} )%>");
 
 set_up_data_table_reviewer();
 

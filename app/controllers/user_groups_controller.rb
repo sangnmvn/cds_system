@@ -2,8 +2,6 @@ class UserGroupsController < ApplicationController
   layout "system_layout"
 
   def index
-    @user_groups = UserGroup.all
-    @user = User.all
   end
 
   def load_user
