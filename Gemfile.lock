@@ -157,6 +157,13 @@ GEM
       dry-schema (~> 1.5)
     erubi (1.9.0)
     execjs (2.7.0)
+    factory_girl (4.9.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.9.0)
+      factory_girl (~> 4.9.0)
+      railties (>= 3.0.0)
+    faker (2.12.0)
+      i18n (>= 1.6, < 2)
     ffi (1.12.2)
     ffi (1.12.2-java)
     ffi (1.12.2-x64-mingw32)
@@ -390,6 +397,8 @@ DEPENDENCIES
   config
   database_cleaner (~> 1.5)
   devise
+  factory_girl_rails
+  faker
   font-awesome-sass
   jbuilder (~> 2.7)
   jquery-rails
