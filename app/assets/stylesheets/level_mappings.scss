@@ -6,17 +6,20 @@
     position: -webkit-sticky;    
 }
 
+/*
 .table-new-title-mapping tbody td:nth-child(1) {
     width: 20%;              
 }
 .table-new-title-mapping tbody td:nth-child(2) {
     width: 7%;  
 }
-
-.basic-table-wrapper > .table-edit-title-mapping {
+*/
+.basic-table-wrapper > .table-edit-title-mapping,
+.basic-table-wrapper > .table-new-title-mapping
+{
     margin-left: 520px;
-  }
-
+}
+.table-new-title-mapping > * > tr > td:nth-child(1),
 .table-edit-title-mapping > * > tr > td:nth-child(1) {
     width: 380px; 
     white-space: nowrap;
@@ -25,23 +28,30 @@
     z-index: 1;
 }
 
+.table-new-title-mapping > tbody > tr,
+.table-edit-title-mapping > tbody > tr{
+    padding: 12px 12px;
+}
+.table-new-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(1) ,
+.table-new-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(2) ,
 .table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(1) ,
 .table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(2)
 {
     background-color: #CFD5EA;
-    padding: 6px 12px;
-    height: 63px;    
+    padding: 18px 12px;
+    height: 64px;    
 }
-
+.table-new-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(1) ,
+.table-new-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(2) ,
 .table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(1) ,
 .table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(2)
 {
     background-color: #fff;
-    padding: 6px 12px;
-    height: 63px;    
+    padding: 18px 12px;
+    height: 64px;    
 }
 
-
+.table-new-title-mapping > * > tr > td:nth-child(2),
 .table-edit-title-mapping > * > tr > td:nth-child(2) { 
     width: 140px;  
     white-space: nowrap;
@@ -49,7 +59,8 @@
     margin-left: -140px;        
     z-index: 1;
 }
-
+.table-new-title-mapping > * > tr > .dynamic_title_header_col,
+.table-new-title-mapping > * > tr > .competency_row,
 .table-edit-title-mapping > * > tr > .dynamic_title_header_col,
 .table-edit-title-mapping > * > tr > .competency_row { 
     white-space: nowrap;             
