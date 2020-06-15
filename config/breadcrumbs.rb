@@ -18,6 +18,16 @@ crumb :level_mapping_new do |item|
 end
 
 crumb :forms do
-  link "Forms", "/forms"
+  link "CDS Assessment", "/forms"
+  parent :root
+end
+
+crumb :new_cds do
+  link "New CDS", "/forms/cds_assessment"
+  parent :forms
+end
+
+crumb :cds_review do
+  link "Review CDS", "/forms/cds_review"
   parent :root
 end
