@@ -35,6 +35,7 @@
     <div class='col-12 div-table'><%= render 'edit_level_mapping'%></div>
   </div>
 </div>
+<% breadcrumb :level_mapping_edit, @role %>
 <script>
   var global_role_id = <%= @role.id %>
   var global_can_view = <%= can_view? %>

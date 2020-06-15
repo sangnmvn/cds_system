@@ -31,6 +31,7 @@
   </div>
 </div>
 <input class='d-none' id="role_id" value='<%= @role.id %>'>
+<% breadcrumb :level_mapping_new, @role %>
 <script>
   var global_can_view = <%= can_view? %>
   var role_name =  "<%= @role.name %>"

@@ -193,6 +193,16 @@ h2,
     border: 0.13em solid #0066CC;
 }
 
+.header-breadcrumb {
+    background-color: #DDDDDD;
+    color: white !important;
+    padding-left: 2%;
+    height: 40px;
+    padding-top: 10px;;
+}
+.header{
+    background-color: #DDDDDD;
+}
 /*
   *= require_tree .
   *= require_self

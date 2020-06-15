@@ -45,8 +45,8 @@ $(document).ready(function () {
     newRow.cells[3].innerHTML = row;
     newRow.insertCell(4);
     newRow.cells[4].innerHTML =
-      `<a type='button' class='btnAction' title='Add more levels' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
-    <a type='button' class='btnAction' title='Remove level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`;
+      `<a type='button' class='btnAction' title='Add a level' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
+    <a type='button' class='btnAction' title='Delete a level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>`;
 
   });
   $('#table_level_mapping').on('click', '#btn_remove_level', function () {
@@ -141,9 +141,9 @@ function createNewRowRequire(count) {
   temp += `
       </select>
       </div>
-      <div class='col-2 divIcon'>
-        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
+      <div class='col-2 divIcon'  style='padding-top:7px'>
+        <a type='button' class='btnAction invisible' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -172,9 +172,9 @@ function createNewRowLevel(count) {
   temp += `
       </select>
       </div>
-      <div class='col-2 divIcon'>
-        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
+      <div class='col-2 divIcon' style='padding-top:7px'>
+        <a type='button' class='btnAction invisible' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
