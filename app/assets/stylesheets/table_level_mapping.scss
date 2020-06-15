@@ -35,7 +35,7 @@
 }
 
 #table_level_mapping tbody td:nth-child(1) {
-  width: 18%;
+  width: 17%;
   text-align: left;
 }
 
@@ -63,7 +63,7 @@
 }
 
 #table_edit_level_mapping tbody td:nth-child(1) {
-  width: 18%;
+  width: 17%;
   text-align: left;
 }
 
@@ -181,4 +181,7 @@ a.disabled {
 a.disabled {
   pointer-events: none;
   cursor: default;
+  i{
+    color:#6c757d
+  }
 }

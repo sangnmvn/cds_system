@@ -14,7 +14,7 @@ $(document).ready(function () {
     } else {
       $(this).closest('td').append(createNewRowRequire(count))
       $(this).parent().children()[1].classList.remove('invisible')
-      $(this).addClass("invisible").removeClass("visible")
+      $(this).addClass("invisible")
     }
   });
   $('#table_edit_level_mapping').on('click', '#btn_remove_required', function () {
@@ -180,8 +180,8 @@ function createNewRowRequire(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -211,8 +211,8 @@ function createNewRowLevel(count) {
       </select>
       </div>
       <div class='col-2 divIcon'>
-        <a type='button' class='btnAction invisible' title='Add more Required' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
-        <a type='button' class='btnAction invisible' title='Remove Required' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
+        <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
+        <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
       </div>`
   return temp
@@ -220,10 +220,10 @@ function createNewRowLevel(count) {
 function checkRow (row)
 {
   if(row.children()[0].children[0].value == "" || row.children()[1].children[0].value == "-1" || row.children()[2].children[0].value == "-1"){
-    row.children()[3].children[0].classList.add('invisible')
+    row.children()[3].children[0].classList.add('disabled')
   }
   else{
-    row.children()[3].children[0].classList.remove('invisible')
+    row.children()[3].children[0].classList.remove('disabled')
   }
 }
 function checkData() {
