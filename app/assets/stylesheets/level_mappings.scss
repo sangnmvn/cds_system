@@ -13,14 +13,48 @@
     width: 7%;  
 }
 
-.table-edit-title-mapping tbody td:nth-child(1) {
-    width: 20%;  
+.basic-table-wrapper > .table-edit-title-mapping {
+    margin-left: 520px;
+  }
+
+.table-edit-title-mapping > * > tr > td:nth-child(1) {
+    width: 380px; 
+    white-space: nowrap;
+    position: absolute;
+    margin-left: -520px;        
+    z-index: 1;
+}
+
+.table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(1) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(2)
+{
+    background-color: #CFD5EA;
+    padding: 6px 12px;
+    height: 63px;    
+}
+
+.table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(1) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(2)
+{
+    background-color: #fff;
+    padding: 6px 12px;
+    height: 63px;    
 }
 
 
-.table-edit-title-mapping tbody td:nth-child(2) {
-    width: 7%;  
+.table-edit-title-mapping > * > tr > td:nth-child(2) { 
+    width: 140px;  
+    white-space: nowrap;
+    position: absolute;
+    margin-left: -140px;        
+    z-index: 1;
 }
+
+.table-edit-title-mapping > * > tr > .dynamic_title_header_col,
+.table-edit-title-mapping > * > tr > .competency_row { 
+    white-space: nowrap;             
+}
+
 
 .number {
     text-align: right;
@@ -81,6 +115,10 @@ table tr td {
     padding: 0px 10px 0px 10px;    
 }
 
+#edit_title_mapping_table > * > tr:nth-child(2n+1)
+{
+    background-color: #CFD5EA;
+}
 .table-level-mapping_list tbody tr td:nth-child(1) {
     text-align: right;    
     width: 50px;

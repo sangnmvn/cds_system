@@ -1,29 +1,29 @@
 require "rails_helper"
 
-RSpec.describe LevelMapping, type: :model do
+RSpec.describe TitleMapping, type: :model do
   #-------------------- done -------------------------------------
-  describe LevelMapping do
-    it "should validate_presence_of" do
-      action = LevelMapping.new(level: nil, rank_number: 2, quantity: 3, competency_type: 1)
+  describe TitleMapping do
+    it "should validate_presence_of value" do
+      action = TitleMapping.new(value: nil, updated_by: 1, title_id: 1, competency_id: 1)
       expect(action).to_not be_valid
     end
-    it "should validate_presence_of" do
-      action = LevelMapping.new(level: 1, rank_number: nil, quantity: 3, competency_type: 1)
+
+    it "should validate_presence_of updated_by" do
+      action = TitleMapping.new(value: 1, updated_by: nil, title_id: 1, competency_id: 1)
       expect(action).to_not be_valid
     end
-    it "should validate_presence_of" do
-      action = LevelMapping.new(level: 1, rank_number: 2, quantity: nil, competency_type: 1)
+
+    it "should validate_presence_of title" do
+      action = TitleMapping.new(value: 1, updated_by: 1, title_id: nil, competency_id: 1)
       expect(action).to_not be_valid
     end
-    it "should validate_presence_of" do
-      action = LevelMapping.new(level: 1, rank_number: 2, quantity: 3, competency_type: nil)
+
+    it "should validate_presence_of competency" do
+      action = TitleMapping.new(value: 1, updated_by: 1, title_id: 1, competency_id: nil)
       expect(action).to_not be_valid
-    end
-    it "is valid with valid attributes" do
-      subject = LevelMapping.new(level: 1, rank_number: 2, quantity: 3, competency_type: 1, updated_by: 1)
-      expect(subject).to be_valid
     end
   end
+
   #---------------------------------------------------------------
   # describe "numericality_level" do
   #   it { should validate_numericality_of(:level).only_integer }

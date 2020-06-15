@@ -109,16 +109,20 @@ function loadTitleMappingForEdit() {
       }
 
       $(".table-edit-title-mapping tbody").html(final_html);
-
+      
       $('select.competency_value').change(function () {
         $(this).attr('data-is_changed', 'true');
         $('#btn_save').attr("disabled", false);
         $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
       })
-    }
+    }    
   });
+  
+  
 }
 
 $(document).ready(function () {
-  loadTitleMappingForEdit();
+  loadTitleMappingForEdit();  
+  
 });
+
