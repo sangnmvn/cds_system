@@ -7,6 +7,8 @@ class FormsController < ApplicationController
   include TitleMappingsHelper
 
   def index
+    @check_6_month = true
+    @check_6_month = current_user.joined_date.to_i < 6.months.ago.to_i if current_user.joined_date
   end
 
   def get_list_cds_assessment_manager

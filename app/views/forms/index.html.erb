@@ -6,7 +6,11 @@
       CDS Assessment List
     </div>
     <div class="col-2 button-add-cds-assessment" style="text-align: right">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path) %>
+      <% if @check_6_month %>
+        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path %>
+      <% else %>
+        <button title="Can not add CDS"><i style="color: #ccc" class="fa fa-plus"></i> Add</button>
+      <% end %>
     </div>
     <div class="col-12" style="padding: 0px">
       <table class="table table-primary table-responsive-sm table-mytable table-cds-assessment-list">

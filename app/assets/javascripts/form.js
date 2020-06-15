@@ -67,7 +67,7 @@ function loadDataPanel(form_id) {
         var l = '';
         var levels = response[competency].levels
         for (level in levels) {
-          l += `<tr class="d-flex">
+          l += `<tr data-level="${level}" class="d-flex level-competency">
                     <td class="col-2"></td>
                     <td class="col-7">Level ${level}</td>
                     <td class="col-3">${levels[level].current}/${levels[level].total}</td>
@@ -83,6 +83,7 @@ function loadDataPanel(form_id) {
         i += 1;
       };
       $('#competency_panel').html(temp);
+
       $(".card table thead tr").click(function () {
         checkChangeSlot();
         $(".collapse").removeClass("show");
@@ -91,6 +92,12 @@ function loadDataPanel(form_id) {
         $(id).addClass("show");
         num = id.split("#collapse");
         $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
+      });
+
+      $(".level-competency").click(function () {
+        checkChangeSlot();
+        $(".level-competency td").css("color", "black");
+        $(this).find('td').css("color", "#4472c4");
       });
       $('#card0').click()
     }
@@ -385,6 +392,29 @@ $(document).on("click", ".card table thead tr", function () {
     }
   });
 });
+
+$(document).on("click", ".level-competency", function () {
+  var data = getParams();
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+  data.level = $(this).data('level')
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_cds_assessment",
+    data: data,
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      loadDataSlots(response);
+      checkStatusFormStaff(status);
+    }
+  });
+});
+
 
 $(document).on("click", ".modal-view-assessment-history", function () {
   $('#modal_history_assessment').modal('show');

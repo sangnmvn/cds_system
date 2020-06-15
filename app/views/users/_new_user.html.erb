@@ -82,7 +82,6 @@
                     </div>
                   </div>
                   <br>
-                  <%# project %>
                   <div class="row">
                     <div class="col-sm-3">
                       <label>Project</label>
@@ -92,7 +91,14 @@
                     </div>
                   </div>
                   <br>
-                  <%# end  %>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>Joined Date</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" id="joined_date" class="form-control joined-date">
+                    </div>
+                  </div>
                 </div>
               </div>
             <% end %>
@@ -106,7 +112,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer" style="justify-content: center;">
-          <button type="button" class="btn btn-primary" id="btn-modal-add-user">Save</button>
+          <button type="button" class="btn btn-primary" id="btn_modal_add_user">Save</button>
           <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
         </div>
       </div>

@@ -1,5 +1,12 @@
 // filter select company
 $(document).ready(function () {
+  $(".joined-date").datepicker({
+    todayBtn: "linked",
+    todayHighlight: true,
+    autoclose: true,
+    format: "M dd, yyyy"
+  });
+
   $("#filter-company").change(function () {
     company_id = $("#filter-company").val();
     $.ajax({
@@ -85,7 +92,7 @@ $(document).ready(function () {
 });
 // submit add user
 $(document).ready(function () {
-  $("#btn-modal-add-user").click(function () {
+  $("#btn_modal_add_user").click(function () {
     first_name = $("#first").val();
     last_name = $("#last").val();
     email = $("#email").val();
@@ -93,6 +100,7 @@ $(document).ready(function () {
     role = $("#role").val();
     company = $("#company").val();
     project = $("#project").val();
+    joined_date = $("#joined_date").val();
     $(".error").remove();
     check_email = false;
     check_account = false;
@@ -164,6 +172,7 @@ $(document).ready(function () {
           last: last_name,
           email: email,
           account: account,
+          joined_date: joined_date,
         },
         dataType: "json",
         success: function (response) {
@@ -492,6 +501,7 @@ $(document).on("click", ".edit_icon", function () {
         $("#modalEdit #first").val(v.first_name);
         $("#modalEdit #last").val(v.last_name);
         $("#modalEdit #email").val(v.email);
+        $("#modalEdit #joined_date").val(e.joined_date);
         $("#modalEdit #account").val(v.account);
         $("#modalEdit #user_id").val(v.id);
         $("#modalEdit #role").html("");
@@ -543,14 +553,15 @@ $(document).on("click", ".edit_icon", function () {
 });
 
 // submit edit user
-$(document).on("click", "#btn-modal-edit-user", function () {
+$(document).on("click", "#btn_modal_edit_user", function () {
   first_name = $("#modalEdit #first").val();
   last_name = $("#modalEdit #last").val();
   email = $("#modalEdit #email").val();
   account = $("#modalEdit #account").val();
   role = $("#modalEdit #role").val();
   company = $("#modalEdit #company").val();
-  project = $("#modalEdit #project").val();
+  project = $("#modalEdit #project").val()
+  joined_date = $("#modalEdit #joined_date").val();;
   id = $("#modalEdit #user_id").val();
   check_email = false;
   check_account = false;
@@ -632,6 +643,7 @@ $(document).on("click", "#btn-modal-edit-user", function () {
         email: email,
         account: account,
         id: id,
+        joined_date: joined_date,
       },
       dataType: "json",
       success: function (response) {

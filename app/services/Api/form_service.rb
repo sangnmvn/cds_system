@@ -17,6 +17,7 @@ module Api
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      slots = slots.where(level: params[:level]) if params[:level].present?
       hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
       form_slots = get_point_for_result(form_slots)

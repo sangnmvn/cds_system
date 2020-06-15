@@ -24,7 +24,7 @@
         <option value="no_assessment" selected>No Assessments</option>
         <option value="need_to_update" selected>Need to update evidences</option>
         <option value="assessing" selected>Assessing in the current period</option>
-        <option value="planned" selected>Planned</option>
+        <option value="planned" selected> Planned in previous CDP</option>
       </select>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank %>
       <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment" %>

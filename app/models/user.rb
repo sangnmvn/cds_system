@@ -24,6 +24,10 @@ class User < ApplicationRecord
     first_name + " " + last_name
   end
 
+  def format_joined_date
+    self.joined_date ? self.joined_date.strftime("%b %d, %Y") : ""
+  end
+
   def get_project
     project_ids = ProjectMember.distinct.where(user_id: id).pluck(:project_id)
     Project.where(id: project_ids).pluck(:desc).join(", ")

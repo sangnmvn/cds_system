@@ -17,6 +17,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
       t.string :title, default: ""
       ## Rememberable
       t.datetime :remember_created_at
+      t.datetime :joined_date
 
       t.belongs_to :company, foreign_key: true
       t.belongs_to :role, foreign_key: true

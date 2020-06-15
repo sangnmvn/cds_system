@@ -90,7 +90,7 @@ class UsersController < ApplicationController
 
     use_new = User.new(email: params[:email], password: PASSWORD_DEFAULT, first_name: params[:first],
                        last_name: params[:last], account: params[:account],
-                       company_id: params[:company], role_id: params[:role])
+                       company_id: params[:company], role_id: params[:role], joined_date: params[:joined_date])
 
     if use_new.save
       if params[:project].present?
@@ -111,7 +111,7 @@ class UsersController < ApplicationController
     roles = Role.select(:id, :name)
     project_ids = ProjectMember.where(user_id: params[:id]).pluck(:project_id)
 
-    render json: { companies: companies, projects: projects, roles: roles, user: @user, project_ids: project_ids }
+    render json: { companies: companies, projects: projects, roles: roles, user: @user, project_ids: project_ids, joined_date: @user.format_joined_date }
   end
 
   # modal company
@@ -136,6 +136,7 @@ class UsersController < ApplicationController
       account: user_params[:account],
       company_id: user_params[:company_id],
       role_id: user_params[:role_id],
+      joined_date: params[:joined_date],
     }
     if @user.update(user_param)
       project_user = ProjectMember.joins(:user, :project).select("project_members.id,projects.id").where(user_id: params[:id]).map(&:id)
@@ -222,7 +223,7 @@ class UsersController < ApplicationController
     params[:filter_project] = params["filter-project"]
     params.permit(:id, :first_name, :last_name, :email, :account,
                   :company_id, :role_id, :status, :is_delete, :offset,
-                  :search, :filter_company, :filter_role, :filter_project, :project_id)
+                  :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date)
   end
 
   def get_sort_params
