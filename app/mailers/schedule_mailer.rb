@@ -55,4 +55,15 @@ class ScheduleMailer < ApplicationMailer
 
     mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")} to #{@period.to_date.strftime("%b %d, %Y")}] for Reviewer")
   end
+
+  def pm_create_schedule_for_project
+    user = params[:user]
+    @schedule = params[:schedule]
+    @period = params[:period]
+    @end_date_member = params[:end_date_member]
+    @end_date_reviewer = params[:end_date_reviewer]
+    @notify_member = params[:notify_member]
+    emails = user.collect(&:email).join(", ")
+    mail(to: emails, subject: "[CDS system] CDS Assessment Schedule in [from #{@period.from_date.strftime("%b %d, %Y")}  to #{@period.to_date.strftime("%b %d, %Y")}] for team member")
+  end
 end

@@ -262,7 +262,7 @@ function loadDataSlots(response) {
             <option value="1" ${check(e.tracking.recommends[0].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
           </select>
         </td>flag
-        <td class="disabled" ><textarea style="resize:none" disabled colspan="1" style="${checkPM(e.tracking.recommends[0].is_pm)}">${e.tracking.recommends[0].name}</textarea></td>`;
+        <td class="disabled" style="${checkPM(e.tracking.recommends[0].is_pm)}"><textarea style="resize:none" disabled colspan="1">${e.tracking.recommends[0].name}</textarea></td>`;
     } else {
       temp += `
         <td class="disabled" colspan="4" ><textarea style="resize:none" disabled></textarea></td>

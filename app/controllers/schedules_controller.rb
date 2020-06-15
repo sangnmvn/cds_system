@@ -193,9 +193,9 @@ class SchedulesController < ApplicationController
 
       if @schedule.save
         @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-        #user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
-        # send mail
-        #ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
+        project_id = ProjectMember.where(user_id: current_user.id).pluck(:project_id).uniq
+        user = User.joins(:project_members,:company).where(is_delete: false, "companies.id": params[:company_id],"project_members.project_id": project_id).where.not(id: current_user.id).uniq
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: period,end_date_member: params[:end_date_member],end_date_reviewer: params[:end_date_reviewer],notify_member: params[:notify_member]).pm_create_schedule_for_project.deliver_later(wait: 1.minute)
         render json: { status: true }
       else
         render json: { status: false }

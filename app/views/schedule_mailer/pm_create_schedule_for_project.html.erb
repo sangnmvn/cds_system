@@ -1,0 +1,11 @@
+<p>Dear all,</p>
+<p>The schedule of CDS Assessment in period <%= @period.from_date.strftime('%b %d, %Y') %> - <%= @period.to_date.strftime('%b %d, %Y') %> has created with below information:</p>
+<ul>
+  <li>Stard date: <%= @schedule.start_date.strftime('%b %d, %Y')%></li>
+  <li>End date: <%= @schedule.end_date_hr.strftime('%b %d, %Y')%></li>
+  <li>End date for Members: <%= @end_date_member%>, Reminder of due date: <%= @notify_member%></li>
+  <li>End date for Reviewers: <%= @end_date_reviewer%>, Reminder of due date: <%= @notify_member%></li>
+</ul>
+<p>Please complete your assessment on time. For members who are responsible to review assessments, please commit the files on-time, too.</p>
+<p>Thank you,</p>
+<p>CDS system</p>
