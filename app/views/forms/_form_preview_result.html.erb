@@ -16,8 +16,8 @@
         <% @competencies.each do |competency| %>
           <tr>
             <td style="width:400px" class="form-competency-name fixed-column column-1"><%= competency.name %></td>
-            <td style="width:60px;" class="form-pr-rank type-number fixed-column column-2"><%= @hash_rank[competency.id].zero? ? "N/A" : @hash_rank[competency.id] %></td>
-            <td style="width:60px"class="form-pr-level fixed-column column-3"><%= @hash_level[competency.id] %></td>
+            <td style="width:60px;" class="form-pr-rank type-number fixed-column column-2"><%= @calculate_result[:hash_rank][competency.id].zero? ? "N/A" : @calculate_result[:hash_rank][competency.id] %></td>
+            <td style="width:60px"class="form-pr-level fixed-column column-3"><%= @calculate_result[:hash_level][competency.id] %></td>
             <% @slots.each do |slot| %>
               <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
             <% end %>

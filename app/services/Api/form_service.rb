@@ -3,21 +3,25 @@ module Api
     REVIEW_CDS = 16
     APPROVE_CDS = 17
 
-    def initialize(params, current_user)
+    def initialize(params, current_user, privilege_array)
+      @privilege_array = privilege_array
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
     end
 
     def get_competencies(form_id = nil)
       return get_old_competencies if params[:title_history_id].present?
-
-      if form_id.nil?
-        form_id = Form.select(:id).find_by(user_id: current_user.id, is_delete: false).id
+      if form_id.present?
+        form = Form.find_by(form_id)
+      else
+        form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form_id }).order(:competency_id, :level, :slot_id)
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
       hash = {}
-      form_slots = FormSlot.includes(:comments).where(form_id: form_id)
-      form_slots = format_form_slot(form_slots, true)
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
+      form_slots = get_point_for_result(form_slots)
+      result = preview_result(form)
+      
       slots.map do |slot|
         key = slot.competency.name
         if hash[key].nil?
@@ -25,6 +29,7 @@ module Api
             type: slot.competency.sort_type,
             id: slot.competency_id,
             levels: {},
+            level_point: calculate_level(result[key]),
           }
         end
         if hash[key][:levels][slot.level].nil?
@@ -33,8 +38,19 @@ module Api
             current: 0,
           }
         end
+
         hash[key][:levels][slot.level][:total] += 1
-        hash[key][:levels][slot.level][:current] += 1 if form_slots[slot.id]
+        data = form_slots[slot.id]
+        value = data[:final_point] || data[:point]
+        value = data[:point] if data[:is_change]
+        if current_user.id != form.user_id
+          if privilege_array.include?(REVIEW_CDS)
+            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
+          elsif privilege_array.include?(APPROVE_CDS)
+            value = data[:final_point] || value
+          end
+        end
+        hash[key][:levels][slot.level][:current] += 1 if value > 2
       end
       hash
     end
@@ -357,7 +373,7 @@ module Api
       end
     end
 
-    def preview_result(form, privilege_array)
+    def preview_result(form)
       competencies = Competency.where(template_id: form.template_id).order(:location).pluck(:id)
       filter = {
         form_slots: { form_id: form.id },
@@ -404,7 +420,72 @@ module Api
       h_point
     end
 
-    def calculate_level_rank(hash_point)
+    def calculate_result(form, competencies, result)
+      hash_level = {}
+      competencies.map do |compentency|
+        hash_level[compentency.id] = calculate_level(result[compentency.name])
+      end
+
+      title_mappings = TitleMapping.includes(:competency).joins(:title).where(titles: { role_id: form.role_id }).select(:competency_id, :value, "titles.rank").order(:competency_id, :value)
+      hash = {}
+      title_mappings.map do |title_mapping|
+        hash[title_mapping.competency_id] = { value: [], type: title_mapping.competency.type } if hash[title_mapping.competency_id].nil?
+        hash[title_mapping.competency_id][:value] << title_mapping.value
+      end
+      hash_rank = {}
+      h_competency_type = { "All" => [] }
+      hash_level.each do |key, value|
+        val = convert_value_title_mapping(value)
+        hash_rank[key] = hash[key][:value].count { |x| val >= x }
+
+        h_competency_type[hash[key][:type]] = [] if h_competency_type[hash[key][:type]].nil?
+        h_competency_type[hash[key][:type]] << hash_rank[key]
+        h_competency_type["All"] << hash_rank[key]
+      end
+
+      level_mappings = LevelMapping.joins(:title).where(titles: { role_id: form.role_id }).order("titles.rank", :level)
+
+      h_level_mapping = {}
+      level_mappings.each do |level_mapping|
+        key = "#{level_mapping.title_id}_#{level_mapping.level}"
+        h_level_mapping[key] = [] if h_level_mapping[key].nil?
+        h_level_mapping[key] << level_mapping
+      end
+
+      current_title = {
+        level: form.level || "N/A",
+        rank: form.rank || "N/A",
+        title: form.title&.name || "N/A",
+      }
+
+      expected_title = {
+        level: "N/A",
+        rank: "N/A",
+        title: "N/A",
+      }
+
+      h_level_mapping.each do |key, value|
+        is_pass = true
+        value.each do |val|
+          count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
+          is_pass = count >= val.quantity
+        end
+        if is_pass
+          expected_title[:level] = value.first.level
+          expected_title[:rank] = value.first.title.rank
+          expected_title[:title] = value.first.title.name
+        end
+      end
+
+      {
+        hash_level: hash_level,
+        hash_rank: hash_rank,
+        current_title: current_title,
+        expected_title: expected_title,
+      }
+    end
+
+    def calculate_level(hash_point)
       s_level = ""
       hash = {}
       hash_point.each do |key, value|
@@ -528,7 +609,7 @@ module Api
 
     private
 
-    attr_reader :params, :current_user
+    attr_reader :params, :current_user, :privilege_array
 
     def format_filter(name, id)
       {

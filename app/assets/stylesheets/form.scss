@@ -77,8 +77,8 @@ $color-disable: #afaaaa;
 }
 
 .table-cds-assessment-list tr td {
-  padding: 0px 10px 0px 10px;
-  border: 1px solid white;
+    padding: 0px 10px 0px 10px;
+    border: 1px solid white;
 }
 
 .table-cds-assessment-list thead tr td {
@@ -92,6 +92,7 @@ $color-disable: #afaaaa;
 .table-cds-assessment-list tbody tr td:nth-child(2) {
     width: 20%;
 }
+
 .table-cds-assessment-list tbody tr td:nth-child(4) {
     width: 25%;
 }
@@ -263,11 +264,13 @@ $color-disable: #afaaaa;
     td {
         border: 1px solid #42719a;
     }
+
     thead tr {
         background-color: #8da8db;
         font-weight: bold;
     }
 }
+
 .fail-slot {
     color: red;
 }
@@ -521,9 +524,9 @@ select:disabled {
         text-align: left;
         background-color: white !important;
     }
-    
+
     .form-pr-rank {
-        background-color: #f7f257 !important;
+        background-color: #f9f584 !important;
     }
 
     .form-pr-level {

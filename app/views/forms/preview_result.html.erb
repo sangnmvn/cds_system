@@ -18,19 +18,19 @@
         </thead>
         <tbody>
           <tr>
+            <td>Title</td>
+            <td><%= @calculate_result[:current_title][:title]%></td>
+            <td class="td-expected"><%= @calculate_result[:expected_title][:title]%></td>
+          </tr>
+          <tr>
             <td>Rank</td>
-            <td><%= @h_title_current[:rank] %></td>
-            <td class="td-expected"><%= @h_title_result[:rank]%></td>
+            <td><%= @calculate_result[:current_title][:rank] %></td>
+            <td class="td-expected"><%= @calculate_result[:expected_title][:rank]%></td>
           </tr>
           <tr>
             <td>Level</td>
-            <td><%= @h_title_current[:level]%></td>
-            <td class="td-expected"><%= @h_title_result[:level]%></td>
-          </tr>
-          <tr>
-            <td>Title</td>
-            <td><%= @h_title_current[:title]%></td>
-            <td class="td-expected"><%= @h_title_result[:title]%></td>
+            <td><%= @calculate_result[:current_title][:level]%></td>
+            <td class="td-expected"><%= @calculate_result[:expected_title][:level]%></td>
           </tr>
         </tbody>
       </table>
