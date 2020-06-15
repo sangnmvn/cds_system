@@ -128,7 +128,18 @@ class UsersController < ApplicationController
     account_exist = User.select(:id).where.not(id: params[:id]).where(account: params[:account]).present?
     return render json: { status: "exist", email_exist: email_exist, account_exist: account_exist } if email_exist || account_exist
 
-    if @user.update(user_params)
+    binding.pry
+
+    user_param = {
+      id: user_params[:id],
+      first_name: user_params[:first_name],
+      last_name: user_params[:last_name],
+      email: user_params[:email],
+      account: user_params[:account],
+      company_id: user_params[:company_id],
+      role_id: user_params[:role_id],
+    }
+    if @user.update(user_param)
       project_user = ProjectMember.joins(:user, :project).select("project_members.id,projects.id").where(user_id: params[:id]).map(&:id)
       management_default = 0
 
