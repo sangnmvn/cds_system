@@ -331,6 +331,8 @@
     headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
     });
     success("Add reviewer to this group has been successfully!");
+    save_button(0)
+    $('#addReviewerModal').modal('hide')
   });
   function save_button(flag) {
   if (flag == 0) {

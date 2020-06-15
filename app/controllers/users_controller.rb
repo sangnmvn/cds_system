@@ -62,7 +62,7 @@ class UsersController < ApplicationController
 
     # add approver in list
     approver_ids.each do |approver_id|
-      Approver.create!(user_id: user_id, approver_id: approver_id)
+      Approver.create!(user_id: params[:id], approver_id: approver_id)
     end
   end
 
