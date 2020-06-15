@@ -24,12 +24,13 @@ function LoadDataAssessmentList() {
           color_delete = "gray";
           status_class = "";
           color_edit = "gray";
+          link = '#';
         }
         if (!["Done", "New"].includes(form.status)) {
           color_delete = "gray";
           status_class = "";
           color_edit = "gray";
-          link = "#";
+          link = "#";          
         }
         var this_element = `<tr id='period_id_{id}'> 
               <td>{no}</td> 

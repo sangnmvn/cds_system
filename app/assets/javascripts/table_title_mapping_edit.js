@@ -63,7 +63,6 @@ function loadTitleMappingForEdit() {
       final_html = '';
       for (i = 0; i < key_of_title_list.length; i++) {
         title_name = key_of_title_list[i];
-        console.log(title_name);        
         data_list = title_list[title_name];
         if (data_list.length == 0) {
           continue;
