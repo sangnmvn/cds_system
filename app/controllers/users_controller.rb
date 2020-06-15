@@ -128,8 +128,6 @@ class UsersController < ApplicationController
     account_exist = User.select(:id).where.not(id: params[:id]).where(account: params[:account]).present?
     return render json: { status: "exist", email_exist: email_exist, account_exist: account_exist } if email_exist || account_exist
 
-    binding.pry
-
     user_param = {
       id: user_params[:id],
       first_name: user_params[:first_name],
