@@ -3,7 +3,12 @@ module Api
     REVIEW_CDS = 16
     APPROVE_CDS = 17
 
-    def initialize(params, current_user, privilege_array)
+    def initialize(params, current_user)
+      groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
+      privilege_array = []
+      groups.each do |group|
+        privilege_array += group&.list_privileges
+      end
       @privilege_array = privilege_array
       @current_user = current_user
       @params = ActiveSupport::HashWithIndifferentAccess.new params
@@ -22,7 +27,7 @@ module Api
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
       form_slots = get_point_for_result(form_slots)
       result = preview_result(form)
-      
+
       slots.map do |slot|
         key = slot.competency.name
         if hash[key].nil?

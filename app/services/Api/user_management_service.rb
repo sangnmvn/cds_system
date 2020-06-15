@@ -1,6 +1,11 @@
 module Api
   class UserManagementService < BaseService
-    def initialize(params, current_user, privilege_array)
+    def initialize(params, current_user)
+      groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
+      privilege_array = []
+      groups.each do |group|
+        privilege_array += group&.list_privileges
+      end
       @privilege_array = privilege_array
       @current_user = current_user
       @params = params

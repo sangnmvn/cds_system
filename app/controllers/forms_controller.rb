@@ -253,7 +253,7 @@ class FormsController < ApplicationController
   private
 
   def form_service
-    @form_service ||= Api::FormService.new(form_params, current_user, @privilege_array)
+    @form_service ||= Api::FormService.new(form_params, current_user)
   end
 
   def form_params

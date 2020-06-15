@@ -212,7 +212,7 @@ class UsersController < ApplicationController
   end
 
   def user_management_serviece
-    @user_management_serviece = Api::UserManagementService.new(user_params, current_user, @privilege_array)
+    @user_management_serviece = Api::UserManagementService.new(user_params, current_user)
   end
 
   def user_params
