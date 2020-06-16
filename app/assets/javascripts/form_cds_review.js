@@ -27,9 +27,9 @@ function loadDataAssessment(data_filter) {
             <td class="type-text">{project}</td>
             <td class="type-text">{email}</td>
             <td class="type-text">{role}</td> 
-            <td class="type-number">{level}</td> 
-            <td class="type-number">{rank}</td> 
             <td class="type-text">{title}</td> 
+            <td class="type-number">{rank}</td> 
+            <td class="type-number">{level}</td> 
             <td class="type-text">{submit_date}</td>
             <td class="type-text">{review_date}</td>
             <td class="type-text">{status}</td> 
@@ -80,7 +80,7 @@ function loadDataFilter() {
         $('<option value="0" selected>All</option>').appendTo("#user_filter");
 
       $.each(response.companies, function (k, v) {
-        if (k == 0 && response.projects.length == 1)
+        if (k == 0 && response.companies.length == 1)
           $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#company_filter");
         else
           $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");

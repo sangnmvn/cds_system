@@ -16,6 +16,8 @@ class FormsController < ApplicationController
         @form_service.get_list_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.get_list_cds_review
+      else
+        redirect_to root_path
       end
     render json: data
   end
@@ -34,6 +36,8 @@ class FormsController < ApplicationController
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
+      else
+        redirect_to root_path
       end
   end
 
@@ -168,7 +172,8 @@ class FormsController < ApplicationController
     form = Form.find_by_id(params[:form_id])
     approvers = Approver.where(user_id: form.user_id).includes(:approver)
     return render json: { status: "fail" } if approvers.empty?
-    if form.update(period_id: params[:period_id], status: "Awaiting Review")
+
+    if form.update(period_id: params[:period_id], status: "Awaiting Review", submit_date: DateTime.now)
       user = form.user
       period = form.period
       CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_later(wait: 1.minute)
@@ -246,6 +251,8 @@ class FormsController < ApplicationController
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
+      else
+        redirect_to root_path
       end
     render json: data
   end

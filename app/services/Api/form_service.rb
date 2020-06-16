@@ -113,7 +113,7 @@ module Api
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_ids = Approver.where(approver_id: current_user.id, user_id: user_ids).pluck(:user_id).uniq
 
-      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id], status: "Awaiting Review").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
 
       forms.map do |form|
         format_form_cds_review(form)
@@ -125,7 +125,7 @@ module Api
       user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
-      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+      forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: ["New", "Awaiting Review"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
 
       forms.map do |form|
         format_form_cds_review(form)
@@ -784,9 +784,9 @@ module Api
         project: form.user&.get_project,
         email: form.user&.email,
         role_name: form.role&.name,
-        level: form.level,
-        rank: form.rank,
-        title: form.title&.name,
+        level: form.level || "N/A",
+        rank: form.rank || "N/A",
+        title: form.title&.name || "N/A" ,
         submit_date: form.submit_date || "",
         review_date: form.review_date || "",
         status: form.status,

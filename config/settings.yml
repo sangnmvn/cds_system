@@ -28,8 +28,6 @@ privileges:
         title_name: "User Group Management",
         title_id: 2,
       },
-    7: { id: 7, name: "Review CDS-CDP Review", title_name: "CDS-CDP Review",
-        title_id: 3, },
     9:
       {
         id: 9,
@@ -62,22 +60,22 @@ privileges:
     15: 
       {
         id: 15,
-        name: "Assessment CDS",
-        title_name: "Assessment CDS",
+        name: "CDS Assessment",
+        title_name: "CDS Assessment",
         title_id: 6,
       },
     16: 
       {
         id: 16,
-        name: "Review Assessment CDS",
-        title_name: "Assessment CDS",
+        name: "Review CDS Assessment",
+        title_name: "CDS Assessment",
         title_id: 6,
       },
     17: 
       {
         id: 17,
-        name: "Approve Assessment CDS",
-        title_name: "Assessment CDS",
+        name: "Approve CDS Assessment",
+        title_name: "CDS Assessment",
         title_id: 6,
       },
 

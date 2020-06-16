@@ -165,7 +165,7 @@ function getValueStringPoint(point) {
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
-  if ((is_reviewer != user_id) || (is_submit == "true") || status=="Done")
+  if ((is_reviewer != user_id) || (is_submit == "true") || status == "Done")
     return "disabled"
   else
     return;
@@ -460,11 +460,14 @@ function checkStatusFormReview(status) {
   if (is_approval == "true") {
     $('a.submit-assessment').css("display", "none");
     $('a.reject-assessment i').css("color", "#ccc");
-    if (status== "Done"){
-    $('a.reject-assessment i').css("color", "blue");
-    $('a.approval-assessment i').css("color", "#ccc");
-    // $('a.reject-assessment').removeClass('reject-assessment');
-    $('a.approval-assessment').removeClass('approval-assessment');
+    if (status == "Done") {
+      $('a.reject-assessment i').css("color", "blue");
+      $('a.approval-assessment i').css("color", "#ccc");
+      $('a.approval-assessment').removeClass('approval-assessment');
+    } else {
+      $('a.reject-assessment i').css("color", "#ccc");
+      $('a.approval-assessment i').css("color", "blue");
+      $('a.reject-assessment').removeClass('reject-assessment');
     }
     return;
   }
@@ -476,7 +479,7 @@ function checkStatusFormReview(status) {
       $('a.submit-assessment').removeClass('submit-assessment');
       // $('given-point-select').css("display", "none"); 
       // $('recommend').css("n", "none");
-     
+
       return;
     }
   }
