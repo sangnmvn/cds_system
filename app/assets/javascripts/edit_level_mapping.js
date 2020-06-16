@@ -400,6 +400,7 @@ function loadLevelMapping(count) {
 
 function fillSelectType(select, value) {
   select.find("option").remove()
+  $("<option value='-1' disabled selected/>").html("Competency type").appendTo(select)
   $('<option value="All"/>').html("All").appendTo(select)
   $('<option value="General"/>').html("General").appendTo(select)
   $('<option value="Specialized"/>').html("Special").appendTo(select)
@@ -408,6 +409,7 @@ function fillSelectType(select, value) {
 
 function fillSelectRank(select, value, count) {
   select.find("option").remove()
+  $("<option value='-1' disabled selected/>").html("Rank").appendTo(select)
   for (var i = 1; i <= count; i++) {
     $("<option value='" + i + "'/>").html(i).appendTo(select)
   }
