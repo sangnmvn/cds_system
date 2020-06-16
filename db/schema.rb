@@ -15,6 +15,8 @@ ActiveRecord::Schema.define(version: 2020_06_11_041416) do
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "approver_id"
+    t.boolean "is_submit_cds", default: false
+    t.boolean "is_submit_cdp", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["approver_id"], name: "index_approvers_on_approver_id"
@@ -88,6 +90,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_041416) do
 
   create_table "forms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "_type"
+    t.boolean "is_approved", default: false
     t.bigint "template_id"
     t.bigint "period_id"
     t.bigint "user_id"
@@ -285,6 +288,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_041416) do
     t.boolean "status", default: true
     t.string "title", default: ""
     t.datetime "remember_created_at"
+    t.datetime "joined_date"
     t.bigint "company_id"
     t.bigint "role_id"
     t.datetime "created_at", precision: 6, null: false

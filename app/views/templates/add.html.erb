@@ -5,13 +5,8 @@
 <%= javascript_include_tag 'table_template', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <script src='//cdn.ckeditor.com/4.14.0/basic/ckeditor.js'></script>
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
-    <li class="breadcrumb-item active">Template Management</li>
-  </ol>
-</nav>
 
+<% breadcrumb :edit_templates %>
 <div class="container-fluid" id="grad1" style=" padding-right: 0px; padding-left: 0px;">
   <div class="template-header">
     <span class="title"><%= title %></span>

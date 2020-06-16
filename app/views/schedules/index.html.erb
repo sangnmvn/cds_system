@@ -1,12 +1,7 @@
 <%= javascript_include_tag "schedules", 'data-turbolinks-track': "reload" %>
 <%= stylesheet_link_tag "jquery.dataTables.min", media: "all", 'data-turbolinks-track': "reload" %>
 <%= stylesheet_link_tag "schedule", media: "all", 'data-turbolinks-track': "reload" %>
-<nav aria-label="breadcrumb" class="">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
-    <li class="breadcrumb-item active">Schedule Management</li>
-  </ol>
-</nav>
+<% breadcrumb :schedules %>
 <%= render 'modal_destroy'%>
 <%= render "delete_selected" %>
 <%= render "add_hr" %>

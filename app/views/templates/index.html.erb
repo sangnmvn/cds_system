@@ -4,13 +4,8 @@
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'table_template_excel.js', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template_index_step1', 'data-turbolinks-track': 'reload' %>
+<% breadcrumb :template_management %>
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
-    <li class="breadcrumb-item active">Template Management</li>
-  </ol>
-</nav>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
 <div class="container-fluid">

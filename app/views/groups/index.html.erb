@@ -6,12 +6,7 @@
 
 <%= stylesheet_link_tag 'group', media: 'all', 'data-turbolinks-track': 'reload' %>
  <input type="hidden" value="<%= @privilege_array.include? 4%>" class="get_privilege">
-<nav aria-label="breadcrumb" class="">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
-    <li class="breadcrumb-item active">User Group Management</li>
-  </ol>
-</nav>
+<% breadcrumb :groups %>
 
 <!-- Modal show -->
 <div id="modal_content" class="modal_destroy">

@@ -2,12 +2,7 @@
 <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input type="hidden" value="<%= @privilege_array.include? 1%>" class="get_privilege">
-<nav aria-label="breadcrumb" class="">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Admintrator</a></li>
-    <li class="breadcrumb-item active">User Management</li>
-  </ol>
-</nav>
+<% breadcrumb :users %>
 <div class="container-fluid" style="margin-bottom: 40px;">
   <div class="container-fluid">
     <!-- Control the column width, and how they should appear on different devices -->

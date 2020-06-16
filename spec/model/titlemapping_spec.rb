@@ -22,25 +22,15 @@ RSpec.describe TitleMapping, type: :model do
       action = TitleMapping.new(value: 1, updated_by: 1, title_id: 1, competency_id: nil)
       expect(action).to_not be_valid
     end
+
+    # it "is valid with valid attributes" do
+    #   subject = TitleMapping.new(value: 1, updated_by: 1, title_id: 1, competency_id: nil)
+    #   expect(subject).to be_valid
+    # end
   end
 
   #---------------------------------------------------------------
-  # describe "numericality_level" do
-  #   it { should validate_numericality_of(:level).only_integer }
-  #   it { should validate_numericality_of(:level).is_greater_than_or_equal_to(1) }
-  # end
-  # describe "numericality_quantity" do
-  #   it { should validate_numericality_of(:quantity).only_integer }
-  #   it { should validate_numericality_of(:quantity).is_greater_than_or_equal_to(1) }
-  # end
-  # describe "numericality_rank_number" do
-  #   it { should validate_numericality_of(:rank_number).only_integer }
-  #   it { should validate_numericality_of(:rank_number).is_greater_than_or_equal_to(1) }
-  # end
-  # describe "associations_title" do
-  #   it { should belong_to(:title) }
-  # end
-  # describe "associations_user" do
-  #   it { should belong_to(:user) }
-  # end
+  describe "numericality_value" do
+    it { should validate_numericality_of(:value).only_integer.is_greater_than_or_equal_to(1)}
+  end
 end

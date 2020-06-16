@@ -2,13 +2,7 @@
 <%= javascript_include_tag "form_cds_cdp_review", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-<nav aria-label="breadcrumb" class="">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">CDS/CDP</a></li>
-    <li class="breadcrumb-item active">CDS & CDP Reviewer</li>
-    <input type="hidden" value="<%= current_user.id %>" id="get_current_user_inview">
-  </ol>
-</nav>
+<% breadcrumb :cds_cdp_review %>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
     <div class="col-md-5" ><%= @hash[:title] unless @hash.nil? %></div>
