@@ -32,7 +32,7 @@ class LevelMappingsController < ApplicationController
   def add
     @role = Role.find_by_id(params[:role_id])
     title = Title.where(role_id: @role.id).order(:rank)
-    count_competencies =  Competency.includes(:template).where("templates.role_id": @role.id).count
+    count_competencies = Competency.includes(:template).where("templates.role_id": @role.id).count
     competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
     @list_title = {
       data: title.where(status: 0),
@@ -47,8 +47,8 @@ class LevelMappingsController < ApplicationController
     @role = Role.find_by_id(params[:role_id])
     level_mappings = LevelMapping.includes(:title).where("titles.role_id": params[:role_id]).order("titles.rank", :level, :rank_number, :competency_type)
     title = Title.where(role_id: @role.id).order(:rank)
-    count_competencies =  Competency.includes(:template).where("templates.role_id": @role.id).count
-    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)    
+    count_competencies = Competency.includes(:template).where("templates.role_id": @role.id).count
+    competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
     @list_level_mapping = {
       data: level_mappings,
       rank: title.count,
@@ -59,9 +59,9 @@ class LevelMappingsController < ApplicationController
   end
 
   def save_level_mapping
-    return render json: {status: "fail"} unless can_edit?
+    return render json: { status: "fail" } unless can_edit?
     status = @level_mapping_service.save_level_mapping(params)
-    render json: {status: status}
+    render json: { status: status }
   end
 
   def save_title_mapping
@@ -72,7 +72,7 @@ class LevelMappingsController < ApplicationController
 
   def edit_title_mapping
     return render json: { status: "fail" } unless can_edit? && @level_mapping_service.edit_title_mapping(params)
-    render json: { status: "success" } 
+    render json: { status: "success" }
   end
 
   def can_edit?
@@ -96,6 +96,6 @@ class LevelMappingsController < ApplicationController
   end
 
   def level_mapping_params
-    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank,:list_del,:list_new,:list_edit,:level_mapping_id)
+    params.permit(:id, :role_id, :id_level, :title_id, :level, :quantity, :type, :rank, :list_del, :list_new, :list_edit, :level_mapping_id)
   end
 end

@@ -1,6 +1,10 @@
 <%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
-<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
+<div id="alert-success" class="alert alert-success" data-alert="alert">
+  <div id="content-alert-success"></div>
+</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert">
+  <div id="content-alert-fail"></div>
+</div>
 <div class='row'>
   <div class='col-12'>
     <div class='basic-table-wrapper'>
@@ -15,46 +19,46 @@
           </tr>
         </thead>
         <tbody>
-        <% @list_title[:data].each do |item| %>
-          <tr data-title-id='<%= item.id %>'>
-            <td><%= item.name %></td>
-            <td><%= item.rank %></td>
-            <td>1</td>
-            <td>
-            <div class="row">
-              <div class='col-3'>
-                <input type="number" class="form-control" min="1" max="<%= @list_title[:count_competency] %>" placeholder='Quantity'>
-              </div>
-              <div class='col-5'>
-                <select class="form-control" id="select_type">
-                  <option value='-1' disabled selected>Competency type</option>
-                  <option value='0'>All</option>
-                  <option value='1'>General</option>
-                  <option value='2'>Special</option>
-                </select>
-              </div>
-              <div class='col-2'>
-                <select class="form-control" id="select_rank">
-                  <option value='-1' disabled selected>Rank</option>
-                  <% @list_title[:no_rank].times do |counter| %>
-                    <option><%= counter+1 %></option>
-                  <% end %>
-                </select>
-              </div>
-              <div class='col-2 divIcon'  style="padding-top:7px">
-                <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required">
-                  <i class='fas fa-plus-circle btnAdd'></i>
-                </a>
-                <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
-              </div>
-            </div>
-            </td>
-            <td>
-              <a type='button' class='btnAction' title='Add a level' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
-              <a type='button' class='btnAction invisible' title='Delete a level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>
-            </td>
-          </tr>
-        <% end %>
+          <% @list_title[:data].each do |item| %>
+            <tr data-title-id='<%= item.id %>'>
+              <td><%= item.name %></td>
+              <td><%= item.rank %></td>
+              <td>1</td>
+              <td>
+                <div class="row">
+                  <div class='col-3'>
+                    <input type="number" class="form-control" min="1" max="<%= @list_title[:count_competency] %>" placeholder='Quantity'>
+                  </div>
+                  <div class='col-5'>
+                    <select class="form-control" id="select_type">
+                      <option value='-1' disabled selected>Competency type</option>
+                      <option value='All'>All</option>
+                      <option value='General'>General</option>
+                      <option value='Specialized'>Special</option>
+                    </select>
+                  </div>
+                  <div class='col-2'>
+                    <select class="form-control" id="select_rank">
+                      <option value='-1' disabled selected>Rank</option>
+                      <% @list_title[:no_rank].times do |counter| %>
+                        <option><%= counter+1 %></option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div class='col-2 divIcon'  style="padding-top:7px">
+                    <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required">
+                      <i class='fas fa-plus-circle btnAdd'></i>
+                    </a>
+                    <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <a type='button' class='btnAction' title='Add a level' id="btn_add_level"><i class='fa fa-plus btnAdd'></i></a>
+                <a type='button' class='btnAction invisible' title='Delete a level' id="btn_remove_level"><i class='fas fa-times btnDel'></i></a>
+              </td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>

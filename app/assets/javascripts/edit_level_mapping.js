@@ -165,9 +165,9 @@ function createNewRowRequire(count) {
     <div class='col-5'>
       <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
-        <option value='0'>All</option>
-        <option value='1'>General</option>
-        <option value='2'>Special</option>
+        <option value='All'>All</option>
+        <option value='General'>General</option>
+        <option value='Specialized'>Special</option>
       </select>
     </div>
     <div class='col-2'>
@@ -196,9 +196,9 @@ function createNewRowLevel(count) {
     <div class='col-5'>
       <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
-        <option value='0'>All</option>
-        <option value='1'>General</option>
-        <option value='2'>Special</option>
+        <option value='All'>All</option>
+        <option value='General'>General</option>
+        <option value='Specialized'>Special</option>
       </select>
     </div>
     <div class='col-2'>
@@ -217,12 +217,11 @@ function createNewRowLevel(count) {
       </div>`
   return temp
 }
-function checkRow (row)
-{
-  if(row.children()[0].children[0].value == "" || row.children()[1].children[0].value == "-1" || row.children()[2].children[0].value == "-1"){
+function checkRow(row) {
+  if (row.children()[0].children[0].value == "" || row.children()[1].children[0].value == "-1" || row.children()[2].children[0].value == "-1") {
     row.children()[3].children[0].classList.add('disabled')
   }
-  else{
+  else {
     row.children()[3].children[0].classList.remove('disabled')
   }
 }
@@ -253,7 +252,7 @@ function checkDuplicateRequired(td) {
   for (var i = 0; i < lenght; i++) {
     var type = listRow[i].children[1].children[0].value
     var rank = listRow[i].children[2].children[0].value
-    if ((selectType == "0" || type == "0") && rank == selectRank) {
+    if ((selectType == all || type == all) && rank == selectRank) {
       count++
     } else {
       if (type == selectType && rank == selectRank)
@@ -401,9 +400,9 @@ function loadLevelMapping(count) {
 
 function fillSelectType(select, value) {
   select.find("option").remove()
-  $('<option value="0"/>').html("All").appendTo(select)
-  $('<option value="1"/>').html("General").appendTo(select)
-  $('<option value="2"/>').html("Special").appendTo(select)
+  $('<option value="All"/>').html("All").appendTo(select)
+  $('<option value="General"/>').html("General").appendTo(select)
+  $('<option value="Specialized"/>').html("Special").appendTo(select)
   select.find("option[value='" + value + "']").prop('selected', true)
 }
 

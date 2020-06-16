@@ -131,9 +131,9 @@ function createNewRowRequire(count) {
     <div class='col-5'>
       <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
-        <option value='0'>All</option>
-        <option value='1'>General</option>
-        <option value='2'>Special</option>
+        <option value='All'>All</option>
+        <option value='General'>General</option>
+        <option value='Specialized'>Special</option>
       </select>
     </div>
     <div class='col-2'>
@@ -162,9 +162,9 @@ function createNewRowLevel(count) {
     <div class='col-5'>
       <select class="form-control" id="select_type">
         <option value='-1' disabled selected>Competency type</option>
-        <option value='0'>All</option>
-        <option value='1'>General</option>
-        <option value='2'>Special</option>
+        <option value='All'>All</option>
+        <option value='General'>General</option>
+        <option value='Specialized'>Special</option>
       </select>
     </div>
     <div class='col-2'>
@@ -224,7 +224,7 @@ function checkDuplicateRequired(td) {
   for (var i = 0; i < lenght; i++) {
     var type = listRow[i].children[1].children[0].value
     var rank = listRow[i].children[2].children[0].value
-    if ((selectType == "0" || type == "0") && rank == selectRank) {
+    if ((selectType == all || type == all) && rank == selectRank) {
       count++
     } else {
       if (type == selectType && rank == selectRank)

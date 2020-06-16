@@ -136,7 +136,7 @@ module Api
       end
       list_del = params[:list_del]
       if list_del.present?
-          return "fail" unless LevelMapping.where(id: list_del).destroy_all
+        return "fail" unless LevelMapping.where(id: list_del).destroy_all
       end
       list_edit = params[:list_edit]
       if list_edit.present?
@@ -154,25 +154,5 @@ module Api
     private
 
     attr_reader :params, :current_user
-
-    def table_level_mapping_params
-      type = case params[:type]
-        when "1"
-          "General"
-        when "2"
-          "Specialized"
-        else
-          "All"
-        end
-
-      {
-        title_id: params[:title_id].to_i,
-        level: params[:level].to_i,
-        quantity: params[:quantity].to_i,
-        competency_type: type,
-        rank_number: params[:rank].to_i,
-        updated_by: @current_user.id,
-      }
-    end
   end
 end
