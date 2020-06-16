@@ -529,7 +529,11 @@ module Api
     def approve_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
       return "fail" if form.nil?
+      competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+      result = preview_result(form)
+      calculate_result = calculate_result(form, competencies, result)
 
+      return "fail" unless form.update(status: "Done", title: calculate_result[:expected_title][:title], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
 
@@ -554,7 +558,6 @@ module Api
 
         hash[key] += 1
       end
-      return "fail" unless form.update(status: "Done")
       user = User.find(form.user_id)
       period = Period.find(form.period_id)
       if form.is_approved
