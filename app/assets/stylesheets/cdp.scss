@@ -1,0 +1,43 @@
+.btn {
+  color: white;
+}
+
+.div-slot {
+  background-color: #8da8db;
+  height: 40px;
+  line-height: 40px;
+  margin: 0px 0px 0px 0px;
+  color: white;
+  border: 1px #0000 solid;
+}
+
+.btn-action {
+  margin: 2px;
+  padding-right: 5px;
+}
+
+.icon-green {
+  color: green;
+  font-size: 20px;
+}
+
+.icon-yellow {
+  color: yellow;
+  font-size: 20px;
+}
+
+.div-icon {
+  padding: 0px;
+  text-align: left;
+
+  .a {
+    vertical-align: middle;
+  }
+}
+
+.row {
+  padding-left: 10px;
+  .div-row {
+    padding-bottom: 6px;
+  }
+}
