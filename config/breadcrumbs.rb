@@ -32,6 +32,11 @@ crumb :cds_review do
   parent :root
 end
 
+crumb :new_cdp do
+  link "CDP Staff", "/forms/cdp_assessment"
+  parent :root
+end
+
 crumb :cds_cdp_review do
   link "CDS Review", "/forms/cds_cdp_review"
   parent :cds_review, :root
