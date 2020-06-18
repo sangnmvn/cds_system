@@ -1,43 +1,107 @@
-.btn {
-  color: white;
-}
+.cdp-slot-wrapper {
 
-.div-slot {
-  background-color: #8da8db;
-  height: 40px;
-  line-height: 40px;
-  margin: 0px 0px 0px 0px;
-  color: white;
-  border: 1px #0000 solid;
-}
-
-.btn-action {
-  margin: 2px;
-  padding-right: 5px;
-}
-
-.icon-green {
-  color: green;
-  font-size: 20px;
-}
-
-.icon-yellow {
-  color: yellow;
-  font-size: 20px;
-}
-
-.div-icon {
-  padding: 0px;
-  text-align: left;
-
-  .a {
-    vertical-align: middle;
+  .btn {
+    color: white;
   }
-}
 
-.row {
-  padding-left: 10px;
-  .div-row {
-    padding-bottom: 6px;
+  .div-slot {
+    background-color: #8da8db;
+    height: 40px;
+    line-height: 40px;
+    margin: 0px 0px 0px 0px;
+    color: white;
+    border: 1px #0000 solid;
+  }
+  .row{
+    padding-left: 10px;
+  }
+  .btn-action {
+    margin: 2px;
+    padding-right: 5px;
+  }
+
+  .icon-green {
+    color: green;
+    font-size: 20px;
+  }
+
+  .icon-yellow {
+    color: yellow;
+    font-size: 20px;
+  }
+
+  .div-icon {
+    padding: 0px;
+    text-align: left;
+
+    .a {
+      vertical-align: middle;
+    }
+  }
+
+  .padding-collapse {
+    padding: 10px;
+    padding-top: 20px;
+  }
+  .padding-collapse-children {
+    padding-left: 10px;
+  }
+    .div-row {
+      padding-bottom: 10px;
+    }
+
+    .div-content {
+      padding-top: 10px;
+      padding-left: 20px;
+    }
+  .table-review{
+    width: 80%;
+    height: 80%;
+    border: 1px solid #8da8db;
+    tr,td{
+      border: 1px solid #8da8db;
+    }
+    textarea{
+      height: 120px;
+      width: 100%;
+    }
+    tbody td:nth-child(1) {
+      width: 10%;
+      text-align: left;
+    }
+    tbody td:nth-child(2) {
+      width: 30%;
+      text-align: left;
+    }
+    tbody td:nth-child(3) {
+      width: 60%;
+      text-align: left;
+    }
+  }
+  .text-comment{
+    height: 120px;
+    width: 200%;
+  }
+  .arrow-box {
+    position: relative;
+    padding-left: 30px;
+    padding-top: 10px;
+    :after {
+      left: 100%;
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    :after {
+      border-color: rgba(136, 183, 213, 0);
+      border-left-color: #8da8db;
+      border-width: 20px;
+      margin-top: -20px;
+    }
   }
 }
