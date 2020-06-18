@@ -1,8 +1,8 @@
+
 function loadDataSlots(response) {
   var temp = "";
   $(response).each(function (i, e) {
     length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
-    rowspan = length || 1;
     flag = ""
     class_flag = "flag-red"
     for (i in e.tracking.recommends) {
@@ -16,67 +16,207 @@ function loadDataSlots(response) {
         break
       }
     }
-    temp += ` 
-      <tr id="${e.id}" class="tr_slot">
-        <td style="text-align:center" rowspan="${rowspan}">${e.slot_id}</td>
-        <td style="position: relative; vertical-align: top" rowspan="${rowspan}">
-          <div>${e.desc}</div>
-          <br>
-          <div id="slot_description_${e.slot_id}" style="display: none;">${e.evidence}</div>
-          <br>
-          <a id="${e.slot_id}" class="line-slot" href="javascript:void(0)" style="bottom:0; left:0; position: absolute;">View Details</a>
-        </td>
-        <td class="${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}" rowspan="${rowspan}">
-          <select class="commit-select" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
-            <option value="true" ${checkCommmit(e.tracking.is_commit)}>Commit</option>
-            <option value="fasle" ${checkUncommmit(e.tracking.is_commit)}>Uncommit</option>
-          </select>
-        </td>
-        <td class="${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}" rowspan="${rowspan}"><textarea class="evidence autoresizing" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea></td>`;
-    if (length != 0) {
-      temp += `
-        <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}"style="${checkPM(e.tracking.recommends[0].is_pm)}">
-          <textarea style="resize:none" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[0].user_id)}>${e.tracking.recommends[0].recommends}</textarea>
-        </td>
-        <td class="disabled" style="${checkPM(e.tracking.recommends[0].is_pm)}"><textarea style="resize:none" disabled>${e.tracking.recommends[0].name}</textarea></td>`;
-    } else {
-      temp += `
-        <td class="disabled" colspan="4" ><textarea style="resize:none" disabled></textarea></td>
-        <td class="disabled" colspan="2" >
-          <select class="given-point-select" disabled>
-            <option></option>
-          </select>
-        </td>
-        <td class="disabled" colspan="1"><textarea style="resize:none" disabled></textarea></td>`;
-    }
-    temp += `<td rowspan="${rowspan}">
-              <a href="javascript:void(0)" title="History Comment" style="color:green;" class="icon modal-view-assessment-history" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fas fa-history"></i></a>
-              </br>
-              `;
-    if (e.tracking.flag != "red")
-      temp += `<a href="javascript:void(0)" title="${checkTitle(e.tracking.flag)}"  class="flag-cds-assessment icon ${class_flag}" data-click="${flag}" data-form-slot-id="${e.tracking.id}" data-slot-id="${e.id}" ><i style="color: ${e.tracking.flag};" class="far fa-flag"></i></a>
-              </br>`;
-    if (e.tracking.is_passed)
-      temp += `<a href="javascript:void(0)" title="Re-Assessment" class="icon modal-view-re-assess" data-id="${e.id}" data-slot-id="${e.slot_id}"><i class="fa fa-edit"></i></a>`;
-    else
-      temp += `<a href="javascript:void(0)" title="Re-Assessment" style="color:gray;" class="icon"><i class="fa fa-edit"></i></a>`
-    temp += `</td></tr>`;
-
-    if (length > 1) {
-      for (i = 1; i < length; i++) {
-        temp += `flag-cds-assessment
-          <tr>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}"style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none"  ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea></td>
-            <td class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}"style="${checkPM(e.tracking.recommends[i].is_pm)}"><textarea style="resize:none" disabled>${e.tracking.recommends[i].name}</textarea></td>
-          </tr>`;
+    temp += `<div class="container-fluid cdp-slot-wrapper" data-slot-id="${e.id}" id="row_slot">
+    <div class="row">
+      <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
+        <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
+        <b id="description-slot">${e.slot_id} - ${e.desc}</b>
+      </div>
+      <div class="col-1 div-slot" class="div-icon">
+        <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
+        <a type='button' class='btn-action' title="View slot's history" id="btn_edit"><i class="fa fa-edit icon-yellow"></i></a>
+      </div>
+    </div>
+    <div id="content_${e.id}" class="collapse padding-collapse">
+      <div class="row div-content">
+        <div class="col-2">
+          <b>Evidence Guideline:</b>
+        </div>
+        <div class="col-10">${e.evidence}</div>
+      </div>
+      <div class="row div-content">
+          <div class="col-2">
+            <b>Staff Commit (*):</b>
+          </div>
+          <div class="col-3">
+            <select class="form-control" id="staff-commit" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
+              <option value="false" ${checkUncommmit(e.tracking.is_commit)}> Un-commit </option>
+              <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
+              <option value="commit_cdp" ${checkDataCDP(e.tracking.point,e.tracking.is_commit)}> Commit CDP</option>
+            </select>
+          </div>
+      </div>
+      <div class="row div-content" style="${checkDataPoint(e.tracking.point)}">
+          <div class="col-2">
+            <b>Self-Assessment (*):</b>
+          </div>
+          <div class="col-3">
+            <select class="form-control" id="select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
+              <option value="-1" selected></option>
+              <option value="1" ${check(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
+              <option value="2" ${check(e.tracking.point, 2)}> 2 - Needs Improvement</option>
+              <option value="3" ${check(e.tracking.point, 3)}> 3 - Meets Expectations</option>
+              <option value="4" ${check(e.tracking.point, 4)}> 4 - Exceeds Expectations</option>
+              <option value="5" ${check(e.tracking.point, 5)}> 5 - Outstanding</option>
+            </select>
+          </div>
+      </div>
+      <div class="row div-content div-row">
+          <div class="col-2">
+            <b>Staff Comment (*):</b>
+          </div>
+          <div class="col-3">
+            <textarea id="command" placeholder="<comment content if any>" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
+          </div>
+      </div>`
+      if (length > 0) {
+        var lst_approver = []
+        temp += `<div class="row div-row arrow-box row-cdp">
+                  <div class="col-3 div-slot" data-toggle="collapse" data-target="#reviewer_${e.id}">
+                    <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
+                    <b>Reviewer Review</b>
+                  </div>
+                </div>
+                <div id="reviewer_${e.id}" class="collapse padding-collapse-children">
+                  <div class="row div-content">
+                    <table class="table table-review" id="table-reviewer">`
+        for (i = 0; i < length; i++) {
+          if(checkPM(e.tracking.recommends[i].is_pm))
+          {
+            lst_approver.push(e.tracking.recommends[i].user_id)
+            lst_approver.push(e.tracking.recommends[i].given_point)
+            lst_approver.push(e.tracking.recommends[i].name)
+            lst_approver.push(e.tracking.recommends[i].recommends)
+          }else{
+            temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
+                <td>${e.tracking.recommends[i].name}</td>
+                <td>
+                  <select class="form-control select-commit" id="reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                    <option value="uncommit" selected> Un-commit </option>
+                    <option value="commit"> Commit</option>
+                  </select>
+                  <select class="form-control select-commit" id="reviewer-asssessment" style="display:none" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                    <option value="-1" selected></option>
+                    <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+                    <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
+                    <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
+                    <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
+                    <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
+                  </select>
+                </td>
+                <td>
+                  <textarea id="reviewer_recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                </td>
+              </tr>`
+          }
+        }
+        if(lst_approver.length > 0)
+        temp += `</table>
+          </div>
+        </div>
+          <div class="row div-row arrow-box row-cdp">
+            <div class="col-3 div-slot" data-toggle="collapse" data-target="#approver_${e.id}">
+              <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
+              <b>Approver Review</b>
+            </div>
+          </div>
+          <div id="approver_${e.id}" class="collapse padding-collapse-children">
+            <div class="row div-content">
+                <table class="table table-review" id="table-approver" >
+                  <tr class="${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}">
+                    <td>${lst_approver[2]}</td>
+                    <td>
+                      <select class="form-control select-commit" id="approver-commit" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                        <option value="uncommit" selected> Uncommit </option>
+                        <option value="commit"> Commit</option>
+                      </select>
+                      <select class="form-control select-commit" id="approver-assessment" style="display:none" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                        <option value="5" ${check(lst_approver[1], 5)}>5 - Outstanding</option>
+                        <option value="4" ${check(lst_approver[1], 4)}>4 - Exceeds Expectations</option>
+                        <option value="3" ${check(lst_approver[1], 3)}>3 - Meets Expectations</option>
+                        <option value="2" ${check(lst_approver[1], 2)}>2 - Needs Improvement</option>
+                        <option value="1" ${check(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
+                      </select>
+                    </td>
+                    <td>
+                      <textarea id="approver-recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>`
       }
-    }
-  });
-  if (jQuery.isEmptyObject(response)) {
-    temp = '<td colspan="18" style="text-align:center">No data available in table</td>';
-  }
-  $('.cdp-table table tbody').html(temp);
+  })
+  $('#content-slot').html(temp);
+  checkStatusFormStaff(status);
+  checkChangeSlot();
 }
+function checkStatusFormStaff(status) {
+  switch (status) {
+    case "New":
+      break;
+    case "Done":
+      break;
+    case "Awaiting Review":
+      break;
+  }
+}
+function check(x, y) {
+  if (x == y)
+    return "selected"
+  return ""
+}
+
+function checkDataPoint(x) {
+  if (x == "")
+    return "display:none"
+  return ""
+}
+
+function checkDataCDP(x,y) {
+  if (x == "" && y == true)
+    return "selected"
+  return ""
+}
+
+function checkCommmit(is_commit) {
+  if (is_commit)
+    return "selected"
+  return ""
+}
+
+function checkUncommmit(is_commit) {
+  if (!is_commit)
+    return "selected"
+  return ""
+}
+function checkPM(is_pm) {
+  if (is_pm)
+    return true
+}
+function checkDisableFormSlotsStaff(is_reviewer, user_id) {
+  if (is_reviewer == false)
+    return "disabled"
+  else
+    return checkDisableFormSlotsUser(user_id);
+}
+
+function checkDisableFormSlotsReviewer(is_reviewer) {
+  if (is_reviewer == true)
+    return "disabled"
+  else
+    return ""
+}
+
+function checkDisableFormSlotsUser(user_id) {
+  if (user_id != user_current)
+    return "disabled"
+  else
+    return ""
+}
+
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
@@ -183,23 +323,6 @@ function loadDataPanel(form_id) {
   });
 }
 
-function resizeTextarea() {
-  $(".autoresizing").on("input", function () {
-    if ($(this).height() < $(this).parent().height())
-      return;
-    this.style.height = "auto";
-    this.style.height = this.scrollHeight + "px";
-  });
-
-  $(".autoresizing").each((i, el) => {
-    if (el.textLength == 0)
-      return;
-    el.style.height = "auto";
-    el.style.height = el.scrollHeight + "px";
-  })
-
-}
-
 function checkTitle(flag) {
   var title = "Request more evidences";
   if (flag == "yellow")
@@ -209,16 +332,6 @@ function checkTitle(flag) {
   return title
 }
 
-function hightlightChangeSlot(id) {
-  var list_tr = $('.csd-assessment-table table tbody').find('.tr_slot');
-  for (var i = 0; i < list_tr.length; i++) {
-    if (list_tr[i].id == id) {
-      list_tr[i].children[2].children[0].style.color = '#3366CC'
-      list_tr[i].children[3].children[0].style.color = '#3366CC'
-      list_tr[i].children[4].children[0].style.color = '#3366CC'
-    }
-  }
-}
 function hightlightChangeCompetency(id, level) {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
@@ -228,74 +341,202 @@ function hightlightChangeCompetency(id, level) {
     }
   }
 }
+
 function checkChangeSlot() {
   $.ajax({
     type: "GET",
     url: "/forms/get_slot_is_change",
-    data: { form_id: form_id },
+    data: {
+      form_id: form_id
+    },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     dataType: "json",
     success: function (response) {
       $.each(response, function (i, e) {
-        hightlightChangeSlot(e.slot_id);
         hightlightChangeCompetency(e.competency_id, e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
     }
   });
 }
-$(document).on("click", ".line-slot", function () {
-  if (document.getElementById("slot_description_" + this.id).style.display == "block") {
-    document.getElementById("slot_description_" + this.id).style.display = "none";
-    document.getElementById(this.id).innerText = "ViewDetails";
-  } else {
-    document.getElementById("slot_description_" + this.id).style.display = "block";
-    document.getElementById(this.id).innerText = "Hide Details";
+$(document).ready(function () {
+  $(document).on("click", ".line-slot", function () {
+    if (document.getElementById("slot_description_" + this.id).style.display == "block") {
+      document.getElementById("slot_description_" + this.id).style.display = "none";
+      document.getElementById(this.id).innerText = "ViewDetails";
+    } else {
+      document.getElementById("slot_description_" + this.id).style.display = "block";
+      document.getElementById(this.id).innerText = "Hide Details";
+    }
+  });
+
+  // left panel 
+  $(document).on("click", ".card table thead tr", function () {
+    var data = getParams();
+    if (form_id)
+      data.form_id = form_id;
+    else if (title_history_id)
+      data.title_history_id = title_history_id;
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_cds_assessment",
+      data: data,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        loadDataSlots(response);
+      }
+    });
+  });
+
+  $(document).on("click", ".level-competency", function () {
+    var data = getParams();
+    if (form_id)
+      data.form_id = form_id;
+    else if (title_history_id)
+      data.title_history_id = title_history_id;
+    data.level = $(this).data('level')
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_cds_assessment",
+      data: data,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        loadDataSlots(response);
+      }
+    });
+  });
+
+  $(document).on("change", "#staff-commit", function () {
+    if ($(this).val() == "commit_cds") {
+      $(this).parent().parent().next().removeAttr("style")
+      var row_review = $(this).parent().parent().nextAll()
+      var select_reviewer = row_review[3].getElementsByClassName("select-commit")
+      for (var i = 0; i < select_reviewer.length; i++)
+      {
+        if(i % 2 == 0)
+          row_review[5].getElementsByClassName("select-commit")[0].style = "display:none"
+        else
+          row_review[5].getElementsByClassName("select-commit")[0].style = "display:block"
+      } 
+      row_review[5].getElementsByClassName("select-commit")[0].style = "display:none"
+      row_review[5].getElementsByClassName("select-commit")[1].style = "display:block"
+    } else {
+      $(this).parent().parent().next().attr("style", "display:none")
+      var row_review = $(this).parent().parent().nextAll()
+      var select_reviewer = row_review[3].getElementsByClassName("select-commit")
+      for (var i = 0; i < select_reviewer.length; i++)
+      {
+        if(i % 2 != 0)
+          row_review[5].getElementsByClassName("select-commit")[0].style = "display:none"
+        else
+          row_review[5].getElementsByClassName("select-commit")[0].style = "display:block"
+      } 
+      row_review[5].getElementsByClassName("select-commit")[0].style = "display:block"
+      row_review[5].getElementsByClassName("select-commit")[1].style = "display:none"
+    }
+  });
+
+  $("#content-slot").on("change", ".search-assessment", function () {
+    var data = getParams();
+    if (form_id)
+      data.form_id = form_id;
+    else if (title_history_id)
+      data.title_history_id = title_history_id;
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_cds_assessment",
+      data: data,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        loadDataSlots(response);
+      }
+    });
+  });
+
+  $("#content-slot").on("change", "#filter-form-slots", function () {
+    var data = getParams();
+    if (form_id)
+      data.form_id = form_id;
+    else if (title_history_id)
+      data.title_history_id = title_history_id;
+
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_cds_assessment",
+      data: data,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        loadDataSlots(response);
+      }
+    });
+  });
+
+  $("#content-slot").on("change", "#row_slot", function () {
+    var is_commit = $(this).find('#staff-commit').val();
+    var evidence = $(this).find('#command').val();
+    var temp = $(this).find('#description-slot').html().split(" - ")[0];
+    if (is_commit == "commit_cdp" && evidence != "") {
+      is_commit = true
+      var slot_id = $(this).data("slot-id");
+      $.ajax({
+        type: "POST",
+        url: "/forms/save_cds_assessment_staff",
+        data: {
+          form_id: form_id,
+          is_commit: is_commit,
+          point: "",
+          evidence: evidence,
+          slot_id: slot_id,
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        success: function (response) {
+          current = $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text().split('/');
+          max = parseInt(current[1]);
+          current_change = 0
+          $('div#content-slot div#row_slot').each(function (i, sel) {
+            level = $(this).children('td:nth-child(1)').text();
+            index = i + 1
+            val = $('div.csd-assessment-table table tbody tr:nth-child(' + index + ') td:nth-child(4) select option:selected').val();
+            if (level.charAt(0) == temp.charAt(0) && val != "")
+              current_change += 1;
+          });
+          if (current_change <= max)
+            current_change = current_change;
+          else
+            current = max;
+          $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
+          $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor', '#99CCFF')
+        }
+      });
+    }
+    });
+})
+function getParams() {
+  var data = {
+    competency_id: $('#competency_panel').find('.show').data('competency-id'),
+    search: $(".search-assessment").val(),
+    filter: ""
   }
-});
-
-// left panel 
-$(document).on("click", ".card table thead tr", function () {
-  var data = getParams();
-  if (form_id)
-    data.form_id = form_id;
-  else if (title_history_id)
-    data.title_history_id = title_history_id;
-
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_cds_assessment",
-    data: data,
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      loadDataSlots(response);
-    }
+  filter = [];
+  $('#filter-form-slots :selected').each(function (i, sel) {
+    filter.push($(sel).val())
   });
-});
-
-$(document).on("click", ".level-competency", function () {
-  var data = getParams();
-  if (form_id)
-    data.form_id = form_id;
-  else if (title_history_id)
-    data.title_history_id = title_history_id;
-  data.level = $(this).data('level')
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_cds_assessment",
-    data: data,
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      loadDataSlots(response);
-    }
-  });
-});
-
+  data.filter = filter.join();
+  return data;
+}
