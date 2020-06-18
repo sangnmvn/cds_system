@@ -38,6 +38,7 @@ module Api
             level_point: calculate_level(result[key]),
           }
         end
+
         if hash[key][:levels][slot.level].nil?
           hash[key][:levels][slot.level] = {
             total: 0,
@@ -240,9 +241,8 @@ module Api
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
       arr = []
-      slots.map do |slot|
-        hash[slot.level] = -1 if hash[slot.level].nil?
-        hash[slot.level] += 1
+      slots.each do |slot|
+        hash[slot.level] = 0 if hash[slot.level].nil?
         s = slot_to_hash(slot, hash[slot.level], form_slots)
         if filter_slots[:passed] && s[:tracking][:is_passed]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
@@ -255,7 +255,13 @@ module Api
         elsif filter_slots[:assessing] && !s[:tracking][:point].zero? && s[:tracking][:recommends].empty?
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
+        hash[slot.level] += 1
       end
+
+      arr.each do |item|
+        return item if item[:slot_id] == params[:search]
+      end
+
       arr
     end
 
@@ -580,10 +586,19 @@ module Api
     end
 
     def get_data_view_history
-      line_managers = LineManager.where(form_slot_id: params[:form_slot_id])
+      comment = Comment.find_by(form_slot_id: params[:form_slot_id])
+      line_managers = LineManager.where(form_slot_id: params[:form_slot_id]).order(:period_id)
       recommends = get_recommend_by_period(line_managers)
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
+      period_id = line_managers.first&.period_id
+      key  = Period.find_by_id(period_id).format_name
+      hash[key] = {
+        evidence: comment.evidence || "",
+        point: comment.point || 0,
+        recommends: recommends,
+      }
+
       slot_histories.map do |h|
         hash[h.title_history.period.format_name] = {
           evidence: h.evidence || "",
@@ -786,7 +801,7 @@ module Api
         role_name: form.role&.name,
         level: form.level || "N/A",
         rank: form.rank || "N/A",
-        title: form.title&.name || "N/A" ,
+        title: form.title&.name || "N/A",
         submit_date: form.submit_date || "",
         review_date: form.review_date || "",
         status: form.status,
