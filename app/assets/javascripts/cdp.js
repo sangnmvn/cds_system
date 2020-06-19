@@ -64,7 +64,7 @@ function loadDataSlots(response) {
             <b class="comment">Staff Comment :</b>
           </div>
           <div class="col-3">
-            <textarea id="command" placeholder="<comment content if any>" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
+            <textarea id="command" maxlength="1000" placeholder="<comment content if any>" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
       if (length > 0) {
@@ -104,7 +104,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea id="reviewer_recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" id="reviewer_recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
           }
@@ -142,7 +142,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea id="approver-recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" id="approver-recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -366,8 +366,11 @@ $(document).ready(function () {
       fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
       return;
     }
+    var point = $(this).find('#select-assessment').val();
+    if(is_commit == "commit_cdp")
+      point = ""
     var temp = $(this).find('#description-slot').html().split(" - ")[0];
-    if (is_commit == "commit_cdp" && evidence != "") {
+    if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
       var slot_id = $(this).data("slot-id");
       $.ajax({
@@ -376,7 +379,7 @@ $(document).ready(function () {
         data: {
           form_id: form_id,
           is_commit: is_commit,
-          point: "",
+          point: point,
           evidence: evidence,
           slot_id: slot_id,
         },
