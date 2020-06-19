@@ -1,3 +1,4 @@
 class Comment < ApplicationRecord
-    belongs_to :form_slot
+  belongs_to :form_slot
+  validates :evidence, length: { maximum: 1000 }
 end

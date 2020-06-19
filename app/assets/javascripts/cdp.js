@@ -361,6 +361,11 @@ $(document).ready(function () {
   $("#content-slot").on("change", "#row_slot", function () {
     var is_commit = $(this).find('#staff-commit').val();
     var evidence = $(this).find('#command').val();
+    if (evidence.length >= 1000)
+    {
+      fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
+      return;
+    }
     var temp = $(this).find('#description-slot').html().split(" - ")[0];
     if (is_commit == "commit_cdp" && evidence != "") {
       is_commit = true
