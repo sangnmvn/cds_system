@@ -11,6 +11,11 @@ class FormsController < ApplicationController
     @check_6_month = current_user.joined_date.to_i < 6.months.ago.to_i if current_user.joined_date
   end
 
+  def index_cds_cdp
+    @check_6_month = true
+    @check_6_month = current_user.joined_date.to_i < 6.months.ago.to_i if current_user.joined_date
+  end
+
   def get_list_cds_assessment_manager
     data = if @privilege_array.include?(APPROVE_CDS)
         @form_service.get_list_cds_approve

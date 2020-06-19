@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       post "get_competencies"
       get "cds_assessment"
       get "cdp_assessment"
+      get "index_cds_cdp"
       get "cds_cdp_review"
       get "get_slot_is_change"
       get "review_cds_assessment"

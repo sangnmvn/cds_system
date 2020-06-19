@@ -5,6 +5,14 @@
   }
 
   .div-slot {
+    background-color: #4472c4;
+    height: 40px;
+    line-height: 40px;
+    margin: 0px 0px 0px 0px;
+    color: white;
+    border: 1px #0000 solid;
+  }
+  .div-child-slot {
     background-color: #8da8db;
     height: 40px;
     line-height: 40px;
@@ -21,7 +29,7 @@
   }
 
   .icon-green {
-    color: green;
+    color: #FFFF00;
     font-size: 20px;
   }
 
@@ -70,11 +78,11 @@
       text-align: left;
     }
     tbody td:nth-child(2) {
-      width: 30%;
+      width: 20%;
       text-align: left;
     }
     tbody td:nth-child(3) {
-      width: 60%;
+      width: 30%;
       text-align: left;
     }
   }
