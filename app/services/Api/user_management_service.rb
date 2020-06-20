@@ -32,7 +32,7 @@ module Api
         current_user_data.push(user.account)
 
         current_user_data.push(user.role.name)
-        current_user_data.push(user.title)
+        current_user_data.push(user.title&.name)
         project_name = h_projects[user.id].present? ? h_projects[user.id].join(", ") : ""
         current_user_data.push(project_name)
         current_user_data.push(user.company.name)
@@ -88,8 +88,114 @@ module Api
       Role.select(:id, :name).where(id: users.pluck(:role_id)).order(:name)
     end
 
+    def data_users_by_gender
+      users = User.left_outer_joins(:project_members).where(filter_users).group(:gender).count
+
+      h_users = {}
+      h_users[:Male] = users[true] if users[true]
+      h_users[:Female] = users[false] if users[false]
+
+      { data: h_users, total: users.values.sum }
+    end
+
+    def data_users_by_role
+      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).group("roles.desc").count
+
+      { data: h_users, total: h_users.values.sum }
+    end
+
+    def data_users_by_seniority(gender = false)
+      users = User.where(filter_users).where(gender: gender).group("(YEAR(NOW() - users.joined_date) - 2000)").count
+      h_users = {
+        "<3" => 0,
+        "3-5" => 0,
+        "5-7" => 0,
+        "7-10" => 0,
+        ">10" => 0,
+      }
+      users.each do |key, value|
+        case key
+        when nil
+          h_users["<3"] += value
+        when 0...3
+          h_users["<3"] += value
+        when 3...5
+          h_users["3-5"] += value
+        when 5...7
+          h_users["5-7"] += value
+        when 7...10
+          h_users["7-10"] += value
+        else
+          h_users[">10"] += value
+        end
+      end
+
+      h_users
+    end
+
+    def calulate_data_user_by_seniority
+      males = data_users_by_seniority(true)
+      females = data_users_by_seniority
+      total = males.values.sum + females.values.sum
+      { males: males, females: females, total: total }
+    end
+
+    def data_users_by_rank(gender = false)
+      users = User.left_outer_joins(:project_members, :title).where(filter_users).where(gender: gender).where.not(role_id: 6).group("titles.rank").count
+
+      if params[:role_id].length == 1
+        count_title = Title.where(role_id: params[:role_id]).count
+        h_users = {}
+        count_title.times do |i|
+          h_users[i] = 0
+        end
+        users.each do |key, value|
+          h_users[key] = value
+        end
+        return h_users
+      end
+
+      users.each do |key, value|
+        case key
+        when 1
+          h_users[1] += value
+        when 2
+          h_users[2] += value
+        when 3
+          h_users[3] += value
+        else
+          h_users[">3"] += value
+        end
+      end
+      h_users
+    end
+
+    def calulate_data_user_by_rank
+      males = data_users_by_rank(true)
+      females = data_users_by_rank
+      total = males.values.sum + females.values.sum
+      { male: males, females: females, total: total }
+    end
+
+    def data_user_up_title
+      user_ids = User.where(filter_users).pluck(:id)
+      forms = Form.where(user_id: user_ids, is_delete: false)
+    end
+
     private
 
     attr_reader :current_user, :params, :privilege_array
+
+    def filter_users
+      filter = {
+        status: true,
+        is_delete: false,
+      }
+      filter[:company_id] = params[:company_id].split(",") if params[:company_id].present? && params[:company_id] != "All"
+      filter[:role_id] = params[:role_id].split(",") if params[:role_id].present? && params[:role_id] != "All"
+      filter[:project_members] = { project_id: params[:project_id].split(",") } if params[:project_id].present? && params[:project_id] != "All"
+
+      filter
+    end
   end
 end

@@ -10,12 +10,10 @@
     <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'tokenize2.min', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-      <div class="header-breadcrumb">
-          <%= breadcrumbs separator: " / ",display_single_fragment: true, link_current: true %>
-      </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar_menu">
       <a class="navbar-brand" href="#" style="font-size: 4rem;color: #4472C4;">CDS</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +22,7 @@
       <div class="collapse navbar-collapse" >
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <%= link_to "Dashboard",root_path, class: "nav-link"%>
+            <%= link_to "Dashboard", root_path, class: "nav-link"%>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -112,8 +112,19 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "users#index2"
+  root to: "dashboards#index"
 
+  resources :dashboards do
+    collection do
+      post :data_users_by_gender
+      post :data_users_by_role
+      post :calulate_data_user_by_seniority
+      post :calulate_data_user_by_rank
+      post :data_user_up_title
+      post :data_user_keep_all
+      post :data_filter
+    end
+  end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
   get "/schedule_data/" => "schedules#get_schedule_data", defaults: { format: "json" }
   # resources :users

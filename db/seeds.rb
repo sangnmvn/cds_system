@@ -33,7 +33,7 @@ ProjectMember.delete_all
 
 # Create role
 role_create = [
-  { id: 1, name: "QC", desc: "Quality Assurance" },
+  { id: 1, name: "QC", desc: "Quality Control" },
   { id: 2, name: "DEV", desc: "Developer" },
   { id: 3, name: "BA", desc: "Business Analyst" },
   { id: 4, name: "PM", desc: "Project Manager" },
@@ -57,31 +57,59 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create users
 
-User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: 7.months.ago) if Rails.env.development?
-User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: 3, joined_date: 7.months.ago)
-User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: 3, joined_date: 7.months.ago)
-User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: 3, joined_date: 7.months.ago)
-User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1", joined_date: 7.months.ago)
-User.create!(id: 6, email: "hoanpt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1", joined_date: 7.months.ago)
-User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1", joined_date: 7.months.ago)
-User.create!(id: 8, email: "phungnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phung", last_name: "Nguyen Van", account: "phungnv", role_id: "1", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 9, email: "locnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Loc", last_name: "Nguyen Van", account: "locnv", role_id: "2", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 10, email: "ngocph@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ngoc", last_name: "Pham Huu", account: "ngocph", role_id: "3", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 11, email: "phuctnh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phuc", last_name: "Tran Nguyen Hoang", account: "phuctnh", role_id: "4", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 12, email: "lamnguyenngoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Lam", last_name: "Nguyen Ngoc", account: "lamng", role_id: "5", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 13, email: "linhlevu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Le Vu", account: "linhlv", role_id: "6", company_id: "2", joined_date: 7.months.ago)
-User.create!(id: 14, email: "linhnguyenquang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Nguyen Quang", account: "linhnq", role_id: "1", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 15, email: "hiendinhthuy@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hien", last_name: "Dinh Thuy", account: "hiendt", role_id: "2", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 16, email: "tientranquanhoang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tien", last_name: "Tran Quang Hoang", account: "tientqh", role_id: "3", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 17, email: "tuyenhothikim@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tuyen", last_name: "Ho Thi Kim", account: "tuyenhtk", role_id: "4", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 18, email: "dongnguyenchinh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dong", last_name: "Nguyen Chinh", account: "dongnc", role_id: "5", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 19, email: "dungphamthu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dung", last_name: "Pham Thu", account: "dungpt", role_id: "6", company_id: "3", joined_date: 7.months.ago)
-User.create!(id: 20, email: "lydothi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ly", last_name: "Do Thi", account: "lydt", role_id: "1", company_id: "4", joined_date: 7.months.ago)
-User.create!(id: 21, email: "tamleminh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tam", last_name: "Le Minh", account: "tamlm", role_id: "2", company_id: "4", joined_date: 7.months.ago)
-User.create!(id: 22, email: "vandaonthihong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Van", last_name: "Doan Thi Hong", account: "vandth", role_id: "3", company_id: "4", joined_date: 7.months.ago)
-User.create!(id: 23, email: "vuvotruong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vu", last_name: "Vo Truong", account: "vuvt", role_id: "4", company_id: "4", joined_date: 7.months.ago)
-User.create!(id: 24, email: "ninhnguyenthi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ninh", last_name: "Nguyen Thi", account: "ninhnt", role_id: "5", company_id: "4", joined_date: 7.months.ago)
-User.create!(id: 25, email: "thangnguyentat@bestarion.com", password: "password", password_confirmation: "password", first_name: "Thang", last_name: "Nguyen Tat", account: "thangnt", role_id: "6", company_id: "4", joined_date: 7.months.ago)
+# Create Title
+# QC
+Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1", status: 0)
+Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1", status: 0)
+Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1", status: 0)
+Title.create!(id: 4, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "1", status: 1)
+# Dev
+Title.create!(id: 5, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2", status: 0)
+Title.create!(id: 6, name: "Developer", desc: "Developer", rank: 2, role_id: "2", status: 0)
+Title.create!(id: 7, name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2", status: 0)
+Title.create!(id: 8, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2", status: 0)
+Title.create!(id: 9, name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2", status: 0)
+Title.create!(id: 10, name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2", status: 0)
+Title.create!(id: 11, name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2", status: 0)
+# BA
+Title.create!(id: 12, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3", status: 0)
+Title.create!(id: 13, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3", status: 0)
+Title.create!(id: 14, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3", status: 0)
+Title.create!(id: 20, name: "Business Analyst Manager", desc: "Business Analyst Manager", rank: 4, role_id: "3", status: 1)
+# PM
+Title.create!(id: 15, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4", status: 0)
+Title.create!(id: 16, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4", status: 0)
+Title.create!(id: 17, name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4", status: 0)
+# SM
+Title.create!(id: 18, name: "SM Test", desc: "SM Test", role_id: "5", status: 0, rank: 1)
+# HR
+Title.create!(id: 19, name: "HR Test", desc: "HR Test", role_id: "6", status: 0, rank: 1)
+
+User.create!(id: 1, email: "admin@bestarion.com", password: "password", password_confirmation: "password", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..4)) if Rails.env.development?
+User.create!(id: 2, email: "duynt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Duy", last_name: "Nguyen Thanh", account: "duynt", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..4))
+User.create!(id: 3, email: "hieuam@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hieu", last_name: "Ao Minh", account: "hieuam", role_id: "2", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(5..11))
+User.create!(id: 4, email: "hungdq@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hung", last_name: "Duong Quoc", account: "hungdq", role_id: "3", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(12..14))
+User.create!(id: 5, email: "vinhmx@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vinh", last_name: "Mai Xuan", account: "vinhmx", role_id: "4", company_id: "1", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(15..17))
+User.create!(id: 6, email: "hoanpt@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hoan", last_name: "Phung The", account: "hoanpt", role_id: "5", company_id: "1", joined_date: rand(12).years.ago, gender: rand(2), title_id: 18)
+User.create!(id: 7, email: "baonguyenquoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Bao", last_name: "Nguyen Quoc", account: "baonq", role_id: "6", company_id: "1", joined_date: rand(12).years.ago, gender: rand(2))
+User.create!(id: 8, email: "phungnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phung", last_name: "Nguyen Van", account: "phungnv", role_id: "1", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..4))
+User.create!(id: 9, email: "locnguyenvan@bestarion.com", password: "password", password_confirmation: "password", first_name: "Loc", last_name: "Nguyen Van", account: "locnv", role_id: "2", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(5..11))
+User.create!(id: 10, email: "ngocph@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ngoc", last_name: "Pham Huu", account: "ngocph", role_id: "3", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(12..14))
+User.create!(id: 11, email: "phuctnh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Phuc", last_name: "Tran Nguyen Hoang", account: "phuctnh", role_id: "4", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(15..17))
+User.create!(id: 12, email: "lamnguyenngoc@bestarion.com", password: "password", password_confirmation: "password", first_name: "Lam", last_name: "Nguyen Ngoc", account: "lamng", role_id: "5", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2), title_id: 18)
+User.create!(id: 13, email: "linhlevu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Le Vu", account: "linhlv", role_id: "6", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2))
+User.create!(id: 14, email: "linhnguyenquang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Linh", last_name: "Nguyen Quang", account: "linhnq", role_id: "1", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..4))
+User.create!(id: 15, email: "hiendinhthuy@bestarion.com", password: "password", password_confirmation: "password", first_name: "Hien", last_name: "Dinh Thuy", account: "hiendt", role_id: "2", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(5..11))
+User.create!(id: 16, email: "tientranquanhoang@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tien", last_name: "Tran Quang Hoang", account: "tientqh", role_id: "3", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(12..14))
+User.create!(id: 17, email: "tuyenhothikim@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tuyen", last_name: "Ho Thi Kim", account: "tuyenhtk", role_id: "4", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(15..17))
+User.create!(id: 18, email: "dongnguyenchinh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dong", last_name: "Nguyen Chinh", account: "dongnc", role_id: "5", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2), title_id: 18)
+User.create!(id: 19, email: "dungphamthu@bestarion.com", password: "password", password_confirmation: "password", first_name: "Dung", last_name: "Pham Thu", account: "dungpt", role_id: "6", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2))
+User.create!(id: 20, email: "lydothi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ly", last_name: "Do Thi", account: "lydt", role_id: "1", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..4))
+User.create!(id: 21, email: "tamleminh@bestarion.com", password: "password", password_confirmation: "password", first_name: "Tam", last_name: "Le Minh", account: "tamlm", role_id: "2", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(5..11))
+User.create!(id: 22, email: "vandaonthihong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Van", last_name: "Doan Thi Hong", account: "vandth", role_id: "3", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(12..14))
+User.create!(id: 23, email: "vuvotruong@bestarion.com", password: "password", password_confirmation: "password", first_name: "Vu", last_name: "Vo Truong", account: "vuvt", role_id: "4", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(15..17))
+User.create!(id: 24, email: "ninhnguyenthi@bestarion.com", password: "password", password_confirmation: "password", first_name: "Ninh", last_name: "Nguyen Thi", account: "ninhnt", role_id: "5", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2), title_id: 18)
+User.create!(id: 25, email: "thangnguyentat@bestarion.com", password: "password", password_confirmation: "password", first_name: "Thang", last_name: "Nguyen Tat", account: "thangnt", role_id: "6", company_id: "4", joined_date: rand(12).years.ago, gender: rand(2))
 
 ProjectMember.create!(user_id: 1, project_id: 1, is_managent: "0")
 ProjectMember.create!(user_id: 2, project_id: 1, is_managent: "0")
@@ -159,36 +187,6 @@ ProjectMember.create!(user_id: 19, project_id: 2, is_managent: "0")
 # Approver.create!(approver_id: 1, user_id: 2)
 # Approver.create!(approver_id: 3, user_id: 2)
 # Approver.create!(approver_id: 4, user_id: 2)
-
-# Create Title
-# QC
-Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1", status: 0)
-Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1", status: 0)
-Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1", status: 0)
-Title.create!(id: 4, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "1", status: 1)
-# Dev
-Title.create!(id: 5, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2", status: 0)
-Title.create!(id: 6, name: "Developer", desc: "Developer", rank: 2, role_id: "2", status: 0)
-Title.create!(id: 7, name: "Senior Developer", desc: "Senior Developer", rank: 3, role_id: "2", status: 0)
-Title.create!(id: 8, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "2", status: 0)
-Title.create!(id: 9, name: "Solution Architect", desc: "Solution Architect", rank: 5, role_id: "2", status: 0)
-Title.create!(id: 10, name: "Senior Solution Architect", desc: "Senior Solution Architect", rank: 6, role_id: "2", status: 0)
-Title.create!(id: 11, name: "Director of Technology", desc: "Director of Technology", rank: 7, role_id: "2", status: 0)
-# BA
-Title.create!(id: 12, name: "Senior Business Analyst", desc: "Senior Business Analyst", rank: 3, role_id: "3", status: 0)
-Title.create!(id: 13, name: "Business Analyst", desc: "Business Analyst", rank: 2, role_id: "3", status: 0)
-Title.create!(id: 14, name: "Associate Business Analyst", desc: "Associate Business Analyst", rank: 1, role_id: "3", status: 0)
-Title.create!(id: 20, name: "Business Analyst Manager", desc: "Business Analyst Manager", rank: 4, role_id: "3", status: 1)
-# PM
-# PM
-Title.create!(id: 15, name: "Associate Project Manager", desc: "Associate Project Manager", rank: 1, role_id: "4", status: 0)
-Title.create!(id: 16, name: "Project Manager", desc: "Project Manager", rank: 2, role_id: "4", status: 0)
-Title.create!(id: 17, name: "Senior Project Manager", desc: "Senior Project Manager", rank: 3, role_id: "4", status: 0)
-# SM
-Title.create!(id: 18, name: "SM Test", desc: "SM Test", role_id: "5", status: 0)
-# HR
-Title.create!(id: 19, name: "HR Test", desc: "HR Test", role_id: "6", status: 0)
-
 # Create Template
 Template.create!(id: 1, name: "CDS/CDP QC", description: "Template Career Development Plan / Career Development System For QC", role_id: "1", user_id: 1, status: true)
 Template.create!(id: 2, name: "CDS/CDP HR", description: "Template Career Development Plan / Career Development System For HR", role_id: "2", user_id: 1)
@@ -621,7 +619,7 @@ slot_create = [
   {
     desc: "Identify different options for test selection, test prioritization and effort allocation",
     evidence: "- Xác định được các options khác nhau trong việc lựa chọn cách thức test, test levels, test types, test suite \n
-             - Xác định được độ ưu tiên của các hoạt động test (dựa trên các mục tiêu khác nhau của dự án) \n
+             - Xác định đ����ợc độ ưu tiên của các hoạt động test (dựa trên các mục tiêu khác nhau của dự án) \n
              - Biết cách allocate resources cho testing activities của dự án \n
              - Nếu đã từng lead system testing (là người chịu trách nhiệm chính) cho ít nhất 1 release của dự án thì được xem là bằng chứng \
              để pass slot này",
@@ -1179,25 +1177,25 @@ Group.create!(id: 35, name: "Reviewer", description: "Reviewer", status: 1, priv
 Group.create!(id: 36, name: "Staff", description: "Staff", status: 1, privileges: "")
 Group.create!(id: 37, name: "PM", description: "PM", status: 1, privileges: "14")
 #  template HR
-User.create!(id: 32, email: "nguyenvana@bestarion.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3", joined_date: 7.months.ago)
+User.create!(id: 32, email: "nguyenvana@bestarion.com", password: "password", password_confirmation: "password", first_name: "A", last_name: "Nguyen Van", account: "anv", role_id: "6", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2))
 UserGroup.create!(group_id: 33, user_id: 32)
 UserGroup.create!(group_id: 31, user_id: 1)
 # GroupPrivilege.create!(group_id: 33, privilege_id: 9)
 # GroupPrivilege.create!(group_id: 33, privilege_id: 10)
 
-User.create!(id: 33, email: "nguyenvanb@bestarion.com", password: "password", password_confirmation: "password", first_name: "B", last_name: "Nguyen Van", account: "bnv", role_id: "5", company_id: "3", joined_date: 7.months.ago)
+User.create!(id: 33, email: "nguyenvanb@bestarion.com", password: "password", password_confirmation: "password", first_name: "B", last_name: "Nguyen Van", account: "bnv", role_id: "5", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2))
 UserGroup.create!(group_id: 32, user_id: 33)
 # GroupPrivilege.create!(group_id: 32, privilege_id: 10)
 
-User.create!(id: 34, email: "nguyenvanc@bestarion.com", password: "password", password_confirmation: "password", first_name: "C", last_name: "Nguyen Van", account: "cnv", role_id: "4", company_id: "3", joined_date: 7.months.ago)
+User.create!(id: 34, email: "nguyenvanc@bestarion.com", password: "password", password_confirmation: "password", first_name: "C", last_name: "Nguyen Van", account: "cnv", role_id: "4", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2))
 UserGroup.create!(group_id: 33, user_id: 34)
 # GroupPrivilege.create!(group_id: 33, privilege_id: 13)
 #  test user management
-User.create!(id: 35, email: "nguyenvand@bestarion.com", password: "password", password_confirmation: "password", first_name: "D", last_name: "Nguyen Van", account: "dnv", role_id: "6", company_id: "3", joined_date: 7.months.ago)
+User.create!(id: 35, email: "nguyenvand@bestarion.com", password: "password", password_confirmation: "password", first_name: "D", last_name: "Nguyen Van", account: "dnv", role_id: "6", company_id: "3", joined_date: rand(12).years.ago, gender: rand(2))
 UserGroup.create!(group_id: 34, user_id: 35)
 # GroupPrivilege.create!(group_id: 34, privilege_id: 1)
 
-User.create!(id: 36, email: "nguyenvane@bestarion.com", password: "password", password_confirmation: "password", first_name: "E", last_name: "Nguyen Van", account: "env", role_id: "6", company_id: "2", joined_date: 7.months.ago)
+User.create!(id: 36, email: "nguyenvane@bestarion.com", password: "password", password_confirmation: "password", first_name: "E", last_name: "Nguyen Van", account: "env", role_id: "6", company_id: "2", joined_date: rand(12).years.ago, gender: rand(2))
 UserGroup.create!(group_id: 35, user_id: 36)
 # GroupPrivilege.create!(group_id: 35, privilege_id: 2)
 ProjectMember.create!(user_id: 36, project_id: 3, is_managent: "0")

@@ -126,6 +126,7 @@ function apllyFilter() {
   }
   return data
 }
+
 function customizeFilter() {
   $(".company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
     max = $('.company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
