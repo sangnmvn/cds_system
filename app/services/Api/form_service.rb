@@ -367,11 +367,11 @@ module Api
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        if params[:point].present?
-          comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
-        else
-          comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
-        end
+        comment = if params[:point].present?
+            Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
+          else
+            Comment.where(form_slot_id: form_slot.id, point: nil).first
+          end
         is_commit = params[:is_commit] == "true"
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now)
@@ -773,7 +773,7 @@ module Api
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
-        }       
+        }
       end
       hash
     end
