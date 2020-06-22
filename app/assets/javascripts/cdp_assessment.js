@@ -411,7 +411,7 @@ $(document).ready(function () {
       return;
     }
     var point = $(this).find('#select-assessment').val();
-    if(is_commit == "commit_cdp")
+    if (is_commit == "commit_cdp")
       point = ""
     if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
@@ -461,10 +461,10 @@ $(document).ready(function () {
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
-        success: function (response) {
-        }
+        success: function (response) {}
       });
     }
+  })
   $("#content-slot").on("change", ".comment", function () {
     var row = $(this).closest('.row-slot')
     autoSave(row)
@@ -537,7 +537,7 @@ $(document).ready(function () {
       type: "POST",
       url: "/forms/withdraw_cds",
       data: {
-        form_id: form_id,          
+        form_id: form_id,
       },
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -547,7 +547,7 @@ $(document).ready(function () {
         if (response.status == "success") {
           success(`The CDS assessment of ${response.user_name} has been withdrawn successfully.`);
           $("a.withdraw-assessment i").css("color", "#ccc");
-          $('a.withdraw-assessment').removeClass('withdraw-assessment');          
+          $('a.withdraw-assessment').removeClass('withdraw-assessment');
         } else {
           fails("Can't withdraw CDS.");
         }
@@ -639,7 +639,8 @@ $(document).ready(function () {
         }
       }
     });
-});
+  });
+})
 
 function autoSave(row) {
   var is_commit = row.find('.staff-commit').val();
@@ -649,7 +650,7 @@ function autoSave(row) {
     point = ""
   if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
     is_commit = true
-    var slot_id =row.data("slot-id");
+    var slot_id = row.data("slot-id");
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_staff",
