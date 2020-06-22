@@ -35,6 +35,10 @@ class FormsController < ApplicationController
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
+  def get_competencies_reviewer
+    render json: @form_service.get_competencies_reviewer(form_params[:form_id])
+  end
+
   def cds_review
     @companies = Company.all
     @data_filter = if @privilege_array.include?(APPROVE_CDS)
@@ -119,12 +123,27 @@ class FormsController < ApplicationController
   def cds_cdp_review
     return if params[:user_id].nil?
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
+
+    @is_reviewer = false
+    @is_approver = false
+    reviewers = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
+    @is_reviewer = true if reviewers.present?
+
+    user_id = Form.where(id: params[:form_id]).pluck(:user_id)
+    project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
+    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user).where("users.id": current_user.id).first
+    if user_groups.present?
+      @is_reviewer = false
+      @is_approver = true
+    end
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
         name: schedule.period.format_name,
       }
     end
+
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find_by_id(params[:user_id])
     is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds

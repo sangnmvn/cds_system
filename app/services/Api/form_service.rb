@@ -62,6 +62,54 @@ module Api
       hash
     end
 
+    def get_competencies_reviewer(form_id = nil, user_id = nil)
+      return get_old_competencies if params[:title_history_id].present?
+      if form_id.present?
+        form = Form.find_by(form_id)
+      else
+        form = Form.find_by(user_id: user_id, is_delete: false)
+      end
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      slots = slots.where(level: params[:level]) if params[:level].present?
+      hash = {}
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
+      form_slots = get_point_for_result(form_slots)
+      result = preview_result(form)
+
+      slots.map do |slot|
+        key = slot.competency.name
+        if hash[key].nil?
+          hash[key] = {
+            type: slot.competency.sort_type,
+            id: slot.competency_id,
+            levels: {},
+            level_point: calculate_level(result[key]),
+          }
+        end
+
+        if hash[key][:levels][slot.level].nil?
+          hash[key][:levels][slot.level] = {
+            total: 0,
+            current: 0,
+          }
+        end
+
+        hash[key][:levels][slot.level][:total] += 1
+        data = form_slots[slot.id]
+        value = data[:final_point] || data[:point]
+        value = data[:point] if data[:is_change]
+        if current_user.id != form.user_id
+          if privilege_array.include?(REVIEW_CDS)
+            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
+          elsif privilege_array.include?(APPROVE_CDS)
+            value = data[:final_point] || value
+          end
+        end
+        hash[key][:levels][slot.level][:current] += 1 if value > 2
+      end
+      hash
+    end
+
     def get_slot_change
       form_slots = FormSlot.includes(:slot).where(is_change: true, form_id: params[:form_id])
       arr = Array.new
@@ -197,7 +245,7 @@ module Api
 
       forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
-        period = format_filter(form.period.format_name, form.period_id)
+        period = format_filter(form.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
@@ -362,9 +410,11 @@ module Api
       if params[:recommend] && params[:given_point] && params[:slot_id] && params[:user_id]
         period_id = Form.find(params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
+
         if line_manager.present?
-          line_manager.update(recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
+          line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
           # user_id = Form.where(id: form.id).pluck(:user_id)
           # project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
@@ -704,6 +754,7 @@ module Api
             flag: "red",
             user_id: User.find(approver.approver_id).id,
             is_final: "",
+            is_commit: "uncommit",
             is_pm: false,
           }
         else
@@ -720,6 +771,7 @@ module Api
             flag: line.flag || "red",
             user_id: line.user_id,
             is_final: line.final,
+            is_commit: line.is_commit,
             is_pm: false,
           }
         end
@@ -743,6 +795,7 @@ module Api
             flag: "red",
             user_id: User.find(user.user_id).id,
             is_final: "",
+            is_commit: "",
             is_pm: true,
           }
         else
@@ -759,6 +812,7 @@ module Api
             flag: line.flag || "red",
             user_id: line.user_id,
             is_final: line.final,
+            is_commit: line.is_commit,
             is_pm: true,
           }
         end

@@ -47,6 +47,7 @@ Rails.application.routes.draw do
       post "get_list_cds_assessment_manager"
       get "preview_result"
       post "get_competencies"
+      post "get_competencies_reviewer"
       get "cds_assessment"
       get "cdp_assessment"
       get "index_cds_cdp"
