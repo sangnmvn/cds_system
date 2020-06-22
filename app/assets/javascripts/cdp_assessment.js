@@ -334,7 +334,6 @@ $(document).ready(function () {
     } else {
       $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
       $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
-      
       return
     }
     $.ajax({
@@ -349,13 +348,11 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if(response)
-        {
+        if (response) {
           row.find(".comment").val(response.evidence)
-          row.find('option[value="'+ response.evidence +'"]').prop('selected', true)
+          row.find('option[value="' + response.evidence + '"]').prop('selected', true)
           autoSave(row)
-        }
-        else
+        } else
           autoSave(row)
       }
     });
@@ -410,7 +407,7 @@ $(document).ready(function () {
       return;
     }
     var point = $(this).find('#select-assessment').val();
-    if(is_commit == "commit_cdp")
+    if (is_commit == "commit_cdp")
       point = ""
     if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
@@ -460,10 +457,10 @@ $(document).ready(function () {
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
-        success: function (response) {
-        }
+        success: function (response) {}
       });
     }
+  })
   $("#content-slot").on("change", ".comment", function () {
     var row = $(this).closest('.row-slot')
     autoSave(row)
@@ -526,6 +523,90 @@ $(document).ready(function () {
       }
     });
   });
+
+  $(document).on("click", ".withdraw-assessment", function () {
+    $('#modal_withdraw').modal('show');
+  });
+
+  $(document).on("click", "#confirm_withdraw_cds", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/withdraw_cds",
+      data: {
+        form_id: form_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "success") {
+          success(`The CDS assessment of ${response.user_name} has been withdrawn successfully.`);
+          $("a.withdraw-assessment i").css("color", "#ccc");
+          $('a.withdraw-assessment').removeClass('withdraw-assessment');
+        } else {
+          fails("Can't withdraw CDS.");
+        }
+        $('#modal_withdraw').modal('hide');
+      }
+    });
+  });
+
+  $(document).on("click", ".submit-assessment", function () {
+    $('#modal_period').modal('show');
+  });
+  $(document).on("click", "#confirm_submit_cds", function () {
+    if (is_reviewer) {
+      $.ajax({
+        type: "POST",
+        url: "/forms/reviewer_submit",
+        data: {
+          form_id: form_id,
+          user_id: user_to_be_reviewed,
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.status == "success") {
+            warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
+            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            $('a.submit-assessment').removeClass('submit-assessment');
+            $('#modal_period').modal('hide');
+
+          } else {
+            fails("Can't submit CDS.");
+          }
+        }
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        url: "/forms/submit",
+        data: {
+          form_id: form_id,
+          period_id: parseInt($('#modal_period #period_id').val())
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          $('#modal_period').modal('hide');
+          if (response.status == "success") {
+            success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            $('a.submit-assessment').removeClass('submit-assessment');
+            checkStatusFormStaff(status)
+            checkChangeSlot();
+          } else {
+            fails("Can't submit CDS.");
+          }
+        }
+      })
+    }
+  });
   $(document).on("click", ".submit-assessment", function () {
     $('#modal_period').modal('show');
   });
@@ -565,7 +646,7 @@ function autoSave(row) {
     point = ""
   if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
     is_commit = true
-    var slot_id =row.data("slot-id");
+    var slot_id = row.data("slot-id");
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_staff",
