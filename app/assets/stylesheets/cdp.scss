@@ -12,6 +12,7 @@
     color: white;
     border: 1px #0000 solid;
   }
+
   .div-child-slot {
     background-color: #8da8db;
     height: 40px;
@@ -20,9 +21,11 @@
     color: white;
     border: 1px #0000 solid;
   }
-  .row{
+
+  .row {
     padding-left: 10px;
   }
+
   .btn-action {
     margin: 2px;
     padding-right: 5px;
@@ -51,49 +54,61 @@
     padding: 10px;
     padding-top: 20px;
   }
+
   .padding-collapse-children {
     padding-left: 10px;
   }
-    .div-row {
-      padding-bottom: 10px;
-    }
 
-    .div-content {
-      padding-top: 10px;
-      padding-left: 20px;
-    }
-  .table-review{
+  .div-row {
+    padding-bottom: 10px;
+  }
+
+  .div-content {
+    padding-top: 10px;
+    padding-left: 20px;
+  }
+
+  .table-review {
     width: 80%;
     height: 80%;
     border: 1px solid #8da8db;
-    tr,td{
+
+    tr,
+    td {
       border: 1px solid #8da8db;
     }
-    textarea{
+
+    textarea {
       height: 120px;
       width: 100%;
     }
+
     tbody td:nth-child(1) {
       width: 10%;
       text-align: left;
     }
+
     tbody td:nth-child(2) {
       width: 20%;
       text-align: left;
     }
+
     tbody td:nth-child(3) {
       width: 30%;
       text-align: left;
     }
   }
-  .text-comment{
+
+  .text-comment {
     height: 120px;
     width: 200%;
   }
+
   .arrow-box {
     position: relative;
     padding-left: 30px;
     padding-top: 10px;
+
     :after {
       left: 100%;
       top: 50%;
@@ -111,5 +126,11 @@
       border-width: 20px;
       margin-top: -20px;
     }
+  }
+}
+
+.disabled {
+  select[disabled='disabled'] {
+    background: #6c757d;
   }
 }

@@ -22,7 +22,7 @@
       </select>
       <button class="btn">Request Update</button>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
-      <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
+      <%= link_to '<i class="fas fa-file-import" style="color: green" id="icon_submit"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", id: "submit", title: "Submit CDS" %>
     </div>
   </div>
 </div>

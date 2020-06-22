@@ -647,3 +647,11 @@ select:disabled {
         border: 1px solid #42719a;
     }
 }
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    i{
+        color: #6c757d
+    }
+}

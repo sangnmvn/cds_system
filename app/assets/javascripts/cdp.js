@@ -38,19 +38,19 @@ function loadDataSlots(response) {
             <b>Staff Commit (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control" id="staff-commit" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
+            <select class="form-control" data-slot-id="${e.tracking.id}" id="staff-commit" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
               <option value="false" ${checkUncommmit(e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
               <option value="commit_cdp" ${checkDataCDP(e.tracking.point,e.tracking.is_commit)}> Commit CDP</option>
             </select>
           </div>
       </div>
-      <div class="row div-content" style="${checkDataPoint(e.tracking.point)}">
+      <div class="row div-content">
           <div class="col-2">
             <b>Self-Assessment (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control" id="select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
+            <select class="form-control" id="select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)} style="${checkDataPoint(e.tracking.point)}">
               <option value="1" ${check(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
               <option value="2" ${check(e.tracking.point, 2)}> 2 - Needs Improvement</option>
               <option value="3" ${check(e.tracking.point, 3)}> 3 - Meets Expectations</option>
@@ -61,10 +61,10 @@ function loadDataSlots(response) {
       </div>
       <div class="row div-content div-row">
           <div class="col-2">
-            <b class="comment">Staff Comment :</b>
+            <b class="comment">Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
-            <textarea id="command" maxlength="1000" placeholder="<comment content if any>" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
+            <textarea id="command" maxlength="1000" placeholder="comment content if any" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
       if (length > 0) {
@@ -105,7 +105,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea maxlength="1000" id="reviewer_recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" id="reviewer_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
           }
@@ -143,7 +143,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" id="approver-recomment" placeholder="<comment content if any>" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" id="approver-recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -173,6 +173,14 @@ function checkStatusFormStaff(status) {
     case "Done":
       break;
     case "Awaiting Review":
+      var temp = $(document).find(".form-control")
+      for(var i = 0 ; i < temp.length; i++)
+      {
+        temp[i].setAttribute("disabled","true")
+      }
+        
+      $("#submit").addClass("disabled")
+      $("#icon_submit").attr("style","color:gray")
       break;
   }
 }
@@ -186,6 +194,11 @@ function checkDataPoint(x) {
   if (x == "")
     return "display:none"
   return ""
+}
+function checkRequiredComment(x) {
+  if (x == "")
+    return ""
+  return "(*)"
 }
 
 function checkDataCDP(x,y) {
@@ -283,6 +296,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkStatusFormStaff(status);
       }
     });
   });
@@ -304,18 +318,50 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkStatusFormStaff(status);
       }
     });
   });
 
   $(document).on("change", "#staff-commit", function () {
-    if ($(this).val() == "commit_cds") {
-      $(this).parent().parent().next().removeAttr("style")
+    $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
+    var type = ""
+    if ($(this).val() == "commit_cds")
+    {
+      type = "CDS"
+      $(this).parent().parent().next().children()[1].children[0].removeAttribute("style")
       $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
-    } else {
-      $(this).parent().parent().next().attr("style", "display:none")
-      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
     }
+    else if ($(this).val() == "commit_cdp")
+    {
+      type = "CDP"
+      $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
+      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
+    }
+    else
+      {
+        $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
+        $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
+        $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
+        return
+      }
+    var evidence = $(this).parent().parent().nextAll()[1].children[1].children[0]
+    $.ajax({
+      type: "GET",
+      url: "/forms/get_assessment_staff",
+      data: {
+        form_slot_id: $(this).data("slot-id"),
+        type, 
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        console.log(response.evidence)
+        evidence.innerHTML = response.evidence
+      }
+    });
   });
 
   $("#content-slot").on("change", ".search-assessment", function () {
@@ -370,7 +416,6 @@ $(document).ready(function () {
     var point = $(this).find('#select-assessment').val();
     if(is_commit == "commit_cdp")
       point = ""
-    var temp = $(this).find('#description-slot').html().split(" - ")[0];
     if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
       var slot_id = $(this).data("slot-id");
@@ -425,22 +470,6 @@ $(document).ready(function () {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
         success: function (response) {
-          current = $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text().split('/');
-          max = parseInt(current[1]);
-          current_change = 0
-          $('div#content-slot div#row_slot').each(function (i, sel) {
-            level = $(this).children('td:nth-child(1)').text();
-            index = i + 1
-            val = $('div.csd-assessment-table table tbody tr:nth-child(' + index + ') td:nth-child(4) select option:selected').val();
-            if (level.charAt(0) == temp.charAt(0) && val != "")
-              current_change += 1;
-          });
-          if (current_change <= max)
-            current_change = current_change;
-          else
-            current = max;
-          $('div.show table tr:nth-child(' + temp.charAt(0) + ') td:nth-child(3)').text(current_change + '/' + max);
-          $("div.show table tr:nth-child(" + temp.charAt(0) + ")").css('backgroundColor', '#99CCFF')
         }
       });
     }
@@ -771,3 +800,12 @@ function getParams() {
   return data;
 }
 
+function loadAssessment (form_id, slot_id)
+{
+  
+}
+
+function changeSelectType ()
+{
+
+}

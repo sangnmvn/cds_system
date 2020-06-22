@@ -158,6 +158,10 @@ class FormsController < ApplicationController
     }
   end
 
+  def get_assessment_staff
+    render json: @form_service.get_assessment_staff
+  end
+
   def get_cds_assessment
     render json: @form_service.format_data_slots
   end
@@ -333,6 +337,6 @@ class FormsController < ApplicationController
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids)
+                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type)
   end
 end

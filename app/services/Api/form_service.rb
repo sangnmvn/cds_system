@@ -345,19 +345,49 @@ module Api
       form_slots.each { |form_slot| form_slot.update(is_change: false) }
     end
 
+    # def save_cds_staff
+    #   if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
+    #     form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+    #     comment = Comment.where(form_slot_id: form_slot.id)
+    #     is_commit = params[:is_commit] == "true"
+    #     if comment.present?
+    #       comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
+    #       form_slot.update(is_change: true)
+    #     else
+    #       Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
+    #       form_slot.update(is_change: true)
+    #     end
+    #   end
+    # end
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        comment = Comment.where(form_slot_id: form_slot.id)
+        comment = Comment.where(form_slot_id: form_slot.id).order(:created_at)
         is_commit = params[:is_commit] == "true"
-        if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
-          form_slot.update(is_change: true)
+        if comment.count > 1
+          old_comment = comment.last
+          comment.last.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
+          if ((old_comment[:point].present? && params[:point].blank?) || (old_comment[:point].blank? && params[:point].present?))
+            comment.first.update(evidence: old_comment[:evidence], point: old_comment[:point], is_commit: is_commit)
+          end
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
-          form_slot.update(is_change: true)
+        end
+        form_slot.update(is_change: true)
+      end
+    end
+
+    def get_assessment_staff
+      if params[:form_slot_id].present?
+        if params[:type] == "CDS"
+          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
+        elsif params[:type] == "CDP"
+          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+        else
+          return ""
         end
       end
+      ""
     end
 
     def save_add_more_evidence
