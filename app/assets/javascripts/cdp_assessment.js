@@ -187,6 +187,11 @@ function checkDataPoint(x) {
     return "display:none"
   return ""
 }
+function checkRequiredComment(x) {
+  if (x == "")
+    return ""
+  return "(*)"
+}
 
 function checkRequiredComment(x) {
   if (x == "")
