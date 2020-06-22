@@ -78,16 +78,15 @@ function loadDataSlots(response) {
                 <div id="reviewer_${e.id}" class="collapse padding-collapse-children">
                   <div class="row div-content">
                     <table class="table table-review" id="table-reviewer">`
-        for (i = 0; i < length; i++) {
-          if(checkPM(e.tracking.recommends[i].is_pm))
-          {
-            lst_approver.push(e.tracking.recommends[i].user_id)
-            lst_approver.push(e.tracking.recommends[i].given_point)
-            lst_approver.push(e.tracking.recommends[i].name)
-            lst_approver.push(e.tracking.recommends[i].recommends)
-            lst_approver.push(e.tracking.recommends[i].is_commit)
-          }else{
-            temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
+      for (i = 0; i < length; i++) {
+        if (checkPM(e.tracking.recommends[i].is_pm)) {
+          lst_approver.push(e.tracking.recommends[i].user_id)
+          lst_approver.push(e.tracking.recommends[i].given_point)
+          lst_approver.push(e.tracking.recommends[i].name)
+          lst_approver.push(e.tracking.recommends[i].recommends)
+          lst_approver.push(e.tracking.recommends[i].is_commit)
+        } else {
+          temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
                   <select class="form-control select-commit" id="reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
@@ -404,12 +403,11 @@ $(document).ready(function () {
       }
     });
   });
-  
+
   $("#content-slot").on("change", "#row_slot", function () {
     var is_commit = $(this).find('#staff-commit').val();
     var evidence = $(this).find('#command').val();
-    if (evidence.length >= 1000)
-    {
+    if (evidence.length >= 1000) {
       fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
       return;
     }
@@ -419,8 +417,7 @@ $(document).ready(function () {
     if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
       var slot_id = $(this).data("slot-id");
-      if (is_approver)
-      {
+      if (is_approver) {
         url = "/forms/save_cds_assessment_manager";
         point = $(this).find("#approver-assessment").val();
         recommend = $(this).find("#approver-recomment").val();
@@ -432,12 +429,10 @@ $(document).ready(function () {
           recommend: recommend,
           slot_id: slot_id,
           user_id: user_current
-        };        
-      }
-      else if (is_reviewer)
-      {
+        };
+      } else if (is_reviewer) {
         url = "/forms/save_cds_assessment_manager";
-        point = $(this).find("#reviewer-asssessment").val();      
+        point = $(this).find("#reviewer-asssessment").val();
         recommend = $(this).find("#reviewer-recomment").val();
         is_commit = $(this).find("#reviewer-commit").val() == "commit";
         data = {
@@ -447,13 +442,11 @@ $(document).ready(function () {
           recommend: recommend,
           slot_id: slot_id,
           user_id: user_current
-        };        
-      }
-      else
-      {
+        };
+      } else {
         url = "/forms/save_cds_assessment_staff";
         point = "";
-        is_commit = true;      
+        is_commit = true;
         data = {
           form_id: form_id,
           is_commit: is_commit,
@@ -473,30 +466,30 @@ $(document).ready(function () {
         }
       });
     }
-    });
-    $("#content-slot").on("click", "#btn_view_history", function () {
-      $('#modal_history_assessment').modal('show');
-      var slot_id = $(this).data("slot-id");
-      var id = $(this).data("id");
-      id = $(".card").find('.show').attr('id').split("collapse");
-      competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
-      competency_name = $.trim(competency_name);
-      $('#assessment_history_competency_name').text(competency_name);
-      $('#assessment_history_slot_id').text(slot_id);
-      $.ajax({
-        type: "POST",
-        url: "/forms/get_cds_histories",
-        data: {
-          form_slot_id: $(this).data("id")
-        },
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-        },
-        dataType: "json",
-        success: function (response) {
-          temp = '';
-          if (jQuery.isEmptyObject(response)) {
-            temp = `
+  });
+  $("#content-slot").on("click", "#btn_view_history", function () {
+    $('#modal_history_assessment').modal('show');
+    var slot_id = $(this).data("slot-id");
+    var id = $(this).data("id");
+    id = $(".card").find('.show').attr('id').split("collapse");
+    competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
+    competency_name = $.trim(competency_name);
+    $('#assessment_history_competency_name').text(competency_name);
+    $('#assessment_history_slot_id').text(slot_id);
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_cds_histories",
+      data: {
+        form_slot_id: $(this).data("id")
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        temp = '';
+        if (jQuery.isEmptyObject(response)) {
+          temp = `
               <tr>
                   <td colspan="7" style="text-align:center">No data available in table</td>
               </tr>`;
@@ -522,73 +515,68 @@ $(document).ready(function () {
                   <td>${response[i].recommends[x].name}</td>
                   <td>${response[i].recommends[x].reviewed_date}</td>
                 </tr>`;
-            }
-          };
-          $('.table-view-assessment-history tbody').html(temp);
+          }
+        };
+        $('.table-view-assessment-history tbody').html(temp);
+      }
+    });
+  });
+  $(document).on("click", ".submit-assessment", function () {
+    $('#modal_period').modal('show');
+  });
+  $(document).on("click", "#confirm_submit_cds", function () {
+    if (is_reviewer) {
+      $.ajax({
+        type: "POST",
+        url: "/forms/reviewer_submit",
+        data: {
+          form_id: form_id,
+          user_id: user_to_be_reviewed,
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.status == "success") {
+            warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
+            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            $('a.submit-assessment').removeClass('submit-assessment');
+            $('#modal_period').modal('hide');
+
+          } else {
+            fails("Can't submit CDS.");
+          }
         }
       });
-    });
-    $(document).on("click", ".submit-assessment", function () {
-      $('#modal_period').modal('show');
-    });
-    $(document).on("click", "#confirm_submit_cds", function () {
-      if (is_reviewer)
-      {
-        var user_to_be_reviewed = findGetParameter("user_id");
+    } else {
+      $.ajax({
+        type: "POST",
+        url: "/forms/submit",
+        data: {
+          form_id: form_id,
+          period_id: parseInt($('#modal_period #period_id').val())
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          $('#modal_period').modal('hide');
+          if (response.status == "success") {
+            success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            $('a.submit-assessment').removeClass('submit-assessment');
+            checkStatusFormStaff(status)
+            checkChangeSlot();
+          } else {
+            fails("Can't submit CDS.");
+          }
+        }
+      });
+    }
+  });
 
-        $.ajax({
-          type: "POST",
-          url: "/forms/reviewer_submit",
-          data: {
-            form_id: form_id,
-            user_id: user_to_be_reviewed,
-          },
-          headers: {
-            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-          },
-          dataType: "json",
-          success: function (response) {
-            if (response.status == "success") {
-              warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
-              $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-              $('a.submit-assessment').removeClass('submit-assessment');              
-              $('#modal_period').modal('hide');
-            
-            } else {
-              fails("Can't submit CDS.");
-            }
-          }
-        });
-      }
-      else 
-      {
-        $.ajax({
-          type: "POST",
-          url: "/forms/submit",
-          data: {
-            form_id: form_id,
-            period_id: parseInt($('#modal_period #period_id').val())
-          },
-          headers: {
-            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-          },
-          dataType: "json",
-          success: function (response) {
-            $('#modal_period').modal('hide');
-            if (response.status == "success") {
-              success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
-              $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-              $('a.submit-assessment').removeClass('submit-assessment');
-              checkStatusFormStaff(status)
-              checkChangeSlot();
-            } else {
-              fails("Can't submit CDS.");
-            }
-          }
-        });
-      }
-    });
-  
 });
 
 function loadDataPanel(form_id) {
@@ -798,14 +786,4 @@ function getParams() {
   });
   data.filter = filter.join();
   return data;
-}
-
-function loadAssessment (form_id, slot_id)
-{
-  
-}
-
-function changeSelectType ()
-{
-
 }
