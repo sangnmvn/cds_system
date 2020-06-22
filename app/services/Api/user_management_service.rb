@@ -162,7 +162,7 @@ module Api
           h_users["2"] = value
         when 3
           h_users["3"] = value
-        when 3..20
+        when 4..20
           h_users[">3"] = value
         end
       end
