@@ -401,6 +401,69 @@ $(document).ready(function () {
       }
     });
   });
+
+  $("#content-slot").on("change", "#row_slot", function () {
+    var is_commit = $(this).find('#staff-commit').val();
+    var evidence = $(this).find('#command').val();
+    if (evidence.length >= 1000) {
+      fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
+      return;
+    }
+    var point = $(this).find('#select-assessment').val();
+    if(is_commit == "commit_cdp")
+      point = ""
+    if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
+      is_commit = true
+      var slot_id = $(this).data("slot-id");
+      if (is_approver) {
+        url = "/forms/save_cds_assessment_manager";
+        point = $(this).find("#approver-assessment").val();
+        recommend = $(this).find("#approver-recomment").val();
+        is_commit = $(this).find("#approver-commit").val() == "commit";
+        data = {
+          form_id: form_id,
+          is_commit: is_commit,
+          given_point: point,
+          recommend: recommend,
+          slot_id: slot_id,
+          user_id: user_current
+        };
+      } else if (is_reviewer) {
+        url = "/forms/save_cds_assessment_manager";
+        point = $(this).find("#reviewer-asssessment").val();
+        recommend = $(this).find("#reviewer-recomment").val();
+        is_commit = $(this).find("#reviewer-commit").val() == "commit";
+        data = {
+          form_id: form_id,
+          is_commit: is_commit,
+          given_point: point,
+          recommend: recommend,
+          slot_id: slot_id,
+          user_id: user_current
+        };
+      } else {
+        url = "/forms/save_cds_assessment_staff";
+        point = "";
+        is_commit = true;
+        data = {
+          form_id: form_id,
+          is_commit: is_commit,
+          point: point,
+          evidence: evidence,
+          slot_id: slot_id,
+        };
+      }
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        success: function (response) {
+        }
+      });
+    }
   $("#content-slot").on("change", ".comment", function () {
     var row = $(this).closest('.row-slot')
     autoSave(row)
