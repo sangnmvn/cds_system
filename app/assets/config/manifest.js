@@ -43,7 +43,7 @@
 //= link dashboards
 //= link dashboards.css
 //= link form_cds_cdp_review.js
-//= link cdp.js
 //= link cdp_event.js
-//= link cdp.css
+//= link cdp_assessment.js
+//= link cdp_assessment.css
 //= link form_cds_cdp.js

@@ -362,14 +362,14 @@ module Api
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        comment = Comment.where(form_slot_id: form_slot.id).order(:created_at)
+        if params[:point].present?
+          comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
+        else
+          comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
+        end
         is_commit = params[:is_commit] == "true"
-        if comment.count > 1
-          old_comment = comment.last
-          comment.last.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
-          if ((old_comment[:point].present? && params[:point].blank?) || (old_comment[:point].blank? && params[:point].present?))
-            comment.first.update(evidence: old_comment[:evidence], point: old_comment[:point], is_commit: is_commit)
-          end
+        if comment.present?
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now)
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
@@ -754,7 +754,7 @@ module Api
       end
       form_slots.map do |form_slot|
         recommends = get_recommend(form_slot)
-        comments = form_slot.comments.order(created_at: :desc).first
+        comments = form_slot.comments.order(updated_at: :desc).first
         next unless hash[form_slot.slot_id].nil?
 
         hash[form_slot.slot_id] = {

@@ -25,7 +25,7 @@ function loadDataSlots(response) {
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
       </div>
     </div>
-    <div id="content_${e.id}" class="collapse padding-collapse">
+    <div id="content_${e.id}" class="collapse padding-collapse content-staff" data-slot-id="${e.id}">
       <div class="row div-content">
         <div class="col-2">
           <b>Evidence Guideline:</b>
@@ -60,7 +60,7 @@ function loadDataSlots(response) {
       </div>
       <div class="row div-content div-row">
           <div class="col-2">
-            <b class="comment">Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
+            <b>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
             <textarea maxlength="1000" placeholder="comment content if any" class="form-control text-comment comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
@@ -171,7 +171,6 @@ function checkStatusFormStaff(status) {
       for (var i = 0; i < temp.length; i++) {
         temp[i].setAttribute("disabled", "true")
       }
-
       $("#submit").addClass("disabled")
       $("#icon_submit").attr("style", "color:gray")
       break;
@@ -321,7 +320,9 @@ $(document).ready(function () {
   });
 
   $("#content-slot").on("change", ".staff-commit", function () {
-    $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
+    var row = $(this).closest('.content-staff')
+    row.find(".comment").val("")
+    var form_slot_id = $(this).data("slot-id")
     var type = ""
     if ($(this).val() == "commit_cds") {
       type = "CDS"
@@ -334,16 +335,14 @@ $(document).ready(function () {
     } else {
       $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
       $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
-      $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
+      
       return
     }
-    var row = $(this).closest('.row-slot')
-    debugger
     $.ajax({
       type: "GET",
       url: "/forms/get_assessment_staff",
       data: {
-        form_slot_id: $(this).data("slot-id"),
+        form_slot_id,
         type,
       },
       headers: {
@@ -352,7 +351,11 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if(response)
-          row.find(".comment").html(response.evidence)
+        {
+          row.find(".comment").val(response.evidence)
+          row.find('option[value="'+ response.evidence +'"]').prop('selected', true)
+          autoSave(row)
+        }
         else
           autoSave(row)
       }
