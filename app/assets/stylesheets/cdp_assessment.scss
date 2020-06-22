@@ -17,137 +17,137 @@
 
 .cdp-slot-wrapper {
 
-  .btn {
-    color: white;
-  }
-
-  .div-slot {
-    background-color: #4472c4;
-    height: 40px;
-    line-height: 40px;
-    margin: 0px 0px 0px 0px;
-    color: white;
-    border: 1px #0000 solid;
-  }
-
-  .div-child-slot {
-    background-color: #8da8db;
-    height: 40px;
-    line-height: 40px;
-    margin: 0px 0px 0px 0px;
-    color: white;
-    border: 1px #0000 solid;
-  }
-
-  .row {
-    padding-left: 10px;
-  }
-
-  .btn-action {
-    margin: 2px;
-    padding-right: 5px;
-  }
-
-  .icon-green {
-    color: #FFFF00;
-    font-size: 20px;
-  }
-
-  .icon-default {
-    font-size: 25px;
-  }
-
-  .icon-yellow {
-    color: yellow;
-    font-size: 20px;
-  }
-
-  .div-icon {
-    padding: 0px;
-    text-align: left;
-
-    .a {
-      vertical-align: middle;
-    }
-  }
-
-  .padding-collapse {
-    padding: 10px;
-    padding-top: 20px;
-  }
-
-  .padding-collapse-children {
-    padding-left: 10px;
-  }
-
-  .div-row {
-    padding-bottom: 10px;
-  }
-
-  .div-content {
-    padding-top: 10px;
-    padding-left: 20px;
-  }
-
-  .table-review {
-    width: 80%;
-    height: 80%;
-    border: 1px solid #8da8db;
-
-    tr,
-    td {
-      border: 1px solid #8da8db;
+    .btn {
+        color: white;
     }
 
-    textarea {
-      height: 120px;
-      width: 100%;
+    .div-slot {
+        background-color: #4472c4;
+        height: 40px;
+        line-height: 40px;
+        margin: 0px 0px 0px 0px;
+        color: white;
+        border: 1px #0000 solid;
     }
 
-    tbody td:nth-child(1) {
-      width: 10%;
-      text-align: left;
+    .div-child-slot {
+        background-color: #8da8db;
+        height: 40px;
+        line-height: 40px;
+        margin: 0px 0px 0px 0px;
+        color: white;
+        border: 1px #0000 solid;
     }
 
-    tbody td:nth-child(2) {
-      width: 20%;
-      text-align: left;
+    .row {
+        padding-left: 10px;
     }
 
-    tbody td:nth-child(3) {
-      width: 30%;
-      text-align: left;
-    }
-  }
-
-  .text-comment {
-    height: 120px;
-    width: 200%;
-  }
-
-  .arrow-box {
-    position: relative;
-    padding-left: 30px;
-    padding-top: 10px;
-
-    :after {
-      left: 100%;
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
+    .btn-action {
+        margin: 2px;
+        padding-right: 5px;
     }
 
-    :after {
-      border-color: rgba(136, 183, 213, 0);
-      border-left-color: #8da8db;
-      border-width: 20px;
-      margin-top: -20px;
+    .icon-green {
+        color: #FFFF00;
+        font-size: 20px;
     }
-  }
+
+    .icon-default {
+        font-size: 25px;
+    }
+
+    .icon-yellow {
+        color: yellow;
+        font-size: 20px;
+    }
+
+    .div-icon {
+        padding: 0px;
+        text-align: left;
+
+        .a {
+            vertical-align: middle;
+        }
+    }
+
+    .padding-collapse {
+        padding: 10px;
+        padding-top: 20px;
+    }
+
+    .padding-collapse-children {
+        padding-left: 10px;
+    }
+
+    .div-row {
+        padding-bottom: 10px;
+    }
+
+    .div-content {
+        padding-top: 10px;
+        padding-left: 20px;
+    }
+
+    .table-review {
+        width: 80%;
+        height: 80%;
+        border: 1px solid #8da8db;
+
+        tr,
+        td {
+            border: 1px solid #8da8db;
+        }
+
+        textarea {
+            height: 120px;
+            width: 100%;
+        }
+
+        tbody td:nth-child(1) {
+            width: 10%;
+            text-align: left;
+        }
+
+        tbody td:nth-child(2) {
+            width: 20%;
+            text-align: left;
+        }
+
+        tbody td:nth-child(3) {
+            width: 30%;
+            text-align: left;
+        }
+    }
+
+    .text-comment {
+        height: 120px;
+        width: 200%;
+    }
+
+    .arrow-box {
+        position: relative;
+        padding-left: 30px;
+        padding-top: 10px;
+
+        :after {
+            left: 100%;
+            top: 50%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        :after {
+            border-color: rgba(136, 183, 213, 0);
+            border-left-color: #8da8db;
+            border-width: 20px;
+            margin-top: -20px;
+        }
+    }
 }
 
 .disabled {
