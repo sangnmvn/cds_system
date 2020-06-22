@@ -85,13 +85,14 @@ function loadDataSlots(response) {
             lst_approver.push(e.tracking.recommends[i].given_point)
             lst_approver.push(e.tracking.recommends[i].name)
             lst_approver.push(e.tracking.recommends[i].recommends)
+            lst_approver.push(e.tracking.recommends[i].is_commit)
           }else{
             temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
                   <select class="form-control select-commit" id="reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
-                    <option value="uncommit" selected> Un-commit </option>
-                    <option value="commit"> Commit</option>
+                    <option value="uncommit"> Un-commit </option>
+                    <option value="commit" ${checkCommmit(e.tracking.recommends[i].is_commit)}> Commit</option>
                   </select>
                 </td>
                 <td>
@@ -128,8 +129,8 @@ function loadDataSlots(response) {
                     <td>${lst_approver[2]}</td>
                     <td>
                       <select class="form-control select-commit" id="approver-commit" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
-                        <option value="uncommit" selected> Uncommit </option>
-                        <option value="commit"> Commit</option>
+                        <option value="uncommit"> Uncommit </option>
+                        <option value="commit" ${checkCommmit(lst_approver[4])} > Commit</option>
                       </select>
                     </td>
                     <td>
@@ -357,7 +358,7 @@ $(document).ready(function () {
       }
     });
   });
-
+  
   $("#content-slot").on("change", "#row_slot", function () {
     var is_commit = $(this).find('#staff-commit').val();
     var evidence = $(this).find('#command').val();
@@ -373,16 +374,53 @@ $(document).ready(function () {
     if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
       is_commit = true
       var slot_id = $(this).data("slot-id");
-      $.ajax({
-        type: "POST",
-        url: "/forms/save_cds_assessment_staff",
-        data: {
+      if (is_approver)
+      {
+        url = "/forms/save_cds_assessment_manager";
+        point = $(this).find("#approver-assessment").val();
+        recommend = $(this).find("#approver-recomment").val();
+        is_commit = $(this).find("#approver-commit").val() == "commit";
+        data = {
+          form_id: form_id,
+          is_commit: is_commit,
+          given_point: point,
+          recommend: recommend,
+          slot_id: slot_id,
+          user_id: user_current
+        };        
+      }
+      else if (is_reviewer)
+      {
+        url = "/forms/save_cds_assessment_manager";
+        point = $(this).find("#reviewer-asssessment").val();      
+        recommend = $(this).find("#reviewer-recomment").val();
+        is_commit = $(this).find("#reviewer-commit").val() == "commit";
+        data = {
+          form_id: form_id,
+          is_commit: is_commit,
+          given_point: point,
+          recommend: recommend,
+          slot_id: slot_id,
+          user_id: user_current
+        };        
+      }
+      else
+      {
+        url = "/forms/save_cds_assessment_staff";
+        point = "";
+        is_commit = true;      
+        data = {
           form_id: form_id,
           is_commit: is_commit,
           point: point,
           evidence: evidence,
           slot_id: slot_id,
-        },
+        };
+      }
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
@@ -465,31 +503,63 @@ $(document).ready(function () {
       $('#modal_period').modal('show');
     });
     $(document).on("click", "#confirm_submit_cds", function () {
-      $.ajax({
-        type: "POST",
-        url: "/forms/submit",
-        data: {
-          form_id: form_id,
-          period_id: parseInt($('#modal_period #period_id').val())
-        },
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-        },
-        dataType: "json",
-        success: function (response) {
-          $('#modal_period').modal('hide');
-          if (response.status == "success") {
-            success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
-            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-            $('a.submit-assessment').removeClass('submit-assessment');
-            checkStatusFormStaff(status)
-            checkChangeSlot();
-          } else {
-            fails("Can't submit CDS.");
+      if (is_reviewer)
+      {
+        var user_to_be_reviewed = findGetParameter("user_id");
+
+        $.ajax({
+          type: "POST",
+          url: "/forms/reviewer_submit",
+          data: {
+            form_id: form_id,
+            user_id: user_to_be_reviewed,
+          },
+          headers: {
+            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+          },
+          dataType: "json",
+          success: function (response) {
+            if (response.status == "success") {
+              warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
+              $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+              $('a.submit-assessment').removeClass('submit-assessment');              
+              $('#modal_period').modal('hide');
+            
+            } else {
+              fails("Can't submit CDS.");
+            }
           }
-        }
-      });
+        });
+      }
+      else 
+      {
+        $.ajax({
+          type: "POST",
+          url: "/forms/submit",
+          data: {
+            form_id: form_id,
+            period_id: parseInt($('#modal_period #period_id').val())
+          },
+          headers: {
+            "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+          },
+          dataType: "json",
+          success: function (response) {
+            $('#modal_period').modal('hide');
+            if (response.status == "success") {
+              success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+              $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+              $('a.submit-assessment').removeClass('submit-assessment');
+              checkStatusFormStaff(status)
+              checkChangeSlot();
+            } else {
+              fails("Can't submit CDS.");
+            }
+          }
+        });
+      }
     });
+  
 });
 
 function loadDataPanel(form_id) {
@@ -501,6 +571,84 @@ function loadDataPanel(form_id) {
   $.ajax({
     type: "POST",
     url: "/forms/get_competencies/",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: data,
+    dataType: "json",
+    success: function (response) {
+      var temp = '';
+      var i = 0;
+      for (competency in response) {
+        temp += `
+        <div class="card">
+          <div class="card-header">
+            <table class="table table-primary table-responsive-sm table-mytable table${i}">
+              <thead>
+                <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
+                  <td class="col-2">${response[competency].type}</td>
+                  <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
+                  ${competency}
+                  </td>
+                  <td class="col-3">${response[competency].level_point}</td>  
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div id="collapse${i}" class="collapse" data-parent="#accordion" data-competency-id="${response[competency].id}">
+            <div class="card-body">
+              <div class="competency">
+                <table class="table table-primary table-responsive-sm table-mytable table-left-panel">
+                  <tbody>`
+        var l = '';
+        var levels = response[competency].levels
+        for (level in levels) {
+          l += `<tr data-level="${level}" class="d-flex level-competency">
+                    <td class="col-2"></td>
+                    <td class="col-7">Level ${level}</td>
+                    <td class="col-3">${levels[level].current}/${levels[level].total}</td>
+                </tr>`
+        }
+        temp += l
+        temp += ` </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>`
+        i += 1;
+      };
+      $('#competency_panel').html(temp);
+
+      $(".card table thead tr").click(function () {
+        checkChangeSlot();
+        $(".collapse").removeClass("show");
+        $(".card-header table tr").css("background-color", "#bbcbea");
+        id = $(this).data("target");
+        $(id).addClass("show");
+        num = id.split("#collapse");
+        $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
+      });
+
+      $(".level-competency").click(function () {
+        checkChangeSlot();
+        $(".level-competency td").css("color", "black");
+        $(this).find('td').css("color", "#4472c4");
+      });
+      $('#card0').click()
+    }
+  });
+}
+
+function loadDataPanelReviewer(form_id) {
+  data = {}
+  if (form_id)
+    data.form_id = form_id;
+  else if (title_history_id)
+    data.title_history_id = title_history_id;
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_competencies_reviewer/",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
