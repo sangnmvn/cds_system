@@ -15,13 +15,13 @@ function loadDataSlots(response) {
         break
       }
     }
-    temp += `<div class="container-fluid cdp-slot-wrapper" data-slot-id="${e.id}" id="row_slot">
+    temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-slot-id="${e.id}">
     <div class="row">
       <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
-        <b id="description-slot">${e.slot_id} - ${e.desc}</b>
+        <b id="description_slot">${e.slot_id} - ${e.desc}</b>
       </div>
-      <div class="col-1 div-slot" class="div-icon">
+      <div class="col-1 div-slot div-icon">
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
       </div>
     </div>
@@ -37,7 +37,7 @@ function loadDataSlots(response) {
             <b>Staff Commit (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control" data-slot-id="${e.tracking.id}" id="staff-commit" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
+            <select class="form-control staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
               <option value="false" ${checkUncommmit(e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
               <option value="commit_cdp" ${checkDataCDP(e.tracking.point, e.tracking.is_commit)}> Commit CDP</option>
@@ -49,7 +49,7 @@ function loadDataSlots(response) {
             <b>Self-Assessment (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control" id="select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)} style="${checkDataPoint(e.tracking.point)}">
+            <select class="form-control select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)} style="${checkDataPoint(e.tracking.point)}">
               <option value="1" ${check(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
               <option value="2" ${check(e.tracking.point, 2)}> 2 - Needs Improvement</option>
               <option value="3" ${check(e.tracking.point, 3)}> 3 - Meets Expectations</option>
@@ -63,13 +63,13 @@ function loadDataSlots(response) {
             <b class="comment">Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
-            <textarea id="command" maxlength="1000" placeholder="comment content if any" class="form-control text-comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
+            <textarea maxlength="1000" placeholder="comment content if any" class="form-control text-comment comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
     if (length > 0) {
       var lst_approver = []
       temp += `<div class="row div-row arrow-box row-cdp">
-                  <div class="col-3 div-slot" data-toggle="collapse" data-target="#reviewer_${e.id}">
+                  <div class="col-3 div-child-slot" data-toggle="collapse" data-target="#reviewer_${e.id}">
                     <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
                     <b>Reviewer Review</b>
                   </div>
@@ -148,12 +148,10 @@ function loadDataSlots(response) {
           </div>
           </div>
         </div>`
-      }
-      else {
+      } else {
         temp += `</div></div></div>`
       }
-    }
-    else {
+    } else {
       temp += `</div></div></div>`
     }
   })
@@ -161,6 +159,7 @@ function loadDataSlots(response) {
   checkStatusFormStaff(status);
   checkChangeSlot();
 }
+
 function checkStatusFormStaff(status) {
   switch (status) {
     case "New":
@@ -169,16 +168,16 @@ function checkStatusFormStaff(status) {
       break;
     case "Awaiting Review":
       var temp = $(document).find(".form-control")
-      for(var i = 0 ; i < temp.length; i++)
-      {
-        temp[i].setAttribute("disabled","true")
+      for (var i = 0; i < temp.length; i++) {
+        temp[i].setAttribute("disabled", "true")
       }
-        
+
       $("#submit").addClass("disabled")
-      $("#icon_submit").attr("style","color:gray")
+      $("#icon_submit").attr("style", "color:gray")
       break;
   }
 }
+
 function check(x, y) {
   if (x == y)
     return "selected"
@@ -190,6 +189,7 @@ function checkDataPoint(x) {
     return "display:none"
   return ""
 }
+
 function checkRequiredComment(x) {
   if (x == "")
     return ""
@@ -213,10 +213,12 @@ function checkUncommmit(is_commit) {
     return "selected"
   return ""
 }
+
 function checkPM(is_pm) {
   if (is_pm)
     return true
 }
+
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
   if (is_reviewer == false)
     return "disabled"
@@ -318,43 +320,41 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("change", "#staff-commit", function () {
+  $("#content-slot").on("change", ".staff-commit", function () {
     $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
     var type = ""
-    if ($(this).val() == "commit_cds")
-    {
+    if ($(this).val() == "commit_cds") {
       type = "CDS"
       $(this).parent().parent().next().children()[1].children[0].removeAttribute("style")
       $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
-    }
-    else if ($(this).val() == "commit_cdp")
-    {
+    } else if ($(this).val() == "commit_cdp") {
       type = "CDP"
       $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
       $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
+    } else {
+      $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
+      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
+      $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
+      return
     }
-    else
-      {
-        $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
-        $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
-        $(this).parent().parent().nextAll()[1].children[1].children[0].innerHTML = ""
-        return
-      }
-    var evidence = $(this).parent().parent().nextAll()[1].children[1].children[0]
+    var row = $(this).closest('.row-slot')
+    debugger
     $.ajax({
       type: "GET",
       url: "/forms/get_assessment_staff",
       data: {
         form_slot_id: $(this).data("slot-id"),
-        type, 
+        type,
       },
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       dataType: "json",
       success: function (response) {
-        console.log(response.evidence)
-        evidence.innerHTML = response.evidence
+        if(response)
+          row.find(".comment").html(response.evidence)
+        else
+          autoSave(row)
       }
     });
   });
@@ -399,33 +399,13 @@ $(document).ready(function () {
       }
     });
   });
-
-  $("#content-slot").on("change", "#row_slot", function () {
-    var is_commit = $(this).find('#staff-commit').val();
-    var evidence = $(this).find('#command').val();
-    var point = $(this).find('#select-assessment').val();
-    if(is_commit == "commit_cdp")
-      point = ""
-    if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
-      is_commit = true
-      var slot_id = $(this).data("slot-id");
-      $.ajax({
-        type: "POST",
-        url: "/forms/save_cds_assessment_staff",
-        data: {
-          form_id: form_id,
-          is_commit: is_commit,
-          point: point,
-          evidence: evidence,
-          slot_id: slot_id,
-        },
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-        },
-        success: function (response) {
-        }
-      });
-    }
+  $("#content-slot").on("change", ".comment", function () {
+    var row = $(this).closest('.row-slot')
+    autoSave(row)
+  });
+  $("#content-slot").on("change", ".select-assessment", function () {
+    var row = $(this).closest('.row-slot')
+    autoSave(row)
   });
   $("#content-slot").on("click", "#btn_view_history", function () {
     $('#modal_history_assessment').modal('show');
@@ -511,6 +491,33 @@ $(document).ready(function () {
     });
   });
 });
+
+function autoSave(row) {
+  var is_commit = row.find('.staff-commit').val();
+  var evidence = row.find('.comment').val();
+  var point = row.find('.select-assessment').val();
+  if (is_commit == "commit_cdp")
+    point = ""
+  if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
+    is_commit = true
+    var slot_id =row.data("slot-id");
+    $.ajax({
+      type: "POST",
+      url: "/forms/save_cds_assessment_staff",
+      data: {
+        form_id: form_id,
+        is_commit: is_commit,
+        point: point,
+        evidence: evidence,
+        slot_id: slot_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      success: function (response) {}
+    });
+  }
+}
 
 function loadDataPanel(form_id) {
   data = {}
@@ -643,12 +650,10 @@ function getParams() {
   return data;
 }
 
-function loadAssessment (form_id, slot_id)
-{
-  
+function loadAssessment(form_id, slot_id) {
+
 }
 
-function changeSelectType ()
-{
+function changeSelectType() {
 
 }
