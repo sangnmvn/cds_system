@@ -188,6 +188,7 @@ function checkDataPoint(x) {
     return "display:none"
   return ""
 }
+
 function checkRequiredComment(x) {
   if (x == "")
     return ""
@@ -464,6 +465,13 @@ $(document).ready(function () {
         }
       });
     }
+  $("#content-slot").on("change", ".comment", function () {
+    var row = $(this).closest('.row-slot')
+    autoSave(row)
+  });
+  $("#content-slot").on("change", ".select-assessment", function () {
+    var row = $(this).closest('.row-slot')
+    autoSave(row)
   });
   $("#content-slot").on("click", "#btn_view_history", function () {
     $('#modal_history_assessment').modal('show');
@@ -546,7 +554,6 @@ $(document).ready(function () {
         $('#modal_withdraw').modal('hide');
       }
     });
-       
   });
 
   $(document).on("click", ".submit-assessment", function () {
@@ -601,10 +608,37 @@ $(document).ready(function () {
             fails("Can't submit CDS.");
           }
         }
-      });
+      })
     }
   });
-
+  $(document).on("click", ".submit-assessment", function () {
+    $('#modal_period').modal('show');
+  });
+  $(document).on("click", "#confirm_submit_cds", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/submit",
+      data: {
+        form_id: form_id,
+        period_id: parseInt($('#modal_period #period_id').val())
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        $('#modal_period').modal('hide');
+        if (response.status == "success") {
+          success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+          $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+          $('a.submit-assessment').removeClass('submit-assessment');
+          checkStatusFormStaff(status)
+          checkChangeSlot();
+        } else {
+          fails("Can't submit CDS.");
+        }
+      }
+    });
 });
 
 function autoSave(row) {
