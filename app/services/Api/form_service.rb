@@ -446,8 +446,9 @@ module Api
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
 
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
+
         if line_manager.present?
-          line_manager.update(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
+          line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
           # user_id = Form.where(id: form.id).pluck(:user_id)
           # project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
@@ -753,6 +754,14 @@ module Api
       recommends = get_recommend_by_period(line_managers)
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
+      period_id = line_managers.first&.period_id
+      key = Period.find_by_id(period_id).format_name
+      hash[key] = {
+        evidence: comment.evidence || "",
+        point: comment.point || 0,
+        recommends: recommends,
+      }
+
       slot_histories.map do |h|
         hash[h.title_history.period.format_name] = {
           evidence: h.evidence || "",
