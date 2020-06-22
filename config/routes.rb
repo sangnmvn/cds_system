@@ -55,6 +55,7 @@ Rails.application.routes.draw do
       get "index_cds_cdp"
       get "get_assessment_staff"
       get "cds_cdp_review"
+      get "cdp_review"
       get "get_slot_is_change"
       get "review_cds_assessment"
       post "get_cds_assessment"
