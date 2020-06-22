@@ -655,6 +655,15 @@ module Api
       "success"
     end
 
+    def withdraw_cds
+      form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
+      return "fail" if form.nil?
+      # can't withdraw other people's form
+      return "fail" if (current_user.id != form.user_id)
+      return "fail" unless form.update(status: "New")
+      "success"
+    end
+
     def reject_cds
       form = Form.where(id: params[:form_id], status: "Done").where.not(period: nil).first
       return "fail" if form.nil?

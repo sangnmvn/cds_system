@@ -517,6 +517,36 @@ $(document).ready(function () {
       }
     });
   });
+
+  $(document).on("click", ".withdraw-assessment", function () {
+    $('#modal_withdraw').modal('show');
+  });
+
+  $(document).on("click", "#confirm_withdraw_cds", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/withdraw_cds",
+      data: {
+        form_id: form_id,          
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "success") {
+          success(`The CDS assessment of ${response.user_name} has been withdrawn successfully.`);
+          $("a.withdraw-assessment i").css("color", "#ccc");
+          $('a.withdraw-assessment').removeClass('withdraw-assessment');          
+        } else {
+          fails("Can't withdraw CDS.");
+        }
+        $('#modal_withdraw').modal('hide');
+      }
+    });
+       
+  });
+
   $(document).on("click", ".submit-assessment", function () {
     $('#modal_period').modal('show');
   });

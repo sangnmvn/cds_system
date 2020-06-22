@@ -22,7 +22,11 @@
       </select>
       <button class="btn">Request Update</button>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
-      <%= link_to '<i class="fas fa-file-import" style="color: green" id="icon_submit"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", id: "submit", title: "Submit CDS" %>
+      <% if @hash[:status] == "Awaiting Review" %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS" %>
+      <% else %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
+      <% end %>
     </div>
   </div>
 </div>
@@ -35,6 +39,7 @@
     </div>
   </div>
 </div>
+<div><%= render 'modal_withdraw' %></div>
 <div><%= render "modal_history" %></div>
 <div><%= render "modal_period" %></div>
 <div><%= render "modal_approve_cds" %></div>

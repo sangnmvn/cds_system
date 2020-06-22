@@ -463,7 +463,7 @@ function checkStatusFormReview(status) {
     if (status == "Done") {
       $('a.reject-assessment i').css("color", "blue");
       $('a.approval-assessment i').css("color", "#ccc");
-      $('a.approval-assessment').removeClass('approval-assessment');
+      $('a.approval-assessment').removeClass('approval-assessment');      
     } else {
       $('a.reject-assessment i').css("color", "#ccc");
       $('a.approval-assessment i').css("color", "blue");

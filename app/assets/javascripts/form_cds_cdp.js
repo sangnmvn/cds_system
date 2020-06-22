@@ -13,7 +13,7 @@ function LoadDataAssessmentList() {
         temp = `<tr><td colspan="8" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
-        link = `/forms/cdp_assessment`;
+        link = `/forms/cdp_assessment?form_id=` + form.id;
         if (form.status == "Done")
           link = `/forms/cdp_assessment?title_history_id=${form.id}`;
         link_view = link;

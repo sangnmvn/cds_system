@@ -91,7 +91,6 @@ class FormsController < ApplicationController
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
       {
-
         id: schedule.period_id,
         name: schedule.period.format_name,
       }
@@ -274,7 +273,13 @@ class FormsController < ApplicationController
 
   def reject_cds
     status = @form_service.reject_cds
-    render json: { status: status }
+    render json: { status: status, user_name: user_name }
+  end
+
+  def withdraw_cds
+    user_name = current_user.format_name
+    status = @form_service.withdraw_cds
+    render json: { status: status, user_name: user_name }
   end
 
   def get_cds_histories

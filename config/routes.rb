@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       post "get_data_slot"
       get "get_filter"
       post "reviewer_submit"
+      post "withdraw_cds"
     end
   end
   resources :templates do
