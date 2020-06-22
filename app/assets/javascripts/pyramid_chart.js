@@ -15,6 +15,10 @@ function drawPyramidChart(data, id, text_y, name) {
   // var totalPopulation = d3.sum(data, function (d) { return d.males + d.females; }),
   var percentage = function (d) { return d };
 
+  var color = d3.scaleOrdinal()
+  .domain(data.map(function (d) { return d.group; }))
+  .range(d3.schemeDark2);
+
   // CREATE SVG
   var svg = d3.select(id).append('svg')
     .attr('width', margin.left + width + margin.right)
@@ -46,7 +50,7 @@ function drawPyramidChart(data, id, text_y, name) {
     .range([0, regionWidth]);
 
   var yScale = d3.scaleBand()
-    .domain(data.map(function (d) { return d.group + ""; }))
+    .domain(data.map(function (d) { return d.group; }))
     .rangeRound([height, 0])
     .padding(0.03);;
 
@@ -131,7 +135,7 @@ function drawPyramidChart(data, id, text_y, name) {
     .attr('height', yScale.bandwidth())
     .attr("text-anchor", "left")
     .text(function(d) { return d.males; })
-    .attr("fill", "steelblue");
+    .attr('fill', function (d) { return (color(d.group)) })
 
   rightBarGroup.selectAll('.bar.right')
     .data(data)
@@ -141,7 +145,7 @@ function drawPyramidChart(data, id, text_y, name) {
     .attr('y', function (d) { return yScale(d.group); })
     .attr('width', function (d) { return xScale(percentage(d.females)); })
     .attr('height', yScale.bandwidth())
-    .attr("fill", "tomato");
+    .attr('fill', function (d) { return (color(d.group)) })
 
   // so sick of string concatenation for translations
   function translation(x, y) {
