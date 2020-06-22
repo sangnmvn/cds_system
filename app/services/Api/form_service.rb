@@ -380,19 +380,19 @@ module Api
         end
         form_slot.update(is_change: true)
       end
-      ""
     end
 
     def get_assessment_staff
-      comment = ""
       if params[:form_slot_id].present?
         if params[:type] == "CDS"
-          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
+          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+        else
+          return ""
         end
       end
-      comment
+      ""
     end
 
     def save_add_more_evidence
