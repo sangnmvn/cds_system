@@ -105,14 +105,8 @@ module Api
     end
 
     def data_users_by_seniority(gender = false)
-      users = User.where(filter_users).where(gender: gender).group("(YEAR(NOW() - users.joined_date) - 2000)").count
-      h_users = {
-        "<3" => 0,
-        "3-5" => 0,
-        "5-7" => 0,
-        "7-10" => 0,
-        ">10" => 0,
-      }
+      users = User.where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
+      h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
       users.each do |key, value|
         case key
         when nil
@@ -134,47 +128,56 @@ module Api
     end
 
     def calulate_data_user_by_seniority
-      males = data_users_by_seniority(true)
-      females = data_users_by_seniority
-      total = males.values.sum + females.values.sum
-      { males: males, females: females, total: total }
+      h_males = data_users_by_seniority(true)
+      h_females = data_users_by_seniority
+      list = ["<3", "3-5", "5-7", "7-10", ">10"]
+      data = list.map do |i|
+        { group: i, males: h_males[i], females: h_females[i] }
+      end
+      total = h_males.values.sum + h_females.values.sum
+      { data: data, total: total }
     end
 
-    def data_users_by_rank(gender = false)
+    def data_users_by_title(gender = false)
       users = User.left_outer_joins(:project_members, :title).where(filter_users).where(gender: gender).where.not(role_id: 6).group("titles.rank").count
 
-      if params[:role_id].length == 1
-        count_title = Title.where(role_id: params[:role_id]).count
+      if params[:role_id] && params[:role_id].length == 1
         h_users = {}
+        count_title = Title.where(role_id: params[:role_id]).count
         count_title.times do |i|
-          h_users[i] = 0
+          h_users[i + 1] = 0
         end
+
         users.each do |key, value|
           h_users[key] = value
         end
         return h_users
       end
-
+      h_users = { "1" => 0, "2" => 0, "3" => 0, ">3" => 0 }
       users.each do |key, value|
         case key
         when 1
-          h_users[1] += value
+          h_users["1"] = value
         when 2
-          h_users[2] += value
+          h_users["2"] = value
         when 3
-          h_users[3] += value
-        else
-          h_users[">3"] += value
+          h_users["3"] = value
+        when 3..20
+          h_users[">3"] = value
         end
       end
       h_users
     end
 
-    def calulate_data_user_by_rank
-      males = data_users_by_rank(true)
-      females = data_users_by_rank
-      total = males.values.sum + females.values.sum
-      { male: males, females: females, total: total }
+    def calulate_data_user_by_title
+      h_males = data_users_by_title(true)
+      h_females = data_users_by_title
+      list = (h_males.keys + h_females.keys).uniq
+      data = list.map do |i|
+        { group: i, males: h_males[i], females: h_females[i] }
+      end
+      total = h_males.values.sum + h_females.values.sum
+      { data: data, total: total }
     end
 
     def data_user_up_title

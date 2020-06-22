@@ -28,8 +28,8 @@ class DashboardsController < ApplicationController
     render json: data
   end
 
-  def calulate_data_user_by_rank
-    data = @user_management_serviece.calulate_data_user_by_rank
+  def calulate_data_user_by_title
+    data = @user_management_serviece.calulate_data_user_by_title
     render json: data
   end
 
