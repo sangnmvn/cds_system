@@ -26,8 +26,8 @@
         <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approval'.html_safe, "javascript:void(0)", class: "approval-assessment", title: "Approve CDS" %>
         <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)", class: "reject-assessment", title: "Reject CDS" %>
       <% elsif @is_reviewer %>
-        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
         <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
       <% end %>
     </div>
   </div>
@@ -54,5 +54,6 @@
   var is_reviewer = <%= @is_reviewer || @is_approver %>;
   var is_approver = <%= @is_approver %>;
   var user_current = <%= current_user.id %>;
+  var user_to_be_reviewed = <%= @hash[:user_id] %>;
   loadDataPanelReviewer(form_id);
 </script>
