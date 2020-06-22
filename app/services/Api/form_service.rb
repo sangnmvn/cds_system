@@ -834,7 +834,6 @@ module Api
           comment_type = comments.point.nil? ? "CDP" : "CDS"
         end
         recommends = get_recommend(form_slot)
-
         next unless hash[form_slot.slot_id].nil?
 
         hash[form_slot.slot_id] = {
