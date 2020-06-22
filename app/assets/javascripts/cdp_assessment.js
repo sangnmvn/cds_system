@@ -667,6 +667,33 @@ function autoSaveStaff(row) {
   }
 }
 
+function autoSave(row) {
+  var is_commit = row.find('.staff-commit').val();
+  var evidence = row.find('.comment').val();
+  var point = row.find('.select-assessment').val();
+  if (is_commit == "commit_cdp")
+    point = ""
+  if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "")) {
+    is_commit = true
+    var slot_id =row.data("slot-id");
+    $.ajax({
+      type: "POST",
+      url: "/forms/save_cds_assessment_staff",
+      data: {
+        form_id: form_id,
+        is_commit: is_commit,
+        point: point,
+        evidence: evidence,
+        slot_id: slot_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      success: function (response) {}
+    });
+  }
+}
+
 function loadDataPanel(form_id) {
   data = {}
   if (form_id)
