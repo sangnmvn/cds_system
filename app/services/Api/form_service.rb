@@ -380,6 +380,7 @@ module Api
         end
         form_slot.update(is_change: true)
       end
+      ""
     end
 
     def get_assessment_staff
