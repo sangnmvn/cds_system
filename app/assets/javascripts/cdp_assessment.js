@@ -2,17 +2,19 @@ function loadDataSlots(response) {
   var temp = "";
   $(response).each(function (i, e) {
     length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
-    flag = ""
-    class_flag = "flag-red"
+    flag = "yellow"
+    class_flag = "flag-yellow"
+    title_flag = ""
     for (i in e.tracking.recommends) {
-      if (e.tracking.recommends[i].flag == "yellow") {
-        flag = "yellow";
-        class_flag = "flag-yellow";
+      if (e.tracking.recommends[i].flag == "red") {
+        flag = "red";
+        class_flag = "flag-red";
+        title_flag = "Need to update"
         break
       } else if (e.tracking.recommends[i].flag == "green") {
         flag = "green";
         class_flag = "flag-green";
-        break
+        title_flag = "Updated Evidence"
       }
     }
     temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
@@ -23,6 +25,7 @@ function loadDataSlots(response) {
       </div>
       <div class="col-1 div-slot div-icon">
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
+        <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default"></i></a>
       </div>
     </div>
     <div id="content_${e.id}" class="collapse padding-collapse content-staff" data-slot-id="${e.id}">
@@ -189,6 +192,12 @@ function checkDataPoint(x) {
   return ""
 }
 
+function checkFlag(x) {
+  if (x == "yellow")
+    return "display:none"
+  return ""
+}
+
 function checkRequiredComment(x) {
   if (x == "")
     return ""
@@ -281,7 +290,7 @@ $(document).ready(function () {
     if (form_id)
       data.form_id = form_id;
     else if (title_history_id)
-      data.title_history_id = title_history_id;
+      data.title_history_id = title_history_id;history
     $.ajax({
       type: "POST",
       url: "/forms/get_cds_assessment",
@@ -458,9 +467,9 @@ $(document).ready(function () {
 
   $("#content-slot").on("click", "#btn_view_history", function () {
     $('#modal_history_assessment').modal('show');
-    var slot_id = $(this).data("slot-id");
-    var id = $(this).data("form-slot-id");
-    id = $(".card").find('.show').attr('id').split("collapse");
+    var row = $(this).closest(".row-slot")
+    var slot_id = row.data("slot-id");
+    var id = $(".card").find('.show').attr('id').split("collapse");
     competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
     competency_name = $.trim(competency_name);
     $('#assessment_history_competency_name').text(competency_name);
@@ -469,7 +478,7 @@ $(document).ready(function () {
       type: "POST",
       url: "/forms/get_cds_histories",
       data: {
-        form_slot_id: $(this).data("id")
+        form_slot_id: row.data("form-slot-id")
       },
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
@@ -489,9 +498,11 @@ $(document).ready(function () {
           temp += `
               <tr>
                 <td rowspan="${length}">${i}</td>
+                <td rowspan="${length}">${response[i].commit}</td>
                 <td rowspan="${length}">${getValueStringPoint(response[i].point)}</td>
                 <td rowspan="${length}">${response[i].evidence}</td>
                 <td>${response[i].recommends[0].recommends}</td>
+                <td>${response[i].commit}</td>
                 <td>${getValueStringPoint(response[i].recommends[0].given_point)}</td>
                 <td>${response[i].recommends[0].name}</td>
                 <td>${response[i].recommends[0].reviewed_date}</td>
@@ -500,6 +511,7 @@ $(document).ready(function () {
             temp += `
                 <tr>
                   <td>${response[i].recommends[x].recommends}</td>
+                  <td>${response[i].commit}</td>
                   <td>${getValueStringPoint(response[i].recommends[x].given_point)}</td>
                   <td>${response[i].recommends[x].name}</td>
                   <td>${response[i].recommends[x].reviewed_date}</td>
@@ -594,6 +606,23 @@ $(document).ready(function () {
     $('#modal_period').modal('show');
   });
 })
+
+function getValueStringPoint(point) {
+  switch (point) {
+    case 1:
+      return "1 - Does Not Meet Minimun Standards";
+    case 2:
+      return "2 - Needs Improvement";
+    case 3:
+      return "3 - Meets Expectations";
+    case 4:
+      return "4 - Exceeds Expectations";
+    case 5:
+      return "5 - Outstanding";
+    default:
+      return ""
+  }
+}
 
 function autoSaveStaff(row) {
   var is_commit = row.find('.staff-commit').val();

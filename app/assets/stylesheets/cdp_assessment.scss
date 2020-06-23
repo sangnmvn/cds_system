@@ -35,7 +35,9 @@
     color: #FFFF00;
     font-size: 20px;
   }
-
+  .icon-default{
+    font-size: 25px;
+  }
   .icon-yellow {
     color: yellow;
     font-size: 20px;
@@ -133,4 +135,7 @@
   select[disabled='disabled'] {
     background: #6c757d;
   }
+}
+.div-header{
+  font-size: larger;
 }

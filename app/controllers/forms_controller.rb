@@ -87,6 +87,12 @@ class FormsController < ApplicationController
 
   def cdp_assessment
     params = form_params
+    user = Form.includes(:user).find(params[:form_id])
+    @user = {
+      first_name: user.user.first_name,
+      last_name: user.user.last_name,
+      role_name: user.user.role.name,
+    }
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
     @period = schedules.map do |schedule|
