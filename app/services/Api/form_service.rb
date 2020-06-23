@@ -758,6 +758,7 @@ module Api
       period_id = line_managers.first&.period_id
       key = Period.find_by_id(period_id).format_name
       hash[key] = {
+        commit: comment.point ? "Commit CDS" : "Commit CDP",
         evidence: comment.evidence || "",
         point: comment.point || 0,
         recommends: recommends,
