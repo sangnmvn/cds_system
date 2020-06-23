@@ -289,6 +289,7 @@ module Api
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
       arr = []
+
       slots.each do |slot|
         hash[slot.level] = 0 if hash[slot.level].nil?
         s = slot_to_hash(slot, hash[slot.level], form_slots)
@@ -296,9 +297,13 @@ module Api
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:failed] && s[:tracking][:recommends].present? && !s[:tracking][:is_passed]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:no_assessment] && s[:tracking][:point].zero?
+        elsif filter_slots[:no_assessment] && s[:tracking][:point].zero? && !s[:tracking][:is_commit]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:need_to_update] && s[:tracking][:flag] == "yellow"
+        elsif filter_slots[:cdp_assessment] && s[:tracking][:point].zero? && s[:tracking][:is_commit]
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        elsif filter_slots[:cds_assessment] && !s[:tracking][:point].zero?
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        elsif filter_slots[:need_to_update] && s[:tracking][:flag]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:assessing] && !s[:tracking][:point].zero? && s[:tracking][:recommends].empty?
           arr << slot_to_hash(slot, hash[slot.level], form_slots)

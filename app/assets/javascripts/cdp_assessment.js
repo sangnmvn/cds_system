@@ -50,17 +50,17 @@ function loadDataSlots(response) {
           </div>
           <div class="col-3">
             <select class="form-control select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)} style="${checkDataPoint(e.tracking.point)}">
-              <option value="1" ${check(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
-              <option value="2" ${check(e.tracking.point, 2)}> 2 - Needs Improvement</option>
-              <option value="3" ${check(e.tracking.point, 3)}> 3 - Meets Expectations</option>
-              <option value="4" ${check(e.tracking.point, 4)}> 4 - Exceeds Expectations</option>
-              <option value="5" ${check(e.tracking.point, 5)}> 5 - Outstanding</option>
+              <option value="1" ${compare(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
+              <option value="2" ${compare(e.tracking.point, 2)}> 2 - Needs Improvement</option>
+              <option value="3" ${compare(e.tracking.point, 3)}> 3 - Meets Expectations</option>
+              <option value="4" ${compare(e.tracking.point, 4)}> 4 - Exceeds Expectations</option>
+              <option value="5" ${compare(e.tracking.point, 5)}> 5 - Outstanding</option>
             </select>
           </div>
       </div>
       <div class="row div-content div-row">
           <div class="col-2">
-            <b>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
+            <b class='title-comment'>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
             <textarea maxlength="1000" placeholder="comment content if any" class="form-control text-comment comment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>${e.tracking.evidence}</textarea>
@@ -78,7 +78,7 @@ function loadDataSlots(response) {
                   <div class="row div-content">
                     <table class="table table-review" id="table-reviewer">`
       for (i = 0; i < length; i++) {
-        if (checkPM(e.tracking.recommends[i].is_pm)) {
+        if (e.tracking.recommends[i].is_pm) {
           lst_approver.push(e.tracking.recommends[i].user_id)
           lst_approver.push(e.tracking.recommends[i].given_point)
           lst_approver.push(e.tracking.recommends[i].name)
@@ -95,11 +95,11 @@ function loadDataSlots(response) {
                 </td>
                 <td>
                   <select class="form-control select-commit" id="reviewer-asssessment" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
-                    <option value="1" ${check(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
-                    <option value="2" ${check(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
-                    <option value="3" ${check(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
-                    <option value="4" ${check(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
-                    <option value="5" ${check(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
+                    <option value="1" ${compare(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
+                    <option value="2" ${compare(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
+                    <option value="3" ${compare(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
+                    <option value="4" ${compare(e.tracking.recommends[i].given_point, 4)}>4 - Exceeds Expectations</option>
+                    <option value="5" ${compare(e.tracking.recommends[i].given_point, 5)}>5 - Outstanding</option>
                   </select>
                 </td>
                 <td>
@@ -132,11 +132,11 @@ function loadDataSlots(response) {
                     </td>
                     <td>
                       <select class="form-control select-commit" id="approver-assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
-                        <option value="1" ${check(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
-                        <option value="2" ${check(lst_approver[1], 2)}>2 - Needs Improvement</option>
-                        <option value="3" ${check(lst_approver[1], 3)}>3 - Meets Expectations</option>
-                        <option value="4" ${check(lst_approver[1], 4)}>4 - Exceeds Expectations</option>
-                        <option value="5" ${check(lst_approver[1], 5)}>5 - Outstanding</option>
+                        <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
+                        <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
+                        <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
+                        <option value="4" ${compare(lst_approver[1], 4)}>4 - Exceeds Expectations</option>
+                        <option value="5" ${compare(lst_approver[1], 5)}>5 - Outstanding</option>
                       </select>
                     </td>
                     <td>
@@ -177,7 +177,7 @@ function checkStatusFormStaff(status) {
   }
 }
 
-function check(x, y) {
+function compare(x, y) {
   if (x == y)
     return "selected"
   return ""
@@ -211,11 +211,6 @@ function checkUncommmit(is_commit) {
   if (!is_commit)
     return "selected"
   return ""
-}
-
-function checkPM(is_pm) {
-  if (is_pm)
-    return true
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
@@ -326,16 +321,15 @@ $(document).ready(function () {
     var type = ""
     if ($(this).val() == "commit_cds") {
       type = "CDS"
-      $(this).parent().parent().next().children()[1].children[0].removeAttribute("style")
-      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
+      row.find('.select-assessment').attr("style","display:block")
+      row.find('.title-comment').html("Staff Comment (*):")
     } else if ($(this).val() == "commit_cdp") {
       type = "CDP"
-      $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
-      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment (*):"
+      row.find('.select-assessment').attr("style","display:none")
+      row.find('.title-comment').html("Staff Comment :")
     } else {
-      $(this).parent().parent().next().children()[1].children[0].setAttribute("style", "display:none")
-      $(this).parent().parent().nextAll()[1].children[0].children[0].innerHTML = "Staff Comment :"
-      
+      row.find('.select-assessment').attr("style","display:none")
+      row.find('.title-comment').html("Staff Comment :")
       return
     }
     $.ajax({
@@ -362,7 +356,7 @@ $(document).ready(function () {
     });
   });
 
-  $("#content-slot").on("change", ".search-assessment", function () {
+  $(document).on("change", ".search-assessment", function () {
     var data = getParams();
     if (form_id)
       data.form_id = form_id;
@@ -382,7 +376,7 @@ $(document).ready(function () {
     });
   });
 
-  $("#content-slot").on("change", "#filter-form-slots", function () {
+  $(document).on("change", "#filter-form-slots", function () {
     var data = getParams();
     if (form_id)
       data.form_id = form_id;
