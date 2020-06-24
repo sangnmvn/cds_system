@@ -1,3 +1,17 @@
+function ToggleInput(enable)
+{
+  if (enable)
+  {
+    $(".reviewer-self").removeAttr("disabled");
+    $(".approver-self").removeAttr("disabled");
+  }
+  else
+  {
+    $(".reviewer-self").attr("disabled", '');
+    $(".approver-self").attr("disabled", '');
+  }
+  
+}
 function loadDataSlots(response) {
   var temp = "";
   $(response).each(function (i, e) {
@@ -95,14 +109,14 @@ function loadDataSlots(response) {
           temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} tr-reviewer">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
-                  <select class="form-control select-commit reviewer_commit"  ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                  <select class="form-control select-commit reviewer-commit" disabled>
                     <option value="uncommit"> Un-commit </option>
                     <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
                     <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
                   </select>
                 </td>
                 <td>
-                  <select class="form-control select-commit" id="reviewer_asssessment" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                  <select class="form-control select-commit reviewer-assessment ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"} " ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
                     <option disabled selected> select one </option>
                     <option value="1" ${compare(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
                     <option value="2" ${compare(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
@@ -112,7 +126,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea maxlength="1000" class="reviewer_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" class="reviewer-recommend form-control ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == 'disabled' ? '' : 'reviewer-self'}" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
         }
@@ -134,14 +148,14 @@ function loadDataSlots(response) {
                   <tr class="${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}">
                     <td>${lst_approver[2]}</td>
                     <td>
-                      <select class="form-control select-commit approver_commit"${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                      <select class="form-control select-commit approver-commit" disabled>
                         <option value="uncommit"> Uncommit </option>
                         <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
                         <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
                       </select>
                     </td>
                     <td>
-                      <select class="form-control select-commit approver_assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                      <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" disabled>
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -150,7 +164,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" class="approver_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" class="approver-recommend form-control ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -173,6 +187,10 @@ function loadDataSlots(response) {
 function checkStatusFormStaff(status) {
   switch (status) {
     case "New":
+      var temp = $(document).find(".input-staff")
+      for (var i = 0; i < temp.length; i++) {
+        temp[i].removeAttribute("disabled")
+      }
       break;
     case "Done":
       break;
@@ -409,13 +427,13 @@ $(document).ready(function () {
     var url = "";
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find(".approver_assessment").val();
-      recommend = $(this).find(".approver_recomment").val();
-      is_commit = $(this).find(".approver_commit").val();
+      point = $(this).find(".approver-assessment").val();
+      recommend = $(this).find(".approver-recomment").val();
+      is_commit = $(this).find(".approver-commit").val();
       if (is_commit == "commit_cdp") {
-        $(this).find(".approver_asssessment").addClass("d-none");
+        $(this).find(".approver-asssessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        $(this).find(".approver_asssessment").removeClass("d-none");
+        $(this).find(".approver-asssessment").removeClass("d-none");
       }
       if (is_commit == "uncommit") {
         return;
@@ -436,13 +454,13 @@ $(document).ready(function () {
       };
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find(".reviewer_asssessment").val();
-      recommend = $(this).find(".reviewer_recomment").val();
-      is_commit = $(this).find(".reviewer_commit").val();
+      point = $(this).find(".reviewer-assessment").val();
+      recommend = $(this).find(".reviewer-recommend").val();
+      is_commit = $(this).find(".reviewer-commit").val();
       if (is_commit == "commit_cdp") {
-        $(this).find(".reviewer_asssessment").addClass("d-none");
+        $(this).find(".reviewer-asssessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        $(this).find(".reviewer_asssessment").removeClass("d-none");
+        $(this).find(".reviewer-asssessment").removeClass("d-none");
       }
       if (is_commit == "uncommit") {
         return;
@@ -560,14 +578,14 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success") {
-          success(`The CDS assessment of ${response.user_name} has been withdrawn successfully.`);
+          success(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
           $('a.withdraw-assessment').addClass('d-none');
           $('a.withdraw-assessment').addClass('disabled');
           $('a.submit-assessment').removeClass('d-none');
           $('a.submit-assessment').removeClass('disabled');
-          //checkStatusFormStaff(status)
+          checkStatusFormStaff("New")
         } else {
-          fails("Can't withdraw CDS.");
+          fails("Can't withdraw CDS/CDP.");
         }
         $('#modal_withdraw').modal('hide');
       }
@@ -589,13 +607,14 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
+            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             // NOT
             $('a.submit-assessment').removeClass('submit-assessment');
-            $('#modal_period').modal('hide');
+            $('#modal_period').modal('hide'); 
+            ToggleInput(false);                       
           } else {
-            fails("Can't submit CDS.");
+            fails("Can't submit CDS/CDP.");
           }
         }
       });
@@ -614,13 +633,15 @@ $(document).ready(function () {
         success: function (response) {
           $('#modal_period').modal('hide');
           if (response.status == "success") {
+            // staff submit
             success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
-            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-            $('a.submit-assessment').removeClass('submit-assessment');
+            $('a.submit-assessment').addClass('d-none');
+            $('a.submit-assessment').addClass('disabled');
+            $('a.withdraw-assessment').removeClass('d-none');
+            $('a.withdraw-assessment').removeClass('disabled');
             checkStatusFormStaff("Awaiting Review")
-            $("#status").html("(Awaiting Review)")
           } else {
-            fails("Can't submit CDS.");
+            fails("Can't submit CDS/CDP.");
           }
         }
       })

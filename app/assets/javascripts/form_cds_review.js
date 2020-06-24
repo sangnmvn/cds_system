@@ -34,7 +34,7 @@ function loadDataAssessment(data_filter) {
             <td class="type-text">{review_date}</td>
             <td class="type-text">{status}</td> 
             <td class="type-icon"> 
-              <a data-id='{id}' href='/forms/cdp_review?form_id={id}&user_id={user_id}'>
+              <a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>
                 <i class='fa fa-pencil icon' style='color:#fc9803'></i>
               </a>
               &nbsp;

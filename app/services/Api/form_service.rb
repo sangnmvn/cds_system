@@ -446,9 +446,8 @@ module Api
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
 
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
-
         if line_manager.present?
-          line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
+          line_manager.update(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
           # user_id = Form.where(id: form.id).pluck(:user_id)
           # project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
@@ -464,7 +463,7 @@ module Api
           #     LineManager.create!(recommend: "", user_id: line.approver.id, form_slot_id: form_slot.id, period_id: period_id)
           #   end
           # end
-          LineManager.create!(recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
+          LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
         end
       end
     end

@@ -97,12 +97,12 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
       if (response.status == "success") {
         loadDataAssessmentList();
         success(
-          "The CDS for period " +
+          "The CDS/CDP for period " +
           delete_period_cds +
           " has been deleted successfully."
         );
       } else {
-        fails("Can't delete CDS for period " + delete_period_cds + " .");
+        fails("Can't delete CDS/CDP for period " + delete_period_cds + " .");
       }
     },
   });

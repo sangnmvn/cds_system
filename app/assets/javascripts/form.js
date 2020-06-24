@@ -632,13 +632,13 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+        success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
         checkStatusFormStaff(status)
         checkChangeSlot();
       } else {
-        fails("Can't submit CDS.");
+        fails("Can't submit CDS/CDP.");
       }
     }
   });
