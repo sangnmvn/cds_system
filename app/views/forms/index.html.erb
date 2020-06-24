@@ -1,16 +1,16 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'form_cds_cdp', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'cdp_assessment', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'form_assessment_list', 'data-turbolinks-track': 'reload' %>
 <div class="container-fluid">
   <div class="row" id="cdp_container_div2">
     <div class="col-10" style="font-size: 150%;">
-      CDS & CDP Assessment List
+      CDS Assessment List
     </div>
     <div class="col-2 button-add-cds-assessment" style="text-align: right">
       <% if @check_6_month %>
-        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cdp_assessment_forms_path %>
+        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cds_assessment_forms_path %>
       <% else %>
-        <button title="Can not add CDS & CDP"><i style="color: #ccc" class="fa fa-plus"></i> Add</button>
+        <button title="Can not add CDS"><i style="color: #ccc" class="fa fa-plus"></i> Add</button>
       <% end %>
     </div>
     <div class="col-12" style="padding: 0px">
