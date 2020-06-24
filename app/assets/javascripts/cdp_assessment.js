@@ -180,8 +180,8 @@ function checkStatusFormStaff(status) {
       for (var i = 0; i < temp.length; i++) {
         temp[i].setAttribute("disabled", "true")
       }
-      $("#submit").addClass("disabled")
-      $("#icon_submit").attr("style", "color:gray")
+      //$("#submit").addClass("disabled")
+      //$("#icon_submit").attr("style", "color:gray")
       break;
   }
 }
@@ -526,9 +526,11 @@ $(document).ready(function () {
       success: function (response) {
         if (response.status == "success") {
           success(`The CDS assessment of ${response.user_name} has been withdrawn successfully.`);
-          $("a.withdraw-assessment i").css("color", "#ccc");
-          $('a.withdraw-assessment').removeClass('withdraw-assessment');
-          checkStatusFormStaff(status)
+          $('a.withdraw-assessment').addClass('d-none');
+          $('a.withdraw-assessment').addClass('disabled');
+          $('a.submit-assessment').removeClass('d-none');
+          $('a.submit-assessment').removeClass('disabled');
+          //checkStatusFormStaff(status)
         } else {
           fails("Can't withdraw CDS.");
         }
@@ -554,6 +556,7 @@ $(document).ready(function () {
           if (response.status == "success") {
             warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            // NOT
             $('a.submit-assessment').removeClass('submit-assessment');
             $('#modal_period').modal('hide');
           } else {
