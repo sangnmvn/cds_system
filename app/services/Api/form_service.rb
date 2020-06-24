@@ -696,7 +696,6 @@ module Api
     def get_data_form_slot
       line = LineManager.find_by(form_slot_id: params[:form_slot_id], flag: "orange")
       return if line.nil?
-
       slot = Slot.includes(:competency).joins(:form_slots).find_by(form_slots: { id: params[:form_slot_id] })
       reviewer = User.find(line.user_id)
       comment = Comment.find_by(form_slot_id: params[:form_slot_id])
@@ -748,8 +747,14 @@ module Api
         return hash
       end
       form_slots.map do |form_slot|
-        recommends = get_recommend(form_slot)
         comments = form_slot.comments.order(updated_at: :desc).first
+        if comments.nil?
+          comment_type = ""
+        else
+          comment_type = comments.point.nil? ? "CDP" : "CDS"
+        end
+        recommends = get_recommend(form_slot)
+
         next unless hash[form_slot.slot_id].nil?
 
         hash[form_slot.slot_id] = {
@@ -762,6 +767,7 @@ module Api
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
+          comment_type: comment_type,
         }
       end
       hash
@@ -779,7 +785,7 @@ module Api
       approvers = Approver.includes(:approver).where(user_id: user.id)
       approvers.each_with_index do |approver, i|
         # line = line_managers[i]
-        line = LineManager.find_by(user_id: approver.approver_id, form_slot_id: form_slot.id)
+        line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
         if line.blank?
           hash[:recommends] << {
             given_point: "",
@@ -788,7 +794,7 @@ module Api
             flag: "",
             user_id: User.find(approver.approver_id).id,
             is_final: "",
-            is_commit: "uncommit",
+            is_commit: false,
             is_pm: false,
           }
         else

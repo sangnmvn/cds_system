@@ -1,4 +1,4 @@
-function LoadDataAssessmentList() {
+function loadDataAssessmentList() {
   $.ajax({
     type: "GET",
     url: "/forms/get_list_cds_assessment/",
@@ -70,7 +70,7 @@ function LoadDataAssessmentList() {
 }
 
 $(document).ready(function () {
-  LoadDataAssessmentList();
+  loadDataAssessmentList();
 });
 
 // delete cds
@@ -95,7 +95,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
     success: function (response) {
       $("#modal_delete_cds").modal("hide");
       if (response.status == "success") {
-        LoadDataAssessmentList();
+        loadDataAssessmentList();
         success(
           "The CDS for period " +
           delete_period_cds +

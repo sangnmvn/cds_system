@@ -92,12 +92,13 @@ function loadDataSlots(response) {
           lst_approver.push(e.tracking.recommends[i].recommends)
           lst_approver.push(e.tracking.recommends[i].is_commit)
         } else {
-          temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
+          temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} tr-reviewer">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
-                  <select class="form-control select-commit" id="reviewer_commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                  <select class="form-control select-commit reviewer_commit"  ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
                     <option value="uncommit"> Un-commit </option>
-                    <option value="commit" ${checkCommmit(e.tracking.recommends[i].is_commit)}> Commit</option>
+                    <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
+                    <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
                   </select>
                 </td>
                 <td>
@@ -111,7 +112,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea maxlength="1000" id="reviewer_recommend" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" class="reviewer_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
         }
@@ -133,14 +134,14 @@ function loadDataSlots(response) {
                   <tr class="${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}">
                     <td>${lst_approver[2]}</td>
                     <td>
-                      <select class="form-control select-commit" id="approver_commit" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                      <select class="form-control select-commit approver_commit"${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
                         <option value="uncommit"> Uncommit </option>
-                        <option value="commit" ${checkCommmit(lst_approver[4])} > Commit</option>
+                        <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
+                        <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
                       </select>
                     </td>
                     <td>
-                      <select class="form-control select-commit" id="approver_assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
-                        <option disabled selected> select one </option>
+                      <select class="form-control select-commit approver_assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -149,7 +150,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" id="approver_recommend" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" class="approver_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -401,12 +402,30 @@ $(document).ready(function () {
       fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
       return;
     }
-    var slot_id = $(this).data("slot-id");
+  });
+
+  $("#content-slot").on("change", ".tr-reviewer", function () {
+    var slot_id = $(this).closest('.row-slot').data("slot-id");
+    var url = "";
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find("#approver_assessment").val();
-      recommend = $(this).find("#approver_recommend").val();
-      is_commit = $(this).find("#approver_commit").val() == "commit";
+      point = $(this).find(".approver_assessment").val();
+      recommend = $(this).find(".approver_recomment").val();
+      is_commit = $(this).find(".approver_commit").val();
+      if (is_commit == "commit_cdp") {
+        $(this).find(".approver_asssessment").addClass("d-none");
+      } else if (is_commit == "commit_cds") {
+        $(this).find(".approver_asssessment").removeClass("d-none");
+      }
+      if (is_commit == "uncommit") {
+        return;
+      } else if (is_commit == "commit_cdp" && is_commit == $(".staff-commit").val()) {
+        point = null;
+      } else if (is_commit != $(".staff-commit").val()) {
+        // not sync between staff and line manager
+        fails("Fail to auto-save review!")
+        return;
+      }
       data = {
         form_id: form_id,
         is_commit: is_commit,
@@ -417,9 +436,23 @@ $(document).ready(function () {
       };
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find("#reviewer_asssessment").val();
-      recommend = $(this).find("#reviewer_recommend").val();
-      is_commit = $(this).find("#reviewer_commit").val() == "commit";
+      point = $(this).find(".reviewer_asssessment").val();
+      recommend = $(this).find(".reviewer_recomment").val();
+      is_commit = $(this).find(".reviewer_commit").val();
+      if (is_commit == "commit_cdp") {
+        $(this).find(".reviewer_asssessment").addClass("d-none");
+      } else if (is_commit == "commit_cds") {
+        $(this).find(".reviewer_asssessment").removeClass("d-none");
+      }
+      if (is_commit == "uncommit") {
+        return;
+      } else if (is_commit == "commit_cdp" && is_commit == $(".staff-commit").val()) {
+        point = null;
+      } else if (is_commit != $(".staff-commit").val()) {
+        // not sync between staff and line manager
+        fails("Fail to auto-save review!")
+        return;
+      }
       data = {
         form_id: form_id,
         is_commit: is_commit,
@@ -429,15 +462,17 @@ $(document).ready(function () {
         user_id: user_current
       };
     }
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: data,
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      success: function (response) {}
-    });
+    if (url != "") {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        success: function (response) {}
+      });
+    }
   })
 
   $("#content-slot").on("change", ".comment", function () {

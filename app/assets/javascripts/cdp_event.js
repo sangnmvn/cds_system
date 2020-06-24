@@ -18,8 +18,7 @@ $(document).on("click", ".reject-assessment", function () {
       if (response.status == "success") {
         warning(`The CDS assessment of ${response.user_name} has been rejected successfully.`);
         // $("a.reject-assessment i").css("color", "#ccc");
-        // $('a.reject-assessment').removeClass('reject-assessment');
-        location.reload();
+        // $('a.reject-assessment').removeClass('reject-assessment');        
       } else {
         fails("Can't rejected CDS.");
       }
@@ -44,8 +43,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
       if (response.status == "success") {
         warning(`The CDS assessment of ${response.user_name} has been approved successfully.`);
         // $("a.approval-assessment i").css("color", "#ccc");
-        // $('a.approval-assessment').removeClass('approval-assessment');
-        location.reload();
+        // $('a.approval-assessment').removeClass('approval-assessment');        
       } else {
         fails("Can't approve CDS.");
       }
