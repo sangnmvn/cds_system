@@ -94,4 +94,32 @@ privileges:
       title_name: "Level Mapping",
       title_id: 7      
     },
+    20:
+    {
+      id: 20,
+      name: "Full Access on all Companies",
+      title_name: "Dashboards",
+      title_id: 8     
+    },
+    21:
+    {
+      id: 21,
+      name: "Full Access on my Companies",
+      title_name: "Dashboards",
+      title_id: 8     
+    },
+    22:
+    {
+      id: 22,
+      name: "Full Access on my Projects",
+      title_name: "Dashboards",
+      title_id: 8     
+    },
+    23:
+    {
+      id: 23,
+      name: "View my Dashboard",
+      title_name: "Dashboards",
+      title_id: 8     
+    },
   }

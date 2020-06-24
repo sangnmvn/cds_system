@@ -3,7 +3,7 @@ function drawPieChart(data, total, id, name) {
   $(id).html(`<div class="col title">${name}</div>`)
   // set the dimensions and margins of the graph
   var width = $(id).width() - 50;
-  var height = $(id).height() - 20;
+  var height = $(id).height() - 30;
   var margin = 40;
   var legendRectSize = 18;
   var legendSpacing = 4;

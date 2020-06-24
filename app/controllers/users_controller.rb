@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
-  before_action :get_privilege_id, :user_management_serviece
+  before_action :get_privilege_id, :user_management_services
   before_action :redirect_to_index, except: [:index2]
 
   def get_user_data
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
       users = users.where.not(id: user_project_ids)
     end
 
-    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_serviece.format_user_data(users) }
+    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_services.format_user_data(users) }
   end
 
   def index
@@ -73,11 +73,11 @@ class UsersController < ApplicationController
   end
 
   def get_filter_company
-    render json: @user_management_serviece.get_filter_company
+    render json: @user_management_services.get_filter_company
   end
 
   def get_filter_project
-    render json: { roles: @user_management_serviece.get_filter_project }
+    render json: { roles: @user_management_services.get_filter_project }
   end
 
   def create
@@ -211,8 +211,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def user_management_serviece
-    @user_management_serviece = Api::UserManagementService.new(user_params, current_user)
+  def user_management_services
+    @user_management_services = Api::UserManagementService.new(user_params, current_user)
   end
 
   def user_params

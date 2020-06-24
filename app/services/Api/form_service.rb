@@ -11,7 +11,7 @@ module Api
       end
       @privilege_array = privilege_array
       @current_user = current_user
-      @params = ActiveSupport::HashWithIndifferentAccess.new params
+      @params = params
     end
 
     def get_competencies(form_id = nil)
@@ -592,7 +592,7 @@ module Api
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
       period_id = line_managers.first&.period_id
-      key  = Period.find_by_id(period_id).format_name
+      key = Period.find_by_id(period_id).format_name
       hash[key] = {
         evidence: comment.evidence || "",
         point: comment.point || 0,

@@ -47,6 +47,7 @@
 //= link edit_level_mapping.js
 
 //= link pyramid_chart
+//= link data_table_dashboards
 //= link pie_chart
 //= link dashboards
 //= link dashboards.css

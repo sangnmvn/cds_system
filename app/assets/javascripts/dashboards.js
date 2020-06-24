@@ -60,8 +60,6 @@ function drawChart(data_filter = {}) {
 $(document).ready(function () {
   loadFilterReview();
   loadDataFilter();
-  drawChart();
-
   $(".apply-filter").click(function () {
     data_filter = paramFilter();
     drawChart(data_filter);
@@ -81,7 +79,6 @@ function loadFilterReview() {
       $('btn-filter-dashboard i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
   });
 }
-
 
 function loadDataFilter() {
   $.ajax({
@@ -120,9 +117,14 @@ function loadDataFilter() {
       });
       $("#company_filter, #project_filter, #role_filter").bsMultiSelect({});
       customizeFilter();
+      data_filter = paramFilter();
+      drawChart(data_filter);
+      loadDataUpTitle(data_filter);
+      loadDataKeepTitle(data_filter);
     }
   });
 }
+
 function paramFilter() {
   return {
     company_id: $('#company_filter').val().join(),

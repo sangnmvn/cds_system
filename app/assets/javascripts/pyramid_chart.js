@@ -4,7 +4,7 @@ function drawPyramidChart(data, id, text_y, name) {
 
   var margin = { top: 25, right: 20, bottom: 20, left: 20, middle: 20 },
     width = $(id).width() - 50 - margin.left - margin.right,
-    height = $(id).height() - 20 - margin.top - margin.bottom;
+    height = $(id).height() - 30 - margin.top - margin.bottom;
   // the width of each side of the chart
   var regionWidth = width / 2 - margin.middle;
 

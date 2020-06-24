@@ -1,80 +1,5 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <%= stylesheet_link_tag 'dashboards', media: 'all', 'data-turbolinks-track': 'reload' %>
-<style>
-  .aa {
-      /* background-color: red; */
-      height: 50%;
-  }
-  .bb {
-      /* background-color: blue; */
-      height: 50%;
-  }
-  .cc {
-      /* background-color: green; */
-      height: 50%;
-  }
-  .dd {
-      /* background-color: yellow; */
-      height: 50%;
-  }
-  .row1 {
-      display: flex;
-      flex-wrap: wrap;
-      height: calc(100vh - 250px);
-      width: calc(100vw - 50px);
-      margin-left: 50px;
-  }
-  .title-header {
-      font-size: 30px;
-      font-weight: bold;
-  }
-  .title {
-      font-size: 20px;
-      font-weight: bold;
-      padding-left: 100px;
-      padding-bottom: 10px;
-  }
-  .legend {
-      font-size: 12px;
-  }
-  rect {
-      stroke-width: 2;
-  }
-  .welcome{
-      text-align: center;
-      font-size: 30px;
-      font-weight: bold;
-      width: calc(100vw - 150px)
-  }
-  .header-panel {
-    display: flex;
-  }
-  .btn-filter-dashboard {
-    text-align: center;
-    align-items: center;
-    padding-top: 10px;
-    width: 150px;
-    cursor: pointer;
-  }
-  
-  .badge {
-    border: 1px solid black;
-    padding-left: 5px !important;
-    margin-right: 10px;
-    margin-bottom: 5px;
-  }
-  
-  .badge span {
-    padding-right: 5px;
-  }
-  
-  .badge button span {
-    color: red;
-  }
-  .item-filter-dashboard{
-    padding: 5px;
-  }
-</style>
 <div class="header-panel">
   <div class="welcome">Welcome to Competency Development System</div>
   <div id="filter_dashboard" class="btn-filter-dashboard"">
@@ -84,8 +9,7 @@
 <div class="col-10 filter-dashboard">
   <%= render "filter_review" %>
 </div>
-<div>
-  <div class="title-header">Data Overview</div>
+<div class="dashboard">
   <div class="row1">
     <div id="chart_role" class="col bb">
       <div class="col title">
@@ -107,9 +31,65 @@
       </div>
     </div>
   </div>
+  <br>
+  <div class="title-table">
+    <div class="title-header-up">Up Title in the Lastest Period</div>
+    <div class="icon">
+      <span>Export</span>&nbsp;
+      <i class="fa fa-file-excel-o icon" style="color: green"></i>&nbsp;
+      <i class="fa fa-file-pdf-o"  style="color: #a96f6f" aria-hidden="true"></i>
+    </div>
+  </div>
+  <table id="table_up" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th class="th-sm number">No.</th>
+        <th class="th-sm name">Full Name</th>
+        <th class="th-sm email">Email</th>
+        <th class="th-sm role">Role</th>
+        <th class="th-sm title-h">Title</th>
+        <th class="th-sm rank">Rank</th>
+        <th class="th-sm level">Level</th>
+        <th class="th-sm action">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <div class="title-table">
+    <div class="title-header-keep">Keep Title/Rank/Level in the Latest Period</div>
+    <div class="icon">
+      <span>Keep in</span>&nbsp;
+      <select class="filter" id="select_type">
+        <option value='0' disabled selected>At least 1 latest period</option>
+      </select>&nbsp;
+      <span>Export</span>&nbsp;
+      <i class="fa fa-file-excel-o icon" style="color: green"></i>&nbsp;
+      <i class="fa fa-file-pdf-o"  style="color: #a96f6f" aria-hidden="true"></i>
+    </div>
+  </div>
+  <table id="table_keep" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th class="th-sm number">No.</th>
+        <th class="th-sm name">Full Name</th>
+        <th class="th-sm email">Email</th>
+        <th class="th-sm role">Role</th>
+        <th class="th-sm title-h">Title</th>
+        <th class="th-sm rank">Rank</th>
+        <th class="th-sm level">Level</th>
+        <th class="th-sm action">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
 </div>
 <script type="text/javascript" src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
 <script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'pyramid_chart', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'pie_chart', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'data_table_dashboards', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'dashboards', 'data-turbolinks-track': 'reload' %>

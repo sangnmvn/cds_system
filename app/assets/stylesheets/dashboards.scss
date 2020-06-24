@@ -1,3 +1,201 @@
 // Place all the styles related to the dashboards controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+$border-color: #fff;
+$header-color: #4472c4;
+$even-color: #E9EBF5;
+$odd-color: #CFD5EA;
+
+.item-row {
+    border: 1px solid;
+}
+
+th {
+    border: 1px solid;
+}
+
+.aa {
+    background-color: #dae7ff;
+    padding-left: 50px;
+    border-left: 2px solid white;
+    height: 50%;
+}
+
+.bb {
+    /* background-color: blue; */
+    padding-left: 50px;
+    height: 50%;
+    background-color: #dae7ff;
+}
+
+.cc {
+    /* background-color: green; */
+    padding-left: 50px;
+    height: 50%;
+    border-left: 2px solid white;
+    background-color: #dae7ff;
+}
+
+.dd {
+    /* background-color: yellow; */
+    padding-left: 50px;
+    height: 50%;
+    background-color: #dae7ff;
+}
+
+.row1 {
+    background-color: #dae7ff;
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - 250px);
+}
+
+.title-header {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.legend {
+    font-size: 12px;
+}
+
+rect {
+    stroke-width: 2;
+}
+
+.welcome {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    width: calc(100vw - 150px)
+}
+
+.header-panel {
+    display: flex;
+}
+
+.btn-filter-dashboard {
+    text-align: center;
+    align-items: center;
+    padding-top: 10px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.badge {
+    border: 1px solid black;
+    padding-left: 5px !important;
+    margin-right: 10px;
+    margin-bottom: 5px;
+
+    span {
+        padding-right: 5px;
+    }
+
+    button span {
+        color: red;
+    }
+
+    .item-filter-dashboard {
+        padding: 5px;
+    }
+}
+
+.title-table {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .icon {
+        width: 300px;
+        display: contents;
+    }
+
+    .filter {
+        width: 200px;
+    }
+
+}
+
+.title-header-up {
+    font-size: 30px;
+    font-weight: bold;
+    width: calc(100vw - 120px);
+}
+
+.title-header-keep {
+    font-size: 30px;
+    font-weight: bold;
+    width: calc(100vw - 360px);
+}
+
+.w-100 {
+    border: 1px solid white;
+}
+
+.dashboard {
+    table {
+        border: 2px solid #4882bf;
+        tr {
+            border: 1px solid $border-color;
+
+            &.even {
+                background-color: $even-color;
+            }
+
+            &.odd {
+                background-color: $odd-color;
+            }
+
+            th {
+                color: #fff;
+                background-color: $header-color;
+                border: 1px solid $border-color;
+            }
+
+            td {
+                border: 1px solid $border-color;
+            }
+
+            .number {
+                width: 2%;
+            }
+
+            .name {
+                width: 15%;
+            }
+
+            .email {
+                width: 15%;
+            }
+
+            .role {
+                width: 15%;
+            }
+
+            .title-h {
+                width: 15%;
+            }
+
+            .rank {
+                width: 5%;
+            }
+
+            .level {
+                width: 5%;
+            }
+
+            .action {
+                width: 5%;
+            }
+        }
+    }
+}

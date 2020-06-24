@@ -6,6 +6,7 @@ class User < ApplicationRecord
   belongs_to :role
   has_many :project_members, :dependent => :destroy
   belongs_to :company
+  has_many :title_histories
   belongs_to :title, optional: true
   has_many :forms, :dependent => :destroy
   has_many :user_group, :dependent => :destroy

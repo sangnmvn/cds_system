@@ -105,7 +105,7 @@ module Api
     end
 
     def data_users_by_seniority(gender = false)
-      users = User.where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
+      users = User.joins(:project_members).where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
       users.each do |key, value|
         case key
@@ -180,9 +180,90 @@ module Api
       { data: data, total: total }
     end
 
-    def data_user_up_title
-      user_ids = User.where(filter_users).pluck(:id)
-      forms = Form.where(user_id: user_ids, is_delete: false)
+    def data_users_up_title
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+
+      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
+
+      h_rank = {}
+      title_second.map do |title|
+        h_rank[title.user_id] = title.rank
+      end
+      results = []
+      user_ids = []
+      title_first.map do |title|
+        next if h_rank[title.user_id] == title.rank
+        results << {
+          class: (i.even? ? "even" : "odd"),
+          title_history_id: title.id,
+          full_name: title.user.format_name,
+          email: title.user.email,
+          role: title.role_name,
+          rank: title.rank,
+          title: title.title,
+          level: title.level,
+        }
+        user_ids << title.user_id
+      end
+
+      # 20.times do |i|
+      #   results << {
+      #     class: (i.even? ? "even" : "odd"),
+      #     title_history_id: rand(i + 100),
+      #     full_name: "#{rand(i + 100)} name name",
+      #     email: "#{rand(i + 100)}aaa.@gmail.com",
+      #     role: "#{rand(i + 100)} role role",
+      #     rank: rand(i + 100),
+      #     title: "#{rand(i + 100)} title tile",
+      #     level: rand(i + 100),
+      #   }
+      # end
+      { data: results, user_ids: user_ids, period_id: first.values }
+    end
+
+    def data_users_keep_title
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      user_up = data_users_up_title[:user_ids]
+      period_id = data_users_up_title[:period_id]
+      titles = TitleHistory.includes(:user).where(user_id: user_ids - user_up, period_id: period_id)
+      titles.map do |title|
+        {
+          class: (i.even? ? "even" : "odd"),
+          title_history_id: title.id,
+          full_name: title.user.format_name,
+          email: title.user.email,
+          role: title.role_name,
+          rank: title.rank,
+          title: title.title,
+          level: title.level,
+        }
+      end
+
+      # results = []
+      # 20.times do |i|
+      #   results << {
+      #     class: (i.even? ? "even" : "odd"),
+      #     title_history_id: rand(i + 100),
+      #     full_name: "#{rand(i + 100)} name name",
+      #     email: "#{rand(i + 100)}aaa.@gmail.com",
+      #     role: "#{rand(i + 100)} role role",
+      #     rank: rand(i + 100),
+      #     title: "#{rand(i + 100)} title tile",
+      #     level: rand(i + 100),
+      #   }
+      # end
+      # results
     end
 
     private
@@ -194,9 +275,10 @@ module Api
         status: true,
         is_delete: false,
       }
-      filter[:company_id] = params[:company_id].split(",") if params[:company_id].present? && params[:company_id] != "All"
-      filter[:role_id] = params[:role_id].split(",") if params[:role_id].present? && params[:role_id] != "All"
-      filter[:project_members] = { project_id: params[:project_id].split(",") } if params[:project_id].present? && params[:project_id] != "All"
+
+      filter[:company_id] = params[:company_id].split(",").map(&:to_i) if params[:company_id].present? && params[:company_id] != "All"
+      filter[:role_id] = params[:role_id].split(",").map(&:to_i) if params[:role_id].present? && params[:role_id] != "All"
+      filter[:project_members] = { project_id: params[:project_id].split(",").map(&:to_i) } if params[:project_id].present? && params[:project_id] != "All"
 
       filter
     end
