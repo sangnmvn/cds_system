@@ -8,11 +8,11 @@
 <% breadcrumb :new_cdp %>
 <div class="container-fluid">
   <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; ">
-    <div class="col-md-5 div-header" ><%="CDS & CDP #{@user[:role_name]} - #{@user[:first_name]} #{@user[:last_name]} (#{@hash[:status]})"%></div>
-    <div class="col-md-4" style="text-align:right">
-      Search: <input type="text" class="search-assessment" placeholder="Enter ID, Description" style="height: 88%">
+    <div class="col-md-5 div-header" ><%= "CDS & CDP #{@user[:role_name]} - #{@user[:format_name]} " %><span id="status"><%= "(#{@hash[:status]})" %></span></div>
+    <div class="col-md-4" style="text-align:right;">
+      Search: <input type="text" class="search-assessment" style="height: -webkit-fill-available;" placeholder="Enter ID, Description">
     </div>
-    <div class="col-md-3 list-action filter-slots" style="text-align:right">
+    <div class="col-md-3 list-action filter-slots" style="text-align:right;">
       Filter
       <select id="filter-form-slots" multiple="multiple">
         <option value="passed">Passed slots in previous periods</option>
@@ -24,26 +24,24 @@
         <option value="assessing" selected>Assessing in the current period</option>
         <option value="planned" selected> Planned in previous CDP</option>
       </select>
-      <%= link_to '<i class="fas fa-cloud-upload-alt" style="color: #ccc"></i> Send Request'.html_safe, "javascript:void(0)", class: "disabled send-request", title: "Send request" %>
+      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: #ccc"></i> Confirm Request'.html_safe, "javascript:void(0)", class: "confirm-request", title: "Confirm request" %>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
       <% if @hash[:status] == "Awaiting Review" %>
-        <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS-CDP" %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS-CDP" %>
       <% else %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", id: "submit", title: "Submit CDS-CDP" %>
       <% end %>
     </div>
   </div>
 </div>
-<br/>
 <div class="container-fluid">
   <div class="row" id="body-row">
     <%= render "left_panel" %>
     <div class="col" style="padding-right: 0px" id="content-slot">
-      <%# content slot %>
     </div>
   </div>
 </div>
-<div><%= render 'modal_withdraw' %></div>
+<div><%= render "modal_withdraw" %></div>
 <div><%= render "modal_history" %></div>
 <div><%= render "modal_period" %></div>
 <div><%= render "modal_approve_cds" %></div>
@@ -55,5 +53,7 @@
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = false;
   var is_approver = false;
+  var lst_slot = {};
+  var check_request_update = "";
   loadDataPanel(form_id);
 </script>

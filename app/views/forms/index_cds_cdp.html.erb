@@ -7,7 +7,7 @@
     </div>
     <div class="col-2 button-add-cds-assessment" style="text-align: right">
       <% if @check_6_month %>
-        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, "/forms/cdp_assessment" %>
+        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cdp_assessment_forms_path %>
       <% else %>
         <button title="Can not add CDS & CDP"><i style="color: #ccc" class="fa fa-plus"></i> Add</button>
       <% end %>

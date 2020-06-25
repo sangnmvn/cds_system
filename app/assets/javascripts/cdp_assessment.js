@@ -2,21 +2,24 @@ function loadDataSlots(response) {
   var temp = "";
   $(response).each(function (i, e) {
     length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
-    flag = "yellow"
-    class_flag = "flag-yellow"
+    flag = ""
     title_flag = ""
     for (i in e.tracking.recommends) {
-      if (e.tracking.recommends[i].flag == "red") {
-        flag = "red";
-        class_flag = "flag-red";
+      if (e.tracking.recommends[i].flag == "orange") {
+        flag = "orange";
         title_flag = "Need to update"
         break
-      } else if (e.tracking.recommends[i].flag == "green") {
-        flag = "green";
-        class_flag = "flag-green";
+      } else if (e.tracking.recommends[i].flag == "yellow") {
+        flag = "yellow";
         title_flag = "Updated Evidence"
+        check_request_update = "true"
       }
     }
+    if (check_request_update == "") {
+      $(".confirm-request").addClass("disabled")
+      $("#icon_confirm_request").prop("style", "color: #6c757d")
+    }
+    lst_slot[e.id] = flag
     temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
       <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
@@ -25,7 +28,7 @@ function loadDataSlots(response) {
       </div>
       <div class="col-1 div-slot div-icon">
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
-        <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default"></i></a>
+        <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
     </div>
     <div id="content_${e.id}" class="collapse padding-collapse content-staff" data-slot-id="${e.id}">
@@ -41,7 +44,7 @@ function loadDataSlots(response) {
           </div>
           <div class="col-3">
             <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
-              <option value="false" ${checkUncommmit(e.tracking.is_commit)}> Un-commit </option>
+              <option value="false" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
               <option value="commit_cdp" ${checkDataCDP(e.tracking.point,e.tracking.is_commit)}> Commit CDP</option>
             </select>
@@ -53,6 +56,7 @@ function loadDataSlots(response) {
           </div>
           <div class="col-3">
             <select class="form-control input-staff select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)} style="${checkDataPoint(e.tracking.point)}">
+              <option disabled selected> select one </option>
               <option value="1" ${compare(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
               <option value="2" ${compare(e.tracking.point, 2)}> 2 - Needs Improvement</option>
               <option value="3" ${compare(e.tracking.point, 3)}> 3 - Meets Expectations</option>
@@ -98,6 +102,7 @@ function loadDataSlots(response) {
                 </td>
                 <td>
                   <select class="form-control select-commit" id="reviewer_asssessment" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
+                    <option disabled selected> select one </option>
                     <option value="1" ${compare(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
                     <option value="2" ${compare(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
                     <option value="3" ${compare(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
@@ -106,7 +111,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea maxlength="1000" id="reviewer_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" id="reviewer_recommend" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
         }
@@ -135,6 +140,7 @@ function loadDataSlots(response) {
                     </td>
                     <td>
                       <select class="form-control select-commit" id="approver_assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
+                        <option disabled selected> select one </option>
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -143,7 +149,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" id="approver_recomment" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" id="approver_recommend" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -186,32 +192,26 @@ function compare(x, y) {
   return ""
 }
 
-function checkDataPoint(x) {
-  if (x == "")
+function checkDataPoint(point) {
+  if (point == "")
     return "display:none"
   return ""
 }
 
-function checkFlag(x) {
-  if (x == "yellow")
+function checkFlag(flag) {
+  if (flag == "")
     return "display:none"
   return ""
 }
 
-function checkRequiredComment(x) {
-  if (x == "")
+function checkRequiredComment(point) {
+  if (point == "")
     return ""
   return "(*)"
 }
 
-function checkRequiredComment(x) {
-  if (x == "")
-    return ""
-  return "(*)"
-}
-
-function checkDataCDP(x, y) {
-  if (x == "" && y == true)
+function checkDataCDP(point, is_commit) {
+  if (point == "" && is_commit == true)
     return "selected"
   return ""
 }
@@ -222,28 +222,14 @@ function checkCommmit(is_commit) {
   return ""
 }
 
-function checkUncommmit(is_commit) {
-  if (!is_commit)
-    return "selected"
-  return ""
-}
-
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
-  if (is_reviewer)
-    return checkDisableFormSlotsUser(user_id)
-  else
+  if (!is_reviewer  || user_id != user_current)
     return "disabled"
+  return ""
 }
 
 function checkDisableFormSlotsReviewer(is_reviewer) {
   if (is_reviewer)
-    return "disabled"
-  else
-    return ""
-}
-
-function checkDisableFormSlotsUser(user_id) {
-  if (user_id != user_current)
     return "disabled"
   else
     return ""
@@ -290,7 +276,7 @@ $(document).ready(function () {
     if (form_id)
       data.form_id = form_id;
     else if (title_history_id)
-      data.title_history_id = title_history_id;history
+      data.title_history_id = title_history_id;
     $.ajax({
       type: "POST",
       url: "/forms/get_cds_assessment",
@@ -358,8 +344,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if(response)
-        {
+        if (response) {
           row.find(".comment").val(response.evidence)
           row.find('option[value="' + response.evidence + '"]').prop('selected', true)
           autoSaveStaff(row)
@@ -420,7 +405,7 @@ $(document).ready(function () {
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
       point = $(this).find("#approver_assessment").val();
-      recommend = $(this).find("#approver_recomment").val();
+      recommend = $(this).find("#approver_recommend").val();
       is_commit = $(this).find("#approver_commit").val() == "commit";
       data = {
         form_id: form_id,
@@ -433,7 +418,7 @@ $(document).ready(function () {
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
       point = $(this).find("#reviewer_asssessment").val();
-      recommend = $(this).find("#reviewer_recomment").val();
+      recommend = $(this).find("#reviewer_recommend").val();
       is_commit = $(this).find("#reviewer_commit").val() == "commit";
       data = {
         form_id: form_id,
@@ -489,7 +474,7 @@ $(document).ready(function () {
         if (jQuery.isEmptyObject(response)) {
           temp = `
               <tr>
-                  <td colspan="7" style="text-align:center">No data available in table</td>
+                <td colspan="9" style="text-align:center">No data available in table</td>
               </tr>`;
           $("#modal_history_assessment table").removeClass("table-responsive");
         }
@@ -591,16 +576,17 @@ $(document).ready(function () {
         success: function (response) {
           $('#modal_period').modal('hide');
           if (response.status == "success") {
-            success("This CDS for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             $('a.submit-assessment').removeClass('submit-assessment');
-            checkStatusFormStaff(status)
+            checkStatusFormStaff("Awaiting Review")
+            $("#status").html("(Awaiting Review)")
           } else {
             fails("Can't submit CDS.");
           }
         }
       })
-    }
+    };
   });
   $(document).on("click", ".submit-assessment", function () {
     $('#modal_period').modal('show');
@@ -647,6 +633,11 @@ function autoSaveStaff(row) {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       success: function (response) {
+        if (lst_slot[slot_id] == "yellow") {
+          $(".confirm-request").removeClass("disabled")
+          $("#icon_confirm_request").prop("style", "color:green")
+          row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
+        }
         checkChangeSlot();
       }
     });
@@ -811,9 +802,9 @@ function loadDataPanelReviewer(form_id) {
 
 function checkTitle(flag) {
   var title = "Request more evidences";
-  if (flag == "yellow")
+  if (flag == "orange")
     title = "Need to add more evidences";
-  if (flag == "green")
+  if (flag == "yellow")
     title = "Evidences have been added and sent to Requester";
   return title
 }

@@ -383,29 +383,28 @@ module Api
     end
 
     def get_assessment_staff
+      comment = ""
       if params[:form_slot_id].present?
         if params[:type] == "CDS"
-          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
+          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
-        else
-          return ""
+          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
         end
       end
-      ""
+      comment
     end
 
     def save_add_more_evidence
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.includes(:line_managers, :comments).find_by(slot_id: params[:slot_id], form_id: params[:form_id])
         comment = form_slot.comments.first
-        line_manager = form_slot.line_managers.find_by_flag("red")
+        line_manager = form_slot.line_managers.find_by_flag("orange")
         return false if line_manager.nil?
         approver = User.find(line_manager.user_id)
         is_commit = params[:is_commit] == "true"
         if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, flag: "green")
-          line_manager.update(flag: "green")
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, flag: "yellow")
+          line_manager.update(flag: "yellow")
           period = Form.includes(:period).find(params[:form_id]).period
           CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: params[:competency_name], user: current_user, from_date: period.from_date, to_date: period.to_date, reviewer: approver).user_add_more_evidence.deliver_later(wait: 1.minute)
         else
@@ -421,19 +420,19 @@ module Api
       competency_name = Competency.find(form_slot.slot.competency_id).name
       user = User.find(params[:user_id])
       if line.nil?
-        LineManager.create!(form_slot_id: params[:form_slot_id], flag: "red", period_id: form.period_id, user_id: current_user.id)
+        LineManager.create!(form_slot_id: params[:form_slot_id], flag: "orange", period_id: form.period_id, user_id: current_user.id)
         comment = Comment.find_by(form_slot_id: params[:form_slot_id])
-        comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: "red") : comment.update(flag: "red")
+        comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: "orange") : comment.update(flag: "orange")
         CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, from_date: form.period.from_date, to_date: form.period.to_date).reviewer_requested_more_evidences.deliver_now
-        return "red"
+        return "orange"
       end
 
-      status = line.flag == "red" ? "yellow" : "red"
+      status = line.flag == "orange" ? "" : "orange"
       line.update(flag: status)
       comment = Comment.find_by(form_slot_id: params[:form_slot_id])
       comment.nil? ? Comment.create!(form_slot_id: params[:form_slot_id], flag: status) : comment.update(flag: status)
 
-      if status == "red"
+      if status == "orange"
         CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, from_date: form.period.from_date, to_date: form.period.to_date).reviewer_requested_more_evidences.deliver_now
       else
         CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, recommend: params[:recommend]).reviewer_cancelled_request_more_evidences.deliver_now
@@ -680,20 +679,10 @@ module Api
     end
 
     def get_data_view_history
-      comment = Comment.where(form_slot_id: params[:form_slot_id]).order(:updated_at).last
       line_managers = LineManager.where(form_slot_id: params[:form_slot_id]).order(:period_id)
       recommends = get_recommend_by_period(line_managers)
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
-      period_id = line_managers.first&.period_id
-      key = Period.find_by_id(period_id).format_name
-      hash[key] = {
-        commit: comment.point ? "Commit CDS" : "Commit CDP",
-        evidence: comment.evidence || "",
-        point: comment.point || 0,
-        recommends: recommends,
-      }
-
       slot_histories.map do |h|
         hash[h.title_history.period.format_name] = {
           evidence: h.evidence || "",
@@ -705,7 +694,7 @@ module Api
     end
 
     def get_data_form_slot
-      line = LineManager.find_by(form_slot_id: params[:form_slot_id], flag: "red")
+      line = LineManager.find_by(form_slot_id: params[:form_slot_id], flag: "orange")
       return if line.nil?
 
       slot = Slot.includes(:competency).joins(:form_slots).find_by(form_slots: { id: params[:form_slot_id] })
@@ -767,7 +756,7 @@ module Api
           id: form_slot.id,
           evidence: comments&.evidence || "",
           point: comments&.point || 0,
-          flag: comments&.flag || "yellow",
+          flag: comments&.flag || "",
           is_commit: comments&.is_commit,
           is_change: form_slot.is_change,
           final_point: recommends[:final_point],
@@ -796,7 +785,7 @@ module Api
             given_point: "",
             recommends: "",
             name: User.find(approver.approver_id).account,
-            flag: "yellow",
+            flag: "",
             user_id: User.find(approver.approver_id).id,
             is_final: "",
             is_commit: "uncommit",
@@ -813,7 +802,7 @@ module Api
             given_point: line.given_point || 0,
             recommends: line.recommend || "",
             name: User.find(line.user_id).account,
-            flag: line.flag || "yellow",
+            flag: line.flag || "",
             user_id: line.user_id,
             is_final: line.final,
             is_commit: line.is_commit,
@@ -837,7 +826,7 @@ module Api
             given_point: "",
             recommends: "",
             name: User.find(user.user_id).account,
-            flag: "yellow",
+            flag: "",
             user_id: User.find(user.user_id).id,
             is_final: "",
             is_commit: "",
@@ -854,7 +843,7 @@ module Api
             given_point: line.given_point || 0,
             recommends: line.recommend || "",
             name: User.find(line.user_id).account,
-            flag: line.flag || "yellow",
+            flag: line.flag || "",
             user_id: line.user_id,
             is_final: line.final,
             is_commit: line.is_commit,
@@ -870,7 +859,7 @@ module Api
         {
           given_point: line.given_point,
           recommends: line.recommend,
-          reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
+          reviewed_date: line.format_updated_date,
           name: User.find(line.user_id).account,
         }
       end
