@@ -91,7 +91,7 @@ function loadDataSlots(response) {
           lst_approver.push(e.tracking.recommends[i].name)
           lst_approver.push(e.tracking.recommends[i].recommends)
         } else {
-          temp += `<tr class="${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}">
+          temp += `<tr class="tr-reviewer">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
                   <select class="form-control select-commit" id="reviewer_commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
@@ -129,7 +129,7 @@ function loadDataSlots(response) {
           <div id="approver_${e.id}" class="collapse padding-collapse-children">
             <div class="row div-content">
                 <table class="table table-review" id="table-approver" >
-                  <tr class="${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}">
+                  <tr>
                     <td>${lst_approver[2]}</td>
                     <td>
                       <select class="form-control select-commit" id="approver_commit" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
