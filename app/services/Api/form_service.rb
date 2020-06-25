@@ -393,7 +393,7 @@ module Api
           return ""
         end
       end
-      ""
+      comment
     end
 
     def save_add_more_evidence
@@ -756,15 +756,6 @@ module Api
       recommends = get_recommend_by_period(line_managers)
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
-      period_id = line_managers.first&.period_id
-      key = Period.find_by_id(period_id).format_name
-      hash[key] = {
-        commit: comment.point ? "Commit CDS" : "Commit CDP",
-        evidence: comment.evidence || "",
-        point: comment.point || 0,
-        recommends: recommends,
-      }
-
       slot_histories.map do |h|
         hash[h.title_history.period.format_name] = {
           evidence: h.evidence || "",
