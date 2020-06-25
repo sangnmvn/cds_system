@@ -53,5 +53,7 @@
   var is_approver = <%= @is_approver %>;
   var user_current = <%= current_user.id %>;
   var user_to_be_reviewed = <%= @hash[:user_id] %>;
+  var check_request_update = ""
+  var lst_slot = {}
   loadDataPanelReviewer(form_id);
 </script>
