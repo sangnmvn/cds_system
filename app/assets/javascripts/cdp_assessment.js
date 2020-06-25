@@ -34,7 +34,7 @@ function loadDataSlots(response) {
       $("#icon_confirm_request").prop("style", "color: #6c757d")
     }
     lst_slot[e.id] = flag
-    temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
+    temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
       <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
@@ -506,7 +506,7 @@ $(document).ready(function () {
   $("#content-slot").on("click", "#btn_view_history", function () {
     $('#modal_history_assessment').modal('show');
     var row = $(this).closest(".row-slot")
-    var slot_id = row.data("slot-id");
+    var slot_id = row.data("location");
     var id = $(".card").find('.show').attr('id').split("collapse");
     competency_name = $('.card .card-header .table' + id[1] + ' thead tr td:nth-child(2)').text();
     competency_name = $.trim(competency_name);
@@ -725,7 +725,7 @@ function loadDataPanel(form_id) {
         <div class="card">
           <div class="card-header">
             <table class="table table-primary table-responsive-sm table-mytable table${i}">
-              <thead>
+              <thead>confirm
                 <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
                   <td class="col-2">${response[competency].type}</td>
                   <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
@@ -757,7 +757,7 @@ function loadDataPanel(form_id) {
                 </div>
             </div>
         </div>`
-        i += 1;
+        i += 1;confirm
       };
       $('#competency_panel').html(temp);
 
@@ -775,7 +775,7 @@ function loadDataPanel(form_id) {
         checkChangeSlot();
         $(".level-competency td").css("color", "black");
         $(this).find('td').css("color", "#4472c4");
-      });
+      });confirm
       $('#card0').click()
     }
   });
@@ -820,7 +820,7 @@ function loadDataPanelReviewer(form_id) {
                 <table class="table table-primary table-responsive-sm table-mytable table-left-panel">
                   <tbody>`
         var l = '';
-        var levels = response[competency].levels
+        var levels = response[competency].levelsconfirm
         for (level in levels) {
           l += `<tr data-level="${level}" class="d-flex level-competency">
                     <td class="col-2"></td>
@@ -831,7 +831,7 @@ function loadDataPanelReviewer(form_id) {
         temp += l
         temp += ` </tbody>
                         </table>
-                    </div>
+                    </div>confirm
                 </div>
             </div>
         </div>`
