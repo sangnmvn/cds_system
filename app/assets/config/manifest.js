@@ -47,3 +47,6 @@
 //= link cdp_assessment.js
 //= link cdp_assessment.css
 //= link form_cds_cdp.js
+
+//= link preview_result.css
+//= link preview_result_new

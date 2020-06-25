@@ -230,6 +230,22 @@ class FormsController < ApplicationController
     # end
   end
 
+  def preview_result_new
+    return redirect_to forms_path if params[:form_id].nil?
+
+    form = Form.includes(:title).find_by_id(params[:form_id])
+    return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
+
+    @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+    @result = @form_service.preview_result(form)
+    @calculate_result = @form_service.calculate_result(form, @competencies, @result)
+    @slots = @result.values.map(&:keys).flatten.uniq.sort
+  end
+
+  def data_view_result
+    render json: { data: @form_service.data_view_result }
+  end
+
   def destroy
     form = Form.find_by_id(params[:id])
     return render json: { status: "can't delete form" } if current_user.role_id == form.role_id || form.status != "New"

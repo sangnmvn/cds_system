@@ -486,16 +486,24 @@ module Api
         h_point[slot.competency.name] = {} if h_point[slot.competency.name].nil?
         data = form_slots[slot.id]
         value = data[:final_point] || data[:point]
-        value = data[:point] if data[:is_change]
+        value_cdp = data[:final_point_cdp] || data[:point_cdp]
+        if data[:is_change]
+          value = data[:point]
+          value_cdp = data[:point_cdp]
+        end
+        
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
+            value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
             value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
           elsif privilege_array.include?(APPROVE_CDS)
             value = data[:final_point] || value
+            value_cdp = data[:final_point_cdp] || value_cdp
           end
         end
         h_slot = {
           value: value,
+          value_cdp: value_cdp,
           type: data[:is_change] ? "assessed" : "new",
           class: "",
         }
@@ -513,6 +521,13 @@ module Api
         h_poisition_level[key] += 1
       end
       h_point
+    end
+
+    def data_view_result
+      form = Form.includes(:title).find_by_id(3)
+      competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+      result = preview_result(form)
+      []
     end
 
     def calculate_result(form, competencies, result)
@@ -945,12 +960,15 @@ module Api
         next unless hash[form_slot.slot_id].nil?
         recommends = get_point_manager(form_slot)
         comments = form_slot.comments.first
+        point_cdp = comments&.is_commit && comments&.point.nil? ? 3 : comments&.point
 
         hash[form_slot.slot_id] = {
           id: form_slot.id,
           point: comments&.point || 0,
+          point_cdp: point_cdp || 0,
           is_commit: comments&.is_commit,
           is_change: form_slot.is_change,
+          final_point_cdp: recommends[:final_point_cdp],
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
@@ -965,18 +983,25 @@ module Api
         is_passed: false,
         recommends: [],
         final_point: 0,
+        final_point_cdp: 0,
       }
       period_id = 0
       line_managers.each do |line|
         break if !period_id.zero? && period_id != line.period_id
         period_id = line.period_id
-        if line.final && line.given_point > 2
-          hash[:is_passed] = true
+        if line.final
+          if line.given_point > 2
+            hash[:is_passed] = true
+          end
           hash[:final_point] = line.given_point
+          hash[:final_point_cdp] = line.given_point.nil? && line.is_commit ? 3 : line.given_point
         end
         hash[:recommends] << {
-          line.user_id => { given_point: line.given_point || 0,
-                            is_final: line.final },
+          line.user_id => {
+                            given_point: line.given_point || 0,
+                            given_point_cdp: line.given_point.nil? && line.is_commit ? 3 : line.given_point,
+                            is_final: line.final,
+                          },
         }
       end
       hash

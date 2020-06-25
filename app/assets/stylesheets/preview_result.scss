@@ -1,0 +1,30 @@
+.table-statistic-preview-result-new {
+    th {
+        border: 1px solid white;
+        vertical-align: middle !important;
+
+        &.rank {
+            width: 1%;
+        }
+
+        &.title-staff {
+            width: 8%;
+        }
+
+        &.level {
+            width: 1%;
+        }
+
+        &.competency {
+            width: 14%;
+        }
+
+        &.title-competency {
+            width: 14%;
+        }
+    }
+
+    td {
+        border: 1px solid white;
+    }
+}

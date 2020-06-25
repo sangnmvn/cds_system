@@ -1,0 +1,92 @@
+<%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'preview_result', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'preview_result_new', 'data-turbolinks-track': 'reload' %>
+<nav aria-label="breadcrumb" class="breadcrumb-preview-result">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active">Preview CDS/CDP Result For <%= current_user.role.desc %> - <%= current_user.format_name %></li>
+  </ol>
+</nav>
+<div class="container-fluid illustration" style="padding-left: 0px;padding-right: 0px;">
+  <div class="row" style="margin-right: 0px;">
+      <table id="view_results_new" class="table table-primary table-responsive-sm table-mytable table-statistic-preview-result-new">
+        <thead>
+          <tr>
+            <th class="th-sm competency" rowspan="2">Competency</th>
+            <th class="th-sm title-competency" rowspan="2">Title by competency</th>
+            <th class="th-sm rank" rowspan="2">Rank</th>
+            <th class="th-sm level" rowspan="2">Level</th>
+            <th class="th-sm" colspan="3">  Currently</th>
+            <th class="th-sm" colspan="3">Expected</th>
+            <th class="th-sm" colspan="3">Next Period</th>
+          </tr>
+          <tr>
+            <th class="th-sm title-staff">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+            <th class="th-sm title-staff">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+            <th class="th-sm title-staff">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="type-text">222</td>
+            <td class="type-text">222</td>
+            <td class="type-number">222</td>
+            <td class="type-number">222</td>
+
+            <td class="type-text" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+            <td class="type-text" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+            <td class="type-text" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+            <td class="type-number" rowspan="3">222</td>
+          </tr>
+          <tr>
+            <td class="type-text">222</td>
+            <td class="type-text">222</td>
+            <td class="type-number">222</td>
+            <td class="type-number">222</td>
+          </tr>
+          <tr>
+            <td class="type-text">222</td>
+            <td class="type-text">222</td>
+            <td class="type-number">222</td>
+            <td class="type-number">222</td>
+          </tr>
+        </tbody>
+      </table>
+    <!--
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     -->
+    <div class="col-12" style="padding-right: 0px">
+      <%= render 'form_preview_result'%>
+    </div>
+  </div>
+</div>

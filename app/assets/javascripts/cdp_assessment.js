@@ -725,7 +725,7 @@ function loadDataPanel(form_id) {
         <div class="card">
           <div class="card-header">
             <table class="table table-primary table-responsive-sm table-mytable table${i}">
-              <thead>confirm
+              <thead>
                 <tr class="d-flex" data-target="#collapse${i}" id="card${i}" data-id-competency="${response[competency].id}">
                   <td class="col-2">${response[competency].type}</td>
                   <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
@@ -757,7 +757,7 @@ function loadDataPanel(form_id) {
                 </div>
             </div>
         </div>`
-        i += 1;confirm
+        i += 1;
       };
       $('#competency_panel').html(temp);
 
@@ -775,7 +775,7 @@ function loadDataPanel(form_id) {
         checkChangeSlot();
         $(".level-competency td").css("color", "black");
         $(this).find('td').css("color", "#4472c4");
-      });confirm
+      });
       $('#card0').click()
     }
   });
@@ -831,7 +831,7 @@ function loadDataPanelReviewer(form_id) {
         temp += l
         temp += ` </tbody>
                         </table>
-                    </div>confirm
+                    </div>
                 </div>
             </div>
         </div>`

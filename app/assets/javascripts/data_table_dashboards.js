@@ -52,7 +52,6 @@ function appendDataToTable(data, is_up = true) {
 
   tpl = ""
   data.forEach(function (user, i) {
-    
     tpl += `
       <tr class="{class}">
         <td class="type-number item-row number">{number}</td>
