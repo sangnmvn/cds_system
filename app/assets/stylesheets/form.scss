@@ -244,8 +244,8 @@ $color-disable: #afaaaa;
 
 //search
 .search-assessment {
-    // height: 80%;
-    width: 50%;
+
+    width: 35%;
 }
 
 // action
@@ -649,7 +649,8 @@ select:disabled {
 a.disabled {
     pointer-events: none;
     cursor: default;
-    i{
+
+    i {
         color: #6c757d
     }
 }

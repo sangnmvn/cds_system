@@ -263,7 +263,7 @@ module Api
 
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
-      form = Form.where(user_id: user_id, _type: "CDS", is_delete: false).where.not(status: "Done").includes(:period, :role, :title).order(:id).last
+      form = Form.where(user_id: user_id, is_delete: false).where.not(status: "Done").includes(:period, :role, :title).order(:id).last
       title_histories = TitleHistory.includes(:period).where(user_id: user_id).order(period_id: :desc)
       list_form = []
       title_histories.each do |title|
@@ -359,20 +359,6 @@ module Api
       form_slots.each { |form_slot| form_slot.update(is_change: false) }
     end
 
-    # def save_cds_staff
-    #   if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
-    #     form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-    #     comment = Comment.where(form_slot_id: form_slot.id)
-    #     is_commit = params[:is_commit] == "true"
-    #     if comment.present?
-    #       comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit)
-    #       form_slot.update(is_change: true)
-    #     else
-    #       Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
-    #       form_slot.update(is_change: true)
-    #     end
-    #   end
-    # end
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
@@ -383,7 +369,11 @@ module Api
           end
         is_commit = params[:is_commit] == "true"
         if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now)
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, flag: comment.flag.blank? ? "" : "yellow")
+          line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange")
+          if line_flag.present?
+            line_flag.update(flag: "yellow")
+          end
         else
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
         end
@@ -395,14 +385,11 @@ module Api
     def get_assessment_staff
       if params[:form_slot_id].present?
         if params[:type] == "CDS"
-          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
+          Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          return comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
-        else
-          return ""
+          Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
         end
       end
-      comment
     end
 
     def save_add_more_evidence
@@ -743,6 +730,10 @@ module Api
 
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
+      comments = Comment.includes(:form_slot).where(form_slots: {form_id: params[:form_id]})
+      comments.update(flag: "")
+      line_managers = LineManager.includes(:form_slot).where(form_slots: {form_id: params[:form_id]})
+      line_managers.update(flag: "")
       return "fail" if form.nil?
       return "fail" unless reset_all_approver_submit_status(current_user.id)
       # can't withdraw other people's form
