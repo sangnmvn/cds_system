@@ -97,19 +97,19 @@ function loadDataSlots(response) {
       }
     }
     if (status == "New" || check_request_update == "") {
-      $(".confirm-request").addClass("disabled")
+      $("#confirm_request").addClass("disabled")
       $("#icon_confirm_request").prop("style", "color: #6c757d")
     }
     lst_slot[e.id] = flag
-    temp += `<div class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
+    temp += `<div id="${e.id}" class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
       <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
-        <b class="description_slot">${e.slot_id} - ${e.desc}</b>
+        <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-1 div-slot div-icon">
-        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" style="${checkPassSlot(e.tracking.is_commit)}"></i>
-        <a type='button' class='btn-action' title="Re-assessment" style="${checkPassSlot(e.tracking.is_passed)}"><i class="fas fa-marker icon-green"></i></a>
+        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
+        <a type='button' class='btn-action re-assessment' title="Re-assessment" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
@@ -283,8 +283,8 @@ function checkDataPoint(point) {
   return ""
 }
 
-function checkPassSlot(is_passed) {
-  if (is_passed)
+function checkPassSlot(is_passed, is_change) {
+  if (!is_change && is_passed)
     return ""
   return "visibility: hidden"
 }
@@ -331,7 +331,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
 }
 
 function checkDisableFormSlotsReviewer(is_reviewer, tracking) {
-  if (is_reviewer || tracking.is_passed || ((status == "Awaiting Review" || status == "Awaiting Approval") && !tracking.flag))
+  if (is_reviewer || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && !tracking.flag))
     return "disabled"
   return ""
 }
@@ -359,6 +359,48 @@ $(document).ready(function () {
   $("#body-row .collapse").collapse("hide");
   $("[data-toggle=sidebar-colapse]").click(function () {
     sidebarCollapse();
+  });
+
+  $(document).on("click", ".re-assessment", function () {
+    $('#modal_re_assess_slots').modal('show');
+
+    var slot_id = $(this).closest(".row-slot").data("location");
+    var id = $(this).closest(".row-slot").data("slot-id");
+    id_competency = $(".card").find('.show').attr('id').split("collapse");
+    competency_name = $('.card .card-header .table' + id_competency[1] + ' thead tr td:nth-child(2)').text();
+    competency_name = $.trim(competency_name);
+
+    $('#competency_name_re_assess').text(competency_name);
+    $('#slot_id_re_assess').text(slot_id);
+    $('#confirm_yes_re_assess_slot').val(id);
+  });
+
+  $(document).on("click", "#confirm_yes_re_assess_slot", function () {
+    $('#modal_re_assess_slots').modal('hide');
+    slot_id = $(this).val();
+    $('#' + slot_id).find('.re-assessment').prop("style", "visibility: hidden")
+    $('#' + slot_id).find('.input-staff').prop("disabled", false)
+  });
+
+  $(document).on("click", "#confirm_request", function () {
+    $('#modal_confirm_request').modal('show');
+  });
+
+  $(document).on("click", "#confirm_yes_request_update", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/confirm_request",
+      data: {
+        form_id: form_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+      }
+    })
+    $('#modal_confirm_request').modal('hide');
   });
 
   function sidebarCollapse() {
@@ -471,7 +513,6 @@ $(document).ready(function () {
     } else {
       row.find('.select-assessment').attr("style", "display:none")
       row.find('.title-comment').html("Staff Comment :")
-      return
     }
     $.ajax({
       type: "GET",
@@ -741,7 +782,7 @@ $(document).ready(function () {
             // NOT
             $('a.submit-assessment').removeClass('submit-assessment');
             $('#modal_period').modal('hide');
-            $(".confirm-request").addClass("disabled")
+            $("#confirm_request").addClass("disabled")
             $("#icon_confirm_request").prop("style", "color: #6c757d")
             toggleInput(false);
           } else {
@@ -883,10 +924,10 @@ function autoSaveStaff(row) {
   var is_commit = row.find('.staff-commit').val();
   var evidence = row.find('.comment').val();
   var point = row.find('.select-assessment').val();
-  if (is_commit == "commit_cdp")
+  if (is_commit != "commit_cds")
     point = ""
-  if (is_commit == "commit_cdp" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
-    is_commit = true
+  if (is_commit == "commit_cdp" || is_commit == "false" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
+    is_commit = is_commit == "false" ? false : true
     var slot_id = row.data("slot-id");
     $.ajax({
       type: "POST",
@@ -903,11 +944,22 @@ function autoSaveStaff(row) {
       },
       success: function (response) {
         if (lst_slot[slot_id] == "orange") {
-          $(".confirm-request").removeClass("disabled")
+          $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
           row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
         }
-
+        var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
+        icon_cdp.prop("style", "visibility: show")
+        if (is_commit == true) {
+          icon_cdp.prop("style", "visibility: show")
+          if (point == "")
+            icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
+          else if (parseInt(point) < 3)
+            icon_cdp.addClass("fa-battery-half").removeClass("fa-battery-empty").removeClass("fa-battery-full")
+          else
+            icon_cdp.addClass("fa-battery-full").removeClass("fa-battery-empty").removeClass("fa-battery-half")
+        } else
+          icon_cdp.prop("style", "visibility: hidden")
         checkChangeSlot();
       }
     });

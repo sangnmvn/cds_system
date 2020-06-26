@@ -124,6 +124,50 @@ module Api
       arr
     end
 
+    def confirm_request
+      #comment_flag_yellows
+      comment_flag_yellows = Comment.includes(:form_slot).
+        where(form_slots: { form_id: params[:form_id] }, flag: "yellow").
+        pluck(:form_slot_id).uniq
+      line_manager_flag = LineManager.includes(:form_slot).
+        where(form_slots: { form_id: params[:form_id] }, flag: "orange",
+              form_slot_id: comment_flag_yellows).pluck(:form_slot_id).uniq
+      if line_manager_flag.present?
+        period = Form.includes(:period).find(params[:form_id]).period
+        reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
+        reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
+
+        binding.pry
+
+        form_slots = FormSlot.includes(slot: [:competency]).where(id: line_manager_flag).pluck("competencies.id").uniq
+        customize_slots = {}
+
+        form_slots.map do |form_slot|
+          key = form_slot.slot.competency.name
+          customize_slots[key] = [] if customize_slots[key].nil?
+          customize_slots[key] << form_slot.slot.level + LETTER_CAP[slot.slot.slot_id.to_i]
+        end
+
+        CdsAssessmentMailer.with(user_name: current_user.account, from_date: period.from_date,
+                                 to_date: period.to_date, reviewers: reviewer, slots: customize_slots).
+          user_add_more_evidence.deliver_later(wait: 1.seconds)
+      end
+    end
+
+    def get_location_slot(slot_ids)
+      hash_position = {}
+      h_level = {}
+      Slot.where(competency_id: form_slots).order(:level).each do |slot|
+        if h_level[slot.level].nil?
+          h_level[slot.level] = 0
+        end
+
+        hash_position[slot.id] = slot.level + LETTER_CAP[h_level[slot.level]]
+        h_level[slot.level] += 1
+      end
+      hash_position
+    end
+
     def get_old_competencies
       competency_ids = FormSlotHistory.where(title_history_id: params[:title_history_id]).pluck(:competency_id).uniq
       competencies = Competency.where(id: competency_ids)
@@ -314,8 +358,6 @@ module Api
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:need_to_update] && s[:tracking][:flag]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:assessing] && !s[:tracking][:point].zero? && s[:tracking][:recommends].empty?
-          arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
         hash[slot.level] += 1
       end
@@ -368,14 +410,11 @@ module Api
             Comment.where(form_slot_id: form_slot.id, point: nil).first
           end
         is_commit = params[:is_commit] == "true"
+        line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange")
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, flag: comment.flag.blank? ? "" : "yellow")
-          line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange")
-          if line_flag.present?
-            line_flag.update(flag: "yellow")
-          end
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id)
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, flag: line_flag.blank? ? "" : "yellow")
         end
         form_slot.update(is_change: true)
       end
@@ -449,20 +488,6 @@ module Api
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
         else
-          # user_id = Form.where(id: form.id).pluck(:user_id)
-          # project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
-          # user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-          # user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
-
-          # approver = Approver.includes(:approver).where(user_id: params[:user_id])
-          # all_line_manager = LineManager.where(form_slot_id: form_slot.id)
-          # approver.each do |line, i|
-          #   if line.approver.id == current_user.id
-          #     LineManager.create!(recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
-          #   else
-          #     LineManager.create!(recommend: "", user_id: line.approver.id, form_slot_id: form_slot.id, period_id: period_id)
-          #   end
-          # end
           LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
         end
       end
@@ -730,9 +755,9 @@ module Api
 
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
-      comments = Comment.includes(:form_slot).where(form_slots: {form_id: params[:form_id]})
+      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
       comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: {form_id: params[:form_id]})
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
       line_managers.update(flag: "")
       return "fail" if form.nil?
       return "fail" unless reset_all_approver_submit_status(current_user.id)
@@ -864,7 +889,7 @@ module Api
           point: comments&.point || 0,
           flag: comments&.flag || "",
           is_commit: comments&.is_commit,
-          is_change: form_slot.is_change,
+          is_change: form_slot.is_change || false,
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],

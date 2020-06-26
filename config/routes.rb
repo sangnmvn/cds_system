@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       get "get_slot_is_change"
       get "review_cds_assessment"
       post "get_cds_assessment"
+      post "confirm_request"
       post "save_cds_assessment_staff"
       post "save_add_more_evidence"
       post "request_add_more_evidence"

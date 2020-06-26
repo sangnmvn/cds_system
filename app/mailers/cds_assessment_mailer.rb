@@ -17,26 +17,23 @@ class CdsAssessmentMailer < ApplicationMailer
         @emails += ", " + reviewer.approver.email
       end
     end
-
-    mail(to: @emails, subject: "[CDS system] CDS Assessment Request to review CDS assessment for #{@firstname} #{@firstcharacters}")
+    mail(to: @emails, subject: "[CDS system] CDS/CDP Assessment Request to review CDS assessment for #{@firstname} #{@firstcharacters}")
   end
 
   def user_add_more_evidence
-    @slot_id = params[:slot_id]
-    @competency_name = params[:competency_name]
-    user = params[:user]
-    @firstname = user.first_name
-    @lastname = user.last_name.split(" ").map { |x| x.chr }.join
-    reviewer = params[:reviewer]
-    @reviewer_name = ""
-    @emails = ""
+    @name = params[:user_name]
+    @reviewer_names = params[:reviewers].map(&:first).join(",")
     @from_date = params[:from_date]
     @to_date = params[:to_date]
-
-    @reviewer_name = reviewer.first_name + reviewer.last_name.split(" ").map { |x| x.chr }.join
-    @emails = reviewer.email
-
-    mail(to: @emails, subject: "[CDS system] Notify to review CDS assessment updates - competency #{@competency_name}/slot #{@slot_id}")
+    slots = params[:slots]
+    binding.pry
+    competency = 
+      slots.each do |slot|
+        slot[:competency_name]
+      end
+    params[:reviewers].each do |reviewer|
+      mail(to: reviewer.last, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
+    end
   end
 
   def reviewer_requested_more_evidences

@@ -181,6 +181,10 @@ class FormsController < ApplicationController
     render json: @form_service.get_slot_change
   end
 
+  def confirm_request
+    render json: @form_service.confirm_request
+  end
+
   def save_cds_assessment_staff
     return render json: { status: "success" } if @form_service.save_cds_staff
     render json: { status: "fail" }
