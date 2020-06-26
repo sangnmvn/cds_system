@@ -319,6 +319,10 @@ $(document).ready(function () {
         {
           ToggleInput(false);             
         }
+        if (status == "Done")
+        {
+          ToggleInput(false);
+        }
       }
     });
   });
