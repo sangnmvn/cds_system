@@ -44,7 +44,7 @@ function InitCheckbox()
       if ($(this).is(":checked"))
       {
         checked_set.add(chkbox_form_slot_id);
-        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self").val().length == 0;
+        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.appover-self").val().length == 0;
         $("#button_request_update").removeAttr("disabled")
       }
       else

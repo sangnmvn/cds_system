@@ -797,6 +797,20 @@ module Api
       }
     end
 
+    def cancel_update_cds(form_slot_ids)
+      line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
+      line_managers.each do |line_manager|
+        line_manager.flag = ""
+        return "fails" unless line_manager.save
+      end
+      comments = Comment.where(form_slot_id: form_slot_ids)
+      comments.each do |comment|
+        comment.flag = ""
+        return "fails" unless comment.save
+      end
+      "success"
+    end
+
     def request_update_cds(form_slot_ids)
       line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
       line_managers.each do |line_manager|
