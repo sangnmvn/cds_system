@@ -138,6 +138,17 @@ module Api
       hash
     end
 
+    def reset_all_approver_submit_status(user_id)
+      all_approver_save = true
+      approver_to_reset = Approver.where(user_id: user_id)
+      approver_to_reset.each { |approver|
+        approver.is_submit_cds = 0
+        approver.is_submit_cdp = 0
+        all_approver_save &&= approver.save
+      }
+      all_approver_save
+    end
+
     def create_form_slot(role_id = nil)
       role_id ||= current_user.role_id
       template_id = Template.find_by(role_id: role_id, status: true)&.id
@@ -147,7 +158,8 @@ module Api
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
       form = Form.new(user_id: current_user.id, _type: "CDS", template_id: template_id, role_id: role_id, status: "New", is_delete: false)
-      if form.save
+      all_approver_save = reset_all_approver_submit_status(current_user.id)
+      if form.save && all_approver_save
         slot_ids.map do |id|
           FormSlot.create!(form_id: form.id, slot_id: id, is_passed: 0)
         end
@@ -173,9 +185,7 @@ module Api
       filter = filter_cds_review_list
       user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
-
       forms = Form.where(_type: "CDS", user_id: user_ids, period_id: filter[:period_id]).where.not(status: ["New", "Awaiting Review"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
-
       forms.map do |form|
         format_form_cds_review(form)
       end
@@ -734,6 +744,7 @@ module Api
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
       return "fail" if form.nil?
+      return "fail" unless reset_all_approver_submit_status(current_user.id)
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
       return "fail" unless form.update(status: "New")
@@ -784,6 +795,20 @@ module Api
         comment_point: comment.point,
         comment_evidence: comment.evidence,
       }
+    end
+
+    def request_update_cds(form_slot_ids)
+      line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
+      line_managers.each do |line_manager|
+        line_manager.flag = "orange"
+        return "fails" unless line_manager.save
+      end
+      comments = Comment.where(form_slot_id: form_slot_ids)
+      comments.each do |comment|
+        comment.flag = "orange"
+        return "fails" unless comment.save
+      end
+      "success"
     end
 
     private

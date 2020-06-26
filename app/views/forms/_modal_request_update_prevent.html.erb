@@ -1,0 +1,19 @@
+<div class="modal fade" id="modal_deny_request_update" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title " style="text-align: center">Warning</h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: left;">
+        <p> There is at least one selected slot without comment.</p>
+        <p>Please enter comment if you want to request update from <%= @hash[:user_name] %>.</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

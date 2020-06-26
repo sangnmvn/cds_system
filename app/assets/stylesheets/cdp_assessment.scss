@@ -1,3 +1,14 @@
+.request_update_checkbox{
+  margin-right: 10px;
+}
+
+.cdp-slot-wrapper .div-slot:nth-child(1){
+  display: flex // for JS
+}
+
+.cdp-slot-wrapper .div-slot:nth-child(1) span{
+  flex-grow: 100;
+}
 #cdp_container_div {
   background-color: #8da8db;
   height: 40px;

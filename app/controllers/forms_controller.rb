@@ -131,10 +131,15 @@ class FormsController < ApplicationController
     @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
   end
 
+  def request_update_cds
+    form_slot_ids = params[:form_slot_ids].split(",").map { |k| k.to_i }
+    render json: @form_service.request_update_cds(form_slot_ids)
+  end
+
   def cds_cdp_review
     return if params[:user_id].nil?
+    reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
-
     get_privilege_assessment
     if @is_reviewer
       @is_submit_cds = reviewer.is_submit_cds
@@ -279,7 +284,7 @@ class FormsController < ApplicationController
     if reviewer.update(is_submit_cds: true)
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
       user = User.find_by_id(params[:user_id])
-      if approvers.where(is_submit_cds: false).where.not(approver_id: user_pms.count.zero?)
+      if approvers.where(is_submit_cds: false).where.not(approver_id: user_pms).count.zero?
         return render json: { status: "fail" } unless Form.find_by_id(params[:form_id]).update(status: "Awaiting Approval")
         user_pms.each do |user_pm|
           CdsAssessmentMailer.with(staff: user, pm: User.find(user_pm)).email_to_pm.deliver_later(wait: 1.minute)
@@ -355,7 +360,6 @@ class FormsController < ApplicationController
   private
 
   def get_privilege_assessment
-    reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)

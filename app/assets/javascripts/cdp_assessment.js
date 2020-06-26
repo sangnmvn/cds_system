@@ -1,3 +1,75 @@
+
+// Set can't have duplicates
+// contains form slot id has been selected
+var checked_set = new Set();
+// contains form slot empty to be checked
+// key: form slot id
+// value: true or false, is message empty
+var checked_set_is_empty_comment = {};
+
+function refreshCheckbox()
+{
+  if (!is_reviewer || is_approver)
+  {     
+    return;
+  }
+  InitCheckbox();
+  $(".cdp-slot-wrapper .request_update_checkbox").each(function()
+  {
+    var form_slot_id = $(this).data("form-slot-id");    
+    if (checked_set.has(form_slot_id))
+    {
+      $(this).prop("checked", true);
+    }
+    else
+    {
+      $(this).prop("checked", false);
+    }
+  });
+}
+function InitCheckbox()
+{
+  $(".cdp-slot-wrapper").each(function()
+  {
+    var form_slot_id = $(this).data("form-slot-id");    
+    var description_slot = $(this).find(".description_slot");
+    var html_segment = `<input type='checkbox' data-form-slot-id='${form_slot_id}' class='request_update_checkbox'>`;
+    description_slot.before(html_segment);
+    $(".request_update_checkbox").change(function(e)
+    {
+      //e.stopPropagation(); 
+      //e.preventDefault(); 
+      
+      var chkbox_form_slot_id = $(this).data("form-slot-id");          
+      if ($(this).is(":checked"))
+      {
+        checked_set.add(chkbox_form_slot_id);
+        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self").val().length == 0;
+        $("#button_request_update").removeAttr("disabled")
+      }
+      else
+      {
+        checked_set.delete(chkbox_form_slot_id);
+        delete checked_set_is_empty_comment[chkbox_form_slot_id];
+        if (checked_set.size == 0)
+        {
+          $("#button_request_update").attr("disabled", '');
+        }
+      }
+    });
+
+    // make collapse
+    var original_toggle = $(this).find(".div-slot:nth-child(1)").data("toggle");
+    var original_target = $(this).find(".div-slot:nth-child(1)").data("target");
+    $(this).find(".div-slot:nth-child(1) b").after("<span></span>")
+    $(this).find(".div-slot:nth-child(1)").removeAttr("data-toggle");
+    $(this).find(".div-slot:nth-child(1)").removeAttr("data-target");
+    $(this).find(".div-slot:nth-child(1) :not(input)").attr("data-toggle", original_toggle);
+    $(this).find(".div-slot:nth-child(1) :not(input)").attr("data-target", original_target);
+    $(this).find(".div-slot:nth-child(1) :not(input)").attr("data-toggle", original_toggle);
+    
+  });
+}
 function ToggleInput(enable)
 {
   if (enable)
@@ -41,7 +113,7 @@ function loadDataSlots(response) {
     <div class="row">
       <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
-        <b id="description_slot">${e.slot_id} - ${e.desc}</b>
+        <b class="description_slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-1 div-slot div-icon">
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
@@ -155,7 +227,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}">
+                      <select class="form-control select-commit approver-assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -164,7 +236,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" id="approver_recommend" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" class="approver-recommend form-control" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -315,6 +387,7 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         checkStatusFormStaff(status);
+        // init page at start
         if (is_submit_cds)
         {
           ToggleInput(false);             
@@ -323,6 +396,20 @@ $(document).ready(function () {
         {
           ToggleInput(false);
         }
+
+        $(".select-commit").each(function()
+        {
+          is_commit = $(this).val();
+          if (is_commit == "commit_cdp") {
+            $(this).closest("tr").find(".reviewer-assessment").addClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").addClass("d-none");
+          } else if (is_commit == "commit_cds") {
+            $(this).closest("tr").find(".reviewer-assessment").removeClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").removeClass("d-none");
+          }
+        });   
+        refreshCheckbox();
+        
       }
     });
   });
@@ -345,6 +432,8 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         checkStatusFormStaff(status);
+        refreshCheckbox();
+        
       }
     });
   });
@@ -389,7 +478,56 @@ $(document).ready(function () {
     });
   });
 
-  $("#content-slot").on("change", ".search-assessment", function () {
+  $("#confirm_yes_request_add_more_evidence").on("click", function()
+  {
+    var form_slot_ids = Array.from(checked_set).join(",");
+    data = {"form_slot_ids": form_slot_ids, "form_id": form_id};
+    $.ajax({
+      type: "POST",
+      url: "/forms/request_update_cds",
+      data: data,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response)
+        {
+
+        }
+      }
+      });
+      $("#modal_request_add_more_evidence").modal("hide");
+    });
+  
+
+  $("#button_request_update").on("click", function()
+  {
+    var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
+    var all_comments_not_empty = true;
+    // make sure all values are false
+    for (var i=0; i< booleans.length; i++)
+    {
+      var current_bool = booleans[i];
+      if (current_bool == true)
+      {
+        all_comments_not_empty = false;
+        break;
+      }
+    }
+
+    if (all_comments_not_empty && checked_set.size > 0)
+    {      
+      $("#modal_request_add_more_evidence").modal("show");
+    }
+    else
+    {
+      // open warning model      
+      $("#modal_deny_request_update").modal("show");
+    }    
+  }); 
+
+  $(document).on("change", ".search-assessment", function () {
     var data = getParams();
     if (form_id)
       data.form_id = form_id;
@@ -405,7 +543,10 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        refreshCheckbox();
+        
       }
+
     });
   });
 
@@ -426,6 +567,8 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        refreshCheckbox();
+        
       }
     });
   });
@@ -436,7 +579,7 @@ $(document).ready(function () {
       fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
       return;
     }
-  });
+  });  
 
   $("#content-slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var slot_id = $(this).closest('.row-slot').data("slot-id");
@@ -470,9 +613,30 @@ $(document).ready(function () {
       };
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find("#reviewer_asssessment").val();
-      recommend = $(this).find("#reviewer_recommend").val();
-      is_commit = $(this).find("#reviewer_commit").val() == "commit";
+      point = $(this).find(".reviewer-assessment").val();
+      recommend = $(this).find(".reviewer-recommend").val();
+      
+      var form_slot_id = $(this).closest(".cdp-slot-wrapper").data("form-slot-id")
+      if (form_slot_id in checked_set_is_empty_comment)
+      {
+        checked_set_is_empty_comment[form_slot_id] = (recommend.length == 0);
+      }
+      
+      is_commit = $(this).find(".reviewer-commit").val();
+      if (is_commit == "commit_cdp") {
+        $(this).find(".reviewer-asssessment").addClass("d-none");
+      } else if (is_commit == "commit_cds") {
+        $(this).find(".reviewer-asssessment").removeClass("d-none");
+      }
+      if (is_commit == "uncommit") {
+        return;
+      } else if (is_commit == "commit_cdp" && is_commit == $(".staff-commit").val()) {
+        point = null;
+      } else if (is_commit != $(".staff-commit").val()) {
+        // not sync between staff and line manager
+        fails("Fail to auto-save review!")
+        return;
+      }
       data = {
         form_id: form_id,
         is_commit: is_commit,
@@ -818,7 +982,7 @@ function checkChangeSlot() {
       $.each(response, function (i, e) {
         hightlightChangeCompetency(e.competency_id, e.level);
       });
-      $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
+      $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';      
     }
   });
 }

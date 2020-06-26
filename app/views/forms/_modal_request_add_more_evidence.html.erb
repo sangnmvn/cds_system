@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title" style="text-align: center">Confirm Request to Add More Evidences</h4>
+        <h4 class="modal-title" style="text-align: center">Confirm Request to Update Slot</h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -12,7 +12,7 @@
         You are reviewing slot <span style="font-weight: bold" class="slot_id"></span>. Are you want <span style="font-weight: bold" id="staff_name"><%= @hash[:user_name] %></span> add more evidence for this slot?
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary confirm_yes_request_add_more_evidence">Yes</button>
+        <button type="button" class="btn btn-primary" id="confirm_yes_request_add_more_evidence">Yes</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>
