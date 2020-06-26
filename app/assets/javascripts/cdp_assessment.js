@@ -9,7 +9,7 @@ var checked_set_is_empty_comment = {};
 
 function refreshCheckbox()
 {
-  if (!is_reviewer || is_approver)
+  if (!is_reviewer && !is_approver)
   {     
     return;
   }
