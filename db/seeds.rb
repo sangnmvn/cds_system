@@ -59,9 +59,9 @@ Project.create!(id: 3, desc: "Project Test 2", company_id: "2")
 
 # Create Title
 # QC
-Title.create!(id: 1, name: "Associate QC", desc: "Associate QC", rank: 1, role_id: "1", status: 0)
-Title.create!(id: 2, name: "QC", desc: "QC", rank: 2, role_id: "1", status: 0)
-Title.create!(id: 3, name: "Senior QC", desc: "Senior QC", rank: 3, role_id: "1", status: 0)
+Title.create!(id: 1, name: "Associate QC", desc: "Associate Quality Control", rank: 1, role_id: "1", status: 0)
+Title.create!(id: 2, name: "QC", desc: "Quality Control", rank: 2, role_id: "1", status: 0)
+Title.create!(id: 3, name: "Senior QC", desc: "Senior Quality Control", rank: 3, role_id: "1", status: 0)
 Title.create!(id: 4, name: "Associate Solution Architect", desc: "Associate Solution Architect", rank: 4, role_id: "1", status: 1)
 # Dev
 Title.create!(id: 5, name: "Associate Developer", desc: "Associate Developer", rank: 1, role_id: "2", status: 0)

@@ -1,6 +1,11 @@
-.table-statistic-preview-result-new {
+$color-disable: #afaaaa;
+
+.table-review-result {
+    border: 3px solid #42719a;
+    margin: 1px;
+
     th {
-        border: 1px solid white;
+        border: 1px solid white !important;
         vertical-align: middle !important;
 
         &.rank {
@@ -16,15 +21,230 @@
         }
 
         &.competency {
-            width: 14%;
+            width: 20%;
         }
 
         &.title-competency {
-            width: 14%;
+            width: 15%;
+        }
+
+        &.currently-header {
+            background-color: #ed7c31 !important;
         }
     }
 
     td {
-        border: 1px solid white;
+        border: 0.5px solid white;
+        vertical-align: middle;
+        padding-left: 10px;
+
+        &.currently-td {
+            background-color: #fbe5d6 !important;
+        }
     }
+}
+
+.div-child-slot {
+    background-color: #8da8db;
+    height: 40px;
+    line-height: 40px;
+    margin: 0px 0px 0px 0px;
+    color: white;
+    border: 1px #0000 solid;
+}
+
+.arrow-box {
+    position: relative;
+    padding-top: 10px;
+
+    :after {
+        left: 100%;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(136, 183, 213, 0);
+        border-left-color: #8da8db;
+        border-width: 20px;
+        margin-top: -20px;
+    }
+}
+
+.legend {
+    display: flex;
+    align-items: center;
+
+    .label {
+        margin-left: 15px;
+        padding: 5px;
+    }
+}
+
+
+
+.table-preview-result {
+    border: 1px solid #42719a;
+
+    .form-competency-name {
+        text-align: left;
+        background-color: white !important;
+    }
+
+    .form-pr-rank {
+        background-color: #f9f584 !important;
+    }
+
+    .form-pr-level {
+        background-color: #f9f584 !important;
+        text-align: right;
+    }
+
+    .td-expected {
+        color: #42b6f5;
+    }
+
+    .slot-header {
+        padding: 10px;
+        text-align: center;
+        width: 40px;
+
+        &.lv1 {
+            background-color: #c5e0b4;
+        }
+
+        &.lv2 {
+            background-color: #deecf7;
+        }
+
+        &.lv3 {
+            background-color: #fcf2cc;
+        }
+
+        &.lv4 {
+            background-color: #dae4f3;
+        }
+
+        &.lv5 {
+            background-color: #f3d5f3;
+        }
+
+        &.lv6 {
+            background-color: #b4e0ca;
+        }
+
+        &.lv7 {
+            background-color: #aed6ee;
+        }
+
+        &.lv8 {
+            background-color: #b3a5e0;
+        }
+
+        &.lv9 {
+            background-color: #dde0b3;
+        }
+
+        &.lv10 {
+            background-color: #d8b8b1;
+        }
+    }
+
+    th {
+        position: sticky;
+        z-index: 2;
+        top: 0;
+        border-top: 1px solid #42719a;
+        border-left: 1px solid #42719a;
+        border-bottom: 1px solid #42719a !important;
+
+        &.fixed-header {
+            z-index: 3;
+        }
+
+        &.column-1 {
+            left: 0;
+            background-color: $color-disable;
+        }
+
+        &.column-2 {
+            left: 400px
+        }
+
+        &.column-3 {
+            left: 460px
+        }
+    }
+
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #42719a;
+        border-left: 1px solid #42719a;
+        vertical-align: middle;
+        background-color: $color-disable;
+
+        &.fixed-column {
+            position: sticky;
+            z-index: 1;
+
+            &.column-1 {
+                left: 0
+            }
+
+            &.column-2 {
+                left: 400px
+            }
+
+            &.column-3 {
+                left: 460px
+            }
+        }
+    }
+}
+
+.assessed {
+    background-color: #239B56 !important;
+
+    &.btn {
+        width: 50px;
+        border: 1px solid #42719a;
+    }
+}
+
+.re-assessed-slots {
+    background-color: #4daae8 !important;
+
+    &.btn {
+        width: 50px;
+        border: 1px solid #42719a;
+    }
+}
+
+.new {
+    background-color: white !important;
+
+    &.btn {
+        width: 50px;
+        border: 1px solid #42719a;
+    }
+}
+
+.slot-cdp {
+    background-color: yellow !important;
+
+    &.btn {
+        width: 50px;
+        border: 1px solid #42719a;
+    }
+}
+
+.fail-slot {
+    color: red;
+}
+
+.pass-slot {
+    color: yellow;
 }

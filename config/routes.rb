@@ -45,7 +45,7 @@ Rails.application.routes.draw do
     collection do
       get "get_list_cds_assessment"
       post "get_list_cds_assessment_manager"
-      get :preview_result_new
+      get :preview_result
       get "preview_result"
       post :data_view_result
       post "get_competencies"

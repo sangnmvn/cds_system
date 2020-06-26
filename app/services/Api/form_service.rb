@@ -491,7 +491,7 @@ module Api
           value = data[:point]
           value_cdp = data[:point_cdp]
         end
-        
+
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
@@ -501,18 +501,31 @@ module Api
             value_cdp = data[:final_point_cdp] || value_cdp
           end
         end
+        type = "new"
+        class_name = ""
+        if data[:is_change]
+          class_name = if value_cdp && value.zero?
+              "slot-cdp"
+            elsif value > 2
+              type = "assessed"
+              "pass-slot"
+            else
+              type = "assessed"
+              "fail-slot"
+            end
+        end
+
         h_slot = {
           value: value,
           value_cdp: value_cdp,
-          type: data[:is_change] ? "assessed" : "new",
-          class: "",
+          type: type,
+          class: class_name,
         }
-        if data[:is_change]
-          h_slot[:class] = data[:point] > 2 ? "pass-slot" : "fail-slot"
-        end
+
         unless data[:is_commit]
           h_slot = {
             value: 0,
+            value_cdp: 0,
             type: "new",
             class: "",
           }
@@ -525,32 +538,62 @@ module Api
 
     def data_view_result
       form = Form.includes(:title).find_by_id(3)
-      competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+      competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
       result = preview_result(form)
-      []
+
+      calculate_result(form, competencies, result, type = :value)
     end
 
-    def calculate_result(form, competencies, result)
+    def calculate_result(form, competencies, result, type = :value)
+      h_result = calculate_result_by_type(form, competencies, result, :value)
+      h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
+      h_result
+    end
+
+    def calculate_result_by_type(form, competencies, result, type = :value)
       hash_level = {}
       competencies.map do |compentency|
-        hash_level[compentency.id] = calculate_level(result[compentency.name])
+        compentency.level = calculate_level(result[compentency.name], type)
       end
 
-      title_mappings = TitleMapping.includes(:competency).joins(:title).where(titles: { role_id: form.role_id }).select(:competency_id, :value, "titles.rank").order(:competency_id, :value)
       hash = {}
+      title_mappings = TitleMapping.select(:competency_id, :value, "titles.rank").includes(:competency).joins(:title)
+        .where(titles: { role_id: form.role_id }).order(:competency_id, :value)
       title_mappings.map do |title_mapping|
-        hash[title_mapping.competency_id] = { value: [], type: title_mapping.competency.type } if hash[title_mapping.competency_id].nil?
+        if hash[title_mapping.competency_id].nil?
+          hash[title_mapping.competency_id] = {
+            value: [],
+            type: title_mapping.competency.type,
+          }
+        end
+
         hash[title_mapping.competency_id][:value] << title_mapping.value
       end
+
+      h_title = {}
+      Title.select(:rank, :desc).where(role_id: form.role_id).map do |title|
+        h_title[title.rank] = title.desc
+      end
+
       hash_rank = {}
       h_competency_type = { "All" => [] }
-      hash_level.each do |key, value|
-        val = convert_value_title_mapping(value)
-        hash_rank[key] = hash[key][:value].count { |x| val >= x }
+      competencies.each do |competency|
+        val_cdp = convert_value_title_mapping(competency.level)
+        h_rank_value = hash[competency.id][:value].count { |x| val_cdp >= x }
+        competency.rank = h_rank_value
+        competency.title_name = h_title[h_rank_value]
 
-        h_competency_type[hash[key][:type]] = [] if h_competency_type[hash[key][:type]].nil?
-        h_competency_type[hash[key][:type]] << hash_rank[key]
-        h_competency_type["All"] << hash_rank[key]
+        hash_rank[competency.id] = {
+          value: h_rank_value,
+          name: h_title[h_rank_value],
+        }
+
+        if h_competency_type[hash[competency.id][:type]].nil?
+          h_competency_type[hash[competency.id][:type]] = []
+        end
+
+        h_competency_type[hash[competency.id][:type]] << competency.rank
+        h_competency_type["All"] << competency.rank
       end
 
       level_mappings = LevelMapping.joins(:title).where(titles: { role_id: form.role_id }).order("titles.rank", :level)
@@ -566,12 +609,14 @@ module Api
         level: form.level || "N/A",
         rank: form.rank || "N/A",
         title: form.title&.name || "N/A",
+        title_id: form.title_id,
       }
 
       expected_title = {
         level: "N/A",
         rank: "N/A",
         title: "N/A",
+        title_id: nil,
       }
 
       h_level_mapping.each do |key, value|
@@ -580,22 +625,33 @@ module Api
           count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
           is_pass = count >= val.quantity
         end
+
         if is_pass
           expected_title[:level] = value.first.level
           expected_title[:rank] = value.first.title.rank
-          expected_title[:title] = value.first.title.name
+          expected_title[:title] = value.first.title.desc
+          expected_title[:title_id] = value.first.title.id
         end
       end
+      h_competencies = competencies.map do |com|
+        {
+          id: com.id,
+          name: com.name,
+          rank: com.rank,
+          level: com.level,
+          title_name: com.title_name,
+        }
+      end
 
+      return expected_title if type == :value_cdp
       {
-        hash_level: hash_level,
-        hash_rank: hash_rank,
+        competencies: h_competencies,
         current_title: current_title,
         expected_title: expected_title,
       }
     end
 
-    def calculate_level(hash_point)
+    def calculate_level(hash_point, type = :value)
       s_level = ""
       hash = {}
       hash_point.each do |key, value|
@@ -607,8 +663,8 @@ module Api
           }
         end
         hash[key.to_i][:count] += 1
-        hash[key.to_i][:sum] += value[:value]
-        hash[key.to_i][:fail] += 1 if value[:value] < 3
+        hash[key.to_i][:sum] += value[type]
+        hash[key.to_i][:fail] += 1 if value[type] < 3
       end
 
       hash.each do |k, v|

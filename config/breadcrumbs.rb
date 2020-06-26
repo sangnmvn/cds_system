@@ -37,6 +37,11 @@ crumb :new_cdp do
   parent :root
 end
 
+crumb :view_result_assessment do |form_id|
+  link "View Result", "/forms/preview_result_new?form_id=#{form_id}"
+  parent :new_cdp
+end
+
 crumb :cds_cdp_review do
   link "CDS Review", "/forms/cds_cdp_review"
   parent :cds_review, :root

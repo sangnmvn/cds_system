@@ -1,29 +1,59 @@
-<div class="title-table-form-preview-result">CDS Assessment Point</div>
-<div style="overflow-x:auto;">
-  <div class="horizontal-scroll-except-first-column">
-    <table class="table table-striped table-responsive-sm table-preview-result">
-      <thead>
-        <tr>
-          <th style="width:400px" class="fixed-header column-1">Competency</th>
-          <th style="width:60px" class="form-pr-rank fixed-header column-2">Rank</th>
-          <th style="width:60px"class="form-pr-level fixed-header column-3">Level</th>
-          <% @slots.each_with_index do |slot, i| %>
-            <th class="slot-header lv<%= slot.to_i %>"><%= slot %></th>
-          <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <% @competencies.each do |competency| %>
+<div class="row div-row arrow-box">
+  <div id="btn_view_result" class="col-3 div-child-slot" data-toggle="collapse" data-target="#table_point">
+    <a type='button' class='btn-action' title="View slot's history" ><i class="fas fa-caret-down"></i></a>
+    <b>View CDS/CDP Assessment Point Details</b>
+  </div>
+</div>
+<br>
+<div id="table_point" class="collapse">
+  <div class="row" style="margin-bottom: 10px">
+    <div class="col-2 legend">
+      <div class="btn assessed" disabled>&nbsp;</div>
+      <div class="label">Assessed CDS in the current period</div>
+    </div>
+    <div class="col-2 legend">
+      <div class="btn re-assessed-slots" disabled>&nbsp;</div>
+      <div class="label">Re-assessed slots</div>
+    </div>
+    <div class="col-2 legend">
+      <div class="btn new" disabled>&nbsp;</div>
+      <div class="label">New/Passed slots</div>
+    </div>
+    <div class="col-2 legend">
+      <div class="btn assessed pass-slot" disabled>3</div>
+      <div class="label">Can pass in the current period</div>
+    </div>
+    <div class="col-2 legend">
+      <div class="btn assessed fail-slot" disabled>2</div>
+      <div class="label">Can fail in the current period</div>
+    </div>
+    <div class="col-2 legend">
+      <div class="btn slot-cdp" disabled>0</div>
+      <div class="label">Assessed CDP in the current period</div>
+    </div>
+  </div>
+  <div class="padding-collapse-children collapse show"">
+    <div class="horizontal-scroll-except-first-column">
+      <table class="table table-striped table-responsive-sm table-preview-result">
+        <thead>
           <tr>
-            <td style="width:400px" class="form-competency-name fixed-column column-1"><%= competency.name %></td>
-            <td style="width:60px;" class="form-pr-rank type-number fixed-column column-2"><%= @calculate_result[:hash_rank][competency.id].zero? ? "N/A" : @calculate_result[:hash_rank][competency.id] %></td>
-            <td style="width:60px"class="form-pr-level fixed-column column-3"><%= @calculate_result[:hash_level][competency.id] %></td>
-            <% @slots.each do |slot| %>
-              <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
+            <th style="width:400px" class="fixed-header column-1">Competency</th>
+            <% @slots.each_with_index do |slot, i| %>
+              <th class="slot-header lv<%= slot.to_i %>"><%= slot %></th>
             <% end %>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @competencies.each do |competency| %>
+            <tr>
+              <td style="width:400px" class="form-competency-name fixed-column column-1"><%= competency.name %></td>
+              <% @slots.each do |slot| %>
+                <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -9,6 +9,8 @@ class Competency < ApplicationRecord
   validates :name, format: { with: /\A[\w\.,\s\&]+\z/ }
   validates :_type, inclusion: { in: %w(General Specialized) }
 
+  attr_accessor :rank, :level, :title_name, :title_id
+
   def type
     self._type
   end
