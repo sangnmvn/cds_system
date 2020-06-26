@@ -146,7 +146,7 @@ function loadDataSlots(response) {
           <div id="approver_${e.id}" class="collapse padding-collapse-children">
             <div class="row div-content">
                 <table class="table table-review" id="table-approver" >
-                  <tr>
+                  <tr class="tr-approver">
                     <td>${lst_approver[2]}</td>
                     <td>
                       <select class="form-control select-commit" id="approver_commit" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
@@ -155,8 +155,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <select class="form-control select-commit" id="approver_assessment" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>
-                        <option disabled selected> select one </option>
+                      <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}">
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -433,12 +432,30 @@ $(document).ready(function () {
       fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
       return;
     }
-    var slot_id = $(this).data("slot-id");
+  });
+
+  $("#content-slot").on("change", ".tr-reviewer, .tr-approver", function () {
+    var slot_id = $(this).closest('.row-slot').data("slot-id");
+    var url = "";
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find("#approver_assessment").val();
-      recommend = $(this).find("#approver_recommend").val();
-      is_commit = $(this).find("#approver_commit").val() == "commit";
+      point = $(this).find(".approver-assessment").val();
+      recommend = $(this).find(".approver-recommend").val();
+      is_commit = $(this).find(".approver-commit").val();
+      if (is_commit == "commit_cdp") {
+        $(this).find(".approver-asssessment").addClass("d-none");
+      } else if (is_commit == "commit_cds") {
+        $(this).find(".approver-asssessment").removeClass("d-none");
+      }
+      if (is_commit == "uncommit") {
+        return;
+      } else if (is_commit == "commit_cdp" && is_commit == $(".staff-commit").val()) {
+        point = null;
+      } else if (is_commit != $(".staff-commit").val()) {
+        // not sync between staff and line manager
+        fails("Fail to auto-save review!")
+        return;
+      }
       data = {
         form_id: form_id,
         is_commit: is_commit,

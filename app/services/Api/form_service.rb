@@ -694,12 +694,10 @@ module Api
       return "fail" if form.nil?
       competencies = Competency.where(template_id: form.template_id).select(:name, :id)
       result = preview_result(form)
-      calculate_result = calculate_result(form, competencies, result)
-
-      return "fail" unless form.update(status: "Done", title: calculate_result[:expected_title][:title], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
+      #calculate_result = calculate_result(form, competencies, result)
+      #return "fail" unless form.update(status: "Done", title: calculate_result[:expected_title][:title], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
       title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
-
       form_slots = FormSlot.joins(:line_managers).includes(:comments, :line_managers).where(form_id: params[:form_id]).where.not(line_managers: { id: nil })
       slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
       form_slots = format_form_slot(form_slots)
@@ -729,6 +727,7 @@ module Api
         CdsAssessmentMailer.with(staff: user, rank_number: form.rank, level_number: form.level, title_number: form.title&.name, from_date: period.from_date, to_date: period.to_date).pm_approve_cds.deliver_later(wait: 1.minute)
       end
       return "fail" unless form.update(is_approved: true)
+      return "fail" unless form.update(status: "Done")
       "success"
     end
 
