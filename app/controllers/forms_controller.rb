@@ -2,6 +2,8 @@ class FormsController < ApplicationController
   layout "system_layout"
   before_action :form_service
   before_action :get_privilege_id
+  before_action :check_privilege
+  ASSESS_OWN_CDS = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   include TitleMappingsHelper
@@ -133,18 +135,13 @@ class FormsController < ApplicationController
     return if params[:user_id].nil?
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
 
-    @is_reviewer = false
-    @is_approver = false
-    reviewers = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
-    @is_reviewer = true if reviewers.present?
-
-    user_id = Form.where(id: params[:form_id]).pluck(:user_id)
-    project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
-    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-    user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user).where("users.id": current_user.id).first
-    if user_groups.present?
-      @is_reviewer = false
-      @is_approver = true
+    get_privilege_assessment
+    if @is_reviewer
+      @is_submit_cds = reviewer.is_submit_cds
+      @is_submit_cdp = reviewer.is_submit_cdp
+    else
+      @is_submit_cds = false
+      @is_submit_cdp = false
     end
     @period = schedules.map do |schedule|
       {
@@ -271,17 +268,21 @@ class FormsController < ApplicationController
   end
 
   def reviewer_submit
-    approver = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-    user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
-    if approver.update(is_submit_cds: true)
+    # get PM from same project user list
+    user_pms = user_ids.select { |user_id|
+      privilege_array = get_privilege_from_user_id(user_id)
+      privilege_array.include?(APPROVE_CDS)
+    }
+    if reviewer.update(is_submit_cds: true)
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
       user = User.find_by_id(params[:user_id])
-      if approvers.where(is_submit_cds: false).where.not(approver_id: user_groups.pluck(:user_id)).count.zero?
+      if approvers.where(is_submit_cds: false).where.not(approver_id: user_pms.count.zero?)
         return render json: { status: "fail" } unless Form.find_by_id(params[:form_id]).update(status: "Awaiting Approval")
-        user_groups.each do |user_group|
-          CdsAssessmentMailer.with(staff: user, pm: user_group.user).email_to_pm.deliver_later(wait: 1.minute)
+        user_pms.each do |user_pm|
+          CdsAssessmentMailer.with(staff: user, pm: User.find(user_pm)).email_to_pm.deliver_later(wait: 1.minute)
         end
       end
       render json: { status: "success", user_name: user.format_name }
@@ -297,6 +298,7 @@ class FormsController < ApplicationController
   end
 
   def reject_cds
+    user_name = User.find_by_id(params[:user_id]).format_name
     status = @form_service.reject_cds
     render json: { status: status, user_name: user_name }
   end
@@ -351,6 +353,40 @@ class FormsController < ApplicationController
   end
 
   private
+
+  def get_privilege_assessment
+    reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
+    user_id = Form.where(id: params[:form_id]).pluck(:user_id)
+    project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
+    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    @is_reviewer = false
+    @is_approver = false
+    if @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
+      @is_reviewer = true
+    end
+    if @privilege_array.include?(APPROVE_CDS) && user_ids.include?(current_user.id)
+      @is_reviewer = false
+      @is_approver = true
+      # approver has status = Done if CDS has been approved instead
+    end
+  end
+
+  def check_privilege
+    get_privilege_assessment
+    if (@is_reviewer || @is_approver)
+      check_line_manager_privilege
+    else
+      check_staff_privilege
+    end
+  end
+
+  def check_staff_privilege
+    redirect_to index2_users_path unless @privilege_array.include?(ASSESS_OWN_CDS)
+  end
+
+  def check_line_manager_privilege
+    redirect_to index2_users_path unless (@privilege_array.include?(REVIEW_CDS) || @privilege_array.include?(APPROVE_CDS))
+  end
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)

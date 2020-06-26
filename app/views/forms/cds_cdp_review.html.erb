@@ -51,6 +51,8 @@
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = <%= @is_reviewer || @is_approver %>;
+  var is_submit_cds = <%= @is_submit_cds %>
+  var is_submit_cdp = <%= @is_submit_cdp %>
   var is_approver = <%= @is_approver %>;
   var user_current = <%= current_user.id %>;
   var user_to_be_reviewed = <%= @hash[:user_id] %>;

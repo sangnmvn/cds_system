@@ -1,3 +1,20 @@
+function ToggleInput(enable)
+{
+  if (enable)
+  {
+    $(".reviewer-self").removeAttr("disabled");
+    $(".approver-self").removeAttr("disabled");
+  }
+  else
+  {
+    $("a.submit-assessment .fa-file-import").css("color", "#ccc");            
+    $('a.submit-assessment').removeClass('submit-assessment');
+            
+    $(".reviewer-self").attr("disabled", '');
+    $(".approver-self").attr("disabled", '');
+  }
+  
+}
 function loadDataSlots(response) {
   var temp = "";
   $(response).each(function (i, e) {
@@ -245,11 +262,12 @@ function checkDisableFormSlotsReviewer(is_reviewer) {
     return ""
 }
 
+
 $(document).ready(function () {
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
   $("[data-toggle=sidebar-colapse]").click(function () {
-    sidebarCollapse();
+    sidebarCollapse();        
   });
 
   function sidebarCollapse() {
@@ -298,6 +316,10 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         checkStatusFormStaff(status);
+        if (is_submit_cds)
+        {
+          ToggleInput(false);             
+        }
       }
     });
   });
@@ -544,10 +566,9 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            warning(`The CDS assessment of ${response.user_name} has been submitted successfully.`);
-            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-            $('a.submit-assessment').removeClass('submit-assessment');
-            $('#modal_period').modal('hide');
+            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
+            $('#modal_period').modal('hide'); 
+            ToggleInput(false);                       
           } else {
             fails("Can't submit CDS.");
           }
