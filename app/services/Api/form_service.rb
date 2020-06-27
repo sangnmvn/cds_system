@@ -1032,8 +1032,8 @@ module Api
         level: form.level || "N/A",
         rank: form.rank || "N/A",
         title: form.title&.name || "N/A",
-        submit_date: form.submit_date || "",
-        review_date: form.review_date || "",
+        submit_date: format_long_date(form.submit_date),
+        review_date: format_long_date(form.review_date),
         status: form.status,
         user_id: form.user&.id,
       }

@@ -126,12 +126,14 @@ rect {
 }
 
 .title-header-up {
+    padding-left: 10px;
     font-size: 30px;
     font-weight: bold;
     width: calc(100vw - 120px);
 }
 
 .title-header-keep {
+    padding-left: 10px;
     font-size: 30px;
     font-weight: bold;
     width: calc(100vw - 360px);
@@ -144,6 +146,7 @@ rect {
 .dashboard {
     table {
         border: 2px solid #4882bf;
+
         tr {
             border: 1px solid $border-color;
 

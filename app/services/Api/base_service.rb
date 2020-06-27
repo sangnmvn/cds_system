@@ -17,5 +17,10 @@ module Api
         end
       data || 0
     end
+
+    def format_long_date(date)
+      return date.strftime("%b %d, %Y") if date.is_a?(Date) || date.is_a?(DateTime)
+      ""
+    end
   end
 end

@@ -1,6 +1,7 @@
+/*jshint esversion: 6 */
 function drawPyramidChart(data, id, text_y, name) {
   // remove old chart
-  $(id).html(`<div class="col title">${name}</div>`)
+  $(id).html(`<div class="col title">${name}</div>`);
 
   var margin = { top: 25, right: 20, bottom: 20, left: 20, middle: 20 },
     width = $(id).width() - 50 - margin.left - margin.right,
@@ -13,7 +14,7 @@ function drawPyramidChart(data, id, text_y, name) {
     pointB = width - regionWidth;
   // GET THE TOTAL POPULATION SIZE AND CREATE A FUNCTION FOR RETURNING THE PERCENTAGE
   // var totalPopulation = d3.sum(data, function (d) { return d.males + d.females; }),
-  var percentage = function (d) { return d };
+  var percentage = function (d) { return d; };
 
   var color = d3.scaleOrdinal()
   .domain(data.map(function (d) { return d.group; }))
@@ -39,7 +40,7 @@ function drawPyramidChart(data, id, text_y, name) {
   //  it will be reversed for the left x-axis
   var xScale = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([0, regionWidth])
+    .range([0, regionWidth]);
 
   var xScaleLeft = d3.scaleLinear()
     .domain([0, maxValue])
@@ -52,7 +53,7 @@ function drawPyramidChart(data, id, text_y, name) {
   var yScale = d3.scaleBand()
     .domain(data.map(function (d) { return d.group; }))
     .rangeRound([height, 0])
-    .padding(0.03);;
+    .padding(0.03);
 
   // SET UP AXES
   var yAxisLeft = d3.axisRight()
@@ -67,11 +68,12 @@ function drawPyramidChart(data, id, text_y, name) {
 
   var xAxisRight = d3.axisBottom()
     .scale(xScale)
-    .ticks(4)
+    .ticks(4);
+
   var xAxisLeft = d3.axisBottom()
     // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
     .scale(xScale.copy().range([pointA, 0]))
-    .ticks(4)
+    .ticks(4);
 
   // MAKE GROUPS FOR EACH SIDE OF CHART
   // scale(-1,1) is used to reverse the left side so the bars grow left instead of right
@@ -135,7 +137,7 @@ function drawPyramidChart(data, id, text_y, name) {
     .attr('height', yScale.bandwidth())
     .attr("text-anchor", "left")
     .text(function(d) { return d.males; })
-    .attr('fill', function (d) { return (color(d.group)) })
+    .attr('fill', function (d) { return (color(d.group)); });
 
   rightBarGroup.selectAll('.bar.right')
     .data(data)
@@ -145,7 +147,7 @@ function drawPyramidChart(data, id, text_y, name) {
     .attr('y', function (d) { return yScale(d.group); })
     .attr('width', function (d) { return xScale(percentage(d.females)); })
     .attr('height', yScale.bandwidth())
-    .attr('fill', function (d) { return (color(d.group)) })
+    .attr('fill', function (d) { return (color(d.group)); });
 
   // so sick of string concatenation for translations
   function translation(x, y) {
