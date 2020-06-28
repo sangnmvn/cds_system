@@ -137,15 +137,14 @@ module Api
         reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
         reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
 
-        binding.pry
-
         form_slots = FormSlot.includes(slot: [:competency]).where(id: line_manager_flag).pluck("competencies.id").uniq
+        location_slots = get_location_slot(form_slots)
         customize_slots = {}
 
         form_slots.map do |form_slot|
           key = form_slot.slot.competency.name
           customize_slots[key] = [] if customize_slots[key].nil?
-          customize_slots[key] << form_slot.slot.level + LETTER_CAP[slot.slot.slot_id.to_i]
+          customize_slots[key] << location_slots[slot.slot.slot_id.to_sym]
         end
 
         CdsAssessmentMailer.with(user_name: current_user.account, from_date: period.from_date,
@@ -154,7 +153,7 @@ module Api
       end
     end
 
-    def get_location_slot(slot_ids)
+    def get_location_slot(form_slots)
       hash_position = {}
       h_level = {}
       Slot.where(competency_id: form_slots).order(:level).each do |slot|
