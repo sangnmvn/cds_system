@@ -170,6 +170,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
   else
     return;
 }
+
 function checkTitle(flag) {
   var title = "Request more evidences";
   if (flag == "yellow")
@@ -327,6 +328,7 @@ function hightlightChangeSlot(id) {
     }
   }
 }
+
 function hightlightChangeCompetency(id, level) {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
@@ -336,11 +338,14 @@ function hightlightChangeCompetency(id, level) {
     }
   }
 }
+
 function checkChangeSlot() {
   $.ajax({
     type: "GET",
     url: "/forms/get_slot_is_change",
-    data: { form_id: form_id },
+    data: {
+      form_id: form_id
+    },
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
@@ -463,15 +468,14 @@ function checkStatusFormReview(status) {
     if (status == "Done") {
       $('a.reject-assessment i').css("color", "blue");
       $('a.approval-assessment i').css("color", "#ccc");
-      $('a.approval-assessment').removeClass('approval-assessment');      
+      $('a.approval-assessment').removeClass('approval-assessment');
     } else {
       $('a.reject-assessment i').css("color", "#ccc");
       $('a.approval-assessment i').css("color", "blue");
       $('a.reject-assessment').removeClass('reject-assessment');
     }
     return;
-  }
-  else {
+  } else {
     $('a.approval-assessment').css("display", "none");
     $('a.reject-assessment').css("display", "none");
     if (is_submit == "true") {
@@ -576,7 +580,7 @@ $(document).on("change", ".tr_slot", function () {
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
-      success: function (response) { }
+      success: function (response) {}
     });
   }
 });

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
     groups.each do |group|
       privilege_array += group&.list_privileges
     end
-    return privilege_array
+    privilege_array
   end
 
   private

@@ -2,7 +2,7 @@ $(document).on("click", ".approval-assessment", function () {
   $('#modal_approve_cds').modal('show');
 });
 
-$(document).on("click", ".reject-assessment", function (){
+$(document).on("click", ".reject-assessment", function () {
   $('#modal_reject_cds').modal('show');
 })
 
@@ -23,11 +23,11 @@ $(document).on("click", "#confirm_yes_reject_cds", function () {
         warning(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
         // $("a.reject-assessment i").css("color", "#ccc");
         // $('a.reject-assessment').removeClass('reject-assessment');    
-        ToggleInput(true);                    
+        toggleInput(true);
       } else {
         fails("Can't rejected CDS/CDP.");
       }
-    }    
+    }
   });
   $('#modal_reject_cds').modal('hide');
 });
@@ -50,7 +50,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
         warning(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
         // $("a.approval-assessment i").css("color", "#ccc");
         // $('a.approval-assessment').removeClass('approval-assessment');        
-        ToggleInput(false);
+        toggleInput(false);
       } else {
         fails("Can't approve CDS/CDP.");
       }
