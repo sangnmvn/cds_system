@@ -256,7 +256,7 @@ function checkStatusFormStaff(status) {
   }
 }
 
-function check(x, y) {
+function compare(x, y) {
   if (x == y)
     return "selected"
   return ""
@@ -292,15 +292,8 @@ function checkCommmit(is_commit) {
   return ""
 }
 
-function checkUncommmit(is_commit) {
-  if (!is_commit)
-    return "selected"
-  return ""
-}
-
 function checkPM(is_pm) {
-  if (is_pm)
-    return true
+    return is_pm
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
