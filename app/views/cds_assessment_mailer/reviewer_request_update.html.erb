@@ -1,0 +1,11 @@
+<p>Dear <%= @name %> ,</p>
+
+<p>Your CDS/CDP assessment of period [<%= @from_date %> - <%= @to_date %>] has been requested to add more evidences on  the following competencies  </p>
+  <% @slots.each do |k, v| %>
+    <p><b><%= k %></b> / <%= v.join(", ") %></p>
+  <% end %>
+  
+<p> Please access CDS system for more details.</p>
+
+<p>Thank you,</p>
+<p>CDS System</p>

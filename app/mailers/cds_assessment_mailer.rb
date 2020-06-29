@@ -32,6 +32,14 @@ class CdsAssessmentMailer < ApplicationMailer
     end
   end
 
+  def reviewer_request_update
+    @name = params[:staff].account
+    @from_date = params[:from_date]
+    @to_date = params[:to_date]
+    @slots = params[:slots]
+    mail(to: params[:staff].email, subject: "[CDS system] Request to update your CDS/CDP assessment")
+  end
+
   def reviewer_requested_more_evidences
     @slot_id = params[:slot_id]
     @competency_name = params[:competency_name]
