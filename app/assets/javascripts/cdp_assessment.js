@@ -88,11 +88,11 @@ function loadDataSlots(response) {
     for (i in e.tracking.recommends) {
       if (e.tracking.flag == "orange") {
         flag = "orange";
-        title_flag = "Need to update"
+        title_flag = "This slot needs an update"
         break
       } else if (e.tracking.flag == "yellow") {
         flag = "yellow";
-        title_flag = "Updated Evidence"
+        title_flag = "This slot have been updated"
         check_request_update = "true"
       }
     }
@@ -109,7 +109,7 @@ function loadDataSlots(response) {
       </div>
       <div class="col-1 div-slot div-icon">
         <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
-        <a type='button' class='btn-action re-assessment' title="Re-assessment" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
+        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
@@ -303,10 +303,10 @@ function checkTitleFlag(final_point, point) {
   var final = final_point > 0 ? final_point : point
   if (final) {
     if (final > 2)
-      return "Pass slot"
-    return "Fail slot"
+      return "This slot is passed in CDS assessment"
+    return "This slot is failed in CDS assessment"
   }
-  return "Plan slot"
+  return "This slot is planned in CDP"
 }
 
 
@@ -408,6 +408,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
+        success("These slots have been updated and informed to requester successfully.")
       }
     })
     $('#modal_confirm_request').modal('hide');
@@ -957,6 +958,7 @@ function autoSaveStaff(row) {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
           row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
+          row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
         }
         var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
         if (is_commit == true) {
@@ -1057,9 +1059,9 @@ function loadDataPanel(form_id) {
 function checkTitle(flag) {
   var title = "Request more evidences";
   if (flag == "orange")
-    title = "Need to add more evidences";
+    title = "This slot needs an update";
   if (flag == "yellow")
-    title = "Evidences have been added and sent to Requester";
+    title = "This slot have been updated";
   return title
 }
 
