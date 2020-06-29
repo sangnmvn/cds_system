@@ -938,7 +938,7 @@ function autoSaveStaff(row) {
   if (is_commit != "commit_cds")
     point = ""
   if (is_commit == "commit_cdp" || is_commit == "false" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
-    is_commit = is_commit == "false" ? false : true
+    is_commit = is_commit != "false"
     var slot_id = row.data("slot-id");
     $.ajax({
       type: "POST",
