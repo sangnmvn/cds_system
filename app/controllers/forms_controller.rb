@@ -9,13 +9,13 @@ class FormsController < ApplicationController
   include TitleMappingsHelper
 
   def index
-    @check_6_month = true
-    @check_6_month = current_user.joined_date.to_i < 6.months.ago.to_i if current_user.joined_date
+    @check_5_month = true
+    @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
   end
 
   def index_cds_cdp
-    @check_6_month = true
-    @check_6_month = current_user.joined_date.to_i < 6.months.ago.to_i if current_user.joined_date
+    @check_5_month = true
+    @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
   end
 
   def get_list_cds_assessment_manager
@@ -263,17 +263,22 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find_by_id(params[:form_id])
-    approvers = Approver.where(user_id: form.user_id).includes(:approver)
-    return render json: { status: "fail" } if approvers.empty?
-
-    if form.update(period_id: params[:period_id], status: "Awaiting Review", submit_date: DateTime.now)
-      user = form.user
-      period = form.period
-      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, reviewer: approvers.to_a).user_submit.deliver_later(wait: 1.minute)
-      render json: { status: "success" }
+    users = User.joins(:approvers).where("approvers.user_id": form.user_id)
+    action = "review"
+    if users.empty?
+      action = "approve"
+      project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+      users = User.joins(user_group: [:group]).where(id: user_ids).where("groups.privileges like '%17%'")
+      return render json: { status: "fail" } if users.empty?
     else
-      render json: { status: "fail" }
+      render json: { status: "success" } if form.update(period_id: params[:period_id],
+        status: "Awaiting Review", submit_date: DateTime.now)
     end
+    user = form.user
+    period = form.period
+    CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
+      user_submit.deliver_later(wait: 1.minute)
   end
 
   def reviewer_submit

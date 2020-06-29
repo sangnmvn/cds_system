@@ -2,22 +2,23 @@ class CdsAssessmentMailer < ApplicationMailer
   # default from: "hr@bestarion.com"
   def user_submit
     user = params[:user]
-    @firstname = user.first_name
-    @firstcharacters = user.last_name.split(" ").map { |x| x.chr }.join
-    reviewers = params[:reviewer]
+    @name = user.account
+    @fullname = "#{user.first_name} #{user.last_name}"
+    approvers = params[:approvers]
+    @action = params[:action]
     @reviewer_name = ""
     @emails = ""
     @from_date = params[:from_date]
     @to_date = params[:to_date]
-    reviewers.each_with_index do |reviewer, index|
-      @reviewer_name += reviewer.approver.first_name + reviewer.approver.last_name.split(" ").map { |x| x.chr }.join + ", "
+    approvers.each_with_index do |approver, index|
+      @reviewer_name += approver.account + ", "
       if index == 0
-        @emails += reviewer.approver.email
+        @emails += approver.email
       else
-        @emails += ", " + reviewer.approver.email
+        @emails += ", " + approver.email
       end
     end
-    mail(to: @emails, subject: "[CDS system] CDS/CDP Assessment Request to review CDS assessment for #{@firstname} #{@firstcharacters}")
+    mail(to: @emails, subject: "[CDS system] CDS/CDP Assessment Request to #{@action} CDS assessment for #{@name}")
   end
 
   def user_add_more_evidence
@@ -25,12 +26,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @reviewer_names = params[:reviewers].map(&:first).join(",")
     @from_date = params[:from_date]
     @to_date = params[:to_date]
-    slots = params[:slots]
-    binding.pry
-    competency = 
-      slots.each do |slot|
-        slot[:competency_name]
-      end
+    @slots = params[:slots]
     params[:reviewers].each do |reviewer|
       mail(to: reviewer.last, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
     end
@@ -44,8 +40,18 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @emails = staff.email
-
     mail(to: @emails, subject: "[CDS system] Request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+  end
+
+  def staff_withdraw_CDS_CDP
+    @account = params[:account]
+    @name = params[:user_name]
+    @reviewer_names = params[:reviewers].map(&:first).join(",")
+    @from_date = params[:from_date]
+    @to_date = params[:to_date]
+    params[:reviewers].each do |reviewer|
+      mail(to: reviewer.last, subject: "[CDS system] withdraw CDS/CDP assessment of #{@account}")
+    end
   end
 
   def reviewer_cancelled_request_more_evidences

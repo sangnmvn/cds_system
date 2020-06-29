@@ -126,30 +126,31 @@ module Api
 
     def confirm_request
       #comment_flag_yellows
-      comment_flag_yellows = Comment.includes(:form_slot).
+      form_slot_id_in_comments = Comment.includes(:form_slot).
         where(form_slots: { form_id: params[:form_id] }, flag: "yellow").
         pluck(:form_slot_id).uniq
-      line_manager_flag = LineManager.includes(:form_slot).
+      #line manager have orange flag
+      form_slot_ids = LineManager.includes(:form_slot).
         where(form_slots: { form_id: params[:form_id] }, flag: "orange",
-              form_slot_id: comment_flag_yellows).pluck(:form_slot_id).uniq
-      if line_manager_flag.present?
+              form_slot_id: form_slot_id_in_comments)
+      if form_slot_ids.present?
         period = Form.includes(:period).find(params[:form_id]).period
         reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
         reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
 
-        form_slots = FormSlot.includes(slot: [:competency]).where(id: line_manager_flag).pluck("competencies.id").uniq
-        location_slots = get_location_slot(form_slots)
+        form_slots = FormSlot.includes(slot: [:competency]).
+          where(id: form_slot_ids.pluck(:form_slot_id).uniq)
+        location_slots = get_location_slot(form_slots.pluck("competencies.id").uniq)
         customize_slots = {}
-
         form_slots.map do |form_slot|
           key = form_slot.slot.competency.name
           customize_slots[key] = [] if customize_slots[key].nil?
-          customize_slots[key] << location_slots[slot.slot.slot_id.to_sym]
+          customize_slots[key] << location_slots[form_slot.slot.id]
         end
-
         CdsAssessmentMailer.with(user_name: current_user.account, from_date: period.from_date,
                                  to_date: period.to_date, reviewers: reviewer, slots: customize_slots).
           user_add_more_evidence.deliver_later(wait: 1.seconds)
+        line_manager_have_flags.update(flag: "yellow")
       end
     end
 
@@ -754,15 +755,22 @@ module Api
 
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
-      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
-      comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
-      line_managers.update(flag: "")
       return "fail" if form.nil?
       return "fail" unless reset_all_approver_submit_status(current_user.id)
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
       return "fail" unless form.update(status: "New")
+
+      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      comments.update(flag: "")
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      line_managers.update(flag: "")
+      # send mail
+      period = form.period
+      reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
+      reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
+      CdsAssessmentMailer.with(account: current_user.account, from_date: period.from_date,
+                               to_date: period.to_date, reviewers: reviewer, user_name: current_user.format_name).staff_withdraw_CDS_CDP.deliver_later(wait: 1.seconds)
       "success"
     end
 

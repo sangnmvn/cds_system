@@ -108,7 +108,7 @@ function loadDataSlots(response) {
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-1 div-slot div-icon">
-        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
+        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
         <a type='button' class='btn-action re-assessment' title="Re-assessment" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
@@ -297,6 +297,16 @@ function chooseClassIconBatery(final_point, point) {
     return "fa-battery-half"
   }
   return "fa-battery-empty"
+}
+
+function checkTitleFlag(final_point, point) {
+  var final = final_point > 0 ? final_point : point
+  if (final) {
+    if (final > 2)
+      return "Pass slot"
+    return "Fail slot"
+  }
+  return "Plan slot"
 }
 
 
@@ -735,6 +745,7 @@ $(document).ready(function () {
   });
 
   $(document).on("click", "#confirm_withdraw_cds", function () {
+    $('#modal_withdraw').modal('hide');
     $.ajax({
       type: "POST",
       url: "/forms/withdraw_cds",
@@ -757,7 +768,6 @@ $(document).ready(function () {
         } else {
           fails("Can't withdraw CDS/CDP.");
         }
-        $('#modal_withdraw').modal('hide');
       }
     });
   });
@@ -949,9 +959,9 @@ function autoSaveStaff(row) {
           row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
         }
         var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
-        icon_cdp.prop("style", "visibility: show")
         if (is_commit == true) {
           icon_cdp.prop("style", "visibility: show")
+          icon_cdp.prop("title",checkTitleFlag(parseInt(point),0))
           if (point == "")
             icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
           else if (parseInt(point) < 3)
