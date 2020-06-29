@@ -132,7 +132,7 @@ class FormsController < ApplicationController
   end
 
   def request_update_cds
-    form_slot_ids = params[:form_slot_ids].split(",").map { |k| k.to_i }
+    form_slot_ids = params[:form_slot_id].map { |k| k.to_i }
     render json: @form_service.request_update_cds(form_slot_ids)
   end
 

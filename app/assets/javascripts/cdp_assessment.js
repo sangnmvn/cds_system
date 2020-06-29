@@ -2,16 +2,14 @@
 // Set can't have duplicates
 // contains form slot id has been selected
 var checked_set = new Set();
+var data_checked_request = {};
 // contains form slot empty to be checked
 // key: form slot id
 // value: true or false, is message empty
 var checked_set_is_empty_comment = {};
 
-
-
 function refreshCheckbox() {
-  if (!(is_reviewer || is_approver))
-  {
+  if (!(is_reviewer || is_approver)) {
     return;
   }
   initCheckbox();
@@ -30,19 +28,30 @@ function initCheckbox() {
   $(".cdp-slot-wrapper").each(function () {
     var form_slot_id = $(this).data("form-slot-id");
     var description_slot = $(this).find(".description_slot");
-    var html_segment = `<input type='checkbox' data-form-slot-id='${form_slot_id}' class='request-update-checkbox'>`;
+    var html_segment = `<input type='checkbox' data-form-slot-id='${form_slot_id}' data-slot-id='${form_slot_id}' class='request-update-checkbox'>`;
     description_slot.before(html_segment);
     $(".request-update-checkbox").change(function (e) {
       //e.stopPropagation(); 
       //e.preventDefault(); 
       var chkbox_form_slot_id = $(this).data("form-slot-id");
       if ($(this).is(":checked")) {
+        var competency_name = $('#competency_panel').find('.show').data('competency-name');
+        var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
         checked_set.add(chkbox_form_slot_id);
+        if (data_checked_request[competency_name] == undefined)
+          data_checked_request[competency_name] = []
+        if (!data_checked_request[competency_name].includes(slot_id))
+          data_checked_request[competency_name].push(slot_id);
         checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.appover-self").val().length == 0;
         $("#button_request_update").removeAttr("disabled")
       } else {
+        var competency_name = $('#competency_panel').find('.show').data('competency-name');
+        var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
         checked_set.delete(chkbox_form_slot_id);
         delete checked_set_is_empty_comment[chkbox_form_slot_id];
+        var index = data_checked_request[competency_name].indexOf(slot_id);
+        if (index !== -1)
+          data_checked_request[competency_name].splice(index, 1);
         if (checked_set.size == 0) {
           $("#button_request_update").attr("disabled", '');
         }
@@ -59,15 +68,12 @@ function initCheckbox() {
     $(this).find(".div-slot:nth-child(1) :not(input)").attr("data-target", original_target);
   });
 }
-function toggleInput(enable)
-{
-  if (enable)
-  {
+function toggleInput(enable) {
+  if (enable) {
     $(".reviewer-self").removeAttr("disabled");
     $(".approver-self").removeAttr("disabled");
   }
-  else
-  {
+  else {
     $(".reviewer-self").attr("disabled", '');
     $(".approver-self").attr("disabled", '');
   }
@@ -122,7 +128,7 @@ function loadDataSlots(response) {
             <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(is_reviewer || e.tracking.is_passed)}>
               <option value="false" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
-              <option value="commit_cdp" ${checkDataCDP(e.tracking.point,e.tracking.is_commit)}> Commit CDP</option>
+              <option value="commit_cdp" ${checkDataCDP(e.tracking.point, e.tracking.is_commit)}> Commit CDP</option>
             </select>
           </div>
       </div>
@@ -171,10 +177,10 @@ function loadDataSlots(response) {
           temp += `<tr class="tr-reviewer">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
-                  <select class="form-control select-commit reviewer-commit" disabled>
+                  <select class="form-control select-commit reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type != "" ? "disabled" : ""}>
                     <option value="uncommit"> Un-commit </option>
-                    <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
-                    <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
+                    <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""}> Commit CDS</option>
+                    <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""}> Commit CDP</option>
                   </select>
                 </td>
                 <td>
@@ -212,8 +218,8 @@ function loadDataSlots(response) {
                     <td>
                       <select class="form-control select-commit approver-commit" disabled>
                         <option value="uncommit"> Uncommit </option>
-                        <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : "" }> Commit CDS</option>
-                        <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : "" }> Commit CDP</option>
+                        <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""}> Commit CDS</option>
+                        <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""}> Commit CDP</option>
                       </select>
                     </td>
                     <td>
@@ -304,7 +310,7 @@ function checkCommmit(is_commit) {
 }
 
 function checkDisableFormSlotsStaff(is_reviewer, user_id) {
-  if (!is_reviewer  || user_id != user_current)
+  if (!is_reviewer || user_id != user_current)
     return "disabled"
   return ""
 }
@@ -317,7 +323,6 @@ function checkDisableFormSlotsReviewer(is_reviewer) {
 }
 
 $(document).ready(function () {
-  
   $("#button_request_update").on("click", function () {
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
@@ -329,7 +334,6 @@ $(document).ready(function () {
         break;
       }
     }
-  
     if (all_comments_not_empty && checked_set.size > 0) {
       $("#modal_request_add_more_evidence").modal("show");
     } else {
@@ -599,7 +603,7 @@ $(document).ready(function () {
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
-        success: function (response) {}
+        success: function (response) { }
       });
     }
   })
@@ -614,7 +618,7 @@ $(document).ready(function () {
     autoSaveStaff(row)
   });
 
-  
+
 
   $("#content-slot").on("click", "#btn_view_history", function () {
     $('#modal_history_assessment').modal('show');
@@ -724,8 +728,8 @@ $(document).ready(function () {
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             // NOT
             $('a.submit-assessment').removeClass('submit-assessment');
-            $('#modal_period').modal('hide'); 
-            toggleInput(false);                       
+            $('#modal_period').modal('hide');
+            toggleInput(false);
           } else {
             fails("Can't submit CDS/CDP.");
           }
@@ -888,7 +892,7 @@ function autoSaveStaff(row) {
           $("#icon_confirm_request").prop("style", "color:green")
           row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
         }
-        
+
         checkChangeSlot();
       }
     });
@@ -928,7 +932,7 @@ function loadDataPanel(form_id) {
               </thead>
             </table>
           </div>
-          <div id="collapse${i}" class="collapse" data-parent="#accordion" data-competency-id="${response[competency].id}">
+          <div id="collapse${i}" class="collapse" data-parent="#accordion" data-competency-id="${response[competency].id}" data-competency-name="${competency}" >
             <div class="card-body">
               <div class="competency">
                 <table class="table table-primary table-responsive-sm table-mytable table-left-panel">
@@ -1064,7 +1068,7 @@ function hightlightChangeCompetency(id, level) {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
     if ($(".card" + i).attr("data-id-competency") == id) {
-      $(".card" + i).css('backgroundColor', '#FBE5D6')      
+      $(".card" + i).css('backgroundColor', '#FBE5D6')
       $(".collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
     }
   }
@@ -1082,7 +1086,7 @@ function checkChangeSlot() {
     },
     dataType: "json",
     success: function (response) {
-      $.each(response, function (i, e) {        
+      $.each(response, function (i, e) {
         hightlightChangeCompetency(e.competency_id, e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';

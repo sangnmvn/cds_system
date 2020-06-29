@@ -57,3 +57,42 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     }
   });
 });
+
+$(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
+  $('#modal_cancel_request_add_more_evidence, #modal_request_add_more_evidence').modal('hide');
+
+  var _this = this;
+  $.ajax({
+    type: "POST",
+    url: "/forms/request_update_cds",
+    data: {
+      form_slot_id: [...checked_set],
+      form_id: form_id,
+      slot_id: data_checked_request,
+      user_id: user_to_be_reviewed,
+    },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      var success_message = ""
+      var fails_message = ""
+      if (response.color == "yellow") {
+        success_message = "This slot has been requested more evidence successfully.";
+        fails_message = "Can not requested"
+      } else {
+        success_message = "This slot has been cancelled requesting more evidence successfully.";
+        fails_message = "Can not cancelled request"
+      }
+      if (response.status == "success") {
+        $('#' + $(_this).val() + " i").css('color', response.color)
+        $('#' + $(_this).val()).data("click", response.color);
+        $('#' + $(_this).val()).attr("title", checkTitle(response.color))
+        warning(success_message)
+      } else {
+        fails(fails_message);
+      }
+    }
+  });
+});

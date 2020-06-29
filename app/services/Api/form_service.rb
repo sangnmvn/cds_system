@@ -438,6 +438,7 @@ module Api
         return "orange"
       end
 
+
       status = line.flag == "orange" ? "" : "orange"
       line.update(flag: status)
       comment = Comment.find_by(form_slot_id: params[:form_slot_id])
