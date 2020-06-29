@@ -133,7 +133,7 @@ class FormsController < ApplicationController
 
   def request_update_cds
     form_slot_ids = params[:form_slot_id].map { |k| k.to_i }
-    render json: @form_service.request_update_cds(form_slot_ids)
+    render json: @form_service.request_update_cds(form_slot_ids, params[:slot_id])
   end
 
   def cds_cdp_review
@@ -158,12 +158,13 @@ class FormsController < ApplicationController
     form = Form.where(id: params[:form_id]).first
     user = User.includes(:role).find_by_id(params[:user_id])
     is_submit = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])&.is_submit_cds
+
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
       form_id: form.id,
       status: form.status,
-      title: "CDS Review for " + user.role.name + "-" + user.format_name,
+      title: "CDS/CDP Review for #{user.role.name} - #{user.format_name} (#{form.status})",
       is_submit: is_submit,
       is_approval: @privilege_array.include?(APPROVE_CDS),
     }
@@ -273,7 +274,7 @@ class FormsController < ApplicationController
       return render json: { status: "fail" } if users.empty?
     else
       render json: { status: "success" } if form.update(period_id: params[:period_id],
-        status: "Awaiting Review", submit_date: DateTime.now)
+                                                        status: "Awaiting Review", submit_date: DateTime.now)
     end
     user = form.user
     period = form.period
@@ -294,7 +295,8 @@ class FormsController < ApplicationController
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
       user = User.find_by_id(params[:user_id])
       if approvers.where(is_submit_cds: false).where.not(approver_id: user_pms).count.zero?
-        return render json: { status: "fail" } unless Form.find_by_id(params[:form_id]).update(status: "Awaiting Approval")
+        form  = Form.where(id: params[:form_id])
+        return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", review_date: DateTime.now())
         user_pms.each do |user_pm|
           CdsAssessmentMailer.with(staff: user, pm: User.find(user_pm)).email_to_pm.deliver_later(wait: 1.minute)
         end

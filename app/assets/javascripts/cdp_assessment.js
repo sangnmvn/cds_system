@@ -22,11 +22,10 @@ function refreshCheckbox() {
   });
 }
 
-
 function initCheckbox() {
   $(".cdp-slot-wrapper").each(function () {
     var form_slot_id = $(this).data("form-slot-id");
-    var description_slot = $(this).find(".description_slot");
+    var description_slot = $(this).find(".description-slot");
     var html_segment = `<input type='checkbox' data-form-slot-id='${form_slot_id}' data-slot-id='${form_slot_id}' class='request-update-checkbox'>`;
     description_slot.before(html_segment);
     $(".request-update-checkbox").change(function (e) {
@@ -42,7 +41,8 @@ function initCheckbox() {
         if (!data_checked_request[competency_name].includes(slot_id))
           data_checked_request[competency_name].push(slot_id);
         checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.appover-self").val().length == 0;
-        $("#button_request_update").removeAttr("disabled")
+        $("#button_request_update").removeClass("disabled");
+        $("#icon_confirm_request").prop("style", "color:green");
       } else {
         var competency_name = $('#competency_panel').find('.show').data('competency-name');
         var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
@@ -52,7 +52,8 @@ function initCheckbox() {
         if (index !== -1)
           data_checked_request[competency_name].splice(index, 1);
         if (checked_set.size == 0) {
-          $("#button_request_update").attr("disabled", '');
+          $("#button_request_update").addClass("disabled");
+          $("#icon_confirm_request").prop("style", "color: #6c757d")
         }
       }
     });
@@ -103,11 +104,11 @@ function loadDataSlots(response) {
     lst_slot[e.id] = flag
     temp += `<div id="${e.id}" class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
-      <div class="col-11 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
+      <div class="col-10 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
-      <div class="col-1 div-slot div-icon">
+      <div class="col-2 div-slot div-icon">
         <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
         <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
@@ -458,7 +459,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
-        checkStatusFormStaff(status);
+        // checkStatusFormStaff(status);
         // init page at start
         if (is_submit_cds) {
           toggleInput(false);
@@ -834,7 +835,8 @@ $(document).ready(function () {
   $(document).on("click", ".submit-assessment", function () {
     $('#modal_period').modal('show');
   });
-  $("#content-slot").on("change", ".tr-reviewer, .tr-approver", function () {
+
+  $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var slot_id = $(this).closest('.row-slot').data("slot-id");
     var url = "";
     if (is_approver) {
@@ -862,7 +864,7 @@ $(document).ready(function () {
         given_point: point,
         recommend: recommend,
         slot_id: slot_id,
-        user_id: user_current
+        user_id: user_to_be_reviewed
       };
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
@@ -895,7 +897,7 @@ $(document).ready(function () {
         given_point: point,
         recommend: recommend,
         slot_id: slot_id,
-        user_id: user_current
+        user_id: user_to_be_reviewed
       };
     }
     if (url != "") {

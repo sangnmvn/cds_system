@@ -60,7 +60,6 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
 
 $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
   $('#modal_cancel_request_add_more_evidence, #modal_request_add_more_evidence').modal('hide');
-
   var _this = this;
   $.ajax({
     type: "POST",
@@ -68,7 +67,7 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
     data: {
       form_slot_id: [...checked_set],
       form_id: form_id,
-      slot_id: data_checked_request,
+      slot_id: JSON.stringify(data_checked_request),
       user_id: user_to_be_reviewed,
     },
     headers: {

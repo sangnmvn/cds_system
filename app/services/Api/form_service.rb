@@ -150,7 +150,7 @@ module Api
         CdsAssessmentMailer.with(user_name: current_user.account, from_date: period.from_date,
                                  to_date: period.to_date, reviewers: reviewer, slots: customize_slots).
           user_add_more_evidence.deliver_later(wait: 1.seconds)
-        line_manager_have_flags.update(flag: "yellow")
+        form_slot_ids.update(flag: "yellow")
       end
     end
 
@@ -463,7 +463,6 @@ module Api
         CdsAssessmentMailer.with(slot_id: params[:slot_id], competency_name: competency_name, staff: user, from_date: form.period.from_date, to_date: form.period.to_date).reviewer_requested_more_evidences.deliver_now
         return "orange"
       end
-
 
       status = line.flag == "orange" ? "" : "orange"
       line.update(flag: status)
@@ -834,7 +833,7 @@ module Api
       "success"
     end
 
-    def request_update_cds(form_slot_ids)
+    def request_update_cds(form_slot_ids, slot_id)
       line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
       line_managers.each do |line_manager|
         line_manager.flag = "orange"
@@ -845,6 +844,10 @@ module Api
         comment.flag = "orange"
         return "fails" unless comment.save
       end
+      
+      period = Form.includes(:period).find_by_id(params[:form_id]).period
+      user_staff = User.find_by_id(params[:user_id])
+      CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 10.seconds)
       "success"
     end
 
