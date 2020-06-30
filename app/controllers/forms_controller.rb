@@ -90,7 +90,7 @@ class FormsController < ApplicationController
   def cdp_assessment
     params = form_params
     user = if params[:form_id].present?
-        Form.includes(:user).find_by(params[:form_id])&.user
+        Form.includes(:user).find_by_id(params[:form_id])&.user
       else
         current_user
       end
@@ -211,31 +211,31 @@ class FormsController < ApplicationController
     return render json: @form_service.get_data_form_slot
   end
 
-  def preview_result
-    return redirect_to forms_path if params[:form_id].nil?
+  # def preview_result
+  #   return redirect_to forms_path if params[:form_id].nil?
 
-    form = Form.includes(:title).find_by_id(params[:form_id])
-    return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
+  #   form = Form.includes(:title).find_by_id(params[:form_id])
+  #   return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
 
-    @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
-    @result = @form_service.preview_result(form)
-    @calculate_result = @form_service.calculate_result(form, @competencies, @result)
-    @slots = @result.values.map(&:keys).flatten.uniq.sort
+  #   @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+  #   @result = @form_service.preview_result(form)
+  #   @calculate_result = @form_service.calculate_result(form, @competencies, @result)
+  #   @slots = @result.values.map(&:keys).flatten.uniq.sort
 
-    # slot_ids = @result.values.map(&:keys).flatten.uniq.sort
-    # check = 1
-    # count = 0
-    # @slots = []
-    # slot_ids.each do |s|
-    #   if check != s.to_i
-    #     @slots << (check.to_s + LETTER_CAP[count])
-    #     count = 1
-    #   end
-    #   @slots << s
-    #   check = s.to_i
-    #   count += 1
-    # end
-  end
+  #   # slot_ids = @result.values.map(&:keys).flatten.uniq.sort
+  #   # check = 1
+  #   # count = 0
+  #   # @slots = []
+  #   # slot_ids.each do |s|
+  #   #   if check != s.to_i
+  #   #     @slots << (check.to_s + LETTER_CAP[count])
+  #   #     count = 1
+  #   #   end
+  #   #   @slots << s
+  #   #   check = s.to_i
+  #   #   count += 1
+  #   # end
+  # end
 
   def preview_result
     return redirect_to forms_path if params[:form_id].nil?
@@ -245,6 +245,7 @@ class FormsController < ApplicationController
     @form_id = form.id
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
+    
     @slots = @result.values.map(&:keys).flatten.uniq.sort
   end
 

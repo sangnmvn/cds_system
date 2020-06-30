@@ -10,7 +10,7 @@ class TemplatesController < ApplicationController
   include TemplatesHelper
 
   def index
-    redirect_to index2_admin_users_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
+    redirect_to index2_users_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
     @templates = Template.joins(:role, :user).select('templates.*, roles.name as role_name, concat(users.first_name," ",users.last_name) as updated_by').order("updated_at desc")
   end
 

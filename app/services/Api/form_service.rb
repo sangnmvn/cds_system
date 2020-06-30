@@ -17,7 +17,7 @@ module Api
     def get_competencies(form_id = nil)
       return get_old_competencies if params[:title_history_id].present?
       if form_id.present?
-        form = Form.find_by(form_id)
+        form = Form.find_by_id(form_id)
       else
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
@@ -65,7 +65,7 @@ module Api
     def get_competencies_reviewer(form_id = nil, user_id = nil)
       return get_old_competencies if params[:title_history_id].present?
       if form_id.present?
-        form = Form.find_by(form_id)
+        form = Form.find_by_id(form_id)
       else
         form = Form.find_by(user_id: user_id, is_delete: false)
       end
@@ -561,15 +561,15 @@ module Api
     end
 
     def data_view_result
-      form = Form.includes(:title).find_by_id(3)
+      form = Form.includes(:title).find_by_id(params[:form_id])
       competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
       result = preview_result(form)
 
-      calculate_result(form, competencies, result, type = :value)
+      calculate_result(form, competencies, result)
     end
 
-    def calculate_result(form, competencies, result, type = :value)
-      h_result = calculate_result_by_type(form, competencies, result, :value)
+    def calculate_result(form, competencies, result)
+      h_result = calculate_result_by_type(form, competencies, result)
       h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
       h_result
     end
@@ -629,11 +629,11 @@ module Api
         h_level_mapping[key] << level_mapping
       end
 
+      title_history = TitleHistory.where(user_id: form.user_id).where.not(period_id: form.period_id).order(:period_id).last
       current_title = {
-        level: form.level || "N/A",
-        rank: form.rank || "N/A",
-        title: form.title&.name || "N/A",
-        title_id: form.title_id,
+        level: title_history&.level || "N/A",
+        rank: title_history&.rank || "N/A",
+        title: title_history&.title || "N/A",
       }
 
       expected_title = {
@@ -714,11 +714,14 @@ module Api
       form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
       return "fail" if form.nil?
       competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+
       result = preview_result(form)
-      #calculate_result = calculate_result(form, competencies, result)
-      #return "fail" unless form.update(status: "Done", title: calculate_result[:expected_title][:title], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
-      title_history = TitleHistory.new({ rank: form.rank, title: form.title&.name, level: form.level, role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
+      calculate_result = calculate_result_by_type(form, competencies, result)
+      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
+
+      title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
+
       form_slots = FormSlot.joins(:line_managers).includes(:comments, :line_managers).where(form_id: params[:form_id]).where.not(line_managers: { id: nil })
       slots = Slot.includes(:competency).where(id: form_slots.pluck(:slot_id)).order(:competency_id, :level, :slot_id)
       form_slots = format_form_slot(form_slots)
@@ -844,7 +847,7 @@ module Api
         comment.flag = "orange"
         return "fails" unless comment.save
       end
-      
+
       period = Form.includes(:period).find_by_id(params[:form_id]).period
       user_staff = User.find_by_id(params[:user_id])
       CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 10.seconds)

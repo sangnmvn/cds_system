@@ -1,6 +1,5 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'preview_result', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'preview_result', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :view_result_assessment, @form_id %>
 <nav aria-label="breadcrumb" class="breadcrumb-preview-result">
   <ol class="breadcrumb">
@@ -41,3 +40,7 @@
     </div>
   </div>
 </div>
+<script>
+  var form_id = <%= @form_id %>;
+</script>
+<%= javascript_include_tag 'preview_result', 'data-turbolinks-track': 'reload' %>

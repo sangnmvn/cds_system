@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  data_filter = { form_id: 3 };
+  data_filter = { form_id: form_id };
   $.ajax({
     url: "/forms/data_view_result",
     data: data_filter,
