@@ -356,7 +356,7 @@ module Api
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:cds_assessment] && !s[:tracking][:point].zero?
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:need_to_update] && s[:tracking][:flag]
+        elsif filter_slots[:need_to_update] && (s[:tracking][:flag] == "orange")
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
         hash[slot.level] += 1

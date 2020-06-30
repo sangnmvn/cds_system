@@ -431,7 +431,7 @@ $(document).ready(function () {
     );
   }
   // filter
-  $("#filter-form-slots").multiselect({});
+  $("#filter_form_slots").multiselect({});
   $(".filter-slots .multiselect-selected-text").hide();
   $(document).on("click", ".line-slot", function () {
     if (document.getElementById("slot_description_" + this.id).style.display == "block") {
@@ -572,7 +572,7 @@ $(document).ready(function () {
   });
 
 
-  $("#content-slot").on("change", "#filter-form-slots", function () {
+  $(document).on("change", "#filter_form_slots", function () {
     var data = getParams();
     if (form_id)
       data.form_id = form_id;
@@ -1070,9 +1070,9 @@ function checkTitle(flag) {
 function hightlightChangeCompetency(id, level) {
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
-    if ($(".card" + i).attr("data-id-competency") == id) {
-      $(".card" + i).css('backgroundColor', '#FBE5D6')
-      $(".collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
+    if ($("#card" + i).attr("data-id-competency") == id) {
+      $("#card" + i).css('backgroundColor', '#FBE5D6')
+      $("#collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
     }
   }
 }
@@ -1104,7 +1104,7 @@ function getParams() {
     filter: ""
   }
   filter = [];
-  $('#filter-form-slots :selected').each(function (i, sel) {
+  $('#filter_form_slots :selected').each(function (i, sel) {
     filter.push($(sel).val())
   });
   data.filter = filter.join();
