@@ -68,12 +68,12 @@ function initCheckbox() {
     $(this).find(".div-slot:nth-child(1) :not(input)").attr("data-target", original_target);
   });
 }
+
 function toggleInput(enable) {
   if (enable) {
     $(".reviewer-self").removeAttr("disabled");
     $(".approver-self").removeAttr("disabled");
-  }
-  else {
+  } else {
     $(".reviewer-self").attr("disabled", '');
     $(".approver-self").attr("disabled", '');
   }
@@ -109,9 +109,9 @@ function loadDataSlots(response) {
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-2 div-slot div-icon">
-        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} icon-green icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
-        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-green"></i></a>
-        <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-green"></i></a>
+        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} ${checkColorbatery(e.tracking.is_passed,e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
+        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
+        <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-yellow"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
     </div>
@@ -179,7 +179,7 @@ function loadDataSlots(response) {
           temp += `<tr class="tr-reviewer">
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
-                  <select class="form-control select-commit reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type != "" ? "disabled" : ""}>
+                  <select class="form-control select-commit reviewer-commit" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
                     <option value="uncommit"> Un-commit </option>
                     <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""}> Commit CDS</option>
                     <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""}> Commit CDP</option>
@@ -225,7 +225,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}">
+                      <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" ${checkDisableFormSlotsStaff(is_reviewer, lst_approver[0])}>${lst_approver[3]}>
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -288,6 +288,12 @@ function checkPassSlot(is_passed, is_change) {
   if (!is_change && is_passed)
     return ""
   return "visibility: hidden"
+}
+
+function checkColorbatery(is_passed, is_change) {
+  if (!is_change && is_passed)
+    return "icon-green"
+  return "icon-yellow"
 }
 
 function chooseClassIconBatery(final_point, point) {
@@ -669,7 +675,7 @@ $(document).ready(function () {
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
-        success: function (response) { }
+        success: function (response) {}
       });
     }
   })
@@ -963,9 +969,10 @@ function autoSaveStaff(row) {
           row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
         }
         var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
+        icon_cdp.addClass("icon-yellow").removeClass("icon-green")
         if (is_commit == true) {
           icon_cdp.prop("style", "visibility: show")
-          icon_cdp.prop("title",checkTitleFlag(parseInt(point),0))
+          icon_cdp.prop("title", checkTitleFlag(parseInt(point), 0))
           if (point == "")
             icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
           else if (parseInt(point) < 3)

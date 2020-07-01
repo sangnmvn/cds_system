@@ -260,7 +260,7 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
         period = format_filter(form.period.format_name, form.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
@@ -922,6 +922,7 @@ module Api
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id)
+      approver_pm = get_approver(form_slot, approvers)
       approvers.each_with_index do |approver, i|
         # line = line_managers[i]
         line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
@@ -955,24 +956,26 @@ module Api
           }
         end
       end
-      hash = get_recommend_appover(hash, form_slot)
+      hash = get_recommend_appover(hash, form_slot, approver)
     end
 
-    def get_recommend_appover(hash, form_slot)
-      period_id = 0
+    def get_approver (form_slot, line_managers)
       user_id = Form.where(id: form_slot.form_id).pluck(:user_id)
       project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
-      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-      user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
-      user_groups.each do |user|
-        line = LineManager.find_by(form_slot_id: form_slot, user_id: user.user_id)
+      user_ids = ProjectMember.where(project_id: project_ids, user_id: line_managers).pluck(:user_id)
+      users = User.joins(user_group: [:group]).where(id: user_ids).where("groups.privileges like '%17%'")
+    end
+
+    def get_recommend_appover(hash, form_slot,approver)
+      period_id = 0
+      line = LineManager.find_by(form_slot_id: form_slot, user_id: approver.id)
         if (line.blank?)
           hash[:recommends] << {
             given_point: "",
             recommends: "",
-            name: User.find(user.user_id).account,
+            name: approver.account,
             flag: "",
-            user_id: User.find(user.user_id).id,
+            user_id: approver.id,
             is_final: "",
             is_commit: "",
             is_pm: true,
@@ -995,7 +998,6 @@ module Api
             is_pm: true,
           }
         end
-      end
       hash
     end
 

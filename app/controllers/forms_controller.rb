@@ -70,12 +70,12 @@ class FormsController < ApplicationController
       return @hash
     end
     if params.include?(:form_id)
-      form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
+      form = Form.where(user_id: current_user.id, id: params[:form_id]).first
       return if form.nil?
     else
       template_id = Template.find_by(role_id: current_user.role_id, status: true)&.id
       return if template_id.nil?
-      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+      form = Form.includes(:template).where(user_id: current_user.id).order(created_at: :desc).first
     end
     if form.nil? || form.template.role_id != current_user.role_id
       form = @form_service.create_form_slot
@@ -114,12 +114,12 @@ class FormsController < ApplicationController
       return @hash
     end
     if params.include?(:form_id)
-      form = Form.where(user_id: current_user.id, id: params[:form_id], _type: "CDS").first
+      form = Form.where(user_id: current_user.id, id: params[:form_id]).first
       return if form.nil?
     else
       template_id = Template.find_by(role_id: current_user.role_id, status: true)&.id
       return if template_id.nil?
-      form = Form.includes(:template).where(user_id: current_user.id, _type: "CDS").order(created_at: :desc).first
+      form = Form.includes(:template).where(user_id: current_user.id).order(created_at: :desc).first
     end
     if form.nil? || form.template.role_id != current_user.role_id
       form = @form_service.create_form_slot
@@ -211,37 +211,10 @@ class FormsController < ApplicationController
     return render json: @form_service.get_data_form_slot
   end
 
-  # def preview_result
-  #   return redirect_to forms_path if params[:form_id].nil?
-
-  #   form = Form.includes(:title).find_by_id(params[:form_id])
-  #   return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
-
-  #   @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
-  #   @result = @form_service.preview_result(form)
-  #   @calculate_result = @form_service.calculate_result(form, @competencies, @result)
-  #   @slots = @result.values.map(&:keys).flatten.uniq.sort
-
-  #   # slot_ids = @result.values.map(&:keys).flatten.uniq.sort
-  #   # check = 1
-  #   # count = 0
-  #   # @slots = []
-  #   # slot_ids.each do |s|
-  #   #   if check != s.to_i
-  #   #     @slots << (check.to_s + LETTER_CAP[count])
-  #   #     count = 1
-  #   #   end
-  #   #   @slots << s
-  #   #   check = s.to_i
-  #   #   count += 1
-  #   # end
-  # end
-
   def preview_result
     return redirect_to forms_path if params[:form_id].nil?
-
     form = Form.includes(:title).find_by_id(params[:form_id])
-    return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
+    @title = "View CDS/CDP Result For #{user.role.desc} - #{user.format_name}"
     @form_id = form.id
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)

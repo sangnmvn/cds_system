@@ -9,6 +9,7 @@ class DashboardsController < ApplicationController
   VIEW = 23
 
   def index
+    redirect_to index2_users_path if !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
   end
 
   def data_filter

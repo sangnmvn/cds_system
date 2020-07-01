@@ -19,7 +19,7 @@
         <option value="passed">Passed slots in previous periods</option>
         <option value="failed" selected>Failed slots in previous periods</option>
       </select>
-      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Request Update'.html_safe, "javascript:void(0)", id: "button_request_update", class: "confirm-request disabled", title: "Confirm request" %>
+      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Request Update'.html_safe, "javascript:void(0)", id: "button_request_update", class: "confirm-request disabled", title: "Request update" %>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
       <% if @is_approver %>
         <% if @hash[:status] == "Done" %>

@@ -58,7 +58,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     params[:reviewers].each do |reviewer|
-      mail(to: reviewer.last, subject: "[CDS system] withdraw CDS/CDP assessment of #{@account}")
+      mail(to: reviewer.last, subject: "[CDS system] Withdraw CDS/CDP assessment of #{@account}")
     end
   end
 
