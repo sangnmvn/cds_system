@@ -187,7 +187,7 @@ module Api
       { data: data, total: total }
     end
 
-    def data_users_up_title
+    def data_users_up_title()
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
@@ -199,18 +199,20 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
-
-      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
-
+      title_first = TitleHistory.joins([:user, period: [schedules: [:project]]]).includes([:user, period: [:schedules]]).where(user_id: user_ids, period_id: first.values).order("schedules.end_date_hr": :desc)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
       h_rank = {}
       title_second.map do |title|
         h_rank[title.user_id] = title.rank
       end
       results = []
       user_ids = []
-      title_first.map do |title|
+      company_ids = Set.new
+      project_ids = Set.new
+      title_first.each_with_index.map do |title, i|
         next if h_rank[title.user_id] == title.rank
+        previous_title = title_second.find { |element| element.user_id == title.user_id }
+
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -220,23 +222,31 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
+          company_id: title.user&.company_id,
+          project_name: title.period&.schedules&.first&.project.desc,
+          rank_prev: previous_title&.rank,
+          title_prev: previous_title&.title,
+          level_prev: previous_title&.level,
+          period_name: title.period&.format_name,
+          period_name_prev: previous_title.period&.format_name,
         }
         user_ids << title.user_id
+        company_ids << title.user&.company_id
       end
 
-      # 20.times do |i|
-      #   results << {
-      #     class: (i.even? ? "even" : "odd"),
-      #     title_history_id: rand(i + 100),
-      #     full_name: "#{rand(i + 100)} name name",
-      #     email: "#{rand(i + 100)}aaa.@gmail.com",
-      #     role: "#{rand(i + 100)} role role",
-      #     rank: rand(i + 100),
-      #     title: "#{rand(i + 100)} title tile",
-      #     level: rand(i + 100),
-      #   }
-      # end
-      { data: results, user_ids: user_ids, period_id: first.values }
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results, user_ids: user_ids, period_id: first.values, company_ids: company_ids, project_ids: project_ids }
     end
 
     def data_users_keep_title
