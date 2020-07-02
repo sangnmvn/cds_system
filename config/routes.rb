@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       post "request_update_cds"
       get "get_assessment_staff"
       get "cds_cdp_review"
+      get "get_conflict_assessment"
       get "cdp_review"
       get "get_slot_is_change"
       get "review_cds_assessment"

@@ -6,24 +6,24 @@
 <% breadcrumb :new_cdp %>
 <div class="container-fluid">
   <div class="row" id="cdp_container_div2">
-    <div class="col-md-5 div-header" ><%= "CDS & CDP #{@user[:role_name]} - #{@user[:format_name]}" %><span id="status"><%= "(#{@hash[:status]})" %></span></div>
+    <div class="col-md-5 div-header" ><%= "CDS & CDP #{@user[:role_name]} - #{@user[:format_name]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>
     <div class="col-md-7 list-action filter-slots" style="text-align:right;">
       Search: <input type="text" class="search-assessment" placeholder="Enter Slot ID, Description">
       Filter
-      <select id="filter-form-slots" multiple="multiple">
+      <select id="filter_form_slots" multiple="multiple">
         <option value="cds_assessment" selected>Assessing CDS</option>
-        <option value="cdp_assessment" selected>Assessing CDS</option>
+        <option value="cdp_assessment" selected>Assessing CDP</option>
         <option value="need_to_update" selected>Request Update</option>
         <option value="no_assessment" selected>No Assessments</option>
         <option value="passed">Passed slots in previous periods</option>
         <option value="failed" selected>Failed slots in previous periods</option>
       </select>
-      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)",id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
+      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
       <% if @hash[:status] == "Awaiting Review" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS-CDP" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
-      <% elsif  @hash[:status] == "Awaiting Approval" %>
+      <% elsif @hash[:status] == "Awaiting Approval" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
       <% else %>
@@ -55,9 +55,9 @@
   var status = "<%= @hash[:status].to_s %>";
   var is_reviewer = false;
   var is_approver = false;
-  var is_submit_cds = false;
-  var is_submit_cdp = false;
+  var is_submit = false;
   var lst_slot = {};
   var check_request_update = "";
+  var conflict_commits = {}
   loadDataPanel(form_id);
 </script>

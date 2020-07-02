@@ -11,25 +11,28 @@
     <div class="col-md-7 list-action filter-slots" style="text-align:right;">
       Search: <input type="text" class="search-assessment" placeholder="Enter Slot ID, Description"/>
       Filter
-      <select id="filter-form-slots" multiple="multiple">
+      <select id="filter_form_slots" multiple="multiple">
+        <option value="cds_assessment" selected>Assessing CDS</option>
+        <option value="cdp_assessment" selected>Assessing CDP</option>
+        <option value="need_to_update" selected>Request Update</option>
+        <option value="no_assessment" selected>No Assessments</option>
         <option value="passed">Passed slots in previous periods</option>
         <option value="failed" selected>Failed slots in previous periods</option>
-        <option value="no_assessment" selected>No Assessments</option>
-        <option value="need_to_update" selected>Need to update evidences</option>
-        <option value="assessing" selected>Assessing in the current period</option>
-        <option value="planned" selected> Planned in previous CDP</option>
       </select>
-      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Request Update'.html_safe, "javascript:void(0)", id: "button_request_update", class: "confirm-request disabled", title: "Confirm request" %>
+      <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Request Update'.html_safe, "javascript:void(0)", id: "button_request_update", class: "confirm-request disabled", title: "Request update" %>
       <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
-      <% if @is_approver %>
+      <% if @hash[:is_approver] %>
         <% if @hash[:status] == "Done" %>
           <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)", class: "reject-assessment", title: "Reject CDS/CDP" %>
         <% else  %>
           <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approval'.html_safe, "javascript:void(0)", class: "approval-assessment", title: "Approve CDS/CDP" %>
         <% end %>
-      <% elsif @is_reviewer %>
-        <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
-        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS" %>
+      <% elsif @hash[:is_reviewer] %>
+        <% if @hash[:is_submit] %>
+          <%= link_to '<i class="fas fa-file-import" style="color: gray"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment  disabled", title: "Submit CDS/CDP" %>
+        <% else  %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS/CDP" %>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -46,6 +49,7 @@
 <div><%= render "modal_request_add_more_evidence"%></div>
 <div><%= render "modal_request_update_prevent"%></div>
 <div><%= render "modal_approve_cds" %></div>
+<div><%= render "modal_conflict" %></div>
 <div><%= render "modal_reject_cds" %></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
@@ -53,13 +57,13 @@
   var form_id = <%= @hash[:form_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
   var status = "<%= @hash[:status].to_s %>";
-  var is_reviewer = <%= @is_reviewer || @is_approver %>;
-  var is_submit_cds = <%= @is_submit_cds %>
-  var is_submit_cdp = <%= @is_submit_cdp %>
-  var is_approver = <%= @is_approver %>;
+  var is_reviewer = <%= @hash[:is_reviewer] %>;
+  var is_submit = <%= @hash[:is_submit] %>
+  var is_approver = <%= @hash[:is_approver] %>;
   var user_current = <%= current_user.id %>;
   var user_to_be_reviewed = <%= @hash[:user_id] %>;
   var lst_slot = {};
+  var conflict_commits = {}
   var check_request_update = "";
   loadDataPanel(form_id);
 </script>

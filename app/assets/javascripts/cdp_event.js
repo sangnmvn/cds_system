@@ -1,5 +1,10 @@
 $(document).on("click", ".approval-assessment", function () {
-  $('#modal_approve_cds').modal('show');
+  var str = "You have conflict assessment CDS/CDP at " + find_conflict_in_arr(conflict_commits)
+  if (find_conflict_in_arr(conflict_commits) != "") {
+    $("#content_modal_conflict").html(str)
+    $('#modal_conflict').modal('show');
+  } else
+    $('#modal_approve_cds').modal('show');
 });
 
 $(document).on("click", ".reject-assessment", function () {
@@ -48,8 +53,6 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     success: function (response) {
       if (response.status == "success") {
         warning(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
-        // $("a.approval-assessment i").css("color", "#ccc");
-        // $('a.approval-assessment').removeClass('approval-assessment');        
         toggleInput(false);
       } else {
         fails("Can't approve CDS/CDP.");
@@ -95,3 +98,26 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
     }
   });
 });
+
+$(document).on("change", ".approver-commit, .reviewer-commit", function () {
+  var slot = $(this).closest('.row-slot')
+  var competency = $("#competency_panel").find(".show").data("competency-name")
+  if (slot.find(".staff-commit").val() != $(this).val()) {
+    if (conflict_commits[competency] == undefined)
+      conflict_commits[competency] = []
+    conflict_commits[competency].push(slot.data("location"))
+  } else {
+    if (conflict_commits[competency] != undefined)
+      conflict_commits[competency] = conflict_commits[competency].filter(item => item !== slot.data("location"))
+  }
+})
+
+function find_conflict_in_arr(arr) {
+  var str = ""
+  var keys = Object.keys(arr)
+  keys.forEach(key => {
+    if (arr[key].length > 0)
+      str += `<p> ${key} / ${arr[key].toString()}</p>`
+  });
+  return str
+}
