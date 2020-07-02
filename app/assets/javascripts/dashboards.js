@@ -2,6 +2,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff", "#e34856", "#8a103d", "#255381"]
 function drawChart(data_filter = {}) {
   // get data and draw chart gender
   $.ajax({
@@ -38,7 +39,7 @@ function drawChart(data_filter = {}) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPyramidChart(response.data, "#chart_seniority", "Year", "Number of Employees by Seniority");
+      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employees by Seniority", "Year");
     }
   });
 
@@ -52,7 +53,7 @@ function drawChart(data_filter = {}) {
     },
     success: function (response) {
       sleep(1000)
-      drawPyramidChart(response.data, "#chart_title", "Rank", "Number of Employees by Title");
+      drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employees by Title", "Rank");
     }
   })
 }
@@ -120,6 +121,7 @@ function loadDataFilter() {
       data_filter = paramFilter();
       drawChart(data_filter);
       loadDataUpTitle(data_filter);
+      loadDataDownTitle(data_filter);
       loadDataKeepTitle(data_filter);
     }
   });

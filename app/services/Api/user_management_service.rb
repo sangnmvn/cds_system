@@ -111,8 +111,8 @@ module Api
       true
     end
 
-    def data_users_by_seniority(gender = false)
-      users = User.joins(:project_members).where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
+    def data_users_by_seniority
+      users = User.joins(:project_members).where(filter_users).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
       users.each do |key, value|
         case key
@@ -131,59 +131,54 @@ module Api
         end
       end
 
-      h_users
+      h_users.select { |key, value| value > 0 }
     end
 
     def calulate_data_user_by_seniority
-      h_males = data_users_by_seniority(true)
-      h_females = data_users_by_seniority
+      h_males = data_users_by_seniority
       list = ["<3", "3-5", "5-7", "7-10", ">10"]
       data = list.map do |i|
-        { group: i, males: h_males[i], females: h_females[i] }
-      end
-      total = h_males.values.sum + h_females.values.sum
+        next if h_males[i].nil?
+        value = h_males[i] / 2.0
+        { group: i, left: value, right: value }
+      end.compact
+      total = h_males.values.sum
       { data: data, total: total }
     end
 
-    def data_users_by_title(gender = false)
-      users = User.left_outer_joins(:project_members, :title).where(filter_users).where(gender: gender).where.not(role_id: 6).group("titles.rank").count
-
+    def data_users_by_title
       if params[:role_id] && params[:role_id].length == 1
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.desc").count
         h_users = {}
-        count_title = Title.where(role_id: params[:role_id]).count
-        count_title.times do |i|
-          h_users[i + 1] = 0
-        end
-
         users.each do |key, value|
           h_users[key] = value
         end
         return h_users
       end
-      h_users = { "1" => 0, "2" => 0, "3" => 0, ">3" => 0 }
+      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.rank").count
+      h_users = { "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
       users.each do |key, value|
         case key
         when 1
-          h_users["1"] = value
+          h_users["Associate"] = value
         when 2
-          h_users["2"] = value
+          h_users["Middle"] = value
         when 3
-          h_users["3"] = value
+          h_users["Senior"] = value
         when 4..20
-          h_users[">3"] = value
+          h_users["> Senior"] = value
         end
       end
-      h_users
+      h_users.select { |key, value| value > 0 }
     end
 
     def calulate_data_user_by_title
-      h_males = data_users_by_title(true)
-      h_females = data_users_by_title
-      list = (h_males.keys + h_females.keys).uniq
-      data = list.map do |i|
-        { group: i, males: h_males[i], females: h_females[i] }
+      h_males = data_users_by_title
+      data = h_males.keys.map do |i|
+        value = h_males[i] / 2.0
+        { group: i, left: value, right: value }
       end
-      total = h_males.values.sum + h_females.values.sum
+      total = h_males.values.sum
       { data: data, total: total }
     end
 
@@ -203,14 +198,18 @@ module Api
       title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
 
-      h_rank = {}
+      h_old = {}
       title_second.map do |title|
-        h_rank[title.user_id] = title.rank
+        h_old[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+        }
       end
       results = []
       user_ids = []
       title_first.map do |title|
-        next if h_rank[title.user_id] == title.rank
+        next if h_old[title.user_id][:rank] < title.rank
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -220,6 +219,9 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
+          old_rank: h_old[title.user_id][:rank],
+          old_title: h_old[title.user_id][:title],
+          old_level: h_old[title.user_id][:level],
         }
         user_ids << title.user_id
       end
@@ -234,8 +236,74 @@ module Api
       #     rank: rand(i + 100),
       #     title: "#{rand(i + 100)} title tile",
       #     level: rand(i + 100),
+      #     old_rank: rand(i + 100),
+      #     old_title: "#{rand(i + 100)} title tile",
+      #     old_level: rand(i + 100),
       #   }
       # end
+      { data: results, user_ids: user_ids, period_id: first.values }
+    end
+
+    def data_users_down_title
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+
+      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
+
+      h_old = {}
+      title_second.map do |title|
+        h_old[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+        }
+      end
+      results = []
+      user_ids = []
+      title_first.map do |title|
+        next if h_rank[title.user_id] > title.rank
+        results << {
+          class: (i.even? ? "even" : "odd"),
+          title_history_id: title.id,
+          full_name: title.user.format_name,
+          email: title.user.email,
+          role: title.role_name,
+          rank: title.rank,
+          title: title.title,
+          level: title.level,
+          old_rank: h_old[title.user_id][:rank],
+          old_title: h_old[title.user_id][:title],
+          old_level: h_old[title.user_id][:level],
+        }
+        user_ids << title.user_id
+      end
+
+      # 20.times do |i|
+      #   results << {
+      #     class: (i.even? ? "even" : "odd"),
+      #     title_history_id: rand(i + 100),
+      #     full_name: "#{rand(i + 100)} name name",
+      #     email: "#{rand(i + 100)}aaa.@gmail.com",
+      #     role: "#{rand(i + 100)} role role",
+      #     rank: rand(i + 100),
+      #     title: "#{rand(i + 100)} title tile",
+      #     level: rand(i + 100),
+      #     old_rank: rand(i + 100),
+      #     old_title: "#{rand(i + 100)} title tile",
+      #     old_level: rand(i + 100),
+      #   }
+      # end
+
       { data: results, user_ids: user_ids, period_id: first.values }
     end
 
@@ -292,20 +360,19 @@ module Api
 
     private
 
-    def user_params()
-      param = {
-        first_name: params[:first_name], 
+    def user_params
+      {
+        first_name: params[:first_name],
         last_name: params[:last_name],
-        phone: params[:phone_number], 
+        phone: params[:phone_number],
         skype: params[:skype],
-        date_of_birth: params[:date_of_birth], 
+        date_of_birth: params[:date_of_birth],
         nationality: params[:nationality],
-        identity_card_no: params[:identity_card_no], 
+        identity_card_no: params[:identity_card_no],
         permanent_address: params[:permanent_address],
-        current_address: params[:current_address], 
+        current_address: params[:current_address],
         gender: params[:gender],
       }
-      param
     end
   end
 end

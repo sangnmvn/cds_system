@@ -195,11 +195,12 @@ class FormsController < ApplicationController
   def preview_result
     return redirect_to forms_path if params[:form_id].nil?
     form = Form.includes(:title).find_by_id(params[:form_id])
-    @title = "View CDS/CDP Result For #{user.role.desc} - #{user.format_name}"
+    # return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
     @form_id = form.id
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
-
+    user = User.includes(:role).find_by_id(form.user_id)
+    @title = "View CDS/CDP Result For #{user.role.desc} - #{user.format_name}"
     @slots = @result.values.map(&:keys).flatten.uniq.sort
   end
 

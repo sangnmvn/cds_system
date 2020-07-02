@@ -31,7 +31,7 @@ function drawPieChart(data, total, id, name) {
 
   var color = d3.scaleOrdinal()
     .domain(Object.keys(data))
-    .range(d3.schemeDark2);
+    .range(arrColor);
 
   // Compute the position of each group on the pie:
   var pie = d3.pie()
@@ -84,7 +84,7 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value; })
+    .text(function (d) { return d.data.value +'('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;

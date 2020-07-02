@@ -1,5 +1,6 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <%= stylesheet_link_tag 'dashboards', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <div class="header-panel">
   <div class="welcome">Welcome to Competency Development System</div>
   <div id="filter_dashboard" class="btn-filter-dashboard">
@@ -33,7 +34,7 @@
   </div>
   <br>
   <div class="title-table">
-    <div class="title-header-up">Up Title in the Lastest Period</div>
+    <div class="title-header-up">Up Title in the Latest Period</div>
     <div class="icon">
       <span>Export</span>&nbsp;
       <i class="fa fa-file-excel-o icon" id="export_excel_up_title" style="color: green"></i>&nbsp;
@@ -43,19 +44,59 @@
   <table id="table_up" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
     <thead>
       <tr>
-        <th class="th-sm number">No.</th>
-        <th class="th-sm name">Full Name</th>
-        <th class="th-sm email">Email</th>
-        <th class="th-sm role">Role</th>
-        <th class="th-sm title-h">Title</th>
-        <th class="th-sm rank">Rank</th>
-        <th class="th-sm level">Level</th>
-        <th class="th-sm action">Action</th>
+        <th class="th-sm number" rowspan="2" >No.</th>
+        <th class="th-sm name" rowspan="2" data-field="full_name">Full Name</th>
+        <th class="th-sm email" rowspan="2" data-field="email">Email</th>
+        <th class="th-sm role" rowspan="2" data-field="role">Role</th>
+        <th class="th-sm" colspan="3">Previous Assessment</th>
+        <th class="th-sm" colspan="3">Current Assessment</th>
+        <th class="th-sm action" rowspan="2">Action</th>
+      </tr>
+      <tr>
+        <th class="th-sm title-h" data-field="old_title">Title</th>
+        <th class="th-sm rank" data-field="old_rank">Rank</th>
+        <th class="th-sm level" data-field="old_level">Level</th>
+        <th class="th-sm title-h" data-field="title">Title</th>
+        <th class="th-sm rank" data-field="rank">Rank</th>
+        <th class="th-sm level" data-field="level">Level</th>
       </tr>
     </thead>
     <tbody>
     </tbody>
   </table>
+  <br>
+  <div class="title-table">
+    <div class="title-header-up">Down Title in the Latest Period</div>
+    <div class="icon">
+      <span>Export</span>&nbsp;
+      <i class="fa fa-file-excel-o icon" style="color: green"></i>&nbsp;
+      <i class="fa fa-file-pdf-o"  style="color: #a96f6f" aria-hidden="true"></i>
+    </div>
+  </div>
+  <table id="table_down" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th class="th-sm number" rowspan="2" >No.</th>
+        <th class="th-sm name" rowspan="2" data-field="full_name">Full Name</th>
+        <th class="th-sm email" rowspan="2" data-field="email">Email</th>
+        <th class="th-sm role" rowspan="2" data-field="role">Role</th>
+        <th class="th-sm" colspan="3">Previous Assessment</th>
+        <th class="th-sm" colspan="3">Current Assessment</th>
+        <th class="th-sm action" rowspan="2">Action</th>
+      </tr>
+      <tr>
+        <th class="th-sm title-h" data-field="old_title">Title</th>
+        <th class="th-sm rank" data-field="old_rank">Rank</th>
+        <th class="th-sm level" data-field="old_level">Level</th>
+        <th class="th-sm title-h" data-field="title">Title</th>
+        <th class="th-sm rank" data-field="rank">Rank</th>
+        <th class="th-sm level" data-field="level">Level</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <br>
   <div class="title-table">
     <div class="title-header-up">Down Title in the Lastest Period</div>
     <div class="icon">

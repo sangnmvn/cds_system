@@ -11,10 +11,6 @@ $odd-color: #CFD5EA;
     border: 1px solid;
 }
 
-th {
-    border: 1px solid;
-}
-
 .aa {
     background-color: #dae7ff;
     padding-left: 50px;
@@ -69,6 +65,10 @@ th {
 
 rect {
     stroke-width: 2;
+
+    &.bar {
+        max-height: 50px !important;
+    }
 }
 
 .welcome {
@@ -145,7 +145,7 @@ rect {
 
 .dashboard {
     table {
-        border: 2px solid #4882bf;
+        border: 2px solid #4882bf !important;
 
         tr {
             border: 1px solid $border-color;
@@ -159,9 +159,11 @@ rect {
             }
 
             th {
+                vertical-align: middle !important;
+                text-align: center;
                 color: #fff;
                 background-color: $header-color;
-                border: 1px solid $border-color;
+                border: 1px solid $border-color !important;
             }
 
             td {

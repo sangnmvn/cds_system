@@ -71,6 +71,10 @@ class DashboardsController < ApplicationController
     render json: @user_management_services.data_users_up_title
   end
 
+  def data_users_down_title
+    render json: @user_management_services.data_users_down_title
+  end
+
   def data_users_keep_title
     render json: { data: @user_management_services.data_users_keep_title }
   end

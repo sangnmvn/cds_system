@@ -138,6 +138,7 @@ Rails.application.routes.draw do
       post :calulate_data_user_by_seniority
       post :calulate_data_user_by_title
       post :data_users_up_title
+      post :data_users_down_title
       post :data_users_keep_title
       post :data_users_up_title_excel
       post :data_filter
