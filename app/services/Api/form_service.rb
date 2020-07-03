@@ -821,8 +821,14 @@ module Api
     end
 
     def get_conflict_assessment
-      form_slots = FormSlot.where(form_id: params[:form_id])
+      form_slots = FormSlot.includes(:comments).where(form_id: params[:form_id])
       return if form_slots.nil?
+      comment = []
+      form_slots.each do |form_slot|
+        
+        binding.pry
+        form_slot.comments #lấy dc comment
+      end
     end
 
     def cancel_update_cds(form_slot_ids)

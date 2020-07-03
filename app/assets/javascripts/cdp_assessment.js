@@ -37,7 +37,7 @@ function initCheckbox() {
           data_checked_request[competency_name] = []
         if (!data_checked_request[competency_name].includes(slot_id))
           data_checked_request[competency_name].push(slot_id);
-        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.appover-self").val().length == 0;
+        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
         $("#button_request_update").removeClass("disabled");
         $("#icon_confirm_request").prop("style", "color:green");
       } else {
@@ -461,6 +461,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
+        loadDataConflict(form_id)
         loadDataSlots(response);
         // checkStatusFormStaff(status);
         // init page at start
@@ -1001,14 +1002,16 @@ function loadDataPanel(form_id) {
 
 function loadDataConflict(form_id) {
   $.ajax({
-    type: "POST",
+    type: "GET",
     url: "/forms/get_conflict_assessment/",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    data: form_id,
+    data: {form_id : form_id},
     dataType: "json",
-    success: function (response) {}
+    success: function (response) {
+
+    }
   });
 }
 
