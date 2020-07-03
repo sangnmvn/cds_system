@@ -255,7 +255,7 @@ module Api
       user_up = data_users_up_title[:user_ids]
       period_id = data_users_up_title[:period_id]
       titles = TitleHistory.includes(:user).where(user_id: user_ids - user_up, period_id: period_id)
-      titles.map do |title|
+      titles.each_with_index.map do |title, i|
         {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,

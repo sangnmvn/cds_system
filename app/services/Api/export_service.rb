@@ -16,8 +16,10 @@ module Api
     end
 
     def repack_zip_if_multiple(filenames, zip_filename = nil)
-      # turn files into zip if multiple files
-      # Caution: DELETE all file if ZIPPED
+      # - Turn files into zip if multiple files
+      # Caution: DELETE all file if ZIP is applied
+      # - Else return the current file without deletion
+      # If multiple files download .zip, if 1 file download the only file
       if filenames.length.zero?
         nil
       elsif filenames.length == 1
