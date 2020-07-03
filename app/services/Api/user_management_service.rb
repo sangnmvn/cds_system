@@ -208,7 +208,6 @@ module Api
       results = []
       user_ids = []
       company_ids = Set.new
-      project_ids = Set.new
       title_first.each_with_index.map do |title, i|
         next if h_rank[title.user_id] == title.rank
         previous_title = title_second.find { |element| element.user_id == title.user_id }
@@ -248,7 +247,7 @@ module Api
       #level: rand(i + 100),
       #}
       #end
-      { data: results, user_ids: user_ids, period_id: first.values, company_ids: company_ids, project_ids: project_ids }
+      { data: results, user_ids: user_ids, period_id: first.values, company_ids: company_ids }
     end
 
     def data_users_keep_title
