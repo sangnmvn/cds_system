@@ -8,8 +8,8 @@ $("#export_excel_up_title").on('click', function()
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
         success: function (response) {
-          // download this file
-          window.location = response['filename'];
+          // download this file in NEW TAB
+          window.open(response['filename'] ,'_blank');
         }
       });
     
