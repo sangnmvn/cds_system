@@ -199,7 +199,7 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
-      title_first = TitleHistory.joins([:user, period: [schedules: [:project]]]).includes([:user, period: [:schedules]]).where(user_id: user_ids, period_id: first.values).order("schedules.end_date_hr": :desc)
+      title_first = TitleHistory.joins([[user: [:company]], period: [schedules: [:project]]]).includes([[user: [:company]], period: [schedules: [:project]]]).where(user_id: user_ids, period_id: first.values).order("schedules.end_date_hr": :desc)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
       h_rank = {}
       title_second.map do |title|
@@ -223,12 +223,14 @@ module Api
           title: title.title,
           level: title.level,
           company_id: title.user&.company_id,
+          company_name: title.user&.company&.name,
           project_name: title.period&.schedules&.first&.project.desc,
           rank_prev: previous_title&.rank,
           title_prev: previous_title&.title,
           level_prev: previous_title&.level,
-          period_name: title.period&.format_name,
-          period_name_prev: previous_title.period&.format_name,
+          period_name: title.period&.format_name_tail,
+          period_excel_name: title.period&.format_excel_name,
+          period_name_prev: previous_title.period&.format_name_tail,
         }
         user_ids << title.user_id
         company_ids << title.user&.company_id
