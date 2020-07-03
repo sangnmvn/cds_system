@@ -36,7 +36,7 @@
     <div class="title-header-up">Up Title in the Lastest Period</div>
     <div class="icon">
       <span>Export</span>&nbsp;
-      <i class="fa fa-file-excel-o icon" style="color: green"></i>&nbsp;
+      <i class="fa fa-file-excel-o icon" id="export_excel_up_title" style="color: green"></i>&nbsp;
       <i class="fa fa-file-pdf-o"  style="color: #a96f6f" aria-hidden="true"></i>
     </div>
   </div>
@@ -64,7 +64,7 @@
         <option value='0' disabled selected>At least 1 latest period</option>
       </select>&nbsp;
       <span>Export</span>&nbsp;
-      <i class="fa fa-file-excel-o icon" style="color: green"></i>&nbsp;
+      <i class="fa fa-file-excel-o icon" id="export_excel_keep_title" style="color: green"></i>&nbsp;
       <i class="fa fa-file-pdf-o"  style="color: #a96f6f" aria-hidden="true"></i>
     </div>
   </div>
@@ -92,3 +92,4 @@
 <%= javascript_include_tag 'pie_chart', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'data_table_dashboards', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'dashboards', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'dashboards_export', 'data-turbolinks-track': 'reload' %>

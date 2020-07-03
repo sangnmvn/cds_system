@@ -42,6 +42,7 @@
 //= link pie_chart
 //= link dashboards
 //= link dashboards.css
+//= link dashboards_export
 //= link form_cds_cdp_review.js
 //= link cdp_event.js
 //= link cdp_assessment.js

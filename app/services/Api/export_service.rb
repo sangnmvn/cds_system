@@ -1,5 +1,7 @@
 module Api
   class ExportService < BaseService
+    FILE_CLEANUP_TIME_IN_SECONDS = 10 * 60
+
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
       privilege_array = []
@@ -13,12 +15,72 @@ module Api
       @user_mgmt_service ||= Api::UserManagementService.new(params, current_user)
     end
 
+    def repack_zip_if_multiple(filenames, zip_filename = nil)
+      # turn files into zip if multiple files
+      # Caution: DELETE all file if ZIPPED
+      if filenames.length.zero?
+        nil
+      elsif filenames.length == 1
+        filenames[0]
+      else
+        folder = "public/"
+        Zip::File.open(zip_filename, Zip::File::CREATE) do |zipfile|
+          filenames.each do |filename|
+            # Two arguments:
+            # - The name of the file as it will appear in the archive
+            # - The original file, including the path to find it
+            in_filename = File.join(folder, filename)
+            zipfile.add(filename, in_filename)
+          end
+        end
+        filenames.each do |filename|
+          in_filename = File.join(folder, filename)
+          File.delete(in_filename) if File.exist?(in_filename)
+        end
+        zip_filename
+      end
+    end
+
+    def schedule_file_for_clean_up(filename)
+      # Delete the file after FILE_CLEAN_UP_TIME seconds
+      # 1. every second check if the file is replaced
+      #-> File belongs to new requests and current requests are overwritten
+      # 2. else after time has passed delete the file
+      # Precondition: File must be in public folder WITHOUT the 'public/' in the path
+      f = File.new("public/#{filename}")
+
+      # get original creation time
+      creation_time = f.ctime
+      Thread.new do
+        (0...FILE_CLEANUP_TIME_IN_SECONDS).each do |_i|
+          sleep 1
+          begin
+            f = File.new("public/#{filename}")
+            new_creation_time = f.ctime
+            if creation_time != new_creation_time
+              # File has been modified, exit the thread
+              # Later thread will clean it up
+              Thread.exit
+            end
+          rescue StandardError
+            Thread.exit
+          end
+        end
+
+        f = File.new("public/#{filename}")
+        new_creation_time = f.ctime
+        if creation_time == new_creation_time
+          File.delete("public/" + filename)
+        end
+      end
+    end
+
     # Api::ExportService.new({}, User.find(1)).export_excel_up_title("xlsx")
-    #filter[:company_id], filter[:role_id], filter[:project_members]
     def export_excel_up_title(extension)
       outdata = @user_mgmt_service.data_users_up_title
       data_arr = outdata[:data]
       company_ids = outdata[:company_ids]
+      out_file_names = []
       company_ids.each do |company_id|
         package = Axlsx::Package.new
         workbook = package.workbook
@@ -68,14 +130,18 @@ module Api
         # getting output file to public/
         if extension.downcase == "xlsx"
           package.serialize("public/#{out_file_name}.xlsx")
-          File.basename("#{out_file_name}.xlsx")
+          out_file_names << File.basename("#{out_file_name}.xlsx")
         elsif extension.downcase == "pdf"
           package.serialize("public/temp.xlsx")
           Libreconv.convert("public/temp.xlsx", "public/#{out_file_name}.pdf", nil, "pdf:calc_pdf_Export")
-          File.basename("#{out_file_name}.pdf")
           File.delete("public/temp.xlsx") if File.exist?("public/temp.xlsx")
+          out_file_names << File.basename("#{out_file_name}.pdf")
         end
       end
+      zip_file_name = "public/CDS_Promotion_Employee_List.zip"
+      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_filename)
+      final_filename
     end
   end
 end

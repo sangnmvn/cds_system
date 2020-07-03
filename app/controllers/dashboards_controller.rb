@@ -2,7 +2,7 @@ class DashboardsController < ApplicationController
   layout "root_layout"
   before_action :get_privilege_id, :check_privilege
   before_action :user_management_services
-
+  before_action :export_services
   ALL_COMPANY = 20
   MY_COMPANY = 21
   MY_PROJECT = 22
@@ -30,6 +30,12 @@ class DashboardsController < ApplicationController
       projects: projects,
       roles: roles,
     }
+  end
+
+  def export_excel_up_title
+    ext = params[:ext] || "xlsx"
+    filepath = @export_services.export_excel_up_title(ext)
+    render json: { filename: filepath }
   end
 
   def data_users_by_gender
@@ -61,6 +67,10 @@ class DashboardsController < ApplicationController
   end
 
   private
+
+  def export_services
+    @export_services = Api::ExportService.new(params, current_user)
+  end
 
   def user_management_services
     @user_management_services = Api::UserManagementService.new(params, current_user)

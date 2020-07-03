@@ -6,6 +6,7 @@ ruby "2.7.1"
 gem "ajax-datatables-rails"
 
 gem "zip-zip"
+gem "rubyzip"
 gem "axlsx", "~> 1.3.4"
 gem "axlsx_rails" # Provide templates for the axlsx gem
 gem "libreconv"
@@ -26,21 +27,21 @@ gem "turbolinks", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.7"
 
-gem 'config'
+gem "config"
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'bootstrap', '~> 4.4.1'
-gem 'gretel', '~> 3.0', '>= 3.0.9'
-gem 'jquery-rails'
+gem "bootstrap", "~> 4.4.1"
+gem "gretel", "~> 3.0", ">= 3.0.9"
+gem "jquery-rails"
 
-gem 'popper_js', '~> 1.14.5'
-gem 'select_all-rails'
-gem 'font-awesome-sass'
-gem 'bootstrap-datepicker-rails'
-gem 'whenever', require: false
+gem "popper_js", "~> 1.14.5"
+gem "select_all-rails"
+gem "font-awesome-sass"
+gem "bootstrap-datepicker-rails"
+gem "whenever", require: false
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem "kaminari"
@@ -75,8 +76,8 @@ group :development do
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 3.0', require: false
-  gem 'database_cleaner', '~> 1.5'
+  gem "shoulda-matchers", "~> 3.0", require: false
+  gem "database_cleaner", "~> 1.5"
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 2.15"
   gem "selenium-webdriver"
