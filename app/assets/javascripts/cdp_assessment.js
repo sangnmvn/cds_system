@@ -351,6 +351,7 @@ function checkDisableFormSlotsReviewer(is_reviewer, tracking) {
   return ""
 }
 $(document).ready(function () {
+  loadDataConflict(form_id)
   $("#button_request_update").on("click", function () {
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
@@ -461,7 +462,6 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        loadDataConflict(form_id)
         loadDataSlots(response);
         // checkStatusFormStaff(status);
         // init page at start
@@ -1010,7 +1010,7 @@ function loadDataConflict(form_id) {
     data: {form_id : form_id},
     dataType: "json",
     success: function (response) {
-
+      conflict_commits = response
     }
   });
 }

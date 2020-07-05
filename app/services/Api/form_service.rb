@@ -821,14 +821,20 @@ module Api
     end
 
     def get_conflict_assessment
-      form_slots = FormSlot.includes(:comments).where(form_id: params[:form_id])
+      form_slots = FormSlot.includes(slot: [:competency]).includes(:comments,:line_managers).where(form_id: params[:form_id], line_managers: {user_id: current_user.id})
       return if form_slots.nil?
-      comment = []
+      slot_conflicts = {}
       form_slots.each do |form_slot|
-        
-        binding.pry
-        form_slot.comments #lấy dc comment
+        location_slots = get_location_slot(form_slot.slot.competency_id)
+        comment = form_slot.comments.order(:updated_at).last
+        line_manager = form_slot.line_managers.first
+        competency_name = form_slot.slot.competency.name
+        if (comment.nil? && line_manager.is_commit) || (comment.point.nil? && !line_manager.given_point.nil?)
+          slot_conflicts[competency_name] = [] if slot_conflicts[competency_name].nil?
+          slot_conflicts[competency_name] << location_slots[form_slot.slot_id]
+        end
       end
+      slot_conflicts
     end
 
     def cancel_update_cds(form_slot_ids)
