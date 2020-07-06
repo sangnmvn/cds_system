@@ -14,10 +14,12 @@ class Period < ApplicationRecord
   end
 
   def format_long_date
+    return "New" if from_date.nil? || to_date.nil?
     "#{from_date.strftime("%b %d, %Y")} - #{to_date.strftime("%b %d, %Y")}"
   end
 
   def format_excel_name
-    "#{from_date.strftime("%Y%m%d")}"
+    return "New" if from_date.nil?
+    from_date.strftime("%Y%m%d")
   end
 end

@@ -199,19 +199,18 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
-      title_first = TitleHistory.joins([[user: [:company]], period: [schedules: [:project]]]).includes([[user: [:company]], period: [schedules: [:project]]]).where(user_id: user_ids, period_id: first.values).order("schedules.end_date_hr": :desc)
-      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+
+      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
+
       h_rank = {}
       title_second.map do |title|
         h_rank[title.user_id] = title.rank
       end
       results = []
       user_ids = []
-      company_ids = Set.new
-      title_first.each_with_index.map do |title, i|
+      title_first.map do |title|
         next if h_rank[title.user_id] == title.rank
-        previous_title = title_second.find { |element| element.user_id == title.user_id }
-
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -221,33 +220,23 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
-          company_id: title.user&.company_id,
-          company_name: title.user&.company&.name,
-          project_name: title.period&.schedules&.first&.project.desc,
-          rank_prev: previous_title&.rank,
-          title_prev: previous_title&.title,
-          level_prev: previous_title&.level,
-          period_name: title.period&.format_to_date,
-          period_excel_name: title.period&.format_excel_name,
-          period_name_prev: previous_title.period&.format_to_date,
         }
         user_ids << title.user_id
-        company_ids << title.user&.company_id
       end
 
-      #20.times do |i|
-      #results << {
-      #class: (i.even? ? "even" : "odd"),
-      #title_history_id: rand(i + 100),
-      #full_name: "#{rand(i + 100)} name name",
-      #email: "#{rand(i + 100)}aaa.@gmail.com",
-      #role: "#{rand(i + 100)} role role",
-      #rank: rand(i + 100),
-      #title: "#{rand(i + 100)} title tile",
-      #level: rand(i + 100),
-      #}
-      #end
-      { data: results, user_ids: user_ids, period_id: first.values, company_ids: company_ids }
+      # 20.times do |i|
+      #   results << {
+      #     class: (i.even? ? "even" : "odd"),
+      #     title_history_id: rand(i + 100),
+      #     full_name: "#{rand(i + 100)} name name",
+      #     email: "#{rand(i + 100)}aaa.@gmail.com",
+      #     role: "#{rand(i + 100)} role role",
+      #     rank: rand(i + 100),
+      #     title: "#{rand(i + 100)} title tile",
+      #     level: rand(i + 100),
+      #   }
+      # end
+      { data: results, user_ids: user_ids, period_id: first.values }
     end
 
     def data_users_keep_title
@@ -255,7 +244,7 @@ module Api
       user_up = data_users_up_title[:user_ids]
       period_id = data_users_up_title[:period_id]
       titles = TitleHistory.includes(:user).where(user_id: user_ids - user_up, period_id: period_id)
-      titles.each_with_index.map do |title, i|
+      titles.map do |title|
         {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -315,9 +304,14 @@ module Api
       end
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_rank = {}
+      h_previous_period = {}
       title_second.map do |title|
-        h_rank[title.user_id] = [title.rank, title.level, title.title, title&.period&.format_to_date]
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
       end
       results = {}
       user_ids = []
@@ -328,21 +322,19 @@ module Api
       else
         h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
       end
-      h_periods = {}
-      first.map do |company_id, period_id|
-        h_periods[company_id] = { current: period_id, prev: second[company_id] }
-      end
-      title_first.each_with_index.map do |title, i|
-        prev_rank, prev_level, prev_title, prev_name = h_rank[title.user_id]
-        next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) <= 0
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
+        next if title.rank <= prev_rank
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
             users: [],
             company_name: h_companies[company_id],
-            period: h_periods[company_id][:current],
-            prev_period: h_periods[company_id][:prev],
+            period: first[company_id],
+            prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
             period_prev_name: prev_name,
@@ -390,9 +382,14 @@ module Api
       end
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_rank = {}
+      h_previous_period = {}
       title_second.map do |title|
-        h_rank[title.user_id] = [title.rank, title.level, title.title, title&.period&.format_to_date]
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
       end
       results = {}
       user_ids = []
@@ -403,21 +400,19 @@ module Api
       else
         h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
       end
-      h_periods = {}
-      first.map do |company_id, period_id|
-        h_periods[company_id] = { current: period_id, prev: second[company_id] }
-      end
-      title_first.each_with_index.map do |title, i|
-        prev_rank, prev_level, prev_title, prev_name = h_rank[title.user_id]
-        next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) >= 0
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
+        next if title.rank >= prev_rank
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
             users: [],
             company_name: h_companies[company_id],
-            period: h_periods[company_id][:current],
-            prev_period: h_periods[company_id][:prev],
+            period: first[company_id],
+            prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
             period_prev_name: prev_name,
@@ -465,9 +460,14 @@ module Api
       end
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_rank = {}
+      h_previous_period = {}
       title_second.map do |title|
-        h_rank[title.user_id] = [title.rank, title.level, title.title, title&.period&.format_to_date]
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
       end
       results = {}
       user_ids = []
@@ -478,12 +478,10 @@ module Api
       else
         h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
       end
-      h_periods = {}
-      first.map do |company_id, period_id|
-        h_periods[company_id] = { current: period_id }
-      end
-      title_first.each_with_index.map do |title, i|
-        prev_rank, prev_level, prev_title, prev_name = h_rank[title.user_id]
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
         next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) != 0
 
         company_id = title&.user&.company_id
@@ -491,9 +489,11 @@ module Api
           results[company_id] = {
             users: [],
             company_name: h_companies[company_id],
-            period: h_periods[company_id][:current],
+            period: first[company_id],
+            prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
+            period_prev_name: prev_name,
           }
         end
         results[company_id][:users] << {
@@ -502,8 +502,9 @@ module Api
           rank: title&.rank,
           title: title&.title,
           level: title&.level,
-          period_from: title&.period&.id, # !!! dummy
-          period_from_name: title&.period&.format_to_date, # !!! dummy
+          rank_prev: prev_rank,
+          level_prev: prev_level,
+          title_prev: prev_title,
         }
       end
 

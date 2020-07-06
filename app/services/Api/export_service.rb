@@ -26,13 +26,14 @@ module Api
         filenames[0]
       else
         folder = "public/"
-        Zip::File.open(zip_filename, Zip::File::CREATE) do |zipfile|
+        File.delete(zip_filename) if File.exist?(zip_filename)
+        Zip::File.open("public/#{zip_filename}", Zip::File::CREATE) do |zipfile|
           filenames.each do |filename|
             # Two arguments:
             # - The name of the file as it will appear in the archive
             # - The original file, including the path to find it
             in_filename = File.join(folder, filename)
-            zipfile.add(filename, in_filename)
+            zipfile.add(filename, in_filename) { true }
           end
         end
         filenames.each do |filename|
@@ -211,7 +212,7 @@ module Api
           out_file_names << File.basename("#{out_file_name}.pdf")
         end
       end
-      zip_file_name = "public/CDS_Promotion_Employee_List.zip"
+      zip_file_name = "public/CDS_Demotion_Employee_List.zip"
       final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
       schedule_file_for_clean_up(final_filename)
       final_filename
@@ -273,7 +274,7 @@ module Api
           out_file_names << File.basename("#{out_file_name}.pdf")
         end
       end
-      zip_file_name = "public/CDS_Promotion_Employee_List.zip"
+      zip_file_name = "CDS_No_Change_Title_Employee_List.zip"
       final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
       schedule_file_for_clean_up(final_filename)
       final_filename
