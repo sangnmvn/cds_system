@@ -146,5 +146,137 @@ module Api
       schedule_file_for_clean_up(final_filename)
       final_filename
     end
+
+    # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
+    def export_down_title(params)
+      outdata = @user_mgmt_service.data_users_down_title_export(params)
+      h_list = outdata[:data]
+      out_file_names = []
+      return "" unless h_list.keys.any?
+
+      h_list.each do |company_id, h_data|
+        package = Axlsx::Package.new
+        workbook = package.workbook
+        # preparing data
+        period = h_data[:period]
+        period_prev = h_data[:prev_period]
+        period_excel_name = h_data[:period_excel_name]
+        # making file
+        company_name = h_data[:company_name].gsub(/ /, "")
+        out_file_name = "CDS_Company_#{company_name}_Demotion_Employee_List_in_Period_#{period_excel_name}"
+        # formatting Excel
+        title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
+        normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
+        number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
+        email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        # create sheet
+        level_up_sheet = workbook.add_worksheet(:name => "Demotion List")
+        level_up_sheet.page_setup.set(fit_to_width: 1)
+        level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.add_row ["Demotion Employee in the Latest Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.rows[1].cells[0].style = title_format
+        level_up_sheet.merge_cells "A1:J1"
+        level_up_sheet.merge_cells "A2:J2"
+        level_up_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
+        level_up_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
+        level_up_sheet.merge_cells "A3:A4"
+        level_up_sheet.merge_cells "B3:B4"
+        level_up_sheet.merge_cells "C3:C4"
+        level_up_sheet.merge_cells "D3:F3"
+        level_up_sheet.merge_cells "G3:I3"
+        level_up_sheet.merge_cells "J3:J4"
+        filtered_data_arr = h_data[:users]
+        filtered_data_arr.each_with_index do |result, index|
+          level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
+          level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 7, 8].include?(index) }.each { |element| element.style = normal_format }
+          level_up_sheet.rows[-1].cells[0].style = index_format
+          level_up_sheet.rows[-1].cells[2].style = email_format
+          level_up_sheet.rows[-1].cells[4].style = number_format
+          level_up_sheet.rows[-1].cells[5].style = number_format
+          level_up_sheet.rows[-1].cells[7].style = number_format
+          level_up_sheet.rows[-1].cells[8].style = number_format
+        end
+        level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
+        # getting output file to public/
+        extension = params[:ext]
+        if extension.downcase == "xlsx"
+          package.serialize("public/#{out_file_name}.xlsx")
+          out_file_names << File.basename("#{out_file_name}.xlsx")
+        elsif extension.downcase == "pdf"
+          package.serialize("public/temp.xlsx")
+          Libreconv.convert("public/temp.xlsx", "public/#{out_file_name}.pdf", nil, "pdf:calc_pdf_Export")
+          File.delete("public/temp.xlsx") if File.exist?("public/temp.xlsx")
+          out_file_names << File.basename("#{out_file_name}.pdf")
+        end
+      end
+      zip_file_name = "public/CDS_Promotion_Employee_List.zip"
+      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_filename)
+      final_filename
+    end
+
+    # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
+    def export_keep_title(params)
+      outdata = @user_mgmt_service.data_users_keep_title_export(params)
+      h_list = outdata[:data]
+      out_file_names = []
+      return "" unless h_list.keys.any?
+
+      h_list.each do |company_id, h_data|
+        package = Axlsx::Package.new
+        workbook = package.workbook
+        # preparing data
+        period = h_data[:period]
+        period_prev = h_data[:prev_period]
+        period_excel_name = h_data[:period_excel_name]
+        # making file
+        company_name = h_data[:company_name].gsub(/ /, "")
+        out_file_name = "CDS_Company_#{company_name}_No_Change_Title_Employee_List_in_Period_#{period_excel_name}"
+        # formatting Excel
+        title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
+        normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
+        number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
+        email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        # create sheet
+        level_up_sheet = workbook.add_worksheet(:name => "No Change List")
+        level_up_sheet.page_setup.set(fit_to_width: 1)
+        level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.add_row ["List of employee has no change level in period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.rows[1].cells[0].style = title_format
+        level_up_sheet.merge_cells "A1:J1"
+        level_up_sheet.merge_cells "A2:J2"
+        level_up_sheet.add_row ["No.", "Employee Name", "Email", "From Period", "Title", "Rank", "Level", "Notes"], :style => table_header_format
+
+        filtered_data_arr = h_data[:users]
+        filtered_data_arr.each_with_index do |result, index|
+          level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:period_from_name], result[:title], result[:rank], result[:level], ""]
+          level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 5, 6].include?(index) }.each { |element| element.style = normal_format }
+          level_up_sheet.rows[-1].cells[0].style = index_format
+          level_up_sheet.rows[-1].cells[2].style = email_format
+          level_up_sheet.rows[-1].cells[5].style = number_format
+          level_up_sheet.rows[-1].cells[6].style = number_format
+        end
+        level_up_sheet.column_widths 5, 30, 30, 20, 20, 5, 5, 30 # run at last
+        # getting output file to public/
+        extension = params[:ext]
+        if extension.downcase == "xlsx"
+          package.serialize("public/#{out_file_name}.xlsx")
+          out_file_names << File.basename("#{out_file_name}.xlsx")
+        elsif extension.downcase == "pdf"
+          package.serialize("public/temp.xlsx")
+          Libreconv.convert("public/temp.xlsx", "public/#{out_file_name}.pdf", nil, "pdf:calc_pdf_Export")
+          File.delete("public/temp.xlsx") if File.exist?("public/temp.xlsx")
+          out_file_names << File.basename("#{out_file_name}.pdf")
+        end
+      end
+      zip_file_name = "public/CDS_Promotion_Employee_List.zip"
+      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_filename)
+      final_filename
+    end
   end
 end

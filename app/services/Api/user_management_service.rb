@@ -375,6 +375,153 @@ module Api
       { data: results }
     end
 
+    def data_users_down_title_export(data_filter)
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_rank = {}
+      title_second.map do |title|
+        h_rank[title.user_id] = [title.rank, title.level, title.title, title&.period&.format_to_date]
+      end
+      results = {}
+      user_ids = []
+      h_companies = {}
+      companies_id = data_filter[:company_ids]
+      if companies_id.nil?
+        h_companies = Company.pluck([:id, :name]).to_a.to_h
+      else
+        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
+      end
+      h_periods = {}
+      first.map do |company_id, period_id|
+        h_periods[company_id] = { current: period_id, prev: second[company_id] }
+      end
+      title_first.each_with_index.map do |title, i|
+        prev_rank, prev_level, prev_title, prev_name = h_rank[title.user_id]
+        next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) >= 0
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: h_periods[company_id][:current],
+            prev_period: h_periods[company_id][:prev],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+            period_prev_name: prev_name,
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          rank_prev: prev_rank,
+          level_prev: prev_level,
+          title_prev: prev_title,
+        }
+      end
+
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results }
+    end
+
+    def data_users_keep_title_export(data_filter)
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_rank = {}
+      title_second.map do |title|
+        h_rank[title.user_id] = [title.rank, title.level, title.title, title&.period&.format_to_date]
+      end
+      results = {}
+      user_ids = []
+      h_companies = {}
+      companies_id = data_filter[:company_ids]
+      if companies_id.nil?
+        h_companies = Company.pluck([:id, :name]).to_a.to_h
+      else
+        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
+      end
+      h_periods = {}
+      first.map do |company_id, period_id|
+        h_periods[company_id] = { current: period_id }
+      end
+      title_first.each_with_index.map do |title, i|
+        prev_rank, prev_level, prev_title, prev_name = h_rank[title.user_id]
+        next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) != 0
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: h_periods[company_id][:current],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          period_from: title&.period&.id, # !!! dummy
+          period_from_name: title&.period&.format_to_date, # !!! dummy
+        }
+      end
+
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results }
+    end
+
     private
 
     attr_reader :current_user, :params, :privilege_array

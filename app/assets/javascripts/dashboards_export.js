@@ -1,6 +1,6 @@
-function callAjaxExport(ext){
+function callAjaxExport(url, ext){
   $.ajax({
-    url: "/dashboards/export_up_title",
+    url: url,
     data: {
       ext: ext,
       company_ids: data_filter["company_id"], 
@@ -26,9 +26,25 @@ function callAjaxExport(ext){
 }
 
 $("#export_excel_up_title").on('click', function () {
-  callAjaxExport("xlsx");
+  callAjaxExport("/dashboards/export_up_title", "xlsx");
 });
 
 $("#export_pdf_up_title").on('click', function () {
-  callAjaxExport("pdf");
+  callAjaxExport("/dashboards/export_up_title", "pdf");
+});
+
+$("#export_excel_down_title").on('click', function () {
+  callAjaxExport("/dashboards/export_down_title", "xlsx");
+});
+
+$("#export_pdf_down_title").on('click', function () {
+  callAjaxExport("/dashboards/export_down_title", "pdf");
+});
+
+$("#export_excel_keep_title").on('click', function () {
+  callAjaxExport("/dashboards/export_keep_title", "xlsx");
+});
+
+$("#export_pdf_keep_title").on('click', function () {
+  callAjaxExport("/dashboards/export_keep_title", "pdf");
 });
