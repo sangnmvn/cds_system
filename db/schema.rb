@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_11_041416) do
+ActiveRecord::Schema.define(version: 2020_06_22_044408) do
 
   create_table "approvers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_041416) do
     t.bigint "form_slot_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_commit"
     t.index ["form_slot_id"], name: "index_line_managers_on_form_slot_id"
     t.index ["period_id"], name: "index_line_managers_on_period_id"
   end
@@ -286,17 +287,19 @@ ActiveRecord::Schema.define(version: 2020_06_11_041416) do
     t.datetime "reset_password_sent_at"
     t.boolean "is_delete", default: false
     t.boolean "status", default: true
-    t.string "title", default: ""
     t.datetime "remember_created_at"
     t.datetime "joined_date"
+    t.boolean "gender", default: true
     t.bigint "company_id"
     t.bigint "role_id"
+    t.bigint "title_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
+    t.index ["title_id"], name: "index_users_on_title_id"
   end
 
   add_foreign_key "approvers", "users"

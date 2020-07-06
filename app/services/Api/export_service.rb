@@ -77,22 +77,20 @@ module Api
       end
     end
 
-    # Api::ExportService.new({}, User.find(1)).export_excel_up_title("xlsx")
-    def export_excel_up_title(extension)
-      outdata = @user_mgmt_service.data_users_up_title
-      data_arr = outdata[:data]
-      company_ids = outdata[:company_ids]
+    # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
+    def export_up_title(extension, data_filter)
+      outdata = @user_mgmt_service.data_users_up_title_export(data_filter)
+      h_list = outdata[:data]
       out_file_names = []
-      company_ids.each do |company_id|
+      h_list.each do |company_id, h_data|
         package = Axlsx::Package.new
         workbook = package.workbook
         # preparing data
-        filtered_data_arr = data_arr.select { |result| result[:company_id] == company_id }
-        period_prev = filtered_data_arr[0][:period_name_prev]
-        period = filtered_data_arr[0][:period_name]
-        period_excel_name = filtered_data_arr[0][:period_excel_name]
+        period = h_data[:period]
+        period_prev = h_data[:prev_period]
+        period_excel_name = h_data[:period_excel_name]
         # making file
-        company_name = filtered_data_arr[0][:company_name].gsub(/ /, "")
+        company_name = h_data[:company_name].gsub(/ /, "")
         out_file_name = "CDS_Company_#{company_name}_Promotion_Employee_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
@@ -105,11 +103,11 @@ module Api
         level_up_sheet = workbook.add_worksheet(:name => "Promotion List")
         level_up_sheet.page_setup.set(fit_to_width: 1)
         level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.add_row ["Promotion Employee in the Latest Period [#{period}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.add_row ["Promotion Employee in the Latest Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_up_sheet.rows[1].cells[0].style = title_format
         level_up_sheet.merge_cells "A1:J1"
         level_up_sheet.merge_cells "A2:J2"
-        level_up_sheet.add_row ["No.", "Employee Name", "Email", "Period #{data_arr[0][:period_name_prev]}", "", "", "Period #{data_arr[0][:period_name]}", "", "", "Notes"], :style => table_header_format
+        level_up_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
         level_up_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
         level_up_sheet.merge_cells "A3:A4"
         level_up_sheet.merge_cells "B3:B4"
@@ -117,7 +115,7 @@ module Api
         level_up_sheet.merge_cells "D3:F3"
         level_up_sheet.merge_cells "G3:I3"
         level_up_sheet.merge_cells "J3:J4"
-
+        filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
           level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
           level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 7, 8].include?(index) }.each { |element| element.style = normal_format }

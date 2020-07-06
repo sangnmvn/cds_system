@@ -32,9 +32,38 @@ class DashboardsController < ApplicationController
     }
   end
 
-  def export_excel_up_title
+  def filter_cds_review_list
+    filter_users = {}
+    filter = {}
+    unless params[:user_ids] == "0"
+      filter_users[:id] = params[:user_ids]&.split(",")&.map(&:to_i)
+    end
+
+    unless params[:role_ids] == "0"
+      filter_users[:role_id] = params[:role_ids]&.split(",")&.map(&:to_i)
+    end
+
+    unless params[:company_ids] == "0"
+      filter_users[:company_id] = params[:company_ids]&.split(",")&.map(&:to_i)
+    end
+
+    unless params[:period_ids] == "0"
+      filter[:period_id] = params[:period_ids]&.split(",")&.map(&:to_i || 0)
+    end
+
+    unless params[:project_ids] == "0"
+      filter[:project_id] = params[:project_ids]&.split(",")&.map(&:to_i || 0)
+    end
+
+    filter[:filter_users] = filter_users
+
+    filter
+  end
+
+  def export_up_title
+    data_filter = filter_cds_review_list
     ext = params[:ext] || "xlsx"
-    filepath = @export_services.export_excel_up_title(ext)
+    filepath = @export_services.export_up_title(ext, data_filter)
     render json: { filename: filepath }
   end
 

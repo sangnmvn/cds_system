@@ -349,10 +349,6 @@ class FormsController < ApplicationController
     @form_service ||= Api::FormService.new(form_params, current_user)
   end
 
-  def export_service
-    @export_service ||= Api::ExportService.new(form_params, current_user)
-  end
-
   def form_params
     params[:offset] = params[:iDisplayStart] || "0"
     params[:user_ids] = params[:user_ids] || "0"
