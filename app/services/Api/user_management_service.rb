@@ -273,22 +273,6 @@ module Api
       # results
     end
 
-    def compare_2D_array(a, b)
-      if a[0] > b[0]
-        return 1
-      elsif a[0] < b[0]
-        return -1
-      else
-        if a[1] > b[1]
-          return 1
-        elsif a[1] < b[1]
-          return -1
-        else
-          return 0
-        end
-      end
-    end
-
     def data_users_up_title_export(data_filter)
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
@@ -325,8 +309,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
-        next if title.rank <= prev_rank
+        next if title.rank <= prev_period[:rank]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -337,7 +320,7 @@ module Api
             prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
-            period_prev_name: prev_name,
+            period_prev_name: prev_period[:name],
           }
         end
         results[company_id][:users] << {
@@ -346,9 +329,9 @@ module Api
           rank: title&.rank,
           title: title&.title,
           level: title&.level,
-          rank_prev: prev_rank,
-          level_prev: prev_level,
-          title_prev: prev_title,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
         }
       end
 
@@ -403,8 +386,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
-        next if title.rank >= prev_rank
+        next if title.rank >= prev_period[:rank]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -415,7 +397,7 @@ module Api
             prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
-            period_prev_name: prev_name,
+            period_prev_name: prev_period[:name],
           }
         end
         results[company_id][:users] << {
@@ -424,9 +406,9 @@ module Api
           rank: title&.rank,
           title: title&.title,
           level: title&.level,
-          rank_prev: prev_rank,
-          level_prev: prev_level,
-          title_prev: prev_title,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
         }
       end
 
@@ -481,8 +463,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        prev_rank, prev_level, prev_title, prev_name = prev_period[:rank], prev_period[:level], prev_period[:title], prev_period[:name]
-        next if compare_2D_array([title.rank, title.level], [prev_rank, prev_level]) != 0
+        next if title.rank != prev_period[:rank]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -493,7 +474,7 @@ module Api
             prev_period: second[company_id],
             period_excel_name: title&.period&.format_excel_name,
             period_name: title&.period&.format_to_date,
-            period_prev_name: prev_name,
+            period_prev_name: prev_period[:name],
           }
         end
         results[company_id][:users] << {
@@ -502,9 +483,9 @@ module Api
           rank: title&.rank,
           title: title&.title,
           level: title&.level,
-          rank_prev: prev_rank,
-          level_prev: prev_level,
-          title_prev: prev_title,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
         }
       end
 

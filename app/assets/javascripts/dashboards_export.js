@@ -1,25 +1,19 @@
-function callAjaxExport(url, ext){
+function callAjaxExport(url, ext) {
+  temp_params = Object.assign({},data_filter);
+  temp_params["ext"] = ext;
   $.ajax({
     url: url,
-    data: {
-      ext: ext,
-      company_ids: data_filter["company_id"], 
-      project_ids: data_filter["project_id"],
-      role_ids:  data_filter["role_id"]
-    },
+    data: temp_params,
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
       // download this file in NEW TAB
-      if (response['filename'] != "")
-      {
-        window.open(response['filename'], '_blank');
-      }
-      else
-      {
+      if (response['filename'] == "") {
         alert("File is empty!");
+      } else {
+        window.open(response['filename'], '_blank');
       }
     }
   });
