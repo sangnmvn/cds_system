@@ -27,6 +27,11 @@ class FormsController < ApplicationController
     render json: data
   end
 
+  def cancel_request
+    form_slot_ids = params[:form_slot_id].map { |k| k.to_i }
+    render json: @form_service.cancel_request(form_slot_ids, params[:slot_id])
+  end
+
   def get_list_cds_assessment
     render json: @form_service.get_list_cds_assessment(current_user.id)
   end
@@ -154,7 +159,7 @@ class FormsController < ApplicationController
       user_name: user.format_name,
       form_id: form.id,
       status: form.status,
-      title: "CDS/CDP Review for #{user.role.name} - #{user.format_name} (#{form.status})",
+      title: "CDS/CDP Review for #{user.role.name} - #{user.format_name}",
       is_submit: approver.is_submit_cds,
       is_approver: approver.is_approver,
       is_reviewer: !approver.is_approver,
@@ -388,6 +393,6 @@ class FormsController < ApplicationController
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type)
+                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,:cancel_slots)
   end
 end

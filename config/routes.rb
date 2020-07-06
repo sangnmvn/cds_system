@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       get "preview_result"
       post :data_view_result
       post "get_competencies"
+      post :cancel_request
       post "get_competencies_reviewer"
       get "cds_assessment"
       get "cdp_assessment"

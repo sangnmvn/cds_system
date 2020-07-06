@@ -1,5 +1,6 @@
 $(document).on("click", ".approval-assessment", function () {
-  var str = "You have conflict assessment CDS/CDP at " + find_conflict_in_arr(conflict_commits)
+  var str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action. Slot: " + 
+      find_conflict_in_arr(conflict_commits) + "<p>Please continue reviewing or request update from Line Manager</p>"
   if (find_conflict_in_arr(conflict_commits) != "") {
     $("#content_modal_conflict").html(str)
     $('#modal_conflict').modal('show');
@@ -25,9 +26,12 @@ $(document).on("click", "#confirm_yes_reject_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        warning(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
-        // $("a.reject-assessment i").css("color", "#ccc");
-        // $('a.reject-assessment').removeClass('reject-assessment');    
+        success(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
+        $("#approve_cds").removeClass("d-none").addClass("approval-assessment")
+        $("#reject_cds").addClass("d-none").removeClass("reject-assessment")
+        $("#button_cancel_request").removeClass("d-none")
+        $("#button_request_update").removeClass("d-none")
+        $("#status").html("(Awaiting Approval)")
         toggleInput(true);
       } else {
         fails("Can't rejected CDS/CDP.");
@@ -52,7 +56,12 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        warning(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
+        success(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
+        $("#approve_cds").addClass("d-none").removeClass("approval-assessment")
+        $("#button_cancel_request").addClass("d-none")
+        $("#button_request_update").addClass("d-none")
+        $("#reject_cds").removeClass("d-none").addClass("reject-assessment")
+        $("#status").html("(Done)")
         toggleInput(false);
       } else {
         fails("Can't approve CDS/CDP.");
@@ -78,25 +87,19 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
     },
     dataType: "json",
     success: function (response) {
-      var success_message = ""
-      var fails_message = ""
-      if (response.color == "yellow") {
-        success_message = "This slot has been requested more evidence successfully.";
-        fails_message = "Can not requested"
-      } else {
-        success_message = "This slot has been cancelled requesting more evidence successfully.";
-        fails_message = "Can not cancelled request"
-      }
-      if (response.status == "success") {
-        $('#' + $(_this).val() + " i").css('color', response.color)
-        $('#' + $(_this).val()).data("click", response.color);
-        $('#' + $(_this).val()).attr("title", checkTitle(response.color))
-        warning(success_message)
-      } else {
-        fails(fails_message);
-      }
+      // success_message = "These slots have been requested more evidence successfully.";
+      // fails_message = "Can not requested"
+      // if (response.status == "success") {
+      //   success(success_message)
+      // } else {
+      //   fails(fails_message);
+      // }
     }
   });
+  success("These slots have been requested more evidence successfully.")
+  checked_set.clear()
+  data_checked_request = {}
+  loadDataPanel(form_id)
 });
 
 $(document).on("change", ".approver-commit, .reviewer-commit", function () {
@@ -106,7 +109,7 @@ $(document).on("change", ".approver-commit, .reviewer-commit", function () {
     if (conflict_commits[competency] == undefined)
       conflict_commits[competency] = []
     conflict_commits[competency].push(slot.data("location"))
-  } else {
+  }else {
     if (conflict_commits[competency] != undefined)
       conflict_commits[competency] = conflict_commits[competency].filter(item => item !== slot.data("location"))
   }

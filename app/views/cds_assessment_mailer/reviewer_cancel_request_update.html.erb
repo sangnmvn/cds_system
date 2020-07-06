@@ -1,0 +1,11 @@
+<p>Dear <%= @name %> ,</p>
+
+<p>The request for updating your CDS/CDP assessment on the following competencies / slots has been cancelled.</p>
+
+  <% @slots.each do |k, v| %>
+    <p><b><%= k %></b> / <%= v.join(", ") %></p>
+  <% end %>
+  
+<p>Therefore, you do not need to update these slots more.</p>
+<p>Thank you,</p>
+<p>CDS System</p>

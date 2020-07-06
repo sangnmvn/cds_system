@@ -1,11 +1,12 @@
 // Set can't have duplicates
 // contains form slot id has been selected
 var checked_set = new Set();
-var data_checked_request = {};
+var data_checked_request = {}
 // contains form slot empty to be checked
 // key: form slot id
 // value: true or false, is message empty
 var checked_set_is_empty_comment = {};
+
 function refreshCheckbox() {
   if (!(is_reviewer || is_approver)) {
     return;
@@ -40,6 +41,8 @@ function initCheckbox() {
         checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
         $("#button_request_update").removeClass("disabled");
         $("#icon_confirm_request").prop("style", "color:green");
+        $("#button_cancel_request").removeClass("disabled");
+        $("#icon_cancel_request").prop("style", "color:green");
       } else {
         var competency_name = $('#competency_panel').find('.show').data('competency-name');
         var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
@@ -51,6 +54,8 @@ function initCheckbox() {
         if (checked_set.size == 0) {
           $("#button_request_update").addClass("disabled");
           $("#icon_confirm_request").prop("style", "color: #6c757d")
+          $("#button_cancel_request").addClass("disabled");
+          $("#icon_cancel_request").prop("style", "color: #6c757d");
         }
       }
     });
@@ -82,20 +87,35 @@ function loadDataSlots(response) {
     length = e.tracking.recommends == undefined ? 0 : e.tracking.recommends.length;
     flag = ""
     title_flag = ""
-    for (i in e.tracking.recommends) {
+    for (var i = 0; i < length; i++) {
       if (e.tracking.flag == "orange") {
         flag = "orange";
-        title_flag = "This slot needs an update"
+        if (!is_reviewer && !is_approver)
+          title_flag = "This slot needs an update"
+        else
+          title_flag = "This slot's staff needs an update"
         break
       } else if (e.tracking.flag == "yellow") {
-        flag = "yellow";
-        title_flag = "This slot have been updated"
-        check_request_update = "true"
+        if (e.tracking.recommends[i].flag == "#99FF33") {
+          if (e.tracking.recommends[i].user_id == user_current) {
+            flag = e.tracking.recommends[i].flag;
+            title_flag = "This slot have been updated"
+            check_request_update = "true"
+            break;
+          }
+        } else {
+          flag = "yellow"
+          check_request_update = "false"
+        }
+        if (!is_reviewer && !is_approver) {
+          check_request_update = "true"
+        }
       }
     }
     if (status == "New" || check_request_update == "") {
       $("#confirm_request").addClass("disabled")
       $("#icon_confirm_request").prop("style", "color: #6c757d")
+      $("#icon_cancel_request").prop("style", "color: #6c757d")
     }
     lst_slot[e.id] = flag
     temp += `<div id="${e.id}" class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
@@ -123,7 +143,7 @@ function loadDataSlots(response) {
             <b>Staff Commit (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(is_reviewer, e.tracking)}>
+            <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(e.tracking)}>
               <option value="false" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
               <option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit,"CDP")}> Commit CDP</option>
@@ -135,7 +155,7 @@ function loadDataSlots(response) {
             <b>Self-Assessment (*):</b>
           </div>
           <div class="col-3">
-            <select class="form-control input-staff select-assessment" ${checkDisableFormSlotsReviewer(is_reviewer, e.tracking)} style="${checkDataPoint(e.tracking.point)}">
+            <select class="form-control input-staff select-assessment" ${checkDisableFormSlotsReviewer(e.tracking)} style="${checkDataPoint(e.tracking.point)}">
               <option disabled selected> select one </option>
               <option value="1" ${compare(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
               <option value="2" ${compare(e.tracking.point, 2)}> 2 - Needs Improvement</option>
@@ -150,7 +170,7 @@ function loadDataSlots(response) {
             <b class='title-comment'>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
-            <textarea maxlength="1000" placeholder="comment content if any" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(is_reviewer, e.tracking)}>${e.tracking.evidence}</textarea>
+            <textarea maxlength="1000" placeholder="comment content if any" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(e.tracking)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
     if (length > 0) {
@@ -176,7 +196,7 @@ function loadDataSlots(response) {
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
-                  <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
+                  <option value="false" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
                   <option value="commit_cds" ${e.tracking.comment_type == "CDS" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDS")}> Commit CDS</option>
                   <option value="commit_cdp" ${e.tracking.comment_type == "CDP" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDP")}> Commit CDP</option>
                   </select>
@@ -215,7 +235,7 @@ function loadDataSlots(response) {
                     <td>${lst_approver[2]}</td>
                     <td>
                       <select class="form-control select-commit approver-commit ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? "" : "approver-self"}" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])} ${e.tracking.comment_type == "CDS" ? "disabled" : ""} >
-                      <option value="uncommit" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
+                      <option value="false" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
                       <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDS")}> Commit CDS</option>
                       <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDP")}> Commit CDP</option>
                       </select>
@@ -345,11 +365,12 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
   return ""
 }
 
-function checkDisableFormSlotsReviewer(is_reviewer, tracking) {
-  if (is_reviewer || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && !tracking.flag))
+function checkDisableFormSlotsReviewer(tracking) {
+  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && !tracking.flag))
     return "disabled"
   return ""
 }
+
 $(document).ready(function () {
   loadDataConflict(form_id)
   $("#button_request_update").on("click", function () {
@@ -364,12 +385,41 @@ $(document).ready(function () {
       }
     }
     if (all_comments_not_empty && checked_set.size > 0) {
+      $("#modal_request_add_more_evidence #data_slot").html(find_conflict_in_arr(data_checked_request))
       $("#modal_request_add_more_evidence").modal("show");
     } else {
       // open warning model      
       $("#modal_deny_request_update").modal("show");
     }
   });
+  $("#button_cancel_request").on("click", function () {
+    $("#modal_cancel_request_update #data_slot").html(find_conflict_in_arr(data_checked_request))
+    $("#modal_cancel_request_update").modal("show");
+  });
+
+  $("#submit_cancel_request_update").on("click", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/cancel_request",
+      data: {
+        form_slot_id: [...checked_set],
+        form_id: form_id,
+        slot_id: JSON.stringify(data_checked_request),
+        user_id: user_to_be_reviewed,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {}
+    })
+    $('#modal_cancel_request_update').modal('hide');
+    checked_set.clear()
+    data_checked_request = {}
+    loadDataPanel(form_id)
+    success("The CDS/CDP has been cancelled requesting update on some slots successfully.")
+  });
+
   $(".left-panel-competency").hide();
   $("#body-row .collapse").collapse("hide");
   $("[data-toggle=sidebar-colapse]").click(function () {
@@ -414,6 +464,8 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         success("These slots have been updated and informed to requester successfully.")
+        $("#icon_confirm_request").prop("style","color: #ccc")
+        $("#confirm_request").addClass("disabled")
       }
     })
     $('#modal_confirm_request').modal('hide');
@@ -471,7 +523,6 @@ $(document).ready(function () {
         if (status == "Done") {
           toggleInput(false);
         }
-
         $(".select-commit").each(function () {
           is_commit = $(this).val();
           if (is_commit == "commit_cdp") {
@@ -482,8 +533,13 @@ $(document).ready(function () {
             $(this).closest("tr").find(".approver-assessment").removeClass("d-none");
           }
         });
+        $(".cdp-slot-wrapper").each(function () {
+          if ($(this).find(".icon-flag").css("color") != "rgb(255, 255, 255)") {
+            $(this).find(".reviewer-self").removeAttr("disabled");
+            $(this).find(".approver-self").removeAttr("disabled");
+          }
+        });
         refreshCheckbox();
-
       }
     });
   });
@@ -719,12 +775,6 @@ $(document).ready(function () {
 
   $(document).on("click", "#confirm_submit_cds", function () {
     if (is_reviewer) {
-      var str = "You have conflict assessment CDS/CDP at " + find_conflict_in_arr(conflict_commits)
-      if (find_conflict_in_arr(conflict_commits) != "") {
-        $("#content_modal_conflict").html(str)
-        $('#modal_conflict').modal('show');
-        return
-      }
       $.ajax({
         type: "POST",
         url: "/forms/reviewer_submit",
@@ -738,13 +788,16 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
+            success(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             // NOT
-            $('a.submit-assessment').removeClass('submit-assessment');
+            $('a.submit-assessment').addClass('d-none');
             $('#modal_period').modal('hide');
-            $("#confirm_request").addClass("disabled")
-            $("#icon_confirm_request").prop("style", "color: #6c757d")
+            $("#button_request_update").addClass("d-none")
+            $("#button_cancel_request").addClass("d-none")
+            $("#confirm_update_to_approver").removeClass("d-none")
+            $("#icon_confirm_update_to_approver").css("color", "#ccc");
+            $("#status").html("(Submited)")
             toggleInput(false);
           } else {
             fails("Can't submit CDS/CDP.");
@@ -782,6 +835,15 @@ $(document).ready(function () {
     };
   });
   $(document).on("click", ".submit-assessment", function () {
+    if (is_reviewer || is_approver) {
+      var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+        find_conflict_in_arr(conflict_commits) + "</p><p>Please continue reviewing or request update to Staff.</p>"
+      if (find_conflict_in_arr(conflict_commits) != "") {
+        $("#content_modal_conflict").html(str)
+        $('#modal_conflict').modal('show');
+        return
+      }
+    }
     $('#modal_period').modal('show');
   });
 
@@ -798,7 +860,7 @@ $(document).ready(function () {
       } else if (is_commit == "commit_cds") {
         $(this).find(".approver-assessment").removeClass("d-none");
       }
-      if (is_commit == "uncommit") {
+      if (is_commit == "false") {
         return;
       } else if (is_commit == "commit_cdp") {
         point = null;
@@ -827,7 +889,7 @@ $(document).ready(function () {
       } else if (is_commit == "commit_cds") {
         $(this).find(".reviewer-assessment").removeClass("d-none");
       }
-      if (is_commit == "uncommit") {
+      if (is_commit == "false") {
         return;
       } else if (is_commit == "commit_cdp") {
         point = null;
@@ -850,7 +912,9 @@ $(document).ready(function () {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
         success: function (response) {
-          // auto save do nothing
+          $("#confirm_request").removeClass("disabled")
+          $("#icon_confirm_request").prop("style", "color:green")
+          row.closest(".row-slot").find('.icon-flag').prop("style", "color: #99FF33")
         }
       });
     }
@@ -1007,7 +1071,9 @@ function loadDataConflict(form_id) {
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    data: {form_id : form_id},
+    data: {
+      form_id: form_id
+    },
     dataType: "json",
     success: function (response) {
       conflict_commits = response

@@ -27,6 +27,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @slots = params[:slots]
+    @current_user = params[:current_user]
     params[:reviewers].each do |reviewer|
       mail(to: reviewer.last, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
     end
@@ -38,6 +39,12 @@ class CdsAssessmentMailer < ApplicationMailer
     @to_date = params[:to_date]
     @slots = params[:slots]
     mail(to: params[:staff].email, subject: "[CDS system] Request to update your CDS/CDP assessment")
+  end
+
+  def reviewer_cancel_request_update
+    @name = params[:staff].account
+    @slots = params[:slots]
+    mail(to: params[:staff].email, subject: "[CDS system] Cancel the request to update your CDS/CDP assessment")
   end
 
   def reviewer_requested_more_evidences
