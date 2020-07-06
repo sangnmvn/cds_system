@@ -32,38 +32,27 @@ class DashboardsController < ApplicationController
     }
   end
 
-  def filter_cds_review_list
-    filter_users = {}
-    filter = {}
-    unless params[:user_ids] == "0"
-      filter_users[:id] = params[:user_ids]&.split(",")&.map(&:to_i)
-    end
-
-    unless params[:role_ids] == "0"
-      filter_users[:role_id] = params[:role_ids]&.split(",")&.map(&:to_i)
-    end
-
-    unless params[:company_ids] == "0"
-      filter_users[:company_id] = params[:company_ids]&.split(",")&.map(&:to_i)
-    end
-
-    unless params[:period_ids] == "0"
-      filter[:period_id] = params[:period_ids]&.split(",")&.map(&:to_i || 0)
-    end
-
-    unless params[:project_ids] == "0"
-      filter[:project_id] = params[:project_ids]&.split(",")&.map(&:to_i || 0)
-    end
-
-    filter[:filter_users] = filter_users
-
-    filter
-  end
-
   def export_up_title
-    data_filter = filter_cds_review_list
-    ext = params[:ext] || "xlsx"
-    filepath = @export_services.export_up_title(ext, data_filter)
+    params[:ext] ||= "xlsx"
+    if params[:company_ids] = "All"
+      params[:company_ids] = nil
+    else
+      params[:company_ids] = params[:company_ids].split(",").map(&:to_i)
+    end
+
+    if params[:project_ids] = "All"
+      params[:project_ids] = nil
+    else
+      params[:project_ids] = params[:project_ids].split(",").map(&:to_i)
+    end
+
+    if params[:role_ids] = "All"
+      params[:role_ids] = nil
+    else
+      params[:role_ids] = params[:role_ids].split(",").map(&:to_i)
+    end
+
+    filepath = @export_services.export_up_title(params)
     render json: { filename: filepath }
   end
 

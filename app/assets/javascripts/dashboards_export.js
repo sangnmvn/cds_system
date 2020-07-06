@@ -13,7 +13,14 @@ function callAjaxExport(ext){
     },
     success: function (response) {
       // download this file in NEW TAB
-      window.open(response['filename'], '_blank');
+      if (response['filename'] != "")
+      {
+        window.open(response['filename'], '_blank');
+      }
+      else
+      {
+        alert("File is empty!");
+      }
     }
   });
 }

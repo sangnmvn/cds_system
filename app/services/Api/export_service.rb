@@ -78,10 +78,12 @@ module Api
     end
 
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
-    def export_up_title(extension, data_filter)
-      outdata = @user_mgmt_service.data_users_up_title_export(data_filter)
+    def export_up_title(params)
+      outdata = @user_mgmt_service.data_users_up_title_export(params)
       h_list = outdata[:data]
       out_file_names = []
+      return "" unless h_list.keys.any?
+
       h_list.each do |company_id, h_data|
         package = Axlsx::Package.new
         workbook = package.workbook
@@ -128,6 +130,7 @@ module Api
         end
         level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
         # getting output file to public/
+        extension = params[:ext]
         if extension.downcase == "xlsx"
           package.serialize("public/#{out_file_name}.xlsx")
           out_file_names << File.basename("#{out_file_name}.xlsx")
