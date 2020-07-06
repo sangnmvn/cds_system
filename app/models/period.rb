@@ -9,7 +9,7 @@ class Period < ApplicationRecord
   end
 
   def format_to_date
-    return "New" if from_date.nil? || to_date.nil?
+    return "New" if to_date.nil?
     to_date.strftime("%m/%Y")
   end
 

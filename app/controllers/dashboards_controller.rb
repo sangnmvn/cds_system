@@ -34,19 +34,17 @@ class DashboardsController < ApplicationController
 
   def export_up_title
     filepath = @export_services.export_up_title(process_export_params)
-    render json: { filename: filepath }
+    render json: { filepath: filepath }
   end
 
   def export_down_title
-    process_export_params
     filepath = @export_services.export_down_title(process_export_params)
-    render json: { filename: filepath }
+    render json: { filepath: filepath }
   end
 
   def export_keep_title
-    process_export_params
     filepath = @export_services.export_keep_title(process_export_params)
-    render json: { filename: filepath }
+    render json: { filepath: filepath }
   end
 
   def data_users_by_gender
@@ -82,23 +80,24 @@ class DashboardsController < ApplicationController
   def process_export_params
     out_params = params.clone
     out_params[:ext] ||= "xlsx"
-    if out_params[:company_ids] = "All"
-      out_params[:company_ids] = nil
+    if out_params[:company_id] != "All"
+      out_params[:company_id] = out_params[:company_id].split(",").map(&:to_i)
     else
-      out_params[:company_ids] = out_params[:company_ids].split(",").map(&:to_i)
+      out_params[:company_id] = nil
     end
 
-    if out_params[:project_ids] = "All"
-      out_params[:project_ids] = nil
+    if out_params[:project_id] != "All"
+      out_params[:project_id] = out_params[:project_id].split(",").map(&:to_i)
     else
-      out_params[:project_ids] = out_params[:project_ids].split(",").map(&:to_i)
+      out_params[:project_id] = nil
     end
 
-    if out_params[:role_ids] = "All"
-      out_params[:role_ids] = nil
+    if out_params[:role_id] != "All"
+      out_params[:role_id] = out_params[:role_id].split(",").map(&:to_i)
     else
-      out_params[:role_ids] = out_params[:role_ids].split(",").map(&:to_i)
+      out_params[:role_id] = nil
     end
+
     out_params
   end
 

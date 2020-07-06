@@ -15,7 +15,7 @@ module Api
       @user_mgmt_service ||= Api::UserManagementService.new(params, current_user)
     end
 
-    def repack_zip_if_multiple(filenames, zip_filename = nil)
+    def repack_zip_if_multiple(filenames, zip_file_name = nil)
       # - Turn files into zip if multiple files
       # Caution: DELETE all file if ZIP is applied
       # - Else return the current file without deletion
@@ -26,8 +26,8 @@ module Api
         filenames[0]
       else
         folder = "public/"
-        File.delete(zip_filename) if File.exist?(zip_filename)
-        Zip::File.open("public/#{zip_filename}", Zip::File::CREATE) do |zipfile|
+        File.delete(zip_file_name) if File.exist?(zip_file_name)
+        Zip::File.open("public/#{zip_file_name}", Zip::File::CREATE) do |zipfile|
           filenames.each do |filename|
             # Two arguments:
             # - The name of the file as it will appear in the archive
@@ -40,7 +40,7 @@ module Api
           in_filename = File.join(folder, filename)
           File.delete(in_filename) if File.exist?(in_filename)
         end
-        zip_filename
+        zip_file_name
       end
     end
 
