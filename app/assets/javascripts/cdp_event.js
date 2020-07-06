@@ -1,7 +1,8 @@
 $(document).on("click", ".approval-assessment", function () {
-  var str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action. Slot: " + 
-      find_conflict_in_arr(conflict_commits) + "<p>Please continue reviewing or request update from Line Manager</p>"
-  if (find_conflict_in_arr(conflict_commits) != "") {
+  var data_conflict = findConflictinArr(conflict_commits)
+  if (data_conflict) {
+    var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+      data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
     $("#content_modal_conflict").html(str)
     $('#modal_conflict').modal('show');
   } else
@@ -109,13 +110,13 @@ $(document).on("change", ".approver-commit, .reviewer-commit", function () {
     if (conflict_commits[competency] == undefined)
       conflict_commits[competency] = []
     conflict_commits[competency].push(slot.data("location"))
-  }else {
+  } else {
     if (conflict_commits[competency] != undefined)
       conflict_commits[competency] = conflict_commits[competency].filter(item => item !== slot.data("location"))
   }
 })
 
-function find_conflict_in_arr(arr) {
+function findConflictinArr(arr) {
   var str = ""
   var keys = Object.keys(arr)
   keys.forEach(key => {

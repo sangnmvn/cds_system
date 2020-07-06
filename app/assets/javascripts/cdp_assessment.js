@@ -385,7 +385,7 @@ $(document).ready(function () {
       }
     }
     if (all_comments_not_empty && checked_set.size > 0) {
-      $("#modal_request_add_more_evidence #data_slot").html(find_conflict_in_arr(data_checked_request))
+      $("#modal_request_add_more_evidence #data_slot").html(findConflictinArr(data_checked_request))
       $("#modal_request_add_more_evidence").modal("show");
     } else {
       // open warning model      
@@ -393,7 +393,7 @@ $(document).ready(function () {
     }
   });
   $("#button_cancel_request").on("click", function () {
-    $("#modal_cancel_request_update #data_slot").html(find_conflict_in_arr(data_checked_request))
+    $("#modal_cancel_request_update #data_slot").html(findConflictinArr(data_checked_request))
     $("#modal_cancel_request_update").modal("show");
   });
 
@@ -464,7 +464,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         success("These slots have been updated and informed to requester successfully.")
-        $("#icon_confirm_request").prop("style","color: #ccc")
+        $("#icon_confirm_request").prop("style", "color: #ccc")
         $("#confirm_request").addClass("disabled")
       }
     })
@@ -655,14 +655,6 @@ $(document).ready(function () {
     });
   });
 
-  $("#content_slot").on("change", ".row-slot", function () {
-    var evidence = $(this).find('.comment').val();
-    if (evidence.length >= 1000) {
-      fails("Bằng chứng phải nhỏ hơn 1000 ký tự")
-      return;
-    }
-  });
-
   $("#content_slot").on("change", ".comment", function () {
     var row = $(this).closest('.row-slot')
     autoSaveStaff(row)
@@ -763,7 +755,7 @@ $(document).ready(function () {
     });
   });
 
-  function find_conflict_in_arr(arr) {
+  function findConflictinArr(arr) {
     var str = ""
     var keys = Object.keys(arr)
     keys.forEach(key => {
@@ -835,16 +827,16 @@ $(document).ready(function () {
     };
   });
   $(document).on("click", ".submit-assessment", function () {
-    if (is_reviewer || is_approver) {
-      var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
-        find_conflict_in_arr(conflict_commits) + "</p><p>Please continue reviewing or request update to Staff.</p>"
-      if (find_conflict_in_arr(conflict_commits) != "") {
+    var data_conflict = findConflictinArr(conflict_commits)
+    if (data_conflict) {
+      if (is_reviewer || is_approver) {
+        var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+        data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
         $("#content_modal_conflict").html(str)
         $('#modal_conflict').modal('show');
-        return
       }
-    }
-    $('#modal_period').modal('show');
+    } else
+      $('#modal_period').modal('show');
   });
 
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {

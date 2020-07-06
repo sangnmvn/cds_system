@@ -125,11 +125,11 @@ module Api
     end
 
     def confirm_request
-      user_of_form = Form.find_by(id: params[:form_id]).user_id
-      approver = Approver.find_by(user_id: user_of_form, is_approver: 1)
+      user_of_form = Form.includes(:user).find_by(id: params[:form_id])
+      approver = Approver.find_by(user_id: user_of_form, is_approver: true)
       reviewer = ""
       form_slot_ids = {}
-      if user_of_form != current_user.id #check staff or reviewer
+      if user_of_form.user.id == current_user.id #check staff or reviewer
         #form slot have comment_flag_yellows
         form_slot_id_in_comments = Comment.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "yellow").
@@ -138,8 +138,8 @@ module Api
         form_slot_ids = LineManager.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "orange",
                 form_slot_id: form_slot_id_in_comments)
-        reviewer_ids = Approver.where(user_id: current_user.id, is_approver: false).pluck(:approver_id)
-        reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
+        reviewer = User.joins(:approvers).where("approvers.user_id": :current_user.id).
+          where("approvers.is_approver": false).pluck(:account, :email)
       else
         form_slot_id_of_current_users = LineManager.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "#99FF33").
@@ -161,8 +161,7 @@ module Api
           customize_slots[key] = [] if customize_slots[key].nil?
           customize_slots[key] << location_slots[form_slot.slot.id]
         end
-        user_name = User.find_by(id: user_of_form).account
-        CdsAssessmentMailer.with(user_name: user_name, current_user: current_user.account, from_date: period.from_date,
+        CdsAssessmentMailer.with(user_name: user_of_form.user.account, current_user: current_user.account, from_date: period.from_date,
                                  to_date: period.to_date, reviewers: reviewer, slots: customize_slots).
           user_add_more_evidence.deliver_later(wait: 1.seconds)
       end
@@ -494,20 +493,14 @@ module Api
         period_id = Form.find(params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
-        approver_id = Approver.find_by(user_id: params[:user_id], is_approver: 1).approver_id
-        if approver_id.present? && approver_id != current_user.id
-          flag = LineManager.find_by(user_id: approver_id, form_slot_id: form_slot.id).flag
-          if line_manager.present?
-            line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag == "orange" ? "#99FF33" : "")
-          else
-            LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id, flag: flag == "orange" ? "#99FF33" : "")
-          end
+        approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
+        flag = LineManager.find_by(user_id: approver_id, form_slot_id: form_slot.id).flag
+        flag =  "#99FF33" if approver_id.present? && approver_id != current_user.id && flag == "orange"
+        end
+        if line_manager.present?
+          line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag)
         else
-          if line_manager.present?
-            line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id)
-          else
-            LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id)
-          end
+          LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id, flag: flag)
         end
       end
     end
@@ -874,7 +867,7 @@ module Api
     end
 
     def request_update_cds(form_slot_ids, slot_id)
-      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: 1).approver_id
+      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
           LineManager.where(form_slot_id: form_slot_ids)
         else
@@ -894,7 +887,7 @@ module Api
     end
 
     def cancel_request(form_slot_ids, slot_id)
-      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: 1).approver_id
+      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
           LineManager.where(form_slot_id: form_slot_ids)
         else
