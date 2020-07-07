@@ -1,0 +1,241 @@
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag "category_management", media: "all", 'data-turbolinks-track': "reload" %>
+<%= stylesheet_link_tag "cdp_assessment", media: "all", 'data-turbolinks-track': "reload" %>
+<div class="container-fluid" style="padding:0">
+  <div class="row" id="cdp_container_div2">
+    <div class="col-10" style="font-size: 150%;">
+      Setting Company, Project, Role, Title
+    </div>
+  </div>
+</div>
+<div class="category-management row">
+  <div class="col-2">
+    <div class="card">
+      <table class="table table-primary table-responsive-sm table-mytable table${i}">
+        <thead class="left-setting-table">
+          <tr class="btn-company">
+            <td>Company</td>
+          </tr>
+          <tr class="btn-project">
+            <td>Project</td>
+          </tr>
+          <tr class="btn-role">
+            <td>Role</td>
+          </tr>
+          <tr class="btn-title">
+            <td>Title</td>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+  <div class="right-panel col-10">
+    <div id="box_company" class="row">
+      <input class="col-4 company-id" type="text" disabled style="display: none;">
+      <div class="row">
+        <label class="col-2">Company name</label>
+        <input class="col-4 company-name" type="text">
+        <label class="col-2">CEO</label>
+        <input class="col-4 company-ceo" type="text">
+      </div>
+      <div class="row">
+        <label class="col-2">Abbreviation</label>
+        <input type="text" class="col-4 company-abbreviation">
+
+        <label class="col-2">Parent company</label>
+        <select style="height: 30px;" class="col-4 company-parent-company-id"></select>
+      </div>
+      <div class="row">
+        <label class="col-2">Establishment</label>
+        <input type="text" class="col-4 company-establishment form-control joined-date">
+        <label class="col-2">No. of employeest</label>
+        <input type="text" class="col-4 company-quantity" disabled style="background-color: rgb(239, 239, 239);">
+      </div>
+      <div class="row">
+        <label class="col-2">Phone</label>
+        <input type="text" class="col-4 company-phone">
+        <label class="col-2">Email group Staff</label>
+        <input type="text" class="col-4 company-email-group-staff">
+      </div>
+      <div class="row">
+        <label class="col-2">Fax</label>
+        <input type="text" class="col-4 company-fax">
+        <label class="col-2">Email group HR</label>
+        <input type="text" class="col-4 company-email-group-hr">
+      </div>
+      <div class="row">
+        <label class="col-2">Email</label>
+        <input type="text" class="col-4 company-email">
+        <label class="col-2">Email group FA</label>
+        <input type="text" class="col-4 company-email-group-fa">
+      </div>
+      <div class="row">
+        <label class="col-2">Tax Code</label>
+        <input type="text" class="col-4 company-tax-code">
+        <label class="col-2">Email group IT</label>
+        <input type="text" class="col-4 company-email-group-it">
+      </div>
+      <div class="row">
+        <label class="col-2">Website</label>
+        <input type="text" class="col-4 company-website">
+        <label class="col-2">Email group Admin</label>
+        <input type="text" class="col-4 company-email-group-admin">
+      </div>
+      <div class="row">
+        <label class="col-2">Description</label>
+        <textarea class="col-4 company-description"></textarea>
+        <label class="col-2">Address</label>
+        <textarea class="col-4 company-address"></textarea>
+      </div>
+      <div class="row">
+        <label class="col-2">Note</label>
+        <textarea class="col-4 company-note"></textarea>
+      </div>
+    </div>
+    <div id="box_project" class="row" style="display: none;">
+      <div class="row">
+        <label class="col-2">Company Name</label>
+        <select style="height: 30px;" class="col-4 project-company form-control"></select>
+        <label class="col-2">Project Manager</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Project Name</label>
+        <input type="text" class="col-4">
+        <label class="col-2">Customer</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Abbreviation</label>
+        <input type="text" class="col-4">
+        <label class="col-2">Sponsor</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Establishment</label>
+        <input type="text" class="col-4">
+        <label class="col-2">Email</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Closed Date</label>
+        <input type="text" class="col-4  joined-date">
+        <label class="col-2">No. of Employees</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Description</label>
+        <textarea class="col-4"></textarea>
+        <label class="col-2">Note</label>
+        <textarea class="col-4"></textarea>
+      </div>
+    </div>
+    <div id="box_role" class="row" style="display: none;">
+      <div class="row">
+        <label class="col-2">Role Name</label>
+        <input type="text" class="col-4">
+        <label class="col-2">Abbreviation</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Description</label>
+        <textarea class="col-4"></textarea>
+        <label class="col-2">Note</label>
+        <textarea class="col-4"></textarea>
+      </div>
+    </div>
+    <div id="box_title" class="row" style="display: none;">
+      <div class="row">
+        <label class="col-2">Role Name</label>
+        <select style="height: 30px;" class="col-4 title-role form-control"></select>
+        <label class="col-2">Rank</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Title Name</label>
+        <input type="text" class="col-4">
+        <label class="col-2">Abbreviation</label>
+        <input type="text" class="col-4">
+      </div>
+      <div class="row">
+        <label class="col-2">Description</label>
+        <textarea class="col-4"></textarea>
+        <label class="col-2">Note</label>
+        <textarea class="col-4"></textarea>
+      </div>
+    </div>
+    <div class="icon-bar">
+      <button id="btn_save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+      <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+      <button id="btn_add" style="right: 30px;position: absolute;width:90px;background:#8da8db" type="button" class="btn btn-light"
+        data-dismiss="modal"><img src="/assets/Add.png">Add</button>
+    </div>
+  </div>
+  <div class="box-table col-12">
+    <table id="table_setting_company" style="display: none;" class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm name">Company name</th>
+          <th class="th-sm establishment">Establishment</th>
+          <th class="th-sm phone">Phone</th>
+          <th class="th-sm email">Email</th>
+          <th class="th-sm ceo">CEO</th>
+          <th class="th-sm quantity">No. of Employees</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_project" style="display: none;"class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm company_name">Company name</th>
+          <th class="th-sm name">Project Name</th>
+          <th class="th-sm establishment">Establishment</th>
+          <th class="th-sm project_manager">Project Manager</th>
+          <th class="th-sm customer">Customer</th>
+          <th class="th-sm email">Email</th>
+          <th class="th-sm quantity">No. of Employees</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_role" style="display: none;" class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm name">Role Name</th>
+          <th class="th-sm abbreviation">Role Abbreviation</th>
+          <th class="th-sm description">Description</th>
+          <th class="th-sm note">Note</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_title" style="display: none;" class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm role_name">Role Name</th>
+          <th class="th-sm name">Title Name</th>
+          <th class="th-sm abbreviation">Title Abbreviation</th>
+          <th class="th-sm rank">Rank</th>
+          <th class="th-sm description">Description</th>
+          <th class="th-sm note">Note</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript"
+  src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
+<script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>
+<%= javascript_include_tag "data_table_category_management", 'data-turbolinks-track': "reload" %>
