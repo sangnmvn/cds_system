@@ -1,20 +1,20 @@
-<div class="modal fade" id="modal_request_add_more_evidence" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="modal_cancel_request_update" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title" style="text-align: center">Confirm Request to Update Slots</h4>
+        <h4 class="modal-title" style="text-align: center">Confirm Cancel Reuqest to Update Slots</h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
         <input type="hidden" value="1" id="request_more_evidence_recommend">
-        The following slots are selected to request  <span style="font-weight: bold" id="staff_name"><%= @hash[:user_name] %></span> update :
+        The following slots are selected to cancel the requesting update CDS/CDP for <span style="font-weight: bold" id="staff_name"><%= @hash[:user_name] %></span> : 
         <span style="font-weight: bold" class="slot_id" id="data_slot"></span>
-        Are you sure you want <span style="font-weight: bold" id="staff_name"><%= @hash[:user_name] %></span> update for these slots?
+        Are you sure you want cancel this request for these slots?
       </div>
       <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary" id="confirm_yes_request_add_more_evidence">Yes</button>
+        <button type="button" class="btn btn-primary" id="submit_cancel_request_update">Yes</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
       </div>
     </div>

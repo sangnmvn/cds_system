@@ -21,7 +21,7 @@ $(document).ready(function () {
     );
   }
   // filter
-  $("#filter-form-slots").multiselect({});
+  $("#filter_form_slots").multiselect({});
   $(".filter-slots .multiselect-selected-text").hide();
   // $('.filter-slots ul li').addClass('active');
 });
@@ -478,7 +478,7 @@ function getParams() {
     filter: ""
   }
   filter = [];
-  $('#filter-form-slots :selected').each(function (i, sel) {
+  $('#filter_form_slots :selected').each(function (i, sel) {
     filter.push($(sel).val())
   });
   data.filter = filter.join();
@@ -544,7 +544,7 @@ $(document).on("change", ".search-assessment", function () {
   });
 });
 
-$(document).on("change", "#filter-form-slots", function () {
+$(document).on("change", "#filter_form_slots", function () {
   var data = getParams();
   if (form_id)
     data.form_id = form_id;
