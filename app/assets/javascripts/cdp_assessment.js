@@ -100,19 +100,19 @@ function loadDataSlots(response) {
           if (e.tracking.recommends[i].user_id == user_current) {
             flag = e.tracking.recommends[i].flag;
             title_flag = "This slot have been updated"
-            check_request_update = "true"
+            check_request_update = true
             break;
           }
         } else {
           flag = "yellow"
-          check_request_update = "false"
+          check_request_update = false
         }
         if (!is_reviewer && !is_approver) {
-          check_request_update = "true"
+          check_request_update = true
         }
       }
     }
-    if (status == "New" || check_request_update == "") {
+    if (status == "New" || !check_request_update) {
       $("#confirm_request").addClass("disabled")
       $("#icon_confirm_request").prop("style", "color: #6c757d")
       $("#icon_cancel_request").prop("style", "color: #6c757d")
@@ -144,7 +144,7 @@ function loadDataSlots(response) {
           </div>
           <div class="col-3">
             <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(e.tracking)}>
-              <option value="false" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
+              <option value="uncommit" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
               <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
               <option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit,"CDP")}> Commit CDP</option>
             </select>
@@ -196,7 +196,7 @@ function loadDataSlots(response) {
                 <td>${e.tracking.recommends[i].name}</td>
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
-                  <option value="false" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
+                  <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
                   <option value="commit_cds" ${e.tracking.comment_type == "CDS" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDS")}> Commit CDS</option>
                   <option value="commit_cdp" ${e.tracking.comment_type == "CDP" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDP")}> Commit CDP</option>
                   </select>
@@ -235,7 +235,7 @@ function loadDataSlots(response) {
                     <td>${lst_approver[2]}</td>
                     <td>
                       <select class="form-control select-commit approver-commit ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? "" : "approver-self"}" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])} ${e.tracking.comment_type == "CDS" ? "disabled" : ""} >
-                      <option value="false" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
+                      <option value="uncommit" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
                       <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDS")}> Commit CDS</option>
                       <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDP")}> Commit CDP</option>
                       </select>
@@ -852,7 +852,7 @@ $(document).ready(function () {
       } else if (is_commit == "commit_cds") {
         $(this).find(".approver-assessment").removeClass("d-none");
       }
-      if (is_commit == "false") {
+      if (is_commit == "uncommit") {
         return;
       } else if (is_commit == "commit_cdp") {
         point = null;
@@ -881,7 +881,7 @@ $(document).ready(function () {
       } else if (is_commit == "commit_cds") {
         $(this).find(".reviewer-assessment").removeClass("d-none");
       }
-      if (is_commit == "false") {
+      if (is_commit == "uncommit") {
         return;
       } else if (is_commit == "commit_cdp") {
         point = null;
@@ -936,8 +936,8 @@ function autoSaveStaff(row) {
   var point = row.find('.select-assessment').val();
   if (is_commit != "commit_cds")
     point = ""
-  if (is_commit == "commit_cdp" || is_commit == "false" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
-    is_commit = is_commit != "false"
+  if (is_commit == "commit_cdp" || is_commit == "uncommit" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
+    is_commit = is_commit != "uncommit"
     var slot_id = row.data("slot-id");
     $.ajax({
       type: "POST",
