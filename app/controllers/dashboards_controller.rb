@@ -1,18 +1,24 @@
 class DashboardsController < ApplicationController
   layout "root_layout"
-  before_action :get_privilege_id, :check_privilege
+  before_action :get_privilege_id
+  before_action :check_privilege
   before_action :user_management_services
   before_action :export_services
+  before_action :form_services, only: [:data_career_chart]
+
   ALL_COMPANY = 20
   MY_COMPANY = 21
   MY_PROJECT = 22
   VIEW = 23
 
   def index
-    redirect_to index2_users_path if !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
+    # true: manager, false: staff
+    @can_view_chart = (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
+    @can_view_career = true # (@privilege_array & [MY_PROJECT, VIEW]).any? && !(@privilege_array & [ALL_COMPANY, MY_COMPANY]).any?
   end
 
   def data_filter
+    return render json: { status: "fail" } unless (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
     if @privilege_array.include?(ALL_COMPANY)
       companies = Company.select(:name, :id)
       projects = Project.select("projects.desc as name", :id)
@@ -23,6 +29,7 @@ class DashboardsController < ApplicationController
       companies = Company.select(:name, :id).where(id: current_user.company_id)
       projects = Project.select("projects.desc as name", :id).joins(:project_members).where(project_members: { user_id: current_user.id })
     end
+
     roles = User.distinct.select("roles.desc as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) })
 
     render json: {
@@ -67,6 +74,12 @@ class DashboardsController < ApplicationController
     render json: data
   end
 
+  def data_career_chart
+    return render json: { data: "fail" } unless @can_view_career
+    data = @user_management_services.data_career_chart
+    render json: { data: data, has_cdp: true }
+  end
+
   def data_users_up_title
     render json: @user_management_services.data_users_up_title
   end
@@ -107,7 +120,11 @@ class DashboardsController < ApplicationController
     @user_management_services = Api::UserManagementService.new(params, current_user)
   end
 
+  def form_services
+    @form_services = Api::FormService.new(params, current_user)
+  end
+
   def check_privilege
-    redirect_to index2_users_path if @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
+    redirect_to index2_users_path unless (@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT, VIEW]).any?
   end
 end

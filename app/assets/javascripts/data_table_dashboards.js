@@ -47,7 +47,7 @@ function loadDataKeepTitle(data_filter = {}) {
 
 function appendDataToTable(data, is_up = true, has_old = true) {
   if (data.length == 0)
-    return `<tr><td colspan="11" class="type-icon">No data available in table</td></tr>`;
+    return `<tr><td colspan="11" class="type-icon">No data available in this table</td></tr>`;
   tpl = "";
   data.forEach(function (user, i) {
     tpl += `
@@ -82,7 +82,7 @@ function appendDataToTable(data, is_up = true, has_old = true) {
     } else {
       tpl += `
         <a href="javascript:;" class="link-icon">
-          <i class="fa fa-search" aria-hidden="true" title="view slots missed to archive next level"></i>
+          <i class="fa fa-search" aria-hidden="true" title="View slots missed to archive next level"></i>
         </a>
         &nbsp;
         <a href="javascript:;" class="link-icon">

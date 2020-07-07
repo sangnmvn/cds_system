@@ -713,8 +713,9 @@ module Api
       h_point
     end
 
-    def data_view_result
-      form = Form.includes(:title).find_by_id(params[:form_id])
+    def data_view_result(form_id = nil)
+      form_id ||= params[:form_id]
+      form = Form.includes(:title).find_by_id(form_id)
       competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
       result = preview_result(form)
 
@@ -728,7 +729,6 @@ module Api
     end
 
     def calculate_result_by_type(form, competencies, result, type = :value)
-      hash_level = {}
       competencies.map do |compentency|
         compentency.level = calculate_level(result[compentency.name], type)
       end

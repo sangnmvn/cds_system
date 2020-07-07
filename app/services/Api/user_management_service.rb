@@ -172,6 +172,70 @@ module Api
       h_users.select { |key, value| value > 0 }
     end
 
+    def data_career_chart(user_id = nil)
+      user_id ||= current_user.id
+      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order(:period_id)
+      h_rank_empty = {
+        period: "",
+        current_user.role.desc => nil,
+      }
+      role_names = title_histories.pluck(:role_name)
+      role_names.each do |role_name|
+        h_rank_empty[role_name] = nil
+      end
+
+      arr_result = []
+      title_histories.each do |title_history|
+        # new hash empty
+        h_rank = h_rank_empty.clone
+        h_rank[:period] = title_history.period.to_date
+        h_rank[title_history.role_name] = title_history.role_name
+        arr_result << h_rank
+      end
+
+      # add cds cdp
+      form = Form.includes(:title, :role, :period).find_by(user_id: current_user.id)
+      schedule = Schedule.find_by(company_id: current_user.company_id, status: "In-progress")
+
+      if form.present?
+        data_result = Api::FormService.new(params, current_user).data_view_result(form.id)
+
+        if form.status != "Done"
+          h_rank = h_rank_empty.clone
+          h_rank[:period] = schedule&.period&.format_period_career
+          h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
+          h_rank[form.role.desc.to_sym] = data_result[:expected_title][:rank]
+          arr_result << h_rank
+        end
+
+        if data_result[:cdp].present?
+          h_rank = h_rank_empty.clone
+          h_rank[:period] = "Next Period"
+          h_rank[form.role.desc.to_sym] = data_result[:cdp][:rank]
+          arr_result << h_rank
+        end
+      end
+
+      # arr_result = []
+      # 20.times do |i|
+      #   date = "#{2000 + rand(10)}/0#{rand(1..9)}/0#{rand(1..9)}"
+      #   if i == 19
+      #     arr_result << {
+      #       period: date,
+      #       "Quality Control": [1, 2, 3, 4, 5, 6, 7][rand(7)],
+      #       "Business Analyst": nil,
+      #     }
+      #   else
+      #     arr_result << {
+      #       period: date,
+      #       "Quality Control": [nil, 1, 2, 3, 4, 5, 6, 7][rand(7)],
+      #       "Business Analyst": [nil, nil, nil, 4, 5, 6, 7][rand(7)],
+      #     }
+      #   end
+      # end
+      arr_result
+    end
+
     def calulate_data_user_by_title
       h_males = data_users_by_title
       data = h_males.keys.map do |i|
@@ -245,7 +309,7 @@ module Api
     end
 
     def data_users_down_title
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}
@@ -308,10 +372,19 @@ module Api
     end
 
     def data_users_keep_title
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
-      user_up = data_users_up_title[:user_ids]
-      period_id = data_users_up_title[:period_id]
-      titles = TitleHistory.includes(:user).where(user_id: user_ids - user_up, period_id: period_id)
+      number_keep = params[:number_period_keep].to_i
+      user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
+
+      titles = case number_keep
+        when 0
+          Form.includes(:user).where(user_id: user_ids).where("number_keep >= 1")
+        when 1
+          Form.includes(:user).where(user_id: user_ids, number_keep: number_keep)
+        when 2
+          Form.includes(:user).where(user_id: user_ids, number_keep: number_keep)
+        when 3
+          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 2")
+        end
       titles.map do |title|
         {
           class: (i.even? ? "even" : "odd"),
@@ -322,6 +395,7 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
+          keep_period: Form.keep_period.format_name,
         }
       end
 

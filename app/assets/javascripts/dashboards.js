@@ -3,8 +3,8 @@ function sleep(ms) {
 }
 
 var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff", "#e34856", "#8a103d", "#255381"]
-function drawChart(data_filter = {}) {
-  // get data and draw chart gender
+
+function drawChartGender(data_filter) {
   $.ajax({
     url: "/dashboards/data_users_by_gender",
     data: data_filter,
@@ -16,8 +16,9 @@ function drawChart(data_filter = {}) {
       drawPieChart(response.data, response.total, "#chart_gender", "Number of Employees by Gender")
     }
   });
+}
 
-  // get data and draw chart role
+function drawChartRole(data_filter) {
   $.ajax({
     url: "/dashboards/data_users_by_role",
     data: data_filter,
@@ -29,21 +30,9 @@ function drawChart(data_filter = {}) {
       drawPieChart(response.data, response.total, "#chart_role", "Number of Employees by Role")
     }
   });
-  sleep(1000)
-  // get data and draw chart seniority
-  $.ajax({
-    url: "/dashboards/calulate_data_user_by_seniority",
-    data: data_filter,
-    type: "POST",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    success: function (response) {
-      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employees by Seniority", "Year");
-    }
-  });
+}
 
-  // get data and draw chart title
+function drawChartTitle(data_filter) {
   $.ajax({
     url: "/dashboards/calulate_data_user_by_title",
     data: data_filter,
@@ -58,6 +47,57 @@ function drawChart(data_filter = {}) {
   })
 }
 
+function drawChartSeniority(data_filter) {
+  $.ajax({
+    url: "/dashboards/calulate_data_user_by_seniority",
+    data: data_filter,
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employees by Seniority", "Year");
+    }
+  });
+}
+
+function drawChartCareer() {
+  $.ajax({
+    url: "/dashboards/data_career_chart",
+    data: {},
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+      sleep(1000)
+      if (response.data == "fail" || response.data.length <= 1) {
+        $("#my_career ").html('')
+        $("#my_career").css('height', 'auto')
+      }
+      else
+        drawLineChart(response.data, response.has_cdp, "#chart_my_career");
+    }
+  })
+}
+
+function drawChart(data_filter = {}) {
+  // get data and draw chart gender
+  drawChartGender(data_filter)
+  // get data and draw chart role
+  drawChartRole(data_filter)
+  sleep(1000)
+  // get data and draw chart seniority
+  drawChartSeniority(data_filter)
+  // get data and draw chart title
+  drawChartTitle(data_filter)
+  // get data and draw chart my career
+}
+
+$('#company').on('click', function () {
+  $('#table_setting').html(``)
+})
+
 $(document).ready(function () {
   loadFilterReview();
   loadDataFilter();
@@ -68,6 +108,14 @@ $(document).ready(function () {
 
   $(".reset-filter").click(function () {
     drawChart();
+  });
+  // draw chart career
+  drawChartCareer();
+
+  $('#select_type_keep').on('change', function () {
+    var data_filter = paramFilter();
+    data_filter.number_period_keep = $(this).val();
+    loadDataKeepTitle(data_filter);
   });
 });
 
@@ -91,6 +139,8 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
+      if (response.status == "fail")
+        return;
       if (response.companies.length > 1)
         $('<option value="All" selected>All</option>').appendTo("#company_filter");
       if (response.roles.length > 1)

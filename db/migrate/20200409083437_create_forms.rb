@@ -7,6 +7,8 @@ class CreateForms < ActiveRecord::Migration[6.0]
       t.references :template
       t.belongs_to :period, foreign_key: true
       t.belongs_to :user, foreign_key: true
+      t.integer :number_keep, default: 0
+      t.integer :period_keep, default: 0
       t.timestamps
     end
   end

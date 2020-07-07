@@ -1,5 +1,6 @@
 class Form < ApplicationRecord
   belongs_to :period, optional: true
+  belongs_to :period_keep, class_name: "Period", optional: true
   belongs_to :user
   has_many :form_slots, dependent: :destroy
   belongs_to :template

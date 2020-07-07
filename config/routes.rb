@@ -137,6 +137,7 @@ Rails.application.routes.draw do
       post :data_users_by_role
       post :calulate_data_user_by_seniority
       post :calulate_data_user_by_title
+      post :data_career_chart
       post :data_users_up_title
       post :data_users_down_title
       post :data_users_keep_title
