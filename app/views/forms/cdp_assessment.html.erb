@@ -42,6 +42,7 @@
 </div>
 <div><%= render "modal_withdraw" %></div>
 <div><%= render "modal_history" %></div>
+<div><%= render "modal_conflict" %></div>
 <div><%= render "modal_period" %></div>
 <div><%= render "modal_approve_cds" %></div>
 <div><%= render "modal_reject_cds" %></div>
@@ -57,6 +58,7 @@
   var is_approver = false;
   var is_submit = false;
   var lst_slot = {};
+  var check_5_month = <%= @check_5_month %>;
   var user_current = <%= current_user.id %>;
   var check_request_update = false;
   var conflict_commits = {}

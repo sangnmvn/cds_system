@@ -8,14 +8,7 @@ class FormsController < ApplicationController
   APPROVE_CDS = 17
   include TitleMappingsHelper
 
-  def index
-    @check_5_month = true
-    @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
-  end
-
   def index_cds_cdp
-    @check_5_month = true
-    @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
   end
 
   def get_list_cds_assessment_manager
@@ -25,6 +18,14 @@ class FormsController < ApplicationController
         redirect_to root_path
       end
     render json: data
+  end
+
+  def get_summary_comment
+    render json: @form_service.get_summary_comment
+  end
+
+  def save_summary_comment
+    render json: @form_service.save_summary_comment
   end
 
   def cancel_request
@@ -55,42 +56,9 @@ class FormsController < ApplicationController
       end
   end
 
-  def cds_assessment
-    params = form_params
-    @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
-    @period = schedules.map do |schedule|
-      {
-
-        id: schedule.period_id,
-        name: schedule.period.format_name,
-      }
-    end
-    if params[:title_history_id].present?
-      @hash[:status] = "Done"
-      @hash[:title_history_id] = params[:title_history_id]
-      @hash[:title] = "CDS Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
-      return @hash
-    end
-    if params.include?(:form_id)
-      form = Form.where(user_id: current_user.id, id: params[:form_id]).first
-      return if form.nil?
-    else
-      template_id = Template.find_by(role_id: current_user.role_id, status: true)&.id
-      return if template_id.nil?
-      form = Form.includes(:template).where(user_id: current_user.id).order(created_at: :desc).first
-    end
-    if form.nil? || form.template.role_id != current_user.role_id
-      form = @form_service.create_form_slot
-    else
-      form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
-    end
-    @hash[:form_id] = form.id
-    @hash[:status] = form.status
-    @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
-  end
-
   def cdp_assessment
+    @check_5_month = true
+    @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
     params = form_params
     user = if params[:form_id].present?
         Form.includes(:user).find_by_id(params[:form_id])&.user
@@ -213,7 +181,6 @@ class FormsController < ApplicationController
 
   def preview_result
     return redirect_to forms_path if params[:form_id].nil?
-
     form = Form.includes(:title).find_by_id(params[:form_id])
     @title = "View CDS/CDP Result For #{user.role.desc} - #{user.format_name}"
     @form_id = form.id
@@ -393,6 +360,7 @@ class FormsController < ApplicationController
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,:cancel_slots)
+                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type, 
+                  :cancel_slots, :summary_id, :comment)
   end
 end

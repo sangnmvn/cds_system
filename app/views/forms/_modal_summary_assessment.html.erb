@@ -1,0 +1,49 @@
+<%= stylesheet_link_tag "level_mappings", media: "all", 'data-turbolinks-track': "reload" %>
+<div class="modal fade" id="modal_summary_assessment" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title " style="text-align: center">Summary Assessment</h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: left;">
+        <p>How do you think about your staff ?</p>
+        <input type="hidden" id="id_summary"/>
+        <textarea class="form-control" id="input_summary_comment" maxlength="1000" style="height:160px" placeholder="Please enter staff’s strengths / weaknesses / contribution / etc."></textarea>
+        <div class="row" >
+          <div class="col-12 divButton" style="justify-content: center;">
+            <button type="button" class="btn btn-primary" id="btn_save_summary_assessment">Save</button>
+            <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class='col-12'>
+            <div class='table-wrapper'>
+              <table class="table table-responsive-sm table-basic table-mytable border-table" id="table_summary_comment">
+                <thead>
+                  <tr>
+                    <th class="th">Period</th>
+                    <th class="th">User name</th>
+                    <th class="th" >Commented Date</th>
+                    <th class="th">Comment</th>
+                  </tr>
+                </thead>
+                <tbody id="data_summary">
+                  <tr>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

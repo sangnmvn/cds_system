@@ -2,6 +2,7 @@
 // contains form slot id has been selected
 var checked_set = new Set();
 var data_checked_request = {}
+var slot_assessing = {}
 // contains form slot empty to be checked
 // key: form slot id
 // value: true or false, is message empty
@@ -144,9 +145,10 @@ function loadDataSlots(response) {
           </div>
           <div class="col-3">
             <select class="form-control input-staff staff-commit" data-slot-id="${e.tracking.id}" ${checkDisableFormSlotsReviewer(e.tracking)}>
-              <option value="uncommit" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>
-              <option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>
-              <option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit,"CDP")}> Commit CDP</option>
+              <option value="uncommit" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>`
+    if (check_5_month)
+      temp += `<option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>`
+    temp += `<option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit,"CDP")}> Commit CDP</option>
             </select>
           </div>
       </div>
@@ -178,7 +180,7 @@ function loadDataSlots(response) {
       temp += `<div class="row div-row arrow-box row-cdp">
                   <div class="col-3 div-child-slot" data-toggle="collapse" data-target="#reviewer_${e.id}">
                     <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
-                    <b>Reviewer Review</b>
+                    <b>Reviewer Feedbacks</b>
                   </div>
                 </div>
                 <div id="reviewer_${e.id}" class="collapse padding-collapse-children">
@@ -225,7 +227,7 @@ function loadDataSlots(response) {
           <div class="row div-row arrow-box row-cdp">
             <div class="col-3 div-child-slot" data-toggle="collapse" data-target="#approver_${e.id}">
               <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
-              <b>Approver Review</b>
+              <b>Approver Feedbacks</b>
             </div>
           </div>
           <div id="approver_${e.id}" class="collapse padding-collapse-children">
@@ -339,6 +341,18 @@ function checkFlag(flag) {
   return ""
 }
 
+function changeListSlotAssessing(row, action) {
+  var competency_name = $('#competency_panel').find('.show').data('competency-name');
+  if (action == "add") {
+    if (slot_assessing[competency_name] == undefined)
+      slot_assessing[competency_name] = []
+    slot_assessing[competency_name].push(row.data("location"))
+  } else {
+    if (slot_assessing[competency_name] != undefined)
+      slot_assessing[competency_name] = slot_assessing[competency_name].filter(item => item !== row.data("location"))
+  }
+}
+
 function checkRequiredComment(point) {
   if (point == "")
     return ""
@@ -373,6 +387,62 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
+
+  $("#summary_comment").on("click", function () {
+    $.ajax({
+      type: "GET",
+      url: "/forms/get_summary_comment",
+      data: {
+        form_id: form_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        $("tbody#data_summary").html("");
+        $(response).each(
+          function (i, e) {
+            if (e.status) {
+              $("#input_summary_comment").html(e.comment)
+              $("#id_summary").val(e.id)
+            }
+            var tr = $("<tr id='" + e.id + "'/>");
+            $("<td/>").html(e.period).appendTo(tr)
+            $("<td/>").html(e.user_name).appendTo(tr)
+            $("<td/>").html(e.comment_date).appendTo(tr)
+            $("<td/>").html(e.comment).appendTo(tr)
+            tr.appendTo("tbody#data_summary")
+          }
+        )
+        $('#modal_summary_assessment').modal('show')
+      }
+    })
+  })
+
+  $("#btn_save_summary_assessment").on("click", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/save_summary_comment",
+      data: {
+        form_id: form_id,
+        summary_id: $("#id_summary").val(),
+        comment: $("#input_summary_comment").val(),
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response) {
+          success("The CDS/CDP has been saved your summary comment successfully")
+          $('#modal_summary_assessment').modal('hide')
+        } else
+          fail("The CDS/CDP hasn't been saved your summary comment fail")
+      }
+    })
+  })
+
   $("#button_request_update").on("click", function () {
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
@@ -787,6 +857,7 @@ $(document).ready(function () {
             $('#modal_period').modal('hide');
             $("#button_request_update").addClass("d-none")
             $("#button_cancel_request").addClass("d-none")
+            $("#summary_comment").addClass("d-none")
             $("#confirm_update_to_approver").removeClass("d-none")
             $("#icon_confirm_update_to_approver").css("color", "#ccc");
             $("#status").html("(Submited)")
@@ -828,13 +899,20 @@ $(document).ready(function () {
   });
   $(document).on("click", ".submit-assessment", function () {
     var data_conflict = findConflictinArr(conflict_commits)
-    if (data_conflict) {
-      if (is_reviewer || is_approver) {
-        var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+    var str = ""
+    if (data_conflict && (is_reviewer || is_approver)) {
+      str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
         data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
-        $("#content_modal_conflict").html(str)
-        $('#modal_conflict').modal('show');
+    } else {
+      data_conflict = findConflictinArr(slot_assessing)
+      if (data_conflict) {
+        str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
+          data_conflict + " </p>"
       }
+    }
+    if (str != "") {
+      $("#content_modal_conflict").html(str)
+      $('#modal_conflict').modal('show');
     } else
       $('#modal_period').modal('show');
   });
@@ -842,15 +920,21 @@ $(document).ready(function () {
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var slot_id = $(this).closest('.row-slot').data("slot-id");
     var url = "";
+    var row = $(this)
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
       point = $(this).find(".approver-assessment").val();
       recommend = $(this).find(".approver-recommend").val();
       is_commit = $(this).find(".approver-commit").val();
-      if (is_commit == "commit_cdp") {
+      if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         $(this).find(".approver-assessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        $(this).find(".approver-assessment").removeClass("d-none");
+        var approver_point = $(this).find(".approver-assessment")
+        approver_point.removeClass("d-none");
+        if (!approver_point.val() || recommend == "") {
+          changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
+          return
+        }
       }
       if (is_commit == "uncommit") {
         return;
@@ -876,10 +960,15 @@ $(document).ready(function () {
       }
 
       is_commit = $(this).find(".reviewer-commit").val();
-      if (is_commit == "commit_cdp") {
+      if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         $(this).find(".reviewer-assessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        $(this).find(".reviewer-assessment").removeClass("d-none");
+        var reviewer_point = $(this).find(".reviewer-assessment")
+        reviewer_point.removeClass("d-none");
+        if (!reviewer_point.val() || recommend == "") {
+          changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
+          return
+        }
       }
       if (is_commit == "uncommit") {
         return;
@@ -907,6 +996,7 @@ $(document).ready(function () {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
           row.closest(".row-slot").find('.icon-flag').prop("style", "color: #99FF33")
+          changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
         }
       });
     }
@@ -936,6 +1026,8 @@ function autoSaveStaff(row) {
   var point = row.find('.select-assessment').val();
   if (is_commit != "commit_cds")
     point = ""
+  else
+    changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
   if (is_commit == "commit_cdp" || is_commit == "uncommit" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
     is_commit = is_commit != "uncommit"
     var slot_id = row.data("slot-id");
@@ -953,6 +1045,7 @@ function autoSaveStaff(row) {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       success: function (response) {
+        changeListSlotAssessing(row, "remove")
         if (lst_slot[slot_id] == "orange") {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")

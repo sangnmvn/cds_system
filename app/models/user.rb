@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :forms, :dependent => :destroy
   has_many :user_group, :dependent => :destroy
   has_many :level_mappings
+  has_many :summary_comments
   has_many :title_mappings
 
   has_many :approvers, :class_name => "Approver", :foreign_key => "approver_id", :dependent => :destroy
