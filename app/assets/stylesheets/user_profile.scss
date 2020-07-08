@@ -1,0 +1,54 @@
+.user-card {
+  padding-left: 1%;
+  padding-right: 1%;
+  .title-name{
+    padding-top:2%; 
+    padding-right:10%;
+
+  }
+  .div-name{
+    font-size: xx-large;
+  }
+  .text-contact{
+    color: #4F94CD;
+    padding-top: 5%;
+  }
+  .card {
+    background-color: #EEEEEE	;
+    .card-img-top{
+      width:60%
+    }
+    .div-button{
+      padding-top: 3%;
+      .btn{
+        background-color: #4472c4;
+      }
+    }
+  }
+}
+.link-bottom{
+  padding-top: 2%;
+}
+.title-icon{
+  font-size: medium;
+  vertical-align: top;
+  padding-left: 2%;
+}
+.profile{
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 6%;
+  padding-right: 6%;
+  .title-content{
+    padding-top: 2%;
+    font-size: x-large;
+  }
+  .p-title{
+    padding-bottom: 3%;
+
+    font-size: larger;
+    .p-content{
+      padding-top: 1%;
+    }
+  }
+}

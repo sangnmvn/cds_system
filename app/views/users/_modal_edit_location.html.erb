@@ -1,0 +1,65 @@
+<!-- The Modal -->
+<div class="modal fade modal-form-add-user" id="modal_edit_location">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Edit Your Profile</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <p style="color:red">(*) required fields</p>
+            </div>
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Nationality (*)</label>
+                </div>
+                <div class="col-sm-9">
+                <input type="text" id="nationality" class="form-control" placeholder="Please enter your nationality" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Permanent Address (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="permanent_address"  class="form-control" placeholder="Please enter your permanent address" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Current Address (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="current_address"  class="form-control" placeholder="Please enter your current address" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-5">
+              <%= hidden_field(:user, :id) %>
+            </div>
+            <div class="col-sm-2">
+            </div>
+          </div>
+        </div>
+        <%# end container  %>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" id="btn_modal_edit_user">Save</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

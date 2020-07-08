@@ -1,0 +1,74 @@
+<%= stylesheet_link_tag "user_profile", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag 'user_profile', 'data-turbolinks-track': 'reload' %>
+<div class="user-card">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-3" style="text-align:center">
+          <img class="card-img-top" src="/assets/avt.jpg" alt="Card image">
+        </div>
+        <div class="col-7">
+          <div class="row">
+            <div class="col-6 title-name">
+              <div class="div-name"><span id="full_name" >A Nguyễn Văn</span><span class="title-icon" id="edit_contact"><%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)",title: "Edit Contact", id: "edit_contact"%></span></div>
+              <h5 style="padding-bottom:1%" id="role"><span class="badge badge-pill badge-primary">Associate Developer (Rank : 1, Level : 3)</span></h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="text-contact" id="gender"><i class="fas fa-venus-mars" style="color:black" title="Gender"></i>&nbsp; Male</div>
+              <div class="text-contact" id="birthday"><i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>&nbsp; 29/02/2020</div>
+              <div class="text-contact" id="CMND"><i class="far fa-id-card" style="color:black" title="Identity Card No"></i>&nbsp; 1947219382</div>
+            </div>
+            <div class="col-3">
+              <div class="text-contact" id="phone"><i class="fas fa-phone-alt" style="color:black" title="Phone Number"></i>&nbsp; 0372417647</div>
+              <div class="text-contact" id="mail"><i class="fas fa-envelope" style="color:black" title="Email"></i>&nbsp; example@email.com</div>
+              <div class="text-contact" id="skype"><i class="fab fa-skype" style="color:black" title="Skype ID"></i>&nbsp; example@email.com</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 link-bottom">
+              <%= link_to 'Change Password'.html_safe, "javascript:void(0)", id: "change_password"%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row profile">
+  <div class="col-6">
+    <div class="title-content"> INDIVIDUAL INFORMATION</div>
+    <hr/>
+    <div class="p-title">
+      Company
+      <dt class="p-content" id="company">Bestarion</dt> 
+    </div>
+    <div class="p-title">
+      Project
+      <dt class="p-content" id="project">CDS/CDP ,  MSS</dt> 
+    </div>
+    <div class="p-title">
+      Joined Date
+      <dt class="p-content" id="joined_date">12/07/2020</dt> 
+    </div>  
+  </div>
+  <div class="col-6">
+    <div class="title-content"> LOCATION <span class="title-icon"><%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)",title: "Edit Location", id: "edit_location"%></span></div>
+      <hr/>
+      <div class="p-title">
+        Nationality
+        <dt class="p-content" id="nationality">Viet Nam</dt> 
+      </div>
+      <div class="p-title">
+        Permanent Address
+        <dt class="p-content" id="Permanent_address">The White House, 1600 Pennsylvania Avenue NW, Washington, DC 20500</dt> 
+      </div>
+      <div class="p-title">
+        Current Address
+        <dt class="p-content" id="current_address">3rd Floor, QTSC Building 1, Street 14, Quang Trung Software City, Tan Chanh Hiep Ward, District 12, HCM City, Vietnam</dt> 
+      </div>  
+  </div>
+</div>
+<%= render 'modal_edit_contacts' %>
+<%= render 'modal_edit_location' %>

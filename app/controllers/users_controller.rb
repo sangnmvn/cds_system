@@ -41,6 +41,9 @@ class UsersController < ApplicationController
   def index2
   end
 
+  def user_profile
+  end
+
   def add_reviewer
     user_id = params[:id]
     user = User.find_by_id(user_id)

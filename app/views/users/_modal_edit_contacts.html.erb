@@ -1,0 +1,105 @@
+<!-- The Modal -->
+<div class="modal fade modal-form-add-user" id="modal_edit_contact">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Edit Your Profile</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <p style="color:red">(*) required fields</p>
+            </div>
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>First Name (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="first_name"  class="form-control" placeholder="Please enter your first name" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Last Name (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="last_name"  class="form-control" placeholder="Please enter your last name" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Identity Card No</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="identity_card_no"  class="form-control" placeholder="Please enter your identity card no" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Gender</label>
+                </div>
+                <div class="col-sm-9">
+                  <select class="form-control" id="gender">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                  </select>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Date of Birth</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="date" id="birthdate"  class="form-control">
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Phone number</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="phone_number"  class="form-control" placeholder="Please enter your phone number" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Skype</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" id="skype_id" class="form-control" placeholder="Please enter your skype id" />
+                </div>
+              </div>
+              <br>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-5">
+              <%= hidden_field(:user, :id) %>
+            </div>
+            <div class="col-sm-2">
+            </div>
+          </div>
+        </div>
+        <%# end container  %>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" id="btn_modal_edit_user">Save</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

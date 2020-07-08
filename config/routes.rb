@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     collection do
       get :check_emai_account
       get :edit
+      get :user_profile
       get :index2
       post :create
       post :update
