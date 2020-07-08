@@ -5,5 +5,5 @@ class Title < ApplicationRecord
   has_many :title_competency_mappings
   has_many :forms
   has_many :users
-  validates :name, presence: { message: "Please enter a title name" }, uniqueness: { message: "￼Name already exsit" }
+  validates :name, presence: { message: "Please enter a title name" }
 end
