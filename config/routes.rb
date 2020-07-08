@@ -148,6 +148,26 @@ Rails.application.routes.draw do
     end
     get "view_pm"
   end
+
+  resources :category_management do
+    collection do
+      get "index"
+      post "data_setting_company"
+      post "data_setting_project"
+      post "data_setting_role"
+      post "data_setting_title"
+      post "data_setting_load_company"
+      post "data_setting_load_role"
+      post "save_setting_company"
+      post "save_setting_project"
+      post "save_setting_role"
+      post "save_setting_title"
+      post "status_setting_company"
+      post "status_setting_title"
+      post "status_setting_role"
+      post "status_setting_project"
+    end
+  end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
   get "/schedules/get_schedule_hr_info/:id", to: "schedules#get_schedule_hr_info"

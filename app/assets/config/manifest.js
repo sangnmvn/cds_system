@@ -50,3 +50,6 @@
 
 //= link preview_result.css
 //= link preview_result
+
+//= link data_table_category_management
+//= link category_management.css

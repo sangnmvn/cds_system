@@ -6,4 +6,5 @@ class Company < ApplicationRecord
                           foreign_key: "parent_company_id"
 
   belongs_to :parent_company, class_name: "Company", optional: true
+  validates :name, presence: { message: "Please enter a company name" }, uniqueness: { message: "￼Name already exsit" }
 end
