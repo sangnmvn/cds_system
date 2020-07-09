@@ -6,6 +6,7 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+
 $color-disable: #afaaaa;
 
 @import "bootstrap-datepicker";
@@ -39,6 +40,20 @@ $color-disable: #afaaaa;
         font-weight: bold;
     }
 }
+
+.avatar {
+    width: 120px;
+    height: 60px;
+    clip-path: circle(30px at 50% 50%);
+    img {
+        display: block;
+        max-width:120px;
+        max-height:60px;
+        width: auto;
+        height: auto;
+    }
+}
+
 
 .td-mytd {
     text-align: center;
@@ -204,10 +219,11 @@ h2,
     color: white !important;
     padding-left: 2%;
     height: 40px;
-    padding-top: 10px;;
+    padding-top: 10px;
+    ;
 }
 
-.header{
+.header {
     background-color: #DDDDDD;
 }
 
@@ -222,6 +238,7 @@ h2,
 .link-icon {
     text-decoration: unset;
 }
+
 /*
   *= require_tree .
   *= require_self

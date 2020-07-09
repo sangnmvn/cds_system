@@ -104,6 +104,18 @@ module Api
       { data: h_users, total: h_users.values.sum }
     end
 
+    def edit_user_profile
+      h_user = JSON.parse(params[:h_user_profile])
+      user = User.where(id: h_user["id"]).first
+      return false if user.blank?
+      return false unless user.update(first_name: h_user["first_name"], last_name: h_user["last_name"],
+                                phone: h_user["phone_number"], skype: h_user["skype"],
+                                date_of_birth: h_user["date_of_birth"], nationality: h_user["nationality"],
+                                identity_card_no: h_user["identity_card_no"], permanent_address: h_user["permanent_address"],
+                                current_address: h_user["current_address"], gender: h_user["gender"])
+      true
+    end
+
     def data_users_by_seniority(gender = false)
       users = User.joins(:project_members).where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }

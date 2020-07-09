@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "periods/show"
+
   devise_for :users
   resources :user_groups do
     collection do
@@ -20,7 +21,9 @@ Rails.application.routes.draw do
       get :user_profile
       get :index2
       post :create
+      post :change_password
       post :update
+      post :edit_user_profile
       get :get_filter_company
       get :get_filter_project
       get :get_modal_project

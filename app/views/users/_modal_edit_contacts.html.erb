@@ -10,96 +10,90 @@
         </button>
       </div>
       <!-- Modal body -->
-      <div class="modal-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-12">
-              <p style="color:red">(*) required fields</p>
-            </div>
-            <div class="col-sm-12">
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>First Name (*)</label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" id="first_name"  class="form-control" placeholder="Please enter your first name" />
-                </div>
+        <input type="hidden" value="<%= @current_user.id %>" id="user_id">
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <p style="color:red">(*) required fields</p>
               </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Last Name (*)</label>
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>First Name (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="first_name"  class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                  </div>
                 </div>
-                <div class="col-sm-9">
-                  <input type="text" id="last_name"  class="form-control" placeholder="Please enter your last name" />
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Last Name (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
+                  </div>
                 </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Identity Card No</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="identity_card_no"  class="form-control" value="<%= @current_user.identity_card_no %>" placeholder="Please enter your identity card no" />
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Gender</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="gender">
+                      <option value="1" <%= @current_user.gender ? "selected" : "" %> >Male</option>
+                      <option value="0" <%= @current_user.gender ? "" : "selected" %> >Female</option>
+                    </select>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Date of Birth</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="date" id="birthday" value="<%= @current_user.date_of_birth %>" class="form-control">
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Phone number</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="phone_number" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Skype</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="skype" class="form-control" value="<%= @current_user.skype %>" placeholder="Please enter your skype id" />
+                  </div>
+                </div>
+                <br>
               </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Identity Card No</label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" id="identity_card_no"  class="form-control" placeholder="Please enter your identity card no" />
-                </div>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Gender</label>
-                </div>
-                <div class="col-sm-9">
-                  <select class="form-control" id="gender">
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
-                  </select>
-                </div>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Date of Birth</label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="date" id="birthdate"  class="form-control">
-                </div>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Phone number</label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" id="phone_number"  class="form-control" placeholder="Please enter your phone number" />
-                </div>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-sm-3">
-                  <label>Skype</label>
-                </div>
-                <div class="col-sm-9">
-                  <input type="text" id="skype_id" class="form-control" placeholder="Please enter your skype id" />
-                </div>
-              </div>
-              <br>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-5">
-              <%= hidden_field(:user, :id) %>
-            </div>
-            <div class="col-sm-2">
             </div>
           </div>
+          <% # end container %>
         </div>
-        <%# end container  %>
-      </div>
-      <!-- Modal footer -->
-      <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary" id="btn_modal_edit_user">Save</button>
-        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
-      </div>
+        <!-- Modal footer -->
+        <div class="modal-footer" style="justify-content: center;">
+          <button type="button" class="btn btn-primary btn-save-edit">Save</button>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+        </div>
     </div>
   </div>
 </div>

@@ -42,6 +42,14 @@ class UsersController < ApplicationController
   end
 
   def user_profile
+    @curent_user = User.find_by(id: current_user.id)
+    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id).pluck(:desc).join(", ")
+    form = Form.find_by(user_id: current_user.id)
+    @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
+  end
+
+  def edit_user_profile
+    render json: @user_management_services.edit_user_profile
   end
 
   def add_reviewer
@@ -204,6 +212,21 @@ class UsersController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def change_password
+    user = User.find_for_authentication(id: params[:id])
+    if user.valid_password?(params[:old_password])
+      if params[:new_password] != params[:confirm_password]
+        return render json: {status: "Unequal"}
+      else
+        user.update(password: params[:new_password])
+        return true
+      end
+
+    else
+      return render json:  {status: "Uncorrect"}
+    end
+  end
+
   private
 
   def redirect_to_index
@@ -226,7 +249,8 @@ class UsersController < ApplicationController
     params[:filter_project] = params["filter-project"]
     params.permit(:id, :first_name, :last_name, :email, :account,
                   :company_id, :role_id, :status, :is_delete, :offset,
-                  :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date)
+                  :search, :filter_company, :filter_role, :filter_project,
+                  :project_id, :joined_date, :h_user_profile)
   end
 
   def get_sort_params
