@@ -82,20 +82,14 @@ class DashboardsController < ApplicationController
     out_params[:ext] ||= "xlsx"
     if out_params[:company_id] != "All"
       out_params[:company_id] = out_params[:company_id].split(",").map(&:to_i)
-    else
-      out_params[:company_id] = nil
     end
 
     if out_params[:project_id] != "All"
       out_params[:project_id] = out_params[:project_id].split(",").map(&:to_i)
-    else
-      out_params[:project_id] = nil
     end
 
     if out_params[:role_id] != "All"
       out_params[:role_id] = out_params[:role_id].split(",").map(&:to_i)
-    else
-      out_params[:role_id] = nil
     end
 
     out_params

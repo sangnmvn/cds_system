@@ -11,8 +11,6 @@ module Api
       @privilege_array = privilege_array
       @current_user = current_user
       @params = params
-
-      @user_mgmt_service ||= Api::UserManagementService.new(params, current_user)
     end
 
     def repack_zip_if_multiple(filenames, zip_file_name = nil)
@@ -78,9 +76,256 @@ module Api
       end
     end
 
+    def data_users_up_title_export(data_filter)
+      filter_users = {}
+      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
+      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_previous_period = {}
+      title_second.map do |title|
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
+      end
+      results = {}
+      user_ids = []
+      h_companies = {}
+      companies_id = data_filter[:company_ids]
+      if companies_id.nil?
+        h_companies = Company.pluck([:id, :name]).to_a.to_h
+      else
+        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
+      end
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        next if title.rank <= prev_period[:rank]
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: first[company_id],
+            prev_period: second[company_id],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+            period_prev_name: prev_period[:name],
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
+        }
+      end
+
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results }
+    end
+
+    def data_users_down_title_export(data_filter)
+      filter_users = {}
+      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
+      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_previous_period = {}
+      title_second.map do |title|
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
+      end
+      results = {}
+      user_ids = []
+      h_companies = {}
+      companies_id = data_filter[:company_ids]
+      if companies_id.nil?
+        h_companies = Company.pluck([:id, :name]).to_a.to_h
+      else
+        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
+      end
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        next if title.rank >= prev_period[:rank]
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: first[company_id],
+            prev_period: second[company_id],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+            period_prev_name: prev_period[:name],
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
+        }
+      end
+
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results }
+    end
+
+    def data_users_keep_title_export(data_filter)
+      filter_users = {}
+      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
+      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+
+      first = {}
+      second = {}
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_previous_period = {}
+      title_second.map do |title|
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
+      end
+      results = {}
+      user_ids = []
+      h_companies = {}
+      companies_id = data_filter[:company_ids]
+      if companies_id.nil?
+        h_companies = Company.pluck([:id, :name]).to_a.to_h
+      else
+        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
+      end
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        next if title.rank != prev_period[:rank]
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: first[company_id],
+            prev_period: second[company_id],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+            period_prev_name: prev_period[:name],
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
+        }
+      end
+
+      #20.times do |i|
+      #results << {
+      #class: (i.even? ? "even" : "odd"),
+      #title_history_id: rand(i + 100),
+      #full_name: "#{rand(i + 100)} name name",
+      #email: "#{rand(i + 100)}aaa.@gmail.com",
+      #role: "#{rand(i + 100)} role role",
+      #rank: rand(i + 100),
+      #title: "#{rand(i + 100)} title tile",
+      #level: rand(i + 100),
+      #}
+      #end
+      { data: results }
+    end
+
+    # How to run from rails c
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
     def export_up_title(params)
-      outdata = @user_mgmt_service.data_users_up_title_export(params)
+      outdata = data_users_up_title_export(params)
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
@@ -150,7 +395,7 @@ module Api
 
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
     def export_down_title(params)
-      outdata = @user_mgmt_service.data_users_down_title_export(params)
+      outdata = data_users_down_title_export(params)
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
@@ -218,9 +463,8 @@ module Api
       final_filename
     end
 
-    # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
     def export_keep_title(params)
-      outdata = @user_mgmt_service.data_users_keep_title_export(params)
+      outdata = data_users_keep_title_export(params)
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
