@@ -10,10 +10,10 @@ function callAjaxExport(url, ext) {
     },
     success: function (response) {
       // download this file in NEW TAB
-      if (response.filepath == "") {
+      if (response.file_path == "") {
         alert("File is empty!");
       } else {
-        window.open(response.filepath, '_blank');
+        window.open("/" + response.file_path, '_blank');
       }
     }
   });

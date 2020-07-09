@@ -278,6 +278,111 @@ module Api
       end
     end
 
+    def get_list_cds_review_to_export(status)
+      filter = filter_cds_review_list
+
+      user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
+      user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
+
+      first = {}
+      second = {}
+      # filter 1 period
+      # the latest schedule will be first, second will be previous of the filtered schedule
+      filtered_period = Period.find(filter[:period_id][0])
+      schedules = Schedule.where(status: status).order(end_date_hr: :desc).where("start_date <= ?", filtered_period.to_date)
+
+      schedules.map do |schedule|
+        if first[schedule.company_id].nil?
+          first[schedule.company_id] = schedule.period_id
+        elsif second[schedule.company_id].nil?
+          second[schedule.company_id] = schedule.period_id
+        end
+      end
+
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
+      h_previous_period = {}
+      title_second.map do |title|
+        h_previous_period[title.user_id] = {
+          rank: title.rank,
+          level: title.level,
+          title: title.title,
+          name: title&.period&.format_to_date,
+        }
+      end
+      results = {}
+      companies_id = filter[:filter_users][:company_id]
+      h_companies = if companies_id.nil?
+          Company.pluck([:id, :name]).to_h
+        else
+          Company.where(id: companies_id).pluck([:id, :name]).to_h
+        end
+
+      title_first.map do |title|
+        prev_period = h_previous_period[title.user_id]
+        next if title.rank <= prev_period[:rank]
+
+        company_id = title&.user&.company_id
+        if results[company_id].nil?
+          results[company_id] = {
+            users: [],
+            company_name: h_companies[company_id],
+            period: first[company_id],
+            prev_period: second[company_id],
+            period_excel_name: title&.period&.format_excel_name,
+            period_name: title&.period&.format_to_date,
+            period_prev_name: prev_period[:name],
+          }
+        end
+        results[company_id][:users] << {
+          full_name: title&.user&.format_name,
+          email: title&.user&.email,
+          rank: title&.rank,
+          title: title&.title,
+          level: title&.level,
+          rank_prev: prev_period[:rank],
+          level_prev: prev_period[:level],
+          title_prev: prev_period[:title],
+        }
+      end
+      { data: results }
+    end
+
+    def data_filter_cds_view_others
+      user_ids = User.where(is_delete: false)
+      data_filter = {
+        companies: [],
+        projects: [],
+        roles: [],
+        users: [],
+        periods: [],
+      }
+
+      users = User.where(id: user_ids).includes(:company, :role)
+      users.each do |user|
+        company = format_filter(user.company.name, user.company_id)
+        user_arr = format_filter(user.format_name, user.id)
+        role = format_filter(user.role.name, user.role_id)
+        data_filter[:companies] << company unless data_filter[:companies].include?(company)
+        data_filter[:roles] << role unless data_filter[:roles].include?(role)
+        data_filter[:users] << user_arr
+      end
+
+      project_members = ProjectMember.where(user_id: user_ids).includes(:project)
+      project_members.each do |project_member|
+        project = format_filter(project_member.project.desc, project_member.project_id)
+        data_filter[:projects] << project unless data_filter[:projects].include?(project)
+      end
+
+      forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
+      forms.each do |form|
+        period = format_filter(form.period.format_name, form.period_id)
+        data_filter[:periods] << period unless data_filter[:periods].include?(period)
+      end
+
+      data_filter
+    end
+
     def data_filter_cds_review
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
       data_filter = {

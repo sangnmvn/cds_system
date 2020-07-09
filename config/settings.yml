@@ -78,7 +78,13 @@ privileges:
         title_name: "CDS Assessment",
         title_id: 6,
       },
-
+    24: 
+    {
+      id: 24,
+      name: "View CDS (Review)",
+      title_name: "CDS Assessment",
+      title_id: 6,
+    },
     18:
     {
       id: 18,
@@ -122,4 +128,5 @@ privileges:
       title_name: "Dashboards",
       title_id: 8     
     },
+    
   }

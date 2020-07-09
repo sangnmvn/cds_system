@@ -7,6 +7,7 @@ class FormsController < ApplicationController
   ASSESS_OWN_CDS = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
+  VIEW_OTHERS_CDS = 24
   include TitleMappingsHelper
 
   def index_cds_cdp
@@ -35,15 +36,14 @@ class FormsController < ApplicationController
   end
 
   def export_excel_cds_review
-    filepath = ""
+    file_path = ""
     if @privilege_array.include?(APPROVE_CDS)
-      data = @form_service.get_list_cds_approve
-      filepath = @export_service.export_excel_cds_approve(data)
+      data = @form_service.get_list_cds_review_to_export(["Awaiting Approval", "Done"])
     elsif @privilege_array.include?(REVIEW_CDS)
-      data = @form_service.get_list_cds_review
-      filepath = @export_service.export_excel_cds_review(data)
+      data = @form_service.get_list_cds_review_to_export("Awaiting Review")
     end
-    render json: { filepath: filepath }
+    file_path = @export_service.export_excel_cds_review(data)
+    render json: { file_path: file_path }
   end
 
   def get_list_cds_assessment
@@ -60,7 +60,8 @@ class FormsController < ApplicationController
 
   def cds_review
     @companies = Company.all
-    @data_filter = if @privilege_array.include?(APPROVE_CDS)
+    @data_filter = if @privilege_array.include?(VIEW_OTHERS_CDS)
+      elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -313,7 +314,9 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    data = if @privilege_array.include?(APPROVE_CDS)
+    data = if @privilege_array.include?(VIEW_OTHERS_CDS)
+        @form_service.data_filter_cds_view_others
+      elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -378,6 +381,6 @@ class FormsController < ApplicationController
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
                   :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
-                  :cancel_slots, :summary_id, :comment)
+                  :cancel_slots, :summary_id, :comment, :ext)
   end
 end

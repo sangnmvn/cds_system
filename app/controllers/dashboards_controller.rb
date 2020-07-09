@@ -33,18 +33,18 @@ class DashboardsController < ApplicationController
   end
 
   def export_up_title
-    filepath = @export_services.export_up_title
-    render json: { filepath: filepath }
+    file_path = @export_services.export_up_title
+    render json: { file_path: file_path }
   end
 
   def export_down_title
-    filepath = @export_services.export_down_title
-    render json: { filepath: filepath }
+    file_path = @export_services.export_down_title
+    render json: { file_path: file_path }
   end
 
   def export_keep_title
-    filepath = @export_services.export_keep_title
-    render json: { filepath: filepath }
+    file_path = @export_services.export_keep_title
+    render json: { file_path: file_path }
   end
 
   def data_users_by_gender
