@@ -33,17 +33,17 @@ class DashboardsController < ApplicationController
   end
 
   def export_up_title
-    filepath = @export_services.export_up_title(process_export_params)
+    filepath = @export_services.export_up_title
     render json: { filepath: filepath }
   end
 
   def export_down_title
-    filepath = @export_services.export_down_title(process_export_params)
+    filepath = @export_services.export_down_title
     render json: { filepath: filepath }
   end
 
   def export_keep_title
-    filepath = @export_services.export_keep_title(process_export_params)
+    filepath = @export_services.export_keep_title
     render json: { filepath: filepath }
   end
 
@@ -81,22 +81,22 @@ class DashboardsController < ApplicationController
     out_params = params.clone
     out_params[:ext] ||= "xlsx"
     if out_params[:company_id] != "All"
-      out_params[:company_id] = out_params[:company_id].split(",").map(&:to_i)
+      out_params[:company_id] = out_params[:company_id]&.split(",")&.map(&:to_i)
     end
 
     if out_params[:project_id] != "All"
-      out_params[:project_id] = out_params[:project_id].split(",").map(&:to_i)
+      out_params[:project_id] = out_params[:project_id]&.split(",")&.map(&:to_i)
     end
 
     if out_params[:role_id] != "All"
-      out_params[:role_id] = out_params[:role_id].split(",").map(&:to_i)
+      out_params[:role_id] = out_params[:role_id]&.split(",")&.map(&:to_i)
     end
 
     out_params
   end
 
   def export_services
-    @export_services = Api::ExportService.new(params, current_user)
+    @export_services = Api::ExportService.new(process_export_params, current_user)
   end
 
   def user_management_services

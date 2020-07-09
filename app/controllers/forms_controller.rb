@@ -1,6 +1,7 @@
 class FormsController < ApplicationController
   layout "system_layout"
   before_action :form_service
+  before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
   ASSESS_OWN_CDS = 15
@@ -31,6 +32,18 @@ class FormsController < ApplicationController
   def cancel_request
     form_slot_ids = params[:form_slot_id].map(&:to_i)
     render json: @form_service.cancel_request(form_slot_ids, params[:slot_id])
+  end
+
+  def export_excel_cds_review
+    filepath = ""
+    if @privilege_array.include?(APPROVE_CDS)
+      data = @form_service.get_list_cds_approve
+      filepath = @export_service.export_excel_cds_approve(data)
+    elsif @privilege_array.include?(REVIEW_CDS)
+      data = @form_service.get_list_cds_review
+      filepath = @export_service.export_excel_cds_review(data)
+    end
+    render json: { filepath: filepath }
   end
 
   def get_list_cds_assessment
@@ -349,6 +362,10 @@ class FormsController < ApplicationController
     @form_service ||= Api::FormService.new(form_params, current_user)
   end
 
+  def export_service
+    @export_service ||= Api::ExportService.new(form_params, current_user)
+  end
+
   def form_params
     params[:offset] = params[:iDisplayStart] || "0"
     params[:user_ids] = params[:user_ids] || "0"
@@ -360,7 +377,7 @@ class FormsController < ApplicationController
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type, 
+                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
                   :cancel_slots, :summary_id, :comment)
   end
 end

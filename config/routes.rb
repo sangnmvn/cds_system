@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       get :get_filter
       post :reviewer_submit
       post :withdraw_cds
+      post :export_excel_cds_review
     end
   end
   resources :templates do

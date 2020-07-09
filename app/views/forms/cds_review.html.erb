@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'cdp_assessment', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'form_export_cds_review', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'form_review_export', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :cds_review %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
@@ -18,8 +18,8 @@
       </a>
       &nbsp;
       <span>Export</span>
-      <i class="fa fa-file-excel-o icon icon_export_cds_review" id="export_excel_cds_review" style="color: green"></i>&nbsp;
-      <i class="fa fa-file-pdf-o icon icon_export_cds_review" id="export_pdf_cds_review" style="color: #a96f6f" aria-hidden="true"></i>&nbsp;
+      <i class="fa fa-file-excel-o icon icon-export-cds-review" id="export_excel_cds_review" style="color: green"></i>
+      <i class="fa fa-file-pdf-o icon icon-export-cds-review" id="export_pdf_cds_review" style="color: #a96f6f" aria-hidden="true"></i>
     </div>
   </div>
   <div class="col-12 filter-assessment-review">

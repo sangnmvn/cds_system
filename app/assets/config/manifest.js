@@ -57,3 +57,4 @@
 //= link user_profile.css
 //= link user_profile.js
 //= link form_export_cds_review.css
+//= link form_review_export.js

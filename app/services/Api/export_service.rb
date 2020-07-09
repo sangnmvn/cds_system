@@ -1,6 +1,6 @@
 module Api
   class ExportService < BaseService
-    FILE_CLEANUP_TIME_IN_SECONDS = 10 * 60
+    FILE_CLEAN_UP_TIME_IN_SECONDS = 10 * 60
 
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
@@ -13,50 +13,50 @@ module Api
       @params = params
     end
 
-    def repack_zip_if_multiple(filenames, zip_file_name = nil)
+    def repack_zip_if_multiple(file_names, zip_file_name = nil)
       # - Turn files into zip if multiple files
       # Caution: DELETE all file if ZIP is applied
       # - Else return the current file without deletion
       # If multiple files download .zip, if 1 file download the only file
-      if filenames.length.zero?
+      if file_names.length.zero?
         nil
-      elsif filenames.length == 1
-        filenames[0]
+      elsif file_names.length == 1
+        file_names[0]
       else
         folder = "public/"
         File.delete(zip_file_name) if File.exist?(zip_file_name)
-        Zip::File.open("public/#{zip_file_name}", Zip::File::CREATE) do |zipfile|
-          filenames.each do |filename|
+        Zip::File.open("public/#{zip_file_name}", Zip::File::CREATE) do |zip_file|
+          file_names.each do |file_name|
             # Two arguments:
             # - The name of the file as it will appear in the archive
             # - The original file, including the path to find it
-            in_filename = File.join(folder, filename)
-            zipfile.add(filename, in_filename) { true }
+            in_file_name = File.join(folder, file_name)
+            zip_file.add(file_name, in_file_name) { true }
           end
         end
-        filenames.each do |filename|
-          in_filename = File.join(folder, filename)
-          File.delete(in_filename) if File.exist?(in_filename)
+        file_names.each do |file_name|
+          in_file_name = File.join(folder, file_name)
+          File.delete(in_file_name) if File.exist?(in_file_name)
         end
         zip_file_name
       end
     end
 
-    def schedule_file_for_clean_up(filename)
+    def schedule_file_for_clean_up(file_name)
       # Delete the file after FILE_CLEAN_UP_TIME seconds
       # 1. every second check if the file is replaced
       #-> File belongs to new requests and current requests are overwritten
       # 2. else after time has passed delete the file
       # Precondition: File must be in public folder WITHOUT the 'public/' in the path
-      f = File.new("public/#{filename}")
+      f = File.new("public/#{file_name}")
 
       # get original creation time
       creation_time = f.ctime
       Thread.new do
-        (0...FILE_CLEANUP_TIME_IN_SECONDS).each do |_i|
+        (0...FILE_CLEAN_UP_TIME_IN_SECONDS).each do |_i|
           sleep 1
           begin
-            f = File.new("public/#{filename}")
+            f = File.new("public/#{file_name}")
             new_creation_time = f.ctime
             if creation_time != new_creation_time
               # File has been modified, exit the thread
@@ -64,23 +64,30 @@ module Api
               Thread.exit
             end
           rescue StandardError
+            # File has been deleted so deleting the file later is useless
             Thread.exit
           end
         end
 
-        f = File.new("public/#{filename}")
+        f = File.new("public/#{file_name}")
         new_creation_time = f.ctime
         if creation_time == new_creation_time
-          File.delete("public/" + filename)
+          File.delete("public/" + file_name)
         end
       end
     end
 
-    def data_users_up_title_export(data_filter)
+    def export_excel_cds_review(data)
+    end
+
+    def export_excel_cds_approve(data)
+    end
+
+    def data_users_up_title_export
       filter_users = {}
-      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
-      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
+      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
 
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
@@ -106,14 +113,12 @@ module Api
         }
       end
       results = {}
-      user_ids = []
-      h_companies = {}
-      companies_id = data_filter[:company_ids]
-      if companies_id.nil?
-        h_companies = Company.pluck([:id, :name]).to_a.to_h
-      else
-        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
-      end
+      companies_id = @params[:company_id]
+      h_companies = if companies_id == "All"
+          Company.pluck([:id, :name]).to_h
+        else
+          Company.where(id: companies_id).pluck([:id, :name]).to_h
+        end
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
@@ -143,26 +148,14 @@ module Api
         }
       end
 
-      #20.times do |i|
-      #results << {
-      #class: (i.even? ? "even" : "odd"),
-      #title_history_id: rand(i + 100),
-      #full_name: "#{rand(i + 100)} name name",
-      #email: "#{rand(i + 100)}aaa.@gmail.com",
-      #role: "#{rand(i + 100)} role role",
-      #rank: rand(i + 100),
-      #title: "#{rand(i + 100)} title tile",
-      #level: rand(i + 100),
-      #}
-      #end
       { data: results }
     end
 
-    def data_users_down_title_export(data_filter)
+    def data_users_down_title_export
       filter_users = {}
-      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
-      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
+      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
 
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
@@ -188,14 +181,12 @@ module Api
         }
       end
       results = {}
-      user_ids = []
-      h_companies = {}
-      companies_id = data_filter[:company_ids]
-      if companies_id.nil?
-        h_companies = Company.pluck([:id, :name]).to_a.to_h
-      else
-        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
-      end
+      companies_id = @params[:company_id]
+      h_companies = if companies_id == "All"
+          Company.pluck([:id, :name]).to_h
+        else
+          Company.where(id: companies_id).pluck([:id, :name]).to_h
+        end
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
@@ -225,26 +216,14 @@ module Api
         }
       end
 
-      #20.times do |i|
-      #results << {
-      #class: (i.even? ? "even" : "odd"),
-      #title_history_id: rand(i + 100),
-      #full_name: "#{rand(i + 100)} name name",
-      #email: "#{rand(i + 100)}aaa.@gmail.com",
-      #role: "#{rand(i + 100)} role role",
-      #rank: rand(i + 100),
-      #title: "#{rand(i + 100)} title tile",
-      #level: rand(i + 100),
-      #}
-      #end
       { data: results }
     end
 
-    def data_users_keep_title_export(data_filter)
+    def data_users_keep_title_export
       filter_users = {}
-      filter_users[:company_id] = data_filter[:company_id] unless data_filter[:company_id] == "All"
-      filter_users[:role_id] = data_filter[:role_id] unless data_filter[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = data_filter[:project_id] unless data_filter[:project_id] == "All"
+      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
+      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
+      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
 
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
@@ -270,14 +249,12 @@ module Api
         }
       end
       results = {}
-      user_ids = []
-      h_companies = {}
-      companies_id = data_filter[:company_ids]
-      if companies_id.nil?
-        h_companies = Company.pluck([:id, :name]).to_a.to_h
-      else
-        h_companies = Company.where(id: companies_id).pluck([:id, :name]).to_a.to_h
-      end
+      companies_id = @params[:company_id]
+      h_companies = if companies_id == "All"
+          Company.pluck([:id, :name]).to_h
+        else
+          Company.where(id: companies_id).pluck([:id, :name]).to_h
+        end
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
@@ -307,25 +284,13 @@ module Api
         }
       end
 
-      #20.times do |i|
-      #results << {
-      #class: (i.even? ? "even" : "odd"),
-      #title_history_id: rand(i + 100),
-      #full_name: "#{rand(i + 100)} name name",
-      #email: "#{rand(i + 100)}aaa.@gmail.com",
-      #role: "#{rand(i + 100)} role role",
-      #rank: rand(i + 100),
-      #title: "#{rand(i + 100)} title tile",
-      #level: rand(i + 100),
-      #}
-      #end
       { data: results }
     end
 
     # How to run from rails c
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
-    def export_up_title(params)
-      outdata = data_users_up_title_export(params)
+    def export_up_title
+      outdata = data_users_up_title_export
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
@@ -376,7 +341,7 @@ module Api
         end
         level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
         # getting output file to public/
-        extension = params[:ext]
+        extension = @params[:ext]
         if extension.downcase == "xlsx"
           package.serialize("public/#{out_file_name}.xlsx")
           out_file_names << File.basename("#{out_file_name}.xlsx")
@@ -388,14 +353,14 @@ module Api
         end
       end
       zip_file_name = "public/CDS_Promotion_Employee_List.zip"
-      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
-      schedule_file_for_clean_up(final_filename)
-      final_filename
+      final_file_name = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_file_name)
+      final_file_name
     end
 
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
-    def export_down_title(params)
-      outdata = data_users_down_title_export(params)
+    def export_down_title
+      outdata = data_users_down_title_export
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
@@ -446,7 +411,7 @@ module Api
         end
         level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
         # getting output file to public/
-        extension = params[:ext]
+        extension = @params[:ext]
         if extension.downcase == "xlsx"
           package.serialize("public/#{out_file_name}.xlsx")
           out_file_names << File.basename("#{out_file_name}.xlsx")
@@ -458,13 +423,13 @@ module Api
         end
       end
       zip_file_name = "public/CDS_Demotion_Employee_List.zip"
-      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
-      schedule_file_for_clean_up(final_filename)
-      final_filename
+      final_file_name = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_file_name)
+      final_file_name
     end
 
-    def export_keep_title(params)
-      outdata = data_users_keep_title_export(params)
+    def export_keep_title
+      outdata = data_users_keep_title_export
       h_list = outdata[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
@@ -507,7 +472,7 @@ module Api
         end
         level_up_sheet.column_widths 5, 30, 30, 20, 20, 5, 5, 30 # run at last
         # getting output file to public/
-        extension = params[:ext]
+        extension = @params[:ext]
         if extension.downcase == "xlsx"
           package.serialize("public/#{out_file_name}.xlsx")
           out_file_names << File.basename("#{out_file_name}.xlsx")
@@ -519,9 +484,9 @@ module Api
         end
       end
       zip_file_name = "CDS_No_Change_Title_Employee_List.zip"
-      final_filename = repack_zip_if_multiple(out_file_names, zip_file_name)
-      schedule_file_for_clean_up(final_filename)
-      final_filename
+      final_file_name = repack_zip_if_multiple(out_file_names, zip_file_name)
+      schedule_file_for_clean_up(final_file_name)
+      final_file_name
     end
   end
 end
