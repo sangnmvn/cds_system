@@ -15,7 +15,7 @@ function checkPeriodFilter() {
   } catch (e) {
     return true;
   }
-  if (data_filter.period == "" || data_filter.period == "0") {
+  if (data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1) {
     return false;
   } else {
     return true;
