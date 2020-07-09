@@ -19,7 +19,7 @@ class CreateCompanies < ActiveRecord::Migration[6.0]
       t.string :email_group_fa
       t.string :tax_code
       t.text :note
-      t.boolean :status, default: 1
+      t.boolean :status, default: true
       t.references :parent_company
       t.timestamps
     end

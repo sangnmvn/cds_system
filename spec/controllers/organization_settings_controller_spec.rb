@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CategoryManagementController, type: :controller do
+RSpec.describe OrganizationSettingsController, type: :controller do
   describe "POST #data_setting_company" do
   end
   describe "POST #data_setting_project" do

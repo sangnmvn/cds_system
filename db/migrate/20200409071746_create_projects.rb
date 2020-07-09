@@ -12,7 +12,7 @@ class CreateProjects < ActiveRecord::Migration[6.0]
       t.string :email
       t.text :description
       t.string :note
-      t.boolean :status, default: 1
+      t.boolean :status, default: true
       t.belongs_to :company, foreign_key: true
       t.timestamps
     end

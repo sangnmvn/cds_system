@@ -1,0 +1,116 @@
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<%= stylesheet_link_tag "jquery.dataTables.min", media: "all", 'data-turbolinks-track': "reload" %>
+<%= stylesheet_link_tag "organization_settings", media: "all", 'data-turbolinks-track': "reload" %>
+<%= stylesheet_link_tag "cdp_assessment", media: "all", 'data-turbolinks-track': "reload" %>
+<div class="container-fluid" style="padding:0">
+  <div class="row" id="cdp_container_div2">
+    <div class="col-10" style="font-size: 150%;">
+    Organization Settings
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="left-panel col-2">
+    <div class="card">
+      <table class="table table-primary table-responsive-sm table-mytable table${i}">
+        <thead class="left-setting-table">
+          <tr class="btn-company">
+            <td>Company</td>
+          </tr>
+          <tr class="btn-project">
+            <td>Project</td>
+          </tr>
+          <tr class="btn-role">
+            <td>Role</td>
+          </tr>
+          <tr class="btn-title">
+            <td>Title</td>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+  <div class="right-panel col-10">
+    <%= render "right_organization_settings" %>
+    <div class="icon-bar">
+      <button id="btn_save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+      <button id="btn_add" type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+    </div>
+  </div>
+  <div class="box-table col-12">
+    <table id="table_setting_company" style="display: none;"
+      class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm name">Company name</th>
+          <th class="th-sm establishment">Establishment</th>
+          <th class="th-sm phone">Phone</th>
+          <th class="th-sm email">Email</th>
+          <th class="th-sm ceo">CEO</th>
+          <th class="th-sm quantity">No. of Employees</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_project" style="display: none;"
+      class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm company_name">Company name</th>
+          <th class="th-sm name">Project Name</th>
+          <th class="th-sm establishment">Establishment</th>
+          <th class="th-sm project_manager">Project Manager</th>
+          <th class="th-sm customer">Customer</th>
+          <th class="th-sm email">Email</th>
+          <th class="th-sm quantity">No. of Employees</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_role" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
+      cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm name">Role Name</th>
+          <th class="th-sm abbreviation">Role Abbreviation</th>
+          <th class="th-sm description">Description</th>
+          <th class="th-sm note">Note</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+    <table id="table_setting_title" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
+      cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th class="th-sm number">No.</th>
+          <th class="th-sm role_name">Role Name</th>
+          <th class="th-sm name">Title Name</th>
+          <th class="th-sm abbreviation">Title Abbreviation</th>
+          <th class="th-sm rank">Rank</th>
+          <th class="th-sm description">Description</th>
+          <th class="th-sm code">Code</th>
+          <th class="th-sm note">Note</th>
+          <th class="th-sm action">Action</th>
+        </tr>
+      </thead>
+      <tbody> </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript"
+  src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
+<script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>
+<%= javascript_include_tag "data_table_organization_settings", 'data-turbolinks-track': "reload" %>
+
+
+<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>

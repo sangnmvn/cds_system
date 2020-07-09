@@ -12,7 +12,7 @@ module Api
     end
 
     def data_setting_company
-      company = Company.includes(:users)
+      company = Company.includes(:users, :projects)
       results = []
       company.map do |company_value|
         results << {
@@ -37,17 +37,14 @@ module Api
           note: company_value.note || "",
           parent_company_id: company_value.parent_company_id,
           status: company_value.status || "",
+          is_not_used: company_value.users.count == 0 && company_value.projects.count == 0 && Schedule.find_by_company_id(company_value.id).nil?,
         }
       end
       { data: results }
     end
 
     def data_setting_project
-      # if params[:company_id]
-      #   project = Project.where(company_id: params[:company_id]).includes(:company, :project_members)
-      # else
       project = Project.includes(:company, :project_members)
-      # end
       results = []
       project.map do |project_value|
         results << {
@@ -66,13 +63,14 @@ module Api
           description: project_value.description || "",
           note: project_value.note || "",
           status: project_value.status || "",
+          is_not_used: project_value.project_members.count == 0 && Schedule.find_by_project_id(project_value.id).nil?,
         }
       end
       { data: results }
     end
 
     def data_setting_role
-      role = Role.all
+      role = Role.includes(:users, :titles, :templates)
       results = []
       role.map do |role_value|
         results << {
@@ -82,13 +80,14 @@ module Api
           description: role_value.description || "",
           note: role_value.note || "",
           status: role_value.status || "",
+          is_not_used: role_value.users.count == 0 && role_value.titles.count == 0 && role_value.templates.count == 0,
         }
       end
       { data: results }
     end
 
     def data_setting_title
-      title = Title.includes(:role)
+      title = Title.includes(:role, :level_mappings, :title_mappings)
       results = []
       title.map do |title_value|
         results << {
@@ -102,6 +101,7 @@ module Api
           rank: title_value.rank || 0,
           note: title_value.note || "",
           status: title_value.real_status || "",
+          is_not_used: title_value.level_mappings.count == 0 && title_value.title_mappings.count == 0,
         }
       end
       { data: results }

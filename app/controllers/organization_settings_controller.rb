@@ -1,4 +1,4 @@
-class CategoryManagementController < ApplicationController
+class OrganizationSettingsController < ApplicationController
   layout "system_layout"
   before_action :setting_services
 
@@ -36,7 +36,7 @@ class CategoryManagementController < ApplicationController
 
   def save_setting_project
     if params[:project_id].blank?
-      return render json: { status: "exist" } if Project.includes(:company).where(desc: params[:project.name], "companies.id": params[:company_id]).present?
+      return render json: { status: "exist" } if Project.includes(:company).where(desc: params[:project_name], "companies.id": params[:company_id]).present?
     end
     return render json: { status: "success" } if @setting_services.save_setting_project
     render json: { status: "fail" }
@@ -99,6 +99,26 @@ class CategoryManagementController < ApplicationController
     else
       return render json: { status: "success", change: status } if title.update(real_status: 1)
     end
+    render json: { status: "fail" }
+  end
+
+  def delete_setting_company
+    return render json: { status: "success" } if Company.destroy(params[:company_id])
+    render json: { status: "fail" }
+  end
+
+  def delete_setting_project
+    return render json: { status: "success" } if Project.destroy(params[:project_id])
+    render json: { status: "fail" }
+  end
+
+  def delete_setting_role
+    return render json: { status: "success" } if Role.destroy(params[:role_id])
+    render json: { status: "fail" }
+  end
+
+  def delete_setting_title
+    return render json: { status: "success" } if Title.destroy(params[:title_id])
     render json: { status: "fail" }
   end
 
