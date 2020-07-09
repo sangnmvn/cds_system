@@ -1,47 +1,22 @@
 $(document).ready(function () {
   loadDataSettingCompany();
-  setDisplay(
-    "#box_company",
-    "#table_setting_company",
-    "btn-add-company",
-    "btn-save-company"
-  );
+  setDisplay("#box_company", "#table_setting_company", "btn-add-company", "btn-save-company");
   loadCompanyName();
   loadRoleName();
   $(".btn-company").click(function () {
-    setDisplay(
-      "#box_company",
-      "#table_setting_company",
-      "btn-add-company",
-      "btn-save-company"
-    );
+    setDisplay("#box_company", "#table_setting_company", "btn-add-company", "btn-save-company");
     loadDataSettingCompany();
   });
   $(".btn-project").click(function () {
-    setDisplay(
-      "#box_project",
-      "#table_setting_project",
-      "btn-add-project",
-      "btn-save-project"
-    );
+    setDisplay("#box_project", "#table_setting_project", "btn-add-project", "btn-save-project");
     loadDataSettingProject();
   });
   $(".btn-role").click(function () {
-    setDisplay(
-      "#box_role",
-      "#table_setting_role",
-      "btn-add-role",
-      "btn-save-role"
-    );
+    setDisplay("#box_role", "#table_setting_role", "btn-add-role", "btn-save-role");
     loadDataSettingRole();
   });
   $(".btn-title").click(function () {
-    setDisplay(
-      "#box_title",
-      "#table_setting_title",
-      "btn-add-title",
-      "btn-save-title"
-    );
+    setDisplay("#box_title", "#table_setting_title", "btn-add-title", "btn-save-title");
     loadDataSettingTitle();
   });
 
@@ -163,8 +138,8 @@ $(document).on("click", ".btn-save-company", function () {
       '<span class="error-company">Please enter less than 100 character</span>'
     );
   } else {
-    var validEmail = regEx.test($(".company-email").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email").val());
+    if (!valid_email) {
       $(".company-email").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -189,8 +164,8 @@ $(document).on("click", ".btn-save-company", function () {
     );
   }
   if ($(".company-email-group-staff").val().length > 0) {
-    var validEmail = regEx.test($(".company-email-group-staff").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email-group-staff").val());
+    if (!valid_email) {
       $(".company-email-group-staff").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -201,8 +176,8 @@ $(document).on("click", ".btn-save-company", function () {
     }
   }
   if ($(".company-email-group-hr").val().length > 0) {
-    var validEmail = regEx.test($(".company-email-group-hr").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email-group-hr").val());
+    if (!valid_email) {
       $(".company-email-group-hr").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -213,8 +188,8 @@ $(document).on("click", ".btn-save-company", function () {
     }
   }
   if ($(".company-email-group-fa").val().length > 0) {
-    var validEmail = regEx.test($(".company-email-group-fa").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email-group-fa").val());
+    if (!valid_email) {
       $(".company-email-group-fa").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -225,8 +200,8 @@ $(document).on("click", ".btn-save-company", function () {
     }
   }
   if ($(".company-email-group-it").val().length > 0) {
-    var validEmail = regEx.test($(".company-email-group-it").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email-group-it").val());
+    if (!valid_email) {
       $(".company-email-group-it").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -237,8 +212,8 @@ $(document).on("click", ".btn-save-company", function () {
     }
   }
   if ($(".company-email-group-admin").val().length > 0) {
-    var validEmail = regEx.test($(".company-email-group-admin").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".company-email-group-admin").val());
+    if (!valid_email) {
       $(".company-email-group-admin").after(
         '<span class="error-company">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -262,7 +237,7 @@ $(document).on("click", ".btn-save-company", function () {
   if ($(".error-company").length == 0) {
     $.ajax({
       type: "POST",
-      url: "/organization_settings/save_setting_company",
+      url: "/organization_settings/save_company",
       data: {
         company_id: $(".company-id").val(),
         company_name: $(".company-name").val(),
@@ -290,12 +265,7 @@ $(document).on("click", ".btn-save-company", function () {
       },
       success: function (response) {
         if (response.status == "success") {
-          setDisplay(
-            "#box_company",
-            "#table_setting_company",
-            "btn-add-company",
-            "btn-save-company"
-          );
+          setDisplay("#box_company", "#table_setting_company", "btn-add-company", "btn-save-company");
           loadDataSettingCompany();
           warning("These company save successfully.");
         } else if (response.status == "exist") {
@@ -354,8 +324,8 @@ $(document).on("click", ".btn-save-project", function () {
     );
   } else {
     var regEx = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-    var validEmail = regEx.test($(".project-email").val());
-    if (!validEmail) {
+    var valid_email = regEx.test($(".project-email").val());
+    if (!valid_email) {
       $(".project-email").after(
         '<span class="error-project">Please enter a valid email address. For example: abc@domain.com.</span>'
       );
@@ -394,7 +364,7 @@ $(document).on("click", ".btn-save-project", function () {
   if ($(".error-project").length == 0) {
     $.ajax({
       type: "POST",
-      url: "/organization_settings/save_setting_project",
+      url: "/organization_settings/save_project",
       data: {
         project_id: $(".project-id").val(),
         project_company_name: $(".project-company-name").val(),
@@ -415,12 +385,7 @@ $(document).on("click", ".btn-save-project", function () {
       },
       success: function (response) {
         if (response.status == "success") {
-          setDisplay(
-            "#box_project",
-            "#table_setting_project",
-            "btn-add-project",
-            "btn-save-project"
-          );
+          setDisplay("#box_project", "#table_setting_project", "btn-add-project", "btn-save-project");
           loadDataSettingProject();
           warning("These project save successfully.");
         } else if (response.status == "exist") {
@@ -464,7 +429,7 @@ $(document).on("click", ".btn-save-role", function () {
   if ($(".error-role").length == 0) {
     $.ajax({
       type: "POST",
-      url: "/organization_settings/save_setting_role",
+      url: "/organization_settings/save_role",
       data: {
         role_id: $(".role-id").val(),
         role_name: $(".role-name").val(),
@@ -477,12 +442,7 @@ $(document).on("click", ".btn-save-role", function () {
       },
       success: function (response) {
         if (response.status == "success") {
-          setDisplay(
-            "#box_role",
-            "#table_setting_role",
-            "btn-add-role",
-            "btn-save-role"
-          );
+          setDisplay("#box_role", "#table_setting_role", "btn-add-role", "btn-save-role");
 
           loadDataSettingRole();
           warning("These role save successfully.");
@@ -555,7 +515,7 @@ $(document).on("click", ".btn-save-title", function () {
   if ($(".error-title").length == 0) {
     $.ajax({
       type: "POST",
-      url: "/organization_settings/save_setting_title",
+      url: "/organization_settings/save_title",
       data: {
         title_id: $(".title-id").val(),
         title_role_name: $(".title-role-name").val(),
@@ -571,12 +531,7 @@ $(document).on("click", ".btn-save-title", function () {
       },
       success: function (response) {
         if (response.status == "success") {
-          setDisplay(
-            "#box_title",
-            "#table_setting_title",
-            "btn-add-title",
-            "btn-save-title"
-          );
+          setDisplay("#box_title", "#table_setting_title", "btn-add-title", "btn-save-title");
           loadDataSettingTitle();
           warning("These title save successfully.");
         } else if (response.status == "exist") {
@@ -658,9 +613,9 @@ $(document).on("click", ".btn-add-title", function () {
 });
 
 $(document).on("click", ".status-icon-company", function () {
-  company_id = $(this).data("company_id");
+  var company_id = $(this).data("company_id");
   $.ajax({
-    url: "/organization_settings/status_setting_company",
+    url: "/organization_settings/change_status_company",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -688,9 +643,9 @@ $(document).on("click", ".status-icon-company", function () {
   });
 });
 $(document).on("click", ".status-icon-project", function () {
-  project_id = $(this).data("project_id");
+  var project_id = $(this).data("project_id");
   $.ajax({
-    url: "/organization_settings/status_setting_project",
+    url: "/organization_settings/change_status_project",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -718,9 +673,9 @@ $(document).on("click", ".status-icon-project", function () {
   });
 });
 $(document).on("click", ".status-icon-role", function () {
-  role_id = $(this).data("role_id");
+  var role_id = $(this).data("role_id");
   $.ajax({
-    url: "/organization_settings/status_setting_role",
+    url: "/organization_settings/change_status_role",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -748,9 +703,9 @@ $(document).on("click", ".status-icon-role", function () {
   });
 });
 $(document).on("click", ".status-icon-title", function () {
-  title_id = $(this).data("title_id");
+  var title_id = $(this).data("title_id");
   $.ajax({
-    url: "/organization_settings/status_setting_title",
+    url: "/organization_settings/change_status_title",
     type: "POST",
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
@@ -809,7 +764,7 @@ function setDisplay(id, id_header, add_class, save_class) {
 }
 function loadDataSettingCompany(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_company",
+    url: "/organization_settings/data_company",
     data: data_filter,
     type: "POST",
     headers: {
@@ -892,7 +847,7 @@ function appendDataToTableCompany(data) {
 }
 function loadDataSettingProject(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_project",
+    url: "/organization_settings/data_project",
     data: {
       company_ids: data_filter.company,
     },
@@ -953,14 +908,14 @@ function appendDataToTableProject(data) {
     });
     if (user.status)
       tpl += `
-                  <a class="action_icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
-                  <i class="fa fa-toggle-on"></i>
-                  </a>`.formatUnicorn({ id: user.id });
+            <a class="action_icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
+            <i class="fa fa-toggle-on"></i>
+            </a>`.formatUnicorn({ id: user.id });
     else
       tpl += `
-                  <a class="action_icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
-                  <i class="fa fa-toggle-off"></i>
-                  </a>`.formatUnicorn({ id: user.id });
+            <a class="action_icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
+            <i class="fa fa-toggle-off"></i>
+            </a>`.formatUnicorn({ id: user.id });
     if (user.is_not_used)
       tpl += `
             <a class="action_icon delete-project" title="Delete project" data-project_id="{id}" href="javascript:;">
@@ -972,7 +927,7 @@ function appendDataToTableProject(data) {
 }
 function loadDataSettingRole(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_role",
+    url: "/organization_settings/data_role",
     data: {
       role_ids: data_filter.role_ids,
     },
@@ -1019,14 +974,14 @@ function appendDataToTableRole(data) {
     });
     if (user.status)
       tpl += `
-                    <a class="action_icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
-                    <i class="fa fa-toggle-on"></i>
-                    </a>`.formatUnicorn({ id: user.id });
+            <a class="action_icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
+            <i class="fa fa-toggle-on"></i>
+            </a>`.formatUnicorn({ id: user.id });
     else
       tpl += `
-                    <a class="action_icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
-                    <i class="fa fa-toggle-off"></i>
-                    </a>`.formatUnicorn({ id: user.id });
+             <a class="action_icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
+             <i class="fa fa-toggle-off"></i>
+             </a>`.formatUnicorn({ id: user.id });
     if (user.is_not_used)
       tpl += `
             <a class="action_icon delete-role" title="Delete role" data-role_id="{id}" href="javascript:;">
@@ -1038,7 +993,7 @@ function appendDataToTableRole(data) {
 }
 function loadDataSettingTitle(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_title",
+    url: "/organization_settings/data_title",
     data: {
       company_ids: data_filter.company,
     },
@@ -1074,7 +1029,7 @@ function appendDataToTableTitle(data) {
           <td class="type-text item-row role-name">{role_name}</td>
           <td class="type-text item-row name">{name}</td>
           <td class="type-text item-row abbreviation">{abbreviation}</td>
-          <td class="type-text item-row rank">{rank}</td>
+          <td class="type-number item-row rank">{rank}</td>
           <td class="type-text item-row description">{description}</td>
           <td class="type-text item-row code">{code}</td>
           <td class="type-text item-row note">{note}</td>
@@ -1095,14 +1050,14 @@ function appendDataToTableTitle(data) {
     });
     if (user.status)
       tpl += `
-                    <a class="action_icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
-                    <i class="fa fa-toggle-on"></i>
-                    </a>`.formatUnicorn({ id: user.id });
+             <a class="action_icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
+             <i class="fa fa-toggle-on"></i>
+             </a>`.formatUnicorn({ id: user.id });
     else
       tpl += `
-                    <a class="action_icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
-                    <i class="fa fa-toggle-off"></i>
-                    </a>`.formatUnicorn({ id: user.id });
+             <a class="action_icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
+             <i class="fa fa-toggle-off"></i>
+             </a>`.formatUnicorn({ id: user.id });
     if (user.is_not_used)
       tpl += `
             <a class="action_icon delete-title" title="Delete title" data-title_id="{id}" href="javascript:;">
@@ -1115,7 +1070,7 @@ function appendDataToTableTitle(data) {
 
 function loadCompanyName(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_load_company",
+    url: "/organization_settings/data_load_company",
     data: data_filter,
     type: "POST",
     headers: {
@@ -1133,7 +1088,7 @@ function loadCompanyName(data_filter = {}) {
 }
 function loadRoleName(data_filter = {}) {
   $.ajax({
-    url: "/organization_settings/data_setting_load_role",
+    url: "/organization_settings/data_load_role",
     data: data_filter,
     type: "POST",
     headers: {
@@ -1152,7 +1107,7 @@ $(document).on("click", ".delete-company", function () {
   company_id = $(this).data("company_id");
   $.ajax({
     type: "DELETE",
-    url: "/organization_settings/delete_setting_company",
+    url: "/organization_settings/delete_company",
     data: {
       company_id: company_id,
     },
@@ -1174,7 +1129,7 @@ $(document).on("click", ".delete-project", function () {
   project_id = $(this).data("project_id");
   $.ajax({
     type: "DELETE",
-    url: "/organization_settings/delete_setting_project",
+    url: "/organization_settings/delete_project",
     data: {
       project_id: project_id,
     },
@@ -1196,7 +1151,7 @@ $(document).on("click", ".delete-role", function () {
   role_id = $(this).data("role_id");
   $.ajax({
     type: "DELETE",
-    url: "/organization_settings/delete_setting_role",
+    url: "/organization_settings/delete_role",
     data: {
       role_id: role_id,
     },
@@ -1218,7 +1173,7 @@ $(document).on("click", ".delete-title", function () {
   title_id = $(this).data("title_id");
   $.ajax({
     type: "DELETE",
-    url: "/organization_settings/delete_setting_title",
+    url: "/organization_settings/delete_title",
     data: {
       title_id: title_id,
     },

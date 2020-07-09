@@ -1,17 +1,11 @@
 module Api
-  class SettingService < BaseService
+  class OrganizationSettingsService < BaseService
     def initialize(params, current_user)
-      groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
-      privilege_array = []
-      groups.each do |group|
-        privilege_array += group&.list_privileges
-      end
-      @privilege_array = privilege_array
       @current_user = current_user
       @params = params
     end
 
-    def data_setting_company
+    def data_company
       company = Company.includes(:users, :projects)
       results = []
       company.map do |company_value|
@@ -43,7 +37,7 @@ module Api
       { data: results }
     end
 
-    def data_setting_project
+    def data_project
       project = Project.includes(:company, :project_members)
       results = []
       project.map do |project_value|
@@ -69,7 +63,7 @@ module Api
       { data: results }
     end
 
-    def data_setting_role
+    def data_role
       role = Role.includes(:users, :titles, :templates)
       results = []
       role.map do |role_value|
@@ -86,7 +80,7 @@ module Api
       { data: results }
     end
 
-    def data_setting_title
+    def data_title
       title = Title.includes(:role, :level_mappings, :title_mappings)
       results = []
       title.map do |title_value|
@@ -107,15 +101,15 @@ module Api
       { data: results }
     end
 
-    def data_setting_load_company
+    def data_load_company
       Company.pluck(:id, :name)
     end
 
-    def data_setting_load_role
+    def data_load_role
       Role.pluck(:id, :desc)
     end
 
-    def save_setting_company
+    def save_company
       hash = {
         name: params[:company_name],
         abbreviation: params[:company_abbreviation],
@@ -146,7 +140,7 @@ module Api
       end
     end
 
-    def save_setting_project
+    def save_project
       hash = {
         id: params[:project_id],
         desc: params[:project_name],
@@ -171,7 +165,7 @@ module Api
       end
     end
 
-    def save_setting_role
+    def save_role
       hash = {
         id: params[:role_id],
         desc: params[:role_name],
@@ -188,7 +182,7 @@ module Api
       end
     end
 
-    def save_setting_title
+    def save_title
       hash = {
         id: params[:title_id],
         desc: params[:title_name],
@@ -199,7 +193,6 @@ module Api
         description: params[:title_description],
         note: params[:title_note],
       }
-
       if params[:title_id].blank?
         title = Title.new(hash)
         return title.save

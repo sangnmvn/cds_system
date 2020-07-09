@@ -151,24 +151,24 @@ Rails.application.routes.draw do
 
   resources :organization_settings do
     collection do
-      post :data_setting_company
-      post :data_setting_project
-      post :data_setting_role
-      post :data_setting_title
-      post :data_setting_load_company
-      post :data_setting_load_role
-      post :save_setting_company
-      post :save_setting_project
-      post :save_setting_role
-      post :save_setting_title
-      post :status_setting_company
-      post :status_setting_title
-      post :status_setting_role
-      post :status_setting_project
-      delete :delete_setting_company
-      delete :delete_setting_project
-      delete :delete_setting_role
-      delete :delete_setting_title
+      post :data_company
+      post :data_project
+      post :data_role
+      post :data_title
+      post :data_load_company
+      post :data_load_role
+      post :save_company
+      post :save_project
+      post :save_role
+      post :save_title
+      post :change_status_company
+      post :change_status_title
+      post :change_status_role
+      post :change_status_project
+      delete :delete_company
+      delete :delete_project
+      delete :delete_role
+      delete :delete_title
     end
   end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
