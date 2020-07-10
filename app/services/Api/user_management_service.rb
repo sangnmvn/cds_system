@@ -104,6 +104,13 @@ module Api
       { data: h_users, total: h_users.values.sum }
     end
 
+    def edit_user_profile
+      user = User.find_by(id: params[:id])
+      return false if user.blank?
+      return false unless user.update(user_params)
+      true
+    end
+
     def data_users_by_seniority(gender = false)
       users = User.joins(:project_members).where(filter_users).where(gender: gender).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
@@ -281,6 +288,24 @@ module Api
       filter[:project_members] = { project_id: params[:project_id].split(",").map(&:to_i) } if params[:project_id].present? && params[:project_id] != "All"
 
       filter
+    end
+
+    private
+
+    def user_params()
+      param = {
+        first_name: params[:first_name], 
+        last_name: params[:last_name],
+        phone: params[:phone_number], 
+        skype: params[:skype],
+        date_of_birth: params[:date_of_birth], 
+        nationality: params[:nationality],
+        identity_card_no: params[:identity_card_no], 
+        permanent_address: params[:permanent_address],
+        current_address: params[:current_address], 
+        gender: params[:gender],
+      }
+      param
     end
   end
 end

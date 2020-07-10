@@ -1,0 +1,56 @@
+<!-- The Modal -->
+<div class="modal fade modal-form-add-user" id="modal_edit_location">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Edit Your Profile</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-4">
+                  <label>Nationality</label>
+                </div>
+                <div class="col-sm-8">
+                <input type="text" id="nationality" class="form-control" value="<%= @current_user.nationality %>" placeholder="Please enter your nationality" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label>Permanent Address</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="permanent_address"  class="form-control" value="<%= @current_user.permanent_address %>" placeholder="Please enter your permanent address" />
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-4">
+                  <label>Current Address</label>
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" id="current_address"  class="form-control" value="<%= @current_user.current_address  %>" placeholder="Please enter your current address" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" value="<%= @current_user.id %>" id="user_id">
+        <%# end container  %>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary btn-save-edit">Save</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

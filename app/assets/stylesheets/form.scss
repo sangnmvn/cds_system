@@ -8,6 +8,68 @@ $color-disable: #afaaaa;
     font-weight: bold;
 }
 
+.table-wrapper {
+    max-height: 420px;
+    max-width: 1800px;
+    overflow: auto;
+    overflow-x: auto;
+
+    .table-basic {
+        text-align: left;
+        overflow: scroll;
+
+        .th {
+            border: 1px solid #fff;
+            background-color: #3A5FCD;
+            text-align: center;
+            font-size: medium;
+        }
+
+        table {
+            border: 2px solid #0066CC;
+
+            thead {
+                color: #fff;
+                font-size: large;
+                font-weight: bold;
+                max-height: 5px;
+
+                th {
+                    position: sticky;
+                    top: 0;
+                }
+            }
+
+            tbody {
+                .odd {
+                    background-color: #CFD5EA;
+                }
+
+                .even {
+                    background-color: #E9EBF5;
+                }
+
+                td {
+                    border: 1px solid #fff;
+                    vertical-align: middle !important;
+                }
+            }
+        }
+    }
+    #table_summary_comment{
+        td:nth-child(4) {
+            width: 60%;
+            text-align: left;
+        }
+        td:nth-child(3) {
+            text-align: left;
+        }
+        td:nth-child(2) {
+            text-align: left;
+        }
+    }
+}
+
 .filter-input {
     width: 250px;
 }
@@ -108,6 +170,11 @@ $color-disable: #afaaaa;
     font-size: 90%;
     background-color: #8da8db;
     border: none;
+}
+
+.divButton {
+    padding-top: 25px;
+    text-align: center;
 }
 
 .icon {
@@ -654,6 +721,7 @@ a.disabled {
         color: #6c757d
     }
 }
+
 .table {
     margin-bottom: 1px !important;
 }

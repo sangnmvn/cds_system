@@ -1,0 +1,104 @@
+<!-- The Modal -->
+<div class="modal fade modal-form-add-user" id="modal_edit_contact">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Edit Your Profile</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+        <input type="hidden" value="<%= @current_user.id %>" id="user_id">
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <p style="color:red">(*) required fields</p>
+              </div>
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>First Name (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="first_name" class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                    <small id="error_first_name" class="text-danger"></small>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Last Name (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
+                    <small id="error_last_name" class="text-danger"></small>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Identity Card No</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="identity_card_no"  class="form-control" value="<%= @current_user.identity_card_no %>" placeholder="Please enter your identity card no" />
+                    <small id="error_identity_card_no" class="text-danger"></small>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Gender</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="gender">
+                      <option value="1" <%= @current_user.gender ? "selected" : "" %> >Male</option>
+                      <option value="0" <%= @current_user.gender ? "" : "selected" %> >Female</option>
+                    </select>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Date of Birth</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="date" id="birthday" value="<%= @current_user.date_of_birth %>" class="form-control">
+                    <small id="error_birthday" class="text-danger"></small>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Phone number (*)</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="phone_number" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
+                    <small id="error_phone_number" class="text-danger"></small>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label>Skype</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="skype" class="form-control" value="<%= @current_user.skype %>" placeholder="Please enter your skype id" />
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+          </div>
+          <% # end container %>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer" style="justify-content: center;">
+          <button type="button" class="btn btn-secondary btn-save-edit" id="btn_save_contact" disbled>Save</button>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+  </div>
+</div>

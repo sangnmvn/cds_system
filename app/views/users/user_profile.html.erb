@@ -1,0 +1,113 @@
+<%= stylesheet_link_tag "user_profile", media: "all", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag 'user_profile', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+<div class="user-card">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-3" style="text-align:center">
+          <img class="card-img-top" src="/assets/avt.jpg" alt="Card image">
+        </div>
+        <div class="col-7">
+          <div class="row">
+            <div class="col-6 title-name">
+              <div class="div-name">
+                <span id="full_name" >
+                  <%= @current_user.format_name %>
+                </span>
+                <span class="title-icon" id="edit_contact">
+                  <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)",title: "Edit Contact", id: "edit_contact"%>
+                </span>
+              </div>
+              <h5 style="padding-bottom:1%" id="role">
+                <span class="badge badge-pill badge-primary" title="Title - Rank - Level"><%= @form %></span>
+              </h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="text-contact-left" id="p_gender">
+                <i class="fas fa-venus-mars" style="color:black" title="Gender"></i>
+                &nbsp; <%= @current_user.gender ? "Male" : "Female" %>
+              </div>
+              <div class="text-contact-left" id="p_birthday">
+                <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
+                &nbsp; <%= @current_user.date_of_birth != "" ? @current_user.date_of_birth : "N/A" %>
+              </div>
+              <div class="text-contact-left" id="p_CMND">
+                <i class="far fa-id-card" style="color:black" title="Identity Card No"></i>
+                &nbsp; <%= @current_user.identity_card_no != "" ? @current_user.identity_card_no : "N/A" %>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="text-contact-right" id="p_phone">
+                <i class="fas fa-phone-alt" style="color:black" title="Phone Number"></i>
+                &nbsp; <%= @current_user.phone != "" ? @current_user.phone : "N/A" %>
+              </div>
+              <div class="text-contact-right" id="p_mail">
+                <i class="fas fa-envelope" style="color:black" title="Email"></i>
+                &nbsp; <%= @current_user.email %>
+              </div>
+              <div class="text-contact-right" id="p_skype">
+                <i class="fab fa-skype" style="color:black" title="Skype ID"></i>
+                &nbsp; <%= @current_user.skype != "" ? @current_user.skype : "N/A" %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 link-bottom">
+              <%= link_to 'Change Password'.html_safe,  "javascript:void(0)",id: "change_password" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row profile">
+  <div class="col-6">
+    <div class="title-content"> DEPARTMENT</div>
+    <hr/>
+    <div class="p-title">
+      Company
+      <dt class="p-content" id="company"><%= @current_user.company.name %></dt> 
+    </div>
+    <div class="p-title">
+      Project
+      <dt class="p-content" id="project"><%= @project != "" ? @project : "N/A" %></dt> 
+    </div>
+    <div class="p-title">
+      Joined Date
+      <dt class="p-content" id="joined_date"><%= @current_user.joined_date %></dt> 
+    </div>  
+  </div>
+  <div class="col-6">
+    <div class="title-content"> LOCATION 
+      <span class="title-icon">
+        <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)",title: "Edit Location", id: "edit_location"%>
+      </span>
+    </div>
+    <hr/>
+    <div class="p-title">Nationality
+      <dt class="p-content" id="p_nationality">
+        <%= @current_user.nationality != "" ? @current_user.nationality : "N/A" %>
+      </dt> 
+    </div>
+    <div class="p-title">Permanent Address
+      <dt class="p-content" id="p_Permanent_address">
+        <%= @current_user.permanent_address != "" ? @current_user.permanent_address : "N/A" %>
+      </dt> 
+    </div>
+    <div class="p-title">Current Address
+      <dt class="p-content" id="p_current_address">
+        <%= @current_user.current_address != "" ?  @current_user.current_address : "N/A" %>
+      </dt> 
+    </div>  
+  </div>
+</div>
+<%= render 'modal_edit_contacts' %>
+<%= render 'modal_change_password' %>
+<%= render 'modal_edit_location' %>
+
+<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>

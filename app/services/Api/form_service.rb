@@ -2,6 +2,7 @@ module Api
   class FormService < BaseService
     REVIEW_CDS = 16
     APPROVE_CDS = 17
+    Time::DATE_FORMATS[:custom_datetime] = "%d/%m/%Y"
 
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
@@ -122,6 +123,37 @@ module Api
         }
       }
       arr
+    end
+
+    def get_summary_comment
+      form = Form.find_by(id: params[:form_id])
+      summary_comments = SummaryComment.where(form_id: params[:form_id]).order(updated_at: :desc,period_id: :desc)
+      data_comment = []
+      summary_comments.map do |summary_comment|
+        data_comment << {
+          id: summary_comment.id,
+          period: summary_comment.period.format_name,
+          user_name: summary_comment.user.account,
+          comment_date: summary_comment.updated_at.to_s(:custom_datetime),
+          comment: summary_comment.comment,
+          status: (form.user_id != current_user.id) &&
+            (summary_comment.line_manager_id == current_user.id) &&
+            (summary_comment.period_id == form.period_id) ? true : false,
+        }
+      end
+      data_comment
+    end
+
+    def save_summary_comment
+      summary_comment = SummaryComment.where(id: params[:summary_id]).first
+      if summary_comment.present?
+        return false unless summary_comment.update(comment: params[:comment])
+      else
+        form = Form.find_by(id: params[:form_id])
+        return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id, 
+          form_id: form.id, comment: params[:comment])
+      end
+      true
     end
 
     def confirm_request
@@ -493,7 +525,7 @@ module Api
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
         approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
-        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first
+        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first.flag
         flag = "#99FF33" if approver_id.present? && approver_id != current_user.id && flag == "orange"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag)

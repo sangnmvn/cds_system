@@ -53,3 +53,5 @@
 
 //= link data_table_organization_settings
 //= link organization_settings.css
+//= link user_profile.css
+//= link user_profile.js

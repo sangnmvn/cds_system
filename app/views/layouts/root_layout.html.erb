@@ -29,8 +29,6 @@
               CDS/CDP
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/templates">Template Management</a>
-              <a class="dropdown-item" href="/level_mappings">Level Mapping</a>
               <a class="dropdown-item" href="/forms/index_cds_cdp">CDS/CDP Accessment</a>
               <a class="dropdown-item" href="/forms/cds_review">CDS/CDP Review</a>
             </div>
@@ -43,6 +41,10 @@
               <a class="dropdown-item" href="/users">User Management</a>
               <a class="dropdown-item" href="/groups">User Group Management</a>
               <a class="dropdown-item" href="/schedules">Schedule Management</a>
+              <a class="dropdown-item" href="/templates">Template Management</a>
+              <a class="dropdown-item" href="/level_mappings">Level Mapping</a>
+              <a class="dropdown-item" href="">Organization Settings</a>
+              <%= link_to "My Account", user_profile_users_path, class: "dropdown-item"%>
             </div>
           </li>
           <li class="nav-item">
@@ -52,7 +54,7 @@
         <form class="form-inline my-2 my-lg-0">
           <p class="navbar-text float-right">
             <% if user_signed_in? %>
-              <%= link_to "Welcome " + current_user.first_name + " " + current_user.last_name, edit_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Welcome " + current_user.first_name + " " + current_user.last_name, user_profile_users_path, :class => 'navbar-link' %> |
               <%= link_to "Logout", destroy_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
             <% else %>
               <%= link_to "Login", new_user_session_path, :class => 'btn btn-secondary'%>

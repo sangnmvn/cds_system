@@ -1,9 +1,8 @@
 $(document).on("click", ".approval-assessment", function () {
   var data_conflict = findConflictinArr(conflict_commits)
   if (data_conflict) {
-    var str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
-      data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
-    $("#content_modal_conflict").html(str)
+    $("#content_modal_conflict").html(`The following slots have not conflicted on commitment between you and staff:
+    <p>Slot: ${data_conflict} </p><p>Please continue reviewing or request update to Staff.</p>`)
     $('#modal_conflict').modal('show');
   } else
     $('#modal_approve_cds').modal('show');
@@ -31,6 +30,7 @@ $(document).on("click", "#confirm_yes_reject_cds", function () {
         $("#approve_cds").removeClass("d-none").addClass("approval-assessment")
         $("#reject_cds").addClass("d-none").removeClass("reject-assessment")
         $("#button_cancel_request").removeClass("d-none")
+        $("#summary_comment").removeClass("d-none")
         $("#button_request_update").removeClass("d-none")
         $("#status").html("(Awaiting Approval)")
         toggleInput(true);
@@ -61,6 +61,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
         $("#approve_cds").addClass("d-none").removeClass("approval-assessment")
         $("#button_cancel_request").addClass("d-none")
         $("#button_request_update").addClass("d-none")
+        $("#summary_comment").addClass("d-none")
         $("#reject_cds").removeClass("d-none").addClass("reject-assessment")
         $("#status").html("(Done)")
         toggleInput(false);
