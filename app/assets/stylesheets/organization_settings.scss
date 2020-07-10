@@ -1,0 +1,139 @@
+.right-panel {
+    padding: 0;
+    div {
+        margin: 0;
+    }
+    table {
+        width: 100%;
+    }
+    textarea {
+        width: 100%;
+        height: 63.26px;
+        overflow-y: scroll;
+        resize: none;
+    }
+    input,
+    select {
+        height: 31.63px;
+    }
+}
+.item-row {
+    border: 1px solid;
+}
+.row {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    .left-panel {
+        padding: 0;
+    }
+}
+th {
+    border: 1px solid;
+}
+.left-setting-table {
+    text-align: left;
+    background-color: rgb(123, 162, 237);
+    width: 100% !important;
+    color: #000;
+}
+.icon-bar {
+    width: 100%;
+    text-align: center;
+    margin: 12px 0 !important;
+}
+.card {
+    height: 196px;
+}
+.box-table {
+    padding: 0;
+    table {
+        th {
+            font-size: 16px;
+            background: #4472c4;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+        }
+    }
+}
+.box-table {
+    table {
+        border: 2px solid #4472c4;
+    }
+}
+.box-table {
+    table {
+        td {
+            tr {
+                border: 1px solid #fff;
+            }
+        }
+        tr:nth-child(2n + 1) {
+            background-color: #cfd5ea;
+        }
+        tr:nth-child(2n) {
+            background-color: #e9ebf5;
+        }
+    }
+}
+.fa-toggle-off {
+    font-size: 20px;
+    color: #ff0000;
+}
+.fa-toggle-on {
+    font-size: 20px;
+    color: blue;
+}
+.number {
+    width: 1%;
+}
+.action {
+    width: 8%;
+}
+.name,
+.company-name {
+    width: 15%;
+}
+.abbreviation {
+    width: 12%;
+}
+.rank {
+    width: 3%;
+}
+.code {
+    width: 10%;
+}
+.establishment {
+    width: 6%;
+}
+.role-name {
+    width: 10%;
+}
+.quantity {
+    width: 12%;
+}
+.error-company,
+.error-project,
+.error-role,
+.error-title {
+    color: red;
+    font-size: 10px;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+select {
+    height: 30px !important;
+}
+.col-4 {
+    padding: 0;
+    input,
+    select,
+    textarea {
+        width: 100% !important;
+    }
+}
+.fa-trash {
+    color: red;
+    font-size: 19px;
+}

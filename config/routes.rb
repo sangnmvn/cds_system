@@ -148,6 +148,29 @@ Rails.application.routes.draw do
     end
     get "view_pm"
   end
+
+  resources :organization_settings do
+    collection do
+      post :data_company
+      post :data_project
+      post :data_role
+      post :data_title
+      post :data_load_company
+      post :data_load_role
+      post :save_company
+      post :save_project
+      post :save_role
+      post :save_title
+      post :change_status_company
+      post :change_status_title
+      post :change_status_role
+      post :change_status_project
+      delete :delete_company
+      delete :delete_project
+      delete :delete_role
+      delete :delete_title
+    end
+  end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
   get "/schedules/get_schedule_hr_info/:id", to: "schedules#get_schedule_hr_info"
