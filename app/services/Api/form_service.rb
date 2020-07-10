@@ -288,8 +288,9 @@ module Api
       second = {}
       # filter 1 period
       # the latest schedule will be first, second will be previous of the filtered schedule
-      filtered_period = Period.find(filter[:period_id][0])
-      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc).where("start_date <= ?", filtered_period.to_date)
+      filtered_period = Period.find_by(id: filter[:period_id][0])
+      return {} if filtered_period.nil?
+      schedules = Schedule.where(status: "Done").where("start_date <= ?", filtered_period.to_date).order(end_date_hr: :desc)
 
       schedules.map do |schedule|
         if first[schedule.company_id].nil?
@@ -298,6 +299,10 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
+      same_keys = first.keys & second.keys
+      first = first.keep_if { |k, _| same_keys.include? k }
+      second = second.keep_if { |k, _| same_keys.include? k }
+      return {} if first.empty? || second.empty?
 
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a

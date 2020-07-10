@@ -188,7 +188,7 @@ module Api
     end
 
     def data_users_up_title
-      user_ids = User.joins(:project_members).where(filter_users).uniq.pluck(:id)
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}
@@ -240,7 +240,7 @@ module Api
     end
 
     def data_users_keep_title
-      user_ids = User.joins(:project_members).where(filter_users).uniq.pluck(:id)
+      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       user_up = data_users_up_title[:user_ids]
       period_id = data_users_up_title[:period_id]
       titles = TitleHistory.includes(:user).where(user_id: user_ids - user_up, period_id: period_id)

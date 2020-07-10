@@ -284,8 +284,8 @@ module Api
     # How to run from rails c
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")
     def export_up_title
-      outdata = data_users_up_title_export
-      h_list = outdata[:data]
+      out_data = data_users_up_title_export
+      h_list = out_data[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
 
@@ -353,8 +353,8 @@ module Api
     end
 
     def export_down_title
-      outdata = data_users_down_title_export
-      h_list = outdata[:data]
+      out_data = data_users_down_title_export
+      h_list = out_data[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
 
@@ -422,8 +422,8 @@ module Api
     end
 
     def export_keep_title
-      outdata = data_users_keep_title_export
-      h_list = outdata[:data]
+      out_data = data_users_keep_title_export
+      h_list = out_data[:data]
       out_file_names = []
       return "" unless h_list.keys.any?
 
@@ -482,9 +482,10 @@ module Api
       final_file_name
     end
 
-    def export_excel_cds_review(outdata)
+    def export_excel_cds_review(out_data)
       out_file_names = []
-      h_list = outdata[:data]
+      h_list = out_data[:data]
+      return "" if out_data.nil? || out_data.empty? || h_list.nil?
       return "" unless h_list.keys.any?
 
       h_list.each do |company_id, h_data|

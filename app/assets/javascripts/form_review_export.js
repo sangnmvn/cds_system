@@ -8,13 +8,7 @@ function resetExportIconColor() {
   }
 }
 
-function checkPeriodFilter() {
-  try {
-    // if data_filter doesn't exist
-    data_filter
-  } catch (e) {
-    return true;
-  }
+function checkPeriodFilter() {  
   if (data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1) {
     return false;
   } else {
@@ -66,6 +60,5 @@ $(document).ready(function () {
 
   $(".apply-filter, .reset-filter").on("click", function () {
     resetExportIconColor();
-  })
-  resetExportIconColor();
+  })  
 });

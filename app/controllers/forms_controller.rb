@@ -7,7 +7,7 @@ class FormsController < ApplicationController
   ASSESS_OWN_CDS = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  VIEW_OTHERS_CDS = 24
+  VIEW_CDS_REVIEW = 24
   include TitleMappingsHelper
 
   def index_cds_cdp
@@ -58,7 +58,7 @@ class FormsController < ApplicationController
 
   def cds_review
     @companies = Company.all
-    @data_filter = if @privilege_array.include?(VIEW_OTHERS_CDS)
+    @data_filter = if @privilege_array.include?(VIEW_CDS_REVIEW)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
@@ -313,7 +313,7 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    data = if @privilege_array.include?(VIEW_OTHERS_CDS)
+    data = if @privilege_array.include?(VIEW_CDS_REVIEW)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
