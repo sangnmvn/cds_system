@@ -278,7 +278,7 @@ module Api
       end
     end
 
-    def get_list_cds_review_to_export(status)
+    def get_list_cds_review_to_export
       filter = filter_cds_review_list
 
       user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
@@ -289,7 +289,7 @@ module Api
       # filter 1 period
       # the latest schedule will be first, second will be previous of the filtered schedule
       filtered_period = Period.find(filter[:period_id][0])
-      schedules = Schedule.where(status: status).order(end_date_hr: :desc).where("start_date <= ?", filtered_period.to_date)
+      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc).where("start_date <= ?", filtered_period.to_date)
 
       schedules.map do |schedule|
         if first[schedule.company_id].nil?
@@ -320,7 +320,6 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if title.rank <= prev_period[:rank]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?

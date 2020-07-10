@@ -50,9 +50,8 @@
 //= link form_cds_cdp.js
 
 //= link preview_result.css
-//= link preview_result
-
-//= link data_table_organization_settings
+//= link preview_result.js
+//= link data_table_organization_settings.js
 //= link organization_settings.css
 //= link user_profile.css
 //= link user_profile.js

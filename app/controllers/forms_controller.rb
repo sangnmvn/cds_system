@@ -37,10 +37,8 @@ class FormsController < ApplicationController
 
   def export_excel_cds_review
     file_path = ""
-    if @privilege_array.include?(APPROVE_CDS)
-      data = @form_service.get_list_cds_review_to_export(["Awaiting Approval", "Done"])
-    elsif @privilege_array.include?(REVIEW_CDS)
-      data = @form_service.get_list_cds_review_to_export("Awaiting Review")
+    if @privilege_array.include?(APPROVE_CDS) || @privilege_array.include?(REVIEW_CDS)
+      data = @form_service.get_list_cds_review_to_export
     end
     file_path = @export_service.export_excel_cds_review(data)
     render json: { file_path: file_path }
