@@ -287,7 +287,8 @@ module Api
       out_data = data_users_up_title_export
       h_list = out_data[:data]
       out_file_names = []
-      return "" unless h_list.keys.any?
+      return "" if out_data.nil? || out_data.empty? || h_list.nil?
+      return "" if h_list.keys.empty?
 
       h_list.each do |company_id, h_data|
         package = Axlsx::Package.new
@@ -356,7 +357,8 @@ module Api
       out_data = data_users_down_title_export
       h_list = out_data[:data]
       out_file_names = []
-      return "" unless h_list.keys.any?
+      return "" if out_data.nil? || out_data.empty? || h_list.nil?
+      return "" if h_list.keys.empty?
 
       h_list.each do |company_id, h_data|
         package = Axlsx::Package.new
@@ -425,7 +427,8 @@ module Api
       out_data = data_users_keep_title_export
       h_list = out_data[:data]
       out_file_names = []
-      return "" unless h_list.keys.any?
+      return "" if out_data.nil? || out_data.empty? || h_list.nil?
+      return "" if h_list.keys.empty?
 
       h_list.each do |company_id, h_data|
         package = Axlsx::Package.new
@@ -486,7 +489,7 @@ module Api
       out_file_names = []
       h_list = out_data[:data]
       return "" if out_data.nil? || out_data.empty? || h_list.nil?
-      return "" unless h_list.keys.any?
+      return "" if h_list.keys.empty?
 
       h_list.each do |company_id, h_data|
         package = Axlsx::Package.new

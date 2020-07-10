@@ -1,19 +1,15 @@
 function resetExportIconColor() {
   if (checkPeriodFilter()) {
-    $("#export_excel_cds_review i").prop("style", "color: #009000");
-    $("#export_pdf_cds_review i").prop("style", "color: #9F6600");
+    $("#export_excel_cds_review i").prop("style", "color: #009000; opacity: 1.0;");
+    $("#export_pdf_cds_review i").prop("style", "color: #9F6600; opacity: 1.0;");
   } else {
-    $("#export_excel_cds_review i").prop("style", "color: #808080");
-    $("#export_pdf_cds_review i").prop("style", "color: #808080");
+    $("#export_excel_cds_review i").prop("style", "color: #404040; opacity: 0.5;");
+    $("#export_pdf_cds_review i").prop("style", "color: #404040; opacity: 0.5;");
   }
 }
 
 function checkPeriodFilter() {  
-  if (data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1) {
-    return false;
-  } else {
-    return true;
-  }
+  return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1)
 }
 
 function callAjaxExport(ext) {
@@ -46,15 +42,11 @@ $(document).ready(function () {
   $("#export_excel_cds_review").on('click', function () {
     if (checkPeriodFilter()) {
       callAjaxExport("xlsx");
-    } else {
-      alert("You can only select 1 period on export");
-    }
+    } 
   });
   $("#export_pdf_cds_review").on('click', function () {
     if (checkPeriodFilter()) {
       callAjaxExport("pdf");
-    } else {
-      alert("You can only select 1 period on export");
     }
   });
 

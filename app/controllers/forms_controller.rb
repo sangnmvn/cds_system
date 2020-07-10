@@ -4,7 +4,7 @@ class FormsController < ApplicationController
   before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
-  ASSESS_OWN_CDS = 15
+  FULL_ACCESS_CDS_ASSESSMENT = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   VIEW_CDS_REVIEW = 24
@@ -353,7 +353,7 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to index2_users_path unless @privilege_array.include?(ASSESS_OWN_CDS)
+    redirect_to index2_users_path unless @privilege_array.include?(FULL_ACCESS_CDS_ASSESSMENT)
   end
 
   def check_line_manager_privilege
