@@ -523,9 +523,10 @@ module Api
       if params[:recommend] && params[:given_point] && params[:slot_id] && params[:user_id]
         period_id = Form.find(params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
+        line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
-        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first.flag
+        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first
+        flag = flag.nil? ? "" : flag
         flag = "#99FF33" if approver_id.present? && approver_id != current_user.id && flag == "orange"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag)

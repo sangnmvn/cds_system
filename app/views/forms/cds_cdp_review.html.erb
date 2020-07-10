@@ -36,6 +36,7 @@
         <% end %>
       <% elsif @hash[:is_reviewer] %>
         <% if @hash[:is_submit] %>
+          <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
           <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
         <% else  %>
           <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
@@ -60,6 +61,7 @@
 <div><%= render "modal_summary_assessment" %></div>
 <div><%= render "modal_request_update_prevent"%></div>
 <div><%= render "modal_cancel_request_update"%></div>
+<div><%= render "modal_request_add_more_evidence" %></div>
 <div><%= render "modal_approve_cds" %></div>
 <div><%= render "modal_confirm_request" %></div>
 <div><%= render "modal_conflict" %></div>

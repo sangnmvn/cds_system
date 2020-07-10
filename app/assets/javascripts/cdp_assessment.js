@@ -387,7 +387,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if(!(is_reviewer && is_approver))
+  if(!(is_reviewer || is_approver) || (is_reviewer && is_submit))
   {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
