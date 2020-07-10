@@ -806,13 +806,13 @@ module Api
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
       return "fail" unless form.update(status: "New")
-
-      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      period = form.period
+      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }).where.not(flag: "")
       comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, 
+                      period_id: period.id).where.not(flag: "")
       line_managers.update(flag: "")
       # send mail
-      period = form.period
       reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
       reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
       CdsAssessmentMailer.with(account: current_user.account, from_date: period.from_date,

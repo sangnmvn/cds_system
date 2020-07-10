@@ -473,7 +473,7 @@ $(document).ready(function () {
     })
   })
 
-  $("#button_request_update").on("click", function () {
+  $("#button_request_update").on("click", function () {    
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
     // make sure all values are false
