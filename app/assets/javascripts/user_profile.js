@@ -1,6 +1,5 @@
 $(document).ready(function () {
   $("#edit_contact").click(function () {
-    $("#skype").val('')
     $("#modal_edit_contact").modal("show");
   })
 
@@ -50,39 +49,40 @@ $(document).ready(function () {
   })
 
   $("#btn_change_password").click(function () {
-    changeBtnSave(false)
-    checkEmptyData()
-    $.ajax({
-      type: "POST",
-      url: "/users/change_password",
-      data: {
-        id: $("#user_id").val(),
-        old_password: $("#old_pass").val(),
-        new_password: $("#new_pass").val(),
-        confirm_password: $("#confirm_pass").val()
-      },
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      dataType: "json",
-      success: function (response) {
-        if (response == "success") {
-          success("Password have been changed successfully!")
-          $("#modal_change_password").modal("hide")
-        } else if (response.status == "Uncorrect") {
-          changeClassStatus($("#old_pass"))
-          $("#error_old_pass").html("Please enter correct password!")
-        } else if (response.status == "Unequal") {
-          changeClassStatus($("#confirm_pass"))
-          $("#error_confirm").html("Confirm password isn't equal new password!")
-        } else
-          fails("Could not changed password!")
-      }
-    });
+    changeBtnSave("btn_change_password", false)
+    if (checkEmptyData()) {
+      $.ajax({
+        type: "POST",
+        url: "/users/change_password",
+        data: {
+          id: $("#user_id").val(),
+          old_password: $("#old_pass").val(),
+          new_password: $("#new_pass").val(),
+          confirm_password: $("#confirm_pass").val()
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response == "success") {
+            success("Password have been changed successfully!")
+            $("#modal_change_password").modal("hide")
+          } else if (response.status == "Uncorrect") {
+            changeClassStatus($("#old_pass"))
+            $("#error_old_pass").html("Please enter correct password!")
+          } else if (response.status == "Unequal") {
+            changeClassStatus($("#confirm_pass"))
+            $("#error_confirm").html("Confirm password isn't equal new password!")
+          } else
+            fails("Could not changed password!")
+        }
+      });
+    }
   })
 
 
-  $("#modal_change_password #confirm_pass").focusout(function () {
+  $("#modal_change_password #confirm_pass").keyup(function () {
     if ($(this).val() != $("#new_pass").val()) {
       $(this).addClass("is-invalid").removeClass("is-valid")
       $("#error_confirm").html("Confirm password isn't equal new password")
@@ -90,39 +90,99 @@ $(document).ready(function () {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_confirm").html("")
     }
+    changeBtnSave("btn_change_password", true, true)
   })
 
-  $("#modal_change_password #new_pass").focusout(function () {
-    var regex = new RegExp("^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{6}$")
+  $("#modal_change_password #new_pass").keyup(function () {
+    var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     var pass = $(this).val()
-    debugger
     if (pass == "") {
       $(this).addClass("is-invalid").removeClass("is-valid")
       $("#error_new_pass").html("Please enter new password")
     } else if (!regex.test(pass)) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_new_pass").html("Minimum of 8 characters, at least a uppercase letter, a lowercase letter and a number")
+      $("#error_new_pass").html("Minimum of 6 characters, at least a letter and a number")
     } else {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_new_pass").html("")
     }
+    changeBtnSave("btn_change_password", true, true)
   })
 
-  $("#modal_change_password .form-control").change(function () {
+  $("#phone_number").change(function () {
+    checkPhoneNumber($(this).val(), "phone_number", "error_phone_number")
+  })
 
+  $("#old_pass").change(function () {
+    var data = $(this).val()
+    changeBtnSave("btn_change_password", true, true)
+    if (data) {
+      $(this).removeClass("is-invalid")
+      $("#error_old_pass").html("")
+    } else {
+      $(this).addClass("is-invalid")
+      $("#error_old_pass").html("Please enter old password")
+    }
+  })
+
+  $("#first_name").change(function () {
+    var first_name = $(this).val()
+    if (first_name) {
+      checkName(first_name,"first_name","error_first_name")
+      checkDataContact()
+    } else {
+      $(this).addClass("is-invalid")
+      $("#error_first_name").html("Please enter first name")
+      changeBtnSave("btn_save_contact", false)
+    }
+  })
+
+  $("#last_name").change(function () {
+    var last_name = $(this).val()
+    if (last_name) {
+      checkName(last_name,"last_name","error_last_name")
+      checkDataContact()
+    } else {
+      $(this).addClass("is-invalid")
+      $("#error_last_name").html("Please enter last name")
+      changeBtnSave("btn_save_contact", false)
+    }
   })
 
 })
 
-function changeBtnSave(bool) {
-  if (bool == true) {
-    $('#btn-change-password').attr("disabled", false);
-    $('#btn-change-password').addClass("btn-primary").removeClass("btn-secondary")
+function checkDataContact() {
+  var first_name = $("#first_name").val()
+  var last_name = $("#last_name").val()
+  var phone = $("#phone_number").val()
+  if (first_name && last_name && phone) {
+    changeBtnSave("btn_save_contact", true)
   } else {
-    $('#btn-change-password').attr("disabled", true);
-    $('#btn-change-password').removeClass("btn-primary").addClass("btn-secondary")
+    changeBtnSave("btn_save_contact", false)
   }
+}
 
+function changeBtnSave(btn, bool, type) {
+  if (type) {
+    var old_pass = $("#old_pass").val()
+    var new_pass = $("#new_pass").val()
+    var confirm_pass = $("#confirm_pass").val()
+    if (old_pass && new_pass && confirm_pass && (new_pass == confirm_pass)) {
+      $('#' + btn).attr("disabled", false);
+      $('#' + btn).addClass("btn-primary").removeClass("btn-secondary")
+    } else {
+      $('#' + btn).attr("disabled", true);
+      $('#' + btn).removeClass("btn-primary").addClass("btn-secondary")
+    }
+  } else {
+    if (bool == true) {
+      $('#' + btn).attr("disabled", false);
+      $('#' + btn).addClass("btn-primary").removeClass("btn-secondary")
+    } else {
+      $('#' + btn).attr("disabled", true);
+      $('#' + btn).removeClass("btn-primary").addClass("btn-secondary")
+    }
+  }
 }
 
 function changeClassStatus(item, status) {
@@ -134,21 +194,56 @@ function changeClassStatus(item, status) {
 }
 
 function checkEmptyData() {
+  var status = true
+  if ($("#old_pass").val() == "") {
+    $("#old_pass").addClass("is-invalid")
+    $("#error_old_pass").html("Please enter old password")
+    status = false
+  }
+  if ($("#new_pass").val() == "") {
+    changeClassStatus($("#new_pass"))
+    $("#error_new_pass").html("Please enter new password")
+    status = false
+  }
+  if ($("#confirm_pass").val() == "") {
+    changeClassStatus($("#confirm_pass"))
+    $("#error_confirm").html("Please enter confirm password")
+    status = false
+  }
+  return status
+}
+
+function checkConfirm() {
   if ($("#new_pass").val() == $("#confirm_pass").val()) {
-    if ($("#old_pass").val() == "") {
-      $("#old_pass").addClass("is-invalid")
-      $("#error_old_pass").html("Please enter old password")
-    }
-    if ($("#new_pass").val() == "") {
-      changeClassStatus($("#new_pass"))
-      $("#error_new_pass").html("Please enter new password")
-    }
-    if ($("#confirm_pass").val() == "") {
-      changeClassStatus($("#confirm_pass"))
-      $("#error_confirm").html("Please enter confirm password")
-    }
+    changeBtnSave("btn_change_password", true)
   } else {
     changeClassStatus($("#confirm_pass"))
+    changeBtnSave("btn_change_password", false)
   }
+}
 
+function checkName(input, idinput, idspan) {
+  var regex = new RegExp("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+                          "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆẾỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤÚỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+                          "ụúủứừÚỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\\s]+$")
+  if (!regex.test(input)) {
+    $("#" + idspan).html("This field is invalid")
+    $("#" + idinput).addClass("is-invalid")
+    changeBtnSave("btn_save_contact", false)
+  } else {
+    $("#" + idspan).html("")
+    $("#" + idinput).removeClass("is-invalid")
+  }
+}
+
+function checkPhoneNumber(input, idinput, idspan) {
+  var regex = /^[0-9\-\+]{9,15}$/
+  if (!regex.test(input)) {
+    $("#" + idspan).html("This field is invalid")
+    $("#" + idinput).addClass("is-invalid")
+    changeBtnSave("btn_save_contact", false)
+  } else {
+    $("#" + idspan).html("")
+    $("#" + idinput).removeClass("is-invalid")
+  }
 }

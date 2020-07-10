@@ -219,7 +219,7 @@ class UsersController < ApplicationController
         return render json: {status: "Unequal"}
       else
         user.update(password: params[:new_password])
-        return true
+        return render json: {status: "success"}
       end
 
     else

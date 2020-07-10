@@ -23,7 +23,8 @@
                     <label>First Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="first_name"  class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                    <input type="text" id="first_name" class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                    <small id="error_first_name" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
@@ -33,6 +34,7 @@
                   </div>
                   <div class="col-sm-9">
                     <input type="text" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
+                    <small id="error_last_name" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
@@ -42,6 +44,7 @@
                   </div>
                   <div class="col-sm-9">
                     <input type="text" id="identity_card_no"  class="form-control" value="<%= @current_user.identity_card_no %>" placeholder="Please enter your identity card no" />
+                    <small id="error_identity_card_no" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
@@ -63,15 +66,17 @@
                   </div>
                   <div class="col-sm-9">
                     <input type="date" id="birthday" value="<%= @current_user.date_of_birth %>" class="form-control">
+                    <small id="error_birthday" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
                 <div class="row">
                   <div class="col-sm-3">
-                    <label>Phone number</label>
+                    <label>Phone number (*)</label>
                   </div>
                   <div class="col-sm-9">
                     <input type="text" id="phone_number" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
+                    <small id="error_phone_number" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
@@ -91,7 +96,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer" style="justify-content: center;">
-          <button type="button" class="btn btn-primary btn-save-edit">Save</button>
+          <button type="button" class="btn btn-secondary btn-save-edit" id="btn_save_contact" disbled>Save</button>
           <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
         </div>
     </div>

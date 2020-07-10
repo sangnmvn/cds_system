@@ -387,8 +387,41 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-
-  $("#summary_comment").on("click", function () {
+  if(!is_reviewer && !is_approver)
+  {
+    $("#modal_summary_assessment .modal-body").html(`
+      <div class="row">
+        <div class='col-12'>
+          <div class='table-wrapper'>
+            <table class="table table-responsive-sm table-basic table-mytable border-table" id="table_summary_comment">
+              <thead>
+                <tr>
+                  <th class="th">Period</th>
+                  <th class="th">User name</th>
+                  <th class="th" >Commented Date</th>
+                  <th class="th">Comment</th>
+                </tr>
+              </thead>
+              <tbody id="data_summary">
+                <tr>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row" >
+          <div class="col-12 divButton" style="justify-content: center;">
+            <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+    `)
+  }
+  $(document).on("click", "#summary_comment" , function () {
     $.ajax({
       type: "GET",
       url: "/forms/get_summary_comment",
@@ -420,7 +453,7 @@ $(document).ready(function () {
     })
   })
 
-  $("#btn_save_summary_assessment").on("click", function () {
+  $(document).on("click", "#btn_save_summary_assessment" , function () {
     $.ajax({
       type: "POST",
       url: "/forms/save_summary_comment",
