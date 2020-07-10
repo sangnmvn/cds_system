@@ -29,9 +29,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "/users/edit_user_profile",
-      data: {
-        h_user_profile: JSON.stringify(h_user)
-      },
+      data: h_user,
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
@@ -109,7 +107,7 @@ $(document).ready(function () {
     changeBtnSave("btn_change_password", true, true)
   })
 
-  $("#phone_number").change(function () {
+  $("#phone_number").keyup(function () {
     checkPhoneNumber($(this).val(), "phone_number", "error_phone_number")
   })
 
@@ -125,7 +123,7 @@ $(document).ready(function () {
     }
   })
 
-  $("#first_name").change(function () {
+  $("#first_name").keyup(function () {
     var first_name = $(this).val()
     if (first_name) {
       checkName(first_name,"first_name","error_first_name")
@@ -137,7 +135,7 @@ $(document).ready(function () {
     }
   })
 
-  $("#last_name").change(function () {
+  $("#last_name").keyup(function () {
     var last_name = $(this).val()
     if (last_name) {
       checkName(last_name,"last_name","error_last_name")

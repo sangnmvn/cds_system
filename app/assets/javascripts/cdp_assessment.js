@@ -387,7 +387,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if(!is_reviewer && !is_approver)
+  if(!(is_reviewer && is_approver))
   {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
@@ -404,10 +404,7 @@ $(document).ready(function () {
               </thead>
               <tbody id="data_summary">
                 <tr>
-                  <td>N/A</td>
-                  <td>N/A</td>
-                  <td>N/A</td>
-                  <td>N/A</td>
+                  <td colspan='4'>No data available in table</td>
                 </tr>
               </tbody>
             </table>
@@ -951,18 +948,18 @@ $(document).ready(function () {
   });
 
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
-    var slot_id = $(this).closest('.row-slot').data("slot-id");
-    var url = "";
     var row = $(this)
+    var slot_id = row.closest('.row-slot').data("slot-id");
+    var url = "";
     if (is_approver) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find(".approver-assessment").val();
-      recommend = $(this).find(".approver-recommend").val();
-      is_commit = $(this).find(".approver-commit").val();
+      point = row.find(".approver-assessment").val();
+      recommend = row.find(".approver-recommend").val();
+      is_commit = row.find(".approver-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
-        $(this).find(".approver-assessment").addClass("d-none");
+        row.find(".approver-assessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        var approver_point = $(this).find(".approver-assessment")
+        var approver_point = row.find(".approver-assessment")
         approver_point.removeClass("d-none");
         if (!approver_point.val() || recommend == "") {
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
@@ -984,19 +981,19 @@ $(document).ready(function () {
       };
     } else if (is_reviewer) {
       url = "/forms/save_cds_assessment_manager";
-      point = $(this).find(".reviewer-assessment").val();
-      recommend = $(this).find(".reviewer-recommend").val();
+      point = row.find(".reviewer-assessment").val();
+      recommend = row.find(".reviewer-recommend").val();
 
-      var form_slot_id = $(this).closest(".cdp-slot-wrapper").data("form-slot-id")
+      var form_slot_id = row.closest(".cdp-slot-wrapper").data("form-slot-id")
       if (form_slot_id in checked_set_is_empty_comment) {
         checked_set_is_empty_comment[form_slot_id] = (recommend.length == 0);
       }
 
-      is_commit = $(this).find(".reviewer-commit").val();
+      is_commit = row.find(".reviewer-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
-        $(this).find(".reviewer-assessment").addClass("d-none");
+        row.find(".reviewer-assessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
-        var reviewer_point = $(this).find(".reviewer-assessment")
+        var reviewer_point = row.find(".reviewer-assessment")
         reviewer_point.removeClass("d-none");
         if (!reviewer_point.val() || recommend == "") {
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")

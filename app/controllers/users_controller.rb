@@ -250,7 +250,9 @@ class UsersController < ApplicationController
     params.permit(:id, :first_name, :last_name, :email, :account,
                   :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project,
-                  :project_id, :joined_date, :h_user_profile)
+                  :project_id, :joined_date, :phone_number, :date_of_birth,
+                  :identity_card_no, :gender, :skype, :nationality, 
+                  :permanent_address, :current_address)
   end
 
   def get_sort_params
