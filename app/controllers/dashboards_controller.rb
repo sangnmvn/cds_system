@@ -2,7 +2,7 @@ class DashboardsController < ApplicationController
   layout "root_layout"
   before_action :get_privilege_id, :check_privilege
   before_action :user_management_services
-
+  before_action :export_services
   ALL_COMPANY = 20
   MY_COMPANY = 21
   MY_PROJECT = 22
@@ -30,6 +30,21 @@ class DashboardsController < ApplicationController
       projects: projects,
       roles: roles,
     }
+  end
+
+  def export_up_title
+    file_path = @export_services.export_up_title
+    render json: { file_path: file_path }
+  end
+
+  def export_down_title
+    file_path = @export_services.export_down_title
+    render json: { file_path: file_path }
+  end
+
+  def export_keep_title
+    file_path = @export_services.export_keep_title
+    render json: { file_path: file_path }
   end
 
   def data_users_by_gender
@@ -61,6 +76,28 @@ class DashboardsController < ApplicationController
   end
 
   private
+
+  def process_export_params
+    out_params = params.clone
+    out_params[:ext] ||= "xlsx"
+    if out_params[:company_id] != "All"
+      out_params[:company_id] = out_params[:company_id]&.split(",")&.map(&:to_i)
+    end
+
+    if out_params[:project_id] != "All"
+      out_params[:project_id] = out_params[:project_id]&.split(",")&.map(&:to_i)
+    end
+
+    if out_params[:role_id] != "All"
+      out_params[:role_id] = out_params[:role_id]&.split(",")&.map(&:to_i)
+    end
+
+    out_params
+  end
+
+  def export_services
+    @export_services = Api::ExportService.new(process_export_params, current_user)
+  end
 
   def user_management_services
     @user_management_services = Api::UserManagementService.new(params, current_user)

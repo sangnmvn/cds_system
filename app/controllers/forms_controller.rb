@@ -1,12 +1,14 @@
 class FormsController < ApplicationController
+  include TitleMappingsHelper
   layout "system_layout"
   before_action :form_service
+  before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
-  ASSESS_OWN_CDS = 15
+  VIEW_CDS_CDP_ASSESSMENT = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  include TitleMappingsHelper
+  FULL_ACCESS = 24
 
   def index_cds_cdp
   end
@@ -33,6 +35,15 @@ class FormsController < ApplicationController
     render json: @form_service.cancel_request(form_slot_ids, params[:slot_id])
   end
 
+  def export_excel_cds_review
+    file_path = ""
+    if @privilege_array.include?(APPROVE_CDS) || @privilege_array.include?(REVIEW_CDS)
+      data = @form_service.get_list_cds_review_to_export
+    end
+    file_path = @export_service.export_excel_cds_review(data)
+    render json: { file_path: file_path }
+  end
+
   def get_list_cds_assessment
     render json: @form_service.get_list_cds_assessment(current_user.id)
   end
@@ -47,7 +58,9 @@ class FormsController < ApplicationController
 
   def cds_review
     @companies = Company.all
-    @data_filter = if @privilege_array.include?(APPROVE_CDS)
+    @data_filter = if @privilege_array.include?(FULL_ACCESS)
+        @form_service.data_filter_cds_view_others
+      elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -300,7 +313,9 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    data = if @privilege_array.include?(APPROVE_CDS)
+    data = if @privilege_array.include?(FULL_ACCESS)
+        @form_service.data_filter_cds_view_others
+      elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -338,7 +353,7 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to index2_users_path unless @privilege_array.include?(ASSESS_OWN_CDS)
+    redirect_to index2_users_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
   end
 
   def check_line_manager_privilege
@@ -347,6 +362,10 @@ class FormsController < ApplicationController
 
   def form_service
     @form_service ||= Api::FormService.new(form_params, current_user)
+  end
+
+  def export_service
+    @export_service ||= Api::ExportService.new(form_params, current_user)
   end
 
   def form_params
@@ -360,7 +379,7 @@ class FormsController < ApplicationController
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type, 
-                  :cancel_slots, :summary_id, :comment)
+                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
+                  :cancel_slots, :summary_id, :comment, :ext)
   end
 end

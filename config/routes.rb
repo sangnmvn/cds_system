@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       get :get_filter
       post :reviewer_submit
       post :withdraw_cds
+      post :export_excel_cds_review
     end
   end
   resources :templates do
@@ -138,7 +139,11 @@ Rails.application.routes.draw do
       post :calulate_data_user_by_title
       post :data_users_up_title
       post :data_users_keep_title
+      post :data_users_up_title_excel
       post :data_filter
+      post :export_up_title
+      post :export_down_title
+      post :export_keep_title
     end
   end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }

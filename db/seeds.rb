@@ -1169,7 +1169,7 @@ slot_create.each_with_index do |s, i|
   Slot.create!(id: i + 1, desc: s[:desc], evidence: s[:evidence], level: s[:level], competency_id: s[:competency_id], slot_id: s[:slot_id])
 end
 
-Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22")
+Group.create!(id: 31, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22,24")
 Group.create!(id: 32, name: "BOD", description: "BOD", status: 1, privileges: "10")
 Group.create!(id: 33, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
 Group.create!(id: 34, name: "Manager", description: "Manager", status: 1, privileges: "1")

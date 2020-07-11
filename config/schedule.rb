@@ -3,8 +3,6 @@
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-set :environment, "development"
-set :output, "../log/log_task.log"
 # Example:
 #
 # set :output, "/path/to/my/cron_log.log"
@@ -21,8 +19,12 @@ set :output, "../log/log_task.log"
 
 # Learn more: http://github.com/javan/whenever
 # whenever --update-crontab
-# to update task
+# to update task (run scheduled task)
 every 1.day, at: "0:00 am" do
   runner "Schedule.update_status", :environment => Rails.env, :output => "log/cron.log"
   runner "Schedule.deliver_reminder", :environment => Rails.env, :output => "log/cron.log"
+end
+
+every 15.minutes do
+  runner "Api::ExportService.new({}, User.find(1)).clean_up_public_folder", :environment => Rails.env, :output => "log/cron.log"
 end
