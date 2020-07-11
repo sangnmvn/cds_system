@@ -523,9 +523,10 @@ module Api
       if params[:recommend] && params[:given_point] && params[:slot_id] && params[:user_id]
         period_id = Form.find(params[:form_id]).period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id).first
+        line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
-        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first.flag
+        flag = LineManager.where(user_id: approver_id, form_slot_id: form_slot.id).select(:flag).first
+        flag = flag.nil? ? "" : flag
         flag = "#99FF33" if approver_id.present? && approver_id != current_user.id && flag == "orange"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag)
@@ -805,13 +806,13 @@ module Api
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
       return "fail" unless form.update(status: "New")
-
-      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      period = form.period
+      comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }).where.not(flag: "")
       comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] })
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, 
+                      period_id: period.id).where.not(flag: "")
       line_managers.update(flag: "")
       # send mail
-      period = form.period
       reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
       reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
       CdsAssessmentMailer.with(account: current_user.account, from_date: period.from_date,

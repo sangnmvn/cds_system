@@ -387,7 +387,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if(!(is_reviewer && is_approver))
+  if(!(is_reviewer || is_approver) || (is_reviewer && is_submit))
   {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
@@ -473,7 +473,7 @@ $(document).ready(function () {
     })
   })
 
-  $("#button_request_update").on("click", function () {
+  $("#button_request_update").on("click", function () {    
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
     // make sure all values are false
