@@ -1,6 +1,11 @@
 <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<script>
+  var current_reviewers = [];
+  var current_approvers = [];
+  var reviewers = [];
+  var approvers = [];
+</script>
 <input type="hidden" value="<%= @privilege_array.include? 1%>" class="get_privilege">
 <% breadcrumb :users %>
 <div class="container-fluid" style="margin-bottom: 40px;">
@@ -25,7 +30,7 @@
     </div>
   </div>
 </div>
-<div><%= render 'add_reviewer' , users: @users %></div>
+<div><%= render 'add_reviewer_new' , users: @users %></div>
 <input type="hidden" value="<%@privilege_array.include? 1%>" id="check_privilege">
 <% if @privilege_array.include? 1%>
   <div><%= render 'delete' %></div>
@@ -36,3 +41,5 @@
 <%end%>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
+<%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'add_reviewer', 'data-turbolinks-track': 'reload' %>

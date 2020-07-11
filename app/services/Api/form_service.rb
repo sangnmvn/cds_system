@@ -233,11 +233,11 @@ module Api
     def reset_all_approver_submit_status(user_id)
       all_approver_save = true
       approver_to_reset = Approver.where(user_id: user_id)
-      approver_to_reset.each { |approver|
+      approver_to_reset.each do |approver|
         approver.is_submit_cds = 0
         approver.is_submit_cdp = 0
         all_approver_save &&= approver.save
-      }
+      end
       all_approver_save
     end
 
@@ -870,6 +870,7 @@ module Api
 
       result = preview_result(form)
       calculate_result = calculate_result_by_type(form, competencies, result)
+      binding.pry
       return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
 
       title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })

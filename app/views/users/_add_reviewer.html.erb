@@ -38,7 +38,7 @@
       </div>
     </div>
     <!-- hidden input to contains id-->
-    <input type="text" style="display:none;" class="add_reviewer_id_modal"></input>
+    <input type="text" style="display:none;" class="add-reviewer-id-modal"></input>
 </div>
 <script>
   var global_data_table_left;
@@ -183,7 +183,6 @@
     });
   
     $("#table_left tbody .mycontrol[type=checkbox]").on('click', function () {
-  
         var nboxes = $("#table_left tbody :checkbox:not(:checked)");
         if (nboxes.length > 0 && $("#check_all_choose_left").is(":checked") == true) {
           $("#check_all_choose_left").prop("checked", false);
@@ -297,7 +296,7 @@
   $('#save').click(function ()
   {
   
-    var user_id = $('.add_reviewer_id_modal').val();
+    var user_id = $('.add-reviewer-id-modal').val();
     var reviewer_ids = [];
   
     var reviewer_id_rows = global_data_table_right.fnGetData();

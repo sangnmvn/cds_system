@@ -319,7 +319,7 @@ function delete_user() {
 }
 
 function add_reviewer_user() {
-  var user_id = $(".add_reviewer_id_modal").val();
+  var user_id = $(".add-reviewer-id-modal").val();
   //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
     url: "/admin/user_management/add_reviewer/" + user_id,
@@ -340,19 +340,19 @@ $(document).on("click", ".delete_icon", function () {
   $(".display_user_account_delete").html(user_account);
 });
 
-$(document).on("click", ".add_reviewer_icon", function () {
-  var user_id = $(this).data("user_id");
-  var user_account = $(this).data("user_account");
+// $(document).on("click", ".add-reviewer-icon", function () {
+//   var user_id = $(this).data("user_id");
+//   var user_account = $(this).data("user_account");
 
-  $("#add_reviewer_modal_title").html(
-    'Add Reviewer For <span style="color: #fff;font-size: bold;">{account}</span>'.formatUnicorn({
-      account: user_account
-    })
-  );
+//   $("#add_reviewer_modal_title").html(
+//     'Add Reviewer For <span style="color: #fff;font-size: bold;">{account}</span>'.formatUnicorn({
+//       account: user_account
+//     })
+//   );
 
-  $(".add_reviewer_id_modal").val(user_id);
-  add_reviewer_user();
-});
+//   $(".add-reviewer-id-modal").val(user_id);
+//   add_reviewer_user();
+// });
 
 var user_dataTable;
 

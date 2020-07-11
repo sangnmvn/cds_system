@@ -229,11 +229,14 @@ class FormsController < ApplicationController
       users = User.joins(user_group: [:group]).where(id: user_ids).where("groups.privileges like '%17%'")
       return render json: { status: "fail" } if users.empty?
     else
-      render json: { status: "success" } if form.update(period_id: params[:period_id],
+      render json: { status: "success" } if form.update(period_id: params[:period_id].to_i,
                                                         status: "Awaiting Review", submit_date: DateTime.now)
     end
     user = form.user
     period = form.period
+    
+    binding.pry
+    
     CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
       user_submit.deliver_later(wait: 1.minute)
   end

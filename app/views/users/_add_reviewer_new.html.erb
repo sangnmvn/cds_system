@@ -1,0 +1,57 @@
+<div class="modal" tabindex="-1" id="addReviewerModal" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" id="add_reviewer_modal_title" style="color: white">Assign Users to Group</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color:white" >&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6" >
+            <h5>Available Users</h5>
+            <div id="table_left_wrapper" style="overflow-x:auto;">
+              <table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_left">
+                <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
+                    <td>Full Name</td>
+                    <td>Account</td>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-6">
+            <h5>Selected Users</h5>
+            <div id="table_right_wrapper" style="overflow-x:auto;">
+              <table class="table table-primary table-mytable table-responsive-sm"style="width: 100%;border-bottom: 2px solid #4882bf;" id="table_right">
+                <thead>
+                  <tr>
+                    <td>No.</td>
+                    <td><input type="checkbox" id="check_all_choose_right" value="all" class="mycontrol"></td>
+                    <td>Full Name</td>
+                    <td>Account</td>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-12 p-3 text-center">
+            <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Save</button>
+            <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- hidden input to contains id-->
+    <input type="text" style="display:none;" class="add-reviewer-id-modal"></input>
+</div>

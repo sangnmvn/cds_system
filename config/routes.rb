@@ -187,8 +187,6 @@ Rails.application.routes.draw do
   get "/schedules/get_schedule_hr_info/:id", to: "schedules#get_schedule_hr_info"
 
   post "/admin/user_management/:id/edit" => "users#get_modal_edit_users_management", as: :edit_user_management
-  post "/admin/user_management/add_reviewer/:id" => "users#add_reviewer", as: :add_reviewer_user_management
-  post "/admin/user_management/add_reviewer/:id/:approver_ids" => "users#add_reviewer_to_database"
   get "user_groups/show_privileges/:id", to: "user_groups#show_privileges", as: "show_privileges"
   post "user_groups/save_privileges", to: "user_groups#save_privileges", as: "save_privileges"
   delete "admin/user_management/:id" => "users#destroy", as: :destroy_user_management
@@ -199,4 +197,11 @@ Rails.application.routes.draw do
   get "/groups/:id/destroy_page", to: "groups#destroy_page"
   # resources :groups
   # get "groups" => "groups#index"
+
+  resources :users do
+    collection do
+      post :add_reviewer
+      post :add_reviewer_to_database
+    end
+  end
 end

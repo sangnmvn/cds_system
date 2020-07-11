@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :status, :destroy]
   before_action :get_privilege_id, :user_management_services
   before_action :redirect_to_index, except: [:index2]
+  REVIEW_CDS = 16
+  APPROVE_CDS = 17
 
   def get_user_data
     filter = {
@@ -53,12 +55,38 @@ class UsersController < ApplicationController
   end
 
   def add_reviewer
-    user_id = params[:id]
-    user = User.find_by_id(user_id)
-    @reviewers = Approver.includes(:approver).where(user_id: user_id)
-    @available_users = User.where.not(id: @reviewers.pluck(:approver_id)).where(company_id: user.company_id)
+    company_id = User.select(:company_id).find_by_id(params[:user_id]).company_id
 
-    respond_to :js
+    h_reviewers_of_user = Approver.where(user_id: params[:user_id]).pluck(:approver_id, :is_approver).to_h
+
+    approver_ids = UserGroup.left_outer_joins(:group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").pluck(:user_id)
+    reviewer_ids = UserGroup.left_outer_joins(:group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").pluck(:user_id)
+
+    approvers = User.where(id: approver_ids).where(company_id: company_id)
+    reviewers = User.where(id: reviewer_ids).where(company_id: company_id)
+
+    h_approvers = []
+    h_reviewers = []
+
+    approvers.each do |approver|
+      h_approvers << format_data_load_add_reviewer(approver, h_reviewers_of_user)
+    end
+
+    reviewers.each do |approver|
+      h_reviewers << format_data_load_add_reviewer(approver, h_reviewers_of_user)
+    end
+    current_reviewers = []
+    current_approvers = []
+
+    h_reviewers_of_user.each do |key, value|
+      if value
+        current_approvers << key
+      else
+        current_reviewers << key
+      end
+    end
+
+    render json: { approvers: h_approvers, reviewers: h_reviewers, current_reviewers: current_reviewers, current_approvers: current_approvers }
   end
 
   def add_reviewer_to_database
@@ -229,6 +257,16 @@ class UsersController < ApplicationController
 
   private
 
+  def format_data_load_add_reviewer(approver, h_reviewers_of_user)
+    {
+      id: approver.id,
+      name: approver.format_name,
+      email: approver.email,
+      account: approver.account,
+      checked: h_reviewers_of_user[approver.id],
+    }
+  end
+
   def redirect_to_index
     redirect_to index2_users_path unless (@privilege_array.include?(1) || @privilege_array.include?(2))
   end
@@ -252,7 +290,7 @@ class UsersController < ApplicationController
                   :search, :filter_company, :filter_role, :filter_project,
                   :project_id, :joined_date, :phone_number, :date_of_birth,
                   :identity_card_no, :gender, :skype, :nationality, 
-                  :permanent_address, :current_address)
+                  :permanent_address, :current_address, :user_id)
   end
 
   def get_sort_params
