@@ -1,14 +1,14 @@
 class FormsController < ApplicationController
+  include TitleMappingsHelper
   layout "system_layout"
   before_action :form_service
   before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
-  FULL_ACCESS_CDS_ASSESSMENT = 15
+  VIEW_CDS_CDP_ASSESSMENT = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  VIEW_CDS_REVIEW = 24
-  include TitleMappingsHelper
+  FULL_ACCESS = 24
 
   def index_cds_cdp
   end
@@ -58,7 +58,7 @@ class FormsController < ApplicationController
 
   def cds_review
     @companies = Company.all
-    @data_filter = if @privilege_array.include?(VIEW_CDS_REVIEW)
+    @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
@@ -313,7 +313,7 @@ class FormsController < ApplicationController
   end
 
   def get_filter
-    data = if @privilege_array.include?(VIEW_CDS_REVIEW)
+    data = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(APPROVE_CDS)
         @form_service.data_filter_cds_approve
@@ -353,7 +353,7 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to index2_users_path unless @privilege_array.include?(FULL_ACCESS_CDS_ASSESSMENT)
+    redirect_to index2_users_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
   end
 
   def check_line_manager_privilege

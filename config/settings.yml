@@ -60,29 +60,29 @@ privileges:
     15: 
       {
         id: 15,
-        name: "CDS Assessment",
-        title_name: "CDS Assessment",
+        name: "CDS/CDP Assessment",
+        title_name: "CDS/CDP Assessment",
         title_id: 6,
       },
     16: 
       {
         id: 16,
-        name: "Review CDS Assessment",
-        title_name: "CDS Assessment",
+        name: "Review CDS/CDP Assessment",
+        title_name: "CDS/CDP Assessment",
         title_id: 6,
       },
     17: 
       {
         id: 17,
-        name: "Approve CDS Assessment",
-        title_name: "CDS Assessment",
+        name: "Approve CDS/CDP Assessment",
+        title_name: "CDS/CDP Assessment",
         title_id: 6,
       },
     24: 
     {
       id: 24,
-      name: "View CDS (Review)",
-      title_name: "CDS Assessment",
+      name: "Full Access on CDS/CDP Assessment",
+      title_name: "CDS/CDP Assessment",
       title_id: 6,
     },
     18:
