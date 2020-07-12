@@ -1,20 +1,25 @@
+// const _ = require('lodash');
 $(document).on("click", '.add-reviewer-icon', function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_account");
   $("#add_reviewer_modal_title").html(`Add Reviewer For <span style="color: #fff;font-size: bold;">${user_account}</span>`);
 
-  $(".add-reviewer-id-modal").val(user_id);
+  $("#save_add_reviewer").data('user_id', user_id);
   $.ajax({
     url: "/users/add_reviewer/",
     type: "POST",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       user_id: user_id,
     },
     dataType: "json",
     success: function (response) {
-      reviewers = current_reviewers = response.current_reviewers;
-      approvers = current_approvers = response.current_approvers;
+      current_reviewers = new Set(response.current_reviewers);
+      current_approvers = new Set(response.current_approvers);
+      reviewers = new Set(response.current_reviewers);
+      approvers = new Set(response.current_approvers);
       $('#table_left tbody').html(addDataReviewer(response.reviewers))
       $('#table_right tbody').html(addDataReviewer(response.approvers, "checkbox-approver"))
       if (response.reviewers.length > 0)
@@ -25,62 +30,124 @@ $(document).on("click", '.add-reviewer-icon', function () {
   });
 })
 
-$(document).on('click', '#check_all_choose_right', function () {
+$(document).on('click', '#check_all_choose_approvers', function () {
   var check = $(this)[0].checked
   $.each($('.checkbox-approver'), function (i, checkbox) {
-    checkbox.checked = check
+    if (checkbox.checked != check)
+      checkbox.click();
   })
+  changeTypeButtonSave();
 });
 
-$(document).on('click', '#check_all_choose_left', function () {
+$(document).on('click', '#check_all_choose_reviewers', function () {
   var check = $(this)[0].checked
   $.each($('.checkbox-reviewer'), function (i, checkbox) {
-    checkbox.checked = check
+    if (checkbox.checked != check)
+      checkbox.click();
   })
+  changeTypeButtonSave();
 });
 
 $(document).on('click', '.checkbox-approver', function () {
   let id = $(this).data('id');
-  if ($(this)[0].checked)
-    approvers.push(id)
-  else {
-    var index = approvers.indexOf(id);
-    approvers.splice(index, 1);
+  if ($(this)[0].checked) {
+    approvers.add(id)
+    $('.checkbox-reviewer.check-box-' + id).attr('disabled', true)
+  } else {
+    approvers.delete(id);
+    $('.checkbox-reviewer.check-box-' + id).removeAttr('disabled')
   }
-  if ($('.checkbox-approver').filter('input:checkbox:not(":checked")').length == 0)
-    $('#check_all_choose_right')[0].checked = true;
-  else
-    $('#check_all_choose_right')[0].checked = false;
+  if ($('.checkbox-approver').filter(function () {
+    return !this.disabled && !this.checked;
+  }).length == 0) {
+    $('#check_all_choose_approvers')[0].checked = true;
+  } else {
+    $('#check_all_choose_approvers')[0].checked = false;
+  }
+  changeTypeButtonSave();
 });
 
 $(document).on('click', '.checkbox-reviewer', function () {
   let id = $(this).data('id');
-  if ($(this)[0].checked)
-    reviewers.push(id)
-  else {
-    var index = reviewers.indexOf(id);
-    reviewers.splice(index, 1);
-  }
-  if ($('.checkbox-reviewer').filter('input:checkbox:not(":checked")').length == 0)
-    $('#check_all_choose_left')[0].checked = true;
-  else
-    $('#check_all_choose_left')[0].checked = false;
-});
-
-warning("Add reviewer to this group has been successfully!");
-$("#addReviewerModal").on('hide.bs.modal', function () {
-  resetTableAddReviewer();
-});
-
-function save_button(flag) {
-  if (flag == 0) {
-    $('#save').prop("disabled", true)
-    $("#save").removeClass("btn-primary").addClass("btn-secondary");
+  if ($(this)[0].checked) {
+    reviewers.add(id)
+    $('.checkbox-approver.check-box-' + id).attr('disabled', true)
   } else {
-    $('#save').prop("disabled", false)
-    $("#save").removeClass("btn-secondary").addClass("btn-primary");
+    reviewers.delete(id);
+    $('.checkbox-approver.check-box-' + id).removeAttr('disabled')
+  }
+
+  if ($('.checkbox-reviewer').filter(function () {
+     return !this.disabled && !this.checked; 
+    }).length == 0) {
+    $('#check_all_choose_reviewers')[0].checked = true;
+  } else {
+    $('#check_all_choose_reviewers')[0].checked = false;
+  }
+  changeTypeButtonSave();
+});
+
+$("#addReviewerModal").on('hide.bs.modal', function () {
+  $('#table_left, #table_right').remove();
+  $('#table_left_wrapper').html(
+    `<table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_left">
+      <thead>
+        <tr>
+          <td>No.</td>
+          <td><input type="checkbox" id="check_all_choose_reviewers" value="all" class="mycontrol"></td>
+          <td>Full Name</td>
+          <td>Account</td>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>`);
+  $('#table_right_wrapper').html(
+    `<table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_right">
+      <thead>
+        <tr>
+          <td>No.</td>
+          <td><input type="checkbox" id="check_all_choose_approvers" value="all" class="mycontrol"></td>
+          <td>Full Name</td>
+          <td>Account</td>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>`);
+});
+
+function changeTypeButtonSave() {
+  let flag = _.isEqual(reviewers, current_reviewers) && _.isEqual(approvers, current_approvers)
+  $("#save_add_reviewer").removeClass("btn-primary btn-secondary");
+  if (flag) {
+    $('#save_add_reviewer').prop("disabled", true);
+    $("#save_add_reviewer").addClass("btn-secondary");
+  } else {
+    $('#save_add_reviewer').prop("disabled", false);
+    $("#save_add_reviewer").addClass("btn-primary");
   }
 }
+
+$(document).on('click', '#save_add_reviewer', function() {
+  var user_id = $(this).data("user_id");
+  $.ajax({
+    url: "/users/add_reviewer_to_database/",
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      user_id: user_id,
+      approvers: approvers,
+      reviewers: reviewers,
+    },
+    dataType: "json",
+    success: function (response) {
+      warning("Add reviewer to this group has been successfully!");
+    }
+  })
+});
 
 function addDataReviewer(data, class_check = "checkbox-reviewer") {
   if (data.length == 0)
@@ -90,7 +157,7 @@ function addDataReviewer(data, class_check = "checkbox-reviewer") {
     checked = user.checked != undefined ? "checked" : ""
     tpl += `<tr data-id="{id}">
       <td class="type-number">{no}</td>
-      <td data-id="{id}"><input type="checkbox" class="my-control {class_check}" {checked} data-id="{id}"></td>
+      <td data-id="{id}"><input type="checkbox" class="my-control {class_check} check-box-{id}" {checked} data-id="{id}"></td>
       <td class="type-text">{name}</td>
       <td class="type-text">{account}</td>
     </tr>`.formatUnicorn({ id: user.id, no: i + 1, name: user.name, account: user.account, class_check: class_check, checked: checked });
@@ -125,33 +192,4 @@ function setupDataTable(id) {
         cell.innerHTML = i + 1;
       });
   }).draw();
-}
-
-function resetTableAddReviewer() {
-  $('#table_left').remove();
-  $('#table_right').remove();
-  $('#table_left_wrapper').html(`<table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_left">
-      <thead>
-        <tr>
-          <td>No.</td>
-          <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
-          <td>Full Name</td>
-          <td>Account</td>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>`);
-  $('#table_right_wrapper').html(`<table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_right">
-        <thead>
-          <tr>
-            <td>No.</td>
-            <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
-            <td>Full Name</td>
-            <td>Account</td>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>`);
 }

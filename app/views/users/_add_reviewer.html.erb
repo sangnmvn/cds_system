@@ -49,7 +49,7 @@
     // Lấy danh sách checkbox
     var checkboxes = $("#table_left tbody").find('input:checkbox');
   
-    if($("#check_all_choose_left").is(':checked'))
+    if($("#check_all_choose_reviewers").is(':checked'))
     {
       // Lặp và thiết lập checked
       for (var i = 0; i < checkboxes.length; i++){
@@ -79,7 +79,7 @@
     // Lấy danh sách checkbox
     var checkboxes = $("#table_right tbody").find('input:checkbox');
   
-    if($("#check_all_choose_right").is(':checked'))
+    if($("#check_all_choose_approvers").is(':checked'))
     {
       // Lặp và thiết lập checked
       for (var i = 0; i < checkboxes.length; i++){
@@ -109,11 +109,11 @@
   
   
   
-    document.getElementById("check_all_choose_left").onclick = function ()
+    document.getElementById("check_all_choose_reviewers").onclick = function ()
     {
       set_all_left_checkbox();
     };
-    document.getElementById("check_all_choose_right").onclick = function ()
+    document.getElementById("check_all_choose_approvers").onclick = function ()
     {
       set_all_right_checkbox();
     };
@@ -155,7 +155,7 @@
       }
       $('#to_right').attr("disabled",true);
       $('#to_right').removeClass("btn-info").addClass("btn-secondary");
-       $("#check_all_choose_left").prop("checked", false);
+       $("#check_all_choose_reviewers").prop("checked", false);
       $('#save').attr("disabled",false);
       $("#save").removeClass("btn-secondary").addClass("btn-primary");
     });
@@ -176,7 +176,7 @@
       }
       $('#to_left').attr("disabled",true);
       $('#to_left').removeClass("btn-info").addClass("btn-secondary");
-      $("#check_all_choose_right").prop("checked", false);
+      $("#check_all_choose_approvers").prop("checked", false);
       $('#save').attr("disabled",false)
         $("#save").removeClass("btn-secondary").addClass("btn-primary");
   
@@ -184,11 +184,11 @@
   
     $("#table_left tbody .mycontrol[type=checkbox]").on('click', function () {
         var nboxes = $("#table_left tbody :checkbox:not(:checked)");
-        if (nboxes.length > 0 && $("#check_all_choose_left").is(":checked") == true) {
-          $("#check_all_choose_left").prop("checked", false);
+        if (nboxes.length > 0 && $("#check_all_choose_reviewers").is(":checked") == true) {
+          $("#check_all_choose_reviewers").prop("checked", false);
         }
-        else if (nboxes.length == 0 && $("#check_all_choose_left").is(":checked") == false) {
-          $("#check_all_choose_left").prop("checked", true);
+        else if (nboxes.length == 0 && $("#check_all_choose_reviewers").is(":checked") == false) {
+          $("#check_all_choose_reviewers").prop("checked", true);
         }
   
         var nboxes_checked = $("#table_left tbody :checkbox:checked").length;
@@ -208,11 +208,11 @@
   
       $("#table_right tbody .mycontrol[type=checkbox]").on('click', function () {
         var nboxes = $("#table_right tbody :checkbox:not(:checked)");
-        if (nboxes.length > 0 && $("#check_all_choose_right").is(":checked") == true) {
-          $("#check_all_choose_right").prop("checked", false);
+        if (nboxes.length > 0 && $("#check_all_choose_approvers").is(":checked") == true) {
+          $("#check_all_choose_approvers").prop("checked", false);
         }
-        else if (nboxes.length == 0 && $("#check_all_choose_right").is(":checked") == false) {
-          $("#check_all_choose_right").prop("checked", true);
+        else if (nboxes.length == 0 && $("#check_all_choose_approvers").is(":checked") == false) {
+          $("#check_all_choose_approvers").prop("checked", true);
         }
   
         var nboxes_checked = $("#table_right tbody :checkbox:checked").length;

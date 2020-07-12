@@ -90,6 +90,7 @@ class UsersController < ApplicationController
   end
 
   def add_reviewer_to_database
+    binding.pry
     if params[:approver_ids] == "none"
       approver_ids = []
     else
@@ -290,7 +291,7 @@ class UsersController < ApplicationController
                   :search, :filter_company, :filter_role, :filter_project,
                   :project_id, :joined_date, :phone_number, :date_of_birth,
                   :identity_card_no, :gender, :skype, :nationality, 
-                  :permanent_address, :current_address, :user_id)
+                  :permanent_address, :current_address, :user_id, :approvers, :reviewers)
   end
 
   def get_sort_params

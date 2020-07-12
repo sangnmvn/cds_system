@@ -16,7 +16,7 @@
                 <thead>
                   <tr>
                     <td>No.</td>
-                    <td><input type="checkbox" id="check_all_choose_left" value="all" class="mycontrol"></td>
+                    <td><input type="checkbox" id="check_all_choose_reviewers" value="all" class="mycontrol"></td>
                     <td>Full Name</td>
                     <td>Account</td>
                   </tr>
@@ -33,7 +33,7 @@
                 <thead>
                   <tr>
                     <td>No.</td>
-                    <td><input type="checkbox" id="check_all_choose_right" value="all" class="mycontrol"></td>
+                    <td><input type="checkbox" id="check_all_choose_approvers" value="all" class="mycontrol"></td>
                     <td>Full Name</td>
                     <td>Account</td>
                   </tr>
@@ -46,12 +46,12 @@
         </div>
         <div class="modal-footer">
           <div class="col-12 p-3 text-center">
-            <button id="save" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Save</button>
+            <button id="save_add_reviewer" type="button" class="btn btn-secondary" disabled>Save</button>
             <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
     </div>
     <!-- hidden input to contains id-->
-    <input type="text" style="display:none;" class="add-reviewer-id-modal"></input>
+    <div style="display: none;" class="add-reviewer-id-modal"></div>
 </div>
