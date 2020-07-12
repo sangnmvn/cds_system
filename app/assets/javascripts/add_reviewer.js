@@ -5,6 +5,7 @@ $(document).on("click", '.add-reviewer-icon', function () {
   $("#add_reviewer_modal_title").html(`Add Reviewer For <span style="color: #fff;font-size: bold;">${user_account}</span>`);
 
   $("#save_add_reviewer").data('user_id', user_id);
+  $("#save_add_reviewer").data('user_account', user_account);
   $.ajax({
     url: "/users/add_reviewer/",
     type: "POST",
@@ -58,7 +59,7 @@ $(document).on('click', '.checkbox-approver', function () {
     $('.checkbox-reviewer.check-box-' + id).removeAttr('disabled')
   }
   if ($('.checkbox-approver').filter(function () {
-    return !this.disabled && !this.checked;
+    return !(this.disabled || this.checked);
   }).length == 0) {
     $('#check_all_choose_approvers')[0].checked = true;
   } else {
@@ -78,8 +79,8 @@ $(document).on('click', '.checkbox-reviewer', function () {
   }
 
   if ($('.checkbox-reviewer').filter(function () {
-     return !this.disabled && !this.checked; 
-    }).length == 0) {
+    return !(this.disabled || this.checked);
+  }).length == 0) {
     $('#check_all_choose_reviewers')[0].checked = true;
   } else {
     $('#check_all_choose_reviewers')[0].checked = false;
@@ -129,8 +130,14 @@ function changeTypeButtonSave() {
   }
 }
 
-$(document).on('click', '#save_add_reviewer', function() {
-  var user_id = $(this).data("user_id");
+$(document).on('click', '#save_add_reviewer', function () {
+  let user_id = $(this).data("user_id");
+  let user_account = $(this).data("user_account");
+  let approver_remove_ids = _.difference([...current_approvers], [...approvers]);
+  let reviewer_remove_ids = _.difference([...current_reviewers], [...reviewers]);
+  let add_approver_ids = _.difference([...approvers], [...current_approvers]);
+  let add_reviewer_ids = _.difference([...reviewers], [...current_reviewers]);
+  remove_ids = _.concat(approver_remove_ids, reviewer_remove_ids)
   $.ajax({
     url: "/users/add_reviewer_to_database/",
     type: "POST",
@@ -139,12 +146,16 @@ $(document).on('click', '#save_add_reviewer', function() {
     },
     data: {
       user_id: user_id,
-      approvers: approvers,
-      reviewers: reviewers,
+      add_approver_ids: add_approver_ids,
+      add_reviewer_ids: add_reviewer_ids,
+      remove_ids: remove_ids,
     },
     dataType: "json",
     success: function (response) {
-      warning("Add reviewer to this group has been successfully!");
+      if (response.status == "success")
+        warning(`Add reviewer/approver for ${user_account} has been successfully!`);
+      else if(response.status == "fails")
+        fails(`Couldn't add reviewer/approver for ${user_account}!`)
     }
   })
 });

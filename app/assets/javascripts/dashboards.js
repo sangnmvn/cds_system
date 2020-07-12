@@ -115,6 +115,24 @@ $(document).ready(function () {
   $('#select_type_keep').on('change', function () {
     var data_filter = paramFilter();
     data_filter.number_period_keep = $(this).val();
+    $('#layout_table_keep').html(
+      `<table id="table_keep" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="th-sm number">No.</th>
+            <th class="th-sm name">Full Name</th>
+            <th class="th-sm email">Email</th>
+            <th class="th-sm role">Role</th>
+            <th class="th-sm title-h">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+            <th class="th-sm period-keep">Period Keep</th>
+            <th class="th-sm action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>`)
     loadDataKeepTitle(data_filter);
   });
 });

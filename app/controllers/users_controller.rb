@@ -90,19 +90,25 @@ class UsersController < ApplicationController
   end
 
   def add_reviewer_to_database
-    binding.pry
-    if params[:approver_ids] == "none"
-      approver_ids = []
-    else
-      approver_ids = params[:approver_ids].split(",").map(&:to_i)
-    end
+    begin
+      if params[:remove_ids].present?
+        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy
+      end
 
-    # delete all approvers
-    Approver.where(user_id: params[:id]).destroy_all
+      if params[:add_approver_ids].present?
+        params[:add_approver_ids].each do |approver_id|
+          Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: true)
+        end
+      end
 
-    # add approver in list
-    approver_ids.each do |approver_id|
-      Approver.create!(user_id: params[:id], approver_id: approver_id)
+      if params[:add_reviewer_ids].present?
+        params[:add_reviewer_ids].each do |approver_id|
+          Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: false)
+        end
+      end
+      render json: { status: "success" }
+    rescue
+      render json: { status: "fails" }
     end
   end
 
@@ -245,14 +251,13 @@ class UsersController < ApplicationController
     user = User.find_for_authentication(id: params[:id])
     if user.valid_password?(params[:old_password])
       if params[:new_password] != params[:confirm_password]
-        return render json: {status: "Unequal"}
+        return render json: { status: "Unequal" }
       else
         user.update(password: params[:new_password])
-        return render json: {status: "success"}
+        return render json: { status: "success" }
       end
-
     else
-      return render json:  {status: "Uncorrect"}
+      return render json: { status: "Uncorrect" }
     end
   end
 
@@ -286,12 +291,10 @@ class UsersController < ApplicationController
     params[:filter_company] = params["filter-company"]
     params[:filter_role] = params["filter-role"]
     params[:filter_project] = params["filter-project"]
-    params.permit(:id, :first_name, :last_name, :email, :account,
-                  :company_id, :role_id, :status, :is_delete, :offset,
-                  :search, :filter_company, :filter_role, :filter_project,
-                  :project_id, :joined_date, :phone_number, :date_of_birth,
-                  :identity_card_no, :gender, :skype, :nationality, 
-                  :permanent_address, :current_address, :user_id, :approvers, :reviewers)
+    params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
+                  :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
+                  :date_of_birth, :identity_card_no, :gender, :skype, :nationality, :permanent_address, :current_address,
+                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids)
   end
 
   def get_sort_params

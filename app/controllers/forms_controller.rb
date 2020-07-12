@@ -234,9 +234,7 @@ class FormsController < ApplicationController
     end
     user = form.user
     period = form.period
-    
-    binding.pry
-    
+
     CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
       user_submit.deliver_later(wait: 1.minute)
   end

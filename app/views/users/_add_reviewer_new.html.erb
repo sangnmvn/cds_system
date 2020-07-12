@@ -10,7 +10,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-6" >
-            <h5>Available Users</h5>
+            <h5>Reviewers</h5>
             <div id="table_left_wrapper" style="overflow-x:auto;">
               <table class="table table-primary table-mytable table-responsive-sm" style="width:100%;border-bottom: 2px solid #4882bf;" id="table_left">
                 <thead>
@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="col-6">
-            <h5>Selected Users</h5>
+            <h5>Approvers</h5>
             <div id="table_right_wrapper" style="overflow-x:auto;">
               <table class="table table-primary table-mytable table-responsive-sm"style="width: 100%;border-bottom: 2px solid #4882bf;" id="table_right">
                 <thead>
@@ -46,7 +46,7 @@
         </div>
         <div class="modal-footer">
           <div class="col-12 p-3 text-center">
-            <button id="save_add_reviewer" type="button" class="btn btn-secondary" disabled>Save</button>
+            <button id="save_add_reviewer" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Save</button>
             <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -54,4 +54,4 @@
     </div>
     <!-- hidden input to contains id-->
     <div style="display: none;" class="add-reviewer-id-modal"></div>
-</div>
+  </div>

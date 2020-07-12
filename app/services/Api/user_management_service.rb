@@ -377,11 +377,11 @@ module Api
 
       titles = case number_keep
         when 0
-          Form.includes(:user).where(user_id: user_ids).where("number_keep >= 1")
+          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 1")
         when 1
-          Form.includes(:user).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
         when 2
-          Form.includes(:user).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
         when 3
           Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 2")
         end
@@ -395,7 +395,7 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
-          keep_period: Form.keep_period.format_name,
+          keep_period: title.keep_period.format_name,
         }
       end
 
@@ -410,6 +410,7 @@ module Api
       #     rank: rand(i + 100),
       #     title: "#{rand(i + 100)} title tile",
       #     level: rand(i + 100),
+      #     keep_period: "#{rand(i + 100)} period period",
       #   }
       # end
       # results

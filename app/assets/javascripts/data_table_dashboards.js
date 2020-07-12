@@ -40,7 +40,7 @@ function loadDataKeepTitle(data_filter = {}) {
     success: function (response) {
       $("#table_keep tbody").html(appendDataToTable(response.data, false, false));
       if (response.data.length > 0)
-        setupDataTable("#table_keep", 7);
+        setupDataTable("#table_keep", 8);
     },
   });
 }
@@ -70,8 +70,9 @@ function appendDataToTable(data, is_up = true, has_old = true) {
       <td class="type-text item-row title-h">{title}</td>
       <td class="type-number item-row rank">{rank}</td>
       <td class="type-number item-row level">{level}</td>
+      <td class="type-number item-row level">{keep_period}</td>
       <td class="type-icon item-row action">`.formatUnicorn({
-      title: user.title, rank: user.rank, level: user.level,
+      title: user.title, rank: user.rank, level: user.level, keep_period: user.keep_period
     });
 
     if (is_up) {

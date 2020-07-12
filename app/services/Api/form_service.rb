@@ -127,7 +127,7 @@ module Api
 
     def get_summary_comment
       form = Form.find_by(id: params[:form_id])
-      summary_comments = SummaryComment.where(form_id: params[:form_id]).order(updated_at: :desc,period_id: :desc)
+      summary_comments = SummaryComment.where(form_id: params[:form_id]).order(updated_at: :desc, period_id: :desc)
       data_comment = []
       summary_comments.map do |summary_comment|
         data_comment << {
@@ -137,8 +137,8 @@ module Api
           comment_date: summary_comment.updated_at.to_s(:custom_datetime),
           comment: summary_comment.comment,
           status: (form.user_id != current_user.id) &&
-            (summary_comment.line_manager_id == current_user.id) &&
-            (summary_comment.period_id == form.period_id) ? true : false,
+                  (summary_comment.line_manager_id == current_user.id) &&
+                  (summary_comment.period_id == form.period_id) ? true : false,
         }
       end
       data_comment
@@ -150,8 +150,8 @@ module Api
         return false unless summary_comment.update(comment: params[:comment])
       else
         form = Form.find_by(id: params[:form_id])
-        return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id, 
-          form_id: form.id, comment: params[:comment])
+        return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id,
+                                                   form_id: form.id, comment: params[:comment])
       end
       true
     end
@@ -870,8 +870,14 @@ module Api
 
       result = preview_result(form)
       calculate_result = calculate_result_by_type(form, competencies, result)
-      binding.pry
-      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level])
+      if calculate_result[:expected_title][:rank] == form.rank && calculate_result[:expected_title][:level] == form.level
+        keep = (form.keep || 0) + 1
+      else
+        period_keep = form.period
+      end
+      period_keep ||= form.period_keep
+
+      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep: period_keep)
 
       title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
@@ -919,8 +925,8 @@ module Api
       period = form.period
       comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }).where.not(flag: "")
       comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, 
-                      period_id: period.id).where.not(flag: "")
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] },
+                                                             period_id: period.id).where.not(flag: "")
       line_managers.update(flag: "")
       # send mail
       reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
