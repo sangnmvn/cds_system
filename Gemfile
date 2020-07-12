@@ -4,7 +4,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 #sudo apt-get install libreoffice
 ruby "2.7.1"
 gem "ajax-datatables-rails"
-
+gem 'down', '~> 1.1'
+gem 'fileutils', '~> 1.4', '>= 1.4.1'
 gem "zip-zip"
 gem "rubyzip"
 gem "axlsx", "~> 1.3.4"

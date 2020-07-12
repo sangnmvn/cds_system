@@ -3,6 +3,27 @@ $(document).ready(function () {
     $("#modal_edit_contact").modal("show");
   })
 
+  $("#change_avatar").on('change',function(){
+    var file = this.files[0]
+    const url = window.URL.createObjectURL(file);
+    $.ajax({
+      type: "POST",
+      url: "/users/edit_user_avatar",
+      data: url,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response) {
+          success("My avatar have been updated successfully!")
+          $("avt").attr('src',url)
+        } else
+          fails("My avatar haven't been updated!")
+      }
+    });
+  })
+
   $("#edit_location").click(function () {
     $("#modal_edit_location").modal("show");
   })
@@ -107,10 +128,6 @@ $(document).ready(function () {
     changeBtnSave("btn_change_password", true, true)
   })
 
-  $("#phone_number").keyup(function () {
-    checkPhoneNumber($(this).val(), "phone_number", "error_phone_number")
-  })
-
   $("#old_pass").change(function () {
     var data = $(this).val()
     changeBtnSave("btn_change_password", true, true)
@@ -126,20 +143,40 @@ $(document).ready(function () {
   $("#first_name").keyup(function () {
     var first_name = $(this).val()
     if (first_name) {
-      checkName(first_name,"first_name","error_first_name")
       checkDataContact()
+      checkName(first_name,"first_name","error_first_name")
     } else {
       $(this).addClass("is-invalid")
       $("#error_first_name").html("Please enter first name")
       changeBtnSave("btn_save_contact", false)
     }
   })
+  $("#phone_number").keyup(function () {
+    var phone_number = $(this).val()
+    if (phone_number) {
+      checkDataContact()
+      checkPhoneNumber(phone_number,"phone_number","error_phone_number")
+    } else {
+      $(this).addClass("is-invalid")
+      $("#error_phone_number").html("Please enter phone_number")
+      changeBtnSave("btn_save_contact", false)
+    }
+  })
+  $("#birthday").keyup(function () {
+      checkDataContact()
+  })
+  $("#skype").keyup(function () {
+    checkDataContact()
+  })
+  $("#identity_card_no").keyup(function () {
+    checkDataContact()
+  })
 
   $("#last_name").keyup(function () {
     var last_name = $(this).val()
     if (last_name) {
-      checkName(last_name,"last_name","error_last_name")
       checkDataContact()
+      checkName(last_name,"last_name","error_last_name")
     } else {
       $(this).addClass("is-invalid")
       $("#error_last_name").html("Please enter last name")

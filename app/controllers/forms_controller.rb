@@ -94,7 +94,7 @@ class FormsController < ApplicationController
     if params[:title_history_id].present?
       @hash[:status] = "Done"
       @hash[:title_history_id] = params[:title_history_id]
-      @hash[:title] = "CDS Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
+      @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
       return @hash
     end
     if params.include?(:form_id)
@@ -112,7 +112,7 @@ class FormsController < ApplicationController
     end
     @hash[:form_id] = form.id
     @hash[:status] = form.status
-    @hash[:title] = form.period&.format_name.present? ? "CDS Assessment for " + form.period&.format_name : "New CDS Assessment"
+    @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
   end
 
   def request_update_cds
@@ -140,7 +140,7 @@ class FormsController < ApplicationController
       user_name: user.format_name,
       form_id: form.id,
       status: form.status,
-      title: "CDS/CDP Review for #{user.role.name} - #{user.format_name}",
+      title: "CDS/CDP of #{user.role.name} - #{user.account}",
       is_submit: approver.is_submit_cds,
       is_approver: approver.is_approver,
       is_reviewer: !approver.is_approver,

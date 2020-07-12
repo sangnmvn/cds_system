@@ -431,20 +431,26 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $("tbody#data_summary").html("");
-        $(response).each(
-          function (i, e) {
-            if (e.status) {
-              $("#input_summary_comment").html(e.comment)
-              $("#id_summary").val(e.id)
+        if(response.length == 0){
+          var tr = $("<tr/>");
+          $("<td colspan='4'/>").html("No data available in table").appendTo(tr)
+          tr.appendTo("tbody#data_summary")
+        }else{
+          $(response).each(
+            function (i, e) {
+              if (e.status) {
+                $("#input_summary_comment").html(e.comment)
+                $("#id_summary").val(e.id)
+              }
+              var tr = $("<tr id='" + e.id + "'/>");
+              $("<td/>").html(e.period).appendTo(tr)
+              $("<td/>").html(e.user_name).appendTo(tr)
+              $("<td/>").html(e.comment_date).appendTo(tr)
+              $("<td/>").html(e.comment).appendTo(tr)
+              tr.appendTo("tbody#data_summary")
             }
-            var tr = $("<tr id='" + e.id + "'/>");
-            $("<td/>").html(e.period).appendTo(tr)
-            $("<td/>").html(e.user_name).appendTo(tr)
-            $("<td/>").html(e.comment_date).appendTo(tr)
-            $("<td/>").html(e.comment).appendTo(tr)
-            tr.appendTo("tbody#data_summary")
-          }
-        )
+          )
+        }
         $('#modal_summary_assessment').modal('show')
       }
     })

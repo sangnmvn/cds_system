@@ -50,6 +50,11 @@ class UsersController < ApplicationController
     @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 
+  def edit_user_avatar
+    FileUtils.cp(params[:url], "./images/user_avatar/#{current_user.account}")
+    render json: true
+  end
+
   def edit_user_profile
     render json: @user_management_services.edit_user_profile
   end
@@ -294,7 +299,7 @@ class UsersController < ApplicationController
     params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
                   :date_of_birth, :identity_card_no, :gender, :skype, :nationality, :permanent_address, :current_address,
-                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids)
+                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url)
   end
 
   def get_sort_params

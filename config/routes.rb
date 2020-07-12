@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get :edit
       get :user_profile
       get :index2
+      post :edit_user_avatar
       post :create
       post :change_password
       post :update
