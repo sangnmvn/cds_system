@@ -71,3 +71,8 @@ crumb :schedules do
   link "Schedule Management", "/schedules"
   parent :root
 end
+
+crumb :user_profile do
+  link "View your profile", "/users/user_profile"
+  parent :root
+end

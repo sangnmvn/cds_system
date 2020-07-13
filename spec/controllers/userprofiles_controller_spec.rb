@@ -1,27 +1,33 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe UsersController, type: :controller do
-  include Devise::Test::IntegrationHelpers
+  def login(user)
+    post user_session_path, user: user
+  end
+  before (:each) do
+    user = User.create(id: 1, first_name: "admin", last_name: "admin", email: "email@example.com", password: "password")
+    login(user)
+  end
 
-  describe "GET users#user_profile" do
+  describe "users#user_profile" do
+    it "users#user_profile when valid" do
+      get :user_profile
+      expect(response.status).to eq(302)
+    end
     it "should render users#user_profile template" do
-      user = User.create(first_name: "admin", last_name: "admin", email: "email@example.com", password: "123")
-      sign_in user
-      get user_profile
-  
-      page.should have_content(user)
+      visit user_profile_users_path
+      expect(page).to have_content(@user.email)
+      #expect(assigns(:users)).to match_array(["admin"])
+      #expect(response).to render_template("user_profile")
     end
   end
-  describe "POST users#edit_user_profile" do
+  describe "users#edit_user_profile" do
     it "should render users#edit_user_profile template" do
-      user = User.create(first_name: "admin", last_name: "admin", email: "email@example.com", password: "123")
-      sign_in user
-      visit edit_user_profile_users_path(user.id)
-      
-      fill_in "first_name", with: "Admin"
-      fill_in "last_name", with: "Ahihi"
-
-      expect { click_button "btn_save_contact" }.to change(User, :count).by(1)
+      visit user_profile_users_path
+      fill_in('first_name', with: 'John')
+      expect{
+        post :edit_user_profile
+      }.to change(User,:count).by(0)
     end
   end
 end

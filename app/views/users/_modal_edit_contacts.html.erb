@@ -23,7 +23,7 @@
                     <label>First Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="first_name" class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                    <input type="text" maxlength="32" id="first_name" class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
                     <small id="error_first_name" class="text-danger"></small>
                   </div>
                 </div>
@@ -33,7 +33,7 @@
                     <label>Last Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
+                    <input type="text" maxlength="32" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
                     <small id="error_last_name" class="text-danger"></small>
                   </div>
                 </div>
@@ -43,7 +43,7 @@
                     <label>Identity Card No</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="number" id="identity_card_no"  class="form-control" value="<%= @current_user.identity_card_no %>" placeholder="Please enter your identity card no" />
+                    <input type="number" id="identity_card_no"  class="form-control" value="<%= @current_user.identity_card_no %>"/>
                     <small id="error_identity_card_no" class="text-danger"></small>
                   </div>
                 </div>
@@ -65,17 +65,17 @@
                     <label>Date of Birth</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="date" id="birthday" value="<%= @current_user.date_of_birth %>" class="form-control">
+                    <input type="date" id="birthday" max="1945-09-02" value="<%= @current_user.date_of_birth %>" class="form-control">
                     <small id="error_birthday" class="text-danger"></small>
                   </div>
                 </div>
                 <br>
                 <div class="row">
                   <div class="col-sm-3">
-                    <label>Phone number (*)</label>
+                    <label>Phone Number (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="phone_number" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
+                    <input type="text" id="phone_number" maxlength="12" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
                     <small id="error_phone_number" class="text-danger"></small>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
                     <label>Skype</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="skype" class="form-control" value="<%= @current_user.skype %>" placeholder="Please enter your skype id" />
+                    <input type="text" id="skype" maxlength="50" class="form-control" value="<%= @current_user.skype %>" />
                   </div>
                 </div>
                 <br>
@@ -96,7 +96,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer" style="justify-content: center;">
-          <button type="button" class="btn btn-secondary btn-save-edit" id="btn_save_contact" disbled>Save</button>
+          <button type="button" class="btn btn-secondary btn-save-edit" id="btn_save_contact" disabled>Save</button>
           <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
         </div>
     </div>

@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_06_22_044408) do
     t.boolean "is_submit_cdp", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_approver", default: false
     t.index ["approver_id"], name: "index_approvers_on_approver_id"
     t.index ["user_id"], name: "index_approvers_on_user_id"
   end
@@ -216,6 +217,18 @@ ActiveRecord::Schema.define(version: 2020_06_22_044408) do
     t.index ["competency_id"], name: "index_slots_on_competency_id"
   end
 
+  create_table "summary_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "period_id"
+    t.bigint "form_id"
+    t.bigint "line_manager_id"
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["form_id"], name: "index_summary_comments_on_form_id"
+    t.index ["line_manager_id"], name: "index_summary_comments_on_line_manager_id"
+    t.index ["period_id"], name: "index_summary_comments_on_period_id"
+  end
+
   create_table "templates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.text "name"
     t.text "description"
@@ -295,6 +308,14 @@ ActiveRecord::Schema.define(version: 2020_06_22_044408) do
     t.bigint "title_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "phone"
+    t.string "skype"
+    t.date "date_of_birth"
+    t.string "nationality"
+    t.text "permanent_address"
+    t.text "current_address"
+    t.string "identity_card_no"
+    t.string "image"
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -322,6 +343,8 @@ ActiveRecord::Schema.define(version: 2020_06_22_044408) do
   add_foreign_key "schedules", "projects"
   add_foreign_key "schedules", "users"
   add_foreign_key "slots", "competencies"
+  add_foreign_key "summary_comments", "forms"
+  add_foreign_key "summary_comments", "periods"
   add_foreign_key "templates", "roles"
   add_foreign_key "templates", "users"
   add_foreign_key "title_competency_mappings", "competencies"

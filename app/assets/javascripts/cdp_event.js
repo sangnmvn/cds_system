@@ -9,6 +9,7 @@ $(document).on("click", ".approval-assessment", function () {
 });
 
 $(document).on("click", ".reject-assessment", function () {
+  $("#content_reject").html("Are you sure you want to reject CDS/CDP assessment of " + user_name + "?");
   $('#modal_reject_cds').modal('show');
 })
 
