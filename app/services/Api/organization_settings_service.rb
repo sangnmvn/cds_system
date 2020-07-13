@@ -6,9 +6,10 @@ module Api
     end
 
     def data_company
-      company = Company.includes(:users, :projects)
+      company = Company.includes(:users, :projects, :schedules)
       results = []
       company.map do |company_value|
+        is_not_used = company_value.users.count == 0 && company_value.projects.count == 0 && company_value.schedules.count ==0
         results << {
           id: company_value.id,
           name: company_value.name,
@@ -31,7 +32,7 @@ module Api
           note: company_value.note || "",
           parent_company_id: company_value.parent_company_id,
           status: company_value.status || "",
-          is_not_used: company_value.users.count == 0 && company_value.projects.count == 0 && Schedule.find_by_company_id(company_value.id).nil?,
+          is_not_used: is_not_used,
         }
       end
       { data: results }
@@ -91,7 +92,6 @@ module Api
           name: title_value.name || "",
           desc: title_value.desc || "",
           description: title_value.description || "",
-          code: title_value.code || "",
           rank: title_value.rank || 0,
           note: title_value.note || "",
           status: title_value.real_status || "",
@@ -188,7 +188,6 @@ module Api
         desc: params[:title_name],
         role_id: params[:title_role_name],
         name: params[:title_abbreviation],
-        code: params[:title_code],
         rank: params[:title_rank],
         description: params[:title_description],
         note: params[:title_note],

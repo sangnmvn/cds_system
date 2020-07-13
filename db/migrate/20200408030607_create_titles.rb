@@ -5,7 +5,6 @@ class CreateTitles < ActiveRecord::Migration[6.0]
       t.text :name
       t.text :desc
       t.integer :rank
-      t.string :code
       t.text :description
       t.string :note
       t.boolean :real_status, default: true

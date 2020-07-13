@@ -5,7 +5,7 @@
 <div class="container-fluid" style="padding:0">
   <div class="row" id="cdp_container_div2">
     <div class="col-10" style="font-size: 150%;">
-    Organization Settings
+      Organization Settings
     </div>
   </div>
 </div>
@@ -31,14 +31,22 @@
     </div>
   </div>
   <div class="right-panel col-10">
-    <%= render "right_organization_settings" %>
+    <p style="color:red;padding-left: 15px;margin-top: 15px;">(*) required fields</p>
+    <%= render "edit_company_organization_settings" %>
+    <%= render "edit_project_organization_settings" %>
+    <%= render "edit_role_organization_settings" %>
+    <%= render "edit_title_organization_settings" %>
     <div class="icon-bar">
       <button id="btn_save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
       <button id="btn_add" type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
     </div>
   </div>
   <div class="box-table col-12">
-    <table id="table_setting_company" style="display: none;"
+   <div><%= render "modal_delete_company" %></div>
+    <div><%= render "modal_delete_project" %></div>
+    <div><%= render "modal_delete_role" %></div>
+    <div><%= render "modal_delete_title" %></div>
+    <table id="table_company" style="display: none;"
       class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -52,10 +60,9 @@
           <th class="th-sm action">Action</th>
         </tr>
       </thead>
-
       <tbody> </tbody>
     </table>
-    <table id="table_setting_project" style="display: none;"
+    <table id="table_project" style="display: none;"
       class="table dataTable table-striped table-bordered table-sm" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -72,7 +79,7 @@
       </thead>
       <tbody> </tbody>
     </table>
-    <table id="table_setting_role" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
+    <table id="table_role" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
       cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -86,7 +93,7 @@
       </thead>
       <tbody> </tbody>
     </table>
-    <table id="table_setting_title" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
+    <table id="table_title" style="display: none;" class="table dataTable table-striped table-bordered table-sm"
       cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -96,7 +103,6 @@
           <th class="th-sm abbreviation">Title Abbreviation</th>
           <th class="th-sm rank">Rank</th>
           <th class="th-sm description">Description</th>
-          <th class="th-sm code">Code</th>
           <th class="th-sm note">Note</th>
           <th class="th-sm action">Action</th>
         </tr>
@@ -109,8 +115,6 @@
   src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
 <script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>
 <%= javascript_include_tag "data_table_organization_settings", 'data-turbolinks-track': "reload" %>
-
-
 <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
