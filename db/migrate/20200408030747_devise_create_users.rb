@@ -20,7 +20,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.0]
       t.boolean :gender, default: true # true: male, false: female
 
       t.belongs_to :company, foreign_key: true
-      t.belongs_to :role, foreign_key: true
+      t.belongs_to :role, optional: true
       t.belongs_to :title, optional: true
 
       ## Trackable

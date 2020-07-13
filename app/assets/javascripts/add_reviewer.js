@@ -27,6 +27,12 @@ $(document).on("click", '.add-reviewer-icon', function () {
         setupDataTable('#table_left');
       if (response.approvers.length > 0)
         setupDataTable('#table_right');
+      current_approvers.forEach(function(id) {
+        $('.checkbox-approver.check-box-' + id).click();
+      })
+      current_reviewers.forEach(function(id) {
+        $('.checkbox-reviewer.check-box-' + id).click();
+      })
     }
   });
 })
@@ -165,13 +171,12 @@ function addDataReviewer(data, class_check = "checkbox-reviewer") {
     return `<tr><td colspan="4" class="type-icon">No data available in this table</td></tr>`;
   tpl = ""
   data.forEach(function (user, i) {
-    checked = user.checked != undefined ? "checked" : ""
     tpl += `<tr data-id="{id}">
       <td class="type-number">{no}</td>
-      <td data-id="{id}"><input type="checkbox" class="my-control {class_check} check-box-{id}" {checked} data-id="{id}"></td>
+      <td data-id="{id}"><input type="checkbox" class="my-control {class_check} check-box-{id}" data-id="{id}"></td>
       <td class="type-text">{name}</td>
       <td class="type-text">{account}</td>
-    </tr>`.formatUnicorn({ id: user.id, no: i + 1, name: user.name, account: user.account, class_check: class_check, checked: checked });
+    </tr>`.formatUnicorn({ id: user.id, no: i + 1, name: user.name, account: user.account, class_check: class_check});
   })
   return tpl
 }

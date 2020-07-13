@@ -20,6 +20,7 @@ module Api
         h_projects[project.user_id] << project.desc
       end
 
+
       users.map.with_index do |user, index|
         current_user_data = []
         current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
@@ -28,10 +29,10 @@ module Api
         current_user_data.push("<p class='number'>#{number}</p>")
         current_user_data.push(user.first_name)
         current_user_data.push(user.last_name)
-        current_user_data.push(user.email)
+        current_user_data.push(user&.email || "")
         current_user_data.push(user.account)
 
-        current_user_data.push(user.role.name)
+        current_user_data.push(user.role&.name)
         current_user_data.push(user.title&.name)
         project_name = h_projects[user.id].present? ? h_projects[user.id].join(", ") : ""
         current_user_data.push(project_name)
@@ -53,7 +54,7 @@ module Api
               </a></div>")
 
         datas << current_user_data
-      end
+      end.flatten
       datas
     end
 
@@ -99,7 +100,7 @@ module Api
     end
 
     def data_users_by_role
-      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).group("roles.desc").count
+      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil).group("roles.desc").count
 
       { data: h_users, total: h_users.values.sum }
     end

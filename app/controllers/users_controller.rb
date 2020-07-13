@@ -77,8 +77,8 @@ class UsersController < ApplicationController
       h_approvers << format_data_load_add_reviewer(approver, h_reviewers_of_user)
     end
 
-    reviewers.each do |approver|
-      h_reviewers << format_data_load_add_reviewer(approver, h_reviewers_of_user)
+    reviewers.each do |reviewer|
+      h_reviewers << format_data_load_add_reviewer(reviewer, h_reviewers_of_user, false)
     end
     current_reviewers = []
     current_approvers = []
@@ -268,13 +268,16 @@ class UsersController < ApplicationController
 
   private
 
-  def format_data_load_add_reviewer(approver, h_reviewers_of_user)
+  def format_data_load_add_reviewer(approver, h_reviewers_of_user, approve = true)
+    checked = h_reviewers_of_user[approver.id]
+    checked = nil if !approve && checked
+    checked = nil if approve && !checked
     {
       id: approver.id,
       name: approver.format_name,
       email: approver.email,
       account: approver.account,
-      checked: h_reviewers_of_user[approver.id],
+      checked: checked,
     }
   end
 

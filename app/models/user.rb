@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  belongs_to :role
+  belongs_to :role, optional: true
   has_many :project_members, :dependent => :destroy
   belongs_to :company
   has_many :title_histories
