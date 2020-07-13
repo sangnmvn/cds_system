@@ -2,14 +2,10 @@ class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
   before_action :get_privilege_id, :user_management_services
-<<<<<<< HEAD
-  before_action :redirect_to_index, except: [:index2]
+  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-=======
-  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
->>>>>>> done User profile
-
+  
   def get_user_data
     filter = {
       is_delete: false,
