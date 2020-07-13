@@ -1,6 +1,10 @@
 class OrganizationSettingsController < ApplicationController
   layout "system_layout"
+  before_action :get_privilege_id
   before_action :organization_settings_services
+  before_action :check_privilege
+
+  VIEW = 25
 
   def data_company
     render json: @organization_settings.data_company
@@ -36,7 +40,7 @@ class OrganizationSettingsController < ApplicationController
 
   def save_project
     if params[:project_id].blank?
-      return render json: { status: "exist" } if Project.includes(:company).where(desc: params[:project_name], "companies.id": params[:company_id]).present?
+      return render json: { status: "exist" } if Project.includes(:company).where(name: params[:project_name], "companies.id": params[:company_id]).present?
     end
     return render json: { status: "success" } if @organization_settings.save_project
     render json: { status: "fail" }
@@ -60,29 +64,29 @@ class OrganizationSettingsController < ApplicationController
 
   def change_status_company
     company = Company.find_by_id(params[:company_id])
-    status = !company.status
-    return render json: { status: "success", change: status } if company.update(status: status)
+    status = !company.is_enabled
+    return render json: { status: "success", change: status } if company.update(is_enabled: status)
     render json: { status: "fail" }
   end
 
   def change_status_project
     project = Project.find_by_id(params[:project_id])
-    status = !project.status
-    return render json: { status: "success", change: status } if project.update(status: status)
+    status = !project.is_enabled
+    return render json: { status: "success", change: status } if project.update(is_enabled: status)
     render json: { status: "fail" }
   end
 
   def change_status_role
     role = Role.find_by_id(params[:role_id])
-    status = !role.status
-    return render json: { status: "success", change: status } if role.update(status: status)
+    status = !role.is_enabled
+    return render json: { status: "success", change: status } if role.update(is_enabled: status)
     render json: { status: "fail" }
   end
 
   def change_status_title
     title = Title.find_by_id(params[:title_id])
-    status = !title.real_status
-    return render json: { status: "success", change: status } if title.update(real_status: status)
+    status = !title.is_enabled
+    return render json: { status: "success", change: status } if title.update(is_enabled: status)
     render json: { status: "fail" }
   end
 
@@ -130,7 +134,11 @@ class OrganizationSettingsController < ApplicationController
 
   def organization_settings_params
     params.permit(
-      :company_id, :company_name, :company_abbreviation, :company_establishment, :company_phone, :company_fax, :company_email, :company_website, :company_address, :company_description, :company_ceo, :company_tax_code, :company_note, :company_quantity, :company_email_group_staff, :company_email_group_hr, :company_email_group_fa, :company_email_group_it, :company_email_group_admin, :parent_company_id, :project_id, :project_name, :project_company_name, :project_abbreviation, :project_establishment, :project_email, :project_address, :project_description, :project_note, :project_quantity, :project_closed_date, :project_customer, :project_sponsor, :project_manager, :role_id, :role_name, :role_abbreviation, :role_description, :role_note, :title_id, :title_name, :title_role_name, :title_abbreviation, :title_code, :title_rank, :title_address, :title_description, :title_note
+      :company_id, :company_name, :company_abbreviation, :company_establishment, :company_phone, :company_fax, :company_email, :company_website, :company_address, :company_desc, :company_ceo, :company_tax_code, :company_note, :company_quantity, :company_email_group_staff, :company_email_group_hr, :company_email_group_fa, :company_email_group_it, :company_email_group_admin, :parent_company_id, :project_id, :project_name, :project_company_name, :project_abbreviation, :project_establishment, :project_email, :project_address, :project_desc, :project_note, :project_quantity, :project_closed_date, :project_customer, :project_sponsor, :project_manager, :role_id, :role_name, :role_abbreviation, :role_desc, :role_note, :title_id, :title_name, :title_role_name, :title_abbreviation, :title_rank, :title_address, :title_desc, :title_note
     )
+  end
+
+  def check_privilege
+    redirect_to index2_users_path unless (@privilege_array & [VIEW]).any?
   end
 end

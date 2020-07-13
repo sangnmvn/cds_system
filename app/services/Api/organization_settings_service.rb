@@ -9,17 +9,19 @@ module Api
       company = Company.includes(:users, :projects)
       results = []
       company.map do |company_value|
+        is_not_used = company_value.users.count == 0 && company_value.projects.count == 0 && Schedule.find_by_company_id(company_value.id).nil?
+        establishment = company_value.establishment.nil? ? "" : company_value.establishment.to_date.to_s(:long)
         results << {
           id: company_value.id,
           name: company_value.name,
           abbreviation: company_value.abbreviation || "",
-          establishment: company_value.establishment || "",
+          establishment: establishment,
           phone: company_value.phone || "",
           fax: company_value.fax || "",
           email: company_value.email || "",
           website: company_value.website || "",
           address: company_value.address || "",
-          description: company_value.description || "",
+          desc: company_value.desc || "",
           ceo: company_value.ceo || "",
           quantity: company_value.users.count || 0,
           email_group_staff: company_value.email_group_staff || "",
@@ -30,8 +32,8 @@ module Api
           tax_code: company_value.tax_code || "",
           note: company_value.note || "",
           parent_company_id: company_value.parent_company_id,
-          status: company_value.status || "",
-          is_not_used: company_value.users.count == 0 && company_value.projects.count == 0 && Schedule.find_by_company_id(company_value.id).nil?,
+          is_enabled: company_value.is_enabled || "",
+          is_not_used: is_not_used,
         }
       end
       { data: results }
@@ -41,23 +43,26 @@ module Api
       project = Project.includes(:company, :project_members)
       results = []
       project.map do |project_value|
+        is_not_used = project_value.project_members.count == 0 && Schedule.find_by_project_id(project_value.id).nil?
+        establishment = project_value.establishment.nil? ? "" : project_value.establishment.to_date.to_s(:long)
+        closed_date = project_value.closed_date.nil? ? "" : project_value.closed_date.to_date.to_s(:long)
         results << {
           id: project_value.id,
           company_id: project_value.company.id,
           company_name: project_value.company.name || "",
-          name: project_value.desc || "",
+          name: project_value.name || "",
           abbreviation: project_value.abbreviation || "",
-          establishment: project_value.establishment || "",
-          closed_date: project_value.closed_date || "",
+          establishment: establishment,
+          closed_date: closed_date,
           project_manager: project_value.project_manager || "",
           customer: project_value.customer || "",
           sponsor: project_value.sponsor || "",
           email: project_value.email || "",
           quantity: project_value.project_members.count || "",
-          description: project_value.description || "",
+          desc: project_value.desc || "",
           note: project_value.note || "",
-          status: project_value.status || "",
-          is_not_used: project_value.project_members.count == 0 && Schedule.find_by_project_id(project_value.id).nil?,
+          is_enabled: project_value.is_enabled || "",
+          is_not_used: is_not_used,
         }
       end
       { data: results }
@@ -67,14 +72,15 @@ module Api
       role = Role.includes(:users, :titles, :templates)
       results = []
       role.map do |role_value|
+        is_not_used = role_value.users.count == 0 && role_value.titles.count == 0 && role_value.templates.count == 0
         results << {
           id: role_value.id,
           name: role_value.desc || "",
           abbreviation: role_value.name || "",
-          description: role_value.description || "",
+          desc: role_value.desc || "",
           note: role_value.note || "",
-          status: role_value.status || "",
-          is_not_used: role_value.users.count == 0 && role_value.titles.count == 0 && role_value.templates.count == 0,
+          is_enabled: role_value.is_enabled || "",
+          is_not_used: is_not_used,
         }
       end
       { data: results }
@@ -84,18 +90,18 @@ module Api
       title = Title.includes(:role, :level_mappings, :title_mappings)
       results = []
       title.map do |title_value|
+        is_not_used = title_value.level_mappings.count == 0 && title_value.title_mappings.count == 0
         results << {
           id: title_value.id,
           role_id: title_value.role.id,
           role_name: title_value.role.name || "",
           name: title_value.name || "",
+          abbreviation: title_value.abbreviation || "",
           desc: title_value.desc || "",
-          description: title_value.description || "",
-          code: title_value.code || "",
           rank: title_value.rank || 0,
           note: title_value.note || "",
-          status: title_value.real_status || "",
-          is_not_used: title_value.level_mappings.count == 0 && title_value.title_mappings.count == 0,
+          is_enabled: title_value.is_enabled || "",
+          is_not_used: is_not_used,
         }
       end
       { data: results }
@@ -106,7 +112,7 @@ module Api
     end
 
     def data_load_role
-      Role.pluck(:id, :desc)
+      Role.pluck(:id, :name)
     end
 
     def save_company
@@ -119,7 +125,7 @@ module Api
         email: params[:company_email],
         website: params[:company_website],
         address: params[:company_address],
-        description: params[:company_description],
+        desc: params[:company_desc],
         ceo: params[:company_ceo],
         email_group_staff: params[:company_email_group_staff],
         email_group_hr: params[:company_email_group_hr],
@@ -143,19 +149,18 @@ module Api
     def save_project
       hash = {
         id: params[:project_id],
-        desc: params[:project_name],
+        name: params[:project_name],
         company_id: params[:project_company_name],
         abbreviation: params[:project_abbreviation],
         establishment: params[:project_establishment],
         email: params[:project_email],
-        description: params[:project_description],
+        desc: params[:project_desc],
         note: params[:project_note],
         closed_date: params[:project_closed_date],
         customer: params[:project_customer],
         sponsor: params[:project_sponsor],
         project_manager: params[:project_manager],
       }
-
       if params[:project_id].blank?
         project = Project.new(hash)
         return project.save
@@ -168,9 +173,9 @@ module Api
     def save_role
       hash = {
         id: params[:role_id],
-        desc: params[:role_name],
-        name: params[:role_abbreviation],
-        description: params[:role_description],
+        name: params[:role_name],
+        abbreviation: params[:role_abbreviation],
+        desc: params[:role_desc],
         note: params[:role_note],
       }
       if params[:role_id].blank?
@@ -185,12 +190,11 @@ module Api
     def save_title
       hash = {
         id: params[:title_id],
-        desc: params[:title_name],
+        name: params[:title_name],
         role_id: params[:title_role_name],
-        name: params[:title_abbreviation],
-        code: params[:title_code],
+        abbreviation: params[:title_abbreviation],
         rank: params[:title_rank],
-        description: params[:title_description],
+        desc: params[:title_desc],
         note: params[:title_note],
       }
       if params[:title_id].blank?

@@ -1,7 +1,6 @@
 class Company < ApplicationRecord
   has_many :users
   has_many :projects
-
   has_many :subordinates, class_name: "Company",
                           foreign_key: "parent_company_id"
 
