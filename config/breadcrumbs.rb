@@ -76,3 +76,8 @@ crumb :user_profile do
   link "View your profile", "/users/user_profile"
   parent :root
 end
+
+crumb :organization_settings do
+  link "Organization Settings", "/organization_settings"
+  parent :root
+end

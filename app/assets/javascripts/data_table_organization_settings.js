@@ -42,7 +42,7 @@ $(document).on("click", ".edit-company", function () {
   $(".company-email").val($(this).data("email"));
   $(".company-website").val($(this).data("website"));
   $(".company-address").val($(this).data("address"));
-  $(".company-description").val($(this).data("description"));
+  $(".company-desc").val($(this).data("desc"));
   $(".company-ceo").val($(this).data("ceo"));
   $(".company-tax_code").val($(this).data("tax_code"));
   $(".company-note").val($(this).data("note"));
@@ -71,7 +71,7 @@ $(document).on("click",".edit-project", function () {
   $(".project-sponsor").val($(this).data("sponsor"));
   $(".project-email").val($(this).data("email"));
   $(".project-quantity").val($(this).data("quantity"));
-  $(".project-description").val($(this).data("description"));
+  $(".project-desc").val($(this).data("desc"));
   $(".project-note").val($(this).data("note"));
 });
 $(document).on("click",".edit-role", function () {
@@ -83,7 +83,7 @@ $(document).on("click",".edit-role", function () {
   $(".role-id").val($(this).data("id"));
   $(".role-name").val($(this).data("name"));
   $(".role-abbreviation").val($(this).data("abbreviation"));
-  $(".role-description").val($(this).data("description"));
+  $(".role-desc").val($(this).data("desc"));
   $(".role-note").val($(this).data("note"));
 });
 $(document).on("click",".edit-title", function () {
@@ -98,7 +98,7 @@ $(document).on("click",".edit-title", function () {
   $(".title-abbreviation").val($(this).data("abbreviation"));
   $(".title-establishment").val($(this).data("establishment"));
   $(".title-rank").val($(this).data("rank"));
-  $(".title-description").val($(this).data("description"));
+  $(".title-desc").val($(this).data("desc"));
   $(".title-note").val($(this).data("note"));
 });
 
@@ -222,8 +222,8 @@ $(document).on("click",".btn-save-company", function () {
       );
     }
   }
-  if ($(".company-description").val().length > 500) {
-    $(".company-description").after(
+  if ($(".company-desc").val().length > 500) {
+    $(".company-desc").after(
       '<span class="error-company">Maximum length is 500 characters.</span>'
     );
   }
@@ -247,7 +247,7 @@ $(document).on("click",".btn-save-company", function () {
         company_email: $(".company-email").val(),
         company_website: $(".company-website").val(),
         company_address: $(".company-address").val(),
-        company_description: $(".company-description").val(),
+        company_desc: $(".company-desc").val(),
         company_ceo: $(".company-ceo").val(),
         company_tax_code: $(".company-tax_code").val(),
         company_note: $(".company-note").val(),
@@ -339,8 +339,8 @@ $(document).on("click",".btn-save-project", function () {
       '<span class="error-project">Maximum length is 500 characters.</span>'
     );
   }
-  if ($(".project-description").val().length > 500) {
-    $("project-description").after(
+  if ($(".project-desc").val().length > 500) {
+    $("project-desc").after(
       '<span class="error-project">Maximum length is 500 characters.</span>'
     );
   }
@@ -371,7 +371,7 @@ $(document).on("click",".btn-save-project", function () {
         project_abbreviation: $(".project-abbreviation").val(),
         project_establishment: $(".project-establishment").val(),
         project_email: $(".project-email").val(),
-        project_description: $(".project-description").val(),
+        project_desc: $(".project-desc").val(),
         project_note: $(".project-note").val(),
         project_quantity: $(".project-quantity").val(),
         project_closed_date: $(".project-closed-date").val(),
@@ -415,8 +415,8 @@ $(document).on("click",".btn-save-role", function () {
       '<span class="error-role">Maximum length is 500 characters.</span>'
     );
   }
-  if ($(".role-description").val().length > 500) {
-    $(".role-description").after(
+  if ($(".role-desc").val().length > 500) {
+    $(".role-desc").after(
       '<span class="error-role">Maximum length is 500 characters.</span>'
     );
   }
@@ -433,7 +433,7 @@ $(document).on("click",".btn-save-role", function () {
         role_id: $(".role-id").val(),
         role_name: $(".role-name").val(),
         role_abbreviation: $(".role-abbreviation").val(),
-        role_description: $(".role-description").val(),
+        role_desc: $(".role-desc").val(),
         role_note: $(".role-note").val(),
       },
       headers: {
@@ -443,7 +443,7 @@ $(document).on("click",".btn-save-role", function () {
         if (response.status == "success") {
           setDisplay("#box_role", "#table_role", "btn-add-role", "btn-save-role");
           loadDataRole();
-          warning("These role has been created successfully..");
+          warning("These role has been saved successfully..");
         } else if (response.status == "exist") {
           $(".error-role").remove();
           $(".role-name").after(
@@ -485,8 +485,8 @@ $(document).on("click",".btn-save-title", function () {
       '<span class="error-title">Please enter less than 10 character</span>'
     );
   }
-  if ($(".title-description").val().length > 500) {
-    $(".title-description").after(
+  if ($(".title-desc").val().length > 500) {
+    $(".title-desc").after(
       '<span class="error-title">Maximum length is 500 characters.</span>'
     );
   }
@@ -510,7 +510,7 @@ $(document).on("click",".btn-save-title", function () {
         title_role_name: $(".title-role-name").val(),
         title_name: $(".title-name").val(),
         title_abbreviation: $(".title-abbreviation").val(),
-        title_description: $(".title-description").val(),
+        title_desc: $(".title-desc").val(),
         title_note: $(".title-note").val(),
         title_rank: $(".title-rank").val(),
       },
@@ -521,7 +521,7 @@ $(document).on("click",".btn-save-title", function () {
         if (response.status == "success") {
           setDisplay("#box_title", "#table_title", "btn-add-title", "btn-save-title");
           loadDataTitle();
-          warning("The title has been created successfully.");
+          warning("The title has been saved successfully.");
         } else if (response.status == "exist") {
           $(".error-title").remove();
           $(".company-name").after(
@@ -547,7 +547,7 @@ $(document).on("click",".btn-add-company", function () {
   $(".company-email").val("");
   $(".company-website").val("");
   $(".company-address").val("");
-  $(".company-description").val("");
+  $(".company-desc").val("");
   $(".company-ceo").val("");
   $(".company-tax_code").val("");
   $(".company-note").val("");
@@ -569,7 +569,7 @@ $(document).on("click",".btn-add-project", function () {
   $(".project-establishment").val("");
   $(".project-email").val("");
   $(".project-address").val("");
-  $(".project-description").val("");
+  $(".project-desc").val("");
   $(".project-note").val("");
   $(".project-quantity").val("");
   $(".project-closed-date").val("");
@@ -583,7 +583,7 @@ $(document).on("click",".btn-add-role", function () {
   $(".role-id").val("");
   $(".role-name").val("");
   $(".role-abbreviation").val("");
-  $(".role-description").val("");
+  $(".role-desc").val("");
   $(".role-note").val("");
 });
 $(document).on("click",".btn-add-title", function () {
@@ -595,7 +595,7 @@ $(document).on("click",".btn-add-title", function () {
   $(".title-abbreviation").val("");
   $(".title-rank").val("");
   $(".title-address").val("");
-  $(".title-description").val("");
+  $(".title-desc").val("");
   $(".title-note").val("");
 });
 
@@ -874,12 +874,7 @@ function loadDataCompany(data_filter = {}) {
         appendDataToTableCompany(response.data)
       );
       if (response.data.length > 0) {
-        $("#table_company").DataTable({
-          bLengthChange: false,
-          bFilter: false,
-          bAutoWidth: false,
-          destroy: true,
-        });
+        setupDataTable("#table_company");
       }
     },
   });
@@ -899,12 +894,12 @@ function appendDataToTableCompany(data) {
           <td class="type-text item-row ceo">{ceo}</td>
           <td style="width:12%" class="type-number item-row quantity">{quantity}</td>
           <td style="width:8%" class="type-icon item-row action">
-           <a href="javascript:;" class="edit-company" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-phone="{phone}" data-email="{email}" data-ceo="{ceo}" data-establishment="{establishment}" data-fax="{fax}" data-website="{website}" data-address="{address}" data-description="{description}" data-tax_code="{tax_code}" data-note="{note}" data-quantity="{quantity}" data-email_group_staff="{email_group_staff}" data-email_group_hr="{email_group_hr}" data-email_group_fa="{email_group_fa}" data-email_group_it="{email_group_it}" data-email_group_admin="{email_group_admin}"  data-parent_company_id="{parent_company_id}">
+           <a href="javascript:;" class="edit-company" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-phone="{phone}" data-email="{email}" data-ceo="{ceo}" data-establishment="{establishment}" data-fax="{fax}" data-website="{website}" data-address="{address}" data-desc="{desc}" data-tax_code="{tax_code}" data-note="{note}" data-quantity="{quantity}" data-email_group_staff="{email_group_staff}" data-email_group_hr="{email_group_hr}" data-email_group_fa="{email_group_fa}" data-email_group_it="{email_group_it}" data-email_group_admin="{email_group_admin}"  data-parent_company_id="{parent_company_id}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
-      number: i + 1, id: user.id, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, phone: user.phone, fax: user.fax, email: user.email, website: user.website, address: user.address, description: user.description, ceo: user.ceo, quantity: user.quantity, tax_code: user.tax_code, note: user.note, email_group_staff: user.email_group_staff, email_group_hr: user.email_group_hr, email_group_fa: user.email_group_fa, email_group_it: user.email_group_it, email_group_admin: user.email_group_admin, parent_company_id: user.parent_company_id,
+      number: i + 1, id: user.id, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, phone: user.phone, fax: user.fax, email: user.email, website: user.website, address: user.address, desc: user.desc, ceo: user.ceo, quantity: user.quantity, tax_code: user.tax_code, note: user.note, email_group_staff: user.email_group_staff, email_group_hr: user.email_group_hr, email_group_fa: user.email_group_fa, email_group_it: user.email_group_it, email_group_admin: user.email_group_admin, parent_company_id: user.parent_company_id,
     });
-    if (user.status)
+    if (user.is_enabled)
       tpl += `
               <a class="action_icon status-icon-company" title="Disable/Enable company" data-company_id="{id}" href="javascript:;">
               <i class="fa fa-toggle-on"></i>
@@ -939,12 +934,7 @@ function loadDataProject(data_filter = {}) {
         appendDataToTableProject(response.data)
       );
       if (response.data.length > 0) {
-        $("#table_project").DataTable({
-          bLengthChange: false,
-          bFilter: false,
-          bAutoWidth: false,
-          destroy: true,
-        });
+        setupDataTable("#table_project");
       }
     },
   });
@@ -965,12 +955,12 @@ function appendDataToTableProject(data) {
           <td class="type-text item-row email">{email}</td>
           <td class="type-number item-row quantity">{quantity}</td>
           <td class="type-icon item-row action">
-          <a href="javascript:;" class="edit-project" data-id="{id}" data-company_name="{company_id}" data-name="{name}" data-abbreviation="{abbreviation}" data-establishment="{establishment}" data-closed_date="{closed_date}" data-project_manager="{project_manager}" data-customer="{customer}" data-sponsor="{sponsor}" data-email="{email}"data-quantity="{quantity}" data-description="{description}" data-note="{note}">
+          <a href="javascript:;" class="edit-project" data-id="{id}" data-company_name="{company_id}" data-name="{name}" data-abbreviation="{abbreviation}" data-establishment="{establishment}" data-closed_date="{closed_date}" data-project_manager="{project_manager}" data-customer="{customer}" data-sponsor="{sponsor}" data-email="{email}"data-quantity="{quantity}" data-desc="{desc}" data-note="{note}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
           </a>`.formatUnicorn({
-      number: i + 1, id: user.id, company_id: user.company_id, company_name: user.company_name, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, closed_date: user.closed_date, project_manager: user.project_manager, customer: user.customer, sponsor: user.sponsor, email: user.email, quantity: user.quantity, description: user.description, note: user.note,
+      number: i + 1, id: user.id, company_id: user.company_id, company_name: user.company_name, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, closed_date: user.closed_date, project_manager: user.project_manager, customer: user.customer, sponsor: user.sponsor, email: user.email, quantity: user.quantity, desc: user.desc, note: user.note,
     });
-    if (user.status)
+    if (user.is_enabled)
       tpl += `
             <a class="action_icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
             <i class="fa fa-toggle-on"></i>
@@ -1003,12 +993,7 @@ function loadDataRole(data_filter = {}) {
       $("#table_role").DataTable().destroy();
       $("#table_role tbody").html(appendDataToTableRole(response.data));
       if (response.data.length > 0) {
-        $("#table_role").DataTable({
-          bLengthChange: false,
-          bFilter: false,
-          bAutoWidth: false,
-          destroy: true,
-        });
+        setupDataTable("#table_role");
       }
     },
   });
@@ -1023,20 +1008,20 @@ function appendDataToTableRole(data) {
           <td class="type-number item-row number">{number}</td>
           <td class="type-text item-row name">{name}</td>
           <td class="type-text item-row abbreviation">{abbreviation}</td>
-          <td class="type-text item-row description">{description}</td>
+          <td class="type-text item-row desc">{desc}</td>
           <td class="type-text item-row note">{note}</td>
           <td class="type-icon item-row action">
-            <a href="javascript:;" class="edit-role" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-description="{description}" data-note="{note}">
+            <a href="javascript:;" class="edit-role" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-desc="{desc}" data-note="{note}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
       number: i + 1,
       id: user.id,
       name: user.name,
       abbreviation: user.abbreviation,
-      description: user.description,
+      desc: user.desc,
       note: user.note,
     });
-    if (user.status)
+    if (user.is_enabled)
       tpl += `
             <a class="action_icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
             <i class="fa fa-toggle-on"></i>
@@ -1071,12 +1056,7 @@ function loadDataTitle(data_filter = {}) {
         appendDataToTableTitle(response.data)
       );
       if (response.data.length > 0) {
-        $("#table_title").DataTable({
-          bLengthChange: false,
-          bFilter: false,
-          bAutoWidth: false,
-          destroy: true,
-        });
+        setupDataTable("#table_title");
       }
     },
   });
@@ -1094,15 +1074,15 @@ function appendDataToTableTitle(data) {
           <td class="type-text item-row name">{name}</td>
           <td class="type-text item-row abbreviation">{abbreviation}</td>
           <td class="type-number item-row rank">{rank}</td>
-          <td class="type-text item-row description">{description}</td>
+          <td class="type-text item-row desc">{desc}</td>
           <td class="type-text item-row note">{note}</td>
           <td class="type-icon item-row action">
-            <a href="javascript:;" class="edit-title" data-id="{id}" data-role_id="{role_id}" data-role_name="{role_name}" data-name="{name}" data-abbreviation="{abbreviation}" data-rank="{rank}" data-description="{description}" data-note="{note}">
+            <a href="javascript:;" class="edit-title" data-id="{id}" data-role_id="{role_id}" data-role_name="{role_name}" data-name="{name}" data-abbreviation="{abbreviation}" data-rank="{rank}" data-desc="{desc}" data-note="{note}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
-      number: i + 1, id: user.id, role_id: user.role_id, role_name: user.role_name, name: user.name, abbreviation: user.desc, rank: user.rank, description: user.description, note: user.note,
+      number: i + 1, id: user.id, role_id: user.role_id, role_name: user.role_name, name: user.name, abbreviation: user.abbreviation, rank: user.rank, desc: user.desc, note: user.note,
     });
-    if (user.status)
+    if (user.is_enabled)
       tpl += `
              <a class="action_icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
              <i class="fa fa-toggle-on"></i>
@@ -1158,3 +1138,26 @@ function loadRoleName(data_filter = {}) {
   });
 }
 
+function setupDataTable(id, last_column_no = 10) {
+  var table = $(id).DataTable({
+    "bLengthChange": false,
+    "bFilter": false,
+    "bAutoWidth": false,
+    "destroy": true,
+    "columnDefs": [
+      {
+        "searchable": false,
+        "orderable": false,
+        "targets": 0,
+      },
+    ],
+    "order": [[1, "asc"]],
+  });
+
+  table.on("order.dt search.dt", function () {
+    table.column(0, { search: "applied", order: "applied" })
+      .nodes().each(function (cell, i) {
+        cell.innerHTML = i + 1;
+      });
+  }).draw();
+}

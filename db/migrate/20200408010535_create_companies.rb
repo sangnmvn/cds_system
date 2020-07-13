@@ -4,13 +4,13 @@ class CreateCompanies < ActiveRecord::Migration[6.0]
     create_table :companies do |t|
       t.text :name
       t.string :abbreviation
-      t.datetime :establishment
+      t.date :establishment
       t.string :phone
       t.string :fax
       t.string :email
       t.string :website
       t.string :address
-      t.text :description
+      t.text :desc
       t.string :ceo
       t.string :email_group_staff
       t.string :email_group_hr
@@ -19,7 +19,7 @@ class CreateCompanies < ActiveRecord::Migration[6.0]
       t.string :email_group_fa
       t.string :tax_code
       t.text :note
-      t.boolean :status, default: true
+      t.boolean :is_enabled, default: true
       t.references :parent_company
       t.timestamps
     end

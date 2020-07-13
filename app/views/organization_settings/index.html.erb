@@ -2,6 +2,7 @@
 <%= stylesheet_link_tag "jquery.dataTables.min", media: "all", 'data-turbolinks-track': "reload" %>
 <%= stylesheet_link_tag "organization_settings", media: "all", 'data-turbolinks-track': "reload" %>
 <%= stylesheet_link_tag "cdp_assessment", media: "all", 'data-turbolinks-track': "reload" %>
+<% breadcrumb :organization_settings %>
 <div class="container-fluid" style="padding:0">
   <div class="row" id="cdp_container_div2">
     <div class="col-10" style="font-size: 150%;">
@@ -42,7 +43,7 @@
     </div>
   </div>
   <div class="box-table col-12">
-   <div><%= render "modal_delete_company" %></div>
+    <div><%= render "modal_delete_company" %></div>
     <div><%= render "modal_delete_project" %></div>
     <div><%= render "modal_delete_role" %></div>
     <div><%= render "modal_delete_title" %></div>
@@ -86,7 +87,7 @@
           <th class="th-sm number">No.</th>
           <th class="th-sm name">Role Name</th>
           <th class="th-sm abbreviation">Role Abbreviation</th>
-          <th class="th-sm description">Description</th>
+          <th class="th-sm desc">Description</th>
           <th class="th-sm note">Note</th>
           <th class="th-sm action">Action</th>
         </tr>
@@ -102,7 +103,7 @@
           <th class="th-sm name">Title Name</th>
           <th class="th-sm abbreviation">Title Abbreviation</th>
           <th class="th-sm rank">Rank</th>
-          <th class="th-sm description">Description</th>
+          <th class="th-sm desc">Description</th>
           <th class="th-sm note">Note</th>
           <th class="th-sm action">Action</th>
         </tr>

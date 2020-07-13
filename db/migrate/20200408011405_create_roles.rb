@@ -4,9 +4,9 @@ class CreateRoles < ActiveRecord::Migration[6.0]
     create_table :roles do |t|
       t.text :name
       t.text :desc
-      t.text :description
+      t.text :abbreviation
       t.string :note
-      t.boolean :status, default: true
+      t.boolean :is_enabled, default: true
       t.timestamps
     end
   end
