@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :image
+  mount_uploader :image, AvatarUploader
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -29,6 +31,10 @@ class User < ApplicationRecord
 
   def format_joined_date
     self.joined_date ? self.joined_date.strftime("%b %d, %Y") : ""
+  end
+  
+  def format_birthday
+    self.date_of_birth ? self.date_of_birth.strftime("%MMM %DD,%YYYY") : ""
   end
 
   def get_project

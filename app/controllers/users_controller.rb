@@ -2,10 +2,10 @@ class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
   before_action :get_privilege_id, :user_management_services
-  before_action :redirect_to_index, except: [:index2]
+  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-
+  
   def get_user_data
     filter = {
       is_delete: false,
@@ -48,6 +48,11 @@ class UsersController < ApplicationController
     @project = Project.includes(:project_members).where("project_members.user_id": current_user.id).pluck(:desc).join(", ")
     form = Form.find_by(user_id: current_user.id)
     @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
+  end
+
+  def edit_user_avatar
+    FileUtils.cp(params[:url], "./images/user_avatar/#{current_user.account}")
+    render json: true
   end
 
   def edit_user_profile
@@ -294,7 +299,7 @@ class UsersController < ApplicationController
     params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
                   :date_of_birth, :identity_card_no, :gender, :skype, :nationality, :permanent_address, :current_address,
-                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids)
+                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url)
   end
 
   def get_sort_params

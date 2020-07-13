@@ -3,6 +3,25 @@ $(document).ready(function () {
     $("#modal_edit_contact").modal("show");
   })
 
+  $("#change_avatar").on('change',function(){
+    var file = this.files[0]
+    $.ajax({
+      type: "POST",
+      url: "/users/edit_user_avatar",
+      data: file,
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      success: function (response) {
+        if (response) {
+          success("My avatar have been updated successfully!")
+          $("avt").attr('src',url)
+        } else
+          fails("My avatar haven't been updated!")
+      }
+    });
+  })
+
   $("#edit_location").click(function () {
     $("#modal_edit_location").modal("show");
   })
@@ -38,10 +57,10 @@ $(document).ready(function () {
         if (response) {
           $("#modal_edit_contact").modal("hide")
           $("#modal_edit_location").modal("hide")
-          success("My profile have been updated successfully!")
+          success("Your profile have been updated successfully!")
           setTimeout(location.reload.bind(location), 1000);
         } else
-          fails("My profile haven't been updated!")
+          fails("Your profile haven't been updated!")
       }
     });
   })
@@ -107,10 +126,6 @@ $(document).ready(function () {
     changeBtnSave("btn_change_password", true, true)
   })
 
-  $("#phone_number").keyup(function () {
-    checkPhoneNumber($(this).val(), "phone_number", "error_phone_number")
-  })
-
   $("#old_pass").change(function () {
     var data = $(this).val()
     changeBtnSave("btn_change_password", true, true)
@@ -126,23 +141,55 @@ $(document).ready(function () {
   $("#first_name").keyup(function () {
     var first_name = $(this).val()
     if (first_name) {
-      checkName(first_name,"first_name","error_first_name")
       checkDataContact()
+      checkName(first_name,"first_name","error_first_name")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_first_name").html("Please enter first name")
+      $("#error_first_name").html("First Name must be from 1 to 32 characters")
       changeBtnSave("btn_save_contact", false)
     }
+  })
+  $("#phone_number").keyup(function () {
+    var phone_number = $(this).val()
+    if (phone_number) {
+      checkDataContact()
+      checkPhoneNumber(phone_number,"phone_number","error_phone_number")
+    } else {
+      $(this).addClass("is-invalid")
+      $("#error_phone_number").html("Please enter phone_number")
+      changeBtnSave("btn_save_contact", false)
+    }
+  })
+  $("#birthday").change(function () {
+      checkDataContact()
+  })
+  $("#skype").keyup(function () {
+    checkDataContact()
+  })
+  $("#identity_card_no").keyup(function () {
+    checkDataContact()
+  })
+
+  $(".show-pass").on('click',function(){
+    $(this).closest('.row').find('input').prop('type','text')
+    $(this).addClass('d-none')
+    $(this).next().removeClass('d-none')
+  })
+
+  $(".hide-pass").on('click',function(){
+    $(this).closest('.row').find('input').prop('type','password')
+    $(this).addClass('d-none')
+    $(this).prev().removeClass('d-none')
   })
 
   $("#last_name").keyup(function () {
     var last_name = $(this).val()
     if (last_name) {
-      checkName(last_name,"last_name","error_last_name")
       checkDataContact()
+      checkName(last_name,"last_name","error_last_name")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_last_name").html("Please enter last name")
+      $("#error_last_name").html("Last Name must be from 1 to 32 characters.")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -235,9 +282,9 @@ function checkName(input, idinput, idspan) {
 }
 
 function checkPhoneNumber(input, idinput, idspan) {
-  var regex = /^[0-9\-\+]{9,15}$/
+  var regex = /^[0-9\-\+]{9,12}$/
   if (!regex.test(input)) {
-    $("#" + idspan).html("This field is invalid")
+    $("#" + idspan).html("must is valid phone number and maximum number is 12")
     $("#" + idinput).addClass("is-invalid")
     changeBtnSave("btn_save_contact", false)
   } else {

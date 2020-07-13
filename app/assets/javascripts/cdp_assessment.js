@@ -41,7 +41,7 @@ function initCheckbox() {
           data_checked_request[competency_name].push(slot_id);
         checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
         $("#button_request_update").removeClass("disabled");
-        $("#icon_confirm_request").prop("style", "color:green");
+        $("#icon_request_update").prop("style", "color:green");
         $("#button_cancel_request").removeClass("disabled");
         $("#icon_cancel_request").prop("style", "color:green");
       } else {
@@ -54,7 +54,7 @@ function initCheckbox() {
           data_checked_request[competency_name].splice(index, 1);
         if (checked_set.size == 0) {
           $("#button_request_update").addClass("disabled");
-          $("#icon_confirm_request").prop("style", "color: #6c757d")
+          $("#icon_request_update").prop("style", "color: #6c757d")
           $("#button_cancel_request").addClass("disabled");
           $("#icon_cancel_request").prop("style", "color: #6c757d");
         }
@@ -431,20 +431,26 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $("tbody#data_summary").html("");
-        $(response).each(
-          function (i, e) {
-            if (e.status) {
-              $("#input_summary_comment").html(e.comment)
-              $("#id_summary").val(e.id)
+        if(response.length == 0){
+          var tr = $("<tr/>");
+          $("<td colspan='4'/>").html("No data available in table").appendTo(tr)
+          tr.appendTo("tbody#data_summary")
+        }else{
+          $(response).each(
+            function (i, e) {
+              if (e.status) {
+                $("#input_summary_comment").html(e.comment)
+                $("#id_summary").val(e.id)
+              }
+              var tr = $("<tr id='" + e.id + "'/>");
+              $("<td/>").html(e.period).appendTo(tr)
+              $("<td/>").html(e.user_name).appendTo(tr)
+              $("<td/>").html(e.comment_date).appendTo(tr)
+              $("<td/>").html(e.comment).appendTo(tr)
+              tr.appendTo("tbody#data_summary")
             }
-            var tr = $("<tr id='" + e.id + "'/>");
-            $("<td/>").html(e.period).appendTo(tr)
-            $("<td/>").html(e.user_name).appendTo(tr)
-            $("<td/>").html(e.comment_date).appendTo(tr)
-            $("<td/>").html(e.comment).appendTo(tr)
-            tr.appendTo("tbody#data_summary")
-          }
-        )
+          )
+        }
         $('#modal_summary_assessment').modal('show')
       }
     })

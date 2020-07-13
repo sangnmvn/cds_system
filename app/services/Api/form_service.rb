@@ -273,8 +273,9 @@ module Api
       if @privilege_array.include?(REVIEW_CDS)
         forms += Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
       end
+      periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
       forms.map do |form|
-        format_form_cds_review(form)
+        format_form_cds_review(form, user_approve_ids.pluck(:user_id), periods)
       end
     end
 
@@ -1221,7 +1222,7 @@ module Api
       hash
     end
 
-    def format_form_cds_review(form)
+    def format_form_cds_review(form,user_approve_ids, periods)
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
@@ -1236,6 +1237,8 @@ module Api
         review_date: format_long_date(form.review_date),
         status: form.status,
         user_id: form.user&.id,
+        is_approver: (user_approve_ids.include? form.user&.id),
+        is_open_period: (periods.include? form.period_id)
       }
     end
 

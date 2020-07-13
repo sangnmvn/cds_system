@@ -1,4 +1,3 @@
-
 function loadDataAssessment(data_filter) {
   $.ajax({
     type: "POST",
@@ -22,8 +21,8 @@ function loadDataAssessment(data_filter) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
             <td class="type-number">{no}</td> 
-            <td class="type-text"><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>{period}</a></td> 
-            <td class="type-text">{user_name}</td>
+            <td class="type-text">{period}</td> 
+            <td class="type-text"><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}' id='user_name'>{user_name}</a></td>
             <td class="type-text">{project}</td>
             <td class="type-text">{email}</td>
             <td class="type-text">{role}</td> 
@@ -32,17 +31,45 @@ function loadDataAssessment(data_filter) {
             <td class="type-number">{level}</td> 
             <td class="type-text">{submit_date}</td>
             <td class="type-text">{review_date}</td>
-            <td class="type-text">{status}</td> 
+            <td class="type-text" id="status">{status}</td> 
             <td class="type-icon"> 
-              <a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}'>
-                <i class='fa fa-pencil icon' style='color:#fc9803'></i>
+              <a href='/forms/preview_result?form_id={id}'>
+                <i class='far fa-eye icon-list' style='color:#4F94CD'></i>
               </a>
-              &nbsp;
-              <a class='delete-cds' data-id='{id}' data-period-cds='{period}' href='#'>
-                <i class='fa fa-trash icon' style='color:red'></i>
+              &nbsp;`.formatUnicorn({
+          no: i + 1,
+          id: form.id,
+          email: form.email,
+          user_name: form.user_name,
+          project: form.project,
+          review_date: form.review_date,
+          submit_date: form.submit_date,
+          period: form.period_name,
+          role: form.role_name,
+          level: form.level,
+          rank: form.rank,
+          title: form.title,
+          status: form.status,
+          user_id: form.user_id
+        });
+        if (form.is_approver) {
+          if (form.status == "Done" && form.is_open_period) {
+            this_element += `<a class='reject-cds-cdp' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#'>
+          <i class='fas fa-thumbs-down icon-list icon-reject' style='color:blue'></i>
               </a> 
             </td> 
-          </tr>`.formatUnicorn({ no: i + 1, id: form.id, email: form.email, user_name: form.user_name, project: form.project, review_date: form.review_date, submit_date: form.submit_date, period: form.period_name, role: form.role_name, level: form.level, rank: form.rank, title: form.title, status: form.status, user_id: form.user_id });
+          </tr>`
+          }
+          else{
+            this_element += `<a class='reject-cds-cdp disabled' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#'>
+          <i class='fas fa-thumbs-down icon-list icon-reject' style='color:#6c757d'></i>
+              </a> 
+            </td> 
+          </tr>`
+          }
+        } else {
+          this_element += `</td></tr>`
+        }
         temp += this_element;
       };
       $(".table-cds-assessment-manager-list tbody").html(temp);
@@ -116,6 +143,7 @@ function loadDataFilter() {
     }
   });
 }
+
 function apllyFilter() {
   var data = {
     company: $('#company_filter').val().join(),
@@ -226,6 +254,7 @@ function customizeFilter() {
       });
       $('.project-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
     }
+    $(this).closest('tr').find('#user_name').html()
   });
   $(".user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
     max = $('.user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
@@ -279,5 +308,36 @@ $(document).ready(function () {
       period: $("#period_filter").children()[0].value,
     };
     loadDataAssessment(data_filter);
+  });
+  $(document).on("click", ".reject-cds-cdp", function () {
+    user_name = $(this).closest('tr').find('#user_name').html()
+    user_id = $(this).data('userId')
+    form_id = $(this).data('id')
+    $("#content_reject").html("Are you sure you want to reject CDS/CDP assessment of " + user_name + "?");
+    $('#modal_reject_cds').modal('show');
+  })
+  $(document).on("click", "#confirm_yes_reject_cds", function () {
+    $.ajax({
+      type: "POST",
+      url: "/forms/reject_cds",
+      data: {
+        form_id,
+        user_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "success") {
+          success(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
+          $(document).find('#period_id_' + form_id).find(".reject-cds-cdp").addClass('disabled')
+          $(document).find('#period_id_' + form_id).find(".icon-reject").css('color', '##6c757d')
+        } else {
+          fails("Can't rejected CDS/CDP.");
+        }
+      }
+    });
+    $('#modal_reject_cds').modal('hide');
   });
 });

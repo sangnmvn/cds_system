@@ -45,15 +45,39 @@ $color-disable: #afaaaa;
     width: 120px;
     height: 60px;
     clip-path: circle(30px at 50% 50%);
+
     img {
         display: block;
-        max-width:120px;
-        max-height:60px;
+        max-width: 120px;
+        max-height: 60px;
         width: auto;
         height: auto;
     }
 }
 
+/* Chrome, Opera, Safari */
+::-webkit-input-placeholder {
+    font-style: italic;
+    font-size: small;
+}
+
+/* Firefox 19+ */
+::-moz-placeholder {
+    font-style: italic;
+    font-size: small;
+}
+
+/* IE 10+ */
+:-ms-input-placeholder {
+    font-style: italic;
+    font-size: small;
+}
+
+/* Firefox 18- */
+:-moz-placeholder {
+    font-style: italic;
+    font-size: small;
+}
 
 .td-mytd {
     text-align: center;
