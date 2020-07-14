@@ -384,7 +384,7 @@ namespace :cds_system do
         (246, 'Recognized as possessing excellent communication and facilitation skills as well as negotiation skills.', '<p>Kh&ocirc;ng chỉ excellent về communications m&agrave; c&ograve;n l&agrave; excellent về negotiation. C&oacute; thể thương lượng những vấn đề m&agrave; người kh&aacute;c kh&ocirc;ng thể thương lượng nổi</p>', 5, 10, 246, now(), now()),
         (247, 'Demonstrate effective skills in influencing Firm culture.', '<p>Trong qu&aacute; tr&igrave;nh l&agrave;m việc ở c&ocirc;ng ty: C&oacute; kỹ năng v&agrave; ảnh hưởng ở mức độ văn h&oacute;a của tổ chức</p>', 5, 10, 247, now(), now()),
         (248, 'Demonstrate appropriate interpersonal skills required to serve as Executive Sponsor in key client relationships and/or represents BESTARION in strategic business partnerships.', '<p>L&agrave; người đại diện c&ocirc;ng ty để thiết lập v&agrave; duy tr&igrave; mối quan hệ với những kh&aacute;ch h&agrave;ng chủ chốt, quan trọng của c&ocirc;ng ty. Đại diện c&ocirc;ng ty trong c&aacute;c mối quan hệ kinh doanh chiến lược. &ldquo;Kh&ocirc;ng c&oacute; t&ocirc;i th&igrave; kh&ocirc;ng xong&rdquo;</p>', 5, 10, 248, now(), now()),
-        (249, 'Able to improve skill knowledge to adapt yourself to new requirements', '<p>Bằng chứng [bao gồm, kh&ocirc;ng chỉ gồm]:</p><p>Đơn giản nhất l&agrave; ho&agrave;n tất training plan cho newcomer v&agrave; được đ&aacute;nh gi&aacute; tốt [đ&uacute;ng hạn, kết quả kiểm tra tốt chẳng hạn]</p><p>Tham gia c&aacute;c kh&oacute;a huấn luyện của c&ocirc;ng ty v&agrave; thi lần đầu l&agrave; pass ngay</p><p>N&acirc;ng cao tr&igrave;nh độ Anh văn đ&uacute;ng thời điểm như đ&atilde; cam kết với c&ocirc;ng ty</p><p>T&igrave;m hiểu vấn đề mới để giải quyết c&ocirc;ng việc trong d�� &aacute;n đạt đ&uacute;ng ước lượng hợp l&yacute; đ&atilde; đề ra</p>', 1, 11, 249, now(), now()),
+        (249, 'Able to improve skill knowledge to adapt yourself to new requirements', '<p>Bằng chứng [bao gồm, kh&ocirc;ng chỉ gồm]:</p><p>Đơn giản nhất l&agrave; ho&agrave;n tất training plan cho newcomer v&agrave; được đ&aacute;nh gi&aacute; tốt [đ&uacute;ng hạn, kết quả kiểm tra tốt chẳng hạn]</p><p>Tham gia c&aacute;c kh&oacute;a huấn luyện của c&ocirc;ng ty v&agrave; thi lần đầu l&agrave; pass ngay</p><p>N&acirc;ng cao tr&igrave;nh độ Anh văn đ&uacute;ng thời điểm như đ&atilde; cam kết với c&ocirc;ng ty</p><p>T&igrave;m hiểu vấn đề mới để giải quyết c&ocirc;ng việc trong d��� &aacute;n đạt đ&uacute;ng ước lượng hợp l&yacute; đ&atilde; đề ra</p>', 1, 11, 249, now(), now()),
         (250, 'Able to write report if having any request', '<p>Good meeting minutes, c&aacute;c b&aacute;o c&aacute;o về một vấn đề n&agrave;o đ&oacute; khi được y&ecirc;u cầu</p>', 1, 11, 250, now(), now()),
         (251, 'Estimate how much time one has, to allocate it effectively, and to stay within time limits and deadlines.', '<p>Thể hiện ở 2 kh&iacute;a cạnh:</p><p>Với chừng đ&oacute; thời gian c&oacute; được th&igrave; cần ho&agrave;n tất khối lượng c&ocirc;ng việc tương xứng ==&gt; đ&acirc;y l&agrave; thứ cần được hỏi v&agrave; trả lời h&agrave;ng ng&agrave;y: Do I finish a reasonable amount of tasks today? Do the peer / direct manager / customer happy with my achievement? Nếu thời gian đang được sử dụng kh&ocirc;ng hiệu quả do yếu tố kh&aacute;ch quan th&igrave; cần c&oacute; phản hồi với những người c&oacute; li&ecirc;n quan [v&iacute; dụ: suốt ng&agrave;y đi họp m&agrave; lại sử dụng thời gian họp k&eacute;m hiệu quả &hellip;]</p><p>Với chừng đ&oacute; thời gian c&oacute; được th&igrave; kh&ocirc;ng over-commit để rồi kh&ocirc;ng đạt được commitment</p>', 1, 11, 251, now(), now()),
         (252, 'Arrange and finish tasks creatively ', '', 1, 11, 252, now(), now()),
@@ -656,7 +656,7 @@ namespace :cds_system do
         (459, 'Regularly requested by Company or Business Unit leadership and clients for advice and guidance.', '<p>Có khả năng tư vấn, định hướng, dẫn đường cho công ty hoặc khách hàng về: <br />- Chuyên môn kỹ thuật ở vai trò mình nắm giữ, hoặc <br />- Trong những vấn đề liên quan đến hoạt động chung của công ty</p>', 3, 35, 459, now(), now()),
         (460, 'Identify problems, think through potential solutions then communicate and/or escalate appropriately.', "'<p><span style='text-decoration: underline;'><em><strong>Phản ví dụ</strong></em></span>: Khoảng 4:00 PM thấy ứng dụng cho khách h��������������������������������������������ng [bản production] deploy tại www.abc.com bị down và không giải quyết được. 5:30 PM cứ thế đi v����� nhà mà không báo cho cấp trên để giải quyết triệt để</p>'", 1, 36, 460, now(), now()),
         (461, 'Identify and solve simple problems independently (for example: recognizing changes in scope and communicating them).', '<p>Không cần hỏi người khác về giải pháp cho vấn đề [đơn giản] đang gặp phải</p>', 2, 36, 461, now(), now()),
-        (462, 'Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and / or sensitive).', '<p>Đề xuất, hỗ trợ được trong việc giải quyết các vấn đề phức tạp</p>', 2, 36, 462, now(), now()),
+        (462, 'Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and / or sensitive).', '<p>Đề xuất, hỗ trợ được trong việc giải quyết các v��n đề phức tạp</p>', 2, 36, 462, now(), now()),
         (463, 'Lead simple meetings for internal or external clients. Peer and / or next level management are likely to attend these meetings. ', '<p>Bằng chứng thuyết phục là có dính dáng đến khách hàng bên ngoài</p>', 2, 36, 463, now(), now()),
         (464, 'Possess and use good diagnosis / troubleshooting skills.', '', 2, 36, 464, now(), now()),
         (465, 'Identifies and solves complex or sensitive problems (for example: associate performance, project scope issues, and priority changes or resolving multiple conflicting agendas). ', '<p>- Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.<br />- Thế nào là vấn đề phức tạp hoặc nhạy cảm trong phát triển phần mềm?<br />- Yêu cầu của khách hàng phức tạp, logic xử lý phức tạp, giải thuật phức tạp và có đòi hỏi cao về performance, security; đòi hỏi hiểu biết cao để ứng dụng các frameworks sẵn có thay vì phải hiện thực từ đầu; phải xử lý các vấn đề phức tạp đồng thời</p>', 3, 36, 465, now(), now()),
@@ -859,7 +859,7 @@ namespace :cds_system do
         (628, 'AWS Services Monitoring & Auditing', 'Có certificate của khóa học', 4, 50, 94, now(), now()),
         (629, 'Why we need Log aggregator and basic understanding about Log aggregator', 'Nêu những lí do và nhược điểm hiện tại từ đó nói được lí do tại sao cần hệ thống Log tập trung', 1, 51, 95, now(), now()),
         (630, 'Researching stacks for Log aggregator', 'List ra những bộ công cụ hỗ trợ việc xây dựng hệ thống Log tập trung', 1, 51, 96, now(), now()),
-        (631, 'Researching about Cluster architecture, load balance, data balance, scale Logs systems', 'Tìm hiểu và nêu ra được kiến trúc tốt để vận hành hệ thống Log lớn, từ đó có thể tối ưu được những bước bên dưới.', 2, 51, 97, now(), now()),
+        (631, 'Researching about Cluster architecture, load balance, data balance, scale Logs systems', 'Tìm hiểu và nêu ra được kiến trúc tốt đ��� vận hành hệ thống Log lớn, từ đó có thể tối ưu được những bước bên dưới.', 2, 51, 97, now(), now()),
         (632, 'Understanding how client collect and shipping logs data to Master servers', 'Nêu ra được làm sao có thể đưa log từ local lên server chính. Tool nào có thể làm điều đó, và cách thức hoạt động', 2, 51, 98, now(), now()),
         (633, 'Troubleshooting and optimizing cluster systems can run with best performance', 'Hệ thống sẽ scaling liên tục, nên việc có thể tunning liên tục từ nhỏ tới lớn là ok. Chỉ cần có tư duy phải optimize liên tục là đạt mong đợi', 2, 51, 99, now(), now()),
         (634, 'Understanding and setting-up Log aggregator: Elasticsearch, fluentd, kibana', 'Đã cài đặt và vận hành được 1 cụm hoàn chỉnh như trên.', 3, 51, 100, now(), now()),
@@ -1057,7 +1057,7 @@ namespace :cds_system do
         (800, 'Familiar (understand and able to use all standard data types, language features, libraries) with at least one major programming language (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java, etc.)', '<p>Hiểu và có thể sử dụng một ngôn ngữ lập trình ở mức độ căn bản: các kiểu dữ liệu căn bản, các chức năng, thư viện của ngôn ngữ lập trình, kinh nghiệm khoảng 1 năm.</p>', 1, 63, 800, now(), now()),
         (801, 'Ability to work with two scripting languages at a basic level, or with one at advanced level (e.g. bash / shell, Perl, Python, Ruby, VBScript, Powershell).', '<p><strong>Basic</strong>: basic data type, control statements (if/else, loop, switch etc..), work with files<br /><strong>Advanced</strong>: work with network, signal, use/create library, almost everything</p>', 2, 63, 801, now(), now()),
         (802, 'Demonstrate the ability to work well with debugger, profiling tools, review other source code and able to detect defects and explain techniques to fix defects.', '<p>- Thường sử dụng debugger, profiling tool<br />- Thường reivew source code của người khác, hướng dẫn họ fix bug / implement features</p>', 2, 63, 802, now(), now()),
-        (803, 'Work effectively with Regular Expression.', '<p>Có thể sử dụng regex trong hầu hết các trường hợp, có thể train cho người khác. Sử dụng regex không chỉ trong lập trình, mà còn s����� d����ng trong tool (search files, thay thế text ….)</p>', 2, 63, 803, now(), now()),
+        (803, 'Work effectively with Regular Expression.', '<p>Có thể sử dụng regex trong hầu hết các trường hợp, có thể train cho người khác. Sử dụng regex không chỉ trong lập trình, mà còn s��� d��ng trong tool (search files, thay thế text ….)</p>', 2, 63, 803, now(), now()),
         (804, 'Proficiency in one and familiar with another major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java etc.)', '<p><strong>Proficiency</strong>: hiểu và làm việc tốt với những thứ căn bản, và một số thứ nâng cao, không cần ai hướng dẫn, khi gặp vấn đề khó có thể tự tìm cách giải quyết (google chẳng hạn)<br />Có bằng chứng giúp đỡ người khác giải quyết vấn đề kỹ thuật hoặc training<br />(Đã tham gia làm dev / lead của dự án liên quan đến Ruby ít nhất 6 tháng --&gt; tính là proficient Ruby, tương tự cho các ngôn ngữ khác)<br />Fresher thì cần ít nhất 2 năm để có thể gọi là proficiency. Còn với middle cần ít nhất 6 tháng. Không bắt bược phải là ngôn ngữ lập trình chính như là ruby, có thể là Golang, React,…</p>', 2, 63, 804, now(), now()),
         (805, 'The ability to design good queries, can detect performance issues, N + 1 problem, proficiency in analyze and give advice on how to optimize it.', '<p>Apply phần nâng cao của ngôn ngữ database để detect issues, improve performance, optimize query</p>', 2, 63, 805, now(), now()),
         (806, 'Very good in administration, performance optimization and query/index optimization for databases (SQL and NoSQL) or search engine', '<p>- Có bằng chứng cài đặt, cấu hình bảo mật cho database<br />- Đã làm những việc liên quan đến optimize database performance: benchmark, analyze, performance tunning<br />- Đã viết những câu query phức tạp, tương tác với khối lượng dữ liệu lớn, nhiều nguồn dữ liệu khác nhau nhưng tốc độ chạy tốt<br />- Viết index có performance tốt<br />- Cài đặt, cấu hình, sử dụng các search engine như Solr, Elastic search. Có thể viết được hầu hết các dạng query khác nhau.</p>', 3, 63, 806, now(), now()),
@@ -1203,7 +1203,7 @@ namespace :cds_system do
         (896, 'Successfully complete tasks and assignments independently and supervise the work of others as requested.', '<p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục:</p><p>Khi được giao việc thì hoàn tất được công việc một cách độc lập, không cần có sự chỉ dẫn về cách làm, và</p><p>Có thể hướng dẫn, hỗ trợ, giám sát người khác [vài người] hoàn tất công việc</p><p>Supervision phải thể hiện ở mức độ:<br />+ Giúp đỡ MA / Technical khác cách thực hiện, chứ không phải làm thay<br />+ Suppervision phải tương đối dài hạn [từ ít nhất 6 tháng]<br />+ Supervised phải tương đối thành công</p>', 3, 69, 896, now(), now()),
         (897, 'Regularly requested by Company or Business Unit leadership and clients for advice and guidance.', '<p>Có khả năng tư vấn, định hướng, dẫn đường cho công ty và khách hàng về Chuyên môn kỹ thuật ở vai trò mình nắm giữ, hoặc</p><p>Trong những vấn đề liên quan đến hoạt động chung của công ty</p><p>Có thể mở rộng được những hướng phát triển của công ty (ở góc độ xử lý big data)</p>', 3, 69, 897, now(), now()),
         (898, 'Identify problems, think through potential solutions then communicate and/or escalate appropriately.', '<p><strong>Biết nhận diện vấn đề:</strong><br />Biết được thế nào là một Problem, khi sự việc diễn ra phải biết được có Problem trong đó hay không.</p><p><strong>Có tìm giải pháp để giải quyết vấn đề:</strong><br />Cố gắng tìm ra solution, sau đó thông báo cách giải quyết hoặc nếu không giải quyết được thì cũng vẫn phải thông báo để người khác giải quyết thay mình.</p><p>Khi báo vấn đề lên c��p trên phải biết báo đúng người đúng việc.</p><p>Ghi chú: bản thân có thể không giải quyết được vấn đề nhưng biết nhận diện và raise lên vấn đề mà mình hoặc người khác gặp phải</p>', 1, 70, 898, now(), now()),
-        (899, 'Identify and solve simple problems independently (for example: recognizing changes in scope and communicating them).', '<p><strong>Biết nhận diện vấn đề:</strong><br />- Biết được thế nào là một Problem, khi sự việc diễn ra phải biết được có Problem trong đó hay không. <br />- Biết được những vấn đề nào bản thân có th��� tự gi��i quy����t, những vấn đề nào cần xin ý kiến/phê duyệt của cấp trên</p><p><strong>Tìm giải pháp và giải quyết vấn đề:</strong><br />Tìm ra solution và tự giải quyết vấn đề<br />Phản VD: giải quyết vấn đề nhưng làm phát sinh vấn đề mới, gây hậu quả nghiêm trọng</p><p><strong>Đánh giá kết quả thực hiện:</strong><br />Đánh gi�� kết quả thực hiện và rút ra bài học cho mình và cho người khác</p>', 2, 70, 899, now(), now()),
+        (899, 'Identify and solve simple problems independently (for example: recognizing changes in scope and communicating them).', '<p><strong>Biết nhận diện vấn đề:</strong><br />- Biết được thế nào là một Problem, khi sự việc diễn ra phải biết được có Problem trong đó hay không. <br />- Biết được những vấn đề nào bản thân có thể tự giải quyết, những vấn đề nào cần xin ý kiến/phê duyệt của cấp trên</p><p><strong>Tìm giải pháp và giải quyết vấn đề:</strong><br />Tìm ra solution và tự giải quyết vấn đề<br />Phản VD: giải quyết vấn đề nhưng làm phát sinh vấn đề mới, gây hậu quả nghiêm trọng</p><p><strong>Đánh giá kết quả thực hiện:</strong><br />Đánh gi�� kết quả thực hiện và rút ra bài học cho mình và cho người khác</p>', 2, 70, 899, now(), now()),
         (900, 'Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and/or sensitive).', '<p>Đề xuất/hỗ trợ/tham gia trong việc giải quyết các vấn đề phức tạp và mang lại hiệu quả cao</p><p><strong>Vấn đề phức tạp:</strong> <br />- Các issue/bug đặc biệt nghiêm trọng ảnh hưởng đến doanh thu/chi phí/uy tín/deadline của dự án/công ty/khách hàng<br />- Cải tiến các quy trình ở mức độ dự án<br />- Tìm ra phương thức thực hiện hiệu quả các đầu task khó/mới/phức tạp, task mà khách hàng đặc biệt quan tâm<br />- Vấn đề phức tạp phải có kết quả để so sánh tính hiệu quả</p>', 2, 70, 900, now(), now()),
         (901, 'Peer and/or next level management are likely to attend these meetings. ', '<p>Có khả năng chủ trì hiệu quả các buổi họp:<br />- Với những người cùng cấp<br />- Với cấp quản lý cao hơn<br />- Với khách hàng hoặc các stakeholder ngoài dự án liên quan đến các vấn đề trong dự án</p><p>Có khả chủ trì nhiều loại meeting</p><p><strong>Các buổi họp hiệu quả:</strong><br />- Phải đạt được mục tiêu đề ra trước buổi họp<br />- Control được nội dung buổi họp (không để buổi họp đi lan man lạc đề, làm tốn thời gian)<br />- Sử dụng hiệu quả thời gian họp<br />- Khi có Action Items thì follow up cho đến khi có kết quả theo deadline của từng Action Items</p>', 2, 70, 901, now(), now()),
         (902, 'Possess and use good diagnosis/troubleshooting skills.', '<p>Sở hữu những kỹ năng / công cụ (có thể là những chiêu trò) đặc biệt nằm ngoài những thứ Standard của dự án để tìm ra vấn đề / giải quyết vấn đề một cách nhanh chóng, hiệu quả.</p><p>Khi được distribute vấn đề mới / vấn đề quan trọng:<br />- Nhìn thấy/dự đoán các rủi ro phát sinh từ việc thực hiện hoặc từ vấn đề khác có liên quan<br />- Đưa ra giải pháp/cách thực hiện hiệu quả và được cấp quản lý công nhận</p>', 2, 70, 902, now(), now()),
@@ -1805,57 +1805,15 @@ namespace :cds_system do
         (131, 32, 3, 5, 'All', 7, now(), now());
     SQL
 
-    sql_title_mapping = <<-SQL
-      insert into title_mappings(id, updated_by, title_id, competency_id, value, created_at, updated_at) values
-        (242, 1, 27, 57, 1, now(), now()),
-        (243, 1, 27, 58, 1, now(), now()),
-        (244, 1, 27, 59, 1, now(), now()),
-        (245, 1, 27, 60, 1, now(), now()),
-        (246, 1, 27, 61, 1, now(), now()),
-        (247, 1, 27, 62, 1, now(), now()),
-        (248, 1, 27, 63, 1, now(), now()),
-        (249, 1, 28, 57, 100, now(), now()),
-        (250, 1, 28, 58, 101, now(), now()),
-        (251, 1, 28, 59, 101, now(), now()),
-        (252, 1, 28, 60, 100, now(), now()),
-        (253, 1, 28, 61, 100, now(), now()),
-        (254, 1, 28, 62, 100, now(), now()),
-        (255, 1, 28, 63, 100, now(), now()),
-        (256, 1, 29, 57, 199, now(), now()),
-        (257, 1, 29, 58, 199, now(), now()),
-        (258, 1, 29, 59, 201, now(), now()),
-        (259, 1, 29, 60, 199, now(), now()),
-        (260, 1, 29, 61, 200, now(), now()),
-        (261, 1, 29, 62, 200, now(), now()),
-        (262, 1, 29, 63, 200, now(), now()),
-        (263, 1, 30, 57, 200, now(), now()),
-        (264, 1, 30, 58, 200, now(), now()),
-        (265, 1, 30, 59, 300, now(), now()),
-        (266, 1, 30, 60, 201, now(), now()),
-        (267, 1, 30, 61, 299, now(), now()),
-        (268, 1, 30, 62, 299, now(), now()),
-        (269, 1, 30, 63, 299, now(), now()),
-        (270, 1, 31, 57, 201, now(), now()),
-        (271, 1, 31, 58, 300, now(), now()),
-        (272, 1, 31, 59, 301, now(), now()),
-        (273, 1, 31, 60, 299, now(), now()),
-        (274, 1, 31, 61, 300, now(), now()),
-        (275, 1, 31, 62, 300, now(), now()),
-        (276, 1, 31, 63, 300, now(), now()),
-        (277, 1, 32, 57, 299, now(), now()),
-        (278, 1, 32, 58, 301, now(), now()),
-        (279, 1, 32, 59, 399, now(), now()),
-        (280, 1, 32, 60, 301, now(), now()),
-        (281, 1, 32, 61, 400, now(), now()),
-        (282, 1, 32, 62, 400, now(), now()),
-        (283, 1, 32, 63, 400, now(), now()),
-        (284, 1, 33, 57, 300, now(), now()),
-        (285, 1, 33, 58, 400, now(), now()),
-        (286, 1, 33, 59, 500, now(), now()),
-        (287, 1, 33, 60, 400, now(), now()),
-        (288, 1, 33, 61, 400, now(), now()),
-        (289, 1, 33, 62, 400, now(), now()),
-        (290, 1, 33, 63, 400, now(), now());
+    sql_ma = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (33, 'Associate Medical Analyst', '', 1, 8, true),
+        (34, 'Medical Analyst', '', 2, 8, true),
+        (35, 'Senior Medical Analyst', '', 3, 8, true),
+        (36, 'Associate Medical Analyst Manager', '', 4, 8, true),
+        (37, 'Medical Analyst Manager', '', 5, 8, true),
+        (38, 'Senior Medical Analyst Manager', '', 6, 8, true),
+        (39, 'Director of Delivery', '', 7, 8, true);
     SQL
     connection
     ActiveRecord::Base.connection.execute(sql_title)
@@ -1947,85 +1905,362 @@ namespace :cds_system do
     ActiveRecord::Base.connection.execute(sql_title_mapping)
   end
 
-  desc "insert data title for ts"
-  task :migrate_data_title_ts do
+  desc "insert data level mapping for dev"
+  task :migrate_data_level_mapping_dev do
     sql_title = <<-SQL
-      insert into titles(id, name, `desc`, rank, role_id, status) values 
-        (41, 'Associate Technical Support', '', 1, 9, true),
-        (42, 'Technical Support', '', 2, 9, true),
-        (43, 'Senior Technical Support', '', 3, 9, true),
-        (44, 'Associate Technical Support Manager', '', 4, 9, true),
-        (45, 'Technical Support Manager', '', 5, 9, true),
-        (46, 'Senior Technical Support Manager', '', 6, 9, true),
-        (47, 'Director of Technology', '', 7, 9, true);
-    SQL
-    sql_level_mapping = <<-SQL
-      insert into level_mappings(id, title_id, level, quantity, competency_type, rank_number, created_at, updated_at) values
-        (156, 33, 1, 5, 'All', 1, now(), now()),
-        (157, 33, 2, 3, 'All', 2, now(), now()),
-        (158, 34, 1, 5, 'All', 2, now(), now()),
-        (159, 34, 2, 1, 'All', 3, now(), now()),
-        (160, 34, 3, 2, 'All', 3, now(), now()),
-        (161, 34, 4, 3, 'All', 3, now(), now()),
-        (162, 34, 5, 4, 'All', 3, now(), now()),
-        (163, 35, 1, 5, 'All', 3, now(), now()),
-        (164, 35, 2, 1, 'All', 4, now(), now()),
-        (165, 35, 3, 2, 'All', 4, now(), now()),
-        (166, 35, 4, 3, 'All', 4, now(), now()),
-        (167, 35, 5, 4, 'All', 4, now(), now()),
-        (168, 36, 1, 5, 'All', 4, now(), now()),
-        (169, 36, 2, 2, 'All', 5, now(), now()),
-        (170, 36, 3, 4, 'All', 5, now(), now()),
-        (171, 37, 1, 5, 'All', 5, now(), now()),
-        (172, 37, 2, 2, 'All', 6, now(), now()),
-        (173, 37, 3, 4, 'All', 6, now(), now()),
-        (174, 38, 1, 5, 'All', 6, now(), now()),
-        (175, 38, 2, 2, 'All', 7, now(), now()),
-        (176, 38, 3, 4, 'All', 7, now(), now()),
-        (177, 39, 1, 5, 'All', 7, now(), now());
+    insert into titles(id, name, `desc`, rank, role_id, status) values 
+      (1, 'Associate Developer', '', 1, 1, true),
+      (2, 'Developer', '', 2, 1, true),
+      (3, 'Senior Developer', '', 3, 1, true),
+      (4, 'Associate Solution Architect', '', 4, 1, true),
+      (6, 'Senior Solution Architect', '', 6, 1, true),
+      (5, 'Solution Architect', '', 5, 1, true),
+      (7, 'Director of Technology', '', 7, 1, true);
     SQL
 
-    sql_title_mapping = <<-SQL
-    insert into title_mappings(id, updated_by, title_id, competency_id, value, created_at, updated_at) values
-      (326, 1, 41, 70, 1, now(), now()),
-      (327, 1, 41, 71, 1, now(), now()),
-      (328, 1, 41, 72, 1, now(), now()),
-      (329, 1, 41, 73, 1, now(), now()),
-      (330, 1, 42, 69, 100, now(), now()),
-      (331, 1, 42, 70, 101, now(), now()),
-      (332, 1, 42, 71, 101, now(), now()),
-      (333, 1, 42, 72, 101, now(), now()),
-      (334, 1, 42, 73, 100, now(), now()),
-      (335, 1, 43, 69, 200, now(), now()),
-      (336, 1, 43, 70, 200, now(), now()),
-      (337, 1, 43, 71, 200, now(), now()),
-      (338, 1, 43, 72, 201, now(), now()),
-      (339, 1, 43, 73, 200, now(), now()),
-      (340, 1, 44, 69, 200, now(), now()),
-      (341, 1, 44, 70, 200, now(), now()),
-      (342, 1, 44, 71, 200, now(), now()),
-      (343, 1, 44, 72, 301, now(), now()),
-      (344, 1, 44, 73, 300, now(), now()),
-      (345, 1, 45, 69, 201, now(), now()),
-      (346, 1, 45, 70, 300, now(), now()),
-      (347, 1, 45, 71, 300, now(), now()),
-      (348, 1, 45, 72, 400, now(), now()),
-      (349, 1, 45, 73, 301, now(), now()),
-      (350, 1, 46, 69, 300, now(), now()),
-      (351, 1, 46, 70, 301, now(), now()),
-      (352, 1, 46, 71, 301, now(), now()),
-      (353, 1, 46, 72, 401, now(), now()),
-      (354, 1, 46, 73, 400, now(), now()),
-      (355, 1, 47, 69, 300, now(), now()),
-      (356, 1, 47, 70, 400, now(), now()),
-      (357, 1, 47, 71, 400, now(), now()),
-      (358, 1, 47, 72, 500, now(), now()),
-      (359, 1, 47, 73, 400, now(), now());
+    sql_level_mapping = <<-SQL
+    insert into (id, title_id, level, quanity, competency_type, rank_number) values
+      (1, 1, 1, 7, 'All', 1),
+      (2, 1, 2, 4, 'All', 2),
+      (3, 2, 1, 7, 'All', 2),
+      (4, 2, 2, 2, 'All', 3),
+      (5, 2, 3, 4, 'All', 3),
+      (6, 2, 4, 5, 'All', 3),
+      (7, 2, 5, 6, 'All', 3),
+      (8, 3, 1, 7, 'All', 3),
+      (9, 3, 2, 2, 'All', 4),
+      (10, 3, 3, 4, 'All', 4),
+      (11, 3, 5, 5, 'All', 4),
+      (12, 3, 6, 6, 'All', 4),
+      (13, 4, 1, 7, 'All', 4),
+      (14, 4, 2, 4, 'All', 5),
+      (15, 4, 3, 6, 'All', 5),
+      (16, 5, 1, 7, 'All', 5),
+      (17, 5, 2, 3, 'All', 6),
+      (18, 5, 3, 5, 'All', 6),
+      (19, 6, 1, 7, 'All', 6),
+      (20, 6, 2, 5, 'All', 7),
+      (21, 6, 3, 6, 'All', 7),
+      (22, 7, 1, 7, 'All', 7);
     SQL
 
     connection
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
-    ActiveRecord::Base.connection.execute(sql_title_mapping)
+  end
+
+  desc "insert data level mapping for ba"
+  task :migrate_data_level_mapping_ba do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (8, 'Associate Business Analyst', '', 1, 2, true),
+        (9, 'Business Analyst', '', 2, 2, true),
+        (10, 'Senior Business Analyst', '', 3, 2, true),
+        (11, 'Business Analyst Manager', '', 4, 2, true);
+    SQL
+
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (23, 8, 1, 4, 'General', 1),
+        (24, 8, 1, 5, 'Specialized', 1),
+        (25, 8, 2, 1, 'General', 2),
+        (26, 8, 2, 1, 'Specialized', 2),
+        (27, 8, 3, 2, 'General', 2),
+        (28, 8, 3, 2, 'Specialized', 2),
+        (29, 8, 4, 3, 'General', 2),
+        (30, 8, 4, 4, 'Specialized', 2),
+        (31, 9, 1, 4, 'General', 2),
+        (32, 9, 1, 5, 'Specialized', 2),
+        (33, 9, 2, 1, 'General', 3),
+        (34, 9, 2, 1, 'Specialized', 3),
+        (35, 9, 3, 2, 'General', 3),
+        (36, 9, 3, 2, 'Specialized', 3),
+        (37, 9, 4, 3, 'General', 3),
+        (38, 9, 4, 4, 'Specialized', 3),
+        (39, 10, 1, 4, 'General', 3),
+        (40, 10, 1, 5, 'Specialized', 3),
+        (41, 10, 2, 1, 'All', 4),
+        (42, 10, 3, 2, 'All', 4),
+        (43, 10, 4, 3, 'All', 4),
+        (44, 10, 5, 4, 'All', 4),
+        (45, 11, 1, 4, 'General', 4),
+        (46, 11, 1, 5, 'Specialized', 4);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for qc"
+  task :migrate_data_level_mapping_qc do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (12, 'Associate Quality Control', '', 1, 3, true),
+        (13, 'Quality Control', '', 2, 3, true),
+        (14, 'Senior Quality Control', '', 3, 3, true),
+        (15, 'Senior Quality Control', '', 4, 3, false);
+    SQL
+
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (47, 12, 1, 10, 'All', 1),
+        (48, 12, 2, 5, 'All', 2),
+        (49, 13, 1, 10, 'All', 2),
+        (50, 13, 2, 2, 'All', 3),
+        (51, 13, 3, 4, 'All', 3),
+        (52, 13, 4, 6, 'All', 3),
+        (53, 13, 5, 8, 'All', 3),
+        (54, 14, 1, 10, 'All', 3),
+        (55, 14, 2, 4, 'General', 4),
+        (56, 14, 2, 3, 'Specialized', 4),
+        (57, 14, 3, 6, 'Specialized', 4);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for pm"
+  task :migrate_data_level_mapping_pm do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (16, 'Associate Project Manager', '', 1, 4, true),
+        (17, 'Project Manager', '', 2, 4, true),
+        (18, 'Senior Project Manager', '', 3, 4, true);
+    SQL
+
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (58, 16, 1, 2, 'General', 1),
+        (59, 16, 1, 4, 'Specialized', 1),
+        (60, 16, 2, 5, 'Specialized', 1),
+        (61, 16, 3, 1, 'Specialized', 2),
+        (62, 16, 4, 2, 'Specialized', 2),
+        (63, 17, 1, 3, 'General', 1),
+        (64, 17, 1, 3, 'Specialized', 2),
+        (65, 17, 2, 2, 'General', 2),
+        (66, 17, 2, 4, 'Specialized', 2),
+        (67, 17, 3, 5, 'Specialized', 2),
+        (68, 18, 1, 3, 'General', 2),
+        (69, 18, 1, 1, 'Specialized', 3),
+        (70, 18, 2, 2, 'General', 3),
+        (71, 18, 2, 2, 'Specialized', 3),
+        (72, 18, 3, 3, 'Specialized', 3),
+        (73, 18, 4, 4, 'Specialized', 3),
+        (74, 18, 5, 5, 'Specialized', 3),
+        (75, 18, 6, 3, 'General', 3);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for sm"
+  task :migrate_data_level_mapping_sm do
+    sql_sm = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (19, 'Associate Scrum Master', '', 1, 5, true),
+        (20, 'Scrum Master', '', 2, 5, true),
+        (21, 'Senior Scrum Master', '', 3, 5, true);
+    SQL
+
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (76, 19, 1, 4, 'General', 1),
+        (77, 19, 1, 4, 'Specialized', 1),
+        (78, 19, 2, 5, 'Specialized', 1),
+        (79, 19, 3, 1, 'Specialized', 2),
+        (80, 19, 4, 2, 'Specialized', 2),
+        (81, 20, 1, 3, 'Specialized', 2),
+        (82, 20, 2, 3, 'General', 2),
+        (83, 20, 2, 4, 'Specialized', 2),
+        (84, 20, 3, 5, 'Specialized', 2),
+        (85, 21, 1, 4, 'General', 2),
+        (86, 21, 1, 1, 'Specialized', 3),
+        (87, 21, 2, 4, 'General', 3),
+        (88, 21, 2, 2, 'Specialized', 3),
+        (89, 21, 3, 3, 'Specialized', 3),
+        (90, 21, 4, 4, 'Specialized', 3),
+        (91, 21, 5, 5, 'Specialized', 3);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for devops"
+  task :migrate_data_level_mapping_devops do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (22, 'Associate SysOps', '', 1, 6, true),
+        (23, 'SysOps Engineer', '', 2, 6, true),
+        (24, 'DevOps Engineer', '', 3, 6, true),
+        (25, 'Cloud Solutions Architect', '', 4, 6, true),
+        (26, 'Senior Cloud Solutions Architect', '', 5, 6, true);
+    SQL
+
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (91, 22, 1, 11, 'All', 1),
+        (92, 22, 2, 6, 'All', 2),
+        (93, 23, 1, 11, 'All', 2),
+        (94, 23, 2, 4, 'All', 3),
+        (95, 23, 3, 6, 'All', 3),
+        (96, 23, 4, 8, 'All', 3),
+        (97, 23, 5, 10, 'All', 3),
+        (98, 24, 1, 11, 'All', 3),
+        (99, 24, 2, 4, 'All', 4),
+        (100, 24, 3, 6, 'All', 4),
+        (101, 24, 4, 8, 'All', 4),
+        (102, 24, 5, 10, 'All', 4),
+        (103, 25, 1, 13, 'All', 4),
+        (104, 25, 2, 2, 'All', 5),
+        (105, 25, 3, 4, 'All', 5),
+        (106, 26, 1, 6, 'All', 5),
+        (107, 26, 2, 8, 'All', 5),
+        (108, 26, 3, 10, 'All', 5),
+        (109, 26, 4, 13, 'All', 5);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for oe"
+  task :migrate_data_level_mapping_oe do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (27, 'Associate Operations Engineer', '', 1, 7, true),
+        (28, 'Operations Engineer', '', 2, 7, true),
+        (29, 'Senior Operations Engineer', '', 3, 7, true),
+        (30, 'Associate Operations Solution Architect', '', 4, 7, true),
+        (31, 'Operations Solution Architect', '', 5, 7, true),
+        (32, 'Senior Operations Solution Architect', '', 6, 7, true);
+    SQL
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (109, 27, 1, 7, 'All', 1),
+        (110, 27, 2, 4, 'All', 2),
+        (111, 28, 1, 7, 'All', 2),
+        (112, 28, 2, 2, 'All', 3),
+        (113, 28, 3, 4, 'All', 3),
+        (114, 28, 4, 5, 'All', 3),
+        (115, 28, 5, 6, 'All', 3),
+        (116, 29, 1, 7, 'All', 3),
+        (117, 29, 2, 2, 'All', 4),
+        (118, 29, 3, 4, 'All', 4),
+        (119, 29, 4, 5, 'All', 4),
+        (120, 29, 5, 6, 'All', 4),
+        (121, 30, 1, 7, 'All', 4),
+        (122, 30, 2, 4, 'All', 5),
+        (123, 30, 3, 6, 'All', 5),
+        (124, 31, 1, 7, 'All', 5),
+        (125, 31, 2, 3, 'All', 6),
+        (126, 31, 3, 5, 'All', 6),
+        (127, 32, 1, 7, 'All', 6),
+        (128, 32, 2, 5, 'All', 7),
+        (129, 32, 3, 5, 'All', 7);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for ma"
+  task :migrate_data_level_mapping_ma do
+    sql_title = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (33, 'Associate Medical Analyst', '', 1, 8, true),
+        (34, 'Medical Analyst', '', 2, 8, true),
+        (35, 'Senior Medical Analyst', '', 3, 8, true),
+        (36, 'Associate Medical Analyst Manager', '', 4, 8, true),
+        (37, 'Medical Analyst Manager', '', 5, 8, true),
+        (38, 'Senior Medical Analyst Manager', '', , 8, true),
+        (39, 'Director of Delivery', '', 7, 8, true);
+    SQL
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (130, 33, 1, 5, 'All', 1),
+        (131, 33, 2, 2, 'All', 2),
+        (132, 33, 3, 3, 'All', 2),
+        (133, 33, 4, 4, 'All', 2),
+        (134, 34, 1, 5, 'All', 2),
+        (135, 34, 2, 1, 'All', 3),
+        (136, 34, 3, 2, 'All', 3),
+        (137, 34, 4, 3, 'All', 3),
+        (138, 34, 5, 4, 'All', 3),
+        (139, 35, 1, 5, 'All', 3),
+        (140, 35, 2, 1, 'All', 4),
+        (141, 35, 3, 2, 'All', 4),
+        (142, 35, 4, 3, 'All', 4),
+        (143, 35, 5, 4, 'All', 4),
+        (144, 36, 1, 5, 'All', 4),
+        (145, 36, 2, 2, 'All', 5),
+        (146, 36, 3, 4, 'All', 5),
+        (147, 37, 1, 5, 'All', 5),
+        (148, 37, 2, 2, 'All', 6),
+        (149, 37, 3, 4, 'All', 6),
+        (150, 38, 1, 5, 'All', 6),
+        (151, 38, 2, 2, 'All', 7),
+        (152, 38, 3, 4, 'All', 7),
+        (153, 39, 1, 5, 'All', 7),
+        (154, 39, 2, 5, 'All', 7),
+        (155, 39, 3, 5, 'All', 7);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
+  end
+
+  desc "insert data level mapping for ma"
+  task :migrate_data_level_mapping_ma do
+    sql_ts = <<-SQL
+      insert into titles(id, name, `desc`, rank, role_id, status) values 
+        (40, 'Associate Technical Support', '', 1, 9, true),
+        (41, 'Technical Support', '', 2, 9, true),
+        (42, 'Senior Technical Support', '', 3, 9, true),
+        (43, 'Associate Technical Support Manager', '', 4, 9, true),
+        (44, 'Technical Support Manager', '', 5, 9, true),
+        (45, 'Senior Technical Support Manager', '', 6, 9, true),
+        (46, 'Director of Technology', '', 7, 9, true);
+    SQL
+    sql_level_mapping = <<-SQL
+      insert into (id, title_id, level, quanity, competency_type, rank_number) values
+        (156, 33, 1, 5, 'All', 1),
+        (157, 33, 2, 3, 'All', 2),
+        (158, 34, 1, 5, 'All', 2),
+        (159, 34, 2, 1, 'All', 3),
+        (160, 34, 3, 2, 'All', 3),
+        (161, 34, 4, 3, 'All', 3),
+        (162, 34, 5, 4, 'All', 3),
+        (163, 35, 1, 5, 'All', 3),
+        (164, 35, 2, 1, 'All', 4),
+        (165, 35, 3, 2, 'All', 4),
+        (166, 35, 4, 3, 'All', 4),
+        (167, 35, 5, 4, 'All', 4),
+        (168, 36, 1, 5, 'All', 4),
+        (169, 36, 2, 2, 'All', 5),
+        (170, 36, 3, 4, 'All', 5),
+        (171, 37, 1, 5, 'All', 5),
+        (172, 37, 2, 2, 'All', 6),
+        (173, 37, 3, 4, 'All', 6),
+        (174, 38, 1, 5, 'All', 6),
+        (175, 38, 2, 2, 'All', 7),
+        (176, 38, 3, 4, 'All', 7),
+        (177, 39, 1, 5, 'All', 7),
+        (178, 39, 2, 5, 'All', 7),
+        (179, 39, 3, 5, 'All', 7);
+    SQL
+
+    connection
+    ActiveRecord::Base.connection.execute(sql_title)
+    ActiveRecord::Base.connection.execute(sql_level_mapping)
   end
 end
