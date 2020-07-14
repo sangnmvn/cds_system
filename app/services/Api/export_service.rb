@@ -186,6 +186,10 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
+      all_keys = first.keys & second.keys
+      first.select! { |k, v| all_keys.include?(k) }
+      second.select! { |k, v| all_keys.include?(k) }
+
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
       h_previous_period = {}
