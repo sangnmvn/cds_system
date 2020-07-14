@@ -39,9 +39,8 @@
                 <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
                 &nbsp; <%= @current_user.date_of_birth ? @current_user.date_of_birth.to_s(:long) : "N/A" %>
               </div>
-              <div class="text-contact-left" id="p_CMND">
-                <i class="far fa-id-card" style="color:black" title="Identity Card No"></i>
-                &nbsp; <%= @current_user.identity_card_no ? @current_user.identity_card_no : "N/A" %>
+              <div class="text-contact-left">
+                <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
               </div>
             </div>
             <div class="col-4">
@@ -57,11 +56,6 @@
                 <i class="fab fa-skype" style="color:black" title="Skype ID"></i>
                 &nbsp; <%= @current_user.skype ? @current_user.skype : "N/A" %>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-3 link-bottom">
-              <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
             </div>
           </div>
         </div>

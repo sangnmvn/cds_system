@@ -5,12 +5,13 @@ class UsersController < ApplicationController
   before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-
+  FULL_ACCESS = 1
+  VIEW_ACCESS = 2
   def get_user_data
     filter = {
       is_delete: false,
     }
-    unless @privilege_array.include?(1)
+    unless @privilege_array.include?(FULL_ACCESS)
       project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
       user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
       filter[:id] = user_ids
@@ -281,7 +282,7 @@ class UsersController < ApplicationController
   end
 
   def redirect_to_index
-    redirect_to index2_users_path unless (@privilege_array.include?(1) || @privilege_array.include?(2))
+    redirect_to index2_users_path unless (@privilege_array.include?(FULL_ACCESS) || @privilege_array.include?(VIEW_ACCESS))
   end
 
   def set_user
@@ -300,7 +301,7 @@ class UsersController < ApplicationController
     params[:filter_project] = params["filter-project"]
     params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
-                  :date_of_birth, :identity_card_no, :gender, :skype, :nationality, :permanent_address, :current_address,
+                  :date_of_birth, :gender, :skype, :nationality, :permanent_address, :current_address,
                   :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url)
   end
 

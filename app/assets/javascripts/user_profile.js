@@ -38,7 +38,6 @@ $(document).ready(function () {
       last_name: $("#last_name").val(),
       phone_number: $("#phone_number").val(),
       date_of_birth: $("#birthday").val(),
-      identity_card_no: $("#identity_card_no").val(),
       gender: $("#gender").val(),
       skype: $("#skype").val(),
       nationality: $("#nationality").val(),
@@ -82,9 +81,10 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (response) {
-          if (response == "success") {
+          if (response.status == "success") {
             success("Password have been changed successfully!")
             $("#modal_change_password").modal("hide")
+            setTimeout(location.reload.bind(location), 1000);
           } else if (response.status == "Uncorrect") {
             changeClassStatus($("#old_pass"))
             $("#error_old_pass").html("Please enter correct password!")
@@ -163,10 +163,10 @@ $(document).ready(function () {
   $("#birthday").change(function () {
       checkDataContact()
   })
-  $("#skype").keyup(function () {
+  $("#gender").change(function () {
     checkDataContact()
-  })
-  $("#identity_card_no").keyup(function () {
+})
+  $("#skype").keyup(function () {
     checkDataContact()
   })
 
