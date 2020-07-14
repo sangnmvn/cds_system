@@ -14,6 +14,20 @@ module Api
       @params = params
     end
 
+    def set_up_sheet_view(workbook)
+      # create sheet
+      sheet = workbook.add_worksheet(:name => "No Change List")
+      #sheet.sheet_view.zoom_scale = ZOOM_SCALE
+      sheet.page_setup.set(:paper_width => "297mm", :paper_height => "210mm", paper_size: 10)
+      # setup page in a block
+      sheet.page_setup do |page|
+        page.scale = 80
+        page.orientation = :landscape
+      end
+      sheet.page_setup.set(fit_to_width: 1)
+      sheet
+    end
+
     def repack_zip_if_multiple(file_names, zip_file_name = nil)
       # - Turn files into zip if multiple files
       # Caution: DELETE all file if ZIP is applied
@@ -113,11 +127,16 @@ module Api
       end
       results = {}
       companies_id = @params[:company_id]
-      h_companies = if companies_id == "All"
-          Company.pluck([:id, :name]).to_h
-        else
-          Company.where(id: companies_id).pluck([:id, :name]).to_h
-        end
+      if companies_id == "All"
+        companies = Company.all
+      else
+        companies = Company.where(id: companies_id)
+      end
+
+      h_companies = {}
+      companies.map do |company|
+        h_companies[company.id] = company.format_excel_name
+      end
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
@@ -136,7 +155,7 @@ module Api
           }
         end
         results[company_id][:users] << {
-          full_name: title&.user&.format_name,
+          full_name: title&.user&.format_name2,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title,
@@ -203,11 +222,16 @@ module Api
       end
       results = {}
       companies_id = @params[:company_id]
-      h_companies = if companies_id == "All"
-          Company.pluck([:id, :name]).to_h
-        else
-          Company.where(id: companies_id).pluck([:id, :name]).to_h
-        end
+      if companies_id == "All"
+        companies = Company.all
+      else
+        companies = Company.where(id: companies_id)
+      end
+
+      h_companies = {}
+      companies.map do |company|
+        h_companies[company.id] = company.format_excel_name
+      end
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
@@ -226,7 +250,7 @@ module Api
           }
         end
         results[company_id][:users] << {
-          full_name: title&.user&.format_name,
+          full_name: title&.user&.format_name2,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title,
@@ -277,26 +301,30 @@ module Api
       number_keep = @params[:number_period_keep].to_i
       filter_users = {}
       filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
-      filter_users[:project_id] = @params[:project_id] unless @params[:project_id] == "All"
+      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
       filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
 
-      h_companies = if filter_users[:company_id].nil?
-          Company.pluck([:id, :name]).to_h
-        else
-          Company.where(id: filter_users[:company_id]).pluck([:id, :name]).to_h
-        end
+      if filter_users[:company_id].nil?
+        companies = Company.all
+      else
+        companies = Company.where(id: filter_users[:company_id])
+      end
+
+      h_companies = {}
+      companies.map do |company|
+        h_companies[company.id] = company.format_excel_name
+      end
 
       user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id).uniq
-      company_ids = data_users_up_title_export
       titles = case number_keep
         when 0
-          Form.includes(:user, :period_keep, :title).where("number_keep >= 1")
+          Form.includes(:user, :period_keep, :title).where(user_id: user_ids).where("number_keep >= 1")
         when 1
           Form.includes(:user, :period_keep, :title).where(user_id: user_ids, number_keep: number_keep)
         when 2
           Form.includes(:user, :period_keep, :title).where(user_id: user_ids, number_keep: number_keep)
         when 3
-          Form.includes(:user, :period_keep, :title).where("number_keep >= 2")
+          Form.includes(:user, :period_keep, :title).where(user_id: user_ids).where("number_keep >= 2")
         end
 
       results = {}
@@ -312,17 +340,16 @@ module Api
         end
 
         results[company_id][:users] << {
-          full_name: title&.user&.format_name,
+          full_name: title&.user&.format_name2,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title.name,
           level: title&.level,
-          prev_period: Period.find_by_id(title&.period_keep_was),
-          period_from_name: Period.find_by_id(title&.period_keep_was)&.format_to_date,
+          prev_period: title&.period_keep&.id,
+          period_from_name: title&.period_keep&.format_to_date,
         }
       end
-
-      return { data: results }
+      { data: results }
     end
 
     # How to run from rails c
@@ -493,27 +520,25 @@ module Api
         index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        # create sheet
-        level_up_sheet = workbook.add_worksheet(:name => "No Change List")
-        level_up_sheet.sheet_view.zoom_scale = ZOOM_SCALE
-        level_up_sheet.page_setup.set(fit_to_width: 1)
-        level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.add_row ["No Change Title in period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.rows[1].cells[0].style = title_format
-        level_up_sheet.merge_cells "A1:J1"
-        level_up_sheet.merge_cells "A2:J2"
-        level_up_sheet.add_row ["No.", "Employee Name", "Email", "From Period", "Title", "Rank", "Level", "Notes"], :style => table_header_format
+
+        no_change_sheet = set_up_sheet_view(workbook)
+        no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
+        no_change_sheet.add_row ["No Change Title in period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        no_change_sheet.rows[1].cells[0].style = title_format
+        no_change_sheet.merge_cells "A1:J1"
+        no_change_sheet.merge_cells "A2:J2"
+        no_change_sheet.add_row ["No.", "Employee Name", "Email", "From Period", "Title", "Rank", "Level", "Notes"], :style => table_header_format
 
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
-          level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:period_from_name], result[:title], result[:rank], result[:level], ""]
-          level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 5, 6].include?(index) }.each { |element| element.style = normal_format }
-          level_up_sheet.rows[-1].cells[0].style = index_format
-          level_up_sheet.rows[-1].cells[2].style = email_format
-          level_up_sheet.rows[-1].cells[5].style = number_format
-          level_up_sheet.rows[-1].cells[6].style = number_format
+          no_change_sheet.add_row [index + 1, result[:full_name], result[:email], result[:period_from_name], result[:title], result[:rank], result[:level], ""]
+          no_change_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 5, 6].include?(index) }.each { |element| element.style = normal_format }
+          no_change_sheet.rows[-1].cells[0].style = index_format
+          no_change_sheet.rows[-1].cells[2].style = email_format
+          no_change_sheet.rows[-1].cells[5].style = number_format
+          no_change_sheet.rows[-1].cells[6].style = number_format
         end
-        level_up_sheet.column_widths 5, 30, 30, 20, 20, 5, 5, 30 # run at last
+        no_change_sheet.column_widths 5, 30, 30, 20, 20, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
@@ -560,36 +585,36 @@ module Api
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
-        level_up_sheet = workbook.add_worksheet(:name => "Title Comparison")
-        level_up_sheet.sheet_view.zoom_scale = ZOOM_SCALE
-        level_up_sheet.page_setup.set(fit_to_width: 1)
-        level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.rows[1].cells[0].style = title_format
-        level_up_sheet.merge_cells "A1:J1"
-        level_up_sheet.merge_cells "A2:J2"
-        level_up_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
-        level_up_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
-        level_up_sheet.merge_cells "A3:A4"
-        level_up_sheet.merge_cells "B3:B4"
-        level_up_sheet.merge_cells "C3:C4"
-        level_up_sheet.merge_cells "D3:F3"
-        level_up_sheet.merge_cells "G3:I3"
-        level_up_sheet.merge_cells "J3:J4"
+        title_comparison_sheet = workbook.add_worksheet(:name => "Title Comparison")
+        title_comparison_sheet.sheet_view.zoom_scale = ZOOM_SCALE
+        title_comparison_sheet.page_setup.set(fit_to_width: 1)
+        title_comparison_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
+        title_comparison_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], :style => title_format
+        title_comparison_sheet.rows[1].cells[0].style = title_format
+        title_comparison_sheet.merge_cells "A1:J1"
+        title_comparison_sheet.merge_cells "A2:J2"
+        title_comparison_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
+        title_comparison_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
+        title_comparison_sheet.merge_cells "A3:A4"
+        title_comparison_sheet.merge_cells "B3:B4"
+        title_comparison_sheet.merge_cells "C3:C4"
+        title_comparison_sheet.merge_cells "D3:F3"
+        title_comparison_sheet.merge_cells "G3:I3"
+        title_comparison_sheet.merge_cells "J3:J4"
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
-          level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
-          level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
-          level_up_sheet.rows[-1].cells[0].style = index_format
-          level_up_sheet.rows[-1].cells[2].style = email_format
-          level_up_sheet.rows[-1].cells[4].style = number_format
-          level_up_sheet.rows[-1].cells[5].style = number_format
+          title_comparison_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
+          title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
+          title_comparison_sheet.rows[-1].cells[0].style = index_format
+          title_comparison_sheet.rows[-1].cells[2].style = email_format
+          title_comparison_sheet.rows[-1].cells[4].style = number_format
+          title_comparison_sheet.rows[-1].cells[5].style = number_format
           # underline increased value
-          level_up_sheet.rows[-1].cells[6].style = result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
-          level_up_sheet.rows[-1].cells[7].style = result[:rank] > result[:rank_prev] ? number_improved_format : number_format
-          level_up_sheet.rows[-1].cells[8].style = result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev]) ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[6].style = result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
+          title_comparison_sheet.rows[-1].cells[7].style = result[:rank] > result[:rank_prev] ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[8].style = result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev]) ? number_improved_format : number_format
         end
-        level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
+        title_comparison_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
