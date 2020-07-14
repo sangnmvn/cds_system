@@ -214,72 +214,48 @@ module Api
     end
 
     def data_users_keep_title_export
+      
+      binding.pry
+      number_keep = @params[:number_period_keep].to_i
       filter_users = {}
       filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
+      filter_users[:project_id] = @params[:project_id] unless @params[:project_id] == "All"
       filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
 
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
-      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      h_companies = if filter_users[:company_id] == "All"
+        Company.pluck([:id, :name]).to_h
+      else
+        Company.where(id: filter_users[:company_id]).pluck([:id, :name]).to_h
+      end
 
-      first = {}
-      second = {}
-      schedules.map do |schedule|
-        if first[schedule.company_id].nil?
-          first[schedule.company_id] = schedule.period_id
-        elsif second[schedule.company_id].nil?
-          second[schedule.company_id] = schedule.period_id
+      user_ids    = User.left_outer_joins(:project_members).where(filter_users).pluck(:id).uniq
+      company_ids = data_users_up_title_export
+      titles = case number_keep
+        when 0
+          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 1")
+        when 1
+          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+        when 2
+          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+        when 3
+          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 2")
         end
-      end
-      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_previous_period = {}
-      title_second.map do |title|
-        h_previous_period[title.user_id] = {
-          rank: title.rank,
-          level: title.level,
-          title: title.title,
-          name: title&.period&.format_to_date,
-        }
-      end
+
       results = {}
-      companies_id = @params[:company_id]
-      h_companies = if companies_id == "All"
-          Company.pluck([:id, :name]).to_h
-        else
-          Company.where(id: companies_id).pluck([:id, :name]).to_h
-        end
-
-      title_first.map do |title|
-        prev_period = h_previous_period[title.user_id]
-        next if title.rank != prev_period[:rank]
-
-        company_id = title&.user&.company_id
-        if results[company_id].nil?
-          results[company_id] = {
-            users: [],
-            company_name: h_companies[company_id],
-            period: first[company_id],
-            prev_period: second[company_id],
-            period_excel_name: title&.period&.format_excel_name,
-            period_name: title&.period&.format_to_date,
-            period_prev_name: prev_period[:name],
-          }
-        end
-        results[company_id][:users] << {
-          full_name: title&.user&.format_name,
-          email: title&.user&.email,
-          rank: title&.rank,
-          title: title&.title,
-          level: title&.level,
-          rank_prev: prev_period[:rank],
-          level_prev: prev_period[:level],
-          title_prev: prev_period[:title],
-        }
+      
+      titles.map do |title|
+      {
+        full_name: title.user.format_name,
+        email: title.user.email,
+        rank: title.rank,
+        title: title.title,
+        level: title.level,
+        keep_period: title.keep_period.format_name,
+      }
       end
-
-      { data: results }
     end
+
+    
 
     # How to run from rails c
     # Api::ExportService.new({}, User.find(1)).export_up_title("xlsx")

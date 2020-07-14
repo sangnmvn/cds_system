@@ -1,6 +1,7 @@
-function callAjaxExport(url, ext) {
+function callAjaxExport(url, ext, number_period_keep) {
   temp_params = Object.assign({},data_filter);
   temp_params["ext"] = ext;
+  temp_params["number_period_keep"] = number_period_keep;
   $.ajax({
     url: url,
     data: temp_params,
@@ -36,9 +37,11 @@ $("#export_pdf_down_title").on('click', function () {
 });
 
 $("#export_excel_keep_title").on('click', function () {
-  callAjaxExport("/dashboards/export_keep_title", "xlsx");
+  var number_period_keep = $("#select_type_keep").val();
+  callAjaxExport("/dashboards/export_keep_title", "xlsx", number_period_keep);
 });
 
 $("#export_pdf_keep_title").on('click', function () {
-  callAjaxExport("/dashboards/export_keep_title", "pdf");
+  var number_period_keep = $("#select_type_keep").val();
+  callAjaxExport("/dashboards/export_keep_title", "xlsx", number_period_keep);
 });
