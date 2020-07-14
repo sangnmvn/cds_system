@@ -43,5 +43,5 @@ $("#export_excel_keep_title").on('click', function () {
 
 $("#export_pdf_keep_title").on('click', function () {
   var number_period_keep = $("#select_type_keep").val();
-  callAjaxExport("/dashboards/export_keep_title", "xlsx", number_period_keep);
+  callAjaxExport("/dashboards/export_keep_title", "pdf", number_period_keep);
 });
