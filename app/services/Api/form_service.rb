@@ -872,13 +872,14 @@ module Api
       result = preview_result(form)
       calculate_result = calculate_result_by_type(form, competencies, result)
       if calculate_result[:expected_title][:rank] == form.rank && calculate_result[:expected_title][:level] == form.level
-        keep = (form.keep || 0) + 1
+        keep = (form.number_keep || 0) + 1
       else
-        period_keep = form.period
+        period_keep = form.period_id
       end
-      period_keep ||= form.period_keep
+      period_keep ||= form.period_keep_id
 
-      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep: period_keep)
+
+      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep_id: period_keep.id)
 
       title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save

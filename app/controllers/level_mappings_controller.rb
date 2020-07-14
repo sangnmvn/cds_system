@@ -35,7 +35,7 @@ class LevelMappingsController < ApplicationController
     count_competencies = Competency.includes(:template).where("templates.role_id": @role.id).count
     competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
     @list_title = {
-      data: title.where(status: 0),
+      data: title.where(status: true),
       data_real: title,
       no_rank: title.count,
       count_competency: count_competencies,
