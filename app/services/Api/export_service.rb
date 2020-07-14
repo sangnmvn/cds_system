@@ -343,7 +343,7 @@ module Api
         period_excel_name = h_data[:period_excel_name]
         # making file
         company_name = h_data[:company_name].gsub(/ /, "")
-        out_file_name = "CDS_Company_#{company_name}_Promotion_Employee_List_in_Period_#{period_excel_name}"
+        out_file_name = "CDS_#{company_name}_Promotion_Employee_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
@@ -356,7 +356,7 @@ module Api
         level_up_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         level_up_sheet.page_setup.set(fit_to_width: 1)
         level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_up_sheet.add_row ["Promotion in the Latest Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_up_sheet.add_row ["Promotion in the Last Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_up_sheet.rows[1].cells[0].style = title_format
         level_up_sheet.merge_cells "A1:J1"
         level_up_sheet.merge_cells "A2:J2"
@@ -414,7 +414,7 @@ module Api
         period_excel_name = h_data[:period_excel_name]
         # making file
         company_name = h_data[:company_name].gsub(/ /, "")
-        out_file_name = "CDS_Company_#{company_name}_Demotion_Employee_List_in_Period_#{period_excel_name}"
+        out_file_name = "CDS_#{company_name}_Demotion_Employee_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
@@ -427,7 +427,7 @@ module Api
         level_down_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         level_down_sheet.page_setup.set(fit_to_width: 1)
         level_down_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        level_down_sheet.add_row ["Demotion Employee in the Latest Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        level_down_sheet.add_row ["Demotion Employee in the Last Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_down_sheet.rows[1].cells[0].style = title_format
         level_down_sheet.merge_cells "A1:J1"
         level_down_sheet.merge_cells "A2:J2"
@@ -485,7 +485,7 @@ module Api
         period_excel_name = h_data[:period_excel_name]
         # making file
         company_name = h_data[:company_name].gsub(/ /, "")
-        out_file_name = "CDS_Company_#{company_name}_No_Change_Title_Employee_List_in_Period_#{period_excel_name}"
+        out_file_name = "CDS_#{company_name}_No_Change_Title_Employee_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
@@ -549,7 +549,7 @@ module Api
 
         company_name = h_data[:company_name].gsub(/ /, "")
 
-        out_file_name = "CDS_Company_#{company_name}_Title_Comparison_List_in_Period_#{period_excel_name}"
+        out_file_name = "CDS_#{company_name}_Title_Comparison_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
