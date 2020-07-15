@@ -3,8 +3,9 @@ class CompetenciesController < ApplicationController
   before_action :get_privilege_id
   before_action :set_competency, :check_edit, only: [:show, :edit, :update, :edit, :destroy]
   before_action :redirect_to_index
-  before_action :check_edit
-
+  before_action :check_edit, except: [:load]
+  FULL_ACCESS_RIGHT = 9
+  VIEW_ACCESS_RIGHT = 10
   def create
     if Competency.where(name: params[:name].squish!, template_id: params[:template_id]).present?
       render json: { status: "exist" }
@@ -42,7 +43,6 @@ class CompetenciesController < ApplicationController
 
   def load
     competencies = Competency.select(:id, :name, :_type, :desc).where(template_id: params[:id]).order(location: :asc)
-
     render json: competencies
   end
 
@@ -71,13 +71,9 @@ class CompetenciesController < ApplicationController
   end
 
   def check_privileges
-    if @privilege_array.include?(9)
-      render json: { privileges: "full" }
-    elsif @privilege_array.include?(10)
-      render json: { privileges: "view" }
-    else
-      render json: { location: index2_users_path }
-    end
+    return render json: { privileges: "full" } if @privilege_array.include?(FULL_ACCESS_RIGHT)
+    return render json: { privileges: "view" } if @privilege_array.include?(VIEW_ACCESS_RIGHT)
+    return render json: { location: root_path }
   end
 
   private
@@ -93,10 +89,10 @@ class CompetenciesController < ApplicationController
   end
 
   def check_edit
-    render json: { status: "fail" } unless @privilege_array.include?(9)
+    render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_RIGHT)
   end
 
   def redirect_to_index
-    redirect_to index2_users_path unless (@privilege_array.include?(9) || @privilege_array.include?(10))
+    redirect_to root_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
   end
 end

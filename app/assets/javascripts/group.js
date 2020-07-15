@@ -34,8 +34,8 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
       '<span class="error">Please Select A Status</span>'
     );
   }
-  if ( $(".error").length == 0) {
-    
+  if ($(".error").length == 0) {
+
     $.ajax({
       url: "groups/",
       type: "POST",
@@ -53,44 +53,44 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         if (response.status == "success") {
           var table = $("#table_group").DataTable();
           var sData = table.rows().data();
-          
+
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
-              response.id +
-              '" value="0" \
-            class="collection_selection" name="collection_selection[]">'+
-     
-          '<input type="checkbox" id="group_ids[]" value="' +
-          response.id +
-          '" class="selectable selectable_check" name="checkbox"></div>'
+            response.id +
+            '" value="0" \
+            class="collection_selection" name="collection_selection[]">' +
+
+            '<input type="checkbox" id="group_ids[]" value="' +
+            response.id +
+            '" class="selectable selectable_check" name="checkbox"></div>'
           );
           var a = sData.length + 1
-          addData.push('<div style="text-align:right">'+1+'</div>');
+          addData.push('<div style="text-align:right">' + 1 + '</div>');
           addData.push(response.name);
-          
+
           addData.push(response.desc);
-          
+
           addData.push('<div style="text-align:right">0</div>');
           addData.push(response.status_group);
           addData.push(
-            '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+            '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="' + response.id + '" href="#">\
             <i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>\
-            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="' + response.id + '" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="' + response.id + '" href="#"><i class="fa fa-users"></i></a>\
+            <a class="action_icon del_btn" data-group="' + response.id + '" data-toggle="tooltip" title="Delete Group">\
             <i class="fa fa-trash icon" style="color:red"></i></a> </div>'
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
           success("The new group information has been created successfully.");
-          table.row.add(addData,0).draw();
-          
+          table.row.add(addData, 0).draw();
+
           myJS_data_event();
           myAjax();
-          privilegeAjax();	
+          privilegeAjax();
           privilegeJS();
-         
+
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#name").after('<span class="error">Name already exsit</span>');
@@ -107,8 +107,12 @@ $(document).on("click", ".btn-edit-group", function () {
   $.ajax({
     url: "/groups/get_data",
     type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
-    data: { id: group_id },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      id: group_id
+    },
     dataType: "json",
     success: function (response) {
       $(".error").remove();
@@ -164,57 +168,49 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
           var table = $("#table_group").DataTable();
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
-            
-            
+
+
             var current_user_id = table.row(i).data()[0]
-            .split("batch_action_item_")[1]
-            .split('"')[0];
+              .split("batch_action_item_")[1]
+              .split('"')[0];
             current_user_id = parseInt(current_user_id);
             if (current_user_id == response.id) {
               var row_id = i;
               var updateData = [];
               updateData.push(
                 '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
-              response.id +
-              '" value="0" \
-            class="collection_selection" name="collection_selection[]">'+
-     
-          '<input type="checkbox" id="group_ids[]" value="' +
-          response.id +
-          '" class="selectable selectable_check" name="checkbox"></div>'
+                response.id +
+                '" value="0" \
+            class="collection_selection" name="collection_selection[]">' +
+
+                '<input type="checkbox" id="group_ids[]" value="' +
+                response.id +
+                '" class="selectable selectable_check" name="checkbox"></div>'
 
               );
-              var a=row_id+1;
-              updateData.push('<div style="text-align:right">'+ a +'</div>');
+              var a = row_id + 1;
+              updateData.push('<div style="text-align:right">' + a + '</div>');
               updateData.push(response.name);
               updateData.push(response.desc);
-              updateData.push('<div style="text-align:right">'+response.number+'</div>');
+              updateData.push('<div style="text-align:right">' + response.number + '</div>');
               updateData.push(response.status_group);
-              
+
               updateData.push(
-                '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="'+response.id +'" href="#">\
+                '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="' + response.id + '" href="#">\
             <i class="fa fa-pencil icon" style="color:#fc9803"></i></a> \
-            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="'+response.id+'" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
-            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="'+response.id +'" href="#"><i class="fa fa-users"></i></a>\
-            <a class="action_icon del_btn" data-group="'+response.id +'" data-toggle="tooltip" title="Delete Group">\
+            <a class="action_icon key_icon" data-target="#modalPrivilege" data-toggle="modal"  data-id="' + response.id + '" href="#" title="Assign Privileges To Group"><i class="fa fa-key"></i></a> \
+            <a class="action_icon user_group_icon" data-toggle="modal" data-target="#AssignModal" title="Assign Users to Group" data-id="' + response.id + '" href="#"><i class="fa fa-users"></i></a>\
+            <a class="action_icon del_btn" data-group="' + response.id + '" data-toggle="tooltip" title="Delete Group">\
             <i class="fa fa-trash icon" style="color:red"></i></a> </div>'
               );
 
-                var delete_whole_row_constant = undefined;
+              var delete_whole_row_constant = undefined;
               var redraw_table = false;
               table.row(row_id).data(updateData);
               myJS_data_event();
               myAjax();
-              privilegeAjax();	
+              privilegeAjax();
               privilegeJS();
-              /*
-              table.fnUpdate(
-                updateData,
-                row_id,
-                delete_whole_row_constant,
-                redraw_table
-              );
-              */ ;
               break;
             }
           }
@@ -233,13 +229,10 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
 });
 
 var group_dataTable;
+
 function delete_dataTable() {
   group_dataTable.fnClearTable();
 }
-/*
-      processing: true,
-      serverSide: true,
-  */
 
 function setup_dataTable() {
   $("#table_group").ready(function () {
@@ -249,11 +242,10 @@ function setup_dataTable() {
       pagingType: "full_numbers",
       iDisplayLength: 20,
 
-      fnDrawCallback: function()
-      { 
+      fnDrawCallback: function () {
         myJS_data_event();
         myAjax();
-        privilegeAjax();	
+        privilegeAjax();
         privilegeJS();
       },
       language: {
@@ -261,33 +253,11 @@ function setup_dataTable() {
       },
       aoColumnDefs: [
 
-        { "sClass": "numericCol", "aTargets": [ 1 ] }
-        //You can also set 'sType' to 'numeric' and use the built in css.           
+        {
+          "sClass": "numericCol",
+          "aTargets": [1]
+        }
       ]
-  
-    
-      
-
-      // order: [[1, "desc"]], //sắp xếp giảm dần theo cột thứ 1
-      // pagingType is optional, if you want full pagination controls.
-      // Check dataTables documentation to learn more about
-      // available options.
-
-      // aoColumns:
-      //   [
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": ""},
-      //     {"sClass": "d-none"}
-      //   ],
     });
 
     $("#table_group_length").remove();
@@ -315,80 +285,56 @@ function setup_dataTable() {
 $(document).on("click", ".del_btn", function () {
   group_id = $(this).data("group");
   $.ajax({
-    url: "/groups/"+ group_id +"/destroy_page",
+    url: "/groups/" + group_id + "/destroy_page",
     type: "GET",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") }    
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    }
   });
 
 
 });
 
-function reorder_table_row(data_table)
-{
-  var all_data = data_table.fnGetData();  
-    
+function reorder_table_row(data_table) {
+  var all_data = data_table.fnGetData();
+
   var reload_table = false;
-  
-  for (var i=0; i < all_data.length; i++)
-  {
-    data_table.fnUpdate(i+1, i, 1, reload_table,reload_table);
+
+  for (var i = 0; i < all_data.length; i++) {
+    data_table.fnUpdate(i + 1, i, 1, reload_table, reload_table);
   }
 
   data_table.fnDraw();
 }
+
 function delete_datatable_row(data_table, row_id) {
-  // delete the row from table by id
-  //var row = data_table.$("tr")[row_id];
-  
   data_table.row(row_id).remove().draw();
 }
 
 function delete_group() {
   var id = $("#group_id").val();
-  //alert( 'admin/user_management/'  + user_id + '/')
   $.ajax({
-    url: "/groups/"+id,
+    url: "/groups/" + id,
     method: "DELETE",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
         $("#modal_destroy").modal("hide");
+        table = $('#table_group').DataTable()
 
-        /*
-        var index = 0;
-        var index2 = new Array();
-        $('.selectable_check').each(function() {
-            if ($(this).val() == response.id) {
-              index2.push(index);
-            }
-            index++;
-        });
-       
-          for (var i = 0; i < index2.length; i++) {
-          var table = $("#table_group").DataTable();
-        
-            var row_id = index2[i];
-           
-            delete_datatable_row(table, row_id);
-        
-         
-        }
-        */
-       table = $('#table_group').DataTable()
-
-       var n_row = table.rows().data().length
-       for (var i=0; i<n_row; i++)
-       {
+        var n_row = table.rows().data().length
+        for (var i = 0; i < n_row; i++) {
           var data = table.row(i).data()[0];
           var current_id = parseInt(data.split("batch_action_item_")[1].split('"')[0])
-          if (current_id == response.id)
-          {
+          if (current_id == response.id) {
             delete_datatable_row(table, i);
             break;
           }
 
-       }
+        }
 
         success("The group information has been deleted successfully.");
       } else if (response.status == "exist") {
@@ -403,39 +349,39 @@ function delete_group() {
   });
 }
 setup_dataTable();
-$(function() {
+$(function () {
   $("#selectAll").select_all();
 });
 
 $(document).ready(function () {
- 
-   a=$(".get_privilege").val();
-  if(a == 'true'){
-  content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+
+  a = $(".get_privilege").val();
+  if (a == 'true') {
+    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
   data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
   src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
   float-right" data-toggle="modal"  title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
   <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
 
-  $(content).insertAfter(".dataTables_filter");
-  }else{
+    $(content).insertAfter(".dataTables_filter");
+  } else {
     content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
     data-toggle="modal" data-target="#modalAdd" title="Add Group" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
     src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
     float-right" data-toggle="modal" title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
     <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
-  
+
     $(content).insertAfter(".dataTables_filter");
   }
 });
 
-$(document).on("click","#deletes",function(){
+$(document).on("click", "#deletes", function () {
   var groups_ids = new Array();
 
-$.each($("input[name='checkbox']:checked"), function(){
+  $.each($("input[name='checkbox']:checked"), function () {
     groups_ids.push($(this).val());
   });
-number = groups_ids.length;
+  number = groups_ids.length;
   if (number != 0) {
     $('#modalDeleteS').modal('show');
     $('#delete_selected').prop("disabled", false);
@@ -448,64 +394,63 @@ number = groups_ids.length;
 $(document).on("click", "#delete_selected", function () {
 
   var groups_ids = new Array();
-  
-  $.each($("input[name='checkbox']:checked"), function(){
+
+  $.each($("input[name='checkbox']:checked"), function () {
     groups_ids.push($(this).val());
   });
- 
+
   $.ajax({
     url: "/groups/destroy_multiple/",
     method: "DELETE",
-    headers: { "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content") },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       group_ids: groups_ids,
     },
     dataType: "json",
     success: function (response) {
-        $("#modalDeleteS").modal("hide");
-        
-      
-        table = $('#table_group').DataTable()
+      $("#modalDeleteS").modal("hide");
 
-        var n_row = table.rows().data().length
-        for (var i=0; i<n_row; i++)
-        {
-          for (var j = 0;j<response.id.length;j++)  {
-           var data = table.row(i).data()[0];
-           var current_id = parseInt(data.split("batch_action_item_")[1].split('"')[0])
-           if (current_id == response.id[j])
-           {
-             delete_datatable_row(table, i);
-           }
+
+      table = $('#table_group').DataTable()
+
+      var n_row = table.rows().data().length
+      for (var i = 0; i < n_row; i++) {
+        for (var j = 0; j < response.id.length; j++) {
+          var data = table.row(i).data()[0];
+          var current_id = parseInt(data.split("batch_action_item_")[1].split('"')[0])
+          if (current_id == response.id[j]) {
+            delete_datatable_row(table, i);
+          }
         }
       }
-          success("The groups information has been deleted successfully.");
-    
+      success("The groups information has been deleted successfully.");
+
     },
   });
 });
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip(); 
+$(document).ready(function () {
+  $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="modal"]').tooltip();
   $('#table_group').DataTable().on('order.dt search.dt', function () {
     $('#table_group').DataTable().column(1, {
-    search: 'applied',
-    order: 'applied'
+      search: 'applied',
+      order: 'applied'
     }).nodes().each(function (cell, i) {
-    cell.innerHTML = i + 1;
+      cell.innerHTML = i + 1;
     });
-    }).draw();
+  }).draw();
 });
-$(document).click(function(e) {    
-  a=$(".get_privilege").val();
-  if(a == 'true'){
-  var number = $("#table_group tbody :checkbox:checked").length;
+$(document).click(function (e) {
+  a = $(".get_privilege").val();
+  if (a == 'true') {
+    var number = $("#table_group tbody :checkbox:checked").length;
 
-  if (parseInt(number) > 0){
-    $("#deletes").css('background-color', "#8da8db");
+    if (parseInt(number) > 0) {
+      $("#deletes").css('background-color', "#8da8db");
+    } else {
+      $("#deletes").css('background-color', "#dcdcdc");
+    }
   }
-  else{
-    $("#deletes").css('background-color', "#dcdcdc");
-  }
-}
 });

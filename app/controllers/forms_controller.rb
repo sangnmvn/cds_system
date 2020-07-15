@@ -341,7 +341,6 @@ class FormsController < ApplicationController
     if @privilege_array.include?(APPROVE_CDS) && user_ids.include?(current_user.id)
       @is_reviewer = false
       @is_approver = true
-      # approver has status = Done if CDS has been approved instead
     end
   end
 
@@ -355,11 +354,11 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to index2_users_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
+    redirect_to root_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
   end
 
   def check_line_manager_privilege
-    redirect_to index2_users_path unless (@privilege_array.include?(REVIEW_CDS) || @privilege_array.include?(APPROVE_CDS))
+    redirect_to root_path unless (@privilege_array.include?(REVIEW_CDS) || @privilege_array.include?(APPROVE_CDS))
   end
 
   def form_service

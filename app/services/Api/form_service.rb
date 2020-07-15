@@ -367,7 +367,7 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name, user.id)
-        role = format_filter(user.role.name, user.role_id)
+        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
@@ -375,7 +375,7 @@ module Api
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
-        project = format_filter(project_member.project.desc, project_member.project_id)
+        project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
@@ -402,7 +402,7 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name, user.id)
-        role = format_filter(user.role.name, user.role_id)
+        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
@@ -410,7 +410,7 @@ module Api
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
-        project = format_filter(project_member.project.desc, project_member.project_id)
+        project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
@@ -434,19 +434,18 @@ module Api
         users: [],
         periods: [],
       }
-
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name, user.id)
-        role = format_filter(user.role.name, user.role_id)
+        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
 
       project_members.each do |project_member|
-        project = format_filter(project_member.project.desc, project_member.project_id)
+        project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 

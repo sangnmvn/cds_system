@@ -139,6 +139,6 @@ class OrganizationSettingsController < ApplicationController
   end
 
   def check_privilege
-    redirect_to index2_users_path unless (@privilege_array & [VIEW]).any?
+    redirect_to root_path unless (@privilege_array & [VIEW]).any?
   end
 end

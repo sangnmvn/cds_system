@@ -6,7 +6,7 @@ class CreateTemplates < ActiveRecord::Migration[6.0]
       t.text :description
       t.references :user, null: false, foreign_key: true
       t.belongs_to :role, foreign_key: true
-      t.boolean :status, default: true
+      t.boolean :status, default: false
 
       #t.has_many :competencies
       t.timestamps

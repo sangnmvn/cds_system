@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     @curent_user = User.find_by(id: current_user.id)
     @project = Project.includes(:project_members).where("project_members.user_id": current_user.id, is_enabled: true).pluck(:name).join(", ")
     form = Form.find_by(user_id: current_user.id)
-    @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
+    @form = (form.blank? || form.title.blank?) ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 
   def edit_user_avatar
@@ -282,7 +282,7 @@ class UsersController < ApplicationController
   end
 
   def redirect_to_index
-    redirect_to index2_users_path unless (@privilege_array.include?(FULL_ACCESS) || @privilege_array.include?(VIEW_ACCESS))
+    redirect_to root_path unless (@privilege_array.include?(FULL_ACCESS) || @privilege_array.include?(VIEW_ACCESS))
   end
 
   def set_user

@@ -14,12 +14,11 @@ $(document).ready(function () {
     next_button(1)
   }
   postDeleteTemplate()
-  $('.step1_cancel').on('click',function() {
+  $('.step1_cancel').on('click', function () {
     if ($('.save.step1').attr('disabled') == 'disabled') {
       $('.step1_cancel').attr('data-target', "")
       $(location).attr('href', '/templates')
-    }
-    else{
+    } else {
       $('.step1_cancel').attr('data-target', "#modal_warning_close")
     }
   })
@@ -170,9 +169,9 @@ function postCreateTemplate(name, role, description) {
       },
       dataType: "json",
       success: function (response) {
-        if(response.status == 'fail'){
+        if (response.status == 'fail') {
           fails("The template hasn't been created successfully.");
-        }else{
+        } else {
           $('#msform .row .id-template').attr("value", response)
           success("The template has been created successfully.")
           save_button(0)
@@ -217,9 +216,9 @@ function applyEditTemplate(id, name, role, description) {
       },
       dataType: "json",
       success: function (response) {
-        if(response.status == 'fail'){
+        if (response.status == 'fail') {
           fails("The template hasn't been edited.");
-        }else{
+        } else {
           success("The template has been edited successfully.")
           save_button(0)
         }
@@ -262,16 +261,16 @@ function postDeleteTemplate() {
           },
           dataType: "json",
           success: function (response) {
-            if(response.status == 'fail'){
+            if (response.status == 'fail') {
               fails("The template hasn't been deleted.");
-            }else{
+            } else {
               success("The template has been deleted successfully.")
               clicked.closest('tr').remove();
               if ($('.template-table tbody tr').length == 0) {
                 $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")
               }
               $('#modal_warning_close').modal('hide');
-            }            
+            }
           }
         });
       }
@@ -280,33 +279,18 @@ function postDeleteTemplate() {
 }
 
 function checkPrivileges_step1() {
-  $.ajax({
-    type: "GET",
-    url: "/competencies/check_privileges",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    dataType: "json",
-    success: function (response) {
-      if (response.privileges == "view") {
-        $('.btn-light.border-primary').attr('data-target', "")
-        $('.btn-light.border-primary').click(function () {
-          $(location).attr('href', '/templates')
-        })
-        $('#add_template_button').remove()
-        $('.edit_template').removeAttr("href");        
-        $('.edit_template i').css("color", "#000");
-        $('.delete_icon').removeAttr("data-target");
-        $('.delete_icon i').css("color", "#000");
-        $('#step1 #template').prop("disabled", true)
-        $('#step1 #role').prop("disabled", true)
-        $('#step1 #description').prop("disabled", true)
-      }
-      if (response.location) {
-        $(location).attr('href', response.location)
-      }
-    },
-  });
+  if (!is_full_assess) {
+    $('.btn-light.border-primary').attr('data-target', "")
+    $('.btn-light.border-primary').click(function () {
+      $(location).attr('href', '/templates')
+    })
+    $('#add_template_button').remove()
+    $('.delete_icon').removeAttr("data-target");
+    $('.delete_icon i').css("color", "#000");
+    $('#step1 #template').prop("disabled", true)
+    $('#step1 #role').prop("disabled", true)
+    $('#step1 #description').prop("disabled", true)
+  }
 }
 
 //capitalize

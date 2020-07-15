@@ -59,8 +59,7 @@ function loadDataAssessment(data_filter) {
               </a> 
             </td> 
           </tr>`
-          }
-          else{
+          } else {
             this_element += `<a class='reject-cds-cdp disabled' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#'>
           <i class='fas fa-thumbs-down icon-list icon-reject' style='color:#6c757d'></i>
               </a> 
@@ -119,10 +118,12 @@ function loadDataFilter() {
           $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#project_filter");
       });
       $.each(response.roles, function (k, v) {
-        if (k == 0 && response.roles.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
+        if (v) {
+          if (k == 0 && response.roles.length == 1)
+            $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
+          else
+            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
+        }
       });
       $.each(response.users, function (k, v) {
         if (k == 0 && response.users.length == 1)
