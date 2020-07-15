@@ -45,7 +45,7 @@ class UsersController < ApplicationController
 
   def user_profile
     @curent_user = User.find_by(id: current_user.id)
-    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id).where(is_enabled: true).pluck(:name).join(", ")
+    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id, is_enabled: true).pluck(:name).join(", ")
     form = Form.find_by(user_id: current_user.id)
     @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
@@ -158,7 +158,7 @@ class UsersController < ApplicationController
   # get data modal edit
   def edit
     companies = Company.select(:id, :name).where(is_enabled: true)
-    projects = Project.select(:id, :name).where(company_id: @user.company_id).where(is_enabled: true)
+    projects = Project.select(:id, :name).where(company_id: @user.company_id, is_enabled: true)
     roles = Role.select(:id, :name).where(is_enabled: true)
     project_ids = ProjectMember.where(user_id: params[:id]).pluck(:project_id)
 
@@ -167,7 +167,7 @@ class UsersController < ApplicationController
 
   # modal company
   def get_modal_project
-    projects = Project.select(:id, :name).where(company_id: params[:company]).where(is_enabled: true)
+    projects = Project.select(:id, :name).where(company_id: params[:company], is_enabled: true)
     render json: projects
   end
 

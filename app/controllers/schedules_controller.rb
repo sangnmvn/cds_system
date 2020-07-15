@@ -90,7 +90,7 @@ class SchedulesController < ApplicationController
     if check_hr?
       company = Company.where(is_enabled: true).pluck(:name, :id)
     elsif check_pm?
-      company = Company.where(id: current_user.company_id).where(is_enabled: true).pluck(:name, :id)
+      company = Company.where(id: current_user.company_id, is_enabled: true).pluck(:name, :id)
     end
     render json: company
   end
