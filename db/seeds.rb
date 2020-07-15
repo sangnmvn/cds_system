@@ -393,7 +393,7 @@ ProjectMember.create([
   { id: 166, user_id: 167, project_id: 16 },
 ])
 
-Group.create!(id: 1, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22,24")
+Group.create!(id: 1, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22,24,25")
 Group.create!(id: 2, name: "BOD", description: "BOD", status: 1, privileges: "10")
 Group.create!(id: 3, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
 Group.create!(id: 4, name: "Manager", description: "Manager", status: 1, privileges: "1")

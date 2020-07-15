@@ -13,11 +13,11 @@ module Api
 
     def format_user_data(users)
       datas = []
-      projects = Project.distinct.select("project_members.user_id as user_id", :desc).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:desc)
+      projects = Project.distinct.select("project_members.user_id as user_id", :name).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:name)
       h_projects = {}
       projects.map do |project|
         h_projects[project.user_id] = [] if h_projects[project.user_id].nil?
-        h_projects[project.user_id] << project.desc
+        h_projects[project.user_id] << project.name
       end
 
 
@@ -60,10 +60,10 @@ module Api
 
     def get_filter_company
       if params[:company_id] == "all"
-        projects = Project.select(:id, :desc).order(:desc)
+        projects = Project.select(:id, :name).order(:name)
         roles = Role.select(:id, :name).order(:name)
       else
-        projects = Project.select(:id, :desc).where(company_id: params[:company_id]).order(:desc)
+        projects = Project.select(:id, :name).where(company_id: params[:company_id]).order(:name)
         user_ids = User.where(company_id: params[:company_id], is_delete: false).pluck(:role_id).uniq
         roles = Role.select(:id, :name).where(id: user_ids).order(:name)
       end
@@ -100,7 +100,7 @@ module Api
     end
 
     def data_users_by_role
-      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil).group("roles.desc").count
+      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil).group("roles.name").count
 
       { data: h_users, total: h_users.values.sum }
     end
@@ -149,7 +149,7 @@ module Api
 
     def data_users_by_title
       if params[:role_id] && params[:role_id].length == 1
-        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.desc").count
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.name").count
         h_users = {}
         users.each do |key, value|
           h_users[key] = value
@@ -178,7 +178,7 @@ module Api
       title_histories = TitleHistory.joins(:period).where(user_id: user_id).order(:period_id)
       h_rank_empty = {
         period: "",
-        current_user.role.desc => nil,
+        current_user.role.name => nil,
       }
       role_names = title_histories.pluck(:role_name)
       role_names.each do |role_name|
@@ -205,14 +205,14 @@ module Api
           h_rank = h_rank_empty.clone
           h_rank[:period] = schedule&.period&.format_period_career
           h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
-          h_rank[form.role.desc.to_sym] = data_result[:expected_title][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank]
           arr_result << h_rank
         end
 
         if data_result[:cdp].present?
           h_rank = h_rank_empty.clone
           h_rank[:period] = "Next Period"
-          h_rank[form.role.desc.to_sym] = data_result[:cdp][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank]
           arr_result << h_rank
         end
       end

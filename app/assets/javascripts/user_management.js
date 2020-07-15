@@ -24,7 +24,7 @@ $(document).ready(function () {
           $("#filter-project").html("");
           $('<option value="all">All</option>').appendTo("#filter-project");
           $.each(e.projects, function (k, v) {
-            $('<option value="' + v.id + '">' + v.desc + "</option>").appendTo("#filter-project");
+            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#filter-project");
           });
 
           $('<option value="none">None</option>').appendTo("#filter-project");
@@ -222,7 +222,7 @@ $(document).ready(function () {
         $("#modalAdd .tokens-container .token").remove();
         $("#modalAdd #project option").remove();
         $(response).each(function (i, e) {
-          $('<option value="' + e.id + '">' + e.desc + "</option>").appendTo("#modalAdd .tokenize-project");
+          $('<option value="' + e.id + '">' + e.name + "</option>").appendTo("#modalAdd .tokenize-project");
         });
       },
     });
@@ -246,7 +246,7 @@ $(document).ready(function () {
         $("#modalEdit .tokens-container .token").remove();
         $("#modalEdit #project option").remove();
         $(response).each(function (i, e) {
-          $('<option value="' + e.id + '">' + e.desc + "</option>").appendTo("#modalEdit .tokenize-project");
+          $('<option value="' + e.id + '">' + e.name + "</option>").appendTo("#modalEdit .tokenize-project");
         });
       },
     });
@@ -537,12 +537,12 @@ $(document).on("click", ".edit_icon", function () {
               '<option value="' +
               p.id +
               '" selected="selected">' +
-              p.desc +
+              p.name +
               "</option>"
             ).appendTo("#modalEdit .edit-projects .edit-project");
           } else {
             $(
-              '<option value="' + p.id + '">' + p.desc + "</option>"
+              '<option value="' + p.id + '">' + p.name + "</option>"
             ).appendTo("#modalEdit .edit-projects .edit-project");
           }
         });

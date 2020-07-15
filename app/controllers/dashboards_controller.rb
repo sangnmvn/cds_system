@@ -21,16 +21,16 @@ class DashboardsController < ApplicationController
     return render json: { status: "fail" } unless (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
     if @privilege_array.include?(ALL_COMPANY)
       companies = Company.select(:name, :id)
-      projects = Project.select("projects.desc as name", :id)
+      projects = Project.select("projects.name as name", :id)
     elsif @privilege_array.include?(MY_COMPANY)
       companies = Company.select(:name, :id).where(id: current_user.company_id)
-      projects = Project.select("projects.desc as name", :id).where(company_id: current_user.company_id)
+      projects = Project.select("projects.name as name", :id).where(company_id: current_user.company_id)
     elsif @privilege_array.include?(MY_PROJECT)
       companies = Company.select(:name, :id).where(id: current_user.company_id)
-      projects = Project.select("projects.desc as name", :id).joins(:project_members).where(project_members: { user_id: current_user.id })
+      projects = Project.select("projects.name as name", :id).joins(:project_members).where(project_members: { user_id: current_user.id })
     end
 
-    roles = User.distinct.select("roles.desc as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) })
+    roles = User.distinct.select("roles.name as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) })
 
     render json: {
       companies: companies,
