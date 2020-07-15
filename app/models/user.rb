@@ -29,7 +29,7 @@ class User < ApplicationRecord
     first_name + " " + last_name
   end
 
-  def format_name2
+  def format_name_vietnamese
     last_name + " " + first_name
   end
 

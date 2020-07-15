@@ -14,11 +14,11 @@ module Api
       @params = params
     end
 
-    def set_up_sheet_view(workbook)
+    def set_up_sheet_view(workbook, name)
       # create sheet
-      sheet = workbook.add_worksheet(:name => "No Change List")
+      sheet = workbook.add_worksheet(name: name)
       #sheet.sheet_view.zoom_scale = ZOOM_SCALE
-      sheet.page_setup.set(:paper_width => "297mm", :paper_height => "210mm", paper_size: 10)
+      sheet.page_setup.set(paper_width: "297mm", paper_height: "210mm", paper_size: 10)
       # setup page in a block
       sheet.page_setup do |page|
         page.scale = 80
@@ -155,7 +155,7 @@ module Api
           }
         end
         results[company_id][:users] << {
-          full_name: title&.user&.format_name2,
+          full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title,
@@ -250,7 +250,7 @@ module Api
           }
         end
         results[company_id][:users] << {
-          full_name: title&.user&.format_name2,
+          full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title,
@@ -340,7 +340,7 @@ module Api
         end
 
         results[company_id][:users] << {
-          full_name: title&.user&.format_name2,
+          full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title.name,
@@ -379,7 +379,7 @@ module Api
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
-        level_up_sheet = workbook.add_worksheet(:name => "Promotion List")
+        level_up_sheet = set_up_sheet_view(workbook, "Promotion List")
         level_up_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         level_up_sheet.page_setup.set(fit_to_width: 1)
         level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
@@ -450,7 +450,7 @@ module Api
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
-        level_down_sheet = workbook.add_worksheet(:name => "Demotion List")
+        level_down_sheet = set_up_sheet_view(workbook, "Demotion List")
         level_down_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         level_down_sheet.page_setup.set(fit_to_width: 1)
         level_down_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
@@ -521,7 +521,7 @@ module Api
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
 
-        no_change_sheet = set_up_sheet_view(workbook)
+        no_change_sheet = set_up_sheet_view(workbook, "No Change List")
         no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.add_row ["No Change Title in period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.rows[1].cells[0].style = title_format
@@ -585,7 +585,8 @@ module Api
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
-        title_comparison_sheet = workbook.add_worksheet(:name => "Title Comparison")
+        title_comparison_sheet = set_up_sheet_view(workbook, "Title Comparison")
+
         title_comparison_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         title_comparison_sheet.page_setup.set(fit_to_width: 1)
         title_comparison_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
