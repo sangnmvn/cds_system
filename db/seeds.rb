@@ -7,23 +7,23 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 #Delete all
-# FormSlotHistory.delete_all
-# TitleHistory.delete_all
-# LineManager.delete_all
-# Comment.delete_all
-# FormSlot.delete_all
-# Form.delete_all
+FormSlotHistory.delete_all
+TitleHistory.delete_all
+LineManager.delete_all
+Comment.delete_all
+FormSlot.delete_all
+Form.delete_all
 Slot.delete_all
-# TitleMapping.delete_all
-# TitleCompetencyMapping.delete_all
+TitleMapping.delete_all
+TitleCompetencyMapping.delete_all
 Competency.delete_all
 Template.delete_all
-# LevelMapping.delete_all
+LevelMapping.delete_all
 Title.delete_all
 Approver.delete_all
 UserGroup.delete_all
-# Schedule.delete_all
-# Period.delete_all
+Schedule.delete_all
+Period.delete_all
 User.delete_all
 # Role.delete_all
 Project.delete_all
@@ -31,63 +31,7 @@ Project.delete_all
 Group.delete_all
 ProjectMember.delete_all
 
-# Group.create!(id: 31, name:"Administration", description:"Administration", status: 1, privileges:"1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22,24")
-# Group.create!(id: 32, name:"BOD", description:"BOD", status: 1, privileges:"10")
-# Group.create!(id: 33, name:"HR", description:"HR", status: 1, privileges:"9,10,13")
-# Group.create!(id: 34, name:"Manager", description:"Manager", status: 1, privileges:"1")
-# Group.create!(id: 35, name:"Reviewer", description:"Reviewer", status: 1, privileges:"7")
-# Group.create!(id: 36, name:"Staff", description:"Staff", status: 1, privileges:"")
-# Group.create!(id: 37, name:"PM", description:"PM", status: 1, privileges:"14")
-# #  template HR
-# User.create!(id: 32, email:"nguyenvana@bestarion.com", password:"password", password_confirmation:"password", first_name:"A", last_name:"Nguyen Van", account:"anv", role_id:"6", company_id:"3", joined_date: rand(12).years.ago, gender: rand(2))
-# UserGroup.create!(group_id: 33, user_id: 32)
-# UserGroup.create!(group_id: 31, user_id: 1)
-# GroupPrivilege.create!(group_id: 33, privilege_id: 9)
-# GroupPrivilege.create!(group_id: 33, privilege_id: 10)
-
-# User.create!(id: 33, email:"nguyenvanb@bestarion.com", password:"password", password_confirmation:"password", first_name:"B", last_name:"Nguyen Van", account:"bnv", role_id:"5", company_id:"3", joined_date: rand(12).years.ago, gender: rand(2))
-# UserGroup.create!(group_id: 32, user_id: 33)
-# # GroupPrivilege.create!(group_id: 32, privilege_id: 10)
-
-# User.create!(id: 34, email:"nguyenvanc@bestarion.com", password:"password", password_confirmation:"password", first_name:"C", last_name:"Nguyen Van", account:"cnv", role_id:"4", company_id:"3", joined_date: rand(12).years.ago, gender: rand(2), title_id: 16)
-# UserGroup.create!(group_id: 33, user_id: 34)
-# # GroupPrivilege.create!(group_id: 33, privilege_id: 13)
-# #  test user management
-# User.create!(id: 35, email:"nguyenvand@bestarion.com", password:"password", password_confirmation:"password", first_name:"D", last_name:"Nguyen Van", account:"dnv", role_id:"6", company_id:"3", joined_date: rand(12).years.ago, gender: rand(2))
-# UserGroup.create!(group_id: 34, user_id: 35)
-# # GroupPrivilege.create!(group_id: 34, privilege_id: 1)
-
-# User.create!(id: 36, email:"nguyenvane@bestarion.com", password:"password", password_confirmation:"password", first_name:"E", last_name:"Nguyen Van", account:"env", role_id:"6", company_id:"2", joined_date: rand(12).years.ago, gender: rand(2))
-# UserGroup.create!(group_id: 35, user_id: 36)
-# # GroupPrivilege.create!(group_id: 35, privilege_id: 2)
-# ProjectMember.create!(user_id: 36, project_id: 3, is_managent:"0")
-
-# Period.create!(id: 30, from_date:"2019-06-16", to_date:"2019-12-16")
-# Period.create!(id: 40, from_date:"2019-07-16", to_date:"2019-08-16")
-# Period.create!(id: 50, from_date:"2020-05-15", to_date:"2020-09-30")
-# Schedule.create!(user_id: 34, company_id: 1, period_id: 30, start_date:"2020-01-01", end_date_hr:"2020-02-02", notify_hr: 5, desc:"Period 1", status:"Done", _type:"HR")
-# Schedule.create!(user_id: 34, company_id: 2, period_id: 40, start_date:"2020-03-01", end_date_hr:"2020-04-02", notify_hr: 6, desc:"Period 2", status:"Done", _type:"HR")
-# Schedule.create!(user_id: 34, company_id: 3, period_id: 50, start_date:"2020-05-20", end_date_hr:"2020-09-20", notify_hr: 3, desc:"Period 3", status:"In-progress", _type:"HR")
-
-# Form.create!(id: 1, user_id:"1", _type:"CDS", level: 3, rank: 2, template_id:"1", title_id:"1", role_id:"1", status:"New", is_delete: false, submit_date:"2019-06-20", review_date:"2019-06-30")
-# Form.create!(id: 2, user_id:"1", _type:"CDP", template_id:"1", status:"Done")
-# (1..134).each do |i|
-#   FormSlot.create!(id: i, form_id: 1, slot_id: i, is_passed: 0)
-#   Comment.create!(id: i, evidence:"ok", point: rand(1..5), is_commit: 1, form_slot_id: i)
-#   LineManager.create!(recommend:"ok", given_point: rand(1..5), user_id: 11, form_slot_id: i, period_id: 50)
-#   LineManager.create!(recommend:"ok", given_point: rand(1..5), user_id: 3, form_slot_id: i, period_id: 50)
-#   LineManager.create!(recommend:"ok", given_point: rand(1..5), user_id: 1, final: true, form_slot_id: i, period_id: 50)
-# end
-
-# # Form.create!(id: 3, user_id: 2, _type:"CDS", level: 3, rank: 2, template_id:"1", title_id:"1002", role_id:"1", status:"New", is_delete: false, submit_date:"2019-06-20", review_date:"2019-06-30", period_id: 50)
-# # (1..134).each do |i|
-# #   form_slot = FormSlot.create!(form_id: 3, slot_id: i, is_passed: 0)
-# #   Comment.create!(evidence:"ok", point: rand(1..5), is_commit: 1, form_slot_id: form_slot.id)
-# # end
-# Approver.create!(user_id: 2, approver_id: 3)
-# Approver.create!(user_id: 2, approver_id: 11)
-
-User.create(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3))
+User.create(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3)) 
 User.create([
   { id: 2, email: "luanvk@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Luân", last_name: "Võ Kinh", account: "LuanVK", role_id: "1", company_id: 3, joined_date: DateTime.parse("2006-01-10"), gender: true },
   { id: 3, email: "phongbq@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phong", last_name: "Bùi Quang", account: "PhongBQ", company_id: 3, joined_date: DateTime.parse("2013-09-09"), gender: true },
