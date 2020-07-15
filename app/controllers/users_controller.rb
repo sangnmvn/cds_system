@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  
+
   def get_user_data
     filter = {
       is_delete: false,
@@ -35,9 +35,9 @@ class UsersController < ApplicationController
   end
 
   def index
-    @companies = Company.order(:name).pluck(:name, :id)
-    @projects = Project.order(:desc).pluck(:desc, :id)
-    @roles = Role.order(:name).pluck(:name, :id)
+    @companies = Company.where(is_enabled: true).order(:name).pluck(:name, :id)
+    @projects = Project.where(is_enabled: true).order(:name).pluck(:name, :id)
+    @roles = Role.where(is_enabled: true).order(:name).pluck(:name, :id)
   end
 
   def index2
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
 
   def user_profile
     @curent_user = User.find_by(id: current_user.id)
-    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id).pluck(:desc).join(", ")
+    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id).where(is_enabled: true).pluck(:name).join(", ")
     form = Form.find_by(user_id: current_user.id)
     @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
@@ -157,9 +157,9 @@ class UsersController < ApplicationController
 
   # get data modal edit
   def edit
-    companies = Company.select(:id, :name)
-    projects = Project.select(:id, :desc).where(company_id: @user.company_id)
-    roles = Role.select(:id, :name)
+    companies = Company.select(:id, :name).where(is_enabled: true)
+    projects = Project.select(:id, :name).where(company_id: @user.company_id).where(is_enabled: true)
+    roles = Role.select(:id, :name).where(is_enabled: true)
     project_ids = ProjectMember.where(user_id: params[:id]).pluck(:project_id)
 
     render json: { companies: companies, projects: projects, roles: roles, user: @user, project_ids: project_ids, joined_date: @user.format_joined_date }
@@ -167,8 +167,7 @@ class UsersController < ApplicationController
 
   # modal company
   def get_modal_project
-    projects = Project.select(:id, :desc).where(company_id: params[:company])
-
+    projects = Project.select(:id, :name).where(company_id: params[:company]).where(is_enabled: true)
     render json: projects
   end
 
