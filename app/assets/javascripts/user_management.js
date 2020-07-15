@@ -405,6 +405,8 @@ function setup_dataTable() {
         });
 
         colorDisabledRowUser();
+
+        $(".paginate_button.current").prop("style", "font-weight: bold");
         $('.dataTables_length').attr("style", "display:none");
       },
       "bProcessing": true,
