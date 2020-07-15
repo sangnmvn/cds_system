@@ -387,8 +387,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if(!(is_reviewer || is_approver) || (is_reviewer && is_submit))
-  {
+  if (!(is_reviewer || is_approver) || (is_reviewer && is_submit)) {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
         <div class='col-12'>
@@ -418,7 +417,7 @@ $(document).ready(function () {
       </div>
     `)
   }
-  $(document).on("click", "#summary_comment" , function () {
+  $(document).on("click", "#summary_comment", function () {
     $.ajax({
       type: "GET",
       url: "/forms/get_summary_comment",
@@ -431,11 +430,11 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $("tbody#data_summary").html("");
-        if(response.length == 0){
+        if (response.length == 0) {
           var tr = $("<tr/>");
           $("<td colspan='4'/>").html("No data available in table").appendTo(tr)
           tr.appendTo("tbody#data_summary")
-        }else{
+        } else {
           $(response).each(
             function (i, e) {
               if (e.status) {
@@ -456,7 +455,7 @@ $(document).ready(function () {
     })
   })
 
-  $(document).on("click", "#btn_save_summary_assessment" , function () {
+  $(document).on("click", "#btn_save_summary_assessment", function () {
     $.ajax({
       type: "POST",
       url: "/forms/save_summary_comment",
@@ -479,7 +478,7 @@ $(document).ready(function () {
     })
   })
 
-  $("#button_request_update").on("click", function () {    
+  $("#button_request_update").on("click", function () {
     var booleans = Object.keys(checked_set_is_empty_comment).map(k => checked_set_is_empty_comment[k])
     var all_comments_not_empty = true;
     // make sure all values are false
@@ -1109,23 +1108,29 @@ function autoSaveStaff(row) {
 
 function loadDataPanel(form_id) {
   data = {}
-  if (form_id)
-    data.form_id = form_id;
-  else if (title_history_id)
-    data.title_history_id = title_history_id;
-  $.ajax({
-    type: "POST",
-    url: "/forms/get_competencies/",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    data: data,
-    dataType: "json",
-    success: function (response) {
-      var temp = '';
-      var i = 0;
-      for (competency in response) {
-        temp += `
+  if (!(form_id || title_history_id)) {
+    fails("Don't have template availabale!")
+    window.setTimeout(function () {
+      window.location.href = "/forms/index_cds_cdp"
+    }, 3000);
+  } else {
+    if (form_id)
+      data.form_id = form_id;
+    else if (title_history_id)
+      data.title_history_id = title_history_id;
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_competencies/",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: data,
+      dataType: "json",
+      success: function (response) {
+        var temp = '';
+        var i = 0;
+        for (competency in response) {
+          temp += `
         <div class="card">
           <div class="card-header">
             <table class="table table-primary table-responsive-sm table-mytable table${i}">
@@ -1145,44 +1150,45 @@ function loadDataPanel(form_id) {
               <div class="competency">
                 <table class="table table-primary table-responsive-sm table-mytable table-left-panel">
                   <tbody>`
-        var l = '';
-        var levels = response[competency].levels
-        for (level in levels) {
-          l += `<tr data-level="${level}" class="d-flex level-competency">
+          var l = '';
+          var levels = response[competency].levels
+          for (level in levels) {
+            l += `<tr data-level="${level}" class="d-flex level-competency">
                     <td class="col-2"></td>
                     <td class="col-7">Level ${level}</td>
                     <td class="col-3">${levels[level].current}/${levels[level].total}</td>
                 </tr>`
-        }
-        temp += l
-        temp += ` </tbody>
+          }
+          temp += l
+          temp += ` </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>`
-        i += 1;
-      };
-      $('#competency_panel').html(temp);
+          i += 1;
+        };
+        $('#competency_panel').html(temp);
 
-      $(".card table thead tr").click(function () {
-        checkChangeSlot();
-        $(".collapse").removeClass("show");
-        $(".card-header table tr").css("background-color", "#bbcbea");
-        id = $(this).data("target");
-        $(id).addClass("show");
-        num = id.split("#collapse");
-        $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
-      });
+        $(".card table thead tr").click(function () {
+          checkChangeSlot();
+          $(".collapse").removeClass("show");
+          $(".card-header table tr").css("background-color", "#bbcbea");
+          id = $(this).data("target");
+          $(id).addClass("show");
+          num = id.split("#collapse");
+          $(".table" + Number(num[1]) + " tr").css("background-color", "#7ba2ed");
+        });
 
-      $(".level-competency").click(function () {
-        checkChangeSlot();
-        $(".level-competency td").css("color", "black");
-        $(this).find('td').css("color", "#4472c4");
-      });
-      $('#card0').click()
-    }
-  });
+        $(".level-competency").click(function () {
+          checkChangeSlot();
+          $(".level-competency td").css("color", "black");
+          $(this).find('td').css("color", "#4472c4");
+        });
+        $('#card0').click()
+      }
+    });
+  }
 }
 
 function loadDataConflict(form_id) {

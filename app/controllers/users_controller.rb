@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     filter = {
       is_delete: false,
     }
-    unless @privilege_array.include?(FULL_ACCESS)
+    unless @privilege_array.include?(1)
       project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
       user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
       filter[:id] = user_ids
@@ -24,14 +24,12 @@ class UsersController < ApplicationController
       user_ids = ProjectMember.where(project_id: user_params[:filter_project]).pluck(:user_id).uniq
       filter[:id] = user_ids
     end
-
     users = User.includes(:role, :company).search_user(user_params[:search]).where(filter).offset(user_params[:offset]).limit(LIMIT).order(get_sort_params)
 
     if user_params[:filter_project] == "none"
       user_project_ids = ProjectMember.pluck(:user_id).uniq # user have project
       users = users.where.not(id: user_project_ids)
     end
-
     render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_services.format_user_data(users) }
   end
 
