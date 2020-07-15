@@ -360,6 +360,10 @@ function delete_dataTable() {
   user_dataTable.fnClearTable();
 }
 
+function colorDisabledRowUser(){
+  $(".fa-toggle-off").closest("tr").addClass("row-user-disabled");
+  $(".fa-toggle-on").closest("tr").removeClass("row-user-disabled");
+}
 function setup_dataTable() {
 
   $("#table_user_management").ready(function () {
@@ -400,6 +404,7 @@ function setup_dataTable() {
           }
         });
 
+        colorDisabledRowUser();
         $('.dataTables_length').attr("style", "display:none");
       },
       "bProcessing": true,
@@ -415,7 +420,7 @@ function setup_dataTable() {
         "targets": 0
       },
       {
-        "orderable": true,
+        "orderable": false,
         "orderSequence": ["desc", "asc"],
         "targets": 1
       },
@@ -743,6 +748,7 @@ $(document).on("click", ".status_icon", function () {
             '<i class="fa fa-toggle-on"></i>'
           );
         }
+        colorDisabledRowUser();
         success("The status has been changed successfully.");
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");

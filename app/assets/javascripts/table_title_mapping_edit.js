@@ -53,7 +53,7 @@ function loadTitleMappingForEdit() {
       for (competency_s of competency_list) {
         competency = JSON.parse(competency_s);
         column_list.push(competency.name);
-        final_html += '<td data-competency-id="{id}" class="dynamic_title_header_col">{name} (*)</td>'
+        final_html += '<td data-competency-id="{id}" class="dynamic-title-header-col">{name} (*)</td>'
           .formatUnicorn({
             id: competency.id,
             name: competency.name
@@ -83,7 +83,7 @@ function loadTitleMappingForEdit() {
             // find competency data suitable for competency column cell
             if (data_list[k].competency_name == current_cell_competency_name) {
               max_rank = global_max_rank;
-              value_dropdown = `<select data-is_changed='false' class='form-control competency_value'>`              
+              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'>`              
 
               for (var x=1; x< (max_rank+1); x++)
               {
@@ -96,7 +96,7 @@ function loadTitleMappingForEdit() {
                 value: value
               }));
               value_dropdown = value_dropdown.substring(0, index_of_insert) + ' selected ' + value_dropdown.substring(index_of_insert);
-              final_html += "<td class='competency_row'>{value_dropdown}</td>".formatUnicorn({
+              final_html += "<td class='competency-row'>{value_dropdown}</td>".formatUnicorn({
                 value_dropdown: value_dropdown
               });
               break;
@@ -109,7 +109,7 @@ function loadTitleMappingForEdit() {
 
       $(".table-edit-title-mapping tbody").html(final_html);
       
-      $('select.competency_value').change(function () {
+      $('select.competency-value').change(function () {
         $(this).attr('data-is_changed', 'true');
         $('#btn_save').attr("disabled", false);
         $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")

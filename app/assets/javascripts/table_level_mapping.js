@@ -252,11 +252,11 @@ function saveTitleMapping() {
     current_row = $(this);
     title_id = current_row.data("title_id");
     competency_ids = []
-    $(".dynamic_title_header_col").each(function () {
+    $(".dynamic-title-header-col").each(function () {
       competency_ids.push($(this).data("competency-id"));
     })
 
-    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency_value'.formatUnicorn({
+    element_to_read = '.table-new-title-mapping tbody tr[data-title_id={title_id}] .competency-value'.formatUnicorn({
       title_id: title_id
     })
 

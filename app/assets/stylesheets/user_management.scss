@@ -52,6 +52,7 @@ table.dataTable tbody td {
     color: #000;
 }
 
+
 .action_icon>img {
     width: 18px;
     height: 18px;
@@ -81,6 +82,23 @@ img.assign_user_img {
     text-align: center !important;
 }
 
+#table_user_management {
+    .sorting_disabled {
+        background-image: none !important;
+    }
+
+    .row-user-disabled {
+        td {
+            background-color: #888 !important;
+        }
+
+    }
+}
+
+#table_user_management_paginate .paginate_button.disabled {
+    color: #aaa !important;
+}
+
 #table_user_management_info {
     color: black;
 }
@@ -96,11 +114,13 @@ img.assign_user_img {
 #table_user_management_previous {
     color: black;
 }
+
 #table_user_management_wrapper {
     .action_icon {
         text-decoration: none;
-    }   
+    }
 }
+
 .panel_contents table tr.odd>th {
     font-size: 14px;
     background: #4472c4;
