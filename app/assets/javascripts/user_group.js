@@ -53,7 +53,7 @@ function myJS_data_event() {
     }
   };
   // click checkbox item on left
-  $('#table_left:visible tbody').on('click', 'input:checkbox', function () {
+  $('#table_left tbody').on('click', 'input:checkbox', function () {
     $this = $(this);
     if ($this.is(':checked')) {
       if ($("#table_left:visible tbody :checkbox:not(:checked)").length == 0) {
@@ -75,7 +75,7 @@ function myJS_data_event() {
     }
   });
   // click checkbox item on right
-  $('#table_right:visible tbody').on('click', 'input:checkbox', function () {
+  $('#table_right tbody').on('click', 'input:checkbox', function () {
     $this = $(this);
     if ($this.is(':checked')) {
       if ($("#table_right:visible tbody :checkbox:not(:checked)").length == 0) {
