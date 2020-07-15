@@ -11,7 +11,7 @@ $(document).ready(function () {
 function myJS_data_event() {
   document.getElementById("check_all_choose").onclick = function () {
     // Lấy danh sách checkbox
-    var checkboxes = $("#table_left tbody").find('input:checkbox');
+    var checkboxes = $("#table_left:visible tbody").find('input:checkbox');
     if ($("#check_all_choose").is(':checked')) {
       for (var i = 0; i < checkboxes.length; i++) {
         checkboxes[i].checked = true;
@@ -32,7 +32,7 @@ function myJS_data_event() {
   };
   document.getElementById("check_all_remove").onclick = function () {
     // Lấy danh sách checkbox
-    var checkboxes = $("#table_right tbody").find('input:checkbox');
+    var checkboxes = $("#table_right:visible tbody").find('input:checkbox');
     if ($("#check_all_remove").is(':checked')) {
       // Lặp và thiết lập checked
       for (var i = 0; i < checkboxes.length; i++) {
@@ -53,16 +53,16 @@ function myJS_data_event() {
     }
   };
   // click checkbox item on left
-  $('#table_left tbody').on('click', 'input:checkbox', function () {
+  $('#table_left:visible tbody').on('click', 'input:checkbox', function () {
     $this = $(this);
     if ($this.is(':checked')) {
-      if ($("#table_left tbody :checkbox:not(:checked)").length == 0) {
+      if ($("#table_left:visible tbody :checkbox:not(:checked)").length == 0) {
         $('#check_all_choose').prop("checked", true);
       }
       $this.closest('tr').css('background-color', "pink");
       change_button_right(0);
     } else {
-      if ($("#table_left tbody :checkbox:checked").length == 0) {
+      if ($("#table_left:visible tbody :checkbox:checked").length == 0) {
         change_button_right(1);
       }
       if ($this.closest('tr').attr('class') == "odd") {
@@ -75,16 +75,16 @@ function myJS_data_event() {
     }
   });
   // click checkbox item on right
-  $('#table_right tbody').on('click', 'input:checkbox', function () {
+  $('#table_right:visible tbody').on('click', 'input:checkbox', function () {
     $this = $(this);
     if ($this.is(':checked')) {
-      if ($("#table_right tbody :checkbox:not(:checked)").length == 0) {
+      if ($("#table_right:visible tbody :checkbox:not(:checked)").length == 0) {
         $('#check_all_remove').prop("checked", true);
       }
       change_button_left(0);
       $this.closest('tr').css('background-color', "pink");
     } else {
-      if ($("#table_right tbody :checkbox:checked").length == 0) {
+      if ($("#table_right:visible tbody :checkbox:checked").length == 0) {
         change_button_left(1);
       }
       if ($this.closest('tr').attr('class') == "odd") {
@@ -98,14 +98,14 @@ function myJS_data_event() {
   });
   // click button to right =>
   $('#to_right').click(function () {
-    var checkboxes = $("#table_left tbody").find('input:checkbox');
+    var checkboxes = $("#table_left:visible tbody").find('input:checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked == true) {
         checkboxes[i].checked = false;
         var tr = checkboxes[i].closest("tr");
         tr.style.backgroundColor = "white";
-        table_left = $("#table_left").dataTable();
-        table_right = $("#table_right").dataTable();
+        table_left = $("#table_left:visible").dataTable();
+        table_right = $("#table_right:visible").dataTable();
 
         var tr_add = table_left.fnGetData(tr);
         table_right.fnAddData(tr_add);
@@ -121,15 +121,15 @@ function myJS_data_event() {
   });
   // click button to left <=
   $('#to_left').click(function () {
-    var checkboxes = $("#table_right tbody").find('input:checkbox');
+    var checkboxes = $("#table_right:visible tbody").find('input:checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i].checked == true) {
         checkboxes[i].checked = false;
         var tr = checkboxes[i].closest("tr");
         tr.style.backgroundColor = "white";
 
-        table_left = $("#table_left").dataTable();
-        table_right = $("#table_right").dataTable();
+        table_left = $("#table_left:visible").dataTable();
+        table_right = $("#table_right:visible").dataTable();
 
         var tr_add = table_right.fnGetData(tr);
         table_left.fnAddData(tr_add);
@@ -144,12 +144,12 @@ function myJS_data_event() {
   });
 
   $('.close_modal').click(function () {
-      $('#table_left').DataTable().search('');
-      $('#table_right').DataTable().search('');
+      $('#table_left:visible').DataTable().search('');
+      $('#table_right:visible').DataTable().search('');
   });
   // Add index column in table left
-  $('#table_left').DataTable().on('order.dt search.dt', function () {
-    $('#table_left').DataTable().column(0, {
+  $('#table_left:visible').DataTable().on('order.dt search.dt', function () {
+    $('#table_left:visible').DataTable().column(0, {
       search: 'applied',
       order: 'applied'
     }).nodes().each(function (cell, i) {
@@ -157,8 +157,8 @@ function myJS_data_event() {
     });
   }).draw();
   // Add index column in table right
-  $('#table_right').DataTable().on('order.dt search.dt', function () {
-    $('#table_right').DataTable().column(0, {
+  $('#table_right:visible').DataTable().on('order.dt search.dt', function () {
+    $('#table_right:visible').DataTable().column(0, {
       search: 'applied',
       order: 'applied'
     }).nodes().each(function (cell, i) {
@@ -186,11 +186,11 @@ function myJS_data_event() {
 
 function myJS() {
   // real code to setup table is at _add_reviewer.html.erb
-  var table_left = $('#table_left').dataTable({
+  var table_left = $('#table_left:visible').dataTable({
     bInfo: false, bDestroy: true,
 
   });
-  var table_right = $('#table_right').dataTable({
+  var table_right = $('#table_right:visible').dataTable({
     bInfo: false, bDestroy: true
   });
 
@@ -227,7 +227,7 @@ function change_button_save(flag) {
 }
 
 function save() {
-  var checkboxes = $("#table_right").DataTable().rows().data();
+  var checkboxes = $("#table_right:visible").DataTable().rows().data();
   var id_group = $("#title_group h1").text();
   var list = [];
   for (var i = 0; i < checkboxes.length; i++) {
@@ -308,7 +308,7 @@ function myAjax() {
   $('.user_group_icon').click(function () {
     //xoa du lieu cũ của table
     var id = $(this).attr("data-id");
-    //$('#table_left_filter input').html("");$('#to_left')
+    //$('#table_left:visible_filter input').html("");$('#to_left')
     //ajax load bảng user_group
     $.ajax({
       type: "GET",
@@ -324,11 +324,11 @@ function myAjax() {
         $('#to_left').removeClass("btn-info").addClass("btn-secondary");
         $('#to_right').removeClass("btn-info").addClass("btn-secondary");
 
-        $("#table_right").dataTable().fnClearTable();
+        $("#table_right:visible").dataTable().fnClearTable();
         $.each(response, function (i, e) { //duyet mang doi tuong
-          table = $("#table_right").dataTable();
+          table = $("#table_right:visible").dataTable();
           table.fnAddData([
-            "<td style='text-align: right'></td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
+            "<td style='text-align: right'>" + (i+1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
           ]);
         });
       }
@@ -345,12 +345,12 @@ function myAjax() {
       },
       dataType: "json",
       success: function (response) {
-        $("#table_left").dataTable().fnClearTable(); //xoa du lieu cũ của table
+        $("#table_left:visible").dataTable().fnClearTable(); //xoa du lieu cũ của table
         //xoa du lieu cũ của table
         $(response).each(
           function (i, e) { //duyet mang doi tuong
-            $("#table_left").dataTable().fnAddData([
-              "<td style='text-align: right'></td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
+            $("#table_left:visible").dataTable().fnAddData([
+              "<td style='text-align: right'>" + (i+1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
             ]);
           }
         );
