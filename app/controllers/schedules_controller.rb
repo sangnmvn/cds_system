@@ -55,7 +55,6 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.start_date.strftime("%b %d, %Y"))
       current_schedule_data.push(schedule.end_date_hr.strftime("%b %d, %Y"))
       current_schedule_data.push(schedule.status)
-      binding.pry
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
