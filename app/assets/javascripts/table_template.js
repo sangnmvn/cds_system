@@ -252,8 +252,10 @@ function changeBtnFinish(direction) {
       $("#btnFinish").attr("disabled", true);
       $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
     } else {
-      $("#btnFinish").attr("disabled", false);
-      $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+      if (is_full_assess) {
+        $("#btnFinish").attr("disabled", false);
+        $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+      }
     }
   }
 }

@@ -118,7 +118,7 @@ class TemplatesController < ApplicationController
   private
 
   def template_params
-    params.permit(:name, :role_id, :description)
+    params.permit(:name, :role_id, :description, :status)
   end
 
   def invalid_template

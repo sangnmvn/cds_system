@@ -32,8 +32,11 @@ function clickSaveButton() {
     if ($('#msform .row .id-template').attr('value') === undefined) {
       postCreateTemplate(name, role, description)
     } else {
+      status = is_enabled
+      if (!is_enabled)
+        status = $("input[name='status']:checked").val();
       var id = $('#msform .row .id-template').attr('value')
-      applyEditTemplate(id, name, role, description)
+      applyEditTemplate(id, name, role, description, status)
     }
     next_button(1)
   });
@@ -82,6 +85,17 @@ function checkChangeUpdate() {
     checkModalCancel()
   })
   $('.step1 #role').on('click', function () {
+    var name = $('.step1 #template').val()
+    var role = $('.step1 #role').val()
+    if (name.length != 0 && role.length != 0) {
+      save_button(1)
+      clickSaveButton()
+    } else {
+      save_button(0)
+    }
+    checkModalCancel()
+  })
+  $('input[name ="status"]').on('change', function () {
     var name = $('.step1 #template').val()
     var role = $('.step1 #role').val()
     if (name.length != 0 && role.length != 0) {
@@ -165,7 +179,8 @@ function postCreateTemplate(name, role, description) {
       data: {
         name: name,
         role_id: role,
-        description: description
+        description: description,
+        status: false,
       },
       dataType: "json",
       success: function (response) {
@@ -201,7 +216,7 @@ function postCreateTemplate(name, role, description) {
   }
 }
 
-function applyEditTemplate(id, name, role, description) {
+function applyEditTemplate(id, name, role, description, status) {
   if (name !== undefined || role !== undefined) {
     $.ajax({
       type: "PATCH",
@@ -212,7 +227,8 @@ function applyEditTemplate(id, name, role, description) {
       data: {
         name: name,
         role_id: role,
-        description: description
+        description: description,
+        status: status,
       },
       dataType: "json",
       success: function (response) {

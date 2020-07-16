@@ -27,10 +27,10 @@
               <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'form-control border-primary' %>
             <% else %>
               <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), prompt: 'Please select one', class: 'form-control border-primary' %>
-             <% end %>
+            <% end %>
             <div class="error"></div>
           </div>
-       </div>
+      </div>
         <br>
         <%# Description %>
         <div class="row">
@@ -49,11 +49,11 @@
             <label>Status</label>
           </div>
           <div class="col-md-2 status_radio">
-            <%= radio_button_tag :status, "Enable", false, disabled: true %>
+            <%= radio_button_tag :status, 1, (!@template.blank? || @template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess )%>
             <%= label_tag(:status, "Enable") %>
           </div>
           <div class="col-md-3 status_radio">
-            <%= radio_button_tag :status, "Disable", true, disabled: true %>
+            <%= radio_button_tag :status, 0, (@template.blank? || !@template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess ) %>
             <%= label_tag(:status, "Disable") %>
           </div>
           <div class="error"></div>
@@ -67,3 +67,6 @@
 <button class="btn btn-primary save action-button step1" value="Save" name="save">Save</button>
 <button class="btn btn-primary next action-button step1 btn-next-template" value="Next" name="next">Next</button>
 <button class="btn btn-light border-primary step1_cancel" data-toggle="modal" data-target="#modal_warning_close">Cancel</button>
+<script>
+  var is_enabled = <%= ((@template).blank? || !@template[:status]) %>
+</script>
