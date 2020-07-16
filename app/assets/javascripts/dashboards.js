@@ -94,10 +94,6 @@ function drawChart(data_filter = {}) {
   // get data and draw chart my career
 }
 
-$('#company').on('click', function () {
-  $('#table_setting').html(``)
-})
-
 $(document).ready(function () {
   loadFilterReview();
   loadDataFilter();
@@ -135,6 +131,31 @@ $(document).ready(function () {
       </table>`)
     loadDataKeepTitle(data_filter);
   });
+
+  if (is_staff) {
+    $.ajax({
+      type: "POST",
+      url: "/dashboards/data_latest_baseline",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      data: {},
+      dataType: "json",
+      success: function (response) {
+        if (response.data == "fails")
+          return;
+        $('#title_previous').html(response.data.current_title.title);
+        $('#title_current').html(response.data.expected_title.title);
+        $('#title_plan').html(response.data.cdp.title);
+        $('#rank_previous').html(response.data.current_title.rank);
+        $('#rank_current').html(response.data.expected_title.rank);
+        $('#rank_plan').html(response.data.cdp.rank);
+        $('#level_previous').html(response.data.current_title.level);
+        $('#level_current').html(response.data.expected_title.level);
+        $('#level_plan').html(response.data.cdp.level);
+      }
+    });
+  }
 });
 
 function loadFilterReview() {

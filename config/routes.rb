@@ -147,6 +147,7 @@ Rails.application.routes.draw do
       post :export_up_title
       post :export_down_title
       post :export_keep_title
+      post :data_latest_baseline
     end
   end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
