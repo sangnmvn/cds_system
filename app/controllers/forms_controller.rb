@@ -81,7 +81,7 @@ class FormsController < ApplicationController
 
     @user = {
       format_name: user.format_name,
-      role_name: user.role.name,
+      role_name: user.role&.name || "",
     }
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)

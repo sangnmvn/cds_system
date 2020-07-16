@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#modal_edit_contact").modal("show");
   })
 
-  $("#change_avatar").on('change',function(){
+  $("#change_avatar").on('change', function () {
     var file = this.files[0]
     $.ajax({
       type: "POST",
@@ -15,7 +15,7 @@ $(document).ready(function () {
       success: function (response) {
         if (response) {
           success("My avatar have been updated successfully!")
-          $("avt").attr('src',url)
+          $("avt").attr('src', url)
         } else
           fails("My avatar haven't been updated!")
       }
@@ -24,8 +24,8 @@ $(document).ready(function () {
 
   $("#edit_location").click(function () {
     $("#modal_edit_location").modal("show");
-    $('#provinces option[text="'+ select_provinces.trim() +'"]').attr("selected", "selected");
-    $('#district option[value="'+ select_district.trim() +'"]').attr("selected", "selected");
+    $('#provinces option[text="' + select_provinces.trim() + '"]').attr("selected", "selected");
+    $('#district option[value="' + select_district.trim() + '"]').attr("selected", "selected");
   })
 
   $("#change_password").click(function () {
@@ -35,9 +35,12 @@ $(document).ready(function () {
 
   $(".btn-save-edit").click(function () {
     var permanent_address = ""
-    if($("#district").val() == "" || $("#provinces option:selected").val() == "")
-      permanent_address = select_district.trim() + ", " + select_provinces.trim()
-    else
+    if ($("#district").val() == "" || $("#provinces option:selected").val() == "") {
+      if (select_district.trim() != "" && select_provinces.trim() != "")
+        permanent_address = select_district.trim() + ", " + select_provinces.trim()
+      else
+        permanent_address = ""
+    } else
       permanent_address = $("#district option:selected").val() + ", " + $("#provinces option:selected").text()
     var h_user = {
       id: $("#user_id").val(),
@@ -149,7 +152,7 @@ $(document).ready(function () {
     var first_name = $(this).val()
     if (first_name) {
       checkDataContact()
-      checkName(first_name,"first_name","error_first_name")
+      checkName(first_name, "first_name", "error_first_name")
     } else {
       $(this).addClass("is-invalid")
       $("#error_first_name").html("First Name must be from 1 to 32 characters")
@@ -160,7 +163,7 @@ $(document).ready(function () {
     var phone_number = $(this).val()
     if (phone_number) {
       checkDataContact()
-      checkPhoneNumber(phone_number,"phone_number","error_phone_number")
+      checkPhoneNumber(phone_number, "phone_number", "error_phone_number")
     } else {
       $(this).addClass("is-invalid")
       $("#error_phone_number").html("Please enter phone_number")
@@ -168,23 +171,23 @@ $(document).ready(function () {
     }
   })
   $("#birthday").change(function () {
-      checkDataContact()
+    checkDataContact()
   })
   $("#gender").change(function () {
     checkDataContact()
-})
+  })
   $("#skype").keyup(function () {
     checkDataContact()
   })
 
-  $(".show-pass").on('click',function(){
-    $(this).closest('.row').find('input').prop('type','text')
+  $(".show-pass").on('click', function () {
+    $(this).closest('.row').find('input').prop('type', 'text')
     $(this).addClass('d-none')
     $(this).next().removeClass('d-none')
   })
 
-  $(".hide-pass").on('click',function(){
-    $(this).closest('.row').find('input').prop('type','password')
+  $(".hide-pass").on('click', function () {
+    $(this).closest('.row').find('input').prop('type', 'password')
     $(this).addClass('d-none')
     $(this).prev().removeClass('d-none')
   })
@@ -193,7 +196,7 @@ $(document).ready(function () {
     var last_name = $(this).val()
     if (last_name) {
       checkDataContact()
-      checkName(last_name,"last_name","error_last_name")
+      checkName(last_name, "last_name", "error_last_name")
     } else {
       $(this).addClass("is-invalid")
       $("#error_last_name").html("Last Name must be from 1 to 32 characters.")
@@ -276,8 +279,8 @@ function checkConfirm() {
 
 function checkName(input, idinput, idspan) {
   var regex = new RegExp("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
-                          "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆẾỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤÚỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
-                          "ụúủứừÚỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\\s]+$")
+    "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆẾỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤÚỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+    "ụúủứừÚỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\\s]+$")
   if (!regex.test(input)) {
     $("#" + idspan).html("This field is invalid")
     $("#" + idinput).addClass("is-invalid")
