@@ -103,9 +103,13 @@ function drawPieChart(data, total, id, name) {
     .append('g')
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
-      var vert = i * (legendRectSize + legendSpacing + 5);
+      var maxItemOneColumn = Math.ceil(color.domain().length / 2)
+      var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
+
+      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 100)
+      var h = vert - height / 4
       // return 'translate(' + width / 3 + ',' + - height / 4 + ')';
-      return 'translate(' + (width / 3) + ',' + (vert - height / 4) + ')';
+      return 'translate(' + w + ',' + h + ')';
     });
 
   var title = svg.selectAll('.total')
