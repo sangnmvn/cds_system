@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   # devise_for :users
   devise_scope :users do
     get "/users/sign_out" => "devise/sessions#destroy"
+    post "/users/create" => "users#create"
   end
   resources :users do
     collection do
@@ -21,7 +22,6 @@ Rails.application.routes.draw do
       get :user_profile
       get :index2
       post :edit_user_avatar
-      post :create
       post :change_password
       post :update
       post :edit_user_profile
