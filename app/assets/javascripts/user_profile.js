@@ -24,6 +24,8 @@ $(document).ready(function () {
 
   $("#edit_location").click(function () {
     $("#modal_edit_location").modal("show");
+    $('#provinces option[text="'+ select_provinces.trim() +'"]').attr("selected", "selected");
+    $('#district option[value="'+ select_district.trim() +'"]').attr("selected", "selected");
   })
 
   $("#change_password").click(function () {
@@ -32,6 +34,11 @@ $(document).ready(function () {
   })
 
   $(".btn-save-edit").click(function () {
+    var permanent_address = ""
+    if($("#district").val() == "" || $("#provinces option:selected").val() == "")
+      permanent_address = select_district.trim() + ", " + select_provinces.trim()
+    else
+      permanent_address = $("#district option:selected").val() + ", " + $("#provinces option:selected").text()
     var h_user = {
       id: $("#user_id").val(),
       first_name: $("#first_name").val(),
@@ -41,7 +48,7 @@ $(document).ready(function () {
       gender: $("#gender").val(),
       skype: $("#skype").val(),
       nationality: $("#nationality").val(),
-      permanent_address: $("#permanent_address").val(),
+      permanent_address: permanent_address,
       current_address: $("#current_address").val()
     }
     $.ajax({

@@ -3,6 +3,7 @@
 <%= javascript_include_tag "application", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag "select_provinces", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
+<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'></script>
 
 <% breadcrumb :user_profile %>
 <div class="user-card">
@@ -104,10 +105,13 @@
     </div>  
   </div>
 </div>
-<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'/>
 <%= render "modal_edit_contacts" %>
 <%= render "modal_change_password" %>
 <%= render "modal_edit_location" %>
 
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
+<script>
+  var select_provinces = "<%= @current_user.permanent_address.split(",")[1] %>"
+  var select_district = "<%= @current_user.permanent_address.split(",")[0] %>"
+</script>
