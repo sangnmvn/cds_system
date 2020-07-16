@@ -76,7 +76,7 @@
     </div>
     <div class="p-title">
       Joined Date
-      <dt class="p-content" id="joined_date"><%= @current_user.joined_date.to_date.to_s(:long) %></dt> 
+      <dt class="p-content" id="joined_date"><%= @current_user.joined_date.nil? ? "N/A" : @current_user.joined_date.to_date.to_s(:long) %></dt> 
     </div>  
   </div>
   <div class="col-6">
