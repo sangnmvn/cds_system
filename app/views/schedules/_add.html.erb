@@ -39,7 +39,7 @@
                     <label>Project Name (*)</label>
                   </div>
                   <div class="col-sm-6">
-                    <%= select_tag "project", options_from_collection_for_select(@projects, "id", "desc"), class: 'form-control',  include_blank: "Please select a project" %>
+                    <%= select_tag "project", options_from_collection_for_select(@projects, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
                   </div>
                 </div>
                 <br>
