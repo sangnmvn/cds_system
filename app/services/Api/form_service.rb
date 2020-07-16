@@ -290,8 +290,11 @@ module Api
       # filter 1 period
       # the latest schedule will be first, second will be previous of the filtered schedule
       filtered_period = Period.find_by(id: filter[:period_id][0])
-      return {} if filtered_period.nil?
-      schedules = Schedule.where(status: "Done").where("start_date <= ?", filtered_period.to_date).order(end_date_hr: :desc)
+
+      # UNCOMMENT the line below if you don't need dummy data
+      # return {} if filtered_period.nil?
+
+      schedules = Schedule.where(status: "Done").where("start_date <= ?", filtered_period&.to_date).order(end_date_hr: :desc)
 
       schedules.map do |schedule|
         if first[schedule.company_id].nil?
@@ -303,7 +306,8 @@ module Api
       same_keys = first.keys & second.keys
       first = first.keep_if { |k, _| same_keys.include? k }
       second = second.keep_if { |k, _| same_keys.include? k }
-      return {} if first.empty? || second.empty?
+      # UNCOMMENT the line below if you don't need dummy data
+      # return {} if first.empty? || second.empty?
 
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
@@ -350,6 +354,26 @@ module Api
           title_prev: prev_period[:title],
         }
       end
+      results = {}
+      temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
+                    { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+                    { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
+                    { full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
+                    { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
+                    { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
+                    { full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-1", title_prev: "Title 2-1", period_from_name: "02/2020" },
+                    { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-2", title_prev: "Title 2-2", period_from_name: "02/2020" },
+                    { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 3-2", title_prev: "Title 3-2", period_from_name: "08/2019" }]
+
+      results[3] = {}
+      results[3][:users] = temp_users
+      results[3][:company_name] = h_companies[3]
+      results[3][:period] = 50
+      results[3][:prev_period] = 40
+      results[3][:period_excel_name] = "20200901"
+      results[3][:period_name] = "09/2020"
+      results[3][:period_prev_name] = "02/2020"
+
       { data: results }
     end
 
@@ -877,7 +901,6 @@ module Api
       end
       period_keep ||= form.period_keep_id
 
-
       return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep_id: period_keep.id)
 
       title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
@@ -1222,7 +1245,7 @@ module Api
       hash
     end
 
-    def format_form_cds_review(form,user_approve_ids, periods)
+    def format_form_cds_review(form, user_approve_ids, periods)
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
@@ -1238,7 +1261,7 @@ module Api
         status: form.status,
         user_id: form.user&.id,
         is_approver: (user_approve_ids.include? form.user&.id),
-        is_open_period: (periods.include? form.period_id)
+        is_open_period: (periods.include? form.period_id),
       }
     end
 

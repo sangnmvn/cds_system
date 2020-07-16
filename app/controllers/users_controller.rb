@@ -116,7 +116,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroys
+  def destroy
     return render json: { status: "success", deleted_id: params[:id] } if @user.update(is_delete: true)
 
     render json: { status: "fail" }

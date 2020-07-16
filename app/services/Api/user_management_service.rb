@@ -1,6 +1,7 @@
 module Api
   class UserManagementService < BaseService
     FULL_ACCESS = 1
+
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
       privilege_array = []
@@ -14,6 +15,7 @@ module Api
 
     def format_user_data(users)
       datas = []
+      users[0]&.email # anti-crash code (bug rails)
       projects = Project.distinct.select("project_members.user_id as user_id", :name).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:name)
       h_projects = {}
       projects.map do |project|
