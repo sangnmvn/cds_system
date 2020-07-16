@@ -36,7 +36,7 @@ function loadTitleMappingForAdd() {
             for (competency_s of competency_list) {
                 competency = JSON.parse(competency_s);
                 column_list.push(competency.name);
-                final_html += '<td data-competency-id="{id}" class="dynamic_title_header_col">{name} (*)</td>'
+                final_html += '<td data-competency-id="{id}" class="dynamic-title-header-col">{name} (*)</td>'
                     .formatUnicorn({
                         id: competency.id,
                         name: competency.name
@@ -66,14 +66,14 @@ function loadTitleMappingForAdd() {
                     for (k = 0; k < data_list.length; k++) {
                         // find competency data suitable for competency column cell
                         if (data_list[k].competency_name == current_cell_competency_name) {
-                            value_dropdown = `<select class='form-control competency_value'> 
+                            value_dropdown = `<select class='form-control competency-value'> 
                             <option selected value='0-1'>0-1</option><option value='++1'>++1</option><option value='1'>1</option>
                             <option value='1-2'>1-2</option><option value='++2'>++2</option><option value='2'>2</option>
                             <option value='2-3'>2-3</option><option value='++3'>++3</option><option value='3'>3</option>
                             <option value='3-4'>3-4</option><option value='++4'>++4</option><option value='4'>4</option>
                             <option value='4-5'>4-5</option><option value='++5'>++5</option><option value='5'>5</option>
                             </select>`;
-                            final_html += "<td class='competency_row'>{value_dropdown}</td>".formatUnicorn({
+                            final_html += "<td class='competency-row'>{value_dropdown}</td>".formatUnicorn({
                                 value_dropdown: value_dropdown
                             });
                             break;

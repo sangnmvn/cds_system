@@ -8,7 +8,7 @@
             <td class="th">Title</td>
             <td class="th">Rank</td>
             <% @list_title[:competency].each do |item| %>
-              <td class="dynamic_title_header_col" data-competency-id='<%= item.id %>'><%= item.name %> (*)</td>
+              <td class="dynamic-title-header-col" data-competency-id='<%= item.id %>'><%= item.name %> (*)</td>
             <% end %>
           </tr>
         </thead>
@@ -18,8 +18,8 @@
               <td style="text-align: left"><%= item.name %></td>
               <td class="number"><%= item.rank %></td>
               <% @list_title[:competency].each do |item| %>
-                <td class="competency_row">
-                  <select class="form-control competency_value">
+                <td class="competency-row">
+                  <select class="form-control competency-value">
                     <%= 1.upto(@list_title[:no_rank].to_i) do |i| %>
                       <option value="<%=(i - 1)%>-<%= i %>"><%=(i - 1)%>-<%= i %></option>
                       <option value="++<%=i%>">++<%=i%></option>

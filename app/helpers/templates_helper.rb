@@ -289,8 +289,7 @@ module TemplatesHelper
     end
     # convert to array to prevent additional query
     competencies = Competency.select(:id, :name).joins(:template).where("templates.id=?", template_id).order(:_type).to_a
-    all_levels = Competency.joins(:slots).order(:level => :asc, :"slots.slot_id" => :asc).select(:id, :level, :"slots.evidence", :"slots.desc").to_a
-
+    all_levels = Competency.select(:id, :level, :"slots.evidence", :"slots.desc").joins(:slots).order(location: :asc, level: :asc, "slots.slot_id": :asc).to_a
     competencies.each_with_index do |competency, index|
       roman_index = roman(index + 1)
       roman_name = competency.name
@@ -318,7 +317,7 @@ module TemplatesHelper
         :prompt => "",
       })
 
-      levels = all_levels.collect { |c| c.level.to_i if c.id == competency.id }.uniq.compact
+      levels = all_levels.collect { |c| c[:level].to_i if c.id == competency.id }.uniq.compact
       all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
       levels.each do |level|
         cds_sheet.add_row ["", "Level #{level}", "", "", "", "", "", "", "", ""], :style => format5
@@ -345,12 +344,13 @@ module TemplatesHelper
           :prompt => "",
         })
 
-        slot_this_level = all_slot_levels.collect { |c| c if c.level.to_i == level }.compact
+        slot_this_level = all_slot_levels.collect { |c| c if c[:level].to_i == level }.compact
         slot_this_level.each_with_index do |s, index|
           final_name = squish_keep_newline(s.desc)
           final_desc = squish_keep_newline(s.evidence)
-          final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
-          final_level = s.level + alph(index + 1)
+          final_desc_with_HTML = ActionView::Base.full_sanitizer.sanitize(final_desc)
+          #final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
+          final_level = s[:level] + alph(index + 1)
           cds_sheet.add_row [final_level, final_name, final_desc_with_HTML, "Commit", "Commit", "", "", "", "", ""], :style => format6
 
           row_id = cds_sheet.rows.length
@@ -461,7 +461,7 @@ module TemplatesHelper
           final_name = squish_keep_newline(s.desc)
           final_desc = squish_keep_newline(s.evidence)
           final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
-          final_level = s.level + alph(index + 1)
+          final_level = s[:level] + alph(index + 1)
           cdp_sheet.add_row [final_level, final_name, final_desc_with_HTML, "Commit", "Commit", ""], :style => format6
           height = [calculate_height(final_desc), calculate_height(final_name)].max
           cdp_sheet.rows[-1].height = height
