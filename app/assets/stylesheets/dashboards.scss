@@ -204,11 +204,35 @@ rect {
             .level {
                 width: 5%;
             }
+
             .period-keep {
                 width: 10%;
             }
+
             .action {
                 width: 5%;
+            }
+        }
+    }
+
+    .viewport-staff {
+        display: flex;
+        flex-wrap: wrap;
+        height: 400px;
+
+        .cds-cdp-suggestion {
+            width: 50%;
+        }
+
+        .baseline-cds {
+            width: 50%;
+            background-color: #dae7ff;
+            #table_baseline {
+                background-color: #dae7ff;
+                width: 98% !important;
+                .first-column {
+                    width: 10%;
+                }
             }
         }
     }
@@ -237,13 +261,14 @@ rect {
         margin-bottom: 20px;
         font-weight: bold;
     }
-    .solid{
+
+    .solid {
         fill: none;
         stroke-width: 3;
-     }
-     
-     .dashed {
+    }
+
+    .dashed {
         fill: none;
-        stroke-dasharray: 5,5; 
-     }
+        stroke-dasharray: 5, 5;
+    }
 }

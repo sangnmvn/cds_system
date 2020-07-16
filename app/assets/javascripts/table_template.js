@@ -1,9 +1,12 @@
 $(document).ready(function () {
   var templateId = $('#msform .row .id-template').attr("value")
-  CKEDITOR.replace( 'editor' );
+  CKEDITOR.replace('editor');
   checkSlotinTemplate(templateId);
   $('#table_slot').DataTable({
-    fnDrawCallback: function(){checkPrivilegesSlot(); disableButtonUpDown();},
+    fnDrawCallback: function () {
+      checkPrivilegesSlot();
+      disableButtonUpDown();
+    },
     "info": false,
     "searching": false,
     "order": false
@@ -39,7 +42,7 @@ $(document).ready(function () {
     $('#contentMessageDelete').html("Are you sure you want to delete the slot below?<p><i>" + trDel.children()[1].textContent + "</i></p>")
     $("#messageDelete").modal('show')
   });
-  $("#btnDelete").click(function(){
+  $("#btnDelete").click(function () {
     delSlot(idDel, trDel, templateId);
     $("#hideIdSlot").html("");
     $("#descSlot").val("");
@@ -58,8 +61,7 @@ $(document).ready(function () {
     changeBtnSave(-1)
   });
 
-  CKEDITOR.instances.editor.on("key", function(event)
-  {
+  CKEDITOR.instances.editor.on("key", function (event) {
     checkDataDesc()
   });
   changeBtnSave(-1);
@@ -67,8 +69,7 @@ $(document).ready(function () {
   $('.dataTables_length').attr("style", "display:none");
 
   $("#btnFinish").click(function () {
-    if (checkStatusTemplate() == 0)
-    {
+    if (checkStatusTemplate() == 0) {
       $.ajax({
         type: "GET",
         url: "/slots/get_role",
@@ -77,7 +78,7 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (response) {
-          $("#contentQuestionEnable").html("You finished this template for role "+ response.name +". Do you want to enable the template for user using ?")
+          $("#contentQuestionEnable").html("You finished this template for role " + response.name + ". Do you want to enable the template for user using ?")
         },
       });
       $('#messageQuestionEnable').modal('show')
@@ -87,11 +88,11 @@ $(document).ready(function () {
     finnish(templateId);
     $('#messageQuestionEnable').modal('hide')
   })
-  $('#btnCloseStep3').click(function (){
+  $('#btnCloseStep3').click(function () {
     if ($('#addSlot').prop("disabled") == false)
       $("#modal_warning_cancel").modal("show");
     else
-      $(location).attr('href','/templates')
+      $(location).attr('href', '/templates')
   })
 
   $("#txtSearch").keypress(function () {
@@ -116,8 +117,8 @@ $(document).ready(function () {
     changeBtnSave(-1);
   });
 
-  $("#btnAlertCancel").click(function(){
-    $(location).attr('href','/templates')
+  $("#btnAlertCancel").click(function () {
+    $(location).attr('href', '/templates')
   })
 
   //-----------------------------------------------------
@@ -251,8 +252,10 @@ function changeBtnFinish(direction) {
       $("#btnFinish").attr("disabled", true);
       $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
     } else {
-      $("#btnFinish").attr("disabled", false);
-      $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+      if (is_full_assess) {
+        $("#btnFinish").attr("disabled", false);
+        $("#btnFinish").addClass("btn-primary").removeClass("btn-secondary")
+      }
     }
   }
 }
@@ -311,7 +314,7 @@ function finnish(templateId) {
     }
   });
   window.setTimeout(function () {
-    $(location).attr('href','/templates')
+    $(location).attr('href', '/templates')
   }, 1200);
 }
 $(document).on('click', '.btnUpSlot', function () {
@@ -340,15 +343,12 @@ function moveRow(id, row_id, direction, table) {
     },
     dataType: "json",
     success: function (response) {
-      if (response.status != "success")
-      {
-        $("#contentMessageMove").html("This slot is belonging to level "+ response.status +". Therefore, you cannot move it to another level. Please update its level before doing this action.")
+      if (response.status != "success") {
+        $("#contentMessageMove").html("This slot is belonging to level " + response.status + ". Therefore, you cannot move it to another level. Please update its level before doing this action.")
         $('#messageMove').modal('show')
-      }
-      else {
+      } else {
         success("Move success");
-        if(row_id != 1 && direction != -1)
-        {
+        if (row_id != 1 && direction != -1) {
           var num = parseInt(direction);
           current_row_data = table.row(row_id).data();
           previous_row_data = table.row(row_id + num).data();
@@ -356,8 +356,7 @@ function moveRow(id, row_id, direction, table) {
           table.row(row_id + num).data(current_row_data).draw();
           table.row(row_id).data(previous_row_data).draw();
           disableButtonUpDown()
-        }
-        else
+        } else
           loadSlotsinCompetency()
       }
     },
@@ -393,43 +392,28 @@ function checkStatusTemplate() {
   else
     return 0
 }
-function disableButtonUpDown(){
+
+function disableButtonUpDown() {
   tables = $("#table_slot").DataTable();
   length = tables.rows().data().length;
-  if(length >= 1 && $("#table_slot_next").hasClass('disabled'))
-  {
-    $('#table_slot tr:last td .btnDownSlot .icon').attr('style','color:#6c757d')
+  if (length >= 1 && $("#table_slot_next").hasClass('disabled')) {
+    $('#table_slot tr:last td .btnDownSlot .icon').attr('style', 'color:#6c757d')
     $('#table_slot tr:last td .btnDownSlot').addClass('disabled')
   }
   if (length >= 1 && $("#table_slot_previous").hasClass('disabled')) {
-    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style','color:#6c757d')
+    $('#table_slot tr:nth-child(1) td .btnUpSlot .icon').attr('style', 'color:#6c757d')
     $('#table_slot tr:nth-child(1) td .btnUpSlot').addClass('disabled')
   }
 }
-function checkPrivilegesSlot(){
-  $.ajax({
-    type: "GET",
-    url: "/competencies/check_privileges",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
-    },
-    data: {},
-    dataType: "json",
-    success: function (response) {
-      if(response.privileges != "full")
-      {
-        if (response.privileges == "view"){
-          $('#tbdTemplate tr td a').addClass("disabled");
-          $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#6c757d");
-          $('#selectLevel').prop("disabled", true);
-          $('#descSlot').prop("disabled", true);
-          CKEDITOR.instances.editor.setReadOnly(true)
-          $("#btnFinish").attr("disabled", true);
-          $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
-        }
-        else
-          $(location).attr('href','/templates')
-      }
-    },
-  });
+
+function checkPrivilegesSlot() {
+  if (!is_full_assess) {
+    $('#tbdTemplate tr td a').addClass("disabled");
+    $("#tbdTemplate tr td .fa-arrow-circle-up,.fa-arrow-circle-down,.fa-trash,.fa-pencil").css("color", "#6c757d");
+    $('#selectLevel').prop("disabled", true);
+    $('#descSlot').prop("disabled", true);
+    CKEDITOR.instances.editor.config.readOnly = true;
+    $("#btnFinish").attr("disabled", true);
+    $("#btnFinish").removeClass("btn-primary").addClass("btn-secondary")
+  }
 }

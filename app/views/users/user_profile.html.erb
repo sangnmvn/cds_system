@@ -3,7 +3,6 @@
 <%= javascript_include_tag "application", 'data-turbolinks-track': "reload" %>
 
 
-<%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
 <% breadcrumb :user_profile %>
 <div class="user-card">
   <div class="card">
@@ -39,15 +38,14 @@
                 <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
                 &nbsp; <%= @current_user.date_of_birth ? @current_user.date_of_birth.to_s(:long) : "N/A" %>
               </div>
-              <div class="text-contact-left" id="p_CMND">
-                <i class="far fa-id-card" style="color:black" title="Identity Card No"></i>
-                &nbsp; <%= @current_user.identity_card_no ? @current_user.identity_card_no : "N/A" %>
+              <div class="text-contact-left">
+                <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
               </div>
             </div>
             <div class="col-4">
               <div class="text-contact-right" id="p_phone">
                 <i class="fas fa-phone-alt" style="color:black" title="Phone Number"></i>
-                &nbsp; <%= @current_user.phone ? @current_user.phone : "N/A" %>
+                &nbsp; <%= @current_user.phone != "" ? @current_user.phone : "N/A" %>
               </div>
               <div class="text-contact-right" id="p_mail">
                 <i class="fas fa-envelope" style="color:black" title="Email"></i>
@@ -55,13 +53,8 @@
               </div>
               <div class="text-contact-right" id="p_skype">
                 <i class="fab fa-skype" style="color:black" title="Skype ID"></i>
-                &nbsp; <%= @current_user.skype ? @current_user.skype : "N/A" %>
+                &nbsp; <%= @current_user.skype != "" ? @current_user.skype : "N/A" %>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-3 link-bottom">
-              <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
             </div>
           </div>
         </div>
@@ -75,11 +68,11 @@
     <hr/>
     <div class="p-title">
       Company
-      <dt class="p-content" id="company"><%= @current_user.company.name ? @current_user.company.name : "N/A" %></dt> 
+      <dt class="p-content" id="company"><%= @current_user.company.name != "" ? @current_user.company.name : "N/A" %></dt> 
     </div>
     <div class="p-title">
       Project
-      <dt class="p-content" id="project"><%= @project ? @project : "N/A" %></dt> 
+      <dt class="p-content" id="project"><%= @project != "" ? @project : "N/A" %></dt> 
     </div>
     <div class="p-title">
       Joined Date
@@ -100,12 +93,12 @@
     </div>
     <div class="p-title">Permanent Address
       <dt class="p-content" id="p_Permanent_address">
-        <%= @current_user.permanent_address ? @current_user.permanent_address : "N/A" %>
+        <%= @current_user.permanent_address != "" ? @current_user.permanent_address : "N/A" %>
       </dt> 
     </div>
     <div class="p-title">Current Address
       <dt class="p-content" id="p_current_address">
-        <%= @current_user.current_address ? @current_user.current_address : "N/A" %>
+        <%= @current_user.current_address != "" ? @current_user.current_address : "N/A" %>
       </dt> 
     </div>  
   </div>
@@ -116,4 +109,10 @@
 
 <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
-
+<script>
+  var select_provinces = "<%= @current_user.permanent_address.split(",")[1] %>"
+  var select_district = "<%= @current_user.permanent_address.split(",")[0] %>"
+</script>
+<%= javascript_include_tag "select_provinces", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
+<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'></script>

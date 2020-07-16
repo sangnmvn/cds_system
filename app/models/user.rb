@@ -20,7 +20,7 @@ class User < ApplicationRecord
   has_many :approvees, :class_name => "Approver", :foreign_key => "user_id", :dependent => :destroy
 
   scope :search_user, ->(search) {
-          where("email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
+          where("users.email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
         }
 
   has_many :roles, :class_name => "Role", :foreign_key => "updated_by", :dependent => :destroy

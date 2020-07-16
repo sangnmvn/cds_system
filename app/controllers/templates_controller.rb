@@ -10,14 +10,16 @@ class TemplatesController < ApplicationController
   include TemplatesHelper
 
   def index
-    redirect_to index2_users_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
+    redirect_to root_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
     @templates = Template.joins(:role, :user).select('templates.*, roles.name as role_name, concat(users.first_name," ",users.last_name) as updated_by').order("updated_at desc")
+    @is_full_assess = @privilege_array.include?(FULL_ACCESS_RIGHT)
   end
 
   def new
     role_ids = Template.pluck(:role_id)
     @roles = Role.where.not(id: role_ids)
     @competencies = Competency.all
+    @is_full_assess = @privilege_array.include?(FULL_ACCESS_RIGHT)
     render "add", locals: { title: "Add a new Template" }
   end
 
@@ -36,7 +38,7 @@ class TemplatesController < ApplicationController
   end
 
   def edit
-    unless @privilege_array.include?(FULL_ACCESS_RIGHT)
+    unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
       redirect_to action: "index"
       return
     end
@@ -44,12 +46,12 @@ class TemplatesController < ApplicationController
     @template = Template.find(params[:id])
     @current_role_id = Template.find_by_id(params[:id]).role_id
     @roles = Role.where(id: @current_role_id).or(Role.where.not(id: role_ids))
+    @is_full_assess = @privilege_array.include?(FULL_ACCESS_RIGHT)
     render "add", locals: { title: "Edit the Template" }
   end
 
   def update
     return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_RIGHT)
-
     @template = Template.find(params[:id])
     if @template.update_attributes(template_params)
       @template.update_attributes(user_id: current_user.id)
@@ -116,7 +118,7 @@ class TemplatesController < ApplicationController
   private
 
   def template_params
-    params.permit(:name, :role_id, :description)
+    params.permit(:name, :role_id, :description, :status)
   end
 
   def invalid_template

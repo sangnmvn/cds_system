@@ -1,5 +1,6 @@
 module Api
   class UserManagementService < BaseService
+    FULL_ACCESS = 1
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
       privilege_array = []
@@ -19,8 +20,6 @@ module Api
         h_projects[project.user_id] = [] if h_projects[project.user_id].nil?
         h_projects[project.user_id] << project.name
       end
-
-
       users.map.with_index do |user, index|
         current_user_data = []
         current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
@@ -32,13 +31,13 @@ module Api
         current_user_data.push(user&.email || "")
         current_user_data.push(user.account)
 
-        current_user_data.push(user.role&.name)
-        current_user_data.push(user.title&.name)
+        current_user_data.push(user.role&.name || "")
+        current_user_data.push(user.title&.name || "")
         project_name = h_projects[user.id].present? ? h_projects[user.id].join(", ") : ""
         current_user_data.push(project_name)
         current_user_data.push(user.company.name)
         # column action
-        pri = privilege_array.include?(1)
+        pri = privilege_array.include?(FULL_ACCESS)
         current_user_data.push("<div style='text-align: center'>
             <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
               <i class='fa fa-pencil icon' style='color: #{pri ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
@@ -444,7 +443,6 @@ module Api
         skype: params[:skype],
         date_of_birth: params[:date_of_birth],
         nationality: params[:nationality],
-        identity_card_no: params[:identity_card_no],
         permanent_address: params[:permanent_address],
         current_address: params[:current_address],
         gender: params[:gender],

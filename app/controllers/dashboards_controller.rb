@@ -4,7 +4,7 @@ class DashboardsController < ApplicationController
   before_action :check_privilege
   before_action :user_management_services
   before_action :export_services
-  before_action :form_services, only: [:data_career_chart]
+  before_action :form_services, only: [:data_latest_baseline]
 
   ALL_COMPANY = 20
   MY_COMPANY = 21
@@ -14,7 +14,7 @@ class DashboardsController < ApplicationController
   def index
     # true: manager, false: staff
     @can_view_chart = (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
-    @can_view_career = true # (@privilege_array & [MY_PROJECT, VIEW]).any? && !(@privilege_array & [ALL_COMPANY, MY_COMPANY]).any?
+    @can_view_career = (@privilege_array & [MY_PROJECT, VIEW]).any? && !(@privilege_array & [ALL_COMPANY, MY_COMPANY]).any?
   end
 
   def data_filter
@@ -90,6 +90,16 @@ class DashboardsController < ApplicationController
 
   def data_users_keep_title
     render json: { data: @user_management_services.data_users_keep_title }
+  end
+
+  def data_latest_baseline
+    return render json: { data: "fail" } unless @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
+
+    form = Form.includes(:title).find_by_user_id(current_user.id)
+    return render json: { data: "fail" } if form.nil?
+    result = @form_services.preview_result(form)
+    competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
+    render json: { data: @form_services.calculate_result(form, competencies, result) }
   end
 
   private

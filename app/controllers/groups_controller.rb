@@ -94,7 +94,7 @@ class GroupsController < ApplicationController
   private
 
   def redirect_to_index
-    redirect_to index2_users_path if !(@privilege_array.include?(4) || @privilege_array.include?(5))
+    redirect_to root_path if !(@privilege_array.include?(4) || @privilege_array.include?(5))
   end
 
   # Use callbacks to share common setup or constraints between actions.

@@ -5,7 +5,8 @@ class UsersController < ApplicationController
   before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-
+  FULL_ACCESS = 1
+  VIEW_ACCESS = 2
   def get_user_data
     filter = {
       is_delete: false,
@@ -23,14 +24,12 @@ class UsersController < ApplicationController
       user_ids = ProjectMember.where(project_id: user_params[:filter_project]).pluck(:user_id).uniq
       filter[:id] = user_ids
     end
-
     users = User.includes(:role, :company).search_user(user_params[:search]).where(filter).offset(user_params[:offset]).limit(LIMIT).order(get_sort_params)
 
     if user_params[:filter_project] == "none"
       user_project_ids = ProjectMember.pluck(:user_id).uniq # user have project
       users = users.where.not(id: user_project_ids)
     end
-
     render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_services.format_user_data(users) }
   end
 
@@ -47,7 +46,7 @@ class UsersController < ApplicationController
     @curent_user = User.find_by(id: current_user.id)
     @project = Project.includes(:project_members).where("project_members.user_id": current_user.id, is_enabled: true).pluck(:name).join(", ")
     form = Form.find_by(user_id: current_user.id)
-    @form = form.blank? ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
+    @form = (form.blank? || form.title.blank?) ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 
   def edit_user_avatar
@@ -281,7 +280,7 @@ class UsersController < ApplicationController
   end
 
   def redirect_to_index
-    redirect_to index2_users_path unless (@privilege_array.include?(1) || @privilege_array.include?(2))
+    redirect_to root_path unless (@privilege_array.include?(FULL_ACCESS) || @privilege_array.include?(VIEW_ACCESS))
   end
 
   def set_user
@@ -300,7 +299,7 @@ class UsersController < ApplicationController
     params[:filter_project] = params["filter-project"]
     params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
-                  :date_of_birth, :identity_card_no, :gender, :skype, :nationality, :permanent_address, :current_address,
+                  :date_of_birth, :gender, :skype, :nationality, :permanent_address, :current_address,
                   :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url)
   end
 
