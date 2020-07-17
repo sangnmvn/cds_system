@@ -1,3 +1,17 @@
+function refreshTableRowDisable()
+{
+  $("a > .fa-toggle-on").each(function()
+  {
+    $(this).closest("tr").removeClass("row_disabled");
+  });
+
+  $("a > .fa-toggle-off").each(function()
+  {
+    $(this).closest("tr").addClass("row_disabled");
+  });
+}
+
+
 $(document).ready(function () {
   loadDataCompany();
   setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
@@ -25,7 +39,7 @@ $(document).ready(function () {
     todayHighlight: true,
     autoclose: true,
     format: "M dd, yyyy",
-  });
+  });  
 });
 $(document).on("click", ".edit-company", function () {
   $("#btn_save").removeClass(
@@ -622,6 +636,7 @@ $(document).on("click", ".status-icon-company", function () {
           );
           warning("The company has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -653,6 +668,7 @@ $(document).on("click", ".status-icon-project", function () {
           );
           warning("The project has been enable successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -684,6 +700,7 @@ $(document).on("click", ".status-icon-role", function () {
           );
           warning("The role has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -715,6 +732,7 @@ $(document).on("click", ".status-icon-title", function () {
           );
           warning("The title has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -873,7 +891,8 @@ function loadDataCompany(data_filter = {}) {
       );
       if (response.data.length > 0) {
         setupDataTable("#table_company");
-      }
+      }      
+      refreshTableRowDisable();
     },
   });
 }
@@ -934,6 +953,7 @@ function loadDataProject(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_project");
       }
+      refreshTableRowDisable();
     },
   });
 }
@@ -993,6 +1013,7 @@ function loadDataRole(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_role");
       }
+      refreshTableRowDisable();
     },
   });
 }
@@ -1056,6 +1077,7 @@ function loadDataTitle(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_title");
       }
+      refreshTableRowDisable();
     },
   });
 }
@@ -1535,3 +1557,4 @@ $(".title-abbreviation").keyup(function () {
     );
   }
 })
+
