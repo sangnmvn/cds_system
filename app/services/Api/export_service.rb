@@ -141,15 +141,14 @@ module Api
               Thread.exit
             end
           rescue StandardError
-            # File has been deleted so deleting the file later is useless
+            #  File has been deleted so deleting the file later is useless'
             Thread.exit
           end
         end
-
         f = File.new("public/#{file_name}")
         new_creation_time = f.ctime
         if creation_time == new_creation_time
-          File.delete("public/" + file_name)
+          File.delete("public/" + file_name) if File.exists?("public/" + file_name)
         end
       end
     end
@@ -550,7 +549,7 @@ module Api
 
         # get level from current iterated competency
         levels = all_levels.collect { |c| c[:level].to_i if c.id == competency.id }.uniq.compact
-        # get id    from current iterated competency
+        # get slot data from current iterated competency
         all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
         levels.each do |level|
           cds_sheet.add_row ["", "Level #{level}", "", "", "", "", "", "", "", ""], :style => format5
@@ -672,7 +671,9 @@ module Api
         roman_index = roman(index + 1)
         roman_name = competency.name
         cdp_sheet.add_row [roman_index, roman_name, "", "", "", ""], :style => format4
+        # get level from current iterated competency
         levels = all_levels.collect { |c| c[:level].to_i if c.id == competency.id }.uniq.compact
+        # get slot data from current iterated competency
         all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
         levels.each do |level|
           cdp_sheet.add_row ["", "Level #{level}", "", "", "", ""], :style => format5
