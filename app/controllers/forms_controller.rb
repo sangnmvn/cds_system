@@ -234,9 +234,10 @@ class FormsController < ApplicationController
     render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
     user = form.user
     period = form.period
-
-    CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
-      user_submit.deliver_later(wait: 1.minute)
+    Async.await do
+      CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
+        user_submit.deliver_later(wait: 3.seconds)
+    end
   end
 
   def reviewer_submit
@@ -251,8 +252,10 @@ class FormsController < ApplicationController
       if approvers.where(is_submit_cds: false, is_approver: false).count.zero?
         form = Form.where(id: params[:form_id])
         return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", review_date: DateTime.now())
-        user_pms.each do |user_pm|
-          CdsAssessmentMailer.with(staff: user, pm: user_pm.approver).email_to_pm.deliver_later(wait: 5.seconds)
+        Async.await do
+          user_pms.each do |user_pm|
+            CdsAssessmentMailer.with(staff: user, pm: user_pm.approver).email_to_pm.deliver_later(wait: 5.seconds)
+          end
         end
       end
       render json: { status: "success", user_name: user.format_name }
