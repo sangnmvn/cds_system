@@ -18,7 +18,7 @@ class DashboardsController < ApplicationController
   end
 
   def data_filter
-    return render json: { status: "fail" } unless (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
+    return render json: { status: "fails" } unless (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
     if @privilege_array.include?(ALL_COMPANY)
       companies = Company.select(:name, :id)
       projects = Project.select("projects.name as name", :id)
@@ -75,7 +75,7 @@ class DashboardsController < ApplicationController
   end
 
   def data_career_chart
-    return render json: { data: "fail" } unless @can_view_career
+    return render json: { data: "fails" } unless @can_view_career
     data = @user_management_services.data_career_chart
     render json: { data: data, has_cdp: true }
   end
@@ -93,10 +93,10 @@ class DashboardsController < ApplicationController
   end
 
   def data_latest_baseline
-    return render json: { data: "fail" } unless @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
+    return render json: { data: "fails" } unless @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
 
     form = Form.includes(:title).find_by_user_id(current_user.id)
-    return render json: { data: "fail" } if form.nil?
+    return render json: { data: "fails" } if form.nil?
     result = @form_services.preview_result(form)
     competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
     render json: { data: @form_services.calculate_result(form, competencies, result) }

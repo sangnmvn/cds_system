@@ -568,10 +568,12 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        
+        if(response.status == "success")
+          success("These slots have been updated and informed to requester successfully.")
+        else
+          fails("These slots haven't been updated and informed to requester.")
       }
     })
-    success("These slots have been updated and informed to requester successfully.")
     $("#icon_confirm_request").prop("style", "color: #ccc")
     $("#confirm_request").addClass("disabled")
     $('#modal_confirm_request').modal('hide');

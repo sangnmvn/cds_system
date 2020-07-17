@@ -71,7 +71,7 @@ function drawChartCareer() {
     },
     success: function (response) {
       sleep(1000)
-      if (response.data == "fail" || response.data.length <= 1) {
+      if (response.data == "fails" || response.data.length <= 1) {
         $("#my_career ").html('')
         $("#my_career").css('height', 'auto')
       }
@@ -178,7 +178,7 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
-      if (response.status == "fail")
+      if (response.status == "fails")
         return;
       if (response.companies.length > 1)
         $('<option value="All" selected>All</option>').appendTo("#company_filter");

@@ -43,6 +43,6 @@ class User < ApplicationRecord
 
   def get_project
     project_ids = ProjectMember.distinct.where(user_id: id).pluck(:project_id)
-    Project.where(id: project_ids).pluck(:desc).join(", ")
+    Project.where(id: project_ids).pluck(:name).join(", ")
   end
 end

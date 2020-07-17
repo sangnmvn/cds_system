@@ -160,7 +160,8 @@ class FormsController < ApplicationController
   end
 
   def confirm_request
-    render json: @form_service.confirm_request
+    return render json: { status: "success" } if @form_service.confirm_request
+    render json: { status: "fail" }
   end
 
   def save_cds_assessment_staff
