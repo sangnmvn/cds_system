@@ -4,8 +4,8 @@ $(document).ready(function () {
   privilegeJS();
   // privilegeAjax();
   myJS_data_event();
-  $('.dataTables_length').attr("style", "display:none");
   $('.dataTables_paginate').addClass("mypaging");
+  $.fn.DataTable.ext.pager.numbers_length = 5;
 });
 
 function myJS_data_event() {
@@ -330,6 +330,7 @@ function myAjax() {
             "<td style='text-align: right'>" + (i+1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
           ]);
         });
+        $('.dataTables_length').attr("style", "display:none");
       }
     });
   });

@@ -348,13 +348,12 @@ function delete_group() {
     },
   });
 }
-setup_dataTable();
 $(function () {
   $("#selectAll").select_all();
 });
 
 $(document).ready(function () {
-
+  setup_dataTable();
   a = $(".get_privilege").val();
   if (a == 'true') {
     content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
