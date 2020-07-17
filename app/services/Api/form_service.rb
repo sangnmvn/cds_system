@@ -403,7 +403,7 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(_type: "CDS", user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
       forms.each do |form|
         period = format_filter(form.period.format_name, form.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
@@ -772,8 +772,8 @@ module Api
       end
 
       h_title = {}
-      Title.select(:rank, :desc).where(role_id: form.role_id).map do |title|
-        h_title[title.rank] = title.desc
+      Title.select(:rank, :name).where(role_id: form.role_id).map do |title|
+        h_title[title.rank] = title.name
       end
 
       hash_rank = {}

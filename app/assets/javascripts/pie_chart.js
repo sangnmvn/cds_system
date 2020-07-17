@@ -108,7 +108,7 @@ function drawPieChart(data, total, id, name) {
 
       var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 100)
       var h = vert - height / 4
-      // return 'translate(' + width / 3 + ',' + - height / 4 + ')';
+
       return 'translate(' + w + ',' + h + ')';
     });
 
