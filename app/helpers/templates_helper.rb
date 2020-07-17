@@ -439,7 +439,7 @@ module TemplatesHelper
       roman_index = roman(index + 1)
       roman_name = competency.name
       cdp_sheet.add_row [roman_index, roman_name, "", "", "", ""], :style => format4
-      levels = all_levels.collect { |c| c.level.to_i if c.id == competency.id }.uniq.compact
+      levels = all_levels.collect { |c| c[:level].to_i if c.id == competency.id }.uniq.compact
       all_slot_levels = all_levels.collect { |c| c if c.id == competency.id }.compact
       levels.each do |level|
         cdp_sheet.add_row ["", "Level #{level}", "", "", "", ""], :style => format5
@@ -456,11 +456,12 @@ module TemplatesHelper
           :prompt => "",
         })
 
-        slot_this_level = all_slot_levels.collect { |c| c if c.level.to_i == level }.compact
+        slot_this_level = all_slot_levels.collect { |c| c if c[:level].to_i == level }.compact
         slot_this_level.each_with_index do |s, index|
           final_name = squish_keep_newline(s.desc)
           final_desc = squish_keep_newline(s.evidence)
-          final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
+          #final_desc_with_HTML = from_HTML_to_axlsx_text(final_desc)
+          final_desc_with_HTML = ActionView::Base.full_sanitizer.sanitize(final_desc)
           final_level = s[:level] + alph(index + 1)
           cdp_sheet.add_row [final_level, final_name, final_desc_with_HTML, "Commit", "Commit", ""], :style => format6
           height = [calculate_height(final_desc), calculate_height(final_name)].max

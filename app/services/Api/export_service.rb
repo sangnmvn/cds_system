@@ -166,23 +166,23 @@ module Api
         }
       end
       results = {}
-      temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
-                    { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-                    { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
-                    { full_name: "Nguyen Van D", email: "nguyenvand@gmail.com", rank: 4, level: 2, title: "Title 4-2", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
-                    { full_name: "Nguyen Van E", email: "nguyenvane@gmail.com", rank: 2, level: 5, title: "Title 2-5", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-                    { full_name: "Nguyen Van F", email: "nguyenvanf@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-                    { full_name: "Nguyen Van G", email: "nguyenvang@gmail.com", rank: 4, level: 1, title: "Title 3-1", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
-                    { full_name: "Nguyen Van H", email: "nguyenvanha@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-                    { full_name: "Nguyen Van I", email: "nguyenvani@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" }]
-      results[3] = {}
-      results[3][:users] = temp_users
-      results[3][:company_name] = h_companies[3]
-      results[3][:period] = 50
-      results[3][:prev_period] = 40
-      results[3][:period_excel_name] = "20200901"
-      results[3][:period_name] = "09/2020"
-      results[3][:period_prev_name] = "02/2020"
+      # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
+      #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+      #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
+      #               { full_name: "Nguyen Van D", email: "nguyenvand@gmail.com", rank: 4, level: 2, title: "Title 4-2", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
+      #               { full_name: "Nguyen Van E", email: "nguyenvane@gmail.com", rank: 2, level: 5, title: "Title 2-5", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+      #               { full_name: "Nguyen Van F", email: "nguyenvanf@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+      #               { full_name: "Nguyen Van G", email: "nguyenvang@gmail.com", rank: 4, level: 1, title: "Title 3-1", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
+      #               { full_name: "Nguyen Van H", email: "nguyenvanha@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+      #               { full_name: "Nguyen Van I", email: "nguyenvani@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" }]
+      # results[3] = {}
+      # results[3][:users] = temp_users
+      # results[3][:company_name] = h_companies[3]
+      # results[3][:period] = 50
+      # results[3][:prev_period] = 40
+      # results[3][:period_excel_name] = "20200901"
+      # results[3][:period_name] = "09/2020"
+      # results[3][:period_prev_name] = "02/2020"
 
       { data: results }
     end
@@ -262,37 +262,37 @@ module Api
       end
 
       results = {}
-      temp_users = [{ full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-                    { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-                    { full_name: "Nguyen Duc D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
-                    { full_name: "Nguyen Duc E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Duc F", email: "nguyenducf@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Duc G", email: "nguyenducg@gmail.com", rank_prev: 4, level_prev: 1, title_prev: "Title 3-1", rank: 3, level: 1, title: "Title 3-1" },
-                    { full_name: "Nguyen Duc H", email: "nguyenducha@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Duc I", email: "nguyenduci@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" }]
-      results[3] = {}
-      results[3][:users] = temp_users
-      results[3][:company_name] = h_companies[3]
-      results[3][:period] = 50
-      results[3][:prev_period] = 40
-      results[3][:period_excel_name] = "20200901"
-      results[3][:period_name] = "09/2020"
-      results[3][:period_prev_name] = "02/2020"
+      # temp_users = [{ full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
+      #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
+      #               { full_name: "Nguyen Duc D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
+      #               { full_name: "Nguyen Duc E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Duc F", email: "nguyenducf@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Duc G", email: "nguyenducg@gmail.com", rank_prev: 4, level_prev: 1, title_prev: "Title 3-1", rank: 3, level: 1, title: "Title 3-1" },
+      #               { full_name: "Nguyen Duc H", email: "nguyenducha@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Duc I", email: "nguyenduci@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" }]
+      # results[3] = {}
+      # results[3][:users] = temp_users
+      # results[3][:company_name] = h_companies[3]
+      # results[3][:period] = 50
+      # results[3][:prev_period] = 40
+      # results[3][:period_excel_name] = "20200901"
+      # results[3][:period_name] = "09/2020"
+      # results[3][:period_prev_name] = "02/2020"
 
-      temp_users = [{ full_name: "Nguyen Minh A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-                    { full_name: "Nguyen Minh B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Minh C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-                    { full_name: "Nguyen Minh D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
-                    { full_name: "Nguyen Minh E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" }]
-      results[2] = {}
-      results[2][:users] = temp_users
-      results[2][:company_name] = h_companies[2]
-      results[2][:period] = 50
-      results[2][:prev_period] = 40
-      results[2][:period_excel_name] = "20200901"
-      results[2][:period_name] = "09/2020"
-      results[2][:period_prev_name] = "02/2020"
+      # temp_users = [{ full_name: "Nguyen Minh A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
+      #               { full_name: "Nguyen Minh B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Minh C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
+      #               { full_name: "Nguyen Minh D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
+      #               { full_name: "Nguyen Minh E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" }]
+      # results[2] = {}
+      # results[2][:users] = temp_users
+      # results[2][:company_name] = h_companies[2]
+      # results[2][:period] = 50
+      # results[2][:prev_period] = 40
+      # results[2][:period_excel_name] = "20200901"
+      # results[2][:period_name] = "09/2020"
+      # results[2][:period_prev_name] = "02/2020"
 
       { data: results }
     end
@@ -351,20 +351,20 @@ module Api
       end
 
       results = {}
-      temp_users = [{ full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, title: "Title 2-1", period_from_name: "02/2020" },
-                    { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
-                    { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 3, level: 2, title: "Title 3-2", period_from_name: "08/2019" },
-                    { full_name: "Le Khac D", email: "lekhacd@gmail.com", rank: 4, level: 2, title: "Title 4-2", period_from_name: "08/2019" },
-                    { full_name: "Le Khac E", email: "lekhace@gmail.com", rank: 2, level: 5, title: "Title 2-5", period_from_name: "08/2019" },
-                    { full_name: "Le Khac F", email: "lekhacf@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "08/2019" },
-                    { full_name: "Le Khac G", email: "lekhacg@gmail.com", rank: 4, level: 1, title: "Title 3-1", period_from_name: "02/2020" },
-                    { full_name: "Le Khac H", email: "lekhaca@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
-                    { full_name: "Le Khac I", email: "lekhaci@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "02/2019" }]
-      results[3] = {}
-      results[3][:users] = temp_users
-      results[3][:company_name] = h_companies[3]
-      results[3][:period_excel_name] = "20200901"
-      results[3][:period_name] = "09/2020"
+      # temp_users = [{ full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, title: "Title 2-1", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 3, level: 2, title: "Title 3-2", period_from_name: "08/2019" },
+      #               { full_name: "Le Khac D", email: "lekhacd@gmail.com", rank: 4, level: 2, title: "Title 4-2", period_from_name: "08/2019" },
+      #               { full_name: "Le Khac E", email: "lekhace@gmail.com", rank: 2, level: 5, title: "Title 2-5", period_from_name: "08/2019" },
+      #               { full_name: "Le Khac F", email: "lekhacf@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "08/2019" },
+      #               { full_name: "Le Khac G", email: "lekhacg@gmail.com", rank: 4, level: 1, title: "Title 3-1", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac H", email: "lekhaca@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac I", email: "lekhaci@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "02/2019" }]
+      # results[3] = {}
+      # results[3][:users] = temp_users
+      # results[3][:company_name] = h_companies[3]
+      # results[3][:period_excel_name] = "20200901"
+      # results[3][:period_name] = "09/2020"
 
       { data: results }
     end
