@@ -63,8 +63,8 @@ class UsersController < ApplicationController
 
     h_reviewers_of_user = Approver.where(user_id: params[:user_id]).pluck(:approver_id, :is_approver).to_h
 
-    approver_ids = UserGroup.left_outer_joins(:group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").pluck(:user_id)
-    reviewer_ids = UserGroup.left_outer_joins(:group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").pluck(:user_id)
+    approver_ids = UserGroup.left_outer_joins(:group).where.not(user_id: params[:user_id]).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").pluck(:user_id)
+    reviewer_ids = UserGroup.left_outer_joins(:group).where.not(user_id: params[:user_id]).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").pluck(:user_id)
 
     approvers = User.where(id: approver_ids).where(company_id: company_id)
     reviewers = User.where(id: reviewer_ids).where(company_id: company_id)
@@ -95,10 +95,7 @@ class UsersController < ApplicationController
 
   def add_reviewer_to_database
     begin
-      if params[:remove_ids].present?
-        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy
-      end
-
+      Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
       if params[:add_approver_ids].present?
         params[:add_approver_ids].each do |approver_id|
           Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: true)

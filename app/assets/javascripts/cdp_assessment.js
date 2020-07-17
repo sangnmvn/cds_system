@@ -568,11 +568,12 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        success("These slots have been updated and informed to requester successfully.")
-        $("#icon_confirm_request").prop("style", "color: #ccc")
-        $("#confirm_request").addClass("disabled")
+        
       }
     })
+    success("These slots have been updated and informed to requester successfully.")
+    $("#icon_confirm_request").prop("style", "color: #ccc")
+    $("#confirm_request").addClass("disabled")
     $('#modal_confirm_request').modal('hide');
   });
 

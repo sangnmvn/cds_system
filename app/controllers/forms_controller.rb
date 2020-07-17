@@ -242,20 +242,17 @@ class FormsController < ApplicationController
   def reviewer_submit
     reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
-    user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    #user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     # get PM from same project user list
-    user_pms = user_ids.select { |user_id|
-      privilege_array = get_privilege_from_user_id(user_id)
-      privilege_array.include?(APPROVE_CDS)
-    }
+    user_pms = Approver.where(user_id: params[:user_id], is_approver: true).includes(:approver)
     if reviewer.update(is_submit_cds: true)
       approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
       user = User.find_by_id(params[:user_id])
-      if approvers.where(is_submit_cds: false).where.not(approver_id: user_pms).count.zero?
+      if approvers.where(is_submit_cds: false, is_approver: false).count.zero?
         form = Form.where(id: params[:form_id])
         return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", review_date: DateTime.now())
         user_pms.each do |user_pm|
-          CdsAssessmentMailer.with(staff: user, pm: User.find(user_pm)).email_to_pm.deliver_later(wait: 1.minute)
+          CdsAssessmentMailer.with(staff: user, pm: user_pm.approver).email_to_pm.deliver_later(wait: 5.seconds)
         end
       end
       render json: { status: "success", user_name: user.format_name }

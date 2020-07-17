@@ -901,7 +901,7 @@ module Api
       end
       period_keep ||= form.period_keep_id
 
-      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep_id: period_keep.id)
+      return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep_id: period_keep)
 
       title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
