@@ -240,11 +240,11 @@ class FormsController < ApplicationController
   end
 
   def reviewer_submit
-    reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id, is_approver: false)
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
     #user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     # get PM from same project user list
-    user_pms = Approver.where(is_submit_cds: false, is_approver: true).pluck(:approver_id)
+    user_pms = Approver.where(is_submit_cds: false, is_approver: true, user_id: user_ids).pluck(:approver_id)
 
     ActiveRecord::Base.transaction do
       if reviewer.update(is_submit_cds: true)
