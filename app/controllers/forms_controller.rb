@@ -221,17 +221,16 @@ class FormsController < ApplicationController
   def submit
     form = Form.find_by_id(params[:form_id])
     users = User.joins(:approvers).where("approvers.user_id": form.user_id)
-    action = "review"
-    if users.empty?
-      action = "approve"
-      project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
-      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-      users = User.joins(user_group: [:group]).where(id: user_ids).where("groups.privileges like '%17%'")
-      return render json: { status: "fail" } if users.empty?
+   
+    return render json: { status: "fail" } if users.empty?
+    
+    status, action = if Approver.where(user_id: current_user.id, is_approver: false).empty?
+       ["Awaiting Approval", "approve"]
     else
-      render json: { status: "success" } if form.update(period_id: params[:period_id].to_i,
-                                                        status: "Awaiting Review", submit_date: DateTime.now)
+       ["Awaiting Review", "review"]
     end
+
+    render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
     user = form.user
     period = form.period
 

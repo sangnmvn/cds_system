@@ -916,8 +916,8 @@ $(document).ready(function () {
         },
         dataType: "json",
         success: function (response) {
-          $('#modal_period').modal('hide');
           if (response.status == "success") {
+            $('#modal_period').modal('hide');
             // staff submit
             success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
             $('a.submit-assessment').addClass('d-none');
@@ -927,7 +927,7 @@ $(document).ready(function () {
             checkStatusFormStaff("Awaiting Review")
             $("#status").html("(Awaiting Review)")
           } else {
-            fails("Can't submit CDS/CDP.");
+            fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
           }
         }
       })
