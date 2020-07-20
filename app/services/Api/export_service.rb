@@ -161,7 +161,6 @@ module Api
 
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
-
       first = {}
       second = {}
       schedules.map do |schedule|
@@ -226,7 +225,7 @@ module Api
           title_prev: prev_period[:title],
         }
       end
-      results = {}
+      # results = {}
       # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
       #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
       #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
@@ -322,7 +321,7 @@ module Api
         }
       end
 
-      results = {}
+      # results = {}
       # temp_users = [{ full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
       #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
       #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
@@ -411,7 +410,7 @@ module Api
         }
       end
 
-      results = {}
+      # results = {}
       # temp_users = [{ full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, title: "Title 2-1", period_from_name: "02/2020" },
       #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
       #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 3, level: 2, title: "Title 3-2", period_from_name: "08/2019" },

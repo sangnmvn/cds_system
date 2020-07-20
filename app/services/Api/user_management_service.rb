@@ -1,6 +1,7 @@
 module Api
   class UserManagementService < BaseService
     FULL_ACCESS = 1
+    VIEW_USER_MANAGEMENT = 2
 
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
@@ -16,11 +17,13 @@ module Api
     def format_user_data(users)
       datas = []
       users[0]&.email # anti-crash code (bug rails)
-      projects = Project.distinct.select("project_members.user_id as user_id", :name).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:name)
+      projects = Project.distinct.select(:id, "project_members.user_id as user_id", :is_managent, :name).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:name)
       h_projects = {}
+      h_projects_pm = {}
       projects.map do |project|
         h_projects[project.user_id] = [] if h_projects[project.user_id].nil?
         h_projects[project.user_id] << project.name
+        h_projects_pm[project.user_id] = project.id if project.is_managent == 1
       end
       users.map.with_index do |user, index|
         current_user_data = []
@@ -40,6 +43,7 @@ module Api
         current_user_data.push(user.company.name)
         # column action
         pri = privilege_array.include?(FULL_ACCESS)
+        is_pm = privilege_array.include?(VIEW_USER_MANAGEMENT) && h_projects_pm[current_user.id].present?
         current_user_data.push("<div style='text-align: center'>
             <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
               <i class='fa fa-pencil icon' style='color: #{pri ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
@@ -47,8 +51,8 @@ module Api
               <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href='javascript:;'>
                 <i class='fa fa-trash icon' style='color: #{pri ? "red" : "rgb(77, 79, 78)"}'></i>
               </a>
-              <a class='action_icon add-reviewer-icon' data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'  href='javascript:;'>
-                <img border='0' src='/assets/Assign_User_disabled.png' class='assign_user_img'>
+              <a class='action_icon add-reviewer-icon' #{"data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'" if pri || is_pm}  href='javascript:;'>
+                <img border='0' src='/assets/Assign_User.png' class='assign_user_img'>
               </a>
               <a #{"class='action_icon status_icon'" if pri} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
                 <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless pri}'></i>

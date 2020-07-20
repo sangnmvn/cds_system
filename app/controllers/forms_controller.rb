@@ -242,7 +242,7 @@ class FormsController < ApplicationController
   def reviewer_submit
     reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
-    #user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
+    # user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     # get PM from same project user list
     user_pms = Approver.where(user_id: params[:user_id], is_approver: true).includes(:approver)
     if reviewer.update(is_submit_cds: true)
