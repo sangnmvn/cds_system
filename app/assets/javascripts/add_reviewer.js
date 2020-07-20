@@ -1,5 +1,5 @@
 // const _ = require('lodash');
-$(document).on("click", '.add-reviewer-icon', function () {
+$(document).on("click", ".add-reviewer-icon[data-toggle=modal]", function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_account");
   $("#add_reviewer_modal_title").html(`Add Reviewer For <span style="color: #fff;font-size: bold;">${user_account}</span>`);

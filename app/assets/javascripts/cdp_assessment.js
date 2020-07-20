@@ -961,6 +961,11 @@ $(document).ready(function () {
       url = "/forms/save_cds_assessment_manager";
       point = row.find(".approver-assessment").val();
       recommend = row.find(".approver-recommend").val();
+      var form_slot_id = row.closest(".cdp-slot-wrapper").data("form-slot-id")
+      if (form_slot_id in checked_set_is_empty_comment) {
+        checked_set_is_empty_comment[form_slot_id] = (recommend.length == 0);
+      }
+      
       is_commit = row.find(".approver-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");

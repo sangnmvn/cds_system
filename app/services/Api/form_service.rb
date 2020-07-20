@@ -354,25 +354,25 @@ module Api
           title_prev: prev_period[:title],
         }
       end
-      results = {}
-      temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
-                    { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-                    { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
-                    { full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-                    { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-                    { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-                    { full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-1", title_prev: "Title 2-1", period_from_name: "02/2020" },
-                    { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-2", title_prev: "Title 2-2", period_from_name: "02/2020" },
-                    { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 3-2", title_prev: "Title 3-2", period_from_name: "08/2019" }]
+      # results = {}
+      # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
+      #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
+      #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
+      #               { full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
+      #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
+      #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
+      #               { full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-1", title_prev: "Title 2-1", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-2", title_prev: "Title 2-2", period_from_name: "02/2020" },
+      #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 3-2", title_prev: "Title 3-2", period_from_name: "08/2019" }]
 
-      results[3] = {}
-      results[3][:users] = temp_users
-      results[3][:company_name] = h_companies[3]
-      results[3][:period] = 50
-      results[3][:prev_period] = 40
-      results[3][:period_excel_name] = "20200901"
-      results[3][:period_name] = "09/2020"
-      results[3][:period_prev_name] = "02/2020"
+      # results[3] = {}
+      # results[3][:users] = temp_users
+      # results[3][:company_name] = h_companies[3]
+      # results[3][:period] = 50
+      # results[3][:prev_period] = 40
+      # results[3][:period_excel_name] = "20200901"
+      # results[3][:period_name] = "09/2020"
+      # results[3][:period_prev_name] = "02/2020"
 
       { data: results }
     end
@@ -403,12 +403,11 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order(updated_at: :desc)
       forms.each do |form|
         period = format_filter(form.period.format_name, form.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
-
       data_filter
     end
 

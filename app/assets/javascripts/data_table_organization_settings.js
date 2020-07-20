@@ -1,3 +1,14 @@
+function refreshTableRowDisable() {
+  $("a > .fa-toggle-on").each(function () {
+    $(this).closest("tr").removeClass("row-disabled");
+  });
+
+  $("a > .fa-toggle-off").each(function () {
+    $(this).closest("tr").addClass("row-disabled");
+  });
+}
+
+
 $(document).ready(function () {
   loadDataCompany();
   setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
@@ -622,6 +633,7 @@ $(document).on("click", ".status-icon-company", function () {
           );
           warning("The company has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -653,6 +665,7 @@ $(document).on("click", ".status-icon-project", function () {
           );
           warning("The project has been enable successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -684,6 +697,7 @@ $(document).on("click", ".status-icon-role", function () {
           );
           warning("The role has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -715,6 +729,7 @@ $(document).on("click", ".status-icon-title", function () {
           );
           warning("The title has been enabled successfully.");
         }
+        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -858,6 +873,7 @@ function setDisplay(id, id_header, add_class, save_class) {
   $(id).css("display", "");
   $(id_header).css("display", "");
 }
+
 function loadDataCompany(data_filter = {}) {
   $.ajax({
     url: "/organization_settings/data_company",
@@ -874,9 +890,11 @@ function loadDataCompany(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_company");
       }
+      refreshTableRowDisable();
     },
   });
 }
+
 function appendDataToTableCompany(data) {
   tpl = ``;
   if (data.length == 0)
@@ -895,27 +913,54 @@ function appendDataToTableCompany(data) {
            <a href="javascript:;" class="edit-company" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-phone="{phone}" data-email="{email}" data-ceo="{ceo}" data-establishment="{establishment}" data-fax="{fax}" data-website="{website}" data-address="{address}" data-desc="{desc}" data-tax_code="{tax_code}" data-note="{note}" data-quantity="{quantity}" data-email_group_staff="{email_group_staff}" data-email_group_hr="{email_group_hr}" data-email_group_fa="{email_group_fa}" data-email_group_it="{email_group_it}" data-email_group_admin="{email_group_admin}"  data-parent_company_id="{parent_company_id}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
-      number: i + 1, id: user.id, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, phone: user.phone, fax: user.fax, email: user.email, website: user.website, address: user.address, desc: user.desc, ceo: user.ceo, quantity: user.quantity, tax_code: user.tax_code, note: user.note, email_group_staff: user.email_group_staff, email_group_hr: user.email_group_hr, email_group_fa: user.email_group_fa, email_group_it: user.email_group_it, email_group_admin: user.email_group_admin, parent_company_id: user.parent_company_id,
+      number: i + 1,
+      id: user.id,
+      name: user.name,
+      abbreviation: user.abbreviation,
+      establishment: user.establishment,
+      phone: user.phone,
+      fax: user.fax,
+      email: user.email,
+      website: user.website,
+      address: user.address,
+      desc: user.desc,
+      ceo: user.ceo,
+      quantity: user.quantity,
+      tax_code: user.tax_code,
+      note: user.note,
+      email_group_staff: user.email_group_staff,
+      email_group_hr: user.email_group_hr,
+      email_group_fa: user.email_group_fa,
+      email_group_it: user.email_group_it,
+      email_group_admin: user.email_group_admin,
+      parent_company_id: user.parent_company_id,
     });
     if (user.is_enabled)
       tpl += `
               <a class="action-icon status-icon-company" title="Disable/Enable company" data-company_id="{id}" href="javascript:;">
               <i class="fa fa-toggle-on"></i>
-              </a>`.formatUnicorn({ id: user.id });
+              </a>`.formatUnicorn({
+        id: user.id
+      });
     else
       tpl += `
               <a class="action-icon status-icon-company" title="Disable/Enable company" data-company_id="{id}" href="javascript:;">
               <i class="fa fa-toggle-off"></i>
-              </a>`.formatUnicorn({ id: user.id });
+              </a>`.formatUnicorn({
+        id: user.id
+      });
     if (user.is_not_used)
       tpl += `
             <a class="delete-company" title="Delete company" data-company_id="{id}" href="javascript:;">
             <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
 }
+
 function loadDataProject(data_filter = {}) {
   $.ajax({
     url: "/organization_settings/data_project",
@@ -934,9 +979,11 @@ function loadDataProject(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_project");
       }
+      refreshTableRowDisable();
     },
   });
 }
+
 function appendDataToTableProject(data) {
   tpl = ``;
   if (data.length == 0)
@@ -956,27 +1003,48 @@ function appendDataToTableProject(data) {
           <a href="javascript:;" class="edit-project" data-id="{id}" data-company_name="{company_id}" data-name="{name}" data-abbreviation="{abbreviation}" data-establishment="{establishment}" data-closed_date="{closed_date}" data-project_manager="{project_manager}" data-customer="{customer}" data-sponsor="{sponsor}" data-email="{email}"data-quantity="{quantity}" data-desc="{desc}" data-note="{note}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
           </a>`.formatUnicorn({
-      number: i + 1, id: user.id, company_id: user.company_id, company_name: user.company_name, name: user.name, abbreviation: user.abbreviation, establishment: user.establishment, closed_date: user.closed_date, project_manager: user.project_manager, customer: user.customer, sponsor: user.sponsor, email: user.email, quantity: user.quantity, desc: user.desc, note: user.note,
+      number: i + 1,
+      id: user.id,
+      company_id: user.company_id,
+      company_name: user.company_name,
+      name: user.name,
+      abbreviation: user.abbreviation,
+      establishment: user.establishment,
+      closed_date: user.closed_date,
+      project_manager: user.project_manager,
+      customer: user.customer,
+      sponsor: user.sponsor,
+      email: user.email,
+      quantity: user.quantity,
+      desc: user.desc,
+      note: user.note,
     });
     if (user.is_enabled)
       tpl += `
             <a class="action-icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
             <i class="fa fa-toggle-on"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     else
       tpl += `
             <a class="action-icon status-icon-project" title="Disable/Enable project" data-project_id="{id}" href="javascript:;">
             <i class="fa fa-toggle-off"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     if (user.is_not_used)
       tpl += `
             <a class="delete-project" title="Delete project" data-project_id="{id}" href="javascript:;">
             <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
 }
+
 function loadDataRole(data_filter = {}) {
   $.ajax({
     url: "/organization_settings/data_role",
@@ -993,9 +1061,11 @@ function loadDataRole(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_role");
       }
+      refreshTableRowDisable();
     },
   });
 }
+
 function appendDataToTableRole(data) {
   tpl = ``;
   if (data.length == 0)
@@ -1023,21 +1093,28 @@ function appendDataToTableRole(data) {
       tpl += `
             <a class="action-icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
             <i class="fa fa-toggle-on"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     else
       tpl += `
              <a class="action-icon status-icon-role" title="Disable/Enable role" data-role_id="{id}" href="javascript:;">
              <i class="fa fa-toggle-off"></i>
-             </a>`.formatUnicorn({ id: user.id });
+             </a>`.formatUnicorn({
+        id: user.id
+      });
     if (user.is_not_used)
       tpl += `
             <a class="delete-role" title="Delete role" data-role_id="{id}" href="javascript:;">
             <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
 }
+
 function loadDataTitle(data_filter = {}) {
   $.ajax({
     url: "/organization_settings/data_title",
@@ -1056,9 +1133,11 @@ function loadDataTitle(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_title");
       }
+      refreshTableRowDisable();
     },
   });
 }
+
 function appendDataToTableTitle(data) {
   tpl = ``;
   if (data.length == 0)
@@ -1078,23 +1157,37 @@ function appendDataToTableTitle(data) {
             <a href="javascript:;" class="edit-title" data-id="{id}" data-role_id="{role_id}" data-role_name="{role_name}" data-name="{name}" data-abbreviation="{abbreviation}" data-rank="{rank}" data-desc="{desc}" data-note="{note}">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
-      number: i + 1, id: user.id, role_id: user.role_id, role_name: user.role_name, name: user.name, abbreviation: user.abbreviation, rank: user.rank, desc: user.desc, note: user.note,
+      number: i + 1,
+      id: user.id,
+      role_id: user.role_id,
+      role_name: user.role_name,
+      name: user.name,
+      abbreviation: user.abbreviation,
+      rank: user.rank,
+      desc: user.desc,
+      note: user.note,
     });
     if (user.is_enabled)
       tpl += `
              <a class="action-icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
              <i class="fa fa-toggle-on"></i>
-             </a>`.formatUnicorn({ id: user.id });
+             </a>`.formatUnicorn({
+        id: user.id
+      });
     else
       tpl += `
              <a class="action-icon status-icon-title" title="Disable/Enable title" data-title_id="{id}" href="javascript:;">
              <i class="fa fa-toggle-off"></i>
-             </a>`.formatUnicorn({ id: user.id });
+             </a>`.formatUnicorn({
+        id: user.id
+      });
     if (user.is_not_used)
       tpl += `
             <a class="delete-title" title="Delete title" data-title_id="{id}" href="javascript:;">
             <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({ id: user.id });
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
@@ -1118,6 +1211,7 @@ function loadCompanyName(data_filter = {}) {
     },
   });
 }
+
 function loadRoleName(data_filter = {}) {
   $.ajax({
     url: "/organization_settings/data_load_role",
@@ -1142,18 +1236,21 @@ function setupDataTable(id, last_column_no = 10) {
     "bFilter": false,
     "bAutoWidth": false,
     "destroy": true,
-    "columnDefs": [
-      {
-        "searchable": false,
-        "orderable": false,
-        "targets": 0,
-      },
+    "columnDefs": [{
+      "searchable": false,
+      "orderable": false,
+      "targets": 0,
+    }, ],
+    "order": [
+      [1, "asc"]
     ],
-    "order": [[1, "asc"]],
   });
 
   table.on("order.dt search.dt", function () {
-    table.column(0, { search: "applied", order: "applied" })
+    table.column(0, {
+        search: "applied",
+        order: "applied"
+      })
       .nodes().each(function (cell, i) {
         cell.innerHTML = i + 1;
       });

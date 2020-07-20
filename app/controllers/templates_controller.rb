@@ -3,11 +3,11 @@
 class TemplatesController < ApplicationController
   layout "system_layout"
   before_action :get_privilege_id
+  before_action :export_service
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_template
   FILE_CLEANUP_TIME_IN_SECONDS = 10 * 60
   FULL_ACCESS_RIGHT = 9
   VIEW_ACCESS_RIGHT = 10
-  include TemplatesHelper
 
   def index
     redirect_to root_path unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
@@ -63,45 +63,13 @@ class TemplatesController < ApplicationController
 
   def export_excel
     return render json: { status: "fail" } unless @privilege_array.include?(FULL_ACCESS_RIGHT) || @privilege_array.include?(VIEW_ACCESS_RIGHT)
-
     template_id = params["id"]
     ext = params["ext"]
-    output_filename = export_excel_CDS_CDP(template_id, ext)
-
-    # Delete the file after 30 seconds if the file is not replaced
-    # Check every 1 seconds to see if the creation time still match,
-    # If not, the file is overwritten and the thread is safe to exit
-    # => Time Will change if the file is replaced (deleted then created).
-
-    f = File.new("public/#{output_filename}")
-
-    # get original creation time
-    creation_time = f.ctime
-    Thread.new do
-      (0...FILE_CLEANUP_TIME_IN_SECONDS).each do |_i|
-        sleep 1
-        begin
-          f = File.new("public/#{output_filename}")
-          new_creation_time = f.ctime
-          if creation_time != new_creation_time
-            # File has been modified, exit the thread
-            # Later thread will clean it up
-            Thread.exit
-          end
-        rescue StandardError
-          Thread.exit
-        end
-      end
-
-      f = File.new("public/#{output_filename}")
-      new_creation_time = f.ctime
-      if creation_time == new_creation_time
-        File.delete("public/" + output_filename)
-      end
-    end
-
+    output_filename = @export_service.export_excel_CDS_CDP(template_id, ext)
+    output_filename ||= ""
+    @export_service.schedule_file_for_clean_up(output_filename)
     respond_to do |format|
-      format.json { render json: { filename: output_filename } }
+      format.json { render json: { file_path: output_filename } }
     end
   end
 
@@ -117,8 +85,12 @@ class TemplatesController < ApplicationController
 
   private
 
+  def export_service
+    @export_service ||= Api::ExportService.new(template_params, current_user)
+  end
+
   def template_params
-    params.permit(:name, :role_id, :description, :status)
+    params.permit(:name, :role_id, :description, :status, :id, :ext)
   end
 
   def invalid_template
