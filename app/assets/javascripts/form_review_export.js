@@ -8,7 +8,7 @@ function resetExportIconColor() {
   }
 }
 
-function checkPeriodFilter() {  
+function checkPeriodFilter() {
   return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1)
 }
 
@@ -44,12 +44,12 @@ $(document).ready(function () {
     callAjaxExport("xlsx")
     if (checkPeriodFilter()) {
       callAjaxExport("xlsx");
-    } 
+    }
   });
   $("#export_pdf_cds_review").on('click', function () {
     // COMMENT the line below if you don't need the data
     callAjaxExport("pdf")
-    
+
     if (checkPeriodFilter()) {
       callAjaxExport("pdf");
     }
@@ -57,5 +57,5 @@ $(document).ready(function () {
 
   $(".apply-filter, .reset-filter").on("click", function () {
     resetExportIconColor();
-  })  
+  })
 });

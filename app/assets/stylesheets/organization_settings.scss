@@ -1,11 +1,13 @@
-.row_disabled {
+.row-disabled {
     td {
         background-color: #888 !important;
     }
 }
 
-#table_company_paginate, #table_project_paginate, 
-#table_role_paginate, #table_title_paginate {
+#table_company_paginate,
+#table_project_paginate,
+#table_role_paginate,
+#table_title_paginate {
     .paginate_button.disabled {
         color: #aaa !important;
     }
