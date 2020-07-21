@@ -768,7 +768,6 @@ module Api
         level_up_sheet.merge_cells "G3:I3"
         level_up_sheet.merge_cells "J3:J4"
         filtered_data_arr = h_data[:users]
-        longest
         filtered_data_arr.each_with_index do |result, index|
           level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
           level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 7, 8].include?(index) }.each { |element| element.style = normal_format }
