@@ -19,10 +19,10 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response) {
-          success("Your Avatar Have Been Updated Successfully!")
+          success("Your avatar have been updated successfully!")
           $("avt").attr('src', url)
         } else
-          fails("Your Avatar Haven't Been Updated!")
+          fails("Your avatar haven't been updated!")
       }
     });
   })
@@ -65,10 +65,10 @@ $(document).ready(function () {
         if (response) {
           $("#modal_edit_contact").modal("hide")
           $("#modal_edit_location").modal("hide")
-          success("Your Profile Have Been Updated Successfully!")
+          success("Your profile have been updated successfully!")
           setTimeout(location.reload.bind(location), 1000);
         } else
-          fails("Your Profile Haven't Been Updated!")
+          fails("Your profile haven't been updated!")
       }
     });
   })
@@ -91,17 +91,17 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            success("Your Password Have Been Changed Successfully!")
+            success("Your password have been changed successfully!")
             $("#modal_change_password").modal("hide")
             setTimeout(location.reload.bind(location), 1000);
           } else if (response.status == "Uncorrect") {
             changeClassStatus($("#old_pass"))
-            $("#error_old_pass").html("Please Enter Correct Password!")
+            $("#error_old_pass").html("Please enter correct password!")
           } else if (response.status == "Unequal") {
             changeClassStatus($("#confirm_pass"))
-            $("#error_confirm").html("Confirm Password isn't Equal New Password!")
+            $("#error_confirm").html("Confirm password isn't equal new password!")
           } else
-            fails("Could Not Changed Password!")
+            fails("Could not changed password!")
         }
       });
     }
@@ -111,7 +111,7 @@ $(document).ready(function () {
   $("#modal_change_password #confirm_pass").keyup(function () {
     if ($(this).val() != $("#new_pass").val()) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_confirm").html("Confirm Password Isn't Equal New Password")
+      $("#error_confirm").html("confirm password isn't equal new password")
     } else {I
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_confirm").html("")
@@ -127,7 +127,7 @@ $(document).ready(function () {
       $("#error_new_pass").html("Please Enter New Password")
     } else if (!regex.test(pass)) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_new_pass").html("Minimum of 6 characters, At Least a Letter and a Number")
+      $("#error_new_pass").html("Minimum of 6 characters, at least a letter and a number")
     } else {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_new_pass").html("")
@@ -143,7 +143,7 @@ $(document).ready(function () {
       $("#error_old_pass").html("")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_old_pass").html("Please Enter Old Password")
+      $("#error_old_pass").html("Please enter old password")
     }
   })
 
@@ -154,7 +154,7 @@ $(document).ready(function () {
       checkName(first_name, "first_name", "error_first_name")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_first_name").html("First Name Must Be from 1 to 32 Characters")
+      $("#error_first_name").html("First name must be from 1 to 32 characters")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -165,7 +165,7 @@ $(document).ready(function () {
       checkPhoneNumber(phone_number, "phone_number", "error_phone_number")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_phone_number").html("Please Enter Phone Number")
+      $("#error_phone_number").html("Please enter phone number")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -198,7 +198,7 @@ $(document).ready(function () {
       checkName(last_name, "last_name", "error_last_name")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_last_name").html("Last Name Must Be from 1 to 32 Characters.")
+      $("#error_last_name").html("Last name must be from 1 to 32 characters.")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -251,17 +251,17 @@ function checkEmptyData() {
   var status = true
   if ($("#old_pass").val() == "") {
     $("#old_pass").addClass("is-invalid")
-    $("#error_old_pass").html("Please Enter Old Password")
+    $("#error_old_pass").html("Please enter old password")
     status = false
   }
   if ($("#new_pass").val() == "") {
     changeClassStatus($("#new_pass"))
-    $("#error_new_pass").html("Please Enter New Password")
+    $("#error_new_pass").html("Please enter new password")
     status = false
   }
   if ($("#confirm_pass").val() == "") {
     changeClassStatus($("#confirm_pass"))
-    $("#error_confirm").html("Please Enter Confirm Password")
+    $("#error_confirm").html("Please enter confirm password")
     status = false
   }
   return status
@@ -281,7 +281,7 @@ function checkName(input, idinput, idspan) {
     "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆẾỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤÚỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
     "ụúủứừÚỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\\s]+$")
   if (!regex.test(input)) {
-    $("#" + idspan).html("This Field is Invalid")
+    $("#" + idspan).html("This field is invalid")
     $("#" + idinput).addClass("is-invalid")
     changeBtnSave("btn_save_contact", false)
   } else {
@@ -293,7 +293,7 @@ function checkName(input, idinput, idspan) {
 function checkPhoneNumber(input, idinput, idspan) {
   var regex = /^[0-9\-\+]{9,12}$/
   if (!regex.test(input)) {
-    $("#" + idspan).html("Must is Valid Phone Number and Maximum Number is 12")
+    $("#" + idspan).html("Must is valid phone number and maximum number is 12")
     $("#" + idinput).addClass("is-invalid")
     changeBtnSave("btn_save_contact", false)
   } else {
