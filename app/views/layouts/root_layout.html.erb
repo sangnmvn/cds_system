@@ -29,7 +29,7 @@
               CDS/CDP
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/forms/index_cds_cdp">CDS/CDP Accessment</a>
+              <a class="dropdown-item" href="/forms/index_cds_cdp">CDS/CDP Assessment</a>
               <a class="dropdown-item" href="/forms/cds_review">CDS/CDP Review</a>
             </div>
           </li>
@@ -54,8 +54,13 @@
         <form class="form-inline my-2 my-lg-0">
           <p class="navbar-text float-right">
             <% if user_signed_in? %>
-              <%= link_to "Welcome " + current_user.first_name + " " + current_user.last_name, user_profile_users_path, :class => 'navbar-link' %> |
-              <%= link_to "Logout", destroy_user_session_path, :method => :delete, :class => 'btn btn-danger'  %>
+              <div>Welcome&nbsp;</div>
+              <%= link_to current_user.format_name, user_profile_users_path, :class => 'navbar-link' %>&nbsp;|&nbsp;
+              <div class="logout-icon">
+                <i class="fa fa-power-off" aria-hidden="true" style="color: red"></i>
+              </div>
+              &nbsp;
+              <%= link_to 'Logout', destroy_user_session_path, method: :delete, id: "logout" %>
             <% else %>
               <%= link_to "Login", new_user_session_path, :class => 'btn btn-secondary'%>
             <% end %>
@@ -66,22 +71,3 @@
     <%= yield %>
   </body>
 </html>
-<script>
-  $(document).ready(function() {
-   if (location.pathname == '/'){
-  $('li.active').find("a").css('background-color','#CFD5eA');
-   }else{
-    $('li.active').removeClass('active');
-  
-    $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-     $('li.active').find("a").css('background-color','#CFD5eA');
-    }
-  });
-    function getfocus() {
-      document.getElementById("myAnchor").focus();
-    }
-  
-    function losefocus() {
-      document.getElementById("myAnchor").blur();
-    }
-</script>

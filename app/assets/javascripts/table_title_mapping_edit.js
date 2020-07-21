@@ -41,7 +41,7 @@ function loadTitleMappingForEdit() {
       // get sorted competency list
       unsorted_competency_list = Array.from(competency_list);
       title_name = key_of_title_list[0];
-      sort_by_key(title_list[title_name], "competency_location");          
+      sortByKey(title_list[title_name], "competency_location");          
       competency_list = []
       for (var h=0; h < unsorted_competency_list.length; h++)
       {
