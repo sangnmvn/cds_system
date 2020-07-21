@@ -56,14 +56,17 @@ $color-disable: #afaaaa;
             }
         }
     }
-    #table_summary_comment{
+
+    #table_summary_comment {
         td:nth-child(4) {
             width: 60%;
             text-align: left;
         }
+
         td:nth-child(3) {
             text-align: left;
         }
+
         td:nth-child(2) {
             text-align: left;
         }
@@ -166,10 +169,15 @@ $color-disable: #afaaaa;
     width: 8%;
 }
 
-.button-add-cds-assessment button {
-    font-size: 90%;
-    background-color: #8da8db;
-    border: none;
+.button-add-cds-assessment {
+    button {
+        color: #fff;
+        background-color: #8da8db;
+        border: none;
+        &.disabled {
+            background-color: #afaaaa;
+        }
+    }
 }
 
 .divButton {
@@ -183,7 +191,7 @@ $color-disable: #afaaaa;
     font-size: 19px;
 }
 
-.icon-export-cds-review{
+.icon-export-cds-review {
     margin-top: 8px;
     margin-left: 9px;
 }
@@ -435,6 +443,7 @@ $color-disable: #afaaaa;
 .icon {
     font-size: 25px;
 }
+
 .icon-list {
     font-size: 100%;
 }

@@ -494,14 +494,14 @@ module Api
           id: title.id,
           period_name: title.period&.format_name,
           role_name: title.role_name,
-          level: title.level,
-          rank: title.rank,
-          title: title.title,
+          level: title.level || "N/A",
+          rank: title.rank || "N/A",
+          title: title.title || "N/A",
           status: "Done",
         }
       end
       if form
-        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank, title: form.title&.name, status: form.status, level: form.level })
+        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A"})
       end
       list_form
     end

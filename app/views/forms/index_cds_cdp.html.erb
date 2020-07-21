@@ -7,7 +7,11 @@
       CDS & CDP Assessment List
     </div>
     <div class="col-2 button-add-cds-assessment" style="text-align: right">
-    <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cdp_assessment_forms_path %>
+      <% if @check_status %>
+        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cdp_assessment_forms_path %>
+      <% else %>
+        <%= link_to_if false,  ('<button class="disabled"><img src="../assets/Add.png"> Add</button>').html_safe, 'javascript:;' %>
+      <% end %>
     </div>
     <div class="col-12" style="padding: 0px">
       <table class="table table-primary table-responsive-sm table-mytable table-cds-assessment-list">
