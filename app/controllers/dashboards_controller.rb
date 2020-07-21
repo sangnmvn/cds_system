@@ -75,7 +75,7 @@ class DashboardsController < ApplicationController
   end
 
   def data_career_chart
-    return render json: { data: "fails" } unless @can_view_career
+    return render json: { data: "fails" } unless (@privilege_array & [MY_PROJECT, VIEW]).any? && !(@privilege_array & [ALL_COMPANY, MY_COMPANY]).any?
     data = @user_management_services.data_career_chart
     render json: { data: data, has_cdp: true }
   end
