@@ -613,10 +613,10 @@ function action_add() {
     if (user_role == "PM") {
       if (Date.parse(end_date_member) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be greater than Start Date.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be greater than start date.</span></div>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be lower than End date .</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date.</span></div>');
       } else if (end_date_member == "") {
         temp = false;
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
@@ -624,13 +624,13 @@ function action_add() {
 
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start date must be lower than End date for reviewer.</span></div>');
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start date must be less than end date for reviewer.</span></div>');
       } else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date of Member must be lower than End date for reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date for reviewer.</span></div>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date of Reviewer must be lower than End date.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be less than end date.</span></div>')
       } else if (end_date_reviewer == "") {
         temp = false;
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')
@@ -645,22 +645,22 @@ function action_add() {
 
     if (end_date_member_reminder > end_date_reviewer) {
       temp = false;
-      $('#end_date_reviewer').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Reviewer must be greater than End Date Member Reminder.</span></div>');
+      $('#end_date_reviewer').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be greater than end date for member reminder.</span></div>');
     }
 
     var start_date_val = new Date(start_date);
 
     if (end_date_member_reminder < start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member Reminder must be greater than End Date Member Reminder.</span></div>')
+      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
     } else if (end_date_reviewer_reminder < start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member Reminder must be greater than End Date Member Reminder.</span></div>')
+      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
     }
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
-      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than start date.</span></div>')
+      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date must be greater than start date.</span></div>')
     }
 
     if (from_date == "") {
@@ -846,22 +846,22 @@ function action_edit() {
 
     if (end_date_member_reminder > end_date_reviewer) {
       temp = false;
-      $('#end_date_reviewer').after('<span class="error">End Date Reviewer must be greater than End Date Member Reminder.</span>')
+      $('#end_date_reviewer').after('<span class="error">End date reviewer must be greater than end date member reminder.</span>')
     }
 
     var start_date_val = new Date(start_date);
 
     if (end_date_member_reminder < start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<br><span class="error">End Date Member Reminder must be greater than End Date Member Reminder.</span>')
+      $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
     } else if (end_date_reviewer_reminder < start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<br><span class="error">End Date Member Reminder must be greater than End Date Member Reminder.</span>')
+      $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
     }
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
-      $('#end_date').after('<span class="error">End Date must be greater than start date.</span>')
+      $('#end_date').after('<span class="error">End date must be greater than start date.</span>')
     }
 
     if (Date.parse(from_date) >= Date.parse(to_date)) {
@@ -877,10 +877,10 @@ function action_edit() {
     if (user_role == "PM") {
       if (Date.parse(end_date_member) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_member_id).after('<span class="error">End date for member must be greater than Start Date.</span>');
+        $(end_date_member_id).after('<span class="error">End date for member must be greater than start date.</span>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<span class="error">End date for member must be lower than End date .</span>');
+        $(end_date_member_id).after('<span class="error">End date for member must be less than end date.</span>');
       } else if (end_date_member == "") {
         temp = false;
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
@@ -888,13 +888,13 @@ function action_edit() {
 
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">Start date must be lower than End date for reviewer.</span>');
+        $(end_date_reviewer_id).after('<span class="error">Start date must be less than end date for reviewer.</span>');
       } else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">End date of Member must be lower than End date for reviewer.</span>')
+        $(end_date_reviewer_id).after('<span class="error">End date for member must be less than end date for reviewer.</span>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">End date of Reviewer must be lower than End date.</span>')
+        $(end_date_reviewer_id).after('<span class="error">End date for reviewer must be less than end date.</span>')
       } else if (end_date_reviewer == "") {
         temp = false;
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')

@@ -12,7 +12,7 @@
           <form id="form_add_hr">
             <div class="row">
               <div class="col-sm-12">
-                <p style="color:red">(*) required filelds</p>
+                <p style="color:red">(*) required fields</p>
               </div>
               <div class="col-sm-12">
                 <div class="row">
@@ -39,17 +39,17 @@
                   <div class="col-sm-4">
                     <label>Assessment Period (*)</label>
                   </div>
-                    <div class="col-sm-2"> From</div>
-                    <input type="text" id="from_date" class="form-control col-sm-3">
-                    <div class="col-sm-12" style="margin-bottom: 25px;"></div>
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-2">To</div>
-                    <input type="text" id="to_date" class="form-control col-sm-3">
+                  <div class="col-sm-2"> From</div>
+                  <input type="text" id="from_date" class="form-control col-sm-3">
+                  <div class="col-sm-12" style="margin-bottom: 25px;"></div>
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-2">To</div>
+                  <input type="text" id="to_date" class="form-control col-sm-3">
                 </div>
                 <br>
                 <div class="row">
                   <div class="col-sm-4">
-                      <label>Start date (*)</label>
+                    <label>Start date (*)</label>
                   </div>
                   <div class="col-sm-6">
                     <input type="text" id="start_date" class="form-control">
@@ -58,23 +58,23 @@
                 <br>
                 <div class="row">
                   <div class="col-sm-4">
-                      <label>End date (*)</label>
+                    <label>End date (*)</label>
                   </div>
                   <div class="col-sm-6 date">
                     <input type="text" id="end_date" class="form-control">
                   </div>
                 </div>
                 <br>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <label>Reminder (*)</label>
-                    </div>
-                    <div class="col-sm-6">
-                      <input type="number" name="notify_hr" id="notify_hr" min="1" value="1" style="text-align: right;">
-                      <em>day(s) before</em>
-                    </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <label>Reminder (*)</label>
                   </div>
-                  <br>
+                  <div class="col-sm-6">
+                    <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="notify_hr" id="notify_hr" min="1" value="1" style="text-align: right;">
+                    <em>day(s) before</em>
+                  </div>
+                </div>
+                <br>
                 <div class="row">
                   <div class="col-sm-4">
                     <label>Status</label>

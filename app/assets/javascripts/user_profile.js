@@ -1,8 +1,10 @@
 $(document).ready(function () {
   $("#edit_contact").click(function () {
     $("#modal_edit_contact").modal("show");
+  }) 
+  $(".cancel-edit-user-profile").click(function () {
+    setTimeout(location.reload.bind(location), 100);
   })
-
   $("#change_avatar").on('change', function () {
     var file = this.files[0]
     $.ajax({

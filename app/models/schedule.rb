@@ -8,7 +8,7 @@ class Schedule < ApplicationRecord
   delegate :first_name, :last_name, :email, to: :user
 
   scope :search_schedule, ->(search) {
-          where("`desc` LIKE :search OR companies.name LIKE :search", search: "%#{search}%") if search.present?
+          where("schedules.desc LIKE :search OR companies.name LIKE :search", search: "%#{search}%") if search.present?
         }
 
   validate :happened_at_is_valid_datetime
@@ -22,29 +22,29 @@ class Schedule < ApplicationRecord
 
   def happened_at_is_valid_datetime
     if start_date > end_date_hr
-      errors.add(:end_date_hr, "End Date HR must be greater than Start Date")
+      errors.add(:end_date_hr, "End date for HR must be greater than start date")
     end
 
     if _type == "PM"
       if start_date > end_date_employee
-        errors.add(:end_date_employee, "End Date Employee must be greater than Start Date")
+        errors.add(:end_date_employee, "End date for employee must be greater than start date")
       end
 
       if end_date_employee > end_date_reviewer
-        errors.add(:end_date_reviewer, "End Date Reviewer must be greater than End Date Member")
+        errors.add(:end_date_reviewer, "End date for reviewer must be greater than end date member")
       end
 
       if (end_date_employee - notify_employee.days) < start_date
-        errors.add(:notify_employee, "Notify Member Date must be greater than Start Date")
+        errors.add(:notify_employee, "Notify member date must be greater than start date")
       end
 
       if (end_date_reviewer - notify_reviewer.days) < end_date_employee
-        errors.add(:notify_reviewer, "Notify Reviewer Date must be greater than Notify Member Date")
+        errors.add(:notify_reviewer, "Notify reviewer date must be greater than notify member date")
       end
     end
 
     if _type == "HR" && (end_date_hr - notify_hr.days) < start_date
-      errors.add(:notify_hr, "Notify HR Date must be greater than Notify Reviewer Date")
+      errors.add(:notify_hr, "Notify HR Date must be greater than notify reviewer date")
     end
   end
 

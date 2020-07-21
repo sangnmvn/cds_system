@@ -47,7 +47,7 @@ class SchedulesController < ApplicationController
 
       if check_pm?
         project_ids = ProjectMember.where(user_id: current_user.id, :is_managent => true).pluck(:project_id)
-        project_name = Project.find(project_ids).pluck(:desc).join(", ")
+        project_name = Project.find(project_ids).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
 
@@ -110,10 +110,9 @@ class SchedulesController < ApplicationController
       end
     end
 
-    @schedules = Schedule.includes(:user, :company).order(id: :desc).page(params[:page]).per(20)
+    @schedules = Schedule.includes(:user, :company).order(id: :DESC).page(params[:page]).per(20)
     @is_pm = check_pm?
     @is_hr = check_hr?
-
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
   end
 
@@ -157,7 +156,7 @@ class SchedulesController < ApplicationController
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
         if @schedule.save
-          @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+          @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
           user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
           ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
@@ -191,7 +190,7 @@ class SchedulesController < ApplicationController
       @schedule = Schedule.new(temp_params)
 
       if @schedule.save
-        @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+        @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
         project_id = ProjectMember.where(user_id: current_user.id).pluck(:project_id).uniq
         user = User.joins(:project_members, :company).where(is_delete: false, "companies.id": params[:company_id], "project_members.project_id": project_id).where.not(id: current_user.id).uniq
         ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: period, end_date_member: params[:end_date_member], end_date_reviewer: params[:end_date_reviewer], notify_member: params[:notify_member]).pm_create_schedule_for_project.deliver_later(wait: 1.minute)
@@ -216,7 +215,7 @@ class SchedulesController < ApplicationController
                company_id: schedule.company.id,
                company_name: schedule.company.name,
                project_id: schedule.project.id,
-               project_name: schedule.project.desc,
+               project_name: schedule.project.name,
                assessment_period: schedule.period.format_long_date,
                period_id: schedule.period_id,
                start_date: schedule.start_date.strftime("%b %d, %Y"),
@@ -306,7 +305,7 @@ class SchedulesController < ApplicationController
       elsif check_pm?
         ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_pm.deliver_later(wait: 1.minute)
       end
-      @schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+      @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
       render json: { status: true }
     else
       render json: { status: false }

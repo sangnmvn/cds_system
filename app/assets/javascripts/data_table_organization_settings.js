@@ -133,9 +133,9 @@ $(document).on("click", ".btn-save-company", function () {
     $(".company-phone").after(
       '<span class="error-company">Please enter Phone</span>'
     );
-  } else if ($(".company-phone").val().length > 12) {
+  } else if ($(".company-phone").val().length > 12 || $(".company-phone").val().length < 10) {
     $(".company-phone").after(
-      '<span class="error-company">Maximum length is 12 character</span>'
+      '<span class="error-company">Please enter Phone with characters from 10 to 12 characters.</span>'
     );
   }
   if ($(".company-email").val().length < 1) {
@@ -1283,9 +1283,9 @@ $(".company-phone").keyup(function () {
     $(".company-phone").after(
       '<span class="error-company">Please enter Phone</span>'
     );
-  } else if ($(".company-phone").val().length > 12) {
+  } else if ($(".company-phone").val().length > 12 || $(".company-phone").val().length < 10) {
     $(".company-phone").after(
-      '<span class="error-company">Maximum length is 12 character</span>'
+      '<span class="error-company">Please enter Phone with characters from 10 to 12 characters.</span>'
     );
   }
 })
