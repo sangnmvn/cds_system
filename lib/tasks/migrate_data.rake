@@ -2037,12 +2037,6 @@ namespace :cds_system do
     ActiveRecord::Base.connection.execute(sql_title_mapping)
   end
 
-  # drop database ,recreate then migrate
-  # run migrate_data_companies
-  # run migrate_data_roles
-  # then run seed
-  # run excute_migrate_slots, excute_migrate_titles
-  # then run this file
   desc "insert data for table title histories"
   task :migrate_data_title_histories do
     sql_period = <<-SQL
