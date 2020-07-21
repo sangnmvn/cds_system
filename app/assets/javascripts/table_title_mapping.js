@@ -84,6 +84,7 @@ function loadTitleMappingForAdd() {
             }
 
             $(".table-new-title-mapping tbody").html(final_html);
+            checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
         }
     });
 }
@@ -91,3 +92,13 @@ function loadTitleMappingForAdd() {
 $(document).ready(function () {
     //loadTitleMappingForAdd();
 });
+
+function checkPrivilege(edit, view) {
+    if (!edit && !view)
+        window.location.replace = ""
+    else {
+        if (view && edit == "false") {
+            $(".form-control").attr("disabled", true)
+        }
+    }
+}

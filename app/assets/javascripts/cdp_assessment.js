@@ -936,30 +936,45 @@ $(document).ready(function () {
     };
   });
   $(document).on("click", ".submit-assessment", function () {
-    checkStatusForm();
-    var data_conflict = findConflictinArr(conflict_commits)
-    var str = ""
-    if (data_conflict && (is_reviewer || is_approver)) {
-      str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
-        data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
-    } else {
-      data_conflict = findConflictinArr(slot_assessing)
-      if (data_conflict) {
-        str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
-          data_conflict + " </p>"
+    $.ajax({
+      type: "GET",
+      url: "/forms/check_status_form",
+      data: {
+        form_id: form_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "New") {
+          $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
+          $('#modal_conflict').modal('show');
+          $(document).on("click", "#btn_check_status", function () {
+            window.location.href = "/forms/index_cds_cdp"
+          });
+        } else {
+          var data_conflict = findConflictinArr(conflict_commits)
+          var str = ""
+          if (data_conflict && (is_reviewer || is_approver)) {
+            str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+              data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
+          } else {
+            data_conflict = findConflictinArr(slot_assessing)
+            if (data_conflict) {
+              str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
+                data_conflict + " </p>"
+            }
+          }
+          if (str != "") {
+            $("#content_modal_conflict").html(str)
+            $('#modal_conflict').modal('show');
+          } else
+            $('#modal_period').modal('show');
+        }
       }
-    }
-    if (str != "") {
-      $("#content_modal_conflict").html(str)
-      $('#modal_conflict').modal('show');
-    } else
-      $('#modal_period').modal('show');
+    });
   });
-
-  $(document).on("click", "#btn_check_status", function () {
-    window.location.href = "/forms/index_cds_cdp"
-  });
-
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var row = $(this)
     var slot_id = row.closest('.row-slot').data("slot-id");
@@ -1275,23 +1290,5 @@ function getParams() {
 }
 
 function checkStatusForm() {
-  $.ajax({
-    type: "GET",
-    url: "/forms/check_status_form",
-    data: {
-      form_id: form_id
-    },
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    dataType: "json",
-    success: function (response) {
-      if (response.status == "New") {
-        $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
-        $("#btn_check_status").attr("style", "display:block");
-        $("#btn_conflict").attr("style", "display:none");
-        $('#modal_conflict').modal('show');
-      }
-    }
-  });
+
 }
