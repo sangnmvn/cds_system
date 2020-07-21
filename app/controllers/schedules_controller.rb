@@ -47,7 +47,7 @@ class SchedulesController < ApplicationController
 
       if check_pm?
         project_ids = ProjectMember.where(user_id: current_user.id, :is_managent => true).pluck(:project_id)
-        project_name = Project.find(project_ids).pluck(:desc).join(", ")
+        project_name = Project.find(project_ids).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
 
@@ -110,10 +110,9 @@ class SchedulesController < ApplicationController
       end
     end
 
-    @schedules = Schedule.includes(:user, :company).order(id: :desc).page(params[:page]).per(20)
+    @schedules = Schedule.includes(:user, :company).order(id: :DESC).page(params[:page]).per(20)
     @is_pm = check_pm?
     @is_hr = check_hr?
-
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
   end
 
@@ -216,7 +215,7 @@ class SchedulesController < ApplicationController
                company_id: schedule.company.id,
                company_name: schedule.company.name,
                project_id: schedule.project.id,
-               project_name: schedule.project.desc,
+               project_name: schedule.project.name,
                assessment_period: schedule.period.format_long_date,
                period_id: schedule.period_id,
                start_date: schedule.start_date.strftime("%b %d, %Y"),

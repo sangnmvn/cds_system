@@ -156,8 +156,8 @@ Rails.application.routes.draw do
 
   resources :schedules do
     collection do
-      delete "destroy_multiple"
-      get "add_page"
+      delete :destroy_multiple
+      get :add_page
     end
     get "view_pm"
   end

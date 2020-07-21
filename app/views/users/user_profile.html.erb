@@ -112,7 +112,7 @@
 <script> 
   var select_provinces = "<%= @current_user.permanent_address.present? ? @current_user.permanent_address.split(",")[1] : "" %>" 
   var select_district = "<%= @current_user.permanent_address.present?  ? @current_user.permanent_address.split(",")[0] : "" %>" 
-</script>
+</script>;
 <%= javascript_include_tag "select_provinces", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
 <script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'></script>
