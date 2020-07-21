@@ -490,7 +490,7 @@ $(document).ready(function () {
       }
     }
     if (all_comments_not_empty && checked_set.size > 0) {
-      $("#modal_request_add_more_evidence #data_slot").html(findConflictinArr(data_checked_request))
+      $("#modal_request_add_more_evidence #slot_id").html(findConflictinArr(data_checked_request))
       $("#modal_request_add_more_evidence").modal("show");
     } else {
       // open warning model      
@@ -864,7 +864,7 @@ $(document).ready(function () {
   });
 
   function findConflictinArr(arr) {
-    var str = ""
+    var str = "</p>"
     var keys = Object.keys(arr)
     keys.forEach(key => {
       if (arr[key].length > 0)
