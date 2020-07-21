@@ -122,7 +122,7 @@ function loadDataSlots(response) {
     temp += `<div id="${e.id}" class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
       <div class="col-10 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
-        <i class="fas fa-caret-down icon"></i>&nbsp &nbsp
+        <i class="fas fa-caret-down icon"></i>&nbsp
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-2 div-slot div-icon">
@@ -870,6 +870,8 @@ $(document).ready(function () {
       if (arr[key].length > 0)
         str += `<p> ${key} / ${arr[key].toString()}</p>`
     });
+    if(str.split("<p>").length <= 2)
+      str = str.replace("<p>","").replace("</p>","")
     return str
   }
 
@@ -957,12 +959,12 @@ $(document).ready(function () {
           var data_conflict = findConflictinArr(conflict_commits)
           var str = ""
           if (data_conflict && (is_reviewer || is_approver)) {
-            str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
-              data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
+            str = "<p>The following slots have not conflicted on commitment between you and staff:</p><p>Slot: <b>" +
+              data_conflict + "</b></p><p>Please continue reviewing or request update to Staff.</p>"
           } else {
             data_conflict = findConflictinArr(slot_assessing)
             if (data_conflict) {
-              str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
+              str = "<p>The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.</p><p>Slot: " +
                 data_conflict + " </p>"
             }
           }
@@ -1129,6 +1131,22 @@ function autoSaveStaff(row) {
         } else
           icon_cdp.prop("style", "visibility: hidden")
         checkChangeSlot();
+
+        current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
+        max = parseInt(current[1]);
+        current_change = 0
+        $('div.row-slot').each(function (i, sel) {
+          level = $(this).data("location")[0]
+          is_cds = $(this).find(".staff-commit").val() == "commit_cds"
+          point = $(this).find(".select-assessment").val()
+          if (level == row.data("location")[0] && is_cds && point >= 3)
+            current_change += 1;
+        });
+        if (current_change <= max)
+          current_change = current_change;
+        else
+          current = max;
+        $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
       }
     });
   }
@@ -1287,8 +1305,4 @@ function getParams() {
   });
   data.filter = filter.join();
   return data;
-}
-
-function checkStatusForm() {
-
 }

@@ -55,7 +55,7 @@
                     <label>Date of Birth</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="date" id="birthday" max="1945-09-02" value="<%= @current_user.date_of_birth %>" class="form-control">
+                    <input class="datepicker" data-date-format="M dd, yyyy" id="birthday" value="<%= @current_user.date_of_birth ? @current_user.date_of_birth.to_s(:long) : "" %>">
                     <small id="error_birthday" class="text-danger"></small>
                   </div>
                 </div>

@@ -501,7 +501,7 @@ module Api
         }
       end
       if form
-        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A"})
+        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.desc, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A"})
       end
       list_form
     end
@@ -1273,7 +1273,7 @@ module Api
         user_name: form.user&.format_name,
         project: form.user&.get_project,
         email: form.user&.email,
-        role_name: form.role&.name,
+        role_name: form.role&.desc,
         level: form.level || "N/A",
         rank: form.rank || "N/A",
         title: form.title&.name || "N/A",
