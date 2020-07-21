@@ -172,7 +172,7 @@ function loadDataSlots(response) {
             <b class='title-comment'>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
-            <textarea maxlength="1000" placeholder="comment content if any" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(e.tracking)}>${e.tracking.evidence}</textarea>
+            <textarea maxlength="1000" placeholder="Comment content" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(e.tracking)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
     if (length > 0) {
@@ -214,7 +214,7 @@ function loadDataSlots(response) {
                   </select>
                 </td>
                 <td>
-                  <textarea maxlength="1000" class="reviewer-recommend form-control ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == 'disabled' ? '' : 'reviewer-self'}" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
+                  <textarea maxlength="1000" class="reviewer-recommend form-control ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == 'disabled' ? '' : 'reviewer-self'}" placeholder="Comment is required if you commit CDS" class="form-control" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>${e.tracking.recommends[i].recommends}</textarea>
                 </td>
               </tr>`
         }
@@ -253,7 +253,7 @@ function loadDataSlots(response) {
                       </select>
                     </td>
                     <td>
-                      <textarea maxlength="1000" class="approver-recommend form-control ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" placeholder="comment content if any" class="form-control" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])}>${lst_approver[3]}</textarea>
+                      <textarea maxlength="1000" class="approver-recommend form-control ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" placeholder="Comment is required if you commit CDS" class="form-control" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])}>${lst_approver[3]}</textarea>
                     </td>
                   </tr>
                 </table>
@@ -568,7 +568,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if(response.status == "success")
+        if (response.status == "success")
           success("These slots have been updated and informed to requester successfully.")
         else
           fails("These slots haven't been updated and informed to requester.")
@@ -936,25 +936,45 @@ $(document).ready(function () {
     };
   });
   $(document).on("click", ".submit-assessment", function () {
-    var data_conflict = findConflictinArr(conflict_commits)
-    var str = ""
-    if (data_conflict && (is_reviewer || is_approver)) {
-      str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
-        data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
-    } else {
-      data_conflict = findConflictinArr(slot_assessing)
-      if (data_conflict) {
-        str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
-          data_conflict + " </p>"
+    $.ajax({
+      type: "GET",
+      url: "/forms/check_status_form",
+      data: {
+        form_id: form_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "New") {
+          $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
+          $('#modal_conflict').modal('show');
+          $(document).on("click", "#btn_check_status", function () {
+            window.location.href = "/forms/index_cds_cdp"
+          });
+        } else {
+          var data_conflict = findConflictinArr(conflict_commits)
+          var str = ""
+          if (data_conflict && (is_reviewer || is_approver)) {
+            str = "The following slots have not conflicted on commitment between you and staff: <p> Slot: " +
+              data_conflict + "</p><p>Please continue reviewing or request update to Staff.</p>"
+          } else {
+            data_conflict = findConflictinArr(slot_assessing)
+            if (data_conflict) {
+              str = "The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.<p>Slot: " +
+                data_conflict + " </p>"
+            }
+          }
+          if (str != "") {
+            $("#content_modal_conflict").html(str)
+            $('#modal_conflict').modal('show');
+          } else
+            $('#modal_period').modal('show');
+        }
       }
-    }
-    if (str != "") {
-      $("#content_modal_conflict").html(str)
-      $('#modal_conflict').modal('show');
-    } else
-      $('#modal_period').modal('show');
+    });
   });
-
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var row = $(this)
     var slot_id = row.closest('.row-slot').data("slot-id");
@@ -967,7 +987,7 @@ $(document).ready(function () {
       if (form_slot_id in checked_set_is_empty_comment) {
         checked_set_is_empty_comment[form_slot_id] = (recommend.length == 0);
       }
-      
+
       is_commit = row.find(".approver-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");
@@ -1267,4 +1287,8 @@ function getParams() {
   });
   data.filter = filter.join();
   return data;
+}
+
+function checkStatusForm() {
+
 }

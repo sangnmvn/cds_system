@@ -439,6 +439,7 @@ function checkPrivilege(edit, view) {
     if (view && edit == "false") {
       $(".btnAction").remove()
       $(".btn-save").remove()
+      $(".form-control").attr("disabled",true)
     }
   }
 }

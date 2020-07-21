@@ -37,16 +37,18 @@ function loadTitleMappingForEdit() {
           }
         }
       }
-      key_of_title_list = Object.keys(title_list);      
+      key_of_title_list = Object.keys(title_list);
       // get sorted competency list
       unsorted_competency_list = Array.from(competency_list);
       title_name = key_of_title_list[0];
       sortByKey(title_list[title_name], "competency_location");          
       competency_list = []
-      for (var h=0; h < unsorted_competency_list.length; h++)
-      {
-        competency_list.push(JSON.stringify({name: title_list[title_name][h].competency_name, id: title_list[title_name][h].competency_id}))
-      }              
+      for (var h = 0; h < unsorted_competency_list.length; h++) {
+        competency_list.push(JSON.stringify({
+          name: title_list[title_name][h].competency_name,
+          id: title_list[title_name][h].competency_id
+        }))
+      }
       // step 2: append all of the competency column
       final_html = '';
       column_list = [];
@@ -83,11 +85,13 @@ function loadTitleMappingForEdit() {
             // find competency data suitable for competency column cell
             if (data_list[k].competency_name == current_cell_competency_name) {
               max_rank = global_max_rank;
-              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'>`              
+              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'>`
 
-              for (var x=1; x< (max_rank+1); x++)
-              {
-                value_dropdown += `<option value='{j}-{i}'>{j}-{i}</option><option value='++{i}'>++{i}</option><option value='{i}'>{i}</option>`.formatUnicorn({i: x, j: x-1})
+              for (var x = 1; x < (max_rank + 1); x++) {
+                value_dropdown += `<option value='{j}-{i}'>{j}-{i}</option><option value='++{i}'>++{i}</option><option value='{i}'>{i}</option>`.formatUnicorn({
+                  i: x,
+                  j: x - 1
+                })
               }
               value_dropdown += '</select>';
 
@@ -108,20 +112,27 @@ function loadTitleMappingForEdit() {
       }
 
       $(".table-edit-title-mapping tbody").html(final_html);
-      
+
       $('select.competency-value').change(function () {
         $(this).attr('data-is_changed', 'true');
         $('#btn_save').attr("disabled", false);
         $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
       })
-    }    
+      checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
+    }
   });
-  
-  
 }
 
 $(document).ready(function () {
-  loadTitleMappingForEdit();  
-  
+  loadTitleMappingForEdit();
 });
 
+function checkPrivilege(edit, view) {
+  if (!edit && !view)
+    window.location.replace = ""
+  else {
+    if (view && edit == "false") {
+      $(".form-control").attr("disabled", true)
+    }
+  }
+}
