@@ -947,7 +947,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if (response.status == "New") {
+        if (response.status == "New"  && (is_reviewer || is_approver)) {
           $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
           $('#modal_conflict').modal('show');
           $(document).on("click", "#btn_check_status", function () {
