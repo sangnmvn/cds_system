@@ -193,7 +193,6 @@ function myJS() {
   var table_right = $('#table_right:visible').dataTable({
     bInfo: false, bDestroy: true
   });
-
 }
 
 function change_button_left(flag) {

@@ -58,7 +58,6 @@ class UserGroupsController < ApplicationController
   def save_privileges
     group_id = params[:group_id]
     data = params[:data]&.join(",") || ""
-
     Group.where(id: group_id).update(privileges: data)
   end
 end
