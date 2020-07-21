@@ -170,9 +170,6 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
-      all_keys = first.keys & second.keys
-      first.select! { |k, v| all_keys.include?(k) }
-      second.select! { |k, v| all_keys.include?(k) }
 
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
@@ -200,8 +197,9 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if title.rank <= prev_period[:rank]
-
+        # prev_peroid = nil -> user has 1 assessment only and this counts as an improvement
+        next if !prev_period.nil? && title.rank <= prev_period[:rank]
+        prev_period ||= {}
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
