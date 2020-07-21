@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       post :get_list_cds_assessment_manager
       get :preview_result
       get :get_summary_comment
+      get :check_status_form
       post :save_summary_comment
       post :data_view_result
       post :get_competencies

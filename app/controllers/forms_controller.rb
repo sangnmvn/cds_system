@@ -185,6 +185,12 @@ class FormsController < ApplicationController
     render json: { status: "fail" }
   end
 
+  def check_status_form
+    form = Form.find_by(id: params[:form_id])
+    return render json: { status: form.status } if form.present?
+    render json: { status: "fail" }
+  end
+
   def get_data_slot
     return render json: @form_service.get_data_form_slot
   end
@@ -222,14 +228,14 @@ class FormsController < ApplicationController
   def submit
     form = Form.find_by_id(params[:form_id])
     users = User.joins(:approvers).where("approvers.user_id": form.user_id)
-   
+
     return render json: { status: "fail" } if users.empty?
-    
+
     status, action = if Approver.where(user_id: current_user.id, is_approver: false).empty?
-       ["Awaiting Approval", "approve"]
-    else
-       ["Awaiting Review", "review"]
-    end
+        ["Awaiting Approval", "approve"]
+      else
+        ["Awaiting Review", "review"]
+      end
 
     render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
     user = form.user
