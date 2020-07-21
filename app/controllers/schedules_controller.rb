@@ -61,17 +61,17 @@ class SchedulesController < ApplicationController
           <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
-        if schedule._type == "HR"
-          current_schedule_data.push("<td style='text-align: center;'>      
+        # if schedule._type == "HR"
+        current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
-        elsif schedule._type == "PM"
-          current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
-        </td>")
-        end
+        # elsif schedule._type == "PM"
+        #   current_schedule_data.push("<td style='text-align: center;'>
+        #   <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+        #   <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+        # </td>")
+        # end
       else
         current_schedule_data.push("")
       end
@@ -159,7 +159,7 @@ class SchedulesController < ApplicationController
           @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
           user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
-          ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
+          # ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
 
           render json: { status: true }
         else
@@ -193,7 +193,7 @@ class SchedulesController < ApplicationController
         @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
         project_id = ProjectMember.where(user_id: current_user.id).pluck(:project_id).uniq
         user = User.joins(:project_members, :company).where(is_delete: false, "companies.id": params[:company_id], "project_members.project_id": project_id).where.not(id: current_user.id).uniq
-        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: period, end_date_member: params[:end_date_member], end_date_reviewer: params[:end_date_reviewer], notify_member: params[:notify_member]).pm_create_schedule_for_project.deliver_later(wait: 1.minute)
+        # ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: period, end_date_member: params[:end_date_member], end_date_reviewer: params[:end_date_reviewer], notify_member: params[:notify_member]).pm_create_schedule_for_project.deliver_later(wait: 1.minute)
         render json: { status: true }
       else
         render json: { status: false }
@@ -243,7 +243,6 @@ class SchedulesController < ApplicationController
 
   def destroy_page
     schedule = Schedule.find(params[:id])
-
     render json: { status: true, id: schedule.id }
   end
 
@@ -252,16 +251,11 @@ class SchedulesController < ApplicationController
     return render json: { status: false } if schedule.nil?
     period = Period.find(schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-    ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
-
-    if check_hr?
-      if period.destroy && schedule.destroy
-        #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-        render json: { status: true }
-      else
-        render json: { status: false }
-      end
-    elsif check_pm?
+    # ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
+    if period.destroy && schedule.destroy
+      #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+      render json: { status: true }
+    else
       render json: { status: false }
     end
   end
@@ -273,7 +267,7 @@ class SchedulesController < ApplicationController
       schedule.each do |schedule|
         period = Period.find(schedule.period_id)
         user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-        ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
+        # ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
         schedule.destroy
       end
       render json: { status: true }
@@ -301,9 +295,9 @@ class SchedulesController < ApplicationController
       user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
       @period = Period.find(@schedule.period_id)
       if check_hr?
-        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_hr.deliver_later(wait: 1.minute)
+        # ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_hr.deliver_later(wait: 1.minute)
       elsif check_pm?
-        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_pm.deliver_later(wait: 1.minute)
+        # ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_pm.deliver_later(wait: 1.minute)
       end
       @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
       render json: { status: true }

@@ -1,69 +1,78 @@
 <%= javascript_include_tag 'template_index_step1', 'data-turbolinks-track': 'reload' %>
-
 <div class="row" id="step1" style="justify-content: center;">
   <div class="col-lg-6">
     <%= form_with class: "step1 form-add-template", method: "GET" do %>
-     <div class="row">
-      <div class="col-sm-12">
-        <p style="color:red; text-align: left">(*) required fields</p>
-        <%# Template name %>
-        <div class="row">
-          <div class="col-md-2" style="text-align: left">
-            <label>Template Name (*)</label>
+      <div class="row">
+        <div class="col-sm-12">
+          <p style="color:red; text-align: left">(*) required fields</p>
+          <%# Template name %>
+          <div class="row">
+            <div class="col-md-2" style="text-align: left">
+              <label>Template Name (*)</label>
+            </div>
+            <div class="col-md-10 name">
+              <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter template name' %>
+              <div class="error"></div>
+            </div>
           </div>
-          <div class="col-md-10 name">
-            <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter template name' %>
-            <div class="error"></div>
+          <br>
+          <%# Role %>
+          <div class="row">
+            <div class="col-md-2" style="text-align: left">
+              <label>Role</label>
+            </div>
+            <div class="col-md-4 role">
+              <% if @current_role_id%>
+                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'form-control border-primary' %>
+              <% else %>
+                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), prompt: 'Please select one', class: 'form-control border-primary' %>
+              <% end %>
+              <div class="error"></div>
+            </div>
           </div>
-        </div>
-        <br>
-        <%# Role %>
-        <div class="row">
-          <div class="col-md-2" style="text-align: left">
-            <label>Role</label>
+          <br>
+          <%# Description %>
+          <div class="row">
+            <div class="col-md-2" style="text-align: left">
+              <label>Description</label>
+            </div>
+            <div class="col-md-10 description">
+              <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary' %>
+              <div class="error"></div>
+            </div>
           </div>
-          <div class="col-md-4 role">
-            <% if @current_role_id%>
-              <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'form-control border-primary' %>
+          <br>
+          <%# Status %>
+          <div class="row">
+            <div class="col-md-2" style="text-align: left">
+              <label>Status</label>
+            </div>
+            <% if @template.present? %>
+              <div class="col-md-2 status_radio">
+                <%= radio_button_tag :status, 1, (!@template.blank? || @template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess )%>
+                <%= label_tag(:status, "Enable") %>
+              </div>
+              <div class="col-md-3 status_radio">
+                <%= radio_button_tag :status, 0, (@template.blank? || !@template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess ) %>
+                <%= label_tag(:status, "Disable") %>
+              </div>
             <% else %>
-              <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), prompt: 'Please select one', class: 'form-control border-primary' %>
+              <div class="col-md-2 status_radio" >
+                <%= radio_button_tag :status, 1, false, disabled: true%>
+                <%= label_tag(:status, "Enable") %>
+              </div>
+              <div class="col-md-3 status_radio">
+                <%= radio_button_tag :status, 0,checked: true %>
+                <%= label_tag(:status, "Disable") %>
+              </div>
             <% end %>
             <div class="error"></div>
           </div>
-      </div>
-        <br>
-        <%# Description %>
-        <div class="row">
-          <div class="col-md-2" style="text-align: left">
-            <label>Description</label>
-          </div>
-          <div class="col-md-10 description">
-            <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary' %>
-            <div class="error"></div>
-          </div>
-        </div>
-        <br>
-        <%# Status %>
-        <div class="row">
-          <div class="col-md-2" style="text-align: left">
-            <label>Status</label>
-          </div>
-          <div class="col-md-2 status_radio">
-            <%= radio_button_tag :status, 1, (!@template.blank? || @template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess )%>
-            <%= label_tag(:status, "Enable") %>
-          </div>
-          <div class="col-md-3 status_radio">
-            <%= radio_button_tag :status, 0, (@template.blank? || !@template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess ) %>
-            <%= label_tag(:status, "Disable") %>
-          </div>
-          <div class="error"></div>
         </div>
       </div>
-    </div>
     <% end %>
   </div>
 </div>
-
 <button class="btn btn-primary save action-button step1" value="Save" name="save">Save</button>
 <button class="btn btn-primary next action-button step1 btn-next-template" value="Next" name="next">Next</button>
 <button class="btn btn-light border-primary step1_cancel" data-toggle="modal" data-target="#modal_warning_close">Cancel</button>
