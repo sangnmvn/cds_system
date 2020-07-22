@@ -198,7 +198,7 @@ module Api
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
         # prev_peroid = nil -> user has 1 assessment only and this counts as an improvement
-        next if prev_period.present? && title.rank <= prev_period[:rank]
+        next if prev_period.present? && title.rank <= prev_period[:rank] && prev_period[:title] == title.title
         prev_period ||= {}
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -293,7 +293,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if prev_period.nil? || title.rank >= prev_period[:rank]
+        next if prev_period.nil? || (title.rank >= prev_period[:rank] && prev_period[:title] == title.title)
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
