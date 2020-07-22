@@ -75,10 +75,12 @@ class UsersController < ApplicationController
 
   def add_reviewer
     return render json: { reviewers: [], current_reviewers: [] } unless (@privilege_array & [ADD_REVIEWER, FULL_ACCESS]).any?
-    company_id = User.select(:company_id).find_by_id(params[:user_id]).company_id
+    user = User.left_outer_joins(:project_members).select(:company_id, "project_members.project_id").where(id: params[:user_id])
+    company_id = user.first.company_id
+    project_id = user.map(&:project_id)
+
     current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
-    reviewer_ids = UserGroup.left_outer_joins(:group).where.not(user_id: params[:user_id]).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").pluck(:user_id)
-    reviewers = User.where(id: reviewer_ids).where(company_id: company_id)
+    reviewers = User.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     h_reviewers = []
     reviewers.each do |reviewer|
@@ -89,10 +91,12 @@ class UsersController < ApplicationController
 
   def add_approver
     return render json: { approvers: [], current_approvers: 0 } unless (@privilege_array & [ADD_APPROVER, FULL_ACCESS]).any?
-    company_id = User.select(:company_id).find_by_id(params[:user_id]).company_id
+    user = User.left_outer_joins(:project_members).select(:company_id, "project_members.project_id").where(id: params[:user_id])
+    company_id = user.first.company_id
+    project_id = user.map(&:project_id)
+
     current_approvers = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
-    approver_ids = UserGroup.left_outer_joins(:group).where.not(user_id: params[:user_id]).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").pluck(:user_id)
-    approvers = User.where(id: approver_ids).where(company_id: company_id)
+    approvers = User.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     h_approvers = []
     approvers.each do |approver|
