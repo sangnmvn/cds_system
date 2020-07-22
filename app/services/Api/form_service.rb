@@ -1,4 +1,3 @@
-Resolving dependencies....
 module Api
   class FormService < BaseService
     REVIEW_CDS = 16

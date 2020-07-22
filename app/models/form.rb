@@ -3,7 +3,7 @@ class Form < ApplicationRecord
   belongs_to :period_keep, class_name: "Period", optional: true
   belongs_to :user
   has_many :form_slots, dependent: :destroy
-  belongs_to :template, optional: true
+  belongs_to :template
   belongs_to :role, optional: true
   belongs_to :title, optional: true
   has_many :form_histories
