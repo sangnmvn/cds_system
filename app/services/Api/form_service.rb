@@ -332,8 +332,7 @@ module Api
         end
 
       title_first.map do |title|
-        prev_period = h_previous_period[title.user_id]
-
+        prev_period = h_previous_period[title.user_id] || {}
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
