@@ -73,7 +73,12 @@ $(document).ready(function () {
     checkDuplicateRequired($(this))
     checkRow($(this).parent().parent())
   });
-  $('#table_level_mapping').on('keyup', 'input', function () {
+  $('#table_level_mapping').on('keypress', 'input', function () {
+    var regex = /[0-9]/;
+    if (!regex.test(e.key) || parseInt($(this).val() + e.key) > max_quantity) {
+      event.preventDefault();
+      return false;
+    }
     checkData()
     checkRow($(this).parent().parent())
   });
@@ -84,7 +89,7 @@ $(document).ready(function () {
     if (num > max_quantity)
       $(this).val(max_quantity)
   });
-  $('#table_edit_level_mapping').on('change', 'input', function (e) {
+  $('#table_edit_level_mapping').on('input', 'input', function (e) {
     checkData()
     checkRow($(this).parent().parent())
   });
