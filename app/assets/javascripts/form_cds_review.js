@@ -301,14 +301,7 @@ $(document).ready(function () {
   });
 
   $(".reset-filter").click(function () {
-    data_filter = {
-      company: "0",
-      project: "0",
-      role: "0",
-      user: "0",
-      period: $("#period_filter").children()[0].value,
-    };
-    loadDataAssessment(data_filter);
+    loadDataFilter();
   });
   $(document).on("click", ".reject-cds-cdp", function () {
     user_name = $(this).closest('tr').find('#user_name').html()

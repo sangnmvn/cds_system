@@ -103,7 +103,7 @@ $(document).ready(function () {
   });
 
   $(".reset-filter").click(function () {
-    drawChart();
+    loadDataFilter();
   });
   // draw chart career
   drawChartCareer();
