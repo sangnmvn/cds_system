@@ -13,22 +13,31 @@ $(document).ready(function () {
   loadDataCompany();
   setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
   loadCompanyName();
+  $(".btn-company").css("background-color","#8da8db");
   loadRoleName();
   $(".btn-company").click(function () {
     setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
     loadDataCompany();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-company").css("background-color","#8da8db");
   });
   $(".btn-project").click(function () {
     setDisplay("#box_project", "#table_project", "btn-add-project", "btn-save-project");
     loadDataProject();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-project").css("background-color","#8da8db");
   });
   $(".btn-role").click(function () {
     setDisplay("#box_role", "#table_role", "btn-add-role", "btn-save-role");
     loadDataRole();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-role").css("background-color","#8da8db");
   });
   $(".btn-title").click(function () {
     setDisplay("#box_title", "#table_title", "btn-add-title", "btn-save-title");
     loadDataTitle();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-title").css("background-color","#8da8db");
   });
 
   $(".joined-date").datepicker({

@@ -61,17 +61,17 @@ class SchedulesController < ApplicationController
           <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
-        if schedule._type == "HR"
-          current_schedule_data.push("<td style='text-align: center;'>      
+        # if schedule._type == "HR"
+        current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
-        elsif schedule._type == "PM"
-          current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
-        </td>")
-        end
+        # elsif schedule._type == "PM"
+        #   current_schedule_data.push("<td style='text-align: center;'>
+        #   <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+        #   <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+        # </td>")
+        # end
       else
         current_schedule_data.push("")
       end
@@ -243,7 +243,6 @@ class SchedulesController < ApplicationController
 
   def destroy_page
     schedule = Schedule.find(params[:id])
-
     render json: { status: true, id: schedule.id }
   end
 
@@ -253,15 +252,10 @@ class SchedulesController < ApplicationController
     period = Period.find(schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
     ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
-
-    if check_hr?
-      if period.destroy && schedule.destroy
-        #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-        render json: { status: true }
-      else
-        render json: { status: false }
-      end
-    elsif check_pm?
+    if period.destroy && schedule.destroy
+      #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+      render json: { status: true }
+    else
       render json: { status: false }
     end
   end
