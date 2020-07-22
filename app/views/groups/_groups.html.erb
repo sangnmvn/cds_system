@@ -27,7 +27,7 @@
       <tr id= "<%= "group_#{group.id}" %>" >
         <td class="selectable" style="text-align:center">
           <div class="resource_selection_cell">
-            <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection_selection" name="collection_selection[]">
+            <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection-selection" name="collection_selection[]">
         <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable selectable_check',  name: 'checkbox' %>
           </div>
         </td>

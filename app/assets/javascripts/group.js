@@ -59,7 +59,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
             response.id +
             '" value="0" \
-            class="collection_selection" name="collection_selection[]">' +
+            class="collection-selection" name="collection_selection[]">' +
 
             '<input type="checkbox" id="group_ids[]" value="' +
             response.id +
@@ -181,7 +181,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
                 response.id +
                 '" value="0" \
-            class="collection_selection" name="collection_selection[]">' +
+            class="collection-selection" name="collection_selection[]">' +
 
                 '<input type="checkbox" id="group_ids[]" value="' +
                 response.id +
@@ -262,20 +262,20 @@ function setup_dataTable() {
 
     $("#table_group_length").remove();
 
-    $(".toggle_all").click(function () {
-      $(".collection_selection[type=checkbox]").prop(
+    $(".toggle-all").click(function () {
+      $(".collection-selection[type=checkbox]").prop(
         "checked",
         $(this).prop("checked")
       );
     });
 
-    $(".collection_selection[type=checkbox]").click(function () {
+    $(".collection-selection[type=checkbox]").click(function () {
       var nboxes = $("#table_group tbody :checkbox:not(:checked)");
-      if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
-        $(".toggle_all").prop("checked", false);
+      if (nboxes.length > 0 && $(".toggle-all").is(":checked") == true) {
+        $(".toggle-all").prop("checked", false);
       }
-      if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
-        $(".toggle_all").prop("checked", true);
+      if (nboxes.length == 0 && $(".toggle-all").is(":checked") == false) {
+        $(".toggle-all").prop("checked", true);
       }
     });
   });

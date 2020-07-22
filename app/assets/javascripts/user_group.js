@@ -260,7 +260,7 @@ function save() {
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
             response.id +
             '" value="0" \
-            class="collection_selection" name="collection_selection[]">'+
+            class="collection-selection" name="collection_selection[]">'+
 
             '<input type="checkbox" id="group_ids[]" value="' +
             response.id +
@@ -273,7 +273,6 @@ function save() {
           updateData.push(response.desc);
           updateData.push('<div style="text-align:right">' + response.number + '</div>');
           updateData.push(response.status_group);
-
 
           updateData.push(
             '<div style="text-align:center"><a class="action_icon edit_icon btn-edit-group" data-id="' + response.id + '" href="#">\

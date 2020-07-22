@@ -2,24 +2,23 @@
 <%= stylesheet_link_tag 'user_management', media: 'all', 'data-turbolinks-track': 'reload' %>
 <script>
   var current_reviewers = new Set();
-  var current_approvers = new Set();
+  var current_approvers = 0;
   var reviewers = new Set();
-  var approvers = new Set();
+  var approvers = 0;
+  var disabled_reviewer = false;
+  var crud_user = <%= @crud_user %>;
 </script>
-<input type="hidden" value="<%= @privilege_array.include? 1%>" class="get_privilege">
 <% breadcrumb :users %>
 <div class="container-fluid" style="margin-bottom: 40px;">
   <div class="container-fluid">
     <!-- Control the column width, and how they should appear on different devices -->
     <div class="row">
       <div class="col-sm-2" style="padding-right:0px;margin-right:0px">
-        <% if @privilege_array.include? 1%>
-          <%= render 'new_user', companies: @companies, projects: @projects, roles: @roles  %>
-        <%end%>
-        <%= render 'filter', companies: @companies, projects: @projects, roles: @roles %>
+        <%= render('new_user', companies: @companies, projects: @projects, roles: @roles) if @crud_user %>
+        <%= render 'filter' %>
       </div>
       <div class="col-sm-10">
-        <%= render 'users_mgmt_table', companies: @companies, projects: @projects, roles: @roles %>
+        <%= render 'users_mgmt_table' %>
       </div>
     </div>
     <div class="row">
@@ -30,9 +29,9 @@
     </div>
   </div>
 </div>
-<div><%= render 'add_reviewer_new' , users: @users %></div>
-<input type="hidden" value="<%@privilege_array.include? 1%>" id="check_privilege">
-<% if @privilege_array.include? 1%>
+<div><%= render 'add_reviewer' , users: @users %></div>
+<div><%= render 'add_approver' , users: @users %></div>
+<% if @crud_user%>
   <div><%= render 'delete' %></div>
   <div><%= render 'edit' %></div>
   <div><%= render 'delete_multiple_users' %></div>

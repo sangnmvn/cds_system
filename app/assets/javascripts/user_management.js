@@ -6,9 +6,10 @@ $(document).ready(function () {
     autoclose: true,
     format: "M dd, yyyy"
   });
+  get_filter();
 
-  $("#filter-company").change(function () {
-    company_id = $("#filter-company").val();
+  $("#filter_company").change(function () {
+    company_id = $("#filter_company").val();
     $.ajax({
       url: "/users/get_filter_company",
       type: "GET",
@@ -21,30 +22,28 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
-          $("#filter-project").html("");
-          $('<option value="all">All</option>').appendTo("#filter-project");
+          $("#filter_project").html("");
+          $('<option value="all">All</option>').appendTo("#filter_project");
           $.each(e.projects, function (k, v) {
-            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#filter-project");
+            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#filter_project");
           });
 
-          $('<option value="none">None</option>').appendTo("#filter-project");
-          $("#filter-role").html("");
-          $('<option value="all">All</option>').appendTo("#filter-role");
+          $('<option value="none">None</option>').appendTo("#filter_project");
+          $("#filter_role").html("");
+          $('<option value="all">All</option>').appendTo("#filter_role");
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
-              "#filter-role"
+              "#filter_role"
             );
           });
         });
       },
     });
   });
-});
-// filter select project
-$(document).ready(function () {
-  $("#filter-project").change(function () {
-    company_id = $("#filter-company").val();
-    project_id = $("#filter-project").val();
+
+  $("#filter_project").change(function () {
+    company_id = $("#filter_company").val();
+    project_id = $("#filter_project").val();
     $.ajax({
       url: "/users/get_filter_project",
       type: "GET",
@@ -58,40 +57,20 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $(response).each(function (i, e) {
-          $("#filter-role").html("");
-          $('<option value="all">All</option>').appendTo("#filter-role");
+          $("#filter_role").html("");
+          $('<option value="all">All</option>').appendTo("#filter_role");
           $.each(e.roles, function (k, v) {
             $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(
-              "#filter-role"
+              "#filter_role"
             );
           });
         });
       },
     });
   });
-});
-// alert success
-function success(content) {
-  $("#content-alert-success").html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-// alert fails
-function fails(content) {
-  $("#content-alert-fail").html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
-// select project modal add, edit
-$(document).ready(function () {
+
   $(".tokenize-project").tokenize2();
-});
-// submit add user
-$(document).ready(function () {
+
   $("#btn_modal_add_user").click(function () {
     first_name = $("#first").val();
     last_name = $("#last").val();
@@ -203,9 +182,7 @@ $(document).ready(function () {
       });
     }
   });
-});
-// get project by company - modal add user
-$(document).ready(function () {
+
   $(".modal-add-user-management").change(function () {
     company = $(".modal-add-user-management").val();
     $.ajax({
@@ -227,9 +204,7 @@ $(document).ready(function () {
       },
     });
   });
-});
-// get project by company - modal edit user
-$(document).ready(function () {
+
   $(".modal-edit-user-management").change(function () {
     company = $(".modal-edit-user-management").val();
     $.ajax({
@@ -251,22 +226,58 @@ $(document).ready(function () {
       },
     });
   });
-});
-// submit filter
-$(document).ready(function () {
-  $("#btn-filter").click(function () {
+
+  $("#btn_filter").click(function () {
     $('#table_user_management').dataTable().fnDraw();
+  });
+  $("#btn_reset").click(function () {
+    get_filter()
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="modal"]').tooltip();
+
+  $(".toggle-all").click(function () {
+    $(".collection-selection[type=checkbox]").prop("checked", $(this).prop("checked"));
   });
 });
 
-$(document).ready(function () {
-  $("#btn-reset").click(function () {
-    $("#filter-company").val("all");
-    $("#filter-project").val("all");
-    $("#filter-role").val("all");
-    $('#table_user_management').dataTable().fnDraw();
-  });
-});
+function get_filter() {
+  $.ajax({
+    url: "/users/get_filter/",
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      let companies = ""
+      let projects = ""
+      let roles = ""
+      if (response.companies.length > 1)
+        companies += "<option value='all'>All</option>";
+      if (response.projects.length > 1)
+        projects += "<option value='all'>All</option>";
+      if (response.roles.length > 1)
+        roles += "<option value='all'>All</option>";
+      response.companies.forEach(function (value, index) {
+        companies += `<option value='${value[1]}'>${value[0]}</option>`;
+      })
+      response.projects.forEach(function (value, index) {
+        projects += `<option value='${value[1]}'>${value[0]}</option>`;
+      })
+
+      projects += "<option value='none'>None</option>";
+      response.roles.forEach(function (value, index) {
+        roles += `<option value='${value[1]}'>${value[0]}</option>`;
+      })
+      $('#filter_company').html(companies);
+      $('#filter_project').html(projects);
+      $('#filter_role').html(roles);
+      $("#btn_filter").click();
+    }
+  })
+}
 
 function reorder_table_row(data_table) {
   data_table.fnDraw();
@@ -318,21 +329,6 @@ function delete_user() {
   });
 }
 
-function add_reviewer_user() {
-  var user_id = $(".add-reviewer-id-modal").val();
-  //alert( 'admin/user_management/'  + user_id + '/')
-  $.ajax({
-    url: "/admin/user_management/add_reviewer/" + user_id,
-    method: "post",
-    headers: {
-      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-    },
-    success: function (result) {
-      // Do something with the result
-    },
-  });
-}
-
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_firstname") + " " + $(this).data("user_lastname");
@@ -340,67 +336,45 @@ $(document).on("click", ".delete_icon", function () {
   $(".display_user_account_delete").html(user_account);
 });
 
-// $(document).on("click", ".add-reviewer-icon", function () {
-//   var user_id = $(this).data("user_id");
-//   var user_account = $(this).data("user_account");
-
-//   $("#add_reviewer_modal_title").html(
-//     'Add Reviewer For <span style="color: #fff;font-size: bold;">{account}</span>'.formatUnicorn({
-//       account: user_account
-//     })
-//   );
-
-//   $(".add-reviewer-id-modal").val(user_id);
-//   add_reviewer_user();
-// });
-
-var user_dataTable;
-
-function delete_dataTable() {
-  user_dataTable.fnClearTable();
-}
-
-function colorDisabledRowUser(){
+function colorDisabledRowUser() {
   $(".fa-toggle-off").closest("tr").addClass("row-user-disabled");
   $(".fa-toggle-on").closest("tr").removeClass("row-user-disabled");
 }
 function setup_dataTable() {
-
   $("#table_user_management").ready(function () {
-
     $("#table_user_management").dataTable({
       bDestroy: true,
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
       fnServerParams: function (aoData) {
-        company = $("#filter-company").val();
-        project = $("#filter-project").val();
-        role = $("#filter-role").val();
+        company = $("#filter_company").val();
+        project = $("#filter_project").val();
+        role = $("#filter_role").val();
 
         aoData.push({
-          "name": "filter-company",
+          "name": "filter_company",
           "value": company
         });
         aoData.push({
-          "name": "filter-project",
+          "name": "filter_project",
           "value": project
         });
         aoData.push({
-          "name": "filter-role",
+          "name": "filter_role",
           "value": role
         });
 
       },
 
       fnDrawCallback: function () {
-        $(".collection_selection[type=checkbox]").click(function () {
+        $(".collection-selection[type=checkbox]").click(function () {
           var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
-          if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
-            $("#table_user_management .toggle_all").prop("checked", false);
+          if (nboxes.length > 0 && $(".toggle-all").is(":checked") == true) {
+            $("#table_user_management .toggle-all").prop("checked", false);
           }
-          if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
-            $("#table_user_management .toggle_all").prop("checked", true);
+          if (nboxes.length == 0 && $(".toggle-all").is(":checked") == false) {
+            $("#table_user_management .toggle-all").prop("checked", true);
           }
         });
 
@@ -418,74 +392,57 @@ function setup_dataTable() {
       },
       "columnDefs": [{
         "orderable": false,
-        "orderSequence": ["desc", "asc"],
         "targets": 0
       },
       {
         "orderable": false,
-        "orderSequence": ["desc", "asc"],
         "targets": 1
       },
       {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 2
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 3
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 4
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 5
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 6
-      },
-      {
         "orderable": false,
-        "orderSequence": ["desc", "asc"],
-        "targets": 7
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
-        "targets": 8
-      },
-      {
-        "orderable": true,
-        "orderSequence": ["desc", "asc"],
         "targets": 9
-      },
-      {
-        "orderable": false,
-        "orderSequence": ["desc", "asc"],
-        "targets": 10
       },
       ],
     });
 
-    $(".toggle_all").click(function () {
-      $(".collection_selection[type=checkbox]").prop(
-        "checked",
-        $(this).prop("checked")
-      );
-    });
+    if (crud_user) {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+      data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+      <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+    </div>';
 
+      $(content).insertAfter(".dataTables_filter");
+      $(".hidden").attr("placeholder", "Type here to search");
+    } else {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+      data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
+      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+      <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+    </div>';
+
+      $(content).insertAfter(".dataTables_filter");
+      $(".hidden").attr("placeholder", "Type here to search");
+    }
 
   });
-
-
 }
+$(document).on('click', '.collection-selection, .toggle-all', function (e) {
+  if (crud_user) {
+    var number = $("#table_user_management tbody :checkbox:checked").length;
+    if (parseInt(number) > 0) {
+      $("#btn-disable-multiple-users").css('background-color', "#8da8db");
+      $("#btn-delete-many-users").css('background-color', "#8da8db");
+      $("#btn-enable-multiple-users").css('background-color', "#8da8db");
+    } else {
+      $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
+      $("#btn-delete-many-users").css('background-color', "#dcdcdc");
+      $("#btn-enable-multiple-users").css('background-color', "#dcdcdc");
+    }
+  }
+});
 setup_dataTable();
 
 $(document).on("click", ".edit_icon", function () {
@@ -714,7 +671,7 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
         $('.btn-modal-delele-multiple-users').prop("disabled", true);
         $("#modalDeleteMultipleUsers").modal("hide");
         $(".display_number_users_delete").html('');
-        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
         $("#table_user_management").dataTable().fnDraw();
         success("The account information has been deleted successfully.");
       } else if (response.status == "fail") {
@@ -806,7 +763,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
         $('.btn-modal-disable-multiple-users').prop("disabled", true);
         $("#modalStatusMultipleUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
-        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
         success("The account information has been disabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-disable-multiple-users').prop("disabled", true);
@@ -838,7 +795,7 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
         $('.btn-modal-enable-multiple-users').prop("disabled", true);
         $("#modalStatusEnableUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
-        $('.collection_selection, #collection_selection_toggle_all').prop('checked', false);
+        $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
         success("The account information has been enabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-enable-multiple-users').prop("disabled", true);
@@ -846,52 +803,4 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
       }
     },
   });
-});
-
-
-$(document).ready(function () {
-  a = $(".get_privilege").val();
-  if (a == 'true') {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
-  data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-  <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-  <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-  <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
-  </div>';
-
-    $(content).insertAfter(".dataTables_filter");
-    $(".hidden").attr("placeholder", "Type here to search");
-  } else {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
-    data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-    <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-    <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-    <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
-    </div>';
-
-    $(content).insertAfter(".dataTables_filter");
-    $(".hidden").attr("placeholder", "Type here to search");
-  }
-});
-$(document).ready(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-  $('[data-toggle="modal"]').tooltip();
-});
-$(document).click(function (e) {
-  a = $(".get_privilege").val();
-  if (a == 'true') {
-    var number = $("#table_user_management tbody :checkbox:checked").length;
-
-    if (parseInt(number) > 0) {
-      $("#btn-disable-multiple-users").css('background-color', "#8da8db");
-      $("#btn-delete-many-users").css('background-color', "#8da8db");
-      $("#btn-enable-multiple-users").css('background-color', "#8da8db");
-
-    } else {
-
-      $("#btn-disable-multiple-users").css('background-color', "#dcdcdc");
-      $("#btn-delete-many-users").css('background-color', "#dcdcdc");
-      $("#btn-enable-multiple-users").css('background-color', "#dcdcdc");
-    }
-  }
 });

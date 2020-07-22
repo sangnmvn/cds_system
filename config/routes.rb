@@ -33,6 +33,10 @@ Rails.application.routes.draw do
       post :delete_multiple_users
       post :disable_multiple_users
       post :enable_multiple_users
+      post :get_filter
+      post :add_reviewer
+      post :add_approver
+      post :add_reviewer_to_database
     end
   end
 
@@ -200,11 +204,4 @@ Rails.application.routes.draw do
   get "/groups/:id/destroy_page", to: "groups#destroy_page"
   # resources :groups
   # get "groups" => "groups#index"
-
-  resources :users do
-    collection do
-      post :add_reviewer
-      post :add_reviewer_to_database
-    end
-  end
 end
