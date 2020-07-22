@@ -19,7 +19,7 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response) {
-          success("Your avatar have been updated successfully!")
+          warning("Your avatar have been updated successfully!")
           $("avt").attr('src', url)
         } else
           fails("Your avatar haven't been updated!")
@@ -65,7 +65,7 @@ $(document).ready(function () {
         if (response) {
           $("#modal_edit_contact").modal("hide")
           $("#modal_edit_location").modal("hide")
-          success("Your profile have been updated successfully!")
+          warning("Your profile have been updated successfully!")
           setTimeout(location.reload.bind(location), 1000);
         } else
           fails("Your profile haven't been updated!")
@@ -91,7 +91,7 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            success("Your password have been changed successfully!")
+            warning("Your password have been changed successfully!")
             $("#modal_change_password").modal("hide")
             setTimeout(location.reload.bind(location), 1000);
           } else if (response.status == "Uncorrect") {
@@ -111,8 +111,8 @@ $(document).ready(function () {
   $("#modal_change_password #confirm_pass").keyup(function () {
     if ($(this).val() != $("#new_pass").val()) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_confirm").html("confirm password isn't equal new password")
-    } else {I
+      $("#error_confirm").html("Confirm password isn't equal new password!")
+    } else {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_confirm").html("")
     }
@@ -124,7 +124,7 @@ $(document).ready(function () {
     var pass = $(this).val()
     if (pass == "") {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_new_pass").html("Please Enter New Password")
+      $("#error_new_pass").html("Please enter new password")
     } else if (!regex.test(pass)) {
       $(this).addClass("is-invalid").removeClass("is-valid")
       $("#error_new_pass").html("Minimum of 6 characters, at least a letter and a number")
