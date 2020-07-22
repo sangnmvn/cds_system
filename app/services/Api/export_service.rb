@@ -401,7 +401,7 @@ module Api
           full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
-          title: title&.title.name,
+          title: title&.title&.name,
           level: title&.level,
           prev_period: title&.period_keep&.id,
           period_from_name: title&.period_keep&.format_to_date,
@@ -910,7 +910,7 @@ module Api
           no_change_sheet.rows[-1].cells[5].style = number_format
           no_change_sheet.rows[-1].cells[6].style = number_format
         end
-        no_change_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
+        no_change_sheet.column_widths 5, 30, 30, 15, 32, 5, 5, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
