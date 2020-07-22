@@ -96,6 +96,11 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
+      $('.company-filter').html(' <select name="company_filter" id="company_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
+      $('.project-filter').html('<select name="project_filter" id="project_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
+      $('.role-filter').html('<select name="role_filter" id="role_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
+      $('.user-filter').html('<select name="user_filter" id="user_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
+      $('.period-filter').html('<select name="period_filter" id="period_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
       if (response.companies.length > 1)
         $('<option value="0" selected>All</option>').appendTo("#company_filter");
       if (response.roles.length > 1)
@@ -137,7 +142,7 @@ function loadDataFilter() {
         else
           $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#period_filter");
       });
-      $("#company_filter,#project_filter,#role_filter,#user_filter,#period_filter").bsMultiSelect({});
+      $("#company_filter, #project_filter, #role_filter, #user_filter, #period_filter").bsMultiSelect({});
       customizeFilter();
       data_filter = apllyFilter();
       loadDataAssessment(data_filter)
@@ -300,7 +305,12 @@ $(document).ready(function () {
     loadDataAssessment(data_filter);
   });
 
+  $('.item-filter-review').change(function(){
+    $('.reset-filter').removeClass('disabled');
+  });
+
   $(".reset-filter").click(function () {
+    $(this).addClass('disabled');
     loadDataFilter();
   });
   $(document).on("click", ".reject-cds-cdp", function () {

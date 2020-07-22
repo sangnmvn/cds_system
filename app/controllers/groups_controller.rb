@@ -9,6 +9,8 @@ class GroupsController < ApplicationController
   # GET /groups.json
   def index
     @groups = Group.all.order(:id => :desc).where(is_delete: false)
+    @full_access = @privilege_array.include?(FULL_ACCESS)
+    @view = @privilege_array.include?(VIEW)
   end
 
   # GET /groups/1

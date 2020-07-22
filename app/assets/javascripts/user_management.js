@@ -9,6 +9,7 @@ $(document).ready(function () {
   get_filter();
 
   $("#filter_company").change(function () {
+    $('#btn_reset').removeClass('disabled');
     company_id = $("#filter_company").val();
     $.ajax({
       url: "/users/get_filter_company",
@@ -42,6 +43,7 @@ $(document).ready(function () {
   });
 
   $("#filter_project").change(function () {
+    $('#btn_reset').removeClass('disabled');
     company_id = $("#filter_company").val();
     project_id = $("#filter_project").val();
     $.ajax({
@@ -67,6 +69,10 @@ $(document).ready(function () {
         });
       },
     });
+  });
+
+  $("#filter_role").change(function () {
+    $('#btn_reset').removeClass('disabled');
   });
 
   $(".tokenize-project").tokenize2();
@@ -231,6 +237,7 @@ $(document).ready(function () {
     $('#table_user_management').dataTable().fnDraw();
   });
   $("#btn_reset").click(function () {
+    $('#btn_reset').addClass('disabled');
     get_filter()
   });
 

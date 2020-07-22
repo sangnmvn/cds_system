@@ -102,7 +102,12 @@ $(document).ready(function () {
     drawChart(data_filter);
   });
 
+  $('.item-filter-dashboard').change(function(){
+    $('.reset-filter').removeClass('disabled');
+  });
+
   $(".reset-filter").click(function () {
+    $(this).addClass('disabled');
     loadDataFilter();
   });
   // draw chart career
@@ -178,6 +183,10 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
+      $('.company-filter').html(`<select name="company_filter" id="company_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      $('.project-filter').html(`<select name="project_filter" id="project_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      $('.role-filter').html(`<select name="role_filter" id="role_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      // $("#company_filter, #role_filter, #project_filter").html('');
       if (response.status == "fails")
         return;
       if (response.companies.length > 1)

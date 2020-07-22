@@ -278,9 +278,26 @@ function setup_dataTable() {
         $(".toggle-all").prop("checked", true);
       }
     });
+
+    if (full_access) {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+        data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
+        src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+        float-right" data-toggle="modal"  title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
+        <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
+      $(content).insertAfter(".dataTables_filter");
+    } else {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+        data-toggle="modal" data-target="#modalAdd" title="Add Group" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
+        src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+        float-right" data-toggle="modal" title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
+        <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
+      $(content).insertAfter(".dataTables_filter");
+    }
   });
 }
-
 
 $(document).on("click", ".del_btn", function () {
   group_id = $(this).data("group");
@@ -354,24 +371,6 @@ $(function () {
 
 $(document).ready(function () {
   setup_dataTable();
-  a = $(".get_privilege").val();
-  if (a == 'true') {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
-  data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
-  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
-  float-right" data-toggle="modal"  title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
-  <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
-
-    $(content).insertAfter(".dataTables_filter");
-  } else {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
-    data-toggle="modal" data-target="#modalAdd" title="Add Group" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
-    src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
-    float-right" data-toggle="modal" title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
-    <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
-
-    $(content).insertAfter(".dataTables_filter");
-  }
 });
 
 $(document).on("click", "#deletes", function () {
@@ -442,8 +441,7 @@ $(document).ready(function () {
   }).draw();
 });
 $(document).click(function (e) {
-  a = $(".get_privilege").val();
-  if (a == 'true') {
+  if (full_access) {
     var number = $("#table_group tbody :checkbox:checked").length;
 
     if (parseInt(number) > 0) {
