@@ -2076,7 +2076,7 @@ namespace :cds_system do
     SQL
 
     sql_title_history = <<-SQL
-        insert into title_histories(id, rank, title, level, user_id, role_name, period_id, created_at, updated_at) values
+        insert into title_histories(id, level, title, rank, user_id, role_name, period_id, created_at, updated_at) values
            (1, 3, 'Associate Technical Architect', 4, 2, 'Technical Architect', 1, now(), now()),
            (2, 3, 'Associate Technical Architect', 4, 6, 'Technical Architect', 1, now(), now()),
            (3, 2, 'Senior Developer', 3, 8, 'Developer', 1, now(), now()),
@@ -2379,7 +2379,7 @@ namespace :cds_system do
        SQL
 
     sql_form = <<-SQL
-    insert into forms (id, is_approved, period_id, user_id, number_keep, period_keep_id, level, rank, role_id, status, title_id, created_at, updated_at) values
+    insert into forms (id, is_approved, period_id, user_id, number_keep, period_keep_id, rank, level, role_id, status, title_id, created_at, updated_at) values
     (1, 1, 1, 2, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
     (2, 1, 1, 6, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
     (3, 1, 1, 8, 0, null, 3, 2, 1, 'Done', 2, now(), now()),
