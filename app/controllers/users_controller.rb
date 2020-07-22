@@ -23,7 +23,7 @@ class UsersController < ApplicationController
       user_ids = ProjectMember.where(project_id: user_params[:filter_project]).pluck(:user_id).uniq
       filter[:id] = user_ids
     end
-    users = User.includes(:role, :company).search_user(user_params[:search]).where(filter).offset(user_params[:offset]).limit(LIMIT).order(get_sort_params)
+    users = User.includes(:role, :company, :title, project_members: :project).search_user(user_params[:search]).where(filter).offset(user_params[:offset]).limit(LIMIT).order(get_sort_params).order(:email)
 
     if user_params[:filter_project] == "none"
       user_project_ids = ProjectMember.pluck(:user_id).uniq # user have project
@@ -313,23 +313,23 @@ class UsersController < ApplicationController
     return { id: :desc } if params[:iSortCol_0] == "0"
     sort = case params[:iSortCol_0]
       when "1"
-        :id
+        { id: params[:sSortDir_0] || :desc }
       when "2"
-        :first_name
+        { first_name: params[:sSortDir_0] || :desc }
       when "3"
-        :last_name
+        { email: params[:sSortDir_0] || :desc }
       when "4"
-        :email
+        { account: params[:sSortDir_0] || :desc }
       when "5"
-        :account
+        "roles.name " + params[:sSortDir_0] || "desc"
       when "6"
-        :role_id
-      when "9"
-        :company_id
+        "titles.name " + params[:sSortDir_0] || "desc"
+      when "7"
+        "projects.name " + params[:sSortDir_0] || "desc"
+      when "8"
+        "companies.name " + params[:sSortDir_0] || "desc"
       else
-        :id
+        { id: params[:sSortDir_0] || :desc }
       end
-
-    { sort => params[:sSortDir_0] || :desc }
   end
 end
