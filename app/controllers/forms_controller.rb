@@ -12,7 +12,7 @@ class FormsController < ApplicationController
 
   def index_cds_cdp
     form = Form.find_by(user_id: current_user.id)
-    @check_status = form.status == "Done"
+    @check_status = form.nil? || form&.status == "Done"
   end
 
   def get_list_cds_assessment_manager
