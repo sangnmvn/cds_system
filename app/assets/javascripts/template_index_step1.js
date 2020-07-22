@@ -156,22 +156,6 @@ function checkModalCancel() {
   }
 }
 
-function success(content) {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 2000);
-}
-// alert fails
-function fails(content) {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 2000);
-}
-
 function postCreateTemplate(name, role, description) {
   if (name == 'undefined') {
     if ($(`#step1 .name`).closest('div').children('.error').length == 0) {
@@ -204,7 +188,7 @@ function postCreateTemplate(name, role, description) {
           fails("The template hasn't been created successfully.");
         } else {
           $('#msform .row .id-template').attr("value", response)
-          success("The template has been created successfully.")
+          warning("The template has been created successfully.")
           save_button(0)
         }
       },
@@ -251,7 +235,7 @@ function applyEditTemplate(id, name, role, description, status) {
         if (response.status == 'fail') {
           fails("The template hasn't been edited.");
         } else {
-          success("The template has been edited successfully.")
+          warning("The template has been edited successfully.")
           save_button(0)
         }
       },
@@ -296,7 +280,7 @@ function postDeleteTemplate() {
             if (response.status == 'fail') {
               fails("The template hasn't been deleted.");
             } else {
-              success("The template has been deleted successfully.")
+              warning("The template has been deleted successfully.")
               clicked.closest('tr').remove();
               if ($('.template-table tbody tr').length == 0) {
                 $('.template-table tbody').html("<tr><td colspan='8' class='notice'>No data available</td></tr>")

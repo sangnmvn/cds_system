@@ -49,11 +49,11 @@
             </div>
             <% if @template.present? %>
               <div class="col-md-2 status_radio">
-                <%= radio_button_tag :status, 1, (!@template.blank? || @template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess )%>
+                <%= radio_button_tag :status, 1, @template[:status], disabled: !( @template[:status] && @is_full_assess )%>
                 <%= label_tag(:status, "Enable") %>
               </div>
               <div class="col-md-3 status_radio">
-                <%= radio_button_tag :status, 0, (@template.blank? || !@template[:status]), disabled: !((!@template.blank? && @template[:status]) &&  @is_full_assess ) %>
+                <%= radio_button_tag :status, 0, (@template.blank? || !@template[:status]), disabled: !( @template[:status] && @is_full_assess ) %>
                 <%= label_tag(:status, "Disable") %>
               </div>
             <% else %>
@@ -79,6 +79,6 @@
 <script>
   var is_enabled = <%= ((@template).blank? || !@template[:status]) %>
   var current_role_id = "<%= @current_role_id || "" %>"
-  var template_name = "<%= @template[:name] || "" %>"
-  var template_description =  "<%= @template[:description]|| "" %>"
+  var template_name = "<%= @template ? @template[:name] : "" %>"
+  var template_description =  "<%= @template ?  @template[:description] : "" %>"
 </script>

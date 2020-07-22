@@ -33,7 +33,7 @@ $(document).on("click", "#btn-add-competency", function () {
           // hide tooltip
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           // message success
-          success("The competency has been saved successfully.");
+          warning("The competency has been saved successfully.");
           $('.btn-save-competency').prop("disabled", true);
           $(".btn-save-competency").removeClass("btn-primary").addClass("btn-secondary");
         } else if (response.status == "fail") {
@@ -71,7 +71,7 @@ $(document).on("click", "#btn-add-competency", function () {
           $(".form-add-competency #competency_index").val('');
           $('[data-toggle="tooltip"], .tooltip').tooltip("hide");
           disableButtonMove();
-          success("The competency has been saved successfully.");
+          warning("The competency has been saved successfully.");
         } else if (response.status == "fail") {
           fails("The competency has not been saved.");
         }
@@ -99,22 +99,6 @@ function addCompetency(id, name, type, desc) {
           <a class="btn-delete-competency" data-toggle="tooltip" title="Delete Competency" data-id="' + id + '" href="javascript:void(0)"><i class="fa fa-trash icon"></i></a> \
           </td>'
   ]).draw();
-}
-// alert success
-function success(content) {
-  $("#content-alert-success").html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-// alert fails
-function fails(content) {
-  $("#content-alert-fail").html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
 }
 
 $(document).on("click", "#table_add_competency .btn-edit-competency", function () {
@@ -185,7 +169,7 @@ $(document).on("click", "#confirm_yes_delete_competency", function () {
           disableButtonMove();
           $('#modal_delete_competency').modal('hide');
           $(".form-add-competency")[0].reset();
-          success("The competency has been deleted successfully.");
+          warning("The competency has been deleted successfully.");
         } else {
           fails("Can't delete competency.");
         }
@@ -428,7 +412,7 @@ $(document).on('click', '#table_add_competency .btnUp', function () {
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id - 1).data(previous_row_data).draw();
             disableButtonMove();
-            success("The competency is moved up 1 row successfully.");
+            warning("The competency is moved up 1 row successfully.");
           } else if (response.status == "fail") {
             fails("The competency is not moved up 1 row.");
           }
@@ -481,7 +465,7 @@ $(document).on('click', '#table_add_competency .btnDown', function () {
             table.row(row_id).data(current_row_data).draw();
             table.row(row_id + 1).data(next_row_data).draw();
             disableButtonMove();
-            success("The competency is moved down 1 row successfully.");
+            warning("The competency is moved down 1 row successfully.");
           } else if (response.status == "fail") {
             fails("The competency is not moved down 1 row.");
           }

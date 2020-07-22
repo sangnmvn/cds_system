@@ -2,22 +2,6 @@ $(function () {
   $('[data-tooltip="true"]').tooltip()
 })
 
-// function success(content = "Success !") {
-//   $('#content-alert-success').html(content);
-//   $("#alert-success").fadeIn();
-//   window.setTimeout(function () {
-//     $("#alert-success").fadeOut(1000);
-//   }, 5000);
-// }
-
-// // alert fails
-// function fails(content = "Fail !") {
-//   $('#content-alert-fail').html(content);
-//   $("#alert-danger").fadeIn();
-//   window.setTimeout(function () {
-//     $("#alert-danger").fadeOut(1000);
-//   }, 5000);
-// }
 // check status when enter start date and end date
 function check_status(start, end, status_id) {
 
