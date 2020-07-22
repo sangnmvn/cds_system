@@ -17,7 +17,7 @@
             <div class="col-sm-4">
               <label>Schedule Name (*)</label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
               <%= text_field_tag 'desc_edit', nil, class: 'form-control', value: schedule.desc %>
               <input type="hidden" name="id" id="id" value="<%= schedule.id%>">
               <input type="hidden" name="user" id="user" value="<%= current_user.id %>">
@@ -29,7 +29,7 @@
             <div class="col-sm-4">
               <label>Company Name (*)</label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
               <%= select_tag "company_edit", options_from_collection_for_select(@company, "id", "name", schedule.company.id), class: "form-control", disabled: true, include_blank: "Please select a company" %>
             </div>
           </div>
@@ -40,7 +40,7 @@
               <div class="col-sm-4">
                 <label>Project Name (*)</label>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 <%= select_tag "project_edit", options_from_collection_for_select(@project, "id", "name", schedule.project_id), class: "form-control", include_blank: "Please select a project" %>
               </div>
             </div>
@@ -58,7 +58,7 @@
               <div class="col-sm-2">To</div>
               <input type="text" id="to_date" class="form-control col-sm-3" disabled value="<%= schedule.period.to_date.strftime('%b %d, %Y') %>">
             <% elsif @is_pm %>
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 <%= select_tag "schedule_hr_parent", options_from_collection_for_select(@parent_schedules, "id", "parent_period", @parent_schedules.first.id), disabled: true, name: "schedule_hr_parent", class: "form-control", include_blank: "Please select an assessment period" %>
               </div>
             <% end %>
@@ -68,12 +68,12 @@
           <div class="row">
             <div class="col-sm-4">
               <% if @is_hr %>
-                <label>Start date (*)</label>
+                <label>Start Date (*)</label>
               <% elsif @is_pm %>
-                <label>Start date HR (*)</label>
+                <label>Start Date HR (*)</label>
               <% end %>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
               <input type="text" id="start_date_edit" class="form-control" value="<%= schedule.start_date.strftime('%b %d, %Y') %>" disabled>
             </div>
           </div>
@@ -82,12 +82,12 @@
           <div class="row">
             <div class="col-sm-4">
               <% if @is_hr %>
-                <label>End date (*)</label>
+                <label>End Date (*)</label>
               <% elsif @is_pm %>
-                <label>End date HR (*)</label>
+                <label>End Date HR (*)</label>
               <% end %>
             </div>
-            <div class="col-sm-6 input-group date">
+            <div class="col-sm-8 input-group date">
               <% if @is_pm %>
                 <input type="text" id="end_date_edit" disabled="true" class="form-control" value="<%= schedule.end_date_hr.strftime('%b %d, %Y') %>">
               <% elsif @is_hr %>
@@ -101,7 +101,7 @@
               <div class="col-sm-4">
                 <label>Reminder (*)</label>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="notify_hr_edit" min="1" id="notify_hr_edit" style="text-align: right;" value="<%= schedule.notify_hr %>">
                 <em>day(s) before</em>
               </div>
@@ -111,18 +111,18 @@
           <% if @is_pm %>
             <div class="row">
               <div class="col-sm-4">
-                <label>End date for Member(*)</label>
+                <label>End Date for Member(*)</label>
               </div>
-              <div class="col-sm-6 input-group date" style='display: inline;'>
+              <div class="col-sm-8 input-group date" style='display: inline;'>
                 <input type="text" name="end_date_member" id="end_date_member_edit" class="form-control" value="<%= schedule.end_date_employee.strftime('%b %d, %Y')%>">
               </div>
             </div>
             <br>
             <div class="row">
               <div class="col-sm-4">
-                <label>End date for Reviewer(*)</label>
+                <label>End Date for Reviewer(*)</label>
               </div>
-              <div class="col-sm-6 input-group date" style='display: inline;'>
+              <div class="col-sm-8 input-group date" style='display: inline;'>
                 <input type="text" name="end_date_reviewer" id="end_date_reviewer_edit" class="form-control" value="<%= schedule.end_date_reviewer.strftime('%b %d, %Y')%>">
               </div>
             </div>
@@ -131,7 +131,7 @@
               <div class="col-sm-4">
                 <label>Reminder of Member/ Reviewer (*)</label>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  name="notify_member" id="notify_member_edit" min="1" value="<%= schedule.notify_reviewer %>" style="text-align: right;">
                 <em>day(s) before</em>
               </div>
@@ -142,7 +142,7 @@
             <div class="col-sm-4">
               <label>Status</label>
             </div>
-            <div class="col-sm-6" >
+            <div class="col-sm-8" >
               <input type="text" class="form-control" id="status_id" value="<%= schedule.status %>" disabled >
             </div>
           </div>

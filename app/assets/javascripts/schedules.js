@@ -2,22 +2,22 @@ $(function () {
   $('[data-tooltip="true"]').tooltip()
 })
 
-function success(content = "Success !") {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
+// function success(content = "Success !") {
+//   $('#content-alert-success').html(content);
+//   $("#alert-success").fadeIn();
+//   window.setTimeout(function () {
+//     $("#alert-success").fadeOut(1000);
+//   }, 5000);
+// }
 
-// alert fails
-function fails(content = "Fail !") {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
+// // alert fails
+// function fails(content = "Fail !") {
+//   $('#content-alert-fail').html(content);
+//   $("#alert-danger").fadeIn();
+//   window.setTimeout(function () {
+//     $("#alert-danger").fadeOut(1000);
+//   }, 5000);
+// }
 // check status when enter start date and end date
 function check_status(start, end, status_id) {
 
@@ -482,7 +482,7 @@ function on_click_btn() {
         var status = res.status;
         if (status == true) {
           $("#modal").modal("hide");
-          success("The schedule(s) has been deleted successfully");
+          warning("The schedule(s) has been deleted successfully");
         } else {
           fails("Failed to delete all schedule(s)");
         }
@@ -752,7 +752,7 @@ function action_add() {
             var status = res.status;
             if (status == true) {
               $("#modalAdd").modal("hide");
-              success("The schedule has been created successfully");
+              warning("The schedule has been created successfully");
             } else {
               fails("Failed to create this schedule");
             }
@@ -798,7 +798,7 @@ function action_add() {
             view_schedule();
             if (res.status == true) {
               $("#modal").modal("hide");
-              success("The schedule has been edited successfully");
+              warning("The schedule has been edited successfully");
             } else {
               fails("Failed to edit this schedule");
             }
@@ -979,7 +979,7 @@ function action_edit() {
 
           if (status == true) {
             $("#modal").modal("hide");
-            success("The schedule has been edited successfully");
+            warning("The schedule has been edited successfully");
           } else {
             fails("Failed to edit this schedule");
           }
@@ -1016,7 +1016,7 @@ function delete_schedule() {
       var status = res.status;
       if (status == true) {
         $("#modalDeleteSchedule").modal("hide");
-        success("The schedule(s) has been deleted successfully");
+        warning("The schedule(s) has been deleted successfully");
       } else {
         fails("Failed to delete all schedule(s)");
       }

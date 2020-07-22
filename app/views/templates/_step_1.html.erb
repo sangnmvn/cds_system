@@ -11,7 +11,7 @@
               <label>Template Name (*)</label>
             </div>
             <div class="col-md-10 name">
-              <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'form-control border-primary', placeholder: 'Please enter template name' %>
+              <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'val-input-step1 form-control border-primary', placeholder: 'Please enter template name' %>
               <div class="error"></div>
             </div>
           </div>
@@ -19,13 +19,13 @@
           <%# Role %>
           <div class="row">
             <div class="col-md-2" style="text-align: left">
-              <label>Role</label>
+              <label>Role (*)</label>
             </div>
             <div class="col-md-4 role">
               <% if @current_role_id%>
-                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'form-control border-primary' %>
+                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'val-input-step1 form-control border-primary' %>
               <% else %>
-                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), prompt: 'Please select one', class: 'form-control border-primary' %>
+                <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name), prompt: 'Please select one', class: 'val-input-step1 form-control border-primary' %>
               <% end %>
               <div class="error"></div>
             </div>
@@ -37,7 +37,7 @@
               <label>Description</label>
             </div>
             <div class="col-md-10 description">
-              <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'form-control border-primary' %>
+              <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'val-input-step1 form-control border-primary' %>
               <div class="error"></div>
             </div>
           </div>
@@ -78,4 +78,7 @@
 <button class="btn btn-light border-primary step1_cancel" data-toggle="modal" data-target="#modal_warning_close">Cancel</button>
 <script>
   var is_enabled = <%= ((@template).blank? || !@template[:status]) %>
+  var current_role_id = "<%= @current_role_id || "" %>"
+  var template_name = "<%= @template[:name] || "" %>"
+  var template_description =  "<%= @template[:description]|| "" %>"
 </script>

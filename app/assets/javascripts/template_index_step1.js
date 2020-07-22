@@ -22,6 +22,15 @@ $(document).ready(function () {
       $('.step1_cancel').attr('data-target', "#modal_warning_close")
     }
   })
+
+  $('.val-input-step1').on('input', function () {
+    if(check_next_button())
+      next_button(1);
+    else
+      next_button(0);
+    // $('.next').prop("disabled", true);
+    // $('.next').removeClass("btn-primary").addClass("btn-secondary");
+  });
 })
 
 function clickSaveButton() {
@@ -60,6 +69,13 @@ function next_button(flag) {
     $('.next').prop("disabled", false)
     $('.next').removeClass("btn-secondary").addClass("btn-primary")
   }
+}
+function check_next_button() {
+  if (template_name.trim() == $(".name input").val().trim() && current_role_id.trim() == $(".role select").val().trim() && template_description.trim() == $(".description textarea").val().trim() ) {
+    return true;
+  }
+  else
+    return false;
 }
 
 function checkValidation() {
