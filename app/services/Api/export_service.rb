@@ -180,6 +180,7 @@ module Api
           level: title.level,
           title: title.title,
           name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = {}
@@ -198,7 +199,7 @@ module Api
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
         # prev_peroid = nil -> user has 1 assessment only and this counts as an improvement
-        next if prev_period.present? && title.rank <= prev_period[:rank] && prev_period[:title] == title.title
+        next if prev_period.present? && (title.rank <= prev_period[:rank] || title&.role_name != prev_period[:role_name])
         prev_period ||= {}
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -276,6 +277,7 @@ module Api
           level: title.level,
           title: title.title,
           name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = {}
@@ -293,7 +295,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if prev_period.nil? || (title.rank >= prev_period[:rank] && prev_period[:title] == title.title)
+        next if prev_period.nil? || title.rank >= prev_period[:rank] || title&.role_name != prev_period[:role_name]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -983,9 +985,9 @@ module Api
           title_comparison_sheet.rows[-1].cells[4].style = number_format
           title_comparison_sheet.rows[-1].cells[5].style = number_format
           # underline increased value
-          title_comparison_sheet.rows[-1].cells[6].style = result[:rank_prev].present? && result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
-          title_comparison_sheet.rows[-1].cells[7].style = result[:rank_prev].present? && result[:rank] > result[:rank_prev] ? number_improved_format : number_format
-          title_comparison_sheet.rows[-1].cells[8].style = result[:rank_prev].present? && (result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev])) ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[6].style = result[:same_role] && result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
+          title_comparison_sheet.rows[-1].cells[7].style = result[:same_role] && result[:rank] > result[:rank_prev] ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[8].style = result[:same_role] && (result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev])) ? number_improved_format : number_format
         end
         title_comparison_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
         # getting output file to public/

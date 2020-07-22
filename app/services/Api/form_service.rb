@@ -321,6 +321,7 @@ module Api
           level: title.level,
           title: title.title,
           name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = {}
@@ -333,6 +334,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id] || {}
+
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
@@ -354,6 +356,7 @@ module Api
           rank_prev: prev_period[:rank],
           level_prev: prev_period[:level],
           title_prev: prev_period[:title],
+          same_role: prev_period[:role_name]&.downcase&.strip == title&.role_name&.downcase&.strip,
         }
       end
       # results = {}
