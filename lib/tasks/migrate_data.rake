@@ -2076,7 +2076,7 @@ namespace :cds_system do
     SQL
 
     sql_title_history = <<-SQL
-    insert into title_histories(id, rank, title, level, user_id, role_name, period_id, created_at, updated_at) values
+    insert into title_histories(id, level, title, rank, user_id, role_name, period_id, created_at, updated_at) values
           (1, 3, 'Associate Technical Architect', 4, 2, 'Developer', 1, now(), now()),
           (2, 3, 'Associate Technical Architect', 4, 6, 'Developer', 1, now(), now()),
           (3, 2, 'Senior Developer', 3, 8, 'Developer', 1, now(), now()),
