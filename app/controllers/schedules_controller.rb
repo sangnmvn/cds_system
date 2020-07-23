@@ -57,7 +57,7 @@ class SchedulesController < ApplicationController
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#cccccc'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
         current_schedule_data.push("<td style='text-align: center;'>      
