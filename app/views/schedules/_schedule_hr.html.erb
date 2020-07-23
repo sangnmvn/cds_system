@@ -19,7 +19,7 @@
       <td><%= schedule.status %></td>
       <td style="text-align: center;">
         <% if schedule.status == "In-progress" %>
-          <%= link_to(('<i class="fa fa-pencil icon" style="color:#000"></i>').html_safe, "javascript:void(0)", { class: "edit_btn", title: "Edit schedule" }) %>
+          <%= link_to(('<i class="fa fa-pencil icon" style="color:#cccccc"></i>').html_safe, "javascript:void(0)", { class: "edit_btn", title: "Edit schedule" }) %>
           <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "javascript:void(0)", { class: "del_btn", :"data-schedule" => schedule.id, :"data-tooltip" => true, :"data-placement"=> "top" , title: "Delete schedule"  }) %>
         <% end %>
         <% if schedule.status == "New" %>

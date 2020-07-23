@@ -1,9 +1,3 @@
-.row-disabled {
-    td {
-        background-color: #888 !important;
-    }
-}
-
 #table_company_paginate,
 #table_project_paginate,
 #table_role_paginate,
@@ -34,6 +28,10 @@
     input,
     select {
         height: 31.63px;
+    }
+
+    .row{
+        padding-bottom: 6px;
     }
 }
 
@@ -150,7 +148,7 @@ th {
 }
 
 .role-name {
-    width: 10%;
+    width: 15%;
 }
 
 .quantity {
@@ -188,4 +186,12 @@ select {
 
 .action-icon {
     vertical-align: middle;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    i{
+        color: #cccccc;
+    }
 }

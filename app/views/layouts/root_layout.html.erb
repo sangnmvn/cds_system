@@ -38,12 +38,12 @@
               Administrator
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/users">User Management</a>
-              <a class="dropdown-item" href="/groups">User Group Management</a>
-              <a class="dropdown-item" href="/schedules">Schedule Management</a>
-              <a class="dropdown-item" href="/templates">Template Management</a>
-              <a class="dropdown-item" href="/level_mappings">Level Mapping</a>
-              <a class="dropdown-item" href="/organization_settings">Organization Settings</a>
+              <a class="dropdown-item privilate-user-managemen" href="/users">User Management</a>
+              <a class="dropdown-item privilate-user-group-management" href="/groups">User Group Management</a>
+              <a class="dropdown-item privilate-schedule-management" href="/schedules">Schedule Management</a>
+              <a class="dropdown-item privilate-template" href="/templates">Template Management</a>
+              <a class="dropdown-item privilate-level-mapping" href="/level_mappings">Level Mapping</a>
+              <a class="dropdown-item privilate-organization-settings" href="/organization_settings">Organization Settings</a>
               <%= link_to "My Account", user_profile_users_path, class: "dropdown-item"%>
             </div>
           </li>
@@ -71,3 +71,6 @@
     <%= yield %>
   </body>
 </html>
+<script>
+  var privilege_array = "<%= @privilege_array ?  @privilege_array : "" %>";
+</script>

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
-
+  before_action :get_privilege_id
   LIMIT = 20
   PASSWORD_DEFAULT = "123QWEasd"
   LETTER_CAP = *("A".."Z")

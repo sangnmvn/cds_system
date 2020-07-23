@@ -44,9 +44,8 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.desc)
 
       current_schedule_data.push(schedule.company.name)
-
       if check_pm?
-        project_ids = ProjectMember.where(user_id: current_user.id, :is_managent => true).pluck(:project_id)
+        project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
         project_name = Project.find(project_ids).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
@@ -58,20 +57,13 @@ class SchedulesController < ApplicationController
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#cccccc'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
-        # if schedule._type == "HR"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
-        # elsif schedule._type == "PM"
-        #   current_schedule_data.push("<td style='text-align: center;'>
-        #   <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-        #   <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
-        # </td>")
-        # end
       else
         current_schedule_data.push("")
       end
