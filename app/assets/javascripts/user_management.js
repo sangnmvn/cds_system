@@ -236,6 +236,7 @@ $(document).ready(function () {
   $("#btn_filter").click(function () {
     $('#table_user_management').dataTable().fnDraw();
   });
+
   $("#btn_reset").click(function () {
     $('#btn_reset').addClass('disabled');
     get_filter()
@@ -281,7 +282,7 @@ function get_filter() {
       $('#filter_company').html(companies);
       $('#filter_project').html(projects);
       $('#filter_role').html(roles);
-      $("#btn_filter").click();
+      setup_dataTable();
     }
   })
 }
@@ -374,7 +375,7 @@ function setup_dataTable() {
 
       },
 
-      fnDrawCallback: function () {
+      fnDrawCallback: function (dataSource) {
         $(".collection-selection[type=checkbox]").click(function () {
           var nboxes = $("#table_user_management tbody :checkbox:not(:checked)");
           if (nboxes.length > 0 && $(".toggle-all").is(":checked") == true) {
@@ -389,6 +390,10 @@ function setup_dataTable() {
 
         $(".paginate_button.current").prop("style", "font-weight: bold");
         $('.dataTables_length').attr("style", "display:none");
+
+        if (dataSource.aoData.length == 0) {
+          $('.paginate_button').addClass('disabled')
+        }
       },
       "bProcessing": true,
       "bServerSide": true,
@@ -436,6 +441,7 @@ function setup_dataTable() {
 
   });
 }
+
 $(document).on('click', '.collection-selection, .toggle-all', function (e) {
   if (crud_user) {
     var number = $("#table_user_management tbody :checkbox:checked").length;
@@ -450,7 +456,6 @@ $(document).on('click', '.collection-selection, .toggle-all', function (e) {
     }
   }
 });
-setup_dataTable();
 
 $(document).on("click", ".edit_icon", function () {
   user_id = $(this).data("user_id");
