@@ -294,8 +294,9 @@ module Api
       end
       results = []
       user_ids = []
-      title_first.map do |title|
-        next if h_old[title.user_id][:rank] < title.rank
+
+      title_first.each_with_index do |title, i|
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] >= title.rank
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -356,8 +357,8 @@ module Api
       end
       results = []
       user_ids = []
-      title_first.map do |title|
-        next if h_rank[title.user_id] > title.rank
+      title_first.each_with_index do |title, i|
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] <= title.rank
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
@@ -399,25 +400,25 @@ module Api
 
       titles = case number_keep
         when 0
-          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 1")
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids).where("number_keep >= 1")
         when 1
-          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids, number_keep: number_keep)
         when 2
-          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids, number_keep: number_keep)
         when 3
-          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 2")
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids).where("number_keep >= 2")
         end
-      titles.map do |title|
+      titles.map.with_index do |title, i|
         {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
           full_name: title.user.format_name,
           email: title.user.email,
-          role: title.role_name,
+          role: title.role&.name || "N/A",
           rank: title.rank,
-          title: title.title,
+          title: title.title&.name || "N/A",
           level: title.level,
-          keep_period: title.keep_period.format_name,
+          period_keep: title.period_keep.format_name,
         }
       end
 
@@ -432,7 +433,7 @@ module Api
       #     rank: rand(i + 100),
       #     title: "#{rand(i + 100)} title tile",
       #     level: rand(i + 100),
-      #     keep_period: "#{rand(i + 100)} period period",
+      #     period_keep: "#{rand(i + 100)} period period",
       #   }
       # end
       # results
