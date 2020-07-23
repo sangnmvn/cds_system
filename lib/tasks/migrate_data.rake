@@ -1095,7 +1095,7 @@ namespace :cds_system do
         (814, 'Demonstrate a high level understanding of and compile with LARION standards, processes and procedures.', '<p>Hiểu rõ và tuân thủ tốt các quy trình, quy định, thủ tục mà công ty / dự án đang áp dụng.</p><p>Phản ví dụ: nằm trong danh sách report/phạt/nhắc nhở của công ty/dự án từ 3 lần trở lên (cho từng loại) trong khoảng thời gian đánh giá</p>', 1, 64, 814, now(), now()),
         (815, 'Capable of locating and effectively using detailed information from the LARION Portal, SVN, Project Tool', '<p>Biết cách truy xuất và sử dụng hiệu quả bộ công cụ đang được sử dụng trong công ty/dự án (Portal, SVN, Redmine và 1 số tool đang được sử dụng)</p><p>* Biết cách truy xuất: 1 cách nhanh nhất và không cần sự hỗ trợ của người khác có thể truy xuất vào các công cụ</p><p>* Sử dụng hiệu quả: sử dụng tốt các tính năng cơ bản/ thường dùng với từng loại công cụ</p>', 1, 64, 815, now(), now()),
         (816, 'Recognized as a proactive member of the team.', '<p>Được công nhận là thành viên tiên phong, có đóng góp tích cực/hàng đầu trong dự án</p><p>* Thành viên tiên phong, có đóng góp tích cực: trong các mảng công việc chính của dự án (Engineering, Management, Technical, Training) anh luôn là người làm dẫn đầu, khi làm đến mảng công việc này là mọi người nghĩ ngay đến anh</p>', 2, 64, 816, now(), now()),
-        (817, 'Complete critical tasks on time', '<p>Nhân viên được tham gia và hoàn thành các critical task đúng hạn và đạt chất lượng</p><p><strong>Critical</strong> <strong>taks</strong>: những công việc quan trọng, chủ chốt, cốt lõi, độ phức tạp cao trong dự án, task được khách hàng / BoD / SDD Head / PM đặc biệt quan tâm, task trong dây chuyền các task – ảnh hưởng trực tiếp đến nhiều người (phải xong task A thì mới thực hiện task B – trong khi nhiều người trống task đang chờ để làm task B), task có commitment release cho khách hàng</p>', 2, 64, 817, now(), now()),
+        (817, 'Complete critical tasks on time', '<p>Nhân viên được tham gia và hoàn thành các critical task đúng hạn và đạt chất lượng</p><p><strong>Critical</strong> <strong>taks</strong>: những công việc quan trọng, chủ chốt, cốt lõi, độ phức tạp cao trong dự án, task được khách hàng / BoD / SDD Head / PM đặc biệt quan tâm, task trong dây chuyền các task – ảnh hưởng trực tiếp đến nhiều người (phải xong task A thì m��i thực hiện task B – trong khi nhiều người trống task đang chờ để làm task B), task có commitment release cho khách hàng</p>', 2, 64, 817, now(), now()),
         (818, 'Able to represent the skills and capabilities of your department/ practice unit/business unit. ', '<p>Có khả năng đại diện cho dự án</p><p>Đại diện: <br />- Đại diện cho dự án làm việc với những người có liên quan đến dự án<br />- Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận<br />- Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần</p><p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần</p>', 2, 64, 818, now(), now()),
         (819, 'Recognized internally as a solid knowledge resource.', '<p>Cứ hễ có vấn đề gì về mảng kiến thức mà cần trợ giúp / câu trả lời là nghĩ ngay đến nhân viên này.</p><p>Ví dụ: Có kiến thức rất cứng về domain knowledge (kiến thức về Vendor / Mfr, UNSPSC, Noun, Type, Picture, etc...).</p><p>Có khả năng đưa ra quyết định hoặc how to để làm các task khó (ví dụ Un-matched, UNSPSC, HCPCS)</p><p>Áp dụng thành công công nghệ mới vào công việc technical của dự án</p>', 3, 64, 819, now(), now()),
         (820, 'Successfully complete tasks and assignments independently and supervise the work of others as requested.', '<p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục:</p><p>Khi được giao việc thì hoàn tất được công việc một cách độc lập, không cần có sự chỉ dẫn về cách làm, và</p><p>Có thể hướng dẫn, hỗ trợ, giám sát người khác [vài người] hoàn tất công việc</p><p>Supervision phải thể hiện ở mức độ:<br />+ Giúp đỡ MA / Technical khác cách thực hiện, chứ không phải làm thay<br />+ Suppervision phải tương đối dài hạn [từ ít nhất 6 tháng]<br />+ Supervised phải tương đối thành công</p>', 3, 64, 820, now(), now()),
@@ -2028,17 +2028,16 @@ namespace :cds_system do
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
   end
-end
 
-# drop database ,recreate then migrate
-# run migrate_data_companies
-# run migrate_data_roles
-# then run seed
-# run excute_migrate_slots, excute_migrate_titles
-# then run this file
-desc "insert data for table title histories"
-task :migrate_data_title_histories do
-  sql_period = <<-SQL
+  # drop database ,recreate then migrate
+  # run migrate_data_companies
+  # run migrate_data_roles
+  # then run seed
+  # run excute_migrate_slots, excute_migrate_titles
+  # then run this file
+  desc "insert data for table title histories"
+  task :migrate_data_title_histories do
+    sql_period = <<-SQL
       insert into periods(id, from_date, to_date, status, created_at, updated_at) values
         (1, '2020-04-01', '2020-04-30', 'Done', now(), now()),
         (2, '2019-04-01', '2019-04-30', 'Done', now(), now()),
@@ -2048,7 +2047,7 @@ task :migrate_data_title_histories do
         (6, '2015-12-01', '2015-12-30', 'Done', now(), now());
         SQL
 
-  sql_schedule = <<-SQL
+    sql_schedule = <<-SQL
       insert into schedules(id, user_id, company_id, period_id, start_date, end_date_hr,
       notify_hr, `desc`, status, created_at, updated_at) values
         (1, 1, 2, 1, '2020-04-01', '2020-04-30', 3, "Period 2020 Bestarion", "Done", now(), now()), 
@@ -2076,7 +2075,7 @@ task :migrate_data_title_histories do
         (18, 1, 4, 6, '2015-12-01', '2015-12-30', 3, "Period 2015 Atalink", "Done", now(), now());
     SQL
 
-  sql_title_history = <<-SQL
+    sql_title_history = <<-SQL
     insert into title_histories(id, rank, title, level, user_id, role_name, period_id, created_at, updated_at) values
           (1, 3, 'Associate Technical Architect', 4, 2, 'Developer', 1, now(), now()),
           (2, 3, 'Associate Technical Architect', 4, 6, 'Developer', 1, now(), now()),
@@ -2379,7 +2378,7 @@ task :migrate_data_title_histories do
           (299, 5, 'Software Engineer', 3, 158, 'Developer', 6, now(), now()); 
          SQL
 
-  sql_form = <<-SQL
+    sql_form = <<-SQL
     insert into forms (id,template_id, is_approved, period_id, user_id, number_keep, period_keep_id, rank, level, role_id, status, title_id, created_at, updated_at) values
     (1, 1, 1, 1, 2, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
     (2, 1, 1, 1, 6, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
@@ -2491,11 +2490,12 @@ task :migrate_data_title_histories do
     (108, null, 1, 2, 158, 3, 4, 3, 5, null, 'Done', null, now(), now());
     SQL
 
-  connection
-  ActiveRecord::Base.transaction do
-    ActiveRecord::Base.connection.execute(sql_period)
-    ActiveRecord::Base.connection.execute(sql_schedule)
-    ActiveRecord::Base.connection.execute(sql_title_history)
-    ActiveRecord::Base.connection.execute(sql_form)
+    connection
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(sql_period)
+      ActiveRecord::Base.connection.execute(sql_schedule)
+      ActiveRecord::Base.connection.execute(sql_title_history)
+      ActiveRecord::Base.connection.execute(sql_form)
+    end
   end
 end
