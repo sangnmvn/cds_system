@@ -348,7 +348,7 @@ module Api
           }
         end
         results[company_id][:users] << {
-          full_name: title&.user&.format_name,
+          full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
           title: title&.title,
