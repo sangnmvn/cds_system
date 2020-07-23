@@ -1059,7 +1059,7 @@ namespace :cds_system do
         (802, 'Demonstrate the ability to work well with debugger, profiling tools, review other source code and able to detect defects and explain techniques to fix defects.', '<p>- Thường sử dụng debugger, profiling tool<br />- Thường reivew source code của người khác, hướng dẫn họ fix bug / implement features</p>', 2, 63, 802, now(), now()),
         (803, 'Work effectively with Regular Expression.', '<p>Có thể sử dụng regex trong hầu hết các trường hợp, có thể train cho người khác. Sử dụng regex không chỉ trong lập trình, mà còn sử dụng trong tool (search files, thay thế text ….)</p>', 2, 63, 803, now(), now()),
         (804, 'Proficiency in one and familiar with another major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java etc.)', '<p><strong>Proficiency</strong>: hiểu và làm việc tốt với những thứ căn bản, và một số thứ nâng cao, không cần ai hướng dẫn, khi gặp vấn đề khó có thể tự tìm cách giải quyết (google chẳng hạn)<br />Có bằng chứng giúp đỡ người khác giải quyết vấn đề kỹ thuật hoặc training<br />(Đã tham gia làm dev / lead của dự án liên quan đến Ruby ít nhất 6 tháng --&gt; tính là proficient Ruby, tương tự cho các ngôn ngữ khác)<br />Fresher thì cần ít nhất 2 năm để có thể gọi là proficiency. Còn với middle cần ít nhất 6 tháng. Không bắt bược phải là ngôn ngữ lập trình chính như là ruby, có thể là Golang, React,…</p>', 2, 63, 804, now(), now()),
-        (805, 'The ability to design good queries, can detect performance issues, N + 1 problem, proficiency in analyze and give advice on how to optimize it.', '<p>Apply phần nâng cao của ngôn ngữ database để detect issues, improve performance, optimize query</p>', 2, 63, 805, now(), now()),
+        (805, 'The ability to design good queries, can detect performance issues, N + 1 problem, proficiency in analyze and give advice on how to optimize it.', '<p>Apply phần nâng cao của ng����n ngữ database để detect issues, improve performance, optimize query</p>', 2, 63, 805, now(), now()),
         (806, 'Very good in administration, performance optimization and query/index optimization for databases (SQL and NoSQL) or search engine', '<p>- Có bằng chứng cài đặt, cấu hình bảo mật cho database<br />- Đã làm những việc liên quan đến optimize database performance: benchmark, analyze, performance tunning<br />- Đã viết những câu query phức tạp, tương tác với khối lượng dữ liệu lớn, nhiều nguồn dữ liệu khác nhau nhưng tốc độ chạy tốt<br />- Viết index có performance tốt<br />- Cài đặt, cấu hình, sử dụng các search engine như Solr, Elastic search. Có thể viết được hầu hết các dạng query khác nhau.</p>', 3, 63, 806, now(), now()),
         (807, 'Proficiency in two major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java, etc.)', '', 3, 63, 807, now(), now()),
         (808, 'Knowledge of various programming languages / scripts that cover various platforms / technologies including web, desktop, server side, scripting, mobile, IoT, blockchain, big data, machine learning', '<p>Có kiến thức rất rộng về các ngôn ngữ lập trình/script (ví dụ Java, .NET, C, C++, Objective-C, Ruby, Python, R, Scala, JavaScript, PHP, ASP, Golang, Rust, Swift, Julia, Solidity, Bash, Shell, Powershell ...) không yêu cầu chuyên sâu, chỉ cần ở mức khái niệm, chức năng, điểm mạnh, yếu của các ngôn ngữ lập trình này, có thể so sánh các ngôn ngữ lập trình và đưa ra quyết định nên sử dụng cái nào, để khi có requirements thì có thể nói ngay ra được nên sử dụng ngôn ngữ lập trình nào là tốt nhất.</p>', 4, 63, 808, now(), now()),
@@ -2185,7 +2185,7 @@ namespace :cds_system do
           (106, 2, 'Associate Technical Architect', 4, 2, 'Developer', 2, now(), now()),
           (107, 5, 'Associate Solution Architect', 2, 6, 'Developer', 2, now(), now()),
           (108, 4, 'Developer', 2, 8,  'Developer', 2, now(), now()),
-          (109, 1, 'Developer', 0, 12, 'Developer', 2, now(), now()),
+          (109, 1, 'Developer', 0, 12, 'Developer', 2, now(), now()),  
           (110, 1, 'Developer', 2, 13, 'Developer', 2, now(), now()),
           (111, 5, 'Developer', 2, 14, 'Developer', 2, now(), now()),
           (112, 5, 'Developer', 2, 15, 'Developer', 2, now(), now()),
@@ -2256,7 +2256,7 @@ namespace :cds_system do
           (177, 0, 'Technical Support', 0, 43, 'Technical Support', 3, now(), now()),
           (178, 5, 'Medical Analyst', 2, 44, 'Medical Analyst', 3, now(), now()),
           (179, 5, 'Medical Analyst', 2, 45, 'Medical Analyst', 3, now(), now()),
-          (180, 4, 'Project Manager', 1, 46, 'Senior PM', 3, now(), now()),
+          (180, 4, 'Project Manager', 1, 46, 'Project Manager', 3, now(), now()),
           (181, 5, 'Medical Analyst', 2, 47, 'Medical Analyst', 3, now(), now()),
           (182, 2, 'Medical Analyst', 2, 48, 'Medical Analyst', 3, now(), now()),                    
           (183, 2, 'Associate Quality Controller', 1, 49, 'Quality Control', 3, now(), now()),
@@ -2496,7 +2496,6 @@ namespace :cds_system do
       ActiveRecord::Base.connection.execute(sql_schedule)
       ActiveRecord::Base.connection.execute(sql_title_history)
       ActiveRecord::Base.connection.execute(sql_form)
-      #raise Exception
     end
   end
 end
