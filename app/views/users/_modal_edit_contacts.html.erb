@@ -10,7 +10,7 @@
         </button>
       </div>
       <!-- Modal body -->
-        <input type="hidden" value="<%= @current_user.id %>" id="user_id">
+        <input type="hidden" value="<%= @user.id %>" id="user_id">
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row">
@@ -23,7 +23,7 @@
                     <label>First Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" maxlength="32" id="first_name" class="form-control" value="<%= @current_user.first_name %>" placeholder="Please enter your first name" />
+                    <input type="text" maxlength="32" id="first_name" class="form-control" value="<%= @user.first_name %>" placeholder="Please enter your first name" />
                     <small id="error_first_name" class="text-danger"></small>
                   </div>
                 </div>
@@ -33,7 +33,7 @@
                     <label>Last Name (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" maxlength="32" id="last_name"  class="form-control" value="<%= @current_user.last_name %>" placeholder="Please enter your last name" />
+                    <input type="text" maxlength="32" id="last_name"  class="form-control" value="<%= @user.last_name %>" placeholder="Please enter your last name" />
                     <small id="error_last_name" class="text-danger"></small>
                   </div>
                 </div>
@@ -44,8 +44,8 @@
                   </div>
                   <div class="col-sm-9">
                     <select class="form-control" id="gender">
-                      <option value="1" <%= @current_user.gender ? "selected" : "" %> >Male</option>
-                      <option value="0" <%= @current_user.gender ? "" : "selected" %> >Female</option>
+                      <option value="1" <%= @user.gender ? "selected" : "" %> >Male</option>
+                      <option value="0" <%= @user.gender ? "" : "selected" %> >Female</option>
                     </select>
                   </div>
                 </div>
@@ -55,7 +55,7 @@
                     <label>Date of Birth</label>
                   </div>
                   <div class="col-sm-9">
-                    <input class="datepicker" data-date-format="M dd, yyyy" id="birthday" value="<%= @current_user.date_of_birth ? @current_user.date_of_birth.to_s(:long) : "" %>">
+                    <input class="form-control" type="text" id="birthday" value="<%= @user.date_of_birth ? @user.date_of_birth.to_s(:long) : "" %>"/>
                     <small id="error_birthday" class="text-danger"></small>
                   </div>
                 </div>
@@ -65,7 +65,7 @@
                     <label>Phone Number (*)</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="phone_number" maxlength="12" value="<%= @current_user.phone %>" class="form-control" placeholder="Please enter your phone number" />
+                    <input type="text" id="phone_number" maxlength="12" value="<%= @user.phone %>" class="form-control" placeholder="Please enter your phone number" />
                     <small id="error_phone_number" class="text-danger"></small>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
                     <label>Skype</label>
                   </div>
                   <div class="col-sm-9">
-                    <input type="text" id="skype" maxlength="50" class="form-control" value="<%= @current_user.skype %>" />
+                    <input type="text" id="skype" maxlength="50" class="form-control" value="<%= @user.skype %>" />
                   </div>
                 </div>
                 <br>

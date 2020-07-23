@@ -870,8 +870,8 @@ $(document).ready(function () {
       if (arr[key].length > 0)
         str += `<p> ${key} / ${arr[key].toString()}</p>`
     });
-    if(str.split("<p>").length <= 2)
-      str = str.replace("<p>","").replace("</p>","")
+    if (str.split("<p>").length <= 2)
+      str = str.replace("<p>", "").replace("</p>", "")
     return str
   }
 
@@ -949,7 +949,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if (response.status == "New"  && (is_reviewer || is_approver)) {
+        if (response.status == "New" && (is_reviewer || is_approver)) {
           $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
           $('#modal_conflict').modal('show');
           $(document).on("click", "#btn_check_status", function () {
@@ -1110,43 +1110,49 @@ function autoSaveStaff(row) {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       success: function (response) {
-        changeListSlotAssessing(row, "remove")
-        if (lst_slot[slot_id] == "orange") {
-          $("#confirm_request").removeClass("disabled")
-          $("#icon_confirm_request").prop("style", "color:green")
-          row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
-          row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
-        }
-        var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
-        icon_cdp.addClass("icon-yellow").removeClass("icon-green")
-        if (is_commit == true) {
-          icon_cdp.prop("style", "visibility: show")
-          icon_cdp.prop("title", checkTitleFlag(parseInt(point), 0))
-          if (point == "")
-            icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
-          else if (parseInt(point) < 3)
-            icon_cdp.addClass("fa-battery-half").removeClass("fa-battery-empty").removeClass("fa-battery-full")
-          else
-            icon_cdp.addClass("fa-battery-full").removeClass("fa-battery-empty").removeClass("fa-battery-half")
-        } else
-          icon_cdp.prop("style", "visibility: hidden")
-        checkChangeSlot();
+        if (response.status == "success") {
+          changeListSlotAssessing(row, "remove")
+          if (lst_slot[slot_id] == "orange") {
+            $("#confirm_request").removeClass("disabled")
+            $("#icon_confirm_request").prop("style", "color:green")
+            row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
+            row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
+          }
+          var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
+          icon_cdp.addClass("icon-yellow").removeClass("icon-green")
+          if (is_commit == true) {
+            icon_cdp.prop("style", "visibility: show")
+            icon_cdp.prop("title", checkTitleFlag(parseInt(point), 0))
+            if (point == "")
+              icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
+            else if (parseInt(point) < 3)
+              icon_cdp.addClass("fa-battery-half").removeClass("fa-battery-empty").removeClass("fa-battery-full")
+            else
+              icon_cdp.addClass("fa-battery-full").removeClass("fa-battery-empty").removeClass("fa-battery-half")
+          } else
+            icon_cdp.prop("style", "visibility: hidden")
+          checkChangeSlot();
 
-        current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
-        max = parseInt(current[1]);
-        current_change = 0
-        $('div.row-slot').each(function (i, sel) {
-          level = $(this).data("location")[0]
-          is_cds = $(this).find(".staff-commit").val() == "commit_cds"
-          point = $(this).find(".select-assessment").val()
-          if (level == row.data("location")[0] && is_cds && point >= 3)
-            current_change += 1;
-        });
-        if (current_change <= max)
-          current_change = current_change;
+          current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
+          max = parseInt(current[1]);
+          current_change = 0
+          $('div.row-slot').each(function (i, sel) {
+            level = $(this).data("location")[0]
+            is_cds = $(this).find(".staff-commit").val() == "commit_cds"
+            point = $(this).find(".select-assessment").val()
+            if (level == row.data("location")[0] && is_cds && point >= 3)
+              current_change += 1;
+          });
+          if (current_change <= max)
+            current_change = current_change;
+          else
+            current = max;
+          var competency_id = $('div.show').data("competency-id") 
+          $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
+          $("tr[data-id-competency="+ competency_id +"]").children()[2].innerText = response.data
+        }
         else
-          current = max;
-        $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
+          fails("This slot hasn't been save.")
       }
     });
   }

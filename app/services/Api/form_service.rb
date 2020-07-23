@@ -597,7 +597,9 @@ module Api
         end
         form_slot.update(is_change: true)
       end
-      ""
+      form = Form.find_by_id(params[:form_id])
+      result = preview_result(form)
+      calculate_level(result[form_slot.slot.competency.name])
     end
 
     def get_assessment_staff

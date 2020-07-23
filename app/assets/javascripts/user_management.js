@@ -4,7 +4,9 @@ $(document).ready(function () {
     todayBtn: "linked",
     todayHighlight: true,
     autoclose: true,
-    format: "M dd, yyyy"
+    format: "M dd, yyyy",
+    minDate: -2,
+    maxDate: '+0D',
   });
   get_filter();
 
@@ -96,6 +98,10 @@ $(document).ready(function () {
         $("#first").after(
           '<span class="error">The maximum length of First Name is 100 characters.</span>'
         );
+      } else if (!checkName(first_name)) {
+        $("#first").after(
+          '<span class="error">The first name is in-valid</span>'
+        );
       }
     }
 
@@ -105,6 +111,10 @@ $(document).ready(function () {
       if (last_name.length < 2 || last_name.length > 20) {
         $("#last").after(
           '<span class="error">The maximum length of Last Name is 100 characters.</span>'
+        );
+      } else if (!checkName(last_name)) {
+        $("#last").after(
+          '<span class="error">The first name is in-valid</span>'
         );
       }
     }
@@ -337,6 +347,13 @@ function delete_user() {
   });
 }
 
+function checkName(input) {
+  var regex = new RegExp("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+    "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆẾỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤÚỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+    "ụúủứừÚỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\\s]+$")
+  return regex.test(input)
+}
+
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
   var user_account = $(this).data("user_firstname") + " " + $(this).data("user_lastname");
@@ -348,6 +365,7 @@ function colorDisabledRowUser() {
   $(".fa-toggle-off").closest("tr").addClass("row-user-disabled");
   $(".fa-toggle-on").closest("tr").removeClass("row-user-disabled");
 }
+
 function setup_dataTable() {
   $("#table_user_management").ready(function () {
     $("#table_user_management").dataTable({
@@ -403,17 +421,17 @@ function setup_dataTable() {
         "infoFiltered": ""
       },
       "columnDefs": [{
-        "orderable": false,
-        "targets": 0
-      },
-      {
-        "orderable": false,
-        "targets": 1
-      },
-      {
-        "orderable": false,
-        "targets": 9
-      },
+          "orderable": false,
+          "targets": 0
+        },
+        {
+          "orderable": false,
+          "targets": 1
+        },
+        {
+          "orderable": false,
+          "targets": 9
+        },
       ],
     });
 
@@ -551,6 +569,10 @@ $(document).on("click", "#btn_modal_edit_user", function () {
       $("#modalEdit #first").after(
         '<span class="error">The maximum length of First Name is 100 characters.</span>'
       );
+    } else if (!checkName(first_name)) {
+      $("#modalEdit #first").after(
+        '<span class="error">The first name is in-valid</span>'
+      );
     }
   }
   if (last_name.length < 1) {
@@ -561,6 +583,10 @@ $(document).on("click", "#btn_modal_edit_user", function () {
     if (last_name.length < 2 || last_name.length > 20) {
       $("#modalEdit #last").after(
         '<span class="error">The maximum length of Last Name is 100 characters.</span>'
+      );
+    } else if (!checkName(last_name)) {
+      $("#modalEdit #last").after(
+        '<span class="error">The last name is in-valid</span>'
       );
     }
   }

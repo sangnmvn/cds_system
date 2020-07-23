@@ -17,10 +17,12 @@
             <div class="col-6 title-name">
               <div class="div-name">
                 <span id="full_name" >
-                  <%= @current_user.format_name %>
+                  <%= @user.format_name_vietnamese %>
                 </span>
                 <span class="title-icon" id="edit_contact">
-                  <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)", title: "Edit Contact", id: "edit_contact" %>
+                  <% if @is_user %>
+                    <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)", title: "Edit Contact", id: "edit_contact" %>
+                  <% end %>
                 </span>
               </div>
               <h5 style="padding-bottom:1%" id="role">
@@ -32,28 +34,30 @@
             <div class="col-3">
               <div class="text-contact-left" id="p_gender">
                 <i class="fas fa-venus-mars" style="color:black" title="Gender"></i>
-                &nbsp; <%= @current_user.gender ? "Male" : "Female" %>
+                &nbsp; <%= @user.gender ? "Male" : "Female" %>
               </div>
               <div class="text-contact-left" id="p_birthday">
                 <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
-                &nbsp; <%= @current_user.date_of_birth ? @current_user.date_of_birth.to_s(:long) : "N/A" %>
+                &nbsp; <%= @user.date_of_birth ? @ser.date_of_birth.to_s(:long) : "N/A" %>
               </div>
               <div class="text-contact-left">
-                <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
+                <% if @is_user %>
+                  <%= link_to "Change Password".html_safe, "javascript:void(0)", id: "change_password" %>
+                <% end %>
               </div>
             </div>
             <div class="col-4">
               <div class="text-contact-right" id="p_phone">
                 <i class="fas fa-phone-alt" style="color:black" title="Phone Number"></i>
-                &nbsp; <%= @current_user.phone != "" ? @current_user.phone : "N/A" %>
+                &nbsp; <%= @user.phone != "" && !@user.phone.nil? ? @user.phone : "N/A" %>
               </div>
               <div class="text-contact-right" id="p_mail">
                 <i class="fas fa-envelope" style="color:black" title="Email"></i>
-                &nbsp; <%= @current_user.email %>
+                &nbsp; <%= @user.email %>
               </div>
               <div class="text-contact-right" id="p_skype">
                 <i class="fab fa-skype" style="color:black" title="Skype ID"></i>
-                &nbsp; <%= @current_user.skype != "" ? @current_user.skype : "N/A" %>
+                &nbsp; <%= @user.skype != "" &&  !@user.skype.nil? ? @user.skype : "N/A" %>
               </div>
             </div>
           </div>
@@ -68,7 +72,7 @@
     <hr/>
     <div class="p-title">
       Company
-      <dt class="p-content" id="company"><%= @current_user.company.name != "" ? @current_user.company.name : "N/A" %></dt> 
+      <dt class="p-content" id="company"><%= @user.company.name != "" ? @user.company.name : "N/A" %></dt> 
     </div>
     <div class="p-title">
       Project
@@ -76,29 +80,31 @@
     </div>
     <div class="p-title">
       Joined Date
-      <dt class="p-content" id="joined_date"><%= @current_user.joined_date.nil? ? "N/A" : @current_user.joined_date.to_date.to_s(:long) %></dt> 
+      <dt class="p-content" id="joined_date"><%= @user.joined_date.nil? ? "N/A" : @user.joined_date.to_date.to_s(:long) %></dt> 
     </div>  
   </div>
   <div class="col-6">
     <div class="title-content"> LOCATION 
       <span class="title-icon">
-        <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)", title: "Edit Location", id: "edit_location" %>
+        <% if @is_user %>
+          <%= link_to '<i class="far fa-edit"></i>'.html_safe, "javascript:void(0)", title: "Edit Location", id: "edit_location" %>
+        <% end %>
       </span>
     </div>
     <hr/>
     <div class="p-title">Nationality
       <dt class="p-content" id="p_nationality">
-        <%= @current_user.nationality ? @current_user.nationality : "N/A" %>
+        <%= @user.nationality ? @user.nationality : "N/A" %>
       </dt> 
     </div>
     <div class="p-title">Permanent Address
       <dt class="p-content" id="p_Permanent_address">
-      <% if @current_user.permanent_address.present? %>
-            <% if @current_user.permanent_address.sub(", ", "") != "" %>
-                <% if @current_user.permanent_address.split(", ")[0] != "" %>
-                  <%= @current_user.permanent_address %>
+      <% if @user.permanent_address.present? %>
+            <% if @user.permanent_address.sub(", ", "") != "" %>
+                <% if @user.permanent_address.split(", ")[0] != "" %>
+                  <%= @user.permanent_address %>
                 <% else %>
-                  <%= @current_user.permanent_address.split(", ")[1] %>
+                  <%= @user.permanent_address.split(", ")[1] %>
                 <% end
               else %>
                 <%= "N/A" %>
@@ -110,7 +116,7 @@
     </div>
     <div class="p-title">Current Address
       <dt class="p-content" id="p_current_address">
-        <%= @current_user.current_address != "" ? @current_user.current_address : "N/A" %>
+        <%= @user.current_address != "" && !@user.current_address.nil? ? @user.current_address : "N/A" %>
       </dt> 
     </div>  
   </div>

@@ -13,7 +13,7 @@ function drawChartGender(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employees by Gender")
+      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employee(s) by Gender")
     }
   });
 }
@@ -27,7 +27,7 @@ function drawChartRole(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_role", "Number of Employees by Role")
+      drawPieChart(response.data, response.total, "#chart_role", "Number of Employee(s) by Role")
     }
   });
 }
@@ -42,7 +42,7 @@ function drawChartTitle(data_filter) {
     },
     success: function (response) {
       sleep(1000)
-      drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employees by Title", "Rank");
+      drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employee(s) by Title", "Rank");
     }
   })
 }
@@ -56,7 +56,7 @@ function drawChartSeniority(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employees by Seniority", "Year");
+      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employee(s) by Seniority", "Year");
     }
   });
 }

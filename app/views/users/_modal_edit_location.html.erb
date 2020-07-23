@@ -19,7 +19,7 @@
                   <label>Nationality</label>
                 </div>
                 <div class="col-sm-8">
-                  <select id="nationality" class="form-control selectpicker countrypicker" data-default="<%= @current_user.nationality ? @current_user.nationality : "Viet Nam" %>"></select>
+                  <select id="nationality" class="form-control selectpicker countrypicker" data-default="<%= @user.nationality ? @user.nationality : "Viet Nam" %>"></select>
                 </div>
               </div>
               <br>
@@ -50,13 +50,13 @@
                   <label>Current Address</label>
                 </div>
                 <div class="col-sm-8">
-                  <input type="text" id="current_address" maxlength="200"  class="form-control" value="<%= @current_user.current_address  %>" placeholder="Enter your current address" />
+                  <input type="text" id="current_address" maxlength="200"  class="form-control" value="<%= @user.current_address  %>" placeholder="Enter your current address" />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <input type="hidden" value="<%= @current_user.id %>" id="user_id">
+        <input type="hidden" value="<%= @user.id %>" id="user_id">
       </div>
       <!-- Modal footer -->
       <div class="modal-footer" style="justify-content: center;">

@@ -5,10 +5,10 @@ class FormsController < ApplicationController
   before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
-  VIEW_CDS_CDP_ASSESSMENT = 15
+  VIEW_CDS_CDP_ASSESSMENT = 24
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  FULL_ACCESS = 24
+  FULL_ACCESS = 15
 
   def index_cds_cdp
     form = Form.find_by(user_id: current_user.id)
@@ -153,7 +153,7 @@ class FormsController < ApplicationController
   def get_assessment_staff
     render json: @form_service.get_assessment_staff
   end
-
+  
   def get_cds_assessment
     render json: @form_service.format_data_slots
   end
@@ -168,7 +168,8 @@ class FormsController < ApplicationController
   end
 
   def save_cds_assessment_staff
-    return render json: { status: "success" } if @form_service.save_cds_staff
+    data = @form_service.save_cds_staff
+    return render json: { status: "success", data: data } if data.present?
     render json: { status: "fail" }
   end
 
@@ -339,7 +340,10 @@ class FormsController < ApplicationController
   private
 
   def get_privilege_assessment
+  
+
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
+    user_id = user_id || current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     @is_reviewer = false
