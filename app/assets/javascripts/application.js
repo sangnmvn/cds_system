@@ -76,16 +76,16 @@ function CheckPrivilege() {
   if (!privilege_array.includes("25")) {  
     $(".privilate-organization-settings").css("display", "none");
   }
-  if (!privilege_array.includes("4") && !privilege_array.includes("5")) {  
+  if (!privilege_array.includes("6") && !privilege_array.includes("7")) {  
     $(".privilate-user-group-management").css("display", "none");
   }
-  if (!privilege_array.includes("18") && !privilege_array.includes("19")) {  
+  if (!privilege_array.includes("9") && !privilege_array.includes("10")) {  
     $(".privilate-template").css("display", "none");
   }
-  if (!privilege_array.includes("9") && !privilege_array.includes("10")) {  
+  if (!privilege_array.includes("18") && !privilege_array.includes("19")) {  
     $(".privilate-level-mapping").css("display", "none");
   }
-  if (!privilege_array.includes("1") && !privilege_array.includes("2")) {  
+  if (!privilege_array.includes("1") && !privilege_array.includes("2") && !privilege_array.includes("3") && !privilege_array.includes("4") && !privilege_array.includes("5")) {  
     $(".privilate-user-management").css("display", "none");
   }  
   if (!privilege_array.includes("13") && !privilege_array.includes("14")) {  
@@ -94,7 +94,7 @@ function CheckPrivilege() {
   if (!privilege_array.includes("20") && !privilege_array.includes("21") && !privilege_array.includes("22") && !privilege_array.includes("23")) {  
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.includes("16") && !privilege_array.includes("17") && !privilege_array.includes("24")) {  
+  if (!privilege_array.includes("16") && !privilege_array.includes("17") && !privilege_array.includes("15")) {  
     $(".privilate-cds-cdp-review").css("display", "none");
   }  
   if (!privilege_array.includes("15") && !privilege_array.includes("24")) {  
