@@ -39,27 +39,25 @@ function loadTitleMappingForEdit() {
       }
       var title_with_most_competency = ""
       var max_competency_count = -1
-      for (var title_name in title_list)
-      {
+      for (var title_name in title_list) {
         current_length = title_list[title_name].length
-        if (current_length > max_competency_count)
-        {
+        if (current_length > max_competency_count) {
           title_with_most_competency = title_name;
           max_competency_count = current_length;
-        }        
+        }
       }
       key_of_title_list = Object.keys(title_list);
       // get sorted competency list
       unsorted_competency_list = Array.from(competency_list);
-      
-      sortByKey(title_list[title_name], "competency_location");          
+
+      sortByKey(title_list[title_name], "competency_location");
       competency_list = []
 
-      for (var h = 0; h < unsorted_competency_list.length; h++) {            
+      for (var h = 0; h < unsorted_competency_list.length; h++) {
         competency_list.push(JSON.stringify({
           name: title_list[title_with_most_competency][h].competency_name,
           id: title_list[title_with_most_competency][h].competency_id
-        }))        
+        }))
       }
       // step 2: append all of the competency column
       final_html = '';
@@ -93,6 +91,7 @@ function loadTitleMappingForEdit() {
         });
         for (j = 0; j < column_list.length; j++) {
           current_cell_competency_name = column_list[j];
+          found_column = false
           for (k = 0; k < data_list.length; k++) {
             // find competency data suitable for competency column cell
             if (data_list[k].competency_name == current_cell_competency_name) {
@@ -111,16 +110,19 @@ function loadTitleMappingForEdit() {
               index_of_insert = value_dropdown.indexOf(" value='{value}'>".formatUnicorn({
                 value: value
               }));
-              if (index_of_insert > 0)
-              {
+              if (index_of_insert >= 0) {
                 value_dropdown = value_dropdown.substring(0, index_of_insert) + ' selected ' + value_dropdown.substring(index_of_insert);
               }
               final_html += "<td class='competency-row'>{value_dropdown}</td>".formatUnicorn({
                 value_dropdown: value_dropdown
               });
+              found_column = true;
               break;
 
             }
+          }
+          if (!found_column) {
+            final_html += "<td></td>";
           }
         }
         final_html += "</tr>";
