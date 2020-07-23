@@ -36,7 +36,11 @@ class UsersController < ApplicationController
     @crud_user = (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any?
 
     company_id = current_user.company_id if @privilege_array.include?(VIEW_ACCESS) && !@privilege_array.include?(FULL_ACCESS)
-    @companies = Company.where(id: company_id, is_enabled: true).order(:name).pluck(:name, :id)
+    if company_id
+      @companies = Company.where(id: company_id, is_enabled: true).order(:name).pluck(:name, :id)
+    else
+      @companies = Company.where(is_enabled: true).order(:name).pluck(:name, :id)
+    end
     @projects = Project.where(is_enabled: true).order(:name).pluck(:name, :id)
     @roles = Role.where(is_enabled: true).order(:name).pluck(:name, :id)
   end
@@ -156,6 +160,7 @@ class UsersController < ApplicationController
           ProjectMember.create!(user_id: use_new.id, project_id: id.to_i, is_managent: management_default)
         end
       end
+      UserGroup.create(user_id: use_new.id, group_id: 6)
       render json: { status: "success" }
     else
       render json: { status: "fail" }

@@ -165,6 +165,9 @@ function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templat
   $.ajax({
     type: "GET",
     url: "/slots/new",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       desc: desc,
       evidence: evidence,
@@ -185,8 +188,11 @@ function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templat
 
 function updateSlot(desc, evidence, level, competencyId, presentId, templateId) {
   $.ajax({
-    type: "GET",
-    url: "/slots/update",
+    type: "PUT",
+    url: "/slots/" + presentId,
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       desc: desc,
       evidence: evidence,
