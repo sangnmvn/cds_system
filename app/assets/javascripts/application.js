@@ -8,6 +8,29 @@
 //= require select_all.js
 
 // add formatUnicorn function to string
+var full_access_on_all_companies = "1";
+var view_user_on_my_company = "2";
+var add_approver_to_user_on_my_project = "3";
+var add_reviewers_to_user_on_my_project = "4";
+var full_access_on_my_company = "5";
+var full_access_on_user_group_management = "6";
+var view_user_group_management = "7";
+var full_access_on_template_management = "9";
+var view_template_management = "10";
+var full_access_on_schedule_company = "13";
+var full_access_on_schedule_project = "14";
+var full_access_on_my_CDS_CDP_assessment = "15";
+var review_CDS_CDP_assessment = "16";
+var approve_CDS_CDP_assessment = "17";
+var view_CDS_CDP_Assessment = "24";
+var full_access_on_level_mapping_management = "18";
+var view_level_mapping_management = "19";
+var full_access_on_all_companies_dashboard = "20";
+var full_access_on_my_company_dashboard = "21";
+var full_access_on_my_project = "22";
+var view_my_dashboard = "23";
+var organization = "25";
+
 "use strict";
 String.prototype.formatUnicorn =
   String.prototype.formatUnicorn ||
@@ -73,31 +96,31 @@ $(document).ready(function () {
 });
 
 function checkPrivilege() {
-  if (!privilege_array.includes("25")) {  
+  if (!privilege_array.includes(organization)) {
     $(".privilate-organization-settings").css("display", "none");
   }
-  if (!privilege_array.includes("6") && !privilege_array.includes("7")) {  
+  if (!privilege_array.includes(view_user_group_management) && !privilege_array.includes(full_access_on_user_group_management)) {
     $(".privilate-user-group-management").css("display", "none");
   }
-  if (!privilege_array.includes("9") && !privilege_array.includes("10")) {  
+  if (!privilege_array.includes(full_access_on_template_management) && !privilege_array.includes(view_template_management)) {
     $(".privilate-template").css("display", "none");
   }
-  if (!privilege_array.includes("18") && !privilege_array.includes("19")) {  
+  if (!privilege_array.includes(view_level_mapping_management) && !privilege_array.includes(full_access_on_level_mapping_management)) {
     $(".privilate-level-mapping").css("display", "none");
   }
-  if (!privilege_array.includes("1") && !privilege_array.includes("2") && !privilege_array.includes("3") && !privilege_array.includes("4") && !privilege_array.includes("5")) {  
+  if (!privilege_array.includes(view_user_on_my_company) && !privilege_array.includes(full_access_on_all_companies) && !privilege_array.includes(add_reviewers_to_user_on_my_project) && !privilege_array.includes(add_approver_to_user_on_my_project) && !privilege_array.includes(full_access_on_my_company)) {
     $(".privilate-user-management").css("display", "none");
-  }  
-  if (!privilege_array.includes("13") && !privilege_array.includes("14")) {  
+  }
+  if (!privilege_array.includes(full_access_on_schedule_project) && !privilege_array.includes(full_access_on_schedule_company)) {
     $(".privilate-schedule-management").css("display", "none");
-  } 
-  if (!privilege_array.includes("20") && !privilege_array.includes("21") && !privilege_array.includes("22") && !privilege_array.includes("23")) {  
+  }
+  if (!privilege_array.includes(full_access_on_all_companies_dashboard) && !privilege_array.includes(full_access_on_my_company_dashboard) && !privilege_array.includes(full_access_on_my_project) && !privilege_array.includes(view_my_dashboard)) {
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.includes("16") && !privilege_array.includes("17") && !privilege_array.includes("15")) {  
+  if (!privilege_array.includes(review_CDS_CDP_assessment) && !privilege_array.includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.includes(approve_CDS_CDP_assessment)) {
     $(".privilate-cds-cdp-review").css("display", "none");
-  }  
-  if (!privilege_array.includes("15") && !privilege_array.includes("24")) {  
+  }
+  if (!privilege_array.includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.includes(view_CDS_CDP_Assessment)) {
     $(".privilate-cds-cdp-assessment").css("display", "none");
   }
 }
