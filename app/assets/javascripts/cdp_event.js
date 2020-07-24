@@ -1,46 +1,41 @@
 $(document).on("click", ".approval-assessment", function () {
-  var data_conflict = findConflictinArr(conflict_commits)
-  if (data_conflict) {
-    $("#content_modal_conflict").html(`The following slots have not conflicted on commitment between you and staff:
-    <p>Slot: ${data_conflict} </p><p>Please continue reviewing or request update to Staff.</p>`)
-    $('#modal_conflict').modal('show');
-  } else
-  {
-    $.ajax({
-      type: "POST",
-      url: "/forms/get_line_manager_miss_list",
-      data: {
-        form_id: form_id
-      },
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      dataType: "json",
-      success: function (response) {
-        // keep text only
-        for (var key in response) {
-          if (key == parseInt(key, 10)) {
-            delete response[key];
-          }
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_line_manager_miss_list",
+    data: {
+      form_id: form_id
+    },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      var data_conflict = findConflictinArr(conflict_commits)
+      str = ""
+      if (data_conflict) {
+        str = data_conflict
+      }
+      // keep text only
+      for (var key in response) {
+        if (key == parseInt(key, 10)) {
+          delete response[key];
         }
-        if (jQuery.isEmptyObject(response)) {
-          $('#modal_approve_cds').modal('show');
+      }
+      if (jQuery.isEmptyObject(response)) {
+        $('#modal_approve_cds').modal('show');
+      } else {
+        for (var competency_name in response) {
+          str += "\u2022 " + competency_name + ": ";
+          slots = response[competency_name];
+          str += slots.join(", ");
+          str += "<br>"
         }
-        else{
-          str = ""
-          for (var competency_name in response) {
-            str += "\u2022 " + competency_name + ": ";
-            slots = response[competency_name];
-            str += slots.join(", ");
-            str += "<br>"
-          }
 
-          $("#modal_approver_content").html(str);
-          $("#modal_approver_submit").modal('show');
-        }
-      }});
-      
-  }
+        $("#modal_approver_content").html(str);
+        $("#modal_approver_submit").modal('show');
+      }
+    }
+  });
 });
 
 $(document).on("click", ".reject-assessment", function () {
