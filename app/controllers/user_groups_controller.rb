@@ -6,7 +6,7 @@ class UserGroupsController < ApplicationController
 
   def load_user
     user_groups = UserGroup.where(group_id: params[:id]).pluck(:user_id)
-    list_user = User.where.not(is_delete: true, id: user_groups)
+    list_user = User.where.not(is_delete: true, id: user_groups, status: false)
     render json: list_user
   end
 

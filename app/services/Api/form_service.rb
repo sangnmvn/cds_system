@@ -253,6 +253,7 @@ module Api
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
       form ||= Form.new(user_id: current_user.id, template_id: template_id, role_id: role_id, status: "New", is_delete: false)
+      
       all_approver_save = reset_all_approver_submit_status(current_user.id)
       if form.save && all_approver_save
         slot_ids.map do |id|

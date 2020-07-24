@@ -82,11 +82,11 @@ function appendDataToTable(data, is_up = true, has_old = true) {
           <i class="fa fa-file-code-o" aria-hidden="true" title="view CDS/CDP Details"></i>
         </a>`;
     } else {
+        // <a href="javascript:;" class="link-icon">
+        //   <i class="fa fa-search" aria-hidden="true" title="View slots missed to archive next level"></i>
+        // </a>
+        // &nbsp;
       tpl += `
-        <a href="javascript:;" class="link-icon">
-          <i class="fa fa-search" aria-hidden="true" title="View slots missed to archive next level"></i>
-        </a>
-        &nbsp;
         <a href="javascript:;" class="link-icon">
           <i class="fa fa-file-code-o" aria-hidden="true" title="view CDS/CDP Details"></i>
         </a>

@@ -4,7 +4,7 @@ function drawPieChart(data, total, id, name) {
     return;
   $(id).html(`<div class="col title">${name}</div>`);
   // set the dimensions and margins of the graph
-  var width = $(id).width() - 50;
+  var width = $(id).width();
   var height = $(id).height() - 30;
   var legendRectSize = 18;
   var legendSpacing = 4;
@@ -21,12 +21,12 @@ function drawPieChart(data, total, id, name) {
 
   // append text total to avg
   svg.append('text')
-    .attr('dy', -10) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+    .attr('dy', -10)
     .html(total)
     .style('font-size', '30px')
-    .style('text-anchor', 'middle'); // centres text in tooltip
+    .style('text-anchor', 'middle');
   svg.append('text')
-    .attr('dy', 10) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+    .attr('dy', 10)
     .html('employees')
     .style('font-size', '20px')
     .style('text-anchor', 'middle');
@@ -35,9 +35,8 @@ function drawPieChart(data, total, id, name) {
     .domain(Object.keys(data))
     .range(arrColor);
 
-  // Compute the position of each group on the pie:
   var pie = d3.pie()
-    .sort(null) // Do not sort group by size
+    .sort(null)
     .value(function (d) { return d.value; });
   var data_ready = pie(d3.entries(data));
 
