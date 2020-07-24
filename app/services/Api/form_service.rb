@@ -244,15 +244,15 @@ module Api
       all_approver_save
     end
 
-    def create_form_slot(role_id = nil)
-      role_id ||= current_user.role_id
+    def create_form_slot(form = nil)
+      role_id = current_user.role_id
       template_id = Template.find_by(role_id: role_id, status: true)&.id
       return 0 if template_id.nil?
 
       competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
-      form = Form.new(user_id: current_user.id, template_id: template_id, role_id: role_id, status: "New", is_delete: false)
+      form ||= Form.new(user_id: current_user.id, template_id: template_id, role_id: role_id, status: "New", is_delete: false)
       all_approver_save = reset_all_approver_submit_status(current_user.id)
       if form.save && all_approver_save
         slot_ids.map do |id|
@@ -489,7 +489,7 @@ module Api
     def get_list_cds_assessment(user_id = nil)
       user_id ||= current_user.id
       form = Form.where(user_id: user_id, is_delete: false).where.not(status: "Done").includes(:period, :role, :title).order(:id).last
-      title_histories = TitleHistory.includes(:period).where(user_id: user_id).order(period_id: :desc)
+      title_histories = TitleHistory.includes(:period).where(user_id: user_id).order("periods.to_date DESC")
       list_form = []
       title_histories.each do |title|
         list_form << {
@@ -985,14 +985,14 @@ module Api
       form = Form.where(id: params[:form_id], status: "Done").where.not(period: nil).first
       return "fail" if form.nil?
 
-      title_history = TitleHistory.where(user_id: params[:user_id]).order(period_id: :desc).first
+      title_history = TitleHistory.includes(:period).where(user_id: params[:user_id]).order("periods.to_date desc").first
       return "fail" unless title_history.destroy
       return "fail" unless form.update(status: "Awaiting Approval")
       "success"
     end
 
     def get_data_view_history
-      line_managers = LineManager.where(form_slot_id: params[:form_slot_id]).order(:period_id)
+      line_managers = LineManager.includes(:period).where(form_slot_id: params[:form_slot_id]).order("periods.to_date")
       recommends = get_recommend_by_period(line_managers)
       slot_histories = FormSlotHistory.joins(:title_history).where(form_slot_id: params[:form_slot_id])
       hash = {}
@@ -1160,7 +1160,7 @@ module Api
     end
 
     def get_recommend(form_slot)
-      line_managers = form_slot.line_managers.order(period_id: :desc)
+      line_managers = form_slot.line_managers.order("periods.to_date desc")
       hash = {
         is_passed: false,
         recommends: [],

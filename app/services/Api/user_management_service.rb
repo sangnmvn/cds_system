@@ -220,7 +220,7 @@ module Api
       form = Form.includes(:title, :role, :period).find_by(user_id: current_user.id)
       schedule = Schedule.find_by(company_id: current_user.company_id, status: "In-progress")
 
-      if form.present?
+      if form.present? && schedule.present?
         data_result = Api::FormService.new(params, current_user).data_view_result(form.id)
 
         if form.status != "Done"

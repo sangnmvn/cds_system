@@ -86,7 +86,7 @@ class FormsController < ApplicationController
       role_name: user.role&.name || "",
     }
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -111,6 +111,7 @@ class FormsController < ApplicationController
       form = @form_service.create_form_slot
     else
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
+      @form_service.create_form_slot(form)
     end
     @hash[:form_id] = form.id
     @hash[:status] = form.status
@@ -125,7 +126,7 @@ class FormsController < ApplicationController
   def cds_cdp_review
     return if params[:user_id].nil?
     reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order(:period_id)
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -297,7 +298,7 @@ class FormsController < ApplicationController
   def review_cds_assessment
     params = form_params
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order(:period_id)
+    schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
