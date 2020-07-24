@@ -1,6 +1,7 @@
 module Api
   class ExportService < BaseService
-    FILE_CLEAN_UP_TIME_IN_SECONDS = 10 * 60
+    FILE_CLEAN_UP_TIME_IN_SECONDS = 10 * 60 # for downloaded file
+    TEMP_FILE_CLEAN_UP_TIME_IN_SECONDS = 30 # for temporary
     ZOOM_SCALE = 100
     ROMAN_NUMBERS = {
       1000 => "M",
@@ -90,37 +91,7 @@ module Api
       sheet
     end
 
-    def repack_zip_if_multiple(file_names, zip_file_name = nil)
-      # - Turn files into zip if multiple files
-      # Caution: DELETE all file if ZIP is applied
-      # - Else return the current file without deletion
-      # If multiple files download .zip, if 1 file download the only file
-      if file_names.length.zero?
-        nil
-      elsif file_names.length == 1
-        file_names[0]
-      else
-        folder = "public/"
-        File.delete(folder + zip_file_name) if File.exist?(folder + zip_file_name)
-        Zip::File.open(folder + zip_file_name, Zip::File::CREATE) do |zip_file|
-          file_names.each do |file_name|
-            # Two arguments:
-            # - The name of the file as it will appear in the archive
-            # - The original file, including the path to find it
-            in_file_name = File.join(folder, file_name)
-            #binding.pry
-            zip_file.add(file_name, in_file_name) { true }
-          end
-        end
-        file_names.each do |file_name|
-          in_file_name = File.join(folder, file_name)
-          File.delete(in_file_name) if File.exist?(in_file_name)
-        end
-        zip_file_name
-      end
-    end
-
-    def schedule_file_for_clean_up(file_name)
+    def schedule_file_for_clean_up(file_name, time_out = FILE_CLEAN_UP_TIME_IN_SECONDS)
       # Delete the file after FILE_CLEAN_UP_TIME seconds
       # 1. every second check if the file is replaced
       #-> File belongs to new requests and current requests are overwritten
@@ -131,7 +102,7 @@ module Api
       # get original creation time
       creation_time = f.ctime
       Thread.new do
-        (0...FILE_CLEAN_UP_TIME_IN_SECONDS).each do |_i|
+        (0...time_out).each do |_i|
           sleep 1
           begin
             f = File.new("public/#{file_name}")
@@ -151,6 +122,34 @@ module Api
         if creation_time == new_creation_time
           File.delete("public/" + file_name) if File.exists?("public/" + file_name)
         end
+      end
+    end
+
+    def repack_zip_if_multiple(file_names, zip_file_name = nil)
+      # - Turn files into zip if multiple files
+      # Caution: DELETE all file if ZIP is applied
+      # - Else return the current file without deletion
+      # If multiple files download .zip, if 1 file download the only file
+      if file_names.length.zero?
+        nil
+      elsif file_names.length == 1
+        file_names[0]
+      else
+        folder = "public/"
+        File.delete(folder + zip_file_name) if File.exist?(folder + zip_file_name)
+        Zip::File.open(folder + zip_file_name, Zip::File::CREATE) do |zip_file|
+          file_names.each do |file_name|
+            # Two arguments:
+            # - The name of the file as it will appear in the archive
+            # - The original file, including the path to find it
+            in_file_name = File.join(folder, file_name)
+            zip_file.add(file_name, in_file_name) { true }
+          end
+        end
+        file_names.each do |file_name|
+          schedule_file_for_clean_up(file_name, TEMP_FILE_CLEAN_UP_TIME_IN_SECONDS)
+        end
+        zip_file_name
       end
     end
 
