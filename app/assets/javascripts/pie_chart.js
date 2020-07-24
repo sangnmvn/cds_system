@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
 function drawPieChart(data, total, id, name) {
+  if (data.length == 0)
+    return;
   $(id).html(`<div class="col title">${name}</div>`);
   // set the dimensions and margins of the graph
   var width = $(id).width() - 50;
@@ -84,7 +86,7 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value +'('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
+    .text(function (d) { return d.data.value +' ('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
@@ -104,9 +106,11 @@ function drawPieChart(data, total, id, name) {
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
       var maxItemOneColumn = Math.ceil(color.domain().length / 2)
+      if (maxItemOneColumn < 3)
+        maxItemOneColumn = color.domain().length 
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
-      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 100)
+      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 130)
       var h = vert - height / 4
 
       return 'translate(' + w + ',' + h + ')';

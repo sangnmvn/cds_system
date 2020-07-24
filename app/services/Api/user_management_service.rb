@@ -298,11 +298,11 @@ module Api
       user_ids = []
 
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] >= title.rank
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] >= title.rank && h_old[title.user_id][:role] != title.role_name
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
           role: title.role_name,
           rank: title.rank,
@@ -335,7 +335,8 @@ module Api
 
     def data_users_down_title
       user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
-      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
+      
       first = {}
       second = {}
       schedules.map do |schedule|
@@ -355,16 +356,17 @@ module Api
           rank: title.rank,
           level: title.level,
           title: title.title,
+          role: title.role_name,
         }
       end
       results = []
       user_ids = []
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] <= title.rank
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] <= title.rank && h_old[title.user_id][:role] != title.role_name
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
           role: title.role_name,
           rank: title.rank,
@@ -414,7 +416,7 @@ module Api
         {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
           role: title.role&.name || "N/A",
           rank: title.rank,

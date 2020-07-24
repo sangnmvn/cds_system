@@ -1,19 +1,3 @@
-// alert success
-function success(content) {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-// alert fails
-function fails(content) {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
 $(document).on("click", "#btn-submit-add-user-group", function () {
   name = $("#name").val();
   status = $('input[name="status"]:checked').val();
@@ -252,11 +236,14 @@ function setup_dataTable() {
         "info": " _START_ - _END_ of _TOTAL_"
       },
       aoColumnDefs: [
-
         {
-          "sClass": "numericCol",
-          "aTargets": [1]
-        }
+          "orderable": false,
+          "targets": 0
+        },
+        {
+          "orderable": false,
+          "targets": 1
+        },
       ]
     });
 
