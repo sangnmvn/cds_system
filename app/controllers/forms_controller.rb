@@ -111,7 +111,8 @@ class FormsController < ApplicationController
       form = @form_service.create_form_slot
     else
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
-      @form_service.create_form_slot(form)
+      form_slot = FormSlot.where(form_id: form.id)
+      @form_service.create_form_slot(form) if form_slot.nil?
     end
     @hash[:form_id] = form.id
     @hash[:status] = form.status
@@ -244,6 +245,8 @@ class FormsController < ApplicationController
     render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
     user = form.user
     period = form.period
+    old_comment = Comment.includes(:form_slot).where(form_slots: {form_id: params[:form_id]}, is_delete: true)
+    old_comment.destroy_all
     Async.await do
       CdsAssessmentMailer.with(user: user, from_date: period.from_date, to_date: period.to_date, approvers: users.to_a, action: action).
         user_submit.deliver_later(wait: 3.seconds)

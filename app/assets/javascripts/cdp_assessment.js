@@ -31,22 +31,26 @@ function initCheckbox() {
     description_slot.before(html_segment);
     $(".request-update-checkbox").change(function (e) {
       var chkbox_form_slot_id = $(this).data("form-slot-id");
+      var slot_wrapper = $(this).closest(".cdp-slot-wrapper")
       if ($(this).is(":checked")) {
         var competency_name = $('#competency_panel').find('.show').data('competency-name');
-        var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
+        var slot_id = slot_wrapper.data("location");
         checked_set.add(chkbox_form_slot_id);
         if (data_checked_request[competency_name] == undefined)
           data_checked_request[competency_name] = []
         if (!data_checked_request[competency_name].includes(slot_id))
           data_checked_request[competency_name].push(slot_id);
-        checked_set_is_empty_comment[chkbox_form_slot_id] = $(this).closest(".cdp-slot-wrapper").find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
-        $("#button_request_update").removeClass("disabled");
-        $("#icon_request_update").prop("style", "color:green");
-        $("#button_cancel_request").removeClass("disabled");
-        $("#icon_cancel_request").prop("style", "color:green");
+        checked_set_is_empty_comment[chkbox_form_slot_id] = slot_wrapper.find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
+        if (slot_wrapper.find(".icon-flag").css('color') == "rgb(255, 165, 0)") {
+          $("#button_cancel_request").removeClass("disabled");
+          $("#icon_cancel_request").prop("style", "color:green");
+        } else{
+          $("#button_request_update").removeClass("disabled");
+          $("#icon_request_update").prop("style", "color:green");
+        }
       } else {
         var competency_name = $('#competency_panel').find('.show').data('competency-name');
-        var slot_id = $(this).closest(".cdp-slot-wrapper").data("location");
+        var slot_id = slot_wrapper.data("location");
         checked_set.delete(chkbox_form_slot_id);
         delete checked_set_is_empty_comment[chkbox_form_slot_id];
         var index = data_checked_request[competency_name].indexOf(slot_id);
@@ -996,8 +1000,12 @@ $(document).ready(function () {
       is_commit = row.find(".approver-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");
-        point = null;
+        point = null
+        is_commit = false
+        if(is_commit == "commit_cdp")
+          is_commit = true
       } else if (is_commit == "commit_cds") {
+        is_commit = true
         var approver_point = row.find(".approver-assessment")
         approver_point.removeClass("d-none");
         if (!approver_point.val() || recommend == "") {
@@ -1027,7 +1035,11 @@ $(document).ready(function () {
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         point = null;
         row.find(".reviewer-assessment").addClass("d-none");
+        is_commit = false
+        if(is_commit == "commit_cdp")
+          is_commit = true
       } else if (is_commit == "commit_cds") {
+        is_commit = true
         var reviewer_point = row.find(".reviewer-assessment")
         reviewer_point.removeClass("d-none");
         if (!reviewer_point.val() || recommend == "") {
@@ -1055,7 +1067,9 @@ $(document).ready(function () {
         success: function (response) {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
-          row.closest(".row-slot").find('.icon-flag').prop("style", "color: #99FF33")
+          flag = row.closest(".row-slot").find('.icon-flag')
+          if (flag.css('color') == "rgb(255, 255, 0)")
+          flag.prop("style", "color: #99FF33")
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
         }
       });
@@ -1142,11 +1156,10 @@ function autoSaveStaff(row) {
             current_change = current_change;
           else
             current = max;
-          var competency_id = $('div.show').data("competency-id") 
+          var competency_id = $('div.show').data("competency-id")
           $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
-          $("tr[data-id-competency="+ competency_id +"]").children()[2].innerText = response.data
-        }
-        else
+          $("tr[data-id-competency=" + competency_id + "]").children()[2].innerText = response.data
+        } else
           fails("This slot hasn't been save.")
       }
     });

@@ -1,7 +1,12 @@
 $(document).ready(function () {
+  var start_date = new Date(Date.parse(01-01-1945));
+  var end_date = new Date();
+  end_date.setDate(end_date.getDate()-(365*16));
   $("#birthday").datepicker({
     todayBtn: "linked",
     todayHighlight: true,
+    startDate: start_date,
+    endDate: end_date,
     autoclose: true,
     format: "M dd, yyyy"
   })
