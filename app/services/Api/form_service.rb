@@ -501,7 +501,7 @@ module Api
         }
       end
       if form
-        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.desc, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A"})
+        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A" })
       end
       list_form
     end
@@ -668,7 +668,7 @@ module Api
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         approver_ids = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
-        is_final = approver_ids.include?current_user.id 
+        is_final = approver_ids.include? current_user.id
         flag = LineManager.where(user_id: approver_ids, form_slot_id: form_slot.id).select(:flag).first
         flag = flag.nil? ? "" : flag
         flag = "#99FF33" if approver_ids.present? && !is_final && flag == "orange"

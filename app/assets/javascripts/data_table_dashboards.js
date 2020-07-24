@@ -69,11 +69,12 @@ function appendDataToTable(data, is_up = true, has_old = true) {
     tpl += `
       <td class="type-text item-row title-h">{title}</td>
       <td class="type-number item-row rank">{rank}</td>
-      <td class="type-number item-row level">{level}</td>
-      <td class="type-number item-row level">{keep_period}</td>
-      <td class="type-icon item-row action">`.formatUnicorn({
-      title: user.title, rank: user.rank, level: user.level, keep_period: user.keep_period
+      <td class="type-number item-row level">{level}</td>`.formatUnicorn({
+      title: user.title, rank: user.rank, level: user.level
     });
+    if (!has_old)
+      tpl += '<td class="type-number item-row level">' + user.period_keep + '</td>'
+    tpl += `<td class="type-icon item-row action">`
 
     if (is_up) {
       tpl += `
