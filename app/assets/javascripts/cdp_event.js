@@ -27,7 +27,16 @@ $(document).on("click", ".approval-assessment", function () {
           $('#modal_approve_cds').modal('show');
         }
         else{
-          debugger
+          str = ""
+          for (var competency_name in response) {
+            str += "\u2022 " + competency_name + ": ";
+            slots = response[competency_name];
+            str += slots.join(", ");
+            str += "<br>"
+          }
+
+          $("#modal_approver_content").html(str);
+          $("#modal_approver_submit").modal('show');
         }
       }});
       

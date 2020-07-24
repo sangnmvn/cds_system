@@ -1002,7 +1002,7 @@ $(document).ready(function () {
               } else {
                 str = ""
                 for (var competency_name in response) {
-                  str += competency_name + ": ";
+                  str += "\u2022 " + competency_name + ": ";
                   slots = response[competency_name];
                   str += slots.join(", ");
                   str += "<br>"
