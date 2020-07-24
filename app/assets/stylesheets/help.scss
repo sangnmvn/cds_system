@@ -6,18 +6,30 @@ ul {
     padding-inline-start: 20px;
 }
 .row {
-    margin: 0;  
+    margin: 0;
     padding: 0;
     width: 100%;
 
-    .left-panel {   
+    .left-panel {
         padding: 0;
     }
 }
 
-.show-help-2,.show-help-3,.show-help-4,.show-help-5{
+.show-help-2 {
     display: none;
 }
-img{
+img {
     width: 100%;
+}
+
+.show-help-1-1,
+.show-help-2-1,
+.show-help-2-2,
+.show-help-2-3,
+.show-help-2-4,
+.show-help-2-5,
+.show-help-2-6,
+.show-help-2-7 {
+    font-weight: 600;
+    color: #000;
 }
