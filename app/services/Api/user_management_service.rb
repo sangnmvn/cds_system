@@ -298,8 +298,8 @@ module Api
       user_ids = []
 
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] >= title.rank && h_old[title.user_id][:role] != title.role_name
-        results << {
+        next if h_old[title.user_id].present? && h_old[title.user_id][:role] != title.role_name && h_old[title.user_id][:rank] >= title.rank
+        data = {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
           full_name: title.user.format_name_vietnamese,
@@ -308,10 +308,11 @@ module Api
           rank: title.rank,
           title: title.title,
           level: title.level,
-          old_rank: h_old[title.user_id][:rank],
-          old_title: h_old[title.user_id][:title],
-          old_level: h_old[title.user_id][:level],
         }
+        data[:old_rank] = h_old[title.user_id] ? h_old[title.user_id][:rank] : "N/A"
+        data[:old_title] = h_old[title.user_id] ? h_old[title.user_id][:title] : "N/A"
+        data[:old_level] = h_old[title.user_id] ? h_old[title.user_id][:level] : "N/A"
+        results << data
         user_ids << title.user_id
       end
 
@@ -336,7 +337,7 @@ module Api
     def data_users_down_title
       user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
-      
+
       first = {}
       second = {}
       schedules.map do |schedule|
@@ -362,7 +363,7 @@ module Api
       results = []
       user_ids = []
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].nil? || h_old[title.user_id][:rank] <= title.rank && h_old[title.user_id][:role] != title.role_name
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] <= title.rank
         results << {
           class: (i.even? ? "even" : "odd"),
           title_history_id: title.id,
