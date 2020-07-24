@@ -86,7 +86,7 @@ class FormsController < ApplicationController
       role_name: user.role&.name || "",
     }
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where(status: "In-progress").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -367,7 +367,7 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to root_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
+    redirect_to root_path unless @privilege_array.include?(FULL_ACCESS)
   end
 
   def check_line_manager_privilege
