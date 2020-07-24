@@ -454,6 +454,23 @@ module Api
       data_filter
     end
 
+    def get_line_manager_miss_list
+      form_id = params[:form_id]
+      latest_period = Form.find_by(id: form_id).period_id
+      staff_slot = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
+      reviewer_slot = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck("slot_id")
+      staff_slot_ids = Set.new(staff_slot) - Set.new(reviewer_slot)
+      slots = Slot.includes(:competency).where(id: staff_slot_ids).order("competencies.location", :level)
+      results = {}
+      slots.map do |slot|
+        competency_name = slot.competency.name
+        results[competency_name] ||= []
+        results[slot.competency.id] ||= get_location_slot(slot.competency.id)
+        results[competency_name] << results[slot.competency.id][slot.id]
+      end
+      results
+    end
+
     def data_filter_cds_approve
       project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
       user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq

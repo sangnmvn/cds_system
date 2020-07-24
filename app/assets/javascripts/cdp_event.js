@@ -5,7 +5,33 @@ $(document).on("click", ".approval-assessment", function () {
     <p>Slot: ${data_conflict} </p><p>Please continue reviewing or request update to Staff.</p>`)
     $('#modal_conflict').modal('show');
   } else
-    $('#modal_approve_cds').modal('show');
+  {
+    $.ajax({
+      type: "POST",
+      url: "/forms/get_line_manager_miss_list",
+      data: {
+        form_id: form_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        // keep text only
+        for (var key in response) {
+          if (key == parseInt(key, 10)) {
+            delete response[key];
+          }
+        }
+        if (jQuery.isEmptyObject(response)) {
+          $('#modal_approve_cds').modal('show');
+        }
+        else{
+          debugger
+        }
+      }});
+      
+  }
 });
 
 $(document).on("click", ".reject-assessment", function () {

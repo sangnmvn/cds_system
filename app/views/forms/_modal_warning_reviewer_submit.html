@@ -1,0 +1,23 @@
+<div class="modal fade" id="modal_reviewer_submit" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Confirm Cancel Request to Update Slots</h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: left;">
+        <input type="hidden" value="1" id="request_more_evidence_recommend">
+        The following slots have not been reviewed:
+        <span style="font-weight: bold" class="slot_id" id="data_slot"></span>
+        <div id="modal_reviewer_content">  </div>
+        <div id="modal_reviewer_confirm">Are you sure you want to submit this CDS/CDP?</div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary confirm-submit-cds">Yes</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>

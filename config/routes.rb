@@ -87,6 +87,7 @@ Rails.application.routes.draw do
       post :reviewer_submit
       post :withdraw_cds
       post :export_excel_cds_review
+      post :get_line_manager_miss_list
     end
   end
   resources :templates do

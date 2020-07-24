@@ -28,6 +28,10 @@ class FormsController < ApplicationController
     render json: @form_service.get_summary_comment
   end
 
+  def get_line_manager_miss_list
+    render json: @form_service.get_line_manager_miss_list
+  end
+
   def save_summary_comment
     render json: @form_service.save_summary_comment
   end

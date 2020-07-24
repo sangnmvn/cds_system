@@ -617,7 +617,7 @@ $(document).on("click", ".submit-assessment", function () {
   $('#modal_period').modal('show');
 });
 
-$(document).on("click", "#confirm_submit_cds", function () {
+$(document).on("click", ".confirm-submit-cds", function () {
   $.ajax({
     type: "POST",
     url: "/forms/submit",
