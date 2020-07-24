@@ -113,11 +113,11 @@ class UsersController < ApplicationController
   def add_reviewer_to_database
     begin
       Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
-      if params[:add_approver_ids].present? && params[:add_approver_ids] != "0" && (@privilege_array.include? & [ADD_APPROVER, FULL_ACCESS]).any?
+      if params[:add_approver_ids].present? && params[:add_approver_ids] != "0" && (@privilege_array & [ADD_APPROVER, FULL_ACCESS]).any?
         Approver.create(approver_id: params[:add_approver_ids].to_i, user_id: params[:user_id], is_approver: true)
       end
 
-      if params[:add_reviewer_ids].present? && (@privilege_array.include? & [ADD_REVIEWER, FULL_ACCESS]).any?
+      if params[:add_reviewer_ids].present? && (@privilege_array & [ADD_REVIEWER, FULL_ACCESS]).any?
         params[:add_reviewer_ids].each do |approver_id|
           Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: false)
         end

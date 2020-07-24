@@ -46,7 +46,7 @@ $(document).on("click", ".add-approver-icon[data-toggle=modal]", function () {
     },
     dataType: "json",
     success: function (response) {
-      current_approvers =response.current_approvers;
+      current_approvers = response.current_approvers;
       approvers = response.current_approvers;
       $('#table_add_approver tbody').html(addDataReviewer(response.approvers, "checkbox-approver"))
       if (response.approvers.length > 0)
@@ -135,14 +135,30 @@ function changeTypeButtonSave(id, flag) {
     $(id).addClass("btn-primary");
   }
 }
-$(document).on('click', '#save_add_reviewer, #save_add_approver', function () {
-  let user_id = $(this).data("user_id");
-  let user_account = $(this).data("user_account");
-  let approver_remove_ids = current_approvers;
-  let reviewer_remove_ids = _.difference([...current_reviewers], [...reviewers]);
-  let add_approver_ids = approvers;
-  let add_reviewer_ids = _.difference([...reviewers], [...current_reviewers]);
-  remove_ids = _.concat(approver_remove_ids, reviewer_remove_ids);
+$(document).on('click', '#save_add_reviewer', function () {
+  let params = {
+    user_id: $(this).data("user_id"),
+    user_account: $(this).data("user_account"),
+    reviewer_remove_ids: _.difference([...current_reviewers], [...reviewers]),
+    add_reviewer_ids: _.difference([...reviewers], [...current_reviewers]),
+    remove_ids: _.difference([...current_reviewers], [...reviewers]),
+    add_reviewer: true,
+  }
+  ajaxAddReviewerApprover(params)
+});
+
+$(document).on('click', '#save_add_approver', function () {
+  let params = {
+    user_id: $(this).data("user_id"),
+    user_account: $(this).data("user_account"),
+    add_approver_ids: approvers,
+    remove_ids: [current_approvers],
+    add_reviewer: true,
+  }
+  ajaxAddReviewerApprover(params)
+});
+
+function ajaxAddReviewerApprover(params) {
   $.ajax({
     url: "/users/add_reviewer_to_database/",
     type: "POST",
@@ -150,21 +166,20 @@ $(document).on('click', '#save_add_reviewer, #save_add_approver', function () {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     data: {
-      user_id: user_id,
-      add_approver_ids: add_approver_ids,
-      add_reviewer_ids: add_reviewer_ids,
-      remove_ids: remove_ids,
+      user_id: params.user_id,
+      add_approver_ids: params.add_approver_ids,
+      add_reviewer_ids: params.add_reviewer_ids,
+      remove_ids: params.remove_ids,
     },
     dataType: "json",
     success: function (response) {
       if (response.status == "success")
-        warning(`Add reviewer/approver for ${user_account} has been successfully!`);
+        warning(`Add ${params.add_reviewer ? "reviewer" : "approver"} for ${params.user_account} has been successfully!`);
       else if (response.status == "fails")
-        fails(`Couldn't add reviewer/approver for ${user_account}!`)
+        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} for ${params.user_account}!`)
     }
   })
-});
-
+}
 function addDataReviewer(data, class_check = "checkbox-reviewer") {
   if (data.length == 0)
     return `<tr><td colspan="4" class="type-icon">No data available in this table</td></tr>`;

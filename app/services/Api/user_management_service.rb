@@ -195,13 +195,14 @@ module Api
     end
 
     def data_career_chart(user_id = nil)
+      has_cdp = false
       user_id ||= current_user.id
-      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order(:period_id)
+      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order("periods.to_date")
       h_rank_empty = {
         period: "",
-        current_user.role.name.to_sym => nil,
+        current_user.role.name => nil,
       }
-      role_names = title_histories.pluck(:role_name)
+      role_names = title_histories.pluck(:role_name).uniq
       role_names.each do |role_name|
         h_rank_empty[role_name] = nil
       end
@@ -210,8 +211,8 @@ module Api
       title_histories.each do |title_history|
         # new hash empty
         h_rank = h_rank_empty.clone
-        h_rank[:period] = title_history.period.to_date
-        h_rank[title_history.role_name] = title_history.role_name
+        h_rank[:period] = title_history.period&.format_period_career
+        h_rank[title_history.role_name] = title_history.rank
         arr_result << h_rank
       end
 
@@ -226,14 +227,15 @@ module Api
           h_rank = h_rank_empty.clone
           h_rank[:period] = schedule&.period&.format_period_career
           h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
-          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank] || 0
           arr_result << h_rank
         end
 
-        if data_result[:cdp].present?
+        if data_result[:cdp].present? && data_result[:cdp][:title_id].present?
+          has_cdp = true
           h_rank = h_rank_empty.clone
           h_rank[:period] = "Next Period"
-          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank] || 0
           arr_result << h_rank
         end
       end
@@ -255,7 +257,7 @@ module Api
       #     }
       #   end
       # end
-      arr_result
+      { data: arr_result, has_cdp: has_cdp }
     end
 
     def calulate_data_user_by_title

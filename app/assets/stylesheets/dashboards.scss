@@ -49,6 +49,7 @@ $odd-color: #CFD5EA;
 
 .row2 {
     background-color: #dae7ff;
+    border: 1px solid #fff;
     display: flex;
     flex-wrap: wrap;
     height: 400px;
@@ -226,9 +227,9 @@ rect {
 
         .baseline-cds {
             width: 50%;
-            background-color: #dae7ff;
+            // background-color: #dae7ff;
             #table_baseline {
-                background-color: #dae7ff;
+                // background-color: #dae7ff;
                 width: 98% !important;
                 .first-column {
                     width: 10%;

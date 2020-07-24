@@ -819,7 +819,7 @@ module Api
         h_level_mapping[key] << level_mapping
       end
 
-      title_history = TitleHistory.where(user_id: form.user_id).where.not(period_id: form.period_id).order(:period_id).last
+      title_history = TitleHistory.includes(:period).where(user_id: form.user_id).where.not(period_id: form.period_id).order("periods.to_date").last
       current_title = {
         level: title_history&.level || "N/A",
         rank: title_history&.rank || "N/A",
@@ -853,7 +853,7 @@ module Api
           name: com.name,
           rank: com.rank,
           level: com.level,
-          title_name: com.title_name,
+          title_name: com.title_name || "N/A",
         }
       end
 
@@ -866,6 +866,7 @@ module Api
     end
 
     def calculate_level(hash_point, type = :value)
+      return "0" if hash_point.nil?
       s_level = ""
       hash = {}
       hash_point.each do |key, value|
@@ -883,6 +884,7 @@ module Api
 
       hash.each do |k, v|
         plp = v[:count] * 5 / 2.0
+        break if v[:sum].zero?
         if plp <= v[:sum].to_f
           if v[:fail].zero?
             s_level = "#{k}"
@@ -916,7 +918,7 @@ module Api
 
       return "fail" unless form.update(status: "Done", title_id: calculate_result[:expected_title][:title_id], rank: calculate_result[:expected_title][:rank], level: calculate_result[:expected_title][:level], number_keep: keep, period_keep_id: period_keep)
 
-      title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.desc, user_id: form.user_id, period_id: form.period_id })
+      title_history = TitleHistory.new({ rank: calculate_result[:expected_title][:rank], title: calculate_result[:expected_title][:title], level: calculate_result[:expected_title][:level], role_name: form.role.name, user_id: form.user_id, period_id: form.period_id })
       return "fail" unless title_history.save
 
       form_slots = FormSlot.joins(:line_managers).includes(:comments, :line_managers).where(form_id: params[:form_id]).where.not(line_managers: { id: nil })

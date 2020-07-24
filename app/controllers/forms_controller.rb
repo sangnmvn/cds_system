@@ -209,7 +209,7 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-    @title = "View CDS/CDP Result For #{user.role.desc} - #{user.format_name}"
+    @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
     @slots = @result.values.map(&:keys).flatten.uniq.sort
   end
 
