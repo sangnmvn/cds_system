@@ -30,7 +30,7 @@ class DashboardsController < ApplicationController
       projects = Project.select("projects.name as name", :id).joins(:project_members).where(project_members: { user_id: current_user.id })
     end
 
-    roles = User.distinct.select("roles.name as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) })
+    roles = User.distinct.select("roles.name as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) }, status: true)
 
     render json: {
       companies: companies,

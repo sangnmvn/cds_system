@@ -69,10 +69,10 @@ $(document).ready(function () {
     $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
     $('li.active').find("a").css('background-color', '#CFD5eA');
   }
-  CheckPrivilege();
+  checkPrivilege();
 });
 
-function CheckPrivilege() {
+function checkPrivilege() {
   if (!privilege_array.includes("25")) {  
     $(".privilate-organization-settings").css("display", "none");
   }
