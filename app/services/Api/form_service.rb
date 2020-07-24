@@ -168,18 +168,18 @@ module Api
           pluck(:form_slot_id).uniq
         #line manager have orange flag
         form_slot_ids = LineManager.includes(:form_slot).
-          where(form_slots: { form_id: params[:form_id] }, flag: "orange",
+          where(form_slots: { form_id: params[:form_id] }, flag: "orange", period_id: user_of_form.period_id
                 form_slot_id: form_slot_id_in_comments)
         reviewer = User.joins(:approvers).where("approvers.user_id": current_user.id).
           where("approvers.is_approver": false).pluck(:account, :email)
       else
         form_slot_id_of_current_users = LineManager.includes(:form_slot).
-          where(form_slots: { form_id: params[:form_id] }, flag: "#99FF33").
+          where(form_slots: { form_id: params[:form_id] }, flag: "#99FF33", period_id: user_of_form.period_id).
           pluck(:form_slot_id).uniq
         #line manager have orange flag
         form_slot_ids = LineManager.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "orange",
-                form_slot_id: form_slot_id_of_current_users, user_id: approver.approver_id)
+                form_slot_id: form_slot_id_of_current_users, user_id: approver.approver_id, period_id: user_of_form.period_id)
         reviewer = User.where(id: approver.approver_id).pluck(:account, :email)
       end
       old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
@@ -604,6 +604,7 @@ module Api
     def save_cds_staff
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+        form = Form.find_by(id: params[:form_id])
         if params[:point].present?
           comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
           old_comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
@@ -612,7 +613,7 @@ module Api
           comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
         end
         is_commit = params[:is_commit] == "true"
-        line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange")
+        line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange", period_id: form.period_id)
         if comment.present?
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: comment.flag.blank? ? "" : "yellow")
         else
@@ -658,8 +659,8 @@ module Api
     end
 
     def request_add_more_evidence
-      line = LineManager.where(form_slot_id: params[:form_slot_id], user_id: current_user.id).first
       form = Form.includes(:period).find(params[:form_id])
+      line = LineManager.where(form_slot_id: params[:form_slot_id], user_id: current_user.id, period_id: form.period_id).first
       form_slot = FormSlot.includes(:slot).find(params[:form_slot_id])
       competency_name = Competency.find(form_slot.slot.competency_id).name
       user = User.find(params[:user_id])
@@ -1072,7 +1073,8 @@ module Api
     end
 
     def cancel_update_cds(form_slot_ids)
-      line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
+      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first})
+      line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: form.period_id)
       line_managers.each do |line_manager|
         line_manager.flag = ""
         return "fails" unless line_manager.save
@@ -1086,11 +1088,12 @@ module Api
     end
 
     def request_update_cds(form_slot_ids, slot_id)
+      period = Form.includes(:period).find_by_id(params[:form_id]).period
       approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
-          LineManager.where(form_slot_id: form_slot_ids)
+          LineManager.where(form_slot_id: form_slot_ids, period_id: period.id)
         else
-          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
+          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: period.id)
         end
       line_managers.each do |line_manager|
         return "fails" unless line_manager.update(flag: "orange")
@@ -1099,7 +1102,6 @@ module Api
         comment = Comment.find_by(form_slot_id: form_slot_id, is_delete: false)
         comment.nil? ? Comment.create!(form_slot_id: form_slot_id, flag: "orange") : comment.update(flag: "orange")
       end
-      period = Form.includes(:period).find_by_id(params[:form_id]).period
       user_staff = User.find_by_id(params[:user_id])
       Async.await do
         CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 3.seconds)
@@ -1108,11 +1110,12 @@ module Api
     end
 
     def cancel_request(form_slot_ids, slot_id)
+      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first})
       approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
-          LineManager.where(form_slot_id: form_slot_ids)
+          LineManager.where(form_slot_id: form_slot_ids, period_id: form.period_id)
         else
-          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id)
+          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: form.period_id)
         end
       line_managers.each do |line_manager|
         return "fails" unless line_manager.update(flag: "")
@@ -1233,12 +1236,13 @@ module Api
 
     def get_recommend_appover(hash, form_slot)
       period_id = 0
-      user_id = Form.where(id: form_slot.form_id).pluck(:user_id)
+      forms = Form.where(id: form_slot.form_id)
+      user_id = forms.pluck(:user_id)
       project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
       user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
       user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
       user_groups.each do |user|
-        line = LineManager.find_by(form_slot_id: form_slot, user_id: user.user_id)
+        line = LineManager.where(form_slot_id: form_slot, user_id: user.user_id).order(updated_at: :desc).first
         if (line.blank?)
           hash[:recommends] << {
             given_point: "",
