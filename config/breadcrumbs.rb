@@ -81,3 +81,8 @@ crumb :organization_settings do
   link "Organization Settings", "/organization_settings"
   parent :root
 end
+
+crumb :help do
+  link "Help", "/help"
+  parent :root
+end

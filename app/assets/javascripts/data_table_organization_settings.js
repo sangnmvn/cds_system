@@ -1159,7 +1159,7 @@ function appendDataToTableTitle(data) {
         <tr>
           <td class="type-number item-row number">{number}</td>
           <td class="type-text item-row role-name">{role_name}</td>
-          <td class="type-text item-row name">{name}</td>
+          <td class="type-text item-row title-name">{name}</td>
           <td class="type-text item-row abbreviation">{abbreviation}</td>
           <td class="type-number item-row rank">{rank}</td>
           <td class="type-text item-row desc">{desc}</td>
