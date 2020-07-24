@@ -96,7 +96,7 @@ function loadTitleMappingForEdit() {
             // find competency data suitable for competency column cell
             if (data_list[k].competency_name == current_cell_competency_name) {
               max_rank = global_max_rank;
-              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'>`
+              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'><option value='0'>0</option>`
 
               for (var x = 1; x < (max_rank + 1); x++) {
                 value_dropdown += `<option value='{j}-{i}'>{j}-{i}</option><option value='++{i}'>++{i}</option><option value='{i}'>{i}</option>`.formatUnicorn({
