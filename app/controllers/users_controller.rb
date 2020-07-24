@@ -15,7 +15,6 @@ class UsersController < ApplicationController
     filter = {
       is_delete: false,
     }
-
     filter[:company_id] = user_params[:filter_company] if user_params[:filter_company] != "all"
     filter[:role_id] = user_params[:filter_role] if user_params[:filter_role] != "all"
 
@@ -34,7 +33,6 @@ class UsersController < ApplicationController
 
   def index
     @crud_user = (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any?
-
     company_id = current_user.company_id if @privilege_array.include?(VIEW_ACCESS) && !@privilege_array.include?(FULL_ACCESS)
     if company_id
       @companies = Company.where(id: company_id, is_enabled: true).order(:name).pluck(:name, :id)
@@ -62,9 +60,12 @@ class UsersController < ApplicationController
   end
 
   def user_profile
-    @curent_user = User.find_by(id: current_user.id)
-    @project = Project.includes(:project_members).where("project_members.user_id": current_user.id, is_enabled: true).pluck(:name).join(", ")
-    form = Form.find_by(user_id: current_user.id)
+    id = params[:id] || current_user.id
+    id = id.to_i
+    @user = User.find_by(id: id)
+    @is_user = id == current_user.id
+    @project = Project.includes(:project_members).where("project_members.user_id": id, is_enabled: true).pluck(:name).join(", ")
+    form = Form.find_by(user_id: id)
     @form = (form.blank? || form.title.blank?) ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 

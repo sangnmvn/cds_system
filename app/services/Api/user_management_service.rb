@@ -47,7 +47,7 @@ module Api
 
         number = params[:offset] + index + 1
         current_user_data.push("<p class='number'>#{number}</p>")
-        current_user_data.push(user.format_name_vietnamese)
+        current_user_data.push("<a href='/users/user_profile?id=#{user.id}' title='View Contact Detail'>#{user.format_name_vietnamese}</a>")
         current_user_data.push(user&.email || "")
         current_user_data.push(user.account)
 

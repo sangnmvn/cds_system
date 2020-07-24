@@ -61,7 +61,7 @@ class CdsAssessmentMailer < ApplicationMailer
   def staff_withdraw_CDS_CDP
     @account = params[:account]
     @name = params[:user_name]
-    @reviewer_names = params[:reviewers].map(&:first).join(",")
+    @reviewer_names = params[:reviewers].map(&:first).join(", ")
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     params[:reviewers].each do |reviewer|

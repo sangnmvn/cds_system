@@ -1,10 +1,13 @@
 $(document).ready(function () {
-  $('.datepicker').datepicker({
-    startDate: '-3d'
-});
+  $("#birthday").datepicker({
+    todayBtn: "linked",
+    todayHighlight: true,
+    autoclose: true,
+    format: "M dd, yyyy"
+  })
   $("#edit_contact").click(function () {
     $("#modal_edit_contact").modal("show");
-  }) 
+  })
   $(".cancel-edit-user-profile").click(function () {
     setTimeout(location.reload.bind(location), 100);
   })
@@ -120,14 +123,15 @@ $(document).ready(function () {
   })
 
   $("#modal_change_password #new_pass").keyup(function () {
-    var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    //var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    var regex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,32}$/;
     var pass = $(this).val()
     if (pass == "") {
       $(this).addClass("is-invalid").removeClass("is-valid")
       $("#error_new_pass").html("Please enter new password")
     } else if (!regex.test(pass)) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_new_pass").html("Minimum of 6 characters, at least a letter and a number")
+      $("#error_new_pass").html("Min of 8 characters and must have: a uppercase, a downcase, a symbol, a number")
     } else {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_new_pass").html("")

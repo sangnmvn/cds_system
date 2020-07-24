@@ -126,8 +126,8 @@ function loadDataSlots(response) {
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-2 div-slot div-icon">
+        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,  e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
         <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} ${checkColorbatery(e.tracking.is_passed,e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
-        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-yellow"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
@@ -154,11 +154,11 @@ function loadDataSlots(response) {
       </div>
       <div class="row div-content">
           <div class="col-2">
-            <b>Self-Assessment (*):</b>
+            <b class='title-point' style="${checkDataPoint(e.tracking.point)}">Self-Assessment (*):</b>
           </div>
           <div class="col-3">
             <select class="form-control input-staff select-assessment" ${checkDisableFormSlotsReviewer(e.tracking)} style="${checkDataPoint(e.tracking.point)}">
-              <option disabled selected> select one </option>
+              <option disabled selected>Please select one </option>
               <option value="1" ${compare(e.tracking.point, 1)}> 1 - Does Not Meet Minimum Standards </option>
               <option value="2" ${compare(e.tracking.point, 2)}> 2 - Needs Improvement</option>
               <option value="3" ${compare(e.tracking.point, 3)}> 3 - Meets Expectations</option>
@@ -172,14 +172,14 @@ function loadDataSlots(response) {
             <b class='title-comment'>Staff Comment ${checkRequiredComment(e.tracking.point)}:</b>
           </div>
           <div class="col-3">
-            <textarea maxlength="1000" placeholder="Comment content" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(e.tracking)}>${e.tracking.evidence}</textarea>
+            <textarea maxlength="1000" placeholder="Comment is required if you commit CDS" class="form-control input-staff text-comment comment" ${checkDisableFormSlotsReviewer(e.tracking)}>${e.tracking.evidence}</textarea>
           </div>
       </div>`
     if (length > 0) {
       var lst_approver = []
       temp += `<div class="row div-row arrow-box row-cdp">
                   <div class="col-3 div-child-slot" data-toggle="collapse" data-target="#reviewer_${e.id}">
-                    <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
+                    <i class="fas fa-caret-down"></i>
                     <b>Reviewer Feedbacks</b>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ function loadDataSlots(response) {
                 </td>
                 <td>
                   <select class="form-control select-commit reviewer-assessment ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"} " ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)}>
-                    <option disabled selected> select one </option>
+                    <option disabled selected>Please select one </option>
                     <option value="1" ${compare(e.tracking.recommends[i].given_point, 1)}>1 - Does Not Meet Minimun Standards</option>
                     <option value="2" ${compare(e.tracking.recommends[i].given_point, 2)}>2 - Needs Improvement</option>
                     <option value="3" ${compare(e.tracking.recommends[i].given_point, 3)}>3 - Meets Expectations</option>
@@ -226,7 +226,7 @@ function loadDataSlots(response) {
         temp += `
           <div class="row div-row arrow-box row-cdp">
             <div class="col-3 div-child-slot" data-toggle="collapse" data-target="#approver_${e.id}">
-              <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-caret-down"></i></a>
+              <i class="fas fa-caret-down"></i>
               <b>Approver Feedbacks</b>
             </div>
           </div>
@@ -244,7 +244,7 @@ function loadDataSlots(response) {
                     </td>
                     <td>
                       <select class="form-control select-commit approver-assessment ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? '' : 'approver-self'}" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])}>${lst_approver[3]}>
-                        <option disabled selected> select one </option>  
+                        <option disabled selected>Please select one </option>  
                         <option value="1" ${compare(lst_approver[1], 1)}>1 - Does Not Meet Minimun Standards</option>
                         <option value="2" ${compare(lst_approver[1], 2)}>2 - Needs Improvement</option>
                         <option value="3" ${compare(lst_approver[1], 3)}>3 - Meets Expectations</option>
@@ -685,13 +685,16 @@ $(document).ready(function () {
     if ($(this).val() == "commit_cds") {
       type = "CDS"
       row.find('.select-assessment').attr("style", "display:block")
+      row.find('.title-point').attr("style", "display:block")
       row.find('.title-comment').html("Staff Comment (*):")
     } else if ($(this).val() == "commit_cdp") {
       type = "CDP"
       row.find('.select-assessment').attr("style", "display:none")
+      row.find('.title-point').attr("style", "display:none")
       row.find('.title-comment').html("Staff Comment :")
     } else {
       row.find('.select-assessment').attr("style", "display:none")
+      row.find('.title-point').attr("style", "display:none")
       row.find('.title-comment').html("Staff Comment :")
     }
     $.ajax({
@@ -806,7 +809,7 @@ $(document).ready(function () {
           temp += `
               <tr>
                 <td rowspan="${length}">${i}</td>
-                <td rowspan="${length}">${response[i].commit}</td>
+                <td rowspan="${length}">${response[i].point > 0 ? "CDS" : "CDP" }</td>
                 <td rowspan="${length}">${getValueStringPoint(response[i].point)}</td>
                 <td rowspan="${length}">${response[i].evidence}</td>
                 <td>${response[i].recommends[0].recommends}</td>
@@ -819,7 +822,7 @@ $(document).ready(function () {
             temp += `
                 <tr>
                   <td>${response[i].recommends[x].recommends}</td>
-                  <td>${response[i].commit}</td>
+                  <td>${response[i].recommends[x].given_point > 0 ? "CDS" : "CDP" }</td>
                   <td>${getValueStringPoint(response[i].recommends[x].given_point)}</td>
                   <td>${response[i].recommends[x].name}</td>
                   <td>${response[i].recommends[x].reviewed_date}</td>
@@ -870,8 +873,8 @@ $(document).ready(function () {
       if (arr[key].length > 0)
         str += `<p> ${key} / ${arr[key].toString()}</p>`
     });
-    if(str.split("<p>").length <= 2)
-      str = str.replace("<p>","").replace("</p>","")
+    if (str.split("<p>").length <= 2)
+      str = str.replace("<p>", "").replace("</p>", "")
     return str
   }
 
@@ -949,7 +952,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if (response.status == "New"  && (is_reviewer || is_approver)) {
+        if (response.status == "New" && (is_reviewer || is_approver)) {
           $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
           $('#modal_conflict').modal('show');
           $(document).on("click", "#btn_check_status", function () {
@@ -959,7 +962,7 @@ $(document).ready(function () {
           var data_conflict = findConflictinArr(conflict_commits)
           var str = ""
           if (data_conflict && (is_reviewer || is_approver)) {
-            str = "<p>The following slots have not conflicted on commitment between you and staff:</p><p>Slot: <b>" +
+            str = "<p>The following slots have been conflicted on commitment between you and staff:</p><p>Slot: <b>" +
               data_conflict + "</b></p><p>Please continue reviewing or request update to Staff.</p>"
           } else {
             data_conflict = findConflictinArr(slot_assessing)
@@ -993,6 +996,7 @@ $(document).ready(function () {
       is_commit = row.find(".approver-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");
+        point = null;
       } else if (is_commit == "commit_cds") {
         var approver_point = row.find(".approver-assessment")
         approver_point.removeClass("d-none");
@@ -1000,11 +1004,6 @@ $(document).ready(function () {
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
           return
         }
-      }
-      if (is_commit == "uncommit") {
-        return;
-      } else if (is_commit == "commit_cdp") {
-        point = null;
       }
       data = {
         form_id: form_id,
@@ -1026,6 +1025,7 @@ $(document).ready(function () {
 
       is_commit = row.find(".reviewer-commit").val();
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
+        point = null;
         row.find(".reviewer-assessment").addClass("d-none");
       } else if (is_commit == "commit_cds") {
         var reviewer_point = row.find(".reviewer-assessment")
@@ -1034,11 +1034,6 @@ $(document).ready(function () {
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "add")
           return
         }
-      }
-      if (is_commit == "uncommit") {
-        return;
-      } else if (is_commit == "commit_cdp") {
-        point = null;
       }
       data = {
         form_id: form_id,
@@ -1110,43 +1105,49 @@ function autoSaveStaff(row) {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       success: function (response) {
-        changeListSlotAssessing(row, "remove")
-        if (lst_slot[slot_id] == "orange") {
-          $("#confirm_request").removeClass("disabled")
-          $("#icon_confirm_request").prop("style", "color:green")
-          row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
-          row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
-        }
-        var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
-        icon_cdp.addClass("icon-yellow").removeClass("icon-green")
-        if (is_commit == true) {
-          icon_cdp.prop("style", "visibility: show")
-          icon_cdp.prop("title", checkTitleFlag(parseInt(point), 0))
-          if (point == "")
-            icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
-          else if (parseInt(point) < 3)
-            icon_cdp.addClass("fa-battery-half").removeClass("fa-battery-empty").removeClass("fa-battery-full")
-          else
-            icon_cdp.addClass("fa-battery-full").removeClass("fa-battery-empty").removeClass("fa-battery-half")
-        } else
-          icon_cdp.prop("style", "visibility: hidden")
-        checkChangeSlot();
+        if (response.status == "success") {
+          changeListSlotAssessing(row, "remove")
+          if (lst_slot[slot_id] == "orange") {
+            $("#confirm_request").removeClass("disabled")
+            $("#icon_confirm_request").prop("style", "color:green")
+            row.closest(".row-slot").find('.icon-flag').prop("style", "color: yellow")
+            row.closest(".row-slot").find('.icon-flag').prop("title", "This slot have been updated")
+          }
+          var icon_cdp = row.closest(".row-slot").find('.icon-cdp')
+          icon_cdp.addClass("icon-yellow").removeClass("icon-green")
+          if (is_commit == true) {
+            icon_cdp.prop("style", "visibility: show")
+            icon_cdp.prop("title", checkTitleFlag(parseInt(point), 0))
+            if (point == "")
+              icon_cdp.removeClass("fa-battery-full").addClass("fa-battery-empty").removeClass("fa-battery-half")
+            else if (parseInt(point) < 3)
+              icon_cdp.addClass("fa-battery-half").removeClass("fa-battery-empty").removeClass("fa-battery-full")
+            else
+              icon_cdp.addClass("fa-battery-full").removeClass("fa-battery-empty").removeClass("fa-battery-half")
+          } else
+            icon_cdp.prop("style", "visibility: hidden")
+          checkChangeSlot();
 
-        current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
-        max = parseInt(current[1]);
-        current_change = 0
-        $('div.row-slot').each(function (i, sel) {
-          level = $(this).data("location")[0]
-          is_cds = $(this).find(".staff-commit").val() == "commit_cds"
-          point = $(this).find(".select-assessment").val()
-          if (level == row.data("location")[0] && is_cds && point >= 3)
-            current_change += 1;
-        });
-        if (current_change <= max)
-          current_change = current_change;
+          current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
+          max = parseInt(current[1]);
+          current_change = 0
+          $('div.row-slot').each(function (i, sel) {
+            level = $(this).data("location")[0]
+            is_cds = $(this).find(".staff-commit").val() == "commit_cds"
+            point = $(this).find(".select-assessment").val()
+            if (level == row.data("location")[0] && is_cds && point >= 3)
+              current_change += 1;
+          });
+          if (current_change <= max)
+            current_change = current_change;
+          else
+            current = max;
+          var competency_id = $('div.show').data("competency-id") 
+          $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
+          $("tr[data-id-competency="+ competency_id +"]").children()[2].innerText = response.data
+        }
         else
-          current = max;
-        $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
+          fails("This slot hasn't been save.")
       }
     });
   }
