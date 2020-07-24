@@ -1,12 +1,14 @@
 // filter select company
 $(document).ready(function () {
+  var end_date = new Date();
+  end_date.setDate(end_date.getDate()-1);
   $(".joined-date").datepicker({
     todayBtn: "linked",
     todayHighlight: true,
     autoclose: true,
     format: "M dd, yyyy",
     minDate: -2,
-    maxDate: '+0D',
+    endDate: end_date,
   });
   get_filter();
 
