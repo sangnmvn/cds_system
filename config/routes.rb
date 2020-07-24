@@ -188,6 +188,11 @@ Rails.application.routes.draw do
       delete :delete_role
       delete :delete_title
     end
+  end 
+  resources :help do
+    collection do
+      get :index
+    end
   end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"

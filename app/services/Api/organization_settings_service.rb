@@ -75,8 +75,8 @@ module Api
         is_not_used = role_value.users.count == 0 && role_value.titles.count == 0 && role_value.templates.count == 0
         results << {
           id: role_value.id,
-          name: role_value.desc || "",
-          abbreviation: role_value.name || "",
+          name: role_value.name || "",
+          abbreviation: role_value.abbreviation || "",
           desc: role_value.desc || "",
           note: role_value.note || "",
           is_enabled: role_value.is_enabled || "",

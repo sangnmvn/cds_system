@@ -50,6 +50,7 @@
               <%= link_to(('<i class="far fa-eye icon" style="color:blue"></i>').html_safe, edit_template_path(template.id), { class: "view_template", title: "View Template" }) %>&nbsp;&nbsp;
               <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", {class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel", method: "post" }) %>&nbsp;
               <%= link_to(('<i class="fa fa-file-o icon" style="color:##4472c4"></i>').html_safe, "#", {  class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS", method: "post" }) %>
+              <i class="fa fa-trash icon" style="color:#cccc"></i>
             <% end %>
           </td>
         </tr>

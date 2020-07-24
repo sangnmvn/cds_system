@@ -1009,10 +1009,9 @@ function delete_schedule() {
 }
 
 function check_selectAll() {
-  if ($("#user_role").val() == "PM") return;
   $(".selectable").off('click.select_one_namespace')
   $(".selectable").on('click.select_one_namespace', function () {
-    if ($(':checkbox:checked').length > 0) {
+    if ($('.selectable:checked').length > 0) {
       $('#delete_schedule_button').prop("disabled", false);
     } else {
       $('#delete_schedule_button').prop("disabled", true);
@@ -1024,7 +1023,7 @@ function check_selectAll() {
       $('#selectAll').prop('checked', false);
     }
   })
-  $("#selectAll").off('click.select_all_namespace_delete');
+  $("#selectAll").off('click.select_all_namespace_delete')
   $('#selectAll').on('click.select_all_namespace_delete', function () {
     if ($('#selectAll').is(':checked')) {
       $('#delete_schedule_button').prop("disabled", false);

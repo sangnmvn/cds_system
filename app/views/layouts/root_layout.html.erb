@@ -22,15 +22,15 @@
       <div class="collapse navbar-collapse" >
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <%= link_to "Dashboard", root_path, class: "nav-link"%>
+            <%= link_to "Dashboard", root_path, class: "nav-link privilate-cds-dashboard"%>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               CDS/CDP
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/forms/index_cds_cdp">CDS/CDP Assessment</a>
-              <a class="dropdown-item" href="/forms/cds_review">CDS/CDP Review</a>
+              <a class="dropdown-item privilate-cds-cdp-assessment" href="/forms/index_cds_cdp">CDS/CDP Assessment</a>
+              <a class="dropdown-item privilate-cds-cdp-review" href="/forms/cds_review">CDS/CDP Review</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -38,12 +38,12 @@
               Administrator
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/users">User Management</a>
-              <a class="dropdown-item" href="/groups">User Group Management</a>
-              <a class="dropdown-item" href="/schedules">Schedule Management</a>
-              <a class="dropdown-item" href="/templates">Template Management</a>
-              <a class="dropdown-item" href="/level_mappings">Level Mapping</a>
-              <a class="dropdown-item" href="/organization_settings">Organization Settings</a>
+              <a class="dropdown-item privilate-user-managemen" href="/users">User Management</a>
+              <a class="dropdown-item privilate-user-group-management" href="/groups">User Group Management</a>
+              <a class="dropdown-item privilate-schedule-management" href="/schedules">Schedule Management</a>
+              <a class="dropdown-item privilate-template" href="/templates">Template Management</a>
+              <a class="dropdown-item privilate-level-mapping" href="/level_mappings">Level Mapping</a>
+              <a class="dropdown-item privilate-organization-settings" href="/organization_settings">Organization Settings</a>
               <%= link_to "My Account", user_profile_users_path, class: "dropdown-item"%>
             </div>
           </li>
@@ -71,3 +71,7 @@
     <%= yield %>
   </body>
 </html>
+<script>
+  var privilege_array = "<%= @privilege_array ?  @privilege_array : "" %>";
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
