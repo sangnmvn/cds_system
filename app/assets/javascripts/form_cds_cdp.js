@@ -9,8 +9,6 @@ function loadDataAssessmentList() {
     dataType: "json",
     success: function (response) {
       var temp = "";
-      if (response.length == 0)
-        temp = `<tr><td colspan="8" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         link = `/forms/cdp_assessment?form_id=` + form.id;
@@ -36,9 +34,9 @@ function loadDataAssessmentList() {
               <td class="type-number">{no}</td> 
               <td class="type-text"><a href='{link_view}'>{period}</a></td> 
               <td class="type-text">{role}</td> 
-              <td class="type-text">{title}</td> 
+              <td class="type-text">{level}</td> 
               <td class="type-number">{rank}</td> 
-              <td class="type-number">{level}</td> 
+              <td class="type-number">{title}</td> 
               <td class="type-text">{status}</td>
               <td class="type-icon"> 
                 <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}'></i></a>
@@ -65,6 +63,19 @@ function loadDataAssessmentList() {
         temp += this_element;
       }
       $(".table-cds-assessment-list tbody").html(temp);
+      $(".table-cds-assessment-list").DataTable({
+        "bLengthChange": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+        "columnDefs": [
+          {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }
+        ],
+        "order": [[1, "asc"]],
+      });
     },
   });
 }

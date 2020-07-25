@@ -1,4 +1,5 @@
 function loadDataAssessment(data_filter) {
+  var temp = "";
   $.ajax({
     type: "POST",
     url: "/forms/get_list_cds_assessment_manager",
@@ -14,9 +15,6 @@ function loadDataAssessment(data_filter) {
     },
     dataType: "json",
     success: function (response) {
-      var temp = '';
-      if (response.length == 0)
-        temp = `<tr><td colspan="13" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
@@ -72,6 +70,35 @@ function loadDataAssessment(data_filter) {
         temp += this_element;
       };
       $(".table-cds-assessment-manager-list tbody").html(temp);
+      $(".table-cds-assessment-manager-list").DataTable({
+        "bLengthChange": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+        "columnDefs": [
+          {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }
+        ],
+        "order": [[1, "asc"]],
+      });
+    },
+    error: function () {
+      $(".table-cds-assessment-manager-list tbody").html(temp);
+      $(".table-cds-assessment-manager-list").DataTable({
+        "bLengthChange": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+        "columnDefs": [
+          {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }
+        ],
+        "order": [[1, "asc"]],
+      });
     }
   })
 }

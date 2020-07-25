@@ -36,8 +36,8 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         // data group
         if (response.status == "success") {
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var sData = table.rows().data();
-
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
@@ -150,6 +150,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
 
@@ -246,7 +247,8 @@ function setup_dataTable() {
         },
       ]
     });
-
+    $("#table_group_info").attr("style","display:none")
+    $("#table_group_paginate").attr("style","display:none")
     $("#table_group_length").remove();
 
     $(".toggle-all").click(function () {
