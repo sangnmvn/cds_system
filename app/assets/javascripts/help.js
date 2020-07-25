@@ -1,21 +1,112 @@
 $(document).ready(function () {
+
+  var $container = $("html,body");
   $('.help-1').click(function () {
     setDisplayHelp('.show-help-1');
+    document.getElementsByClassName("show-help-1")[0].scrollIntoView();
+  });
+  $('.help-1-1').click(function () {
+    setDisplayHelp('.show-help-1');
+    document.getElementsByClassName("show-help-1-1")[0].scrollIntoView();
+  });
+  $('.help-1-1-1').click(function () {
+    setDisplayHelp('.show-help-1');
+    document.getElementsByClassName("show-help-1-1-1")[0].scrollIntoView();
+  });
+  $('.help-1-1-2').click(function () {
+    setDisplayHelp('.show-help-1');
+    document.getElementsByClassName("show-help-1-1-2")[0].scrollIntoView();
   });
   $('.help-2').click(function () {
     setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2")[0].scrollIntoView();
+  });  
+  $('.help-2-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-1")[0].scrollIntoView();
   });
-  $('.help-3').click(function () {
-    setDisplayHelp('.show-help-3');
+  $('.help-2-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-2")[0].scrollIntoView();
   });
-  $('.help-4').click(function () {
-    setDisplayHelp('.show-help-4');
+  $('.help-2-3').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-3")[0].scrollIntoView();
   });
-  $('.help-5').click(function () {
-    setDisplayHelp('.show-help-5');
+  $('.help-2-3-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-3-1")[0].scrollIntoView();
+  });
+  $('.help-2-3-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-3-2")[0].scrollIntoView();
+  });
+  $('.help-2-3-3').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-3-3")[0].scrollIntoView();
+  });
+  $('.help-2-3-4').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-3-4")[0].scrollIntoView();
+  });
+  $('.help-2-4').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-4")[0].scrollIntoView();
+  });
+  $('.help-2-4-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-4-1")[0].scrollIntoView();
+  });
+  $('.help-2-4-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-4-2")[0].scrollIntoView();
+  });
+  $('.help-2-5').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-5")[0].scrollIntoView();
+  });
+  $('.help-2-5-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-5-1")[0].scrollIntoView();
+  });
+  $('.help-2-5-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-5-2")[0].scrollIntoView();
+  });
+  $('.help-2-6').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-6")[0].scrollIntoView();
+  });
+  $('.help-2-6-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-6-1")[0].scrollIntoView();
+  });
+  $('.help-2-6-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-6-2")[0].scrollIntoView();
+  });
+  $('.help-2-6-3').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-6-3")[0].scrollIntoView();
+  });
+  $('.help-2-6-4').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-6-4")[0].scrollIntoView();
+  });
+  $('.help-2-7').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-7")[0].scrollIntoView();
+  });
+  $('.help-2-7-1').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-7-1")[0].scrollIntoView();
+  });
+  $('.help-2-7-2').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-2-7-2")[0].scrollIntoView();
   });
 });
-function setDisplayHelp(help_display){
-  $('.show-help-1 , .show-help-2 , .show-help-3, .show-help-4 , .show-help-5').css("display","none");
-  $(help_display).css("display","block");
+function setDisplayHelp(help_display) {
+  $('.show-help-1 , .show-help-2 , .show-help-3, .show-help-4 , .show-help-5').css("display", "none");
+  $(help_display).css("display", "block");
 }
