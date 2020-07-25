@@ -151,14 +151,14 @@ module Api
       else
         form = Form.find_by(id: params[:form_id])
         return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id,
-                                                   form_id: form.id, comment: params[:comment])
+                                                  form_id: form.id, comment: params[:comment])
       end
       true
     end
 
     def confirm_request
       user_of_form = Form.includes(:user).find_by(id: params[:form_id])
-      approver = Approver.find_by(user_id: user_of_form, is_approver: true)
+      approver = Approver.find_by(user_id: user_of_form.user_id, is_approver: true)
       reviewer = ""
       form_slot_ids = {}
       if user_of_form.user.id == current_user.id #check staff or reviewer
@@ -168,7 +168,7 @@ module Api
           pluck(:form_slot_id).uniq
         #line manager have orange flag
         form_slot_ids = LineManager.includes(:form_slot).
-          where(form_slots: { form_id: params[:form_id] }, flag: "orange", period_id: user_of_form.period_id
+          where(form_slots: { form_id: params[:form_id] }, flag: "orange", period_id: user_of_form.period_id,
                 form_slot_id: form_slot_id_in_comments)
         reviewer = User.joins(:approvers).where("approvers.user_id": current_user.id).
           where("approvers.is_approver": false).pluck(:account, :email)
@@ -196,9 +196,7 @@ module Api
           customize_slots[key] << location_slots[form_slot.slot.id]
         end
         Async.await do
-          CdsAssessmentMailer.with(user_name: user_of_form.user.account, current_user: current_user.account, from_date: period.from_date,
-                                   to_date: period.to_date, reviewers: reviewer, slots: customize_slots).
-            user_add_more_evidence.deliver_later(wait: 5.seconds)
+          CdsAssessmentMailer.with(user_name: user_of_form.user.account, current_user: current_user.account, from_date: period.from_date,to_date: period.to_date, reviewers: reviewer, slots: customize_slots).user_add_more_evidence.deliver_later(wait: 5.seconds)
         end
         return "success"
       end
@@ -995,16 +993,15 @@ module Api
       return "fail" unless form.update(status: "New")
       period = form.period
       comments = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }).where.not(flag: "")
-      comments.update(flag: "")
-      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] },
-                                                             period_id: period.id).where.not(flag: "")
-      line_managers.update(flag: "")
+      return "fail" unless comments.update(flag: "")
+      line_managers = LineManager.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }).where.not(flag: "")
+      return "fail" unless line_managers.update(flag: "")
       # send mail
       reviewer_ids = Approver.where(user_id: current_user.id).pluck(:approver_id)
       reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
       Async.await do
         CdsAssessmentMailer.with(account: current_user.account, from_date: period.from_date,
-                                 to_date: period.to_date, reviewers: reviewer, user_name: current_user.format_name).staff_withdraw_CDS_CDP.deliver_later(wait: 3.seconds)
+                                to_date: period.to_date, reviewers: reviewer, user_name: current_user.format_name).staff_withdraw_CDS_CDP.deliver_later(wait: 5.seconds)
       end
       "success"
     end
@@ -1096,7 +1093,7 @@ module Api
           LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: period.id)
         end
       line_managers.each do |line_manager|
-        return "fails" unless line_manager.update(flag: "orange")
+        return unless line_manager.update(flag: "orange")
       end
       form_slot_ids.each do |form_slot_id|
         comment = Comment.find_by(form_slot_id: form_slot_id, is_delete: false)
@@ -1110,19 +1107,17 @@ module Api
     end
 
     def cancel_request(form_slot_ids, slot_id)
-      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first})
+      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first}).first
       approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
-          LineManager.where(form_slot_id: form_slot_ids, period_id: form.period_id)
+          LineManager.where(form_slot_id: form_slot_ids, period_id: form.period_id).where.not(flag: "")
         else
-          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: form.period_id)
+          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id).where.not(flag: "")
         end
-      line_managers.each do |line_manager|
-        return "fails" unless line_manager.update(flag: "")
-      end
+      return "fails" unless line_managers.update(flag: "")
       form_slot_ids.each do |form_slot_id|
         comment = Comment.find_by(form_slot_id: form_slot_id, is_delete: false)
-        comment.nil? ? Comment.create!(form_slot_id: form_slot_id, flag: "") : comment.update(flag: "")
+        comment.update(flag: "") if comment.present?
       end
       user_staff = User.find_by_id(params[:user_id])
       Async.await do
@@ -1363,7 +1358,7 @@ module Api
       form_slots.map do |form_slot|
         next unless hash[form_slot.slot_id].nil?
         recommends = get_point_manager(form_slot)
-        comments = form_slot.comments.first
+        comments = form_slot.comments.where(is_delete: false).first
         point_cdp = comments&.is_commit && comments&.point.nil? ? 3 : comments&.point
 
         hash[form_slot.slot_id] = {

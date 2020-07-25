@@ -114,19 +114,20 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
     },
     dataType: "json",
     success: function (response) {
-      // success_message = "These slots have been requested more evidence successfully.";
-      // fails_message = "Can not requested"
-      // if (response.status == "success") {
-      //   success(success_message)
-      // } else {
-      //   fails(fails_message);
-      // }
+      success_message = "These slots have been requested more evidence successfully.";
+      fails_message = "Can not requested"
+      if (response.status == "success") {
+        success(success_message)
+      } else {
+        fails(fails_message);
+      }
+      checked_set.clear()
+      data_checked_request = {}
+      $("#button_request_update").addClass("disabled");
+      $("#icon_request_update").prop("style", "color: #6c757d")
+      loadDataPanel(form_id)
     }
   });
-  success("These slots have been requested more evidence successfully.")
-  checked_set.clear()
-  data_checked_request = {}
-  loadDataPanel(form_id)
 });
 
 $(document).on("change", ".approver-commit, .reviewer-commit", function () {

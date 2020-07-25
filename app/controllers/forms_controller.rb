@@ -38,7 +38,8 @@ class FormsController < ApplicationController
 
   def cancel_request
     form_slot_ids = params[:form_slot_id].map(&:to_i)
-    render json: @form_service.cancel_request(form_slot_ids, params[:slot_id])
+    data = @form_service.cancel_request(form_slot_ids, params[:slot_id])
+    render json: { status: data}
   end
 
   def export_excel_cds_review
@@ -125,7 +126,8 @@ class FormsController < ApplicationController
 
   def request_update_cds
     form_slot_ids = params[:form_slot_id].map(&:to_i)
-    render json: @form_service.request_update_cds(form_slot_ids, params[:slot_id])
+    data = @form_service.request_update_cds(form_slot_ids, params[:slot_id])
+    render json: {status: data}
   end
 
   def cds_cdp_review

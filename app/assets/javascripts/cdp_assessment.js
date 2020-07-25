@@ -44,7 +44,7 @@ function initCheckbox() {
         if (slot_wrapper.find(".icon-flag").css('color') == "rgb(255, 165, 0)") {
           $("#button_cancel_request").removeClass("disabled");
           $("#icon_cancel_request").prop("style", "color:green");
-        } else{
+        } else {
           $("#button_request_update").removeClass("disabled");
           $("#icon_request_update").prop("style", "color:green");
         }
@@ -287,10 +287,9 @@ function checkStatusFormStaff(status) {
     case "Done":
       break;
     case "Awaiting Review" || "Awaiting Approval":
-      var temp = $(document).find(".input-staff")
-      for (var i = 0; i < temp.length; i++) {
-        temp[i].setAttribute("disabled", "true")
-      }
+      $(".input-staff").each(function (i, e) {
+        e.disabled = true
+      })
       break;
   }
 }
@@ -520,13 +519,18 @@ $(document).ready(function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       dataType: "json",
-      success: function (response) {}
+      success: function (response) {
+        if (response.status == "success") {
+          $('#modal_cancel_request_update').modal('hide');
+          checked_set.clear()
+          data_checked_request = {}
+          loadDataPanel(form_id)
+          success("The CDS/CDP has been cancelled requesting update on some slots successfully.")
+        }else{
+          fails("The CDS/CDP hasn't been cancelled requesting update.")
+        }
+      }
     })
-    $('#modal_cancel_request_update').modal('hide');
-    checked_set.clear()
-    data_checked_request = {}
-    loadDataPanel(form_id)
-    success("The CDS/CDP has been cancelled requesting update on some slots successfully.")
   });
 
   $(".left-panel-competency").hide();
@@ -627,7 +631,6 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
-        // checkStatusFormStaff(status);
         // init page at start
         if (is_submit) {
           toggleInput(false);
@@ -740,7 +743,6 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         refreshCheckbox();
-
       }
 
     });
@@ -862,7 +864,11 @@ $(document).ready(function () {
           $('a.submit-assessment').removeClass('d-none');
           $('a.submit-assessment').removeClass('disabled');
           checkStatusFormStaff("New")
+          status = "New"
           $("#status").html("(New)")
+          $(".icon-flag").each(function (i, e) {
+            e.setAttribute('style', 'display:none')
+          })
         } else {
           fails("Can't withdraw CDS/CDP.");
         }
@@ -936,6 +942,7 @@ $(document).ready(function () {
             $('a.withdraw-assessment').removeClass('d-none');
             $('a.withdraw-assessment').removeClass('disabled');
             checkStatusFormStaff("Awaiting Review")
+            status = "Awaiting Review"
             $("#status").html("(Awaiting Review)")
           } else {
             fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
@@ -1017,7 +1024,7 @@ $(document).ready(function () {
         row.find(".approver-assessment").addClass("d-none");
         point = null
         is_commit = false
-        if(is_commit == "commit_cdp")
+        if (is_commit == "commit_cdp")
           is_commit = true
       } else if (is_commit == "commit_cds") {
         is_commit = true
@@ -1051,7 +1058,7 @@ $(document).ready(function () {
         point = null;
         row.find(".reviewer-assessment").addClass("d-none");
         is_commit = false
-        if(is_commit == "commit_cdp")
+        if (is_commit == "commit_cdp")
           is_commit = true
       } else if (is_commit == "commit_cds") {
         is_commit = true
@@ -1083,8 +1090,8 @@ $(document).ready(function () {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
           flag = row.closest(".row-slot").find('.icon-flag')
-          if (flag.css('color') == "rgb(255, 255, 0)")
-          flag.prop("style", "color: #99FF33")
+          if (flag.css('color') == "rgb(255, 255, 0)" && is_reviewer)
+            flag.prop("style", "color: #99FF33")
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
         }
       });
