@@ -51,7 +51,7 @@ $(document).on("click", "#confirm_yes_reject_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        success(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
+        warning(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
         $("#approve_cds").removeClass("d-none").addClass("approval-assessment")
         $("#reject_cds").addClass("d-none").removeClass("reject-assessment")
         $("#button_cancel_request").removeClass("d-none")
@@ -82,7 +82,7 @@ $(document).on("click", "#confirm_yes_approve_cds", function () {
     dataType: "json",
     success: function (response) {
       if (response.status == "success") {
-        success(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
+        warning(`The CDS/CDP assessment of ${response.user_name} has been approved successfully.`);
         $("#approve_cds").addClass("d-none").removeClass("approval-assessment")
         $("#button_cancel_request").addClass("d-none")
         $("#button_request_update").addClass("d-none")
@@ -117,7 +117,7 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
       success_message = "These slots have been requested more evidence successfully.";
       fails_message = "Can not requested"
       if (response.status == "success") {
-        success(success_message)
+        warning(success_message)
       } else {
         fails(fails_message);
       }

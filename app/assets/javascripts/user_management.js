@@ -192,7 +192,7 @@ $(document).ready(function () {
             $("#modalAdd .tokens-container .token").remove();
             $("#modalAdd .form-add-user")[0].reset();
             $("#modalAdd").modal("hide");
-            success("The new account information has been created successfully.");
+            warning("The new account information has been created successfully.");
           } else if (response.status == "fail") {
             fails("Add");
           }
@@ -340,7 +340,7 @@ function delete_user() {
               break;
             }
           }
-          success("The account information has been deleted successfully.");
+          warning("The account information has been deleted successfully.");
         } else {
           fails("Delete");
         }
@@ -654,7 +654,7 @@ $(document).on("click", "#btn_modal_edit_user", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           $("#table_user_management").dataTable().fnDraw();
-          success("The account information has been updated successfully.");
+          warning("The account information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           if (response.email_exist) {
@@ -713,7 +713,7 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
         $(".display_number_users_delete").html('');
         $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
         $("#table_user_management").dataTable().fnDraw();
-        success("The account information has been deleted successfully.");
+        warning("The account information has been deleted successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-delele-multiple-users').prop("disabled", true);
         fails("Delete");
@@ -748,7 +748,7 @@ $(document).on("click", ".status_icon", function () {
           );
         }
         colorDisabledRowUser();
-        success("The status has been changed successfully.");
+        warning("The status has been changed successfully.");
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -804,7 +804,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
         $("#modalStatusMultipleUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
         $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
-        success("The account information has been disabled successfully.");
+        warning("The account information has been disabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-disable-multiple-users').prop("disabled", true);
         fails("Disable");
@@ -836,7 +836,7 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
         $("#modalStatusEnableUsers").modal("hide");
         $("#table_user_management").dataTable().fnDraw();
         $('.collection-selection, #collection_selection_toggle_all').prop('checked', false);
-        success("The account information has been enabled successfully.");
+        warning("The account information has been enabled successfully.");
       } else if (response.status == "fail") {
         $('.btn-modal-enable-multiple-users').prop("disabled", true);
         fails("Disable");

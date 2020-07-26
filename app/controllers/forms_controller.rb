@@ -149,7 +149,7 @@ class FormsController < ApplicationController
       user_id: params[:user_id],
       user_name: user.format_name,
       form_id: form.id,
-      status: form.status,
+      status: (!approver.is_approver && approver.is_submit_cds) ? "Submited" : form.status,
       title: "CDS/CDP of #{user.role.name} - #{user.account}",
       is_submit: approver.is_submit_cds,
       is_approver: approver.is_approver,
@@ -242,16 +242,13 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find_by_id(params[:form_id])
-    users = User.joins(:approvers).where("approvers.user_id": form.user_id)
-
-    return render json: { status: "fail" } if users.empty?
-
-    status, action = if Approver.where(user_id: current_user.id, is_approver: false).empty?
-        ["Awaiting Approval", "approve"]
+    users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false)
+    status, action, users = if users.empty?
+        ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id)]
       else
-        ["Awaiting Review", "review"]
+        ["Awaiting Review", "review", users]
       end
-
+    return render json: { status: "fail" } if users.empty?
     render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
     user = form.user
     period = form.period

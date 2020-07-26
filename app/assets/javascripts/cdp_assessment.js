@@ -390,7 +390,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if (!(is_reviewer || is_approver) || (is_reviewer && is_submit)) {
+  if (!(is_reviewer || is_approver) || (is_reviewer && is_submit) || status == "Done") {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
         <div class='col-12'>
@@ -405,9 +405,6 @@ $(document).ready(function () {
                 </tr>
               </thead>
               <tbody id="data_summary">
-                <tr>
-                  <td colspan='4'>No data available in table</td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -433,26 +430,38 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $("tbody#data_summary").html("");
-        if (response.length == 0) {
-          var tr = $("<tr/>");
-          $("<td colspan='4'/>").html("No data available in table").appendTo(tr)
-          tr.appendTo("tbody#data_summary")
-        } else {
+        if (response.length > 0) {
+          var body = ""
           $(response).each(
             function (i, e) {
               if (e.status) {
                 $("#input_summary_comment").html(e.comment)
                 $("#id_summary").val(e.id)
               }
-              var tr = $("<tr id='" + e.id + "'/>");
-              $("<td/>").html(e.period).appendTo(tr)
-              $("<td/>").html(e.user_name).appendTo(tr)
-              $("<td/>").html(e.comment_date).appendTo(tr)
-              $("<td/>").html(e.comment).appendTo(tr)
-              tr.appendTo("tbody#data_summary")
+              body += `<tr id=${e.id}>
+                        <td>${e.period}</td>
+                        <td>${e.user_name}</td>
+                        <td>${e.comment_date}</td>
+                        <td>${e.comment}</td>
+                      </tr>`
             }
           )
+          $("tbody#data_summary").html(body)
         }
+        var table = $("#table_summary_comment").DataTable({
+          "retrieve": true,
+          "bLengthChange": false,
+          "bFilter": false,
+          "bAutoWidth": false,
+          "columnDefs": [
+            {
+              "searchable": false,
+              "orderable": false,
+              "targets": 0,
+            },
+          ],
+          "order": [[1, "asc"]],
+        });
         $('#modal_summary_assessment').modal('show')
       }
     })
@@ -473,7 +482,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response) {
-          success("The CDS/CDP has been saved your summary comment successfully")
+          warning("The CDS/CDP has been saved your summary comment successfully")
           $('#modal_summary_assessment').modal('hide')
         } else
           fail("The CDS/CDP hasn't been saved your summary comment fail")
@@ -525,7 +534,7 @@ $(document).ready(function () {
           checked_set.clear()
           data_checked_request = {}
           loadDataPanel(form_id)
-          success("The CDS/CDP has been cancelled requesting update on some slots successfully.")
+          warning("The CDS/CDP has been cancelled requesting update on some slots successfully.")
         }else{
           fails("The CDS/CDP hasn't been cancelled requesting update.")
         }
@@ -577,7 +586,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success")
-          success("These slots have been updated and informed to requester successfully.")
+          warning("These slots have been updated and informed to requester successfully.")
         else
           fails("These slots haven't been updated and informed to requester.")
       }
@@ -858,7 +867,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success") {
-          success(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
+          warning(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
           $('a.withdraw-assessment').addClass('d-none');
           $('a.withdraw-assessment').addClass('disabled');
           $('a.submit-assessment').removeClass('d-none');
@@ -903,7 +912,7 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            success(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
+            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             // NOT
             $('a.submit-assessment').addClass('d-none');
@@ -936,7 +945,7 @@ $(document).ready(function () {
           if (response.status == "success") {
             $('#modal_period').modal('hide');
             // staff submit
-            success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            warning("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
             $('a.submit-assessment').addClass('d-none');
             $('a.submit-assessment').addClass('disabled');
             $('a.withdraw-assessment').removeClass('d-none');
@@ -1164,7 +1173,7 @@ function autoSaveStaff(row) {
             icon_cdp.prop("style", "visibility: hidden")
           checkChangeSlot();
 
-          current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
+          current = $("div.show table tr[data-level=" + row.data("location")[0] + "]").children()[2].innerText.split('/');
           max = parseInt(current[1]);
           current_change = 0
           $('div.row-slot').each(function (i, sel) {
@@ -1177,7 +1186,8 @@ function autoSaveStaff(row) {
           if (current_change <= max)
             current_change = current_change;
           else
-            current = max;
+          current_change = max;
+          debugger
           var competency_id = $('div.show').data("competency-id")
           $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
           $("tr[data-id-competency=" + competency_id + "]").children()[2].innerText = response.data

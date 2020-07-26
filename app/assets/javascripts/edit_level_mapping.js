@@ -421,22 +421,6 @@ function fillSelectRank(select, value, count) {
   select.find("option[value='" + value + "']").prop('selected', true)
 }
 
-function success(content) {
-  $("#content-alert-success").html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 4000);
-}
-// alert fails
-function fails(content) {
-  $("#content-alert-fail").html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 4000);
-}
-
 function checkPrivilege(edit, view) {
   if (!edit && !view)
     window.location.replace = ""

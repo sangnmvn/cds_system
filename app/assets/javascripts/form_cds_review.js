@@ -361,7 +361,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success") {
-          success(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
+          warning(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
           $(document).find('#period_id_' + form_id).find(".reject-cds-cdp").addClass('disabled')
           $(document).find('#period_id_' + form_id).find(".icon-reject").css('color', '##6c757d')
         } else {

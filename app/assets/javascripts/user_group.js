@@ -165,23 +165,6 @@ function myJS_data_event() {
       cell.innerHTML = i + 1;
     });
   }).draw();
-
-  //alert success
-  function success(content) {
-    $('#content-alert-success').html(content);
-    $("#alert-success").fadeIn();
-    window.setTimeout(function () {
-      $("#alert-success").fadeOut(1000);
-    }, 5000);
-  }
-  // alert fails
-  function fails(content) {
-    $('#content-alert-fail').html(content);
-    $("#alert-danger").fadeIn();
-    window.setTimeout(function () {
-      $("#alert-danger").fadeOut(1000);
-    }, 5000);
-  }
 }
 
 function myJS() {
@@ -241,7 +224,7 @@ function save() {
     },
     type: "GET",
     success: function (response) {
-      success("Assign user to this group has been successfully! ");
+      warning("Assign user to this group has been successfully! ");
       $("#AssignModal").modal('hide');
       $('.bootbox-confirm').modal('hide');
       var table = $("#table_group").DataTable();
@@ -668,7 +651,7 @@ function save_group_privileges(group_id, arr) {
     dataType: "json",
     success: function (response) {
       $("#modalPrivilege").modal("hide");
-      success('The group information has been updated privilege successfully.')
+      warning('The group information has been updated privilege successfully.')
     },
     error: function (response) {
       fails()

@@ -96,7 +96,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
       $("#modal_delete_cds").modal("hide");
       if (response.status == "success") {
         loadDataAssessmentList();
-        success(
+        warning(
           "The CDS/CDP for period " +
           delete_period_cds +
           " has been deleted successfully."

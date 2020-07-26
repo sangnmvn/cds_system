@@ -67,7 +67,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
-          success("The new group information has been created successfully.");
+          warning("The new group information has been created successfully.");
           table.row.add(addData, 0).draw();
 
           myJS_data_event();
@@ -199,7 +199,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-          success("The group information has been updated successfully.");
+          warning("The group information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#modalEdit #name").after(
@@ -342,7 +342,7 @@ function delete_group() {
 
         }
 
-        success("The group information has been deleted successfully.");
+        warning("The group information has been deleted successfully.");
       } else if (response.status == "exist") {
         $(".error").remove();
         $("#modalEdit #name").after(
@@ -412,7 +412,7 @@ $(document).on("click", "#delete_selected", function () {
           }
         }
       }
-      success("The groups information has been deleted successfully.");
+      warning("The groups information has been deleted successfully.");
 
     },
   });

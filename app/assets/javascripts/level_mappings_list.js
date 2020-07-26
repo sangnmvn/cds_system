@@ -128,7 +128,7 @@ $(document).ready(function () {
   var role_name = localStorage.getItem("role_name");
   var type = localStorage.getItem("type");
   if (role_name && type)
-    success("The level mapping for role " + role_name + " has been " + type + " successfully.");
+    warning("The level mapping for role " + role_name + " has been " + type + " successfully.");
   localStorage.removeItem("role_name");
   localStorage.removeItem("type");
 })
