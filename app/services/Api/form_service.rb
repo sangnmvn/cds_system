@@ -411,15 +411,15 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order(updated_at: :desc)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period.format_name, form.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
       data_filter
     end
 
-    def data_filter_cds_review
+    def data_filter_cds_review      
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
       data_filter = {
         companies: [],
@@ -444,10 +444,10 @@ module Api
         project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
-
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
+      
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period.format_name, form.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
@@ -457,16 +457,17 @@ module Api
     def get_line_manager_miss_list
       form_id = params[:form_id]
       latest_period = Form.find_by(id: form_id).period_id
-      staff_slot = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
-      reviewer_slot = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck("slot_id")
-      staff_slot_ids = Set.new(staff_slot) - Set.new(reviewer_slot)
-      slots = Slot.includes(:competency).where(id: staff_slot_ids).order("competencies.location", :level)
+      staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
+      reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck("slot_id")
+      staff_slot_ids = staff_slots.reject{|id| reviewer_slots.include?(id)}      
+      slots = Slot.includes(:competency).where(id: staff_slot_ids).order(:slot_id, "competencies.location", :level)      
       results = {}
-      slots.map do |slot|
+      competency_locations = {}
+      slots.each do |slot|
         competency_name = slot.competency.name
         results[competency_name] ||= []
-        results[slot.competency.id] ||= get_location_slot(slot.competency.id)
-        results[competency_name] << results[slot.competency.id][slot.id]
+        competency_locations[slot.competency.id] ||= get_location_slot(slot.competency.id)
+        results[competency_name] << competency_locations[slot.competency.id][slot.id]
       end
       results
     end
@@ -497,9 +498,9 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period&.format_name, form&.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 

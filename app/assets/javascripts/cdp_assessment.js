@@ -956,63 +956,45 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        if (response.status == "New" && (is_reviewer || is_approver)) {
+        if (response.status == "New" && is_reviewer) {
           $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
           $('#modal_conflict').modal('show');
           $(document).on("click", "#btn_check_status", function () {
             window.location.href = "/forms/index_cds_cdp"
           });
         } else {
-          $.ajax({
-            type: "POST",
-            url: "/forms/get_line_manager_miss_list",
-            data: {
-              form_id: form_id
-            },
-            headers: {
-              "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-            },
-            dataType: "json",
-            success: function (response) {
-              // keep text only
-              for (var key in response) {
-                if (key == parseInt(key, 10)) {
-                  delete response[key];
-                }
-              }
-
-              if (jQuery.isEmptyObject(response)) {
-                var data_conflict = findConflictinArr(conflict_commits)
-                var str = ""
-                if (data_conflict && (is_reviewer || is_approver)) {
-                  str = "<p>The following slots have not conflicted on commitment between you and staff:</p><p>Slot: <b>" +
-                    data_conflict + "</b></p><p>Please continue reviewing or request update to Staff.</p>"
-                } else {
-                  data_conflict = findConflictinArr(slot_assessing)
-                  if (data_conflict) {
-                    str = "<p>The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.</p><p>Slot: " +
-                      data_conflict + " </p>"
-                  }
-                }
-                if (str != "") {
-                  $("#content_modal_conflict").html(str);
-                  $('#modal_conflict').modal('show');
-                } else
-                  $('#modal_period').modal('show');
-              } else {
-                str = ""
-                for (var competency_name in response) {
-                  str += "\u2022 " + competency_name + ": ";
-                  slots = response[competency_name];
-                  str += slots.join(", ");
-                  str += "<br>"
-                }
-
-                $("#modal_reviewer_content").html(str);
-                $("#modal_reviewer_submit").modal('show');
+          delete response["status"]
+          if (jQuery.isEmptyObject(response)) {
+            var data_conflict = findConflictinArr(conflict_commits)
+            var str = ""
+            if (data_conflict && (is_reviewer || is_approver)) {
+              str = "<p>The following slots have been conflicted on commitment between you and staff:</p><p>Slot: <b>" +
+                data_conflict + "</b></p><p>Please review it or request update from staff before doing this action.</p>"
+            } else {
+              data_conflict = findConflictinArr(slot_assessing)
+              if (data_conflict) {
+                str = "<p>The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.</p><p>Slot: " +
+                  data_conflict + " </p>"
               }
             }
-          })
+            if (str != "") {
+              $("#content_modal_conflict").html(str);
+              $('#modal_conflict').modal('show');
+            } else{
+              $('#modal_period').modal('show');
+            }
+          } else {
+            str = ""
+            for (var competency_name in response) {
+              str += "<p>\u2022 " + competency_name + ": ";
+              slots = response[competency_name];
+              str += slots.join(", ");
+              str += "</p>";
+            }
+
+            $("#modal_reviewer_content").html(str);
+            $("#modal_reviewer_submit").modal('show');
+          }
         }
       }
     });

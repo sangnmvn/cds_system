@@ -63,7 +63,7 @@ class FormsController < ApplicationController
   end
 
   def cds_review
-    @companies = Company.all
+    @companies = Company.all    
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(APPROVE_CDS)
@@ -196,7 +196,14 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    return render json: { status: form.status } if form.present?
+    get_privilege_assessment
+    if @is_reviewer || @is_approver
+      h_result = @form_service.get_line_manager_miss_list
+      h_result[:status] = form.status 
+    else
+      h_result = {status: form.status}
+    end
+    return render json: h_result  if form.present?
     render json: { status: "fail" }
   end
 
