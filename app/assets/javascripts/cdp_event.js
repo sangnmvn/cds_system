@@ -134,21 +134,30 @@ $(document).on("change", ".approver-commit, .reviewer-commit", function () {
   var slot = $(this).closest('.row-slot')
   var competency = $("#competency_panel").find(".show").data("competency-name")
   if (slot.find(".staff-commit").val() != $(this).val()) {
-    if (conflict_commits[competency] == undefined)
-      conflict_commits[competency] = []
-    conflict_commits[competency].push(slot.data("location"))
+    if (conflict_commits[competency] == undefined) {
+      a = new Set()
+      conflict_commits[competency] = a.add(slot.data("location"))
+    } else {
+      conflict_commits[competency] = new Set(conflict_commits[competency])
+      conflict_commits[competency].add(slot.data("location"))
+    }
   } else {
-    if (conflict_commits[competency] != undefined)
-      conflict_commits[competency] = conflict_commits[competency].filter(item => item !== slot.data("location"))
+    if (conflict_commits[competency] != undefined) {
+      conflict_commits[competency] = new Set(conflict_commits[competency])
+      conflict_commits[competency].delete(slot.data("location"))
+    }
   }
 })
 
 function findConflictinArr(arr) {
-  var str = ""
+  var str = "</p>"
   var keys = Object.keys(arr)
   keys.forEach(key => {
-    if (arr[key].length > 0)
-      str += `<p> ${key} / ${arr[key].toString()}</p>`
+    a = new Set(arr[key])
+    if (a.size > 0)
+      str += `<p><b> ${key} / ${[...a].join()}</b></p>`
   });
+  if (str.split("<p>").length <= 2)
+    str = str.replace("<p>", "").replace("</p>", "")
   return str
 }

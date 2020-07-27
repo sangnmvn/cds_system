@@ -1062,7 +1062,7 @@ module Api
         comment = form_slot.comments.where(is_delete: false).first
         line_manager = form_slot.line_managers.first
         competency_name = form_slot.slot.competency.name
-        if (comment.nil? && line_manager.is_commit) || (comment.point.nil? && !line_manager.given_point.nil?)
+        if (comment.nil? && line_manager.is_commit) || (comment.present? && comment.point.nil? && !line_manager.given_point.nil?)
           slot_conflicts[competency_name] = [] if slot_conflicts[competency_name].nil?
           slot_conflicts[competency_name] << location_slots[form_slot.slot_id]
         end

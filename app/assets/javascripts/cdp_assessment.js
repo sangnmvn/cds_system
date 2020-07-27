@@ -453,14 +453,14 @@ $(document).ready(function () {
           "bLengthChange": false,
           "bFilter": false,
           "bAutoWidth": false,
-          "columnDefs": [
-            {
-              "searchable": false,
-              "orderable": false,
-              "targets": 0,
-            },
+          "columnDefs": [{
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }, ],
+          "order": [
+            [1, "asc"]
           ],
-          "order": [[1, "asc"]],
         });
         $('#modal_summary_assessment').modal('show')
       }
@@ -535,7 +535,7 @@ $(document).ready(function () {
           data_checked_request = {}
           loadDataPanel(form_id)
           warning("The CDS/CDP has been cancelled requesting update on some slots successfully.")
-        }else{
+        } else {
           fails("The CDS/CDP hasn't been cancelled requesting update.")
         }
       }
@@ -889,12 +889,9 @@ $(document).ready(function () {
     var str = "</p>"
     var keys = Object.keys(arr)
     keys.forEach(key => {
-      if (arr[key].length > 0)
-      {
-        var arr_duplicate = arr[key]
-        new_arr = arr_duplicate.filter((value, index, arr_duplicate) => arr_duplicate.indexOf(value) === index);
-        str += `<p> ${key} / ${new_arr.toString()}</p>`
-      }
+      a = new Set(arr[key])
+      if (a.size > 0)
+        str += `<p><b> ${key} / ${[...a].join()}</b></p>`
     });
     if (str.split("<p>").length <= 2)
       str = str.replace("<p>", "").replace("</p>", "")
@@ -1036,9 +1033,10 @@ $(document).ready(function () {
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");
         point = null
-        is_commit = false
         if (is_commit == "commit_cdp")
           is_commit = true
+        else
+          is_commit = false
       } else if (is_commit == "commit_cds") {
         is_commit = true
         var approver_point = row.find(".approver-assessment")
@@ -1070,9 +1068,10 @@ $(document).ready(function () {
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         point = null;
         row.find(".reviewer-assessment").addClass("d-none");
-        is_commit = false
         if (is_commit == "commit_cdp")
           is_commit = true
+        else
+          is_commit = false
       } else if (is_commit == "commit_cds") {
         is_commit = true
         var reviewer_point = row.find(".reviewer-assessment")
@@ -1190,7 +1189,7 @@ function autoSaveStaff(row) {
           if (current_change <= max)
             current_change = current_change;
           else
-          current_change = max;
+            current_change = max;
           debugger
           var competency_id = $('div.show').data("competency-id")
           $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
