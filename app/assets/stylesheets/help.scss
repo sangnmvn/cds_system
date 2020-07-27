@@ -22,14 +22,25 @@ img {
     width: 100%;
 }
 
-.show-help-1-1,
-.show-help-2-1,
-.show-help-2-2,
-.show-help-2-3,
-.show-help-2-4,
-.show-help-2-5,
-.show-help-2-6,
-.show-help-2-7 {
+.show-help-css{
     font-weight: 600;
     color: #000;
+}
+
+.fixedElement {
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 16.8% !important;
+}
+
+.card {
+    max-width: 100% !important;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.right-panel {
+    line-height: 35px;
 }
