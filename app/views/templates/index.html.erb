@@ -1,16 +1,13 @@
-<%= stylesheet_link_tag 'font-awesome.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'template-index', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'table_template', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'table_template_excel.js', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template_index_step1', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :template_management %>
-<div id="alert-success" class="alert alert-success" data-alert="alert">
-  <div id="content-alert-success"></div>
-</div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert">
-  <div id="content-alert-fail"></div>
-</div>
+
+<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
 <div class="container-fluid">
   <div class="template-header">
     <span class="title">Template List</span>
@@ -19,23 +16,23 @@
     </div>
   </div>
   <div class="template-table">
-    <table class="table table-responsive-sm" id="template-index">
+    <table class="table table-responsive-sm" id="template_index">
       <thead>
         <tr >
           <th scope="col" style="width:3%">No.</th>
           <th scope="col" style="width:20%">Template Name</th>
-          <th scope="col" style="width:30%">Description</th>
-          <th scope="col" style="width:5%">Role</th>
+          <th scope="col" style="width:27%">Description</th>
+          <th scope="col" style="width:12%">Role</th>
           <th scope="col" style="width:10%" >Latest Update</th>
           <th scope="col" style="width:10%">Updated by</th>
-          <th scope="col" style="width:6%">Status</th>
-          <th scope="col" style="width:6%;">Action</th>
+          <th scope="col" style="width:8%">Status</th>
+          <th scope="col" style="width:10%;">Action</th>
         </tr>
       </thead>
       <tbody>
         <% @templates.each_with_index do |template,index| %>
           <tr>
-            <td class="num"><%= index+1 %></td>
+            <td class="num"></td>
             <td><%= link_to(template.name, edit_template_path(template.id), class: "edit_template") %></td>
             <td><%= template.description %></td>
             <td><%= template.role_name %></td>

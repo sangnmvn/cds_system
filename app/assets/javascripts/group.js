@@ -36,8 +36,8 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         // data group
         if (response.status == "success") {
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var sData = table.rows().data();
-
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
@@ -67,7 +67,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
-          success("The new group information has been created successfully.");
+          warning("The new group information has been created successfully.");
           table.row.add(addData, 0).draw();
 
           myJS_data_event();
@@ -150,6 +150,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
 
@@ -198,7 +199,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-          success("The group information has been updated successfully.");
+          warning("The group information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#modalEdit #name").after(
@@ -246,7 +247,8 @@ function setup_dataTable() {
         },
       ]
     });
-
+    $("#table_group_info").attr("style","display:none")
+    $("#table_group_paginate").attr("style","display:none")
     $("#table_group_length").remove();
 
     $(".toggle-all").click(function () {
@@ -340,7 +342,7 @@ function delete_group() {
 
         }
 
-        success("The group information has been deleted successfully.");
+        warning("The group information has been deleted successfully.");
       } else if (response.status == "exist") {
         $(".error").remove();
         $("#modalEdit #name").after(
@@ -410,7 +412,7 @@ $(document).on("click", "#delete_selected", function () {
           }
         }
       }
-      success("The groups information has been deleted successfully.");
+      warning("The groups information has been deleted successfully.");
 
     },
   });

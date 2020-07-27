@@ -38,7 +38,8 @@ class FormsController < ApplicationController
 
   def cancel_request
     form_slot_ids = params[:form_slot_id].map(&:to_i)
-    render json: @form_service.cancel_request(form_slot_ids, params[:slot_id])
+    data = @form_service.cancel_request(form_slot_ids, params[:slot_id])
+    render json: { status: data }
   end
 
   def export_excel_cds_review
@@ -98,6 +99,7 @@ class FormsController < ApplicationController
       }
     end
     if params[:title_history_id].present?
+      @hash[:is_submit_late] = false
       @hash[:status] = "Done"
       @hash[:title_history_id] = params[:title_history_id]
       @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
@@ -118,6 +120,7 @@ class FormsController < ApplicationController
       form_slot = FormSlot.where(form_id: form.id)
       @form_service.create_form_slot(form) if form_slot.empty?
     end
+    @hash[:is_submit_late] = form.is_submit_late
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
@@ -125,7 +128,8 @@ class FormsController < ApplicationController
 
   def request_update_cds
     form_slot_ids = params[:form_slot_id].map(&:to_i)
-    render json: @form_service.request_update_cds(form_slot_ids, params[:slot_id])
+    data = @form_service.request_update_cds(form_slot_ids, params[:slot_id])
+    render json: { status: data }
   end
 
   def cds_cdp_review
@@ -147,11 +151,12 @@ class FormsController < ApplicationController
       user_id: params[:user_id],
       user_name: user.format_name,
       form_id: form.id,
-      status: form.status,
+      status: (!approver.is_approver && approver.is_submit_cds) ? "Submited" : form.status,
       title: "CDS/CDP of #{user.role.name} - #{user.account}",
       is_submit: approver.is_submit_cds,
       is_approver: approver.is_approver,
       is_reviewer: !approver.is_approver,
+      is_submit_late: form.is_submit_late,
     }
   end
 
@@ -240,19 +245,24 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find_by_id(params[:form_id])
-    users = User.joins(:approvers).where("approvers.user_id": form.user_id)
-
-    return render json: { status: "fail" } if users.empty?
-
-    status, action = if Approver.where(user_id: current_user.id, is_approver: false).empty?
-        ["Awaiting Approval", "approve"]
+    users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false)
+    status, action, users = if users.empty?
+        ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id)]
       else
-        ["Awaiting Review", "review"]
+        ["Awaiting Review", "review", users]
       end
+    return render json: { status: "fail" } if users.empty?
+    if params[:period_id].to_i > 0
+      period = params[:period_id].to_i
+    else
+      schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "New").order("periods.to_date")
+      render json: { status: "fails" } if schedules.blank?
+      period = schedules.last.period_id
+    end
 
-    render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
+    render json: { status: "success" } if form.update(period_id: period, status: status, submit_date: DateTime.now)
     user = form.user
-    period = form.period
+    period = Period.find_by(id: schedules.last.period_id)
     old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
     old_comment.destroy_all
     Async.await do
@@ -351,8 +361,9 @@ class FormsController < ApplicationController
   private
 
   def get_privilege_assessment
+
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
-    user_id = user_id || current_user.id
+    user_id = user_id.present? ? user_id : current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     @is_reviewer = false

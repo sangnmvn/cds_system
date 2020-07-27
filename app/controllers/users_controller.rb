@@ -101,18 +101,23 @@ class UsersController < ApplicationController
     project_id = user.map(&:project_id)
 
     current_approvers = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
-    approvers = User.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+    approvers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+
+    form = Form.find_by(user_id: params[:user_id])
+    is_submit_late = form.present? ? form.is_submit_late : false
 
     h_approvers = []
     approvers.each do |approver|
       h_approvers << format_data_load_add_reviewer(approver, current_approvers)
     end
 
-    render json: { approvers: h_approvers, current_approvers: current_approvers.first }
+    render json: { approvers: h_approvers, current_approvers: current_approvers.first, is_submit_late: is_submit_late }
   end
 
   def add_reviewer_to_database
     begin
+      form = Form.find_by(user_id: params[:user_id])
+      form.update(is_submit_late: params[:is_submit_late]) if form.present?
       Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
       if params[:add_approver_ids].present? && params[:add_approver_ids] != "0" && (@privilege_array & [ADD_APPROVER, FULL_ACCESS]).any?
         Approver.create(approver_id: params[:add_approver_ids].to_i, user_id: params[:user_id], is_approver: true)
@@ -312,7 +317,7 @@ class UsersController < ApplicationController
     params.permit(:id, :first_name, :last_name, :email, :account, :company_id, :role_id, :status, :is_delete, :offset,
                   :search, :filter_company, :filter_role, :filter_project, :project_id, :joined_date, :phone_number,
                   :date_of_birth, :gender, :skype, :nationality, :permanent_address, :current_address,
-                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url)
+                  :user_id, :add_approver_ids, :add_reviewer_ids, :remove_ids, :url, :is_submit_late)
   end
 
   def get_sort_params

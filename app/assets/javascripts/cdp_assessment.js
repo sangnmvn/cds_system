@@ -44,7 +44,7 @@ function initCheckbox() {
         if (slot_wrapper.find(".icon-flag").css('color') == "rgb(255, 165, 0)") {
           $("#button_cancel_request").removeClass("disabled");
           $("#icon_cancel_request").prop("style", "color:green");
-        } else{
+        } else {
           $("#button_request_update").removeClass("disabled");
           $("#icon_request_update").prop("style", "color:green");
         }
@@ -287,10 +287,9 @@ function checkStatusFormStaff(status) {
     case "Done":
       break;
     case "Awaiting Review" || "Awaiting Approval":
-      var temp = $(document).find(".input-staff")
-      for (var i = 0; i < temp.length; i++) {
-        temp[i].setAttribute("disabled", "true")
-      }
+      $(".input-staff").each(function (i, e) {
+        e.disabled = true
+      })
       break;
   }
 }
@@ -391,7 +390,7 @@ function checkDisableFormSlotsReviewer(tracking) {
 
 $(document).ready(function () {
   loadDataConflict(form_id)
-  if (!(is_reviewer || is_approver) || (is_reviewer && is_submit)) {
+  if (!(is_reviewer || is_approver) || (is_reviewer && is_submit) || status == "Done") {
     $("#modal_summary_assessment .modal-body").html(`
       <div class="row">
         <div class='col-12'>
@@ -406,9 +405,6 @@ $(document).ready(function () {
                 </tr>
               </thead>
               <tbody id="data_summary">
-                <tr>
-                  <td colspan='4'>No data available in table</td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -434,26 +430,38 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         $("tbody#data_summary").html("");
-        if (response.length == 0) {
-          var tr = $("<tr/>");
-          $("<td colspan='4'/>").html("No data available in table").appendTo(tr)
-          tr.appendTo("tbody#data_summary")
-        } else {
+        if (response.length > 0) {
+          var body = ""
           $(response).each(
             function (i, e) {
               if (e.status) {
                 $("#input_summary_comment").html(e.comment)
                 $("#id_summary").val(e.id)
               }
-              var tr = $("<tr id='" + e.id + "'/>");
-              $("<td/>").html(e.period).appendTo(tr)
-              $("<td/>").html(e.user_name).appendTo(tr)
-              $("<td/>").html(e.comment_date).appendTo(tr)
-              $("<td/>").html(e.comment).appendTo(tr)
-              tr.appendTo("tbody#data_summary")
+              body += `<tr id=${e.id}>
+                        <td>${e.period}</td>
+                        <td>${e.user_name}</td>
+                        <td>${e.comment_date}</td>
+                        <td>${e.comment}</td>
+                      </tr>`
             }
           )
+          $("tbody#data_summary").html(body)
         }
+        var table = $("#table_summary_comment").DataTable({
+          "retrieve": true,
+          "bLengthChange": false,
+          "bFilter": false,
+          "bAutoWidth": false,
+          "columnDefs": [{
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }, ],
+          "order": [
+            [1, "asc"]
+          ],
+        });
         $('#modal_summary_assessment').modal('show')
       }
     })
@@ -474,7 +482,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response) {
-          success("The CDS/CDP has been saved your summary comment successfully")
+          warning("The CDS/CDP has been saved your summary comment successfully")
           $('#modal_summary_assessment').modal('hide')
         } else
           fail("The CDS/CDP hasn't been saved your summary comment fail")
@@ -520,13 +528,18 @@ $(document).ready(function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       dataType: "json",
-      success: function (response) {}
+      success: function (response) {
+        if (response.status == "success") {
+          $('#modal_cancel_request_update').modal('hide');
+          checked_set.clear()
+          data_checked_request = {}
+          loadDataPanel(form_id)
+          warning("The CDS/CDP has been cancelled requesting update on some slots successfully.")
+        } else {
+          fails("The CDS/CDP hasn't been cancelled requesting update.")
+        }
+      }
     })
-    $('#modal_cancel_request_update').modal('hide');
-    checked_set.clear()
-    data_checked_request = {}
-    loadDataPanel(form_id)
-    success("The CDS/CDP has been cancelled requesting update on some slots successfully.")
   });
 
   $(".left-panel-competency").hide();
@@ -573,7 +586,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success")
-          success("These slots have been updated and informed to requester successfully.")
+          warning("These slots have been updated and informed to requester successfully.")
         else
           fails("These slots haven't been updated and informed to requester.")
       }
@@ -627,7 +640,6 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
-        // checkStatusFormStaff(status);
         // init page at start
         if (is_submit) {
           toggleInput(false);
@@ -740,7 +752,6 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         refreshCheckbox();
-
       }
 
     });
@@ -856,13 +867,17 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success") {
-          success(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
+          warning(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
           $('a.withdraw-assessment').addClass('d-none');
           $('a.withdraw-assessment').addClass('disabled');
           $('a.submit-assessment').removeClass('d-none');
           $('a.submit-assessment').removeClass('disabled');
           checkStatusFormStaff("New")
+          status = "New"
           $("#status").html("(New)")
+          $(".icon-flag").each(function (i, e) {
+            e.setAttribute('style', 'display:none')
+          })
         } else {
           fails("Can't withdraw CDS/CDP.");
         }
@@ -874,8 +889,9 @@ $(document).ready(function () {
     var str = "</p>"
     var keys = Object.keys(arr)
     keys.forEach(key => {
-      if (arr[key].length > 0)
-        str += `<p> ${key} / ${arr[key].toString()}</p>`
+      a = new Set(arr[key])
+      if (a.size > 0)
+        str += `<p><b> ${key} / ${[...a].join()}</b></p>`
     });
     if (str.split("<p>").length <= 2)
       str = str.replace("<p>", "").replace("</p>", "")
@@ -897,7 +913,7 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.status == "success") {
-            success(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
+            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
             // NOT
             $('a.submit-assessment').addClass('d-none');
@@ -930,12 +946,13 @@ $(document).ready(function () {
           if (response.status == "success") {
             $('#modal_period').modal('hide');
             // staff submit
-            success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            warning("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
             $('a.submit-assessment').addClass('d-none');
             $('a.submit-assessment').addClass('disabled');
             $('a.withdraw-assessment').removeClass('d-none');
             $('a.withdraw-assessment').removeClass('disabled');
             checkStatusFormStaff("Awaiting Review")
+            status = "Awaiting Review"
             $("#status").html("(Awaiting Review)")
           } else {
             fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
@@ -1016,9 +1033,10 @@ $(document).ready(function () {
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         row.find(".approver-assessment").addClass("d-none");
         point = null
-        is_commit = false
-        if(is_commit == "commit_cdp")
+        if (is_commit == "commit_cdp")
           is_commit = true
+        else
+          is_commit = false
       } else if (is_commit == "commit_cds") {
         is_commit = true
         var approver_point = row.find(".approver-assessment")
@@ -1050,9 +1068,10 @@ $(document).ready(function () {
       if (is_commit == "commit_cdp" || is_commit == "uncommit") {
         point = null;
         row.find(".reviewer-assessment").addClass("d-none");
-        is_commit = false
-        if(is_commit == "commit_cdp")
+        if (is_commit == "commit_cdp")
           is_commit = true
+        else
+          is_commit = false
       } else if (is_commit == "commit_cds") {
         is_commit = true
         var reviewer_point = row.find(".reviewer-assessment")
@@ -1083,8 +1102,8 @@ $(document).ready(function () {
           $("#confirm_request").removeClass("disabled")
           $("#icon_confirm_request").prop("style", "color:green")
           flag = row.closest(".row-slot").find('.icon-flag')
-          if (flag.css('color') == "rgb(255, 255, 0)")
-          flag.prop("style", "color: #99FF33")
+          if (flag.css('color') == "rgb(255, 255, 0)" && is_reviewer)
+            flag.prop("style", "color: #99FF33")
           changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
         }
       });
@@ -1157,7 +1176,7 @@ function autoSaveStaff(row) {
             icon_cdp.prop("style", "visibility: hidden")
           checkChangeSlot();
 
-          current = $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text().split('/');
+          current = $("div.show table tr[data-level=" + row.data("location")[0] + "]").children()[2].innerText.split('/');
           max = parseInt(current[1]);
           current_change = 0
           $('div.row-slot').each(function (i, sel) {
@@ -1170,7 +1189,8 @@ function autoSaveStaff(row) {
           if (current_change <= max)
             current_change = current_change;
           else
-            current = max;
+            current_change = max;
+          debugger
           var competency_id = $('div.show').data("competency-id")
           $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
           $("tr[data-id-competency=" + competency_id + "]").children()[2].innerText = response.data
@@ -1215,7 +1235,7 @@ function loadDataPanel(form_id) {
                   <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
                   ${competency}
                   </td>
-                  <td class="col-3">${response[competency].level_point}</td>  
+                  <td class="col-3">${response[competency].level_point || "N/A"}</td>  
                 </tr>
               </thead>
             </table>

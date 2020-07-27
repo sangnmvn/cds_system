@@ -1,4 +1,5 @@
 function loadDataAssessment(data_filter) {
+  var temp = "";
   $.ajax({
     type: "POST",
     url: "/forms/get_list_cds_assessment_manager",
@@ -14,9 +15,6 @@ function loadDataAssessment(data_filter) {
     },
     dataType: "json",
     success: function (response) {
-      var temp = '';
-      if (response.length == 0)
-        temp = `<tr><td colspan="13" style="text-align:center">No data available in table</td></tr>`;
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
@@ -72,6 +70,35 @@ function loadDataAssessment(data_filter) {
         temp += this_element;
       };
       $(".table-cds-assessment-manager-list tbody").html(temp);
+      $(".table-cds-assessment-manager-list").DataTable({
+        "bLengthChange": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+        "columnDefs": [
+          {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }
+        ],
+        "order": [[1, "desc"]],
+      });
+    },
+    error: function () {
+      $(".table-cds-assessment-manager-list tbody").html(temp);
+      $(".table-cds-assessment-manager-list").DataTable({
+        "bLengthChange": false,
+        "bFilter": false,
+        "bAutoWidth": false,
+        "columnDefs": [
+          {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0,
+          }
+        ],
+        "order": [[1, "desc"]],
+      });
     }
   })
 }
@@ -334,7 +361,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.status == "success") {
-          success(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
+          warning(`The CDS/CDP assessment of ${response.user_name} has been rejected successfully.`);
           $(document).find('#period_id_' + form_id).find(".reject-cds-cdp").addClass('disabled')
           $(document).find('#period_id_' + form_id).find(".icon-reject").css('color', '##6c757d')
         } else {

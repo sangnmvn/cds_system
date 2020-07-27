@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'cdp_assessment', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'form_review_export', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :cds_review %>
@@ -21,7 +22,7 @@
       <a id="export_excel_cds_review"><i class="fa fa-file-excel-o icon icon-export-cds-review"  style="color: green"></i></a>
       <a id="export_pdf_cds_review"><i class="fa fa-file-pdf-o icon icon-export-cds-review"  style="color: #a96f6f" aria-hidden="true"></i><a>
         </div>
-        <div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+        <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
         <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
         <%= render 'modal_delete_cds' %>
       </div>
@@ -35,31 +36,28 @@
       <table class="table table-primary table-responsive-sm table-cds-assessment-manager-list table-mytable">
         <thead>
           <tr>
-            <td>No.</td>
-            <td>Period</td>
-            <td>User Name</td>
-            <td>Project</td>
-            <td>Email</td>
-            <td>Role</td>
-            <td>Title</td>
-            <td>Rank</td>
-            <td>Level</td>
-            <td>CDS Submitted Date</td>
-            <td>Reviewed Date</td>
-            <td>Status</td>
-            <td>Action</td>
+            <th data-orderable="false">No.</th>
+            <th>Period</th>
+            <th>User Name</th>
+            <th>Project</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Title</th>
+            <th>Rank</th>
+            <th>Level</th>
+            <th>CDS Submitted Date</th>
+            <th>Reviewed Date</th>
+            <th>Status</th>
+            <th data-orderable="false">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td colspan="13">No data available in table</td>
-          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<div id="alert-success" class="alert alert-success" data-alert="alert"><span id="content-alert-success"></span></div>
+<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <%= render 'modal_reject_cds' %>
 <script>

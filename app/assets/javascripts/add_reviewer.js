@@ -35,6 +35,7 @@ $(document).on("click", ".add-approver-icon[data-toggle=modal]", function () {
 
   $("#save_add_approver").data('user_id', user_id);
   $("#save_add_approver").data('user_account', user_account);
+
   $.ajax({
     url: "/users/add_approver/",
     type: "POST",
@@ -48,6 +49,7 @@ $(document).on("click", ".add-approver-icon[data-toggle=modal]", function () {
     success: function (response) {
       current_approvers = response.current_approvers;
       approvers = response.current_approvers;
+      $("input[name='submit_late'][value='"+ response.is_submit_late +"']").prop("checked",true);
       $('#table_add_approver tbody').html(addDataReviewer(response.approvers, "checkbox-approver"))
       if (response.approvers.length > 0)
         setupDataTable('#table_add_approver');
@@ -61,6 +63,10 @@ $(document).on('click', '.checkbox-approver', function () {
   approvers = $(this).data('id');
   let flag = approvers == current_approvers;
   changeTypeButtonSave('#save_add_approver', flag);
+});
+
+$(document).on('change', ".submit-late", function () {
+  changeTypeButtonSave('#save_add_approver', false);
 });
 
 $(document).on('click', '.checkbox-reviewer', function () {
@@ -152,6 +158,7 @@ $(document).on('click', '#save_add_approver', function () {
     user_id: $(this).data("user_id"),
     user_account: $(this).data("user_account"),
     add_approver_ids: approvers,
+    is_submit_late: $("input[name='submit_late']:checked").val(),
     remove_ids: [current_approvers],
     add_reviewer: true,
   }
@@ -170,6 +177,7 @@ function ajaxAddReviewerApprover(params) {
       add_approver_ids: params.add_approver_ids,
       add_reviewer_ids: params.add_reviewer_ids,
       remove_ids: params.remove_ids,
+      is_submit_late: params.is_submit_late,
     },
     dataType: "json",
     success: function (response) {

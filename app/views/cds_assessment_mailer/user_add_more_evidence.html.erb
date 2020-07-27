@@ -4,7 +4,7 @@
 <p>The CDS/CDP assessment period [<%= @from_date %> - <%= @to_date %>] of <%= @name %> has been updated on the following slots : </p>
 <% else %>
 <p>The CDS/CDP assessment period [<%= @from_date %> - <%= @to_date %>] of <%= @name %> has been updated by <%= @current_user %> on the following slots : </p>
-<%%>
+<% end %>
 <% @slots.each do |k, v| %>
   <p><b><%= k %></b> / <%= v.join(", ") %></p>
 <% end %>

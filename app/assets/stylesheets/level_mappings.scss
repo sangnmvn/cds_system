@@ -1,6 +1,11 @@
 // Place all the styles related to the LevelMapping controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.sticky-col {
+    position: sticky;
+    position: -webkit-sticky;    
+}
+
 /*
 .table-new-title-mapping tbody td:nth-child(1) {
     width: 20%;              
@@ -9,280 +14,166 @@
     width: 7%;  
 }
 */
-.sticky-col {
-	position: sticky;
-	position: -webkit-sticky;
+.basic-table-wrapper > .table-edit-title-mapping,
+.basic-table-wrapper > .table-new-title-mapping
+{
+    margin-left: 520px;
 }
-.basic-table-wrapper {
-	 .table-edit-title-mapping {
-		margin-left: 31%;
-	}
-	 .table-new-title-mapping {
-		margin-left: 31%;
-	}
+.table-new-title-mapping > * > tr > td:nth-child(1),
+.table-edit-title-mapping > * > tr > td:nth-child(1) {
+    width: 380px; 
+    white-space: nowrap;
+    position: absolute;
+    margin-left: -520px;        
+    z-index: 1;
 }
-.table-new-title-mapping {
-	 * {
-		 tr {
-			 td {
-				&:nth-child(1) {
-					width: 25%;
-					position: absolute;
-					margin-left: -31%;
-					z-index: 1;
-					border-left: 0.13em solid #0066CC;
-				}
-				&:nth-child(2) {
-					width: 6%;
-					position: absolute;
-					margin-left: -6%;
-					z-index: 1;
-				}
-			}
-			 .dynamic-title-header-col {
-				max-height: 100px;
-				min-width: 100px;
-			}
-			 .competency-row {
-				max-height: 100px;
-				min-width: 100px;
-			}
-		}
-	}
-	 thead {
-		 tr {
-			 td {
-				&:nth-child(1) {
-					border-top: 0.13em solid #0066CC;
-				}
-				&:nth-child(2) {
-					border-top: 0.13em solid #0066CC;
-				}
-			}
-		}
-	}
-	 tbody {
-		 tr {
-			&:nth-last-child(1) {
-				 td {
-					border-bottom: 0.13em solid #0066CC;
-				}
-			}
-			padding: 12px 12px;
-			&:nth-child(2n+1) {
-				 td {
-					&:nth-child(1) {
-						background-color: #CFD5EA;
-						padding: 18px 12px;
-						height: 64px;
-					}
-					&:nth-child(2) {
-						background-color: #CFD5EA;
-						padding: 18px 12px;
-						height: 64px;
-					}
-				}
-			}
-			&:nth-child(2n) {
-				 td {
-					&:nth-child(1) {
-						background-color: #fff;
-						padding: 18px 12px;
-						height: 64px;
-					}
-					&:nth-child(2) {
-						background-color: #fff;
-						padding: 18px 12px;
-						height: 64px;
-					}
-				}
-			}
-		}
-	}
+
+.table-new-title-mapping > tbody > tr,
+.table-edit-title-mapping > tbody > tr{
+    padding: 12px 12px;
 }
-.table-edit-title-mapping {
-	 * {
-		 tr {
-			 td {
-				&:nth-child(1) {
-					width: 25%;
-					position: absolute;
-					margin-left: -31%;
-					z-index: 1;
-					border-left: 0.13em solid #0066CC;
-				}
-				&:nth-child(2) {
-					width: 6%;
-					position: absolute;
-					margin-left: -6%;
-					z-index: 1;
-				}
-			}
-			 .dynamic-title-header-col {
-				max-height: 100px;
-				min-width: 100px;
-			}
-			 .competency-row {
-				max-height: 100px;
-				min-width: 100px;
-			}
-		}
-	}
-	 thead {
-		 tr {
-			 td {
-				&:nth-child(1) {
-					border-top: 0.13em solid #0066CC;
-				}
-				&:nth-child(2) {
-					border-top: 0.13em solid #0066CC;
-				}
-			}
-		}
-	}
-	 tbody {
-		 tr {
-			&:nth-last-child(1) {
-				 td {
-					border-bottom: 0.13em solid #0066CC;
-				}
-			}
-			padding: 12px 12px;
-			&:nth-child(2n+1) {
-				 td {
-					&:nth-child(1) {
-						background-color: #CFD5EA;
-						padding: 18px 12px;
-						height: 64px;
-					}
-					&:nth-child(2) {
-						background-color: #CFD5EA;
-						padding: 18px 12px;
-						height: 64px;
-					}
-				}
-			}
-			&:nth-child(2n) {
-				 td {
-					&:nth-child(1) {
-						background-color: #fff;
-						padding: 18px 12px;
-						height: 64px;
-					}
-					&:nth-child(2) {
-						background-color: #fff;
-						padding: 18px 12px;
-						height: 64px;
-					}
-				}
-			}
-		}
-	}
+.table-new-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(1) ,
+.table-new-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(2) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(1) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n+1) > td:nth-child(2)
+{
+    background-color: #CFD5EA;
+    padding: 18px 12px;
+    height: 64px;    
 }
+.table-new-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(1) ,
+.table-new-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(2) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(1) ,
+.table-edit-title-mapping > tbody > tr:nth-child(2n) > td:nth-child(2)
+{
+    background-color: #fff;
+    padding: 18px 12px;
+    height: 64px;    
+}
+
+.table-new-title-mapping > * > tr > td:nth-child(2),
+.table-edit-title-mapping > * > tr > td:nth-child(2) { 
+    width: 140px;  
+    white-space: nowrap;
+    position: absolute;
+    margin-left: -140px;        
+    z-index: 1;
+}
+.table-new-title-mapping > * > tr > .dynamic-title-header-col,
+.table-new-title-mapping > * > tr > .competency-row,
+.table-edit-title-mapping > * > tr > .dynamic-title-header-col,
+.table-edit-title-mapping > * > tr > .competency-row { 
+    white-space: nowrap;           
+    min-width: 100px;  
+}
+
+
 .number {
-	text-align: right;
+    text-align: right;
 }
-.modal-header {
-	padding-top: 9px;
+.modal-header{
+    padding-top: 9px;
 }
-#role_select {
-	width: 100%;
+#role_select{
+    width: 100%;
 }
-.competency-value {
-	text-align: right;
-	 option {
-		text-align: right;
-	}
+
+.competency-value
+{
+    text-align: right;
 }
-.competency-value[data-is_changed=true] {
-	text-align: right;
-	color: blue;
+
+.competency-value[data-is_changed=true]
+{
+    text-align: right;
+    color: blue;
 }
+
+
+.competency-value > option
+{
+    text-align: right;
+}
+
 a.disabled {
-	pointer-events: none;
-	cursor: default;
+    pointer-events: none;
+    cursor: default;
 }
-.dynamic-title-header-col {
-	background-color: #FFFF00;
-	color: #000;
-	font-weight: bold;
+
+      
+.dynamic-title-header-col
+{
+    background-color: #FFFF00;
+    color: #000;
+    font-weight: bold;        
 }
-.competency-row {
-	min-width: 90px;
+
+.competency-row
+{
+    min-width: 90px;
 }
 .table-cds-assessment-manager-list {
-	margin: 0 auto;
+    margin: 0 auto;
 }
-table {
-	tr {
-		td {
-			text-align: center;
-			vertical-align: middle;
-			border: 1px solid white;
-			padding: 0px 10px 0px 10px;
-		}
-	}
+
+table tr td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid white;
+    padding: 0px 10px 0px 10px;    
 }
-#edit_title_mapping_table {
-	 * {
-		 tr {
-			&:nth-child(2n+1) {
-				background-color: #CFD5EA;
-			}
-		}
-	}
+
+#edit_title_mapping_table > * > tr:nth-child(2n+1)
+{
+    background-color: #CFD5EA;
 }
-.table-level-mapping_list {
-	tbody {
-		tr {
-			td {
-				&:nth-child(1) {
-					text-align: right;
-					width: 50px;
-				}
-				&:nth-child(2) {
-					text-align: left;
-					width: 200px;
-				}
-				&:nth-child(3) {
-					text-align: right;
-					width: 100px;
-				}
-				&:nth-child(4) {
-					text-align: left;
-					width: 250px;
-				}
-				&:nth-child(5) {
-					text-align: left;
-					width: 300px;
-				}
-				&:nth-child(6) {
-					text-align: center;
-					width: 100px;
-				}
-			}
-		}
-	}
-	tr {
-		td {
-			padding: 0px 10px 0px 10px;
-			border: 1px solid white;
-			&:nth-child(1) {
-				width: 1%;
-				height: 42px;
-			}
-		}
-	}
+.table-level-mapping_list tbody tr td:nth-child(1) {
+    text-align: right;    
+    width: 50px;
 }
-.button-level-mapping {
-	button {
-		font-size: 90%;
-		background-color: #8da8db;
-		border: none;
-	}
+
+.table-level-mapping_list tbody tr td:nth-child(2) {
+    text-align: left;    
+    width: 200px;
 }
+
+.table-level-mapping_list tbody tr td:nth-child(3) {
+    text-align: right;    
+    width: 100px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(4) {
+    text-align: left;    
+    width: 250px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(5) {
+    text-align: left;    
+    width: 300px;
+}
+
+.table-level-mapping_list tbody tr td:nth-child(6) {
+    text-align: center;  
+    width: 100px;  
+}
+
+.table-level-mapping_list tr td {
+    padding: 0px 10px 0px 10px;
+    border: 1px solid white;
+}
+
+.button-level-mapping button {
+    font-size: 90%;
+    background-color: #8da8db;
+    border: none;
+}
+
+.table-level-mapping_list tr td:nth-child(1) {
+    width: 1%;
+    height: 42px;
+  }
 .icon {
-	width: 13px;
-	height: 13px;
-	font-size: 19px;
+    width: 13px;
+    height: 13px;
+    font-size: 19px;
 }
