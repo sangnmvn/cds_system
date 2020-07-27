@@ -139,11 +139,11 @@ class SchedulesController < ApplicationController
       temp_params[:_type] = "HR"
       # format date from period
       period_params_temp = period_params
+      period_params_temp[:status] = "New"
       period_params_temp[:from_date] = helpers.date_format(params[:from_date])
       period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
       @period = Period.new(period_params_temp)
-
       if @period.save
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
