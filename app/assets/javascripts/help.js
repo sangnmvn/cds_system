@@ -20,7 +20,7 @@ $(document).ready(function () {
   $('.help-2').click(function () {
     setDisplayHelp('.show-help-2');
     document.getElementsByClassName("show-help-2")[0].scrollIntoView();
-  });  
+  });
   $('.help-2-1').click(function () {
     setDisplayHelp('.show-help-2');
     document.getElementsByClassName("show-help-2-1")[0].scrollIntoView();
@@ -105,7 +105,18 @@ $(document).ready(function () {
     setDisplayHelp('.show-help-2');
     document.getElementsByClassName("show-help-2-7-2")[0].scrollIntoView();
   });
+
+  $(window).scroll(function(e){ 
+    var navbar = $('.right-panel').position().top;//khung chứa noi dung
+    var st = $(window).scrollTop();
+    if (st >= navbar) {
+      $(".card").addClass('fixedElement');//card :menu (ngang hàng với khung)
+    } else {
+      $(".card").removeClass('fixedElement');
+    }
+  });
 });
+
 function setDisplayHelp(help_display) {
   $('.show-help-1 , .show-help-2 , .show-help-3, .show-help-4 , .show-help-5').css("display", "none");
   $(help_display).css("display", "block");
