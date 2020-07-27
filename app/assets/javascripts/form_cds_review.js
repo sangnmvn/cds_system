@@ -81,7 +81,7 @@ function loadDataAssessment(data_filter) {
             "targets": 0,
           }
         ],
-        "order": [[1, "asc"]],
+        "order": [[1, "desc"]],
       });
     },
     error: function () {
@@ -97,7 +97,7 @@ function loadDataAssessment(data_filter) {
             "targets": 0,
           }
         ],
-        "order": [[1, "asc"]],
+        "order": [[1, "desc"]],
       });
     }
   })

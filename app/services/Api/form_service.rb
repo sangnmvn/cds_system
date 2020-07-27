@@ -36,7 +36,7 @@ module Api
             type: slot.competency.sort_type,
             id: slot.competency_id,
             levels: {},
-            level_point: calculate_level(result[key]),
+            level_point: calculate_level(result[key]) || "N/A",
           }
         end
 

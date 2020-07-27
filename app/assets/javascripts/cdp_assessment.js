@@ -1235,7 +1235,7 @@ function loadDataPanel(form_id) {
                   <td class="col-7" style=" padding-right: 10px; padding-left: 10px; text-align: left">  
                   ${competency}
                   </td>
-                  <td class="col-3">${response[competency].level_point}</td>  
+                  <td class="col-3">${response[competency].level_point || "N/A"}</td>  
                 </tr>
               </thead>
             </table>

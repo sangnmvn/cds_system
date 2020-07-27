@@ -31,7 +31,7 @@ function loadDataAssessmentList() {
           link = "#";          
         }
         var this_element = `<tr id='period_id_{id}'> 
-              <td class="type-number">{no}</td> 
+              <td class="type-number"></td> 
               <td class="type-text"><a href='{link_view}'>{period}</a></td> 
               <td class="type-text">{role}</td> 
               <td class="type-text">{level}</td> 
@@ -47,7 +47,6 @@ function loadDataAssessmentList() {
               </td> 
             </tr>`.formatUnicorn({
           id: form.id,
-          no: i + 1,
           link: link,
           link_view: link_view,
           period: form.period_name,
@@ -63,7 +62,7 @@ function loadDataAssessmentList() {
         temp += this_element;
       }
       $(".table-cds-assessment-list tbody").html(temp);
-      $(".table-cds-assessment-list").DataTable({
+      var table = $(".table-cds-assessment-list").DataTable({
         "bLengthChange": false,
         "bFilter": false,
         "bAutoWidth": false,
@@ -74,8 +73,14 @@ function loadDataAssessmentList() {
             "targets": 0,
           }
         ],
-        "order": [[1, "asc"]],
+        "order": [[1, "desc"]],
       });
+      table.on("order.dt search.dt", function () {
+        table.column(0, { search: "applied", order: "applied" })
+          .nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+          });
+      }).draw();
     },
   });
 }
