@@ -104,6 +104,7 @@ $(document).ready(function () {
     window.addEventListener('zoom', () => {
         setHeightTableTitleMapping();
       })    
+    setHeightTableTitleMapping();
 });
 
 
