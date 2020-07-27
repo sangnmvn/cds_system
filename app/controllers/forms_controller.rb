@@ -39,7 +39,7 @@ class FormsController < ApplicationController
   def cancel_request
     form_slot_ids = params[:form_slot_id].map(&:to_i)
     data = @form_service.cancel_request(form_slot_ids, params[:slot_id])
-    render json: { status: data}
+    render json: { status: data }
   end
 
   def export_excel_cds_review
@@ -129,7 +129,7 @@ class FormsController < ApplicationController
   def request_update_cds
     form_slot_ids = params[:form_slot_id].map(&:to_i)
     data = @form_service.request_update_cds(form_slot_ids, params[:slot_id])
-    render json: {status: data}
+    render json: { status: data }
   end
 
   def cds_cdp_review
@@ -156,6 +156,7 @@ class FormsController < ApplicationController
       is_submit: approver.is_submit_cds,
       is_approver: approver.is_approver,
       is_reviewer: !approver.is_approver,
+      is_submit_late: form.is_submit_late,
     }
   end
 
@@ -251,9 +252,17 @@ class FormsController < ApplicationController
         ["Awaiting Review", "review", users]
       end
     return render json: { status: "fail" } if users.empty?
-    render json: { status: "success" } if form.update(period_id: params[:period_id].to_i, status: status, submit_date: DateTime.now)
+    if params[:period_id].to_i > 0
+      period = params[:period_id].to_i
+    else
+      schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "New").order("periods.to_date")
+      render json: { status: "fails" } if schedules.blank?
+      period = schedules.last.period_id
+    end
+
+    render json: { status: "success" } if form.update(period_id: period, status: status, submit_date: DateTime.now)
     user = form.user
-    period = form.period
+    period = Period.find_by(id: schedules.last.period_id)
     old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
     old_comment.destroy_all
     Async.await do
@@ -352,8 +361,9 @@ class FormsController < ApplicationController
   private
 
   def get_privilege_assessment
+
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
-    user_id = user_id || current_user.id
+    user_id = user_id.present? ? user_id : current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     @is_reviewer = false
