@@ -695,15 +695,16 @@ module Api
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         comment = Comment.where(form_slot_id: form_slot.id, is_delete: false).first
+        staff_flag = comment.flag if comment.present?
         approver_ids = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
         is_final = approver_ids.include? current_user.id
-        flag = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).select(:flag).first
-        flag = flag.blank? ? "" : flag
-        flag = "#99FF33" if !is_final && comment.flag == "yellow"
+        comment_linemanager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
+        flag = comment_linemanager.blank? ? "" : comment_linemanager.flag
+        flag = "#99FF33" if !is_final && staff_flag == "yellow"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag, final: is_final)
         else
-          LineManager.create!(is_commit: true, recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id, flag: flag, final: is_final)
+          LineManager.create!(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id, flag: flag, final: is_final)
         end
       end
     end

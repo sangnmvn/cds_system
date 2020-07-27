@@ -890,7 +890,11 @@ $(document).ready(function () {
     var keys = Object.keys(arr)
     keys.forEach(key => {
       if (arr[key].length > 0)
-        str += `<p> ${key} / ${arr[key].toString()}</p>`
+      {
+        var arr_duplicate = arr[key]
+        new_arr = arr_duplicate.filter((value, index, arr_duplicate) => arr_duplicate.indexOf(value) === index);
+        str += `<p> ${key} / ${new_arr.toString()}</p>`
+      }
     });
     if (str.split("<p>").length <= 2)
       str = str.replace("<p>", "").replace("</p>", "")

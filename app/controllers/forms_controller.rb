@@ -99,6 +99,7 @@ class FormsController < ApplicationController
       }
     end
     if params[:title_history_id].present?
+      @hash[:is_submit_late] = false
       @hash[:status] = "Done"
       @hash[:title_history_id] = params[:title_history_id]
       @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
@@ -119,6 +120,7 @@ class FormsController < ApplicationController
       form_slot = FormSlot.where(form_id: form.id)
       @form_service.create_form_slot(form) if form_slot.empty?
     end
+    @hash[:is_submit_late] = form.is_submit_late
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
