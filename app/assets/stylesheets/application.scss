@@ -14,7 +14,7 @@ $color-disable: #afaaaa;
 #alert-success,
 #alert-danger,
 #alert-warning {
-    position: absolute;
+    position: fixed;
     z-index: 3400;
     top: 10%;
     left: 40%;

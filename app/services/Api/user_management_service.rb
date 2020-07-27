@@ -300,7 +300,7 @@ module Api
       title_first.each_with_index do |title, i|
         next if h_old[title.user_id].present? && h_old[title.user_id][:role] != title.role_name && h_old[title.user_id][:rank] >= title.rank
         data = {
-          class: (i.even? ? "even" : "odd"),
+          user_id: title.user_id,
           title_history_id: title.id,
           full_name: title.user.format_name_vietnamese,
           email: title.user.email,
@@ -365,7 +365,7 @@ module Api
       title_first.each_with_index do |title, i|
         next if h_old[title.user_id].nil? || h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] <= title.rank
         results << {
-          class: (i.even? ? "even" : "odd"),
+          user_id: title.user_id,
           title_history_id: title.id,
           full_name: title.user.format_name_vietnamese,
           email: title.user.email,
@@ -415,7 +415,7 @@ module Api
         end
       titles.map.with_index do |title, i|
         {
-          class: (i.even? ? "even" : "odd"),
+          user_id: title.user_id,
           title_history_id: title.id,
           full_name: title.user.format_name_vietnamese,
           email: title.user.email,

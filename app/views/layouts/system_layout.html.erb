@@ -57,7 +57,7 @@
           <p class="navbar-text float-right">
             <% if user_signed_in? %>
               <div>Welcome&nbsp;</div>
-              <%= link_to current_user.format_name, user_profile_users_path, :class => 'navbar-link' %>&nbsp;|&nbsp;
+              <%= link_to current_user.format_name_vietnamese, user_profile_users_path, :class => 'navbar-link' %>&nbsp;|&nbsp;
               <div class="logout-icon">
                 <i class="fa fa-power-off" aria-hidden="true" style="color: red"></i>
               </div>
@@ -74,7 +74,7 @@
   </body>
 </html>
 <script>
-  var privilege_array = "<%= @privilege_array ?  @privilege_array : "" %>";
+  var privilege_array = "<%= @privilege_array ?  @privilege_array.join(',') : "" %>";
 </script>
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>

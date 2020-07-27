@@ -151,7 +151,7 @@ module Api
       else
         form = Form.find_by(id: params[:form_id])
         return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id,
-                                                  form_id: form.id, comment: params[:comment])
+                                                   form_id: form.id, comment: params[:comment])
       end
       true
     end
@@ -196,7 +196,7 @@ module Api
           customize_slots[key] << location_slots[form_slot.slot.id]
         end
         Async.await do
-          CdsAssessmentMailer.with(user_name: user_of_form.user.account, current_user: current_user.account, from_date: period.from_date,to_date: period.to_date, reviewers: reviewer, slots: customize_slots).user_add_more_evidence.deliver_later(wait: 5.seconds)
+          CdsAssessmentMailer.with(user_name: user_of_form.user.account, current_user: current_user.account, from_date: period.from_date, to_date: period.to_date, reviewers: reviewer, slots: customize_slots).user_add_more_evidence.deliver_later(wait: 5.seconds)
         end
         return "success"
       end
@@ -396,7 +396,7 @@ module Api
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
-        user_arr = format_filter(user.format_name, user.id)
+        user_arr = format_filter(user.format_name_vietnamese, user.id)
         role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
@@ -430,7 +430,7 @@ module Api
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
-        user_arr = format_filter(user.format_name, user.id)
+        user_arr = format_filter(user.format_name_vietnamese, user.id)
         role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
@@ -484,7 +484,7 @@ module Api
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
-        user_arr = format_filter(user.format_name, user.id)
+        user_arr = format_filter(user.format_name_vietnamese, user.id)
         role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
@@ -980,8 +980,9 @@ module Api
           CdsAssessmentMailer.with(staff: user, rank_number: form.rank, level_number: form.level, title_number: form.title&.name, from_date: period.from_date, to_date: period.to_date).pm_approve_cds.deliver_later(wait: 3.seconds)
         end
       end
-      return "fail" unless form.update(is_approved: true)
-      return "fail" unless form.update(status: "Done")
+      return "fail" unless form.update(is_approved: true, status: "Done")
+      FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
+
       "success"
     end
 
@@ -1002,7 +1003,7 @@ module Api
       reviewer = User.where(id: reviewer_ids).pluck(:account, :email)
       Async.await do
         CdsAssessmentMailer.with(account: current_user.account, from_date: period.from_date,
-                                to_date: period.to_date, reviewers: reviewer, user_name: current_user.format_name).staff_withdraw_CDS_CDP.deliver_later(wait: 5.seconds)
+                                 to_date: period.to_date, reviewers: reviewer, user_name: current_user.format_name).staff_withdraw_CDS_CDP.deliver_later(wait: 5.seconds)
       end
       "success"
     end
@@ -1071,7 +1072,7 @@ module Api
     end
 
     def cancel_update_cds(form_slot_ids)
-      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first})
+      form = Form.joins(:form_slots).where(form_slots: { id: form_slot_ids.first })
       line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: form.period_id)
       line_managers.each do |line_manager|
         line_manager.flag = ""
@@ -1108,7 +1109,7 @@ module Api
     end
 
     def cancel_request(form_slot_ids, slot_id)
-      form = Form.joins(:form_slots).where(form_slots: {id: form_slot_ids.first}).first
+      form = Form.joins(:form_slots).where(form_slots: { id: form_slot_ids.first }).first
       approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
       line_managers = if approver_id == current_user.id
           LineManager.where(form_slot_id: form_slot_ids, period_id: form.period_id).where.not(flag: "")
@@ -1125,6 +1126,13 @@ module Api
         CdsAssessmentMailer.with(staff: user_staff, slots: JSON.parse(slot_id)).reviewer_cancel_request_update.deliver_later(wait: 3.seconds)
       end
       "success"
+    end
+
+    def load_form_cds_staff
+      form = Form.includes(:form_slots).find_by(user_id: params[:user_id])
+      return "fails" if form.nil? || form.form_slots.empty?
+
+      "/forms/cds_cdp_review?form_id=#{form.id}&user_id=#{params[:user_id]}"
     end
 
     private
@@ -1301,7 +1309,7 @@ module Api
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
-        user_name: form.user&.format_name,
+        user_name: form.user&.format_name_vietnamese,
         project: form.user&.get_project,
         email: form.user&.email,
         role_name: form.role&.desc,

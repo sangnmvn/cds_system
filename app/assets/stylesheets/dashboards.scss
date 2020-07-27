@@ -175,6 +175,10 @@ rect {
 
             td {
                 border: 1px solid $border-color;
+                .link-icon {
+                    text-decoration: unset;
+                    color: #007bff;
+                }
             }
 
             .number {

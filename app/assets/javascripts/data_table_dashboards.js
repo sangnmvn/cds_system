@@ -51,12 +51,12 @@ function appendDataToTable(data, is_up = true, has_old = true) {
   tpl = "";
   data.forEach(function (user, i) {
     tpl += `
-      <tr class="{class}">
+      <tr data-id="{id}">
         <td class="type-number item-row number">{number}</td>
         <td class="type-text item-row name">{name}</td>
         <td class="type-text item-row email">{email}</td>
         <td class="type-text item-row role">{role}</td>`.formatUnicorn({
-      class: user.class, number: i + 1, name: user.full_name, email: user.email, role: user.role
+      id: user.user_id, number: i + 1, name: user.full_name, email: user.email, role: user.role
     });
     if (has_old)
       tpl += `
@@ -78,18 +78,18 @@ function appendDataToTable(data, is_up = true, has_old = true) {
 
     if (is_up) {
       tpl += `
-        <a href="javascript:;" class="link-icon">
+        <div class="link-icon">
           <i class="fa fa-file-code-o" aria-hidden="true" title="view CDS/CDP Details"></i>
-        </a>`;
+        </div>`;
     } else {
         // <a href="javascript:;" class="link-icon">
         //   <i class="fa fa-search" aria-hidden="true" title="View slots missed to archive next level"></i>
         // </a>
         // &nbsp;
       tpl += `
-        <a href="javascript:;" class="link-icon">
+        <div class="link-icon">
           <i class="fa fa-file-code-o" aria-hidden="true" title="view CDS/CDP Details"></i>
-        </a>
+        </div>
       `;
     }
     tpl += `</td></tr>`;
@@ -114,7 +114,7 @@ function setupDataTable(id, last_column_no = 10) {
         "targets": last_column_no,
       },
     ],
-    "order": [[1, "asc"]],
+    "order": [[2, "asc"]],
   });
   $(".dataTables_length").addClass("bs-select");
 

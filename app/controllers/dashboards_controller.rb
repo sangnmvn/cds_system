@@ -4,7 +4,7 @@ class DashboardsController < ApplicationController
   before_action :check_privilege
   before_action :user_management_services
   before_action :export_services
-  before_action :form_services, only: [:data_latest_baseline]
+  before_action :form_services, only: [:data_latest_baseline, :load_form_cds_staff]
 
   ALL_COMPANY = 20
   MY_COMPANY = 21
@@ -101,6 +101,11 @@ class DashboardsController < ApplicationController
     result = @form_services.preview_result(form)
     competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
     render json: { data: @form_services.calculate_result(form, competencies, result) }
+  end
+
+  def load_form_cds_staff
+    form_id = @form_services.load_form_cds_staff
+    render json: { data: form_id }
   end
 
   private

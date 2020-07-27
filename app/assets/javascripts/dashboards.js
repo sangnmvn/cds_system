@@ -102,7 +102,7 @@ $(document).ready(function () {
     drawChart(data_filter);
   });
 
-  $('.item-filter-dashboard').change(function(){
+  $('.item-filter-dashboard').change(function () {
     $('.reset-filter').removeClass('disabled');
   });
 
@@ -161,6 +161,25 @@ $(document).ready(function () {
       }
     });
   }
+
+  $(document).on('click', '.link-icon', function () {
+    $.ajax({
+      url: "/dashboards/load_form_cds_staff",
+      data: {
+        user_id: $(this).parents('tr').data('id')
+      },
+      type: "POST",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      success: function (response) {
+        if (response.data == 'fails')
+          fails("User does not have CDS/CDP on the system");
+        else
+          window.location.href = response.data
+      },
+    });
+  })
 });
 
 function loadFilterReview() {
