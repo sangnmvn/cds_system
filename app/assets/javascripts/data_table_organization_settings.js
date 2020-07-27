@@ -303,11 +303,7 @@ $(document).on("click", ".btn-save-project", function () {
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
   }
-  if ($(".project-establishment").val().length < 1) {
-    $(".project-establishment").after(
-      '<span class="error-project">Please enter Establishment</span>'
-    );
-  } else if ($(".project-establishment").val().length > 255) {
+  if ($(".project-establishment").val().length > 255) {
     $(".project-establishment").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -321,11 +317,7 @@ $(document).on("click", ".btn-save-project", function () {
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
   }
-  if ($(".project-email").val().length < 1) {
-    $(".project-email").after(
-      '<span class="error-project">Please enter Email</span>'
-    );
-  } else if ($(".project-email").val().length > 255) {
+  if ($(".project-email").val().length > 255) {
     $(".project-email").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -1465,11 +1457,7 @@ $(".project-name").keyup(function () {
 })
 $(".project-establishment").change(function () {
   $(".message-project-establishment .error-project").remove();
-  if ($(".project-establishment").val().length < 1) {
-    $(".project-establishment").after(
-      '<span class="error-project">Please enter Establishment</span>'
-    );
-  } else if ($(".project-establishment").val().length > 255) {
+  if ($(".project-establishment").val().length > 255) {
     $(".project-establishment").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -1491,15 +1479,11 @@ $(".project-manager").keyup(function () {
 })
 $(".project-email").keyup(function () {
   $(".message-project-email .error-project").remove();
-  if ($(".project-email").val().length < 1) {
-    $(".project-email").after(
-      '<span class="error-project">Please enter Email</span>'
-    );
-  } else if ($(".project-email").val().length > 255) {
+  if ($(".project-email").val().length > 255) {
     $(".project-email").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
-  } else {
+  } else if ($(".project-email").val().length > 1) {
     var valid_email = regEx.test($(".project-email").val());
     if (!valid_email) {
       $(".project-email").after(
