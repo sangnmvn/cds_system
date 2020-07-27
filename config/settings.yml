@@ -3,27 +3,48 @@ privileges:
     1:
       {
         id: 1,
-        name: "Full Access on User Management",
+        name: "Full Access on all Companies",
         title_name: "User Management",
         title_id: 1,
       },
     2:
       {
         id: 2,
-        name: "View User Management",
+        name: "View User on my Company",
+        title_name: "User Management",
+        title_id: 1,
+      },
+    3:
+      {
+        id: 3,
+        name: "Add Approver to User on my Project",
         title_name: "User Management",
         title_id: 1,
       },
     4:
       {
         id: 4,
-        name: "Full Access on User Group Management",
-        title_name: "User Group Management",
-        title_id: 2,
+        name: "Add Reviewers to User on my Project",
+        title_name: "User Management",
+        title_id: 1,
       },
     5:
       {
         id: 5,
+        name: "Full Access on my Company",
+        title_name: "User Management",
+        title_id: 1,
+      },
+    6:
+      {
+        id: 6,
+        name: "Full Access on User Group Management",
+        title_name: "User Group Management",
+        title_id: 2,
+      },
+    7:
+      {
+        id: 7,
         name: "View User Group Management",
         title_name: "User Group Management",
         title_id: 2,
@@ -60,29 +81,29 @@ privileges:
     15: 
       {
         id: 15,
-        name: "CDS/CDP Assessment",
+        name: "Full Access on my CDS/CDP Assessment",
         title_name: "CDS/CDP Assessment",
         title_id: 6,
       },
-    16: 
+    16:
       {
         id: 16,
         name: "Review CDS/CDP Assessment",
-        title_name: "CDS/CDP Assessment",
+        title_name: "CDS/CDP Review",
         title_id: 6,
       },
-    17: 
+    17:
       {
         id: 17,
         name: "Approve CDS/CDP Assessment",
-        title_name: "CDS/CDP Assessment",
+        title_name: "CDS/CDP Review",
         title_id: 6,
       },
     24: 
     {
       id: 24,
-      name: "Full Access on CDS/CDP Assessment",
-      title_name: "CDS/CDP Assessment",
+      name: "View CDS/CDP Assessment",
+      title_name: "CDS/CDP Review",
       title_id: 6,
     },
     18:
@@ -110,14 +131,14 @@ privileges:
     21:
     {
       id: 21,
-      name: "Full Access on my Companies",
+      name: "Full Access on my Company",
       title_name: "Dashboards",
       title_id: 8     
     },
     22:
     {
       id: 22,
-      name: "Full Access on my Projects",
+      name: "Full Access on my Project",
       title_name: "Dashboards",
       title_id: 8     
     },

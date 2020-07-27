@@ -2,6 +2,9 @@ module Api
   class UserManagementService < BaseService
     FULL_ACCESS = 1
     VIEW_USER_MANAGEMENT = 2
+    ADD_APPROVER = 3
+    ADD_REVIEWER = 4
+    FULL_ACCESS_MY_COMPANY = 5
 
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
@@ -19,43 +22,56 @@ module Api
       users[0]&.email # anti-crash code (bug rails)
       projects = Project.distinct.select(:id, "project_members.user_id as user_id", :is_managent, :name).joins(:project_members).where(project_members: { user_id: users.pluck(:id) }).order(:name)
       h_projects = {}
-      h_projects_pm = {}
       projects.map do |project|
-        h_projects[project.user_id] = [] if h_projects[project.user_id].nil?
-        h_projects[project.user_id] << project.name
-        h_projects_pm[project.user_id] = project.id if project.is_managent == 1
+        if h_projects[project.user_id].nil?
+          h_projects[project.user_id] = {
+            id: [],
+            name: [],
+          }
+        end
+        h_projects[project.user_id][:name] << project.name
+        h_projects[project.user_id][:id] << project.id
       end
+
+      full_access = (privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any?
+      current_projects = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+
       users.map.with_index do |user, index|
+        if h_projects[user.id].present? && (current_projects & h_projects[user.id][:id]).any?
+          is_approver = privilege_array.include?(ADD_APPROVER)
+          is_reviewer = privilege_array.include?(ADD_REVIEWER)
+        end
+
         current_user_data = []
-        current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection_selection' name='collection_selection[]'></div></td>")
+        current_user_data.push("<td class='selectable'><div class='resource_selection_cell'><input type='checkbox' id='batch_action_item_#{user.id}' value='0' class='collection-selection' name='collection_selection[]'></div></td>")
 
         number = params[:offset] + index + 1
         current_user_data.push("<p class='number'>#{number}</p>")
-        current_user_data.push(user.first_name)
-        current_user_data.push(user.last_name)
+        current_user_data.push("<a href='/users/user_profile?id=#{user.id}' title='View Contact Detail'>#{user.format_name_vietnamese}</a>")
         current_user_data.push(user&.email || "")
         current_user_data.push(user.account)
 
         current_user_data.push(user.role&.name || "")
         current_user_data.push(user.title&.name || "")
-        project_name = h_projects[user.id].present? ? h_projects[user.id].join(", ") : ""
+        project_name = h_projects[user.id].present? ? h_projects[user.id][:name].join(", ") : ""
         current_user_data.push(project_name)
         current_user_data.push(user.company.name)
         # column action
-        pri = privilege_array.include?(FULL_ACCESS)
-        is_pm = privilege_array.include?(VIEW_USER_MANAGEMENT) && h_projects_pm[current_user.id].present?
         current_user_data.push("<div style='text-align: center'>
             <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
-              <i class='fa fa-pencil icon' style='color: #{pri ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
+              <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
             </a>
               <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href='javascript:;'>
-                <i class='fa fa-trash icon' style='color: #{pri ? "red" : "rgb(77, 79, 78)"}'></i>
+                <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "rgb(77, 79, 78)"}'></i>
               </a>
-              <a class='action_icon add-reviewer-icon' #{"data-toggle='modal' title='Add Reviewer For User' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.first_name} #{user.last_name}'" if pri || is_pm}  href='javascript:;'>
-                <img border='0' src='/assets/Assign_User.png' class='assign_user_img'>
+              <a class='action_icon add-reviewer-icon'  title='Add Reviewer For User' #{(full_access || is_reviewer) ? "data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"}  href='javascript:;'>
+                <img border='0' src='/assets/add_reviewer.png' class='add-reviewer-icon'>
               </a>
-              <a #{"class='action_icon status_icon'" if pri} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
-                <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless pri}'></i>
+              <a class='action_icon add-approver-icon' title='Add Approver For User' #{(full_access || is_approver) ? "data-toggle='modal'  data-target='#addApproverModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"} href='javascript:;'>
+                <img border='0' src='/assets/add_approver.png' class='add-approver-icon'>
+              </a>
+              <a #{"class='action_icon status_icon'" if full_access} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
+                <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless full_access}'></i>
               </a></div>")
 
         datas << current_user_data
@@ -179,13 +195,14 @@ module Api
     end
 
     def data_career_chart(user_id = nil)
+      has_cdp = false
       user_id ||= current_user.id
-      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order(:period_id)
+      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order("periods.to_date")
       h_rank_empty = {
         period: "",
-        current_user.role.name.to_sym => nil,
+        current_user.role.name => nil,
       }
-      role_names = title_histories.pluck(:role_name)
+      role_names = title_histories.pluck(:role_name).uniq
       role_names.each do |role_name|
         h_rank_empty[role_name] = nil
       end
@@ -194,8 +211,8 @@ module Api
       title_histories.each do |title_history|
         # new hash empty
         h_rank = h_rank_empty.clone
-        h_rank[:period] = title_history.period.to_date
-        h_rank[title_history.role_name] = title_history.role_name
+        h_rank[:period] = title_history.period&.format_period_career
+        h_rank[title_history.role_name] = title_history.rank
         arr_result << h_rank
       end
 
@@ -203,21 +220,22 @@ module Api
       form = Form.includes(:title, :role, :period).find_by(user_id: current_user.id)
       schedule = Schedule.find_by(company_id: current_user.company_id, status: "In-progress")
 
-      if form.present?
+      if form.present? && schedule.present?
         data_result = Api::FormService.new(params, current_user).data_view_result(form.id)
 
         if form.status != "Done"
           h_rank = h_rank_empty.clone
           h_rank[:period] = schedule&.period&.format_period_career
           h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
-          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank] || 0
           arr_result << h_rank
         end
 
-        if data_result[:cdp].present?
+        if data_result[:cdp].present? && data_result[:cdp][:title_id].present?
+          has_cdp = true
           h_rank = h_rank_empty.clone
           h_rank[:period] = "Next Period"
-          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank]
+          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank] || 0
           arr_result << h_rank
         end
       end
@@ -239,7 +257,7 @@ module Api
       #     }
       #   end
       # end
-      arr_result
+      { data: arr_result, has_cdp: has_cdp }
     end
 
     def calulate_data_user_by_title
@@ -278,21 +296,23 @@ module Api
       end
       results = []
       user_ids = []
-      title_first.map do |title|
-        next if h_old[title.user_id][:rank] < title.rank
-        results << {
-          class: (i.even? ? "even" : "odd"),
+
+      title_first.each_with_index do |title, i|
+        next if h_old[title.user_id].present? && h_old[title.user_id][:role] != title.role_name && h_old[title.user_id][:rank] >= title.rank
+        data = {
+          user_id: title.user_id,
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
           role: title.role_name,
           rank: title.rank,
           title: title.title,
           level: title.level,
-          old_rank: h_old[title.user_id][:rank],
-          old_title: h_old[title.user_id][:title],
-          old_level: h_old[title.user_id][:level],
         }
+        data[:old_rank] = h_old[title.user_id] ? h_old[title.user_id][:rank] : "N/A"
+        data[:old_title] = h_old[title.user_id] ? h_old[title.user_id][:title] : "N/A"
+        data[:old_level] = h_old[title.user_id] ? h_old[title.user_id][:level] : "N/A"
+        results << data
         user_ids << title.user_id
       end
 
@@ -316,7 +336,8 @@ module Api
 
     def data_users_down_title
       user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
-      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
+
       first = {}
       second = {}
       schedules.map do |schedule|
@@ -336,16 +357,17 @@ module Api
           rank: title.rank,
           level: title.level,
           title: title.title,
+          role: title.role_name,
         }
       end
       results = []
       user_ids = []
-      title_first.map do |title|
-        next if h_rank[title.user_id] > title.rank
+      title_first.each_with_index do |title, i|
+        next if h_old[title.user_id].nil? || h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] <= title.rank
         results << {
-          class: (i.even? ? "even" : "odd"),
+          user_id: title.user_id,
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
           role: title.role_name,
           rank: title.rank,
@@ -383,25 +405,25 @@ module Api
 
       titles = case number_keep
         when 0
-          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 1")
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids).where("number_keep >= 1")
         when 1
-          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids, number_keep: number_keep)
         when 2
-          Form.includes(:user, :keep_period).where(user_id: user_ids, number_keep: number_keep)
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids, number_keep: number_keep)
         when 3
-          Form.includes(:user, :keep_period).where(user_id: user_ids).where("number_keep >= 2")
+          Form.includes(:user, :period_keep, :role).where(user_id: user_ids).where("number_keep >= 2")
         end
-      titles.map do |title|
+      titles.map.with_index do |title, i|
         {
-          class: (i.even? ? "even" : "odd"),
+          user_id: title.user_id,
           title_history_id: title.id,
-          full_name: title.user.format_name,
+          full_name: title.user.format_name_vietnamese,
           email: title.user.email,
-          role: title.role_name,
+          role: title.role&.name || "N/A",
           rank: title.rank,
-          title: title.title,
+          title: title.title&.name || "N/A",
           level: title.level,
-          keep_period: title.keep_period.format_name,
+          period_keep: title.period_keep.format_name,
         }
       end
 
@@ -416,7 +438,7 @@ module Api
       #     rank: rand(i + 100),
       #     title: "#{rand(i + 100)} title tile",
       #     level: rand(i + 100),
-      #     keep_period: "#{rand(i + 100)} period period",
+      #     period_keep: "#{rand(i + 100)} period period",
       #   }
       # end
       # results

@@ -44,9 +44,8 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.desc)
 
       current_schedule_data.push(schedule.company.name)
-
       if check_pm?
-        project_ids = ProjectMember.where(user_id: current_user.id, :is_managent => true).pluck(:project_id)
+        project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
         project_name = Project.find(project_ids).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
@@ -58,20 +57,13 @@ class SchedulesController < ApplicationController
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
-        if schedule._type == "HR"
-          current_schedule_data.push("<td style='text-align: center;'>      
+        current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
-        elsif schedule._type == "PM"
-          current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#000'></i></a>
-        </td>")
-        end
       else
         current_schedule_data.push("")
       end
@@ -147,11 +139,11 @@ class SchedulesController < ApplicationController
       temp_params[:_type] = "HR"
       # format date from period
       period_params_temp = period_params
+      period_params_temp[:status] = "New"
       period_params_temp[:from_date] = helpers.date_format(params[:from_date])
       period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
       @period = Period.new(period_params_temp)
-
       if @period.save
         temp_params[:period_id] = @period.id
         @schedule = Schedule.new(temp_params)
@@ -243,7 +235,6 @@ class SchedulesController < ApplicationController
 
   def destroy_page
     schedule = Schedule.find(params[:id])
-
     render json: { status: true, id: schedule.id }
   end
 
@@ -253,15 +244,10 @@ class SchedulesController < ApplicationController
     period = Period.find(schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
     ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
-
-    if check_hr?
-      if period.destroy && schedule.destroy
-        #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-        render json: { status: true }
-      else
-        render json: { status: false }
-      end
-    elsif check_pm?
+    if period.destroy && schedule.destroy
+      #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
+      render json: { status: true }
+    else
       render json: { status: false }
     end
   end

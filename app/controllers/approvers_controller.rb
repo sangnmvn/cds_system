@@ -1,2 +1,0 @@
-class ApproversController < ApplicationController
-end

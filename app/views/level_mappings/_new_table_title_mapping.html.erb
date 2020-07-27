@@ -20,6 +20,7 @@
               <% @list_title[:competency].each do |item| %>
                 <td class="competency-row">
                   <select class="form-control competency-value">
+                    <option value="0">0</option>
                     <%= 1.upto(@list_title[:no_rank].to_i) do |i| %>
                       <option value="<%=(i - 1)%>-<%= i %>"><%=(i - 1)%>-<%= i %></option>
                       <option value="++<%=i%>">++<%=i%></option>

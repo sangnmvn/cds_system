@@ -19,21 +19,21 @@
     <div class="row1">
       <div id="chart_role" class="col bb">
         <div class="col title">
-          Number of Employees by Role
+          Number of Employee(s) by Role
         </div>
       </div>
       <div id="chart_gender" class="col aa">
-        <div class="col title">Number of Employees by Gender</div>
+        <div class="col title">Number of Employee(s) by Gender</div>
       </div>
       <div class="w-100"></div>
       <div id="chart_title" class="col dd">
         <div class="col title">
-          Number of Employees by Title
+          Number of Employee (s) by Title
         </div>
       </div>
       <div id="chart_seniority" class="col cc">
         <div class="col title">
-          Number of Employees by Seniority
+          Number of Employee(s) by Seniority
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
   <% end %>
   <% if @can_view_chart %>
     <div class="title-table">
-      <div class="title-header-up">Up Title in the Latest Period</div>
+      <div class="title-header-up">Promotion in the Last Period</div>
       <div class="icon">
         <%= link_to 'View all CDSs/CDPs', cds_review_forms_path, class:"reject-assessment", title:"View all CDSs/CDPs" %>&nbsp;
         <span>Export</span>&nbsp;
@@ -83,7 +83,7 @@
     </div>
     <br>
     <div class="title-table">
-      <div class="title-header-up">Down Title in the Latest Period</div>
+      <div class="title-header-up">Demotion in the Last Period</div>
       <div class="icon">
         <%= link_to 'View all CDSs/CDPs', cds_review_forms_path, class:"reject-assessment", title:"View all CDSs/CDPs" %>&nbsp;
         <span>Export</span>&nbsp;
@@ -118,7 +118,7 @@
     </div>
     <br>
     <div class="title-table">
-      <div class="title-header-keep">Keep Title/Rank/Level in the Latest Period</div>
+      <div class="title-header-keep">No Change Title in the Last Period</div>
       <div class="icon">
         <span>Keep in</span>&nbsp;
         <select class="filter" id="select_type_keep">
@@ -188,12 +188,13 @@
           </tbody>
         </table>
       </div>
-      <div class='cds-cdp-suggestion'>
+      <%# <div class='cds-cdp-suggestion'>
         <div class="title-header-up">CDS&CDP Suggestion</div>
-      </div>
+      </div> %>
     </div>
   <% end %>
 </div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <script>
   var is_staff =  <%= !@can_view_chart && @can_view_career %>;
 </script>

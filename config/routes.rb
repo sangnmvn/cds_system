@@ -33,6 +33,10 @@ Rails.application.routes.draw do
       post :delete_multiple_users
       post :disable_multiple_users
       post :enable_multiple_users
+      post :get_filter
+      post :add_reviewer
+      post :add_approver
+      post :add_reviewer_to_database
     end
   end
 
@@ -83,6 +87,7 @@ Rails.application.routes.draw do
       post :reviewer_submit
       post :withdraw_cds
       post :export_excel_cds_review
+      post :get_line_manager_miss_list
     end
   end
   resources :templates do
@@ -149,6 +154,7 @@ Rails.application.routes.draw do
       post :export_down_title
       post :export_keep_title
       post :data_latest_baseline
+      post :load_form_cds_staff
     end
   end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
@@ -184,6 +190,11 @@ Rails.application.routes.draw do
       delete :delete_role
       delete :delete_title
     end
+  end 
+  resources :help do
+    collection do
+      get :index
+    end
   end
   get "/schedules/:id/edit_page", to: "schedules#edit_page"
   get "/schedules/:id/destroy_page", to: "schedules#destroy_page"
@@ -200,11 +211,4 @@ Rails.application.routes.draw do
   get "/groups/:id/destroy_page", to: "groups#destroy_page"
   # resources :groups
   # get "groups" => "groups#index"
-
-  resources :users do
-    collection do
-      post :add_reviewer
-      post :add_reviewer_to_database
-    end
-  end
 end

@@ -6,7 +6,7 @@ module Api
     end
 
     def get_role_without_level_mapping
-      roles = Role.select(:id, :name).where(updated_by: nil)
+      roles = Role.select(:id, :name).where(updated_by: nil, is_enabled: true)
       roles.map do |role|
         {
           role_id: role.id,

@@ -1,7 +1,5 @@
 <%= javascript_include_tag 'table_level_mapping', 'data-turbolinks-track': 'reload' %>
-<div id="alert-success" class="alert alert-success" data-alert="alert">
-  <div id="content-alert-success"></div>
-</div>
+<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert">
   <div id="content-alert-fail"></div>
 </div>
@@ -27,7 +25,7 @@
               <td>
                 <div class="row">
                   <div class='col-3'>
-                    <input type="number" class="form-control" min="1" max="<%= @list_title[:count_competency] %>" placeholder='Quantity'>
+                    <input type="number" class="form-control input-quantity" min="1" max="<%= @list_title[:count_competency] %>" placeholder='Quantity'>
                   </div>
                   <div class='col-5'>
                     <select class="form-control" id="select_type">

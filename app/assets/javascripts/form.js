@@ -617,7 +617,7 @@ $(document).on("click", ".submit-assessment", function () {
   $('#modal_period').modal('show');
 });
 
-$(document).on("click", "#confirm_submit_cds", function () {
+$(document).on("click", ".confirm-submit-cds", function () {
   $.ajax({
     type: "POST",
     url: "/forms/submit",
@@ -632,7 +632,7 @@ $(document).on("click", "#confirm_submit_cds", function () {
     success: function (response) {
       $('#modal_period').modal('hide');
       if (response.status == "success") {
-        success("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+        warning("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
         $("a.submit-assessment .fa-file-import").css("color", "#ccc");
         $('a.submit-assessment').removeClass('submit-assessment');
         checkStatusFormStaff(status)

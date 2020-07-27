@@ -13,7 +13,7 @@ function drawChartGender(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employees by Gender")
+      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employee(s) by Gender")
     }
   });
 }
@@ -27,7 +27,7 @@ function drawChartRole(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_role", "Number of Employees by Role")
+      drawPieChart(response.data, response.total, "#chart_role", "Number of Employee(s) by Role")
     }
   });
 }
@@ -42,7 +42,7 @@ function drawChartTitle(data_filter) {
     },
     success: function (response) {
       sleep(1000)
-      drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employees by Title", "Rank");
+      drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employee(s) by Title", "Rank");
     }
   })
 }
@@ -56,7 +56,7 @@ function drawChartSeniority(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employees by Seniority", "Year");
+      drawPyramidChart(response.data, response.total, "#chart_seniority", "Number of Employee(s) by Seniority", "Year");
     }
   });
 }
@@ -102,8 +102,13 @@ $(document).ready(function () {
     drawChart(data_filter);
   });
 
+  $('.item-filter-dashboard').change(function () {
+    $('.reset-filter').removeClass('disabled');
+  });
+
   $(".reset-filter").click(function () {
-    drawChart();
+    $(this).addClass('disabled');
+    loadDataFilter();
   });
   // draw chart career
   drawChartCareer();
@@ -156,6 +161,25 @@ $(document).ready(function () {
       }
     });
   }
+
+  $(document).on('click', '.link-icon', function () {
+    $.ajax({
+      url: "/dashboards/load_form_cds_staff",
+      data: {
+        user_id: $(this).parents('tr').data('id')
+      },
+      type: "POST",
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
+      },
+      success: function (response) {
+        if (response.data == 'fails')
+          fails("User does not have CDS/CDP on the system");
+        else
+          window.location.href = response.data
+      },
+    });
+  })
 });
 
 function loadFilterReview() {
@@ -178,6 +202,10 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
+      $('.company-filter').html(`<select name="company_filter" id="company_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      $('.project-filter').html(`<select name="project_filter" id="project_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      $('.role-filter').html(`<select name="role_filter" id="role_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+      // $("#company_filter, #role_filter, #project_filter").html('');
       if (response.status == "fails")
         return;
       if (response.companies.length > 1)

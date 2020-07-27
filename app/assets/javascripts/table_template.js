@@ -161,28 +161,13 @@ function loadSlotsinCompetency(search) {
   });
 }
 
-//alert success
-function success(content) {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-// alert fails
-function fails(content) {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
-
-
 function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templateId) {
   $.ajax({
     type: "GET",
     url: "/slots/new",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       desc: desc,
       evidence: evidence,
@@ -191,7 +176,7 @@ function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templat
     },
     dataType: "json",
     success: function () {
-      success("The slot has been saved successfully.");
+      warning("The slot has been saved successfully.");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
@@ -203,8 +188,11 @@ function addNewSlot(desc, evidence, level, competencyId, nameCompetency, templat
 
 function updateSlot(desc, evidence, level, competencyId, presentId, templateId) {
   $.ajax({
-    type: "GET",
-    url: "/slots/update",
+    type: "PUT",
+    url: "/slots/" + presentId,
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
     data: {
       desc: desc,
       evidence: evidence,
@@ -214,7 +202,7 @@ function updateSlot(desc, evidence, level, competencyId, presentId, templateId) 
     },
     dataType: "json",
     success: function (response) {
-      success("The slot has been updated successfully.");
+      warning("The slot has been updated successfully.");
       loadSlotsinCompetency();
       checkSlotinTemplate(templateId)
     },
@@ -232,7 +220,7 @@ function delSlot(id, tr, templateId) {
     },
     type: "GET",
     success: function (response) {
-      success("The slot has been deleted successfully.");
+      warning("The slot has been deleted successfully.");
       $("#table_slot").dataTable().fnDeleteRow(tr);
       checkSlotinTemplate(templateId)
       disableButtonUpDown()
@@ -306,7 +294,7 @@ function finnish(templateId) {
     },
     dataType: "json",
     success: function (response) {
-      success("The template has been finished")
+      warning("The template has been finished")
       changeBtnFinish(-1)
     },
     error: function () {
@@ -347,7 +335,7 @@ function moveRow(id, row_id, direction, table) {
         $("#contentMessageMove").html("This slot is belonging to level " + response.status + ". Therefore, you cannot move it to another level. Please update its level before doing this action.")
         $('#messageMove').modal('show')
       } else {
-        success("Move success");
+        warning("Move success");
         if (row_id != 1 && direction != -1) {
           var num = parseInt(direction);
           current_row_data = table.row(row_id).data();

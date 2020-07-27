@@ -1,0 +1,57 @@
+// Place all the styles related to the help controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+ul {
+    list-style-type: none;
+    padding-inline-start: 20px;
+}
+.row {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    .left-panel {
+        padding: 0;
+    }
+}
+
+.show-help-2 {
+    display: none;
+}
+img {
+    width: 100%;
+}
+
+.show-help-css-title{
+    font-weight: 600;
+    font-size:20px; 
+    color: rgb(255, 145, 0);
+}
+
+.show-help-css{
+    font-weight: 600;
+    color: #000;
+}
+
+.fixedElement {
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 16.8% !important;
+}
+
+.card {
+    max-width: 100% !important;
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 10px;
+    background-color: #e4e4e4;
+    border: 2px solid #fff;
+}
+
+.right-panel {
+    line-height: 35px;
+    padding-top: 18px;
+    background-color: #cce1f3;
+}

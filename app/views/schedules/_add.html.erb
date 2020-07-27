@@ -17,7 +17,7 @@
                 <div class="col-sm-4">
                   <label>Schedule Name (*)</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= text_field_tag 'desc', nil, class: 'form-control', placeholder: 'Please enter schedule name' %>
                 </div>
               </div>
@@ -25,10 +25,10 @@
               <%# project name %>
               <% if current_user.role.name == "HR" %>
                 <div class="row">
-                  <div class="col-sm-4">
+                  <div class="col-sm-4">￼
                     <label>Company Name (*)</label>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-8">
                     <%= select_tag "project", options_from_collection_for_select(@company, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
                   </div>
                 </div>
@@ -38,7 +38,7 @@
                   <div class="col-sm-4">
                     <label>Project Name (*)</label>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-8">
                     <%= select_tag "project", options_from_collection_for_select(@projects, "id", "name"), class: 'form-control',  include_blank: "Please select a project" %>
                   </div>
                 </div>
@@ -49,7 +49,7 @@
                 <div class="col-sm-4">
                   <label>Start date (*)</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= date_field_tag :start_date , class: "form-control", min: Date.today %>
                 </div>
               </div>
@@ -59,20 +59,20 @@
                 <div class="col-sm-4">
                   <label>Employee's end date (*)</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= date_field_tag :end_date_employee, class: "form-control" %>
                 </div>
               </div>
               <br>
             </div>
             <%# right  %>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
               <%# end date reviewer %>
               <div class="row">
                 <div class="col-sm-4">
                   <label> Reviewer's end date (*)</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= date_field_tag :end_date_employee, class: "form-control" %>
                 </div>
               </div>
@@ -82,7 +82,7 @@
                 <div class="col-sm-4">
                   <label>Day notice to employee (*)</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= number_field_tag :notify_employee, in: 1.0..20.0, class: "form-control" %>
                 </div>
               </div>
@@ -92,7 +92,7 @@
                 <div class="col-sm-4">
                   <label>Day notice to employee</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <%= number_field_tag :notify_reviewer, in: 1.0..20.0, class: "form-control" %>
                 </div>
               </div>

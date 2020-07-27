@@ -28,12 +28,12 @@ crumb :new_cds do
 end
 
 crumb :cds_review do
-  link "CDS Review List", "/forms/cds_review"
+  link "CDS & CDP Review", "/forms/cds_review"
   parent :root
 end
 
 crumb :new_cdp do
-  link "CDP Staff", "/forms/cdp_assessment"
+  link "CDS & CDP Staff", "/forms/cdp_assessment"
   parent :root
 end
 
@@ -79,5 +79,10 @@ end
 
 crumb :organization_settings do
   link "Organization Settings", "/organization_settings"
+  parent :root
+end
+
+crumb :help do
+  link "Help", "/help"
   parent :root
 end

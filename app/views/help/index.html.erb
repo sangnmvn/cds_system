@@ -1,0 +1,68 @@
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<%= stylesheet_link_tag "cdp_assessment", media: "all", 'data-turbolinks-track': "reload" %>
+<%= stylesheet_link_tag "help", media: "all", 'data-turbolinks-track': "reload" %>
+<% breadcrumb :help %>
+<div class="container-fluid" style="padding:0">
+  <div class="row" id="cdp_container_div2">
+    <div class="col-10" style="font-size: 150%;">
+      Help
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="left-panel col-2">
+    <div class="card">
+      <ul>
+        <li><a class="help-1 " href="javascript:void(0)">1. Hệ thống CDS là gì</a></li>
+        <ul>
+          <li><a class="help-1-1 " href="javascript:void(0)">1.1. Những ai tham gia vào hệ thống đánh giá này</a></li>
+          <ul>
+            <li><a class="help-1-1-1 " href="javascript:void(0)">1.1.1. Ai cần đọc tài liệu này</a></li>
+            <li><a class="help-1-1-2 " href="javascript:void(0)">1.1.2. Các tính năng chính</a></li>
+          </ul>
+        </ul>
+        <li><a class="help-2 " href="javascript:void(0)">2. Hướng dẫn sử dụng hệ thống CDS</a></li>
+        <ul>
+          <li><a class="help-2-1 " href="javascript:void(0)">2.1. My account</a></li>
+          <li><a class="help-2-2 " href="javascript:void(0)">2.2. Change password</a></li>
+          <li><a class="help-2-3 " href="javascript:void(0)">2.3. Settings</a></li>
+          <ul>
+            <li><a class="help-2-3-1 " href="javascript:void(0)">2.3.1. Company Information</a></li>
+            <li><a class="help-2-3-2 " href="javascript:void(0)">2.3.2. Project Information</a></li>
+            <li><a class="help-2-3-3 " href="javascript:void(0)">2.3.3. Role Information</a></li>
+            <li><a class="help-2-3-4 " href="javascript:void(0)">2.3.4. Title Information</a></li>
+            <li><a class="help-2-4-1 " href="javascript:void(0)">2.3.5. Template management</a></li>
+            <li><a class="help-2-4-2 " href="javascript:void(0)">2.3.6. Level mapping</a></li>
+          </ul>
+          <li><a class="help-2-5 " href="javascript:void(0)">2.4. User management</a></li>
+          <ul>
+            <li><a class="help-2-5-1 " href="javascript:void(0)">2.4.1. User management</a></li>
+            <li><a class="help-2-5-2 " href="javascript:void(0)">2.4.2. User group management</a></li>
+          </ul>
+          <li><a class="help-2-6 " href="javascript:void(0)">2.5. CDS / CDP assessment</a></li>
+          <ul>
+            <li><a class="help-2-6-1 " href="javascript:void(0)">2.5.1. CDS / CDP assessment flow</a></li>
+            <li><a class="help-2-6-2 " href="javascript:void(0)">2.5.2. Schedule management</a></li>
+            <li><a class="help-2-6-3 " href="javascript:void(0)">2.5.3. CDS / CDP Assessment</a></li>
+            <li><a class="help-2-6-4 " href="javascript:void(0)">2.5.4. CDS / CDP Review</a></li>
+          </ul>
+          <li><a class="help-2-7 " href="javascript:void(0)">2.6. Statistic / Dashboard</a></li>
+          <ul>
+            <li><a class="help-2-7-1 " href="javascript:void(0)">2.6.1. Staff</a></li>
+            <li><a class="help-2-7-2 " href="javascript:void(0)">2.6.2.	Manager</a></li>
+          </ul>
+        </ul>
+      </ul>
+    </div>
+  </div>
+  <div class="right-panel col-10">
+    <div id="show_help">
+      <div class="show-help-1"><%= render "help_1" %></div>
+      <div class="show-help-2"><%= render "help_2" %></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"
+  src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
+<script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>
+<%= javascript_include_tag "help", 'data-turbolinks-track': "reload" %>

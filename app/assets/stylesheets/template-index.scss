@@ -2,12 +2,15 @@ table {
     table-layout: fixed;
 }
 
+.red{
+    color: #ff0000;
+}
 #template-index th,
 td {
     border: 1px solid #fff;
 }
 
-table#template-index {
+table#template_index {
     border: 2px solid #3d7fbc;
 }
 

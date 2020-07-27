@@ -56,11 +56,16 @@ table.dataTable tbody td {
 .action_icon>img {
     width: 18px;
     height: 18px;
-}
 
-img.assign_user_img {
-    width: 30x;
-    height: 35px;
+    &.add-reviewer-icon {
+        margin-bottom: 5px;
+    }
+
+    &.add-approver-icon {
+        margin-bottom: 5px;
+        width: 25px;
+        height: 25px;
+    }
 }
 
 .next_page_icon {
@@ -226,7 +231,7 @@ tr {
 
 .filter-page-user {
     padding: 10px;
-    border: 1px solid #cccccc;
+    border: 1px solid #a9a6a6;
     ;
 }
 
@@ -308,4 +313,28 @@ table.dataTable tbody td {
     width: 13px;
     height: 13px;
     font-size: 19px;
+}
+
+.modal-add-reviewer,
+.modal-add-approver {
+    width: 700px;
+}
+
+#table_reviewer_wrapper,
+#table_approver_wrapper {
+    overflow-x: auto;
+    width: 98%;
+    margin-left: 10px;
+
+    .no {
+        width: 5%;
+    }
+
+    .checkbox {
+        width: 5%;
+    }
+
+    .account {
+        width: 10%;
+    }
 }

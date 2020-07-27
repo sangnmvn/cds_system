@@ -88,12 +88,17 @@ $(document).ready(function () {
     $(this).parent().parent().attr('data-is_change', 'true');
     checkRow($(this).parent().parent())
   });
-  $('#table_edit_level_mapping').on('keyup', 'input', function (e) {
+  $(document).on('keypress', 'input', function (e) {
+    var regex = /[0-9]/;
+    if (!regex.test(e.key) || parseInt($(this).val() + e.key) > max_quantity) {
+      event.preventDefault();
+      return false;
+    }
     checkData()
     checkRow($(this).parent().parent())
     $(this).parent().parent().attr('data-is_change', 'true');
   });
-  $('#table_edit_level_mapping').on('change', 'input', function (e) {
+  $('#table_edit_level_mapping').on('input', 'input', function (e) {
     checkData()
     checkRow($(this).parent().parent())
     $(this).parent().parent().attr('data-is_change', 'true');
@@ -414,22 +419,6 @@ function fillSelectRank(select, value, count) {
     $("<option value='" + i + "'/>").html(i).appendTo(select)
   }
   select.find("option[value='" + value + "']").prop('selected', true)
-}
-
-function success(content) {
-  $("#content-alert-success").html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 4000);
-}
-// alert fails
-function fails(content) {
-  $("#content-alert-fail").html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 4000);
 }
 
 function checkPrivilege(edit, view) {

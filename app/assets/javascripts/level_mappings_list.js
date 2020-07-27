@@ -63,8 +63,8 @@ function loadDataLevelMapping() {
         edit_button_color = '#F99D45';
         delete_button_color = '#E84415';
       } else {
-        edit_button_color = '#000';
-        delete_button_color = '#000';
+        edit_button_color = '#a9a6a6';
+        delete_button_color = '#a9a6a6';
         role_id = '';
       }
       for (var i = 0; i < response.length; i++) {
@@ -128,7 +128,7 @@ $(document).ready(function () {
   var role_name = localStorage.getItem("role_name");
   var type = localStorage.getItem("type");
   if (role_name && type)
-    success("The level mapping for role " + role_name + " has been " + type + " successfully.");
+    warning("The level mapping for role " + role_name + " has been " + type + " successfully.");
   localStorage.removeItem("role_name");
   localStorage.removeItem("type");
 })

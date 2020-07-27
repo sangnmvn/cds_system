@@ -1,3 +1,12 @@
+function setHeightTableTitleMapping() {
+  h = $(".dynamic-title-header-col").outerHeight()
+  title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
+  title_rank_col.outerHeight(h)
+  h = $(".dynamic-title-header-col").css("height")
+  title_rank_col.css('text-align', 'center');
+  title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%  
+}
+
 function loadTitleMappingForEdit() {
   role_id = global_role_id;
 
@@ -37,16 +46,26 @@ function loadTitleMappingForEdit() {
           }
         }
       }
+      var title_with_most_competency = ""
+      var max_competency_count = -1
+      for (var title_name in title_list) {
+        current_length = title_list[title_name].length
+        if (current_length > max_competency_count) {
+          title_with_most_competency = title_name;
+          max_competency_count = current_length;
+        }
+      }
       key_of_title_list = Object.keys(title_list);
       // get sorted competency list
       unsorted_competency_list = Array.from(competency_list);
-      title_name = key_of_title_list[0];
-      sortByKey(title_list[title_name], "competency_location");          
+
+      sortByKey(title_list[title_name], "competency_location");
       competency_list = []
+
       for (var h = 0; h < unsorted_competency_list.length; h++) {
         competency_list.push(JSON.stringify({
-          name: title_list[title_name][h].competency_name,
-          id: title_list[title_name][h].competency_id
+          name: title_list[title_with_most_competency][h].competency_name,
+          id: title_list[title_with_most_competency][h].competency_id
         }))
       }
       // step 2: append all of the competency column
@@ -81,11 +100,12 @@ function loadTitleMappingForEdit() {
         });
         for (j = 0; j < column_list.length; j++) {
           current_cell_competency_name = column_list[j];
+          found_column = false
           for (k = 0; k < data_list.length; k++) {
             // find competency data suitable for competency column cell
             if (data_list[k].competency_name == current_cell_competency_name) {
               max_rank = global_max_rank;
-              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'>`
+              value_dropdown = `<select data-is_changed='false' class='form-control competency-value'><option value='0'>0</option>`
 
               for (var x = 1; x < (max_rank + 1); x++) {
                 value_dropdown += `<option value='{j}-{i}'>{j}-{i}</option><option value='++{i}'>++{i}</option><option value='{i}'>{i}</option>`.formatUnicorn({
@@ -99,13 +119,19 @@ function loadTitleMappingForEdit() {
               index_of_insert = value_dropdown.indexOf(" value='{value}'>".formatUnicorn({
                 value: value
               }));
-              value_dropdown = value_dropdown.substring(0, index_of_insert) + ' selected ' + value_dropdown.substring(index_of_insert);
+              if (index_of_insert >= 0) {
+                value_dropdown = value_dropdown.substring(0, index_of_insert) + ' selected ' + value_dropdown.substring(index_of_insert);
+              }
               final_html += "<td class='competency-row'>{value_dropdown}</td>".formatUnicorn({
                 value_dropdown: value_dropdown
               });
+              found_column = true;
               break;
 
             }
+          }
+          if (!found_column) {
+            final_html += "<td></td>";
           }
         }
         final_html += "</tr>";
@@ -119,12 +145,16 @@ function loadTitleMappingForEdit() {
         $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
       })
       checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
+      setHeightTableTitleMapping()
     }
   });
 }
 
 $(document).ready(function () {
-  loadTitleMappingForEdit();
+  loadTitleMappingForEdit();  
+  window.addEventListener('zoom', () => {
+    setHeightTableTitleMapping();
+  })    
 });
 
 function checkPrivilege(edit, view) {

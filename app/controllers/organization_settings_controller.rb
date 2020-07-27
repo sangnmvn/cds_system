@@ -40,7 +40,7 @@ class OrganizationSettingsController < ApplicationController
 
   def save_project
     if params[:project_id].blank?
-      return render json: { status: "exist" } if Project.includes(:company).where(name: params[:project_name], "companies.id": params[:company_id]).present?
+      return render json: { status: "exist" } if Project.includes(:company).where(name: params[:project_name], "companies.id": params[:project_company_name]).present?
     end
     return render json: { status: "success" } if @organization_settings.save_project
     render json: { status: "fail" }
@@ -48,7 +48,7 @@ class OrganizationSettingsController < ApplicationController
 
   def save_title
     if params[:title_id].blank?
-      return render json: { status: "exist" } if Title.where(name: params[:title_name]).present?
+      return render json: { status: "exist" } if Title.includes(:role).where(name: params[:title_name], "roles.id": params[:title_role_name]).present?
     end
     return render json: { status: "success" } if @organization_settings.save_title
     render json: { status: "fail" }

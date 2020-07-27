@@ -7,6 +7,9 @@ $header-color: #4472c4;
 $even-color: #E9EBF5;
 $odd-color: #CFD5EA;
 
+.dataTables_info {
+    margin-left: 25px !important;
+}
 .item-row {
     border: 1px solid;
 }
@@ -49,17 +52,14 @@ $odd-color: #CFD5EA;
 
 .row2 {
     background-color: #dae7ff;
+    border: 1px solid #fff;
     display: flex;
     flex-wrap: wrap;
     height: 400px;
 }
 
-.title-header {
-    font-size: 30px;
-    font-weight: bold;
-}
-
 .title {
+    margin-top: 20px;
     text-align: center;
     font-size: 20px;
     font-weight: bold;
@@ -134,14 +134,14 @@ rect {
 
 .title-header-up {
     padding-left: 10px;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     width: calc(100vw - 260px);
 }
 
 .title-header-keep {
     padding-left: 10px;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     width: calc(100vw - 530px);
 }
@@ -175,6 +175,10 @@ rect {
 
             td {
                 border: 1px solid $border-color;
+                .link-icon {
+                    text-decoration: unset;
+                    color: #007bff;
+                }
             }
 
             .number {
@@ -226,9 +230,9 @@ rect {
 
         .baseline-cds {
             width: 50%;
-            background-color: #dae7ff;
+            // background-color: #dae7ff;
             #table_baseline {
-                background-color: #dae7ff;
+                // background-color: #dae7ff;
                 width: 98% !important;
                 .first-column {
                     width: 10%;

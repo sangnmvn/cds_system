@@ -1,0 +1,53 @@
+<div class="modal" tabindex="-1" id="addApproverModal" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-add-approver" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" id="add_approver_modal_title" style="color: white">Assign Users to Group</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color:white" >&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6">
+            <label>Allow employees to submit late : </label>
+          </div>
+          <div class="col-3">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input submit-late" value="true" name="submit_late"><i>Accept</i>
+            </label>
+          </div>
+          <div class="col-3">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input submit-late" value="false" name="submit_late" checked><i>Refuse</i>
+            </label>
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <div id="table_approver_wrapper" style="overflow-x:auto;">
+            <table class="table table-primary table-mytable table-responsive-sm"style="width: 100%;border-bottom: 2px solid #4882bf;" id="table_add_approver">
+              <thead>
+                <tr>
+                  <td class="no">No.</td>
+                  <td class="checkbox"></td>
+                  <td class="full-name">Full Name</td>
+                  <td class="account">Account</td>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-12 p-3 text-center">
+            <button id="save_add_approver" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>Save</button>
+            <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- hidden input to contains id-->
+    <div style="display: none;" class="add-reviewer-id-modal"></div>
+  </div>

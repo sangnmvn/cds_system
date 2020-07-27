@@ -1,34 +1,32 @@
-function refreshTableRowDisable() {
-  $("a > .fa-toggle-on").each(function () {
-    $(this).closest("tr").removeClass("row-disabled");
-  });
-
-  $("a > .fa-toggle-off").each(function () {
-    $(this).closest("tr").addClass("row-disabled");
-  });
-}
-
-
 $(document).ready(function () {
   loadDataCompany();
   setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
   loadCompanyName();
+  $(".btn-company").css("background-color","#8da8db");
   loadRoleName();
   $(".btn-company").click(function () {
     setDisplay("#box_company", "#table_company", "btn-add-company", "btn-save-company");
     loadDataCompany();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-company").css("background-color","#8da8db");
   });
   $(".btn-project").click(function () {
     setDisplay("#box_project", "#table_project", "btn-add-project", "btn-save-project");
     loadDataProject();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-project").css("background-color","#8da8db");
   });
   $(".btn-role").click(function () {
     setDisplay("#box_role", "#table_role", "btn-add-role", "btn-save-role");
     loadDataRole();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-role").css("background-color","#8da8db");
   });
   $(".btn-title").click(function () {
     setDisplay("#box_title", "#table_title", "btn-add-title", "btn-save-title");
     loadDataTitle();
+    $(".left-panel table tr").css("background-color","#4472c4");
+    $(".btn-title").css("background-color","#8da8db");
   });
 
   $(".joined-date").datepicker({
@@ -305,11 +303,7 @@ $(document).on("click", ".btn-save-project", function () {
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
   }
-  if ($(".project-establishment").val().length < 1) {
-    $(".project-establishment").after(
-      '<span class="error-project">Please enter Establishment</span>'
-    );
-  } else if ($(".project-establishment").val().length > 255) {
+  if ($(".project-establishment").val().length > 255) {
     $(".project-establishment").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -323,11 +317,7 @@ $(document).on("click", ".btn-save-project", function () {
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
   }
-  if ($(".project-email").val().length < 1) {
-    $(".project-email").after(
-      '<span class="error-project">Please enter Email</span>'
-    );
-  } else if ($(".project-email").val().length > 255) {
+  if ($(".project-email").val().length > 255) {
     $(".project-email").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -633,7 +623,6 @@ $(document).on("click", ".status-icon-company", function () {
           );
           warning("The company has been enabled successfully.");
         }
-        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -665,7 +654,6 @@ $(document).on("click", ".status-icon-project", function () {
           );
           warning("The project has been enable successfully.");
         }
-        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -697,7 +685,6 @@ $(document).on("click", ".status-icon-role", function () {
           );
           warning("The role has been enabled successfully.");
         }
-        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -729,7 +716,6 @@ $(document).on("click", ".status-icon-title", function () {
           );
           warning("The title has been enabled successfully.");
         }
-        refreshTableRowDisable();
       } else if (response.status == "fail") {
         fails("The status hasn't been changed.");
       }
@@ -890,7 +876,6 @@ function loadDataCompany(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_company");
       }
-      refreshTableRowDisable();
     },
   });
 }
@@ -956,6 +941,13 @@ function appendDataToTableCompany(data) {
             </a>`.formatUnicorn({
         id: user.id
       });
+      else
+      tpl += `
+            <a class="delete-company disabled" title="Delete company" data-company_id="{id}" href="javascript:;" >
+            <i class="fa fa-trash"></i>
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
@@ -979,7 +971,6 @@ function loadDataProject(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_project");
       }
-      refreshTableRowDisable();
     },
   });
 }
@@ -1040,6 +1031,13 @@ function appendDataToTableProject(data) {
             </a>`.formatUnicorn({
         id: user.id
       });
+    else
+      tpl += `
+            <a class="delete-project disabled" title="Delete project" data-project_id="{id}" href="javascript:;" >
+            <i class="fa fa-trash"></i>
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
@@ -1061,7 +1059,6 @@ function loadDataRole(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_role");
       }
-      refreshTableRowDisable();
     },
   });
 }
@@ -1110,6 +1107,13 @@ function appendDataToTableRole(data) {
             </a>`.formatUnicorn({
         id: user.id
       });
+    else
+      tpl += `
+            <a class="delete-role disabled" title="Delete role" data-role_id="{id}" href="javascript:;" >
+            <i class="fa fa-trash"></i>
+            </a>`.formatUnicorn({
+        id: user.id
+      });
     tpl += `</td></tr>`;
   });
   return tpl;
@@ -1133,7 +1137,6 @@ function loadDataTitle(data_filter = {}) {
       if (response.data.length > 0) {
         setupDataTable("#table_title");
       }
-      refreshTableRowDisable();
     },
   });
 }
@@ -1148,7 +1151,7 @@ function appendDataToTableTitle(data) {
         <tr>
           <td class="type-number item-row number">{number}</td>
           <td class="type-text item-row role-name">{role_name}</td>
-          <td class="type-text item-row name">{name}</td>
+          <td class="type-text item-row title-name">{name}</td>
           <td class="type-text item-row abbreviation">{abbreviation}</td>
           <td class="type-number item-row rank">{rank}</td>
           <td class="type-text item-row desc">{desc}</td>
@@ -1184,6 +1187,13 @@ function appendDataToTableTitle(data) {
     if (user.is_not_used)
       tpl += `
             <a class="delete-title" title="Delete title" data-title_id="{id}" href="javascript:;">
+            <i class="fa fa-trash"></i>
+            </a>`.formatUnicorn({
+        id: user.id
+      });
+    else
+      tpl += `
+            <a class="delete-title disabled" title="Delete title" data-title_id="{id}" href="javascript:;" >
             <i class="fa fa-trash"></i>
             </a>`.formatUnicorn({
         id: user.id
@@ -1447,11 +1457,7 @@ $(".project-name").keyup(function () {
 })
 $(".project-establishment").change(function () {
   $(".message-project-establishment .error-project").remove();
-  if ($(".project-establishment").val().length < 1) {
-    $(".project-establishment").after(
-      '<span class="error-project">Please enter Establishment</span>'
-    );
-  } else if ($(".project-establishment").val().length > 255) {
+  if ($(".project-establishment").val().length > 255) {
     $(".project-establishment").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
@@ -1473,15 +1479,11 @@ $(".project-manager").keyup(function () {
 })
 $(".project-email").keyup(function () {
   $(".message-project-email .error-project").remove();
-  if ($(".project-email").val().length < 1) {
-    $(".project-email").after(
-      '<span class="error-project">Please enter Email</span>'
-    );
-  } else if ($(".project-email").val().length > 255) {
+  if ($(".project-email").val().length > 255) {
     $(".project-email").after(
       '<span class="error-project">Maximum length is 255 characters.</span>'
     );
-  } else {
+  } else if ($(".project-email").val().length > 1) {
     var valid_email = regEx.test($(".project-email").val());
     if (!valid_email) {
       $(".project-email").after(

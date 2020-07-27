@@ -1,8 +1,10 @@
 /*jshint esversion: 6 */
 function drawPieChart(data, total, id, name) {
+  if (data.length == 0)
+    return;
   $(id).html(`<div class="col title">${name}</div>`);
   // set the dimensions and margins of the graph
-  var width = $(id).width() - 50;
+  var width = $(id).width();
   var height = $(id).height() - 30;
   var legendRectSize = 18;
   var legendSpacing = 4;
@@ -19,12 +21,12 @@ function drawPieChart(data, total, id, name) {
 
   // append text total to avg
   svg.append('text')
-    .attr('dy', -10) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+    .attr('dy', -10)
     .html(total)
     .style('font-size', '30px')
-    .style('text-anchor', 'middle'); // centres text in tooltip
+    .style('text-anchor', 'middle');
   svg.append('text')
-    .attr('dy', 10) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+    .attr('dy', 10)
     .html('employees')
     .style('font-size', '20px')
     .style('text-anchor', 'middle');
@@ -33,9 +35,8 @@ function drawPieChart(data, total, id, name) {
     .domain(Object.keys(data))
     .range(arrColor);
 
-  // Compute the position of each group on the pie:
   var pie = d3.pie()
-    .sort(null) // Do not sort group by size
+    .sort(null)
     .value(function (d) { return d.value; });
   var data_ready = pie(d3.entries(data));
 
@@ -84,7 +85,7 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value +'('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
+    .text(function (d) { return d.data.value +' ('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
@@ -104,9 +105,11 @@ function drawPieChart(data, total, id, name) {
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
       var maxItemOneColumn = Math.ceil(color.domain().length / 2)
+      if (maxItemOneColumn < 3)
+        maxItemOneColumn = color.domain().length 
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
-      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 100)
+      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 130)
       var h = vert - height / 4
 
       return 'translate(' + w + ',' + h + ')';

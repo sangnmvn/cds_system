@@ -1,2 +1,0 @@
-class FormHistoriesController < ApplicationController
-end

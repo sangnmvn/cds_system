@@ -4,7 +4,7 @@ class DashboardsController < ApplicationController
   before_action :check_privilege
   before_action :user_management_services
   before_action :export_services
-  before_action :form_services, only: [:data_latest_baseline]
+  before_action :form_services, only: [:data_latest_baseline, :load_form_cds_staff]
 
   ALL_COMPANY = 20
   MY_COMPANY = 21
@@ -30,7 +30,7 @@ class DashboardsController < ApplicationController
       projects = Project.select("projects.name as name", :id).joins(:project_members).where(project_members: { user_id: current_user.id })
     end
 
-    roles = User.distinct.select("roles.name as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) })
+    roles = User.distinct.select("roles.name as name", "role_id as id").joins(:project_members, :role).where(company_id: companies.pluck(:id), project_members: { project_id: projects.pluck(:id) }, status: true)
 
     render json: {
       companies: companies,
@@ -77,7 +77,8 @@ class DashboardsController < ApplicationController
   def data_career_chart
     return render json: { data: "fails" } unless (@privilege_array & [MY_PROJECT, VIEW]).any? && !(@privilege_array & [ALL_COMPANY, MY_COMPANY]).any?
     data = @user_management_services.data_career_chart
-    render json: { data: data, has_cdp: true }
+
+    render json: data
   end
 
   def data_users_up_title
@@ -100,6 +101,11 @@ class DashboardsController < ApplicationController
     result = @form_services.preview_result(form)
     competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
     render json: { data: @form_services.calculate_result(form, competencies, result) }
+  end
+
+  def load_form_cds_staff
+    form_id = @form_services.load_form_cds_staff
+    render json: { data: form_id }
   end
 
   private

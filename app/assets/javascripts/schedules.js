@@ -2,22 +2,6 @@ $(function () {
   $('[data-tooltip="true"]').tooltip()
 })
 
-function success(content = "Success !") {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-
-// alert fails
-function fails(content = "Fail !") {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
 // check status when enter start date and end date
 function check_status(start, end, status_id) {
 
@@ -482,7 +466,7 @@ function on_click_btn() {
         var status = res.status;
         if (status == true) {
           $("#modal").modal("hide");
-          success("The schedule(s) has been deleted successfully");
+          warning("The schedule(s) has been deleted successfully");
         } else {
           fails("Failed to delete all schedule(s)");
         }
@@ -616,7 +600,7 @@ function action_add() {
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be greater than start date.</span></div>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date for HR.</span></div>');
       } else if (end_date_member == "") {
         temp = false;
         $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
@@ -630,7 +614,7 @@ function action_add() {
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date for reviewer.</span></div>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be less than end date.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be less than end date for HR.</span></div>')
       } else if (end_date_reviewer == "") {
         temp = false;
         $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')
@@ -650,10 +634,10 @@ function action_add() {
 
     var start_date_val = new Date(start_date);
 
-    if (end_date_member_reminder < start_date_val) {
+    if (end_date_member_reminder <= start_date_val) {
       temp = false;
       $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
-    } else if (end_date_reviewer_reminder < start_date_val) {
+    } else if (end_date_reviewer_reminder <= start_date_val) {
       temp = false;
       $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
     }
@@ -752,7 +736,7 @@ function action_add() {
             var status = res.status;
             if (status == true) {
               $("#modalAdd").modal("hide");
-              success("The schedule has been created successfully");
+              warning("The schedule has been created successfully");
             } else {
               fails("Failed to create this schedule");
             }
@@ -796,6 +780,12 @@ function action_add() {
             action_edit();
             action_add();
             view_schedule();
+            if (res.status == true) {
+              $("#modal").modal("hide");
+              warning("The schedule has been edited successfully");
+            } else {
+              fails("Failed to edit this schedule");
+            }
           },
           error: function () {
             $('.lmask').hide();
@@ -851,10 +841,10 @@ function action_edit() {
 
     var start_date_val = new Date(start_date);
 
-    if (end_date_member_reminder < start_date_val) {
+    if (end_date_member_reminder <= start_date_val) {
       temp = false;
       $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
-    } else if (end_date_reviewer_reminder < start_date_val) {
+    } else if (end_date_reviewer_reminder <= start_date_val) {
       temp = false;
       $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
     }
@@ -973,7 +963,7 @@ function action_edit() {
 
           if (status == true) {
             $("#modal").modal("hide");
-            success("The schedule has been edited successfully");
+            warning("The schedule has been edited successfully");
           } else {
             fails("Failed to edit this schedule");
           }
@@ -1010,7 +1000,7 @@ function delete_schedule() {
       var status = res.status;
       if (status == true) {
         $("#modalDeleteSchedule").modal("hide");
-        success("The schedule(s) has been deleted successfully");
+        warning("The schedule(s) has been deleted successfully");
       } else {
         fails("Failed to delete all schedule(s)");
       }
@@ -1019,10 +1009,9 @@ function delete_schedule() {
 }
 
 function check_selectAll() {
-  if ($("#user_role").val() == "PM") return;
   $(".selectable").off('click.select_one_namespace')
   $(".selectable").on('click.select_one_namespace', function () {
-    if ($(':checkbox:checked').length > 0) {
+    if ($('.selectable:checked').length > 0) {
       $('#delete_schedule_button').prop("disabled", false);
     } else {
       $('#delete_schedule_button').prop("disabled", true);
@@ -1034,7 +1023,7 @@ function check_selectAll() {
       $('#selectAll').prop('checked', false);
     }
   })
-  $("#selectAll").off('click.select_all_namespace_delete');
+  $("#selectAll").off('click.select_all_namespace_delete')
   $('#selectAll').on('click.select_all_namespace_delete', function () {
     if ($('#selectAll').is(':checked')) {
       $('#delete_schedule_button').prop("disabled", false);

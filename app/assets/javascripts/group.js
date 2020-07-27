@@ -1,19 +1,3 @@
-// alert success
-function success(content) {
-  $('#content-alert-success').html(content);
-  $("#alert-success").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-success").fadeOut(1000);
-  }, 5000);
-}
-// alert fails
-function fails(content) {
-  $('#content-alert-fail').html(content);
-  $("#alert-danger").fadeIn();
-  window.setTimeout(function () {
-    $("#alert-danger").fadeOut(1000);
-  }, 5000);
-}
 $(document).on("click", "#btn-submit-add-user-group", function () {
   name = $("#name").val();
   status = $('input[name="status"]:checked').val();
@@ -52,14 +36,14 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
         // data group
         if (response.status == "success") {
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var sData = table.rows().data();
-
           var addData = [];
           addData.push(
             '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
             response.id +
             '" value="0" \
-            class="collection_selection" name="collection_selection[]">' +
+            class="collection-selection" name="collection_selection[]">' +
 
             '<input type="checkbox" id="group_ids[]" value="' +
             response.id +
@@ -83,7 +67,7 @@ $(document).on("click", "#btn-submit-add-user-group", function () {
           );
           $("#modalAdd .form-add-group")[0].reset();
           $("#modalAdd").modal("hide");
-          success("The new group information has been created successfully.");
+          warning("The new group information has been created successfully.");
           table.row.add(addData, 0).draw();
 
           myJS_data_event();
@@ -166,6 +150,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
         if (response.status == "success") {
           $("#modalEdit").modal("hide");
           var table = $("#table_group").DataTable();
+          $("#table_group_info").attr("style","display:none")
           var dataLength = table.rows().data().length;
           for (var i = 0; i < dataLength; i++) {
 
@@ -181,7 +166,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
                 '<div class="resource_selection_cell"><input type="hidden" id="batch_action_item_' +
                 response.id +
                 '" value="0" \
-            class="collection_selection" name="collection_selection[]">' +
+            class="collection-selection" name="collection_selection[]">' +
 
                 '<input type="checkbox" id="group_ids[]" value="' +
                 response.id +
@@ -214,7 +199,7 @@ $(document).on("click", "#btn-submit-edit-user-group", function () {
               break;
             }
           }
-          success("The group information has been updated successfully.");
+          warning("The group information has been updated successfully.");
         } else if (response.status == "exist") {
           $(".error").remove();
           $("#modalEdit #name").after(
@@ -252,35 +237,56 @@ function setup_dataTable() {
         "info": " _START_ - _END_ of _TOTAL_"
       },
       aoColumnDefs: [
-
         {
-          "sClass": "numericCol",
-          "aTargets": [1]
-        }
+          "orderable": false,
+          "targets": 0
+        },
+        {
+          "orderable": false,
+          "targets": 1
+        },
       ]
     });
-
+    $("#table_group_info").attr("style","display:none")
+    $("#table_group_paginate").attr("style","display:none")
     $("#table_group_length").remove();
 
-    $(".toggle_all").click(function () {
-      $(".collection_selection[type=checkbox]").prop(
+    $(".toggle-all").click(function () {
+      $(".collection-selection[type=checkbox]").prop(
         "checked",
         $(this).prop("checked")
       );
     });
 
-    $(".collection_selection[type=checkbox]").click(function () {
+    $(".collection-selection[type=checkbox]").click(function () {
       var nboxes = $("#table_group tbody :checkbox:not(:checked)");
-      if (nboxes.length > 0 && $(".toggle_all").is(":checked") == true) {
-        $(".toggle_all").prop("checked", false);
+      if (nboxes.length > 0 && $(".toggle-all").is(":checked") == true) {
+        $(".toggle-all").prop("checked", false);
       }
-      if (nboxes.length == 0 && $(".toggle_all").is(":checked") == false) {
-        $(".toggle_all").prop("checked", true);
+      if (nboxes.length == 0 && $(".toggle-all").is(":checked") == false) {
+        $(".toggle-all").prop("checked", true);
       }
     });
+
+    if (full_access) {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+        data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
+        src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+        float-right" data-toggle="modal"  title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
+        <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
+      $(content).insertAfter(".dataTables_filter");
+    } else {
+      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
+        data-toggle="modal" data-target="#modalAdd" title="Add Group" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
+        src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
+        float-right" data-toggle="modal" title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
+        <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
+  
+      $(content).insertAfter(".dataTables_filter");
+    }
   });
 }
-
 
 $(document).on("click", ".del_btn", function () {
   group_id = $(this).data("group");
@@ -336,7 +342,7 @@ function delete_group() {
 
         }
 
-        success("The group information has been deleted successfully.");
+        warning("The group information has been deleted successfully.");
       } else if (response.status == "exist") {
         $(".error").remove();
         $("#modalEdit #name").after(
@@ -354,24 +360,6 @@ $(function () {
 
 $(document).ready(function () {
   setup_dataTable();
-  a = $(".get_privilege").val();
-  if (a == 'true') {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
-  data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db"><img border="0" style="float:left;margin-top:4px" \
-  src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
-  float-right" data-toggle="modal"  title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
-  <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
-
-    $(content).insertAfter(".dataTables_filter");
-  } else {
-    content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light " \
-    data-toggle="modal" data-target="#modalAdd" title="Add Group" style="width:90px;background:#dcdcdc"><img border="0" style="float:left;margin-top:4px" \
-    src="/assets/Add.png">Add</button><button type="button" class="btn btn-light\
-    float-right" data-toggle="modal" title="Delete Group" style="margin-left:5px;width:100px;background:#dcdcdc" id="deletes">\
-    <img border="0" style="float:left;margin-top:1.7px;width:26%"src="/assets/Delete.png">Delete</button></div>';
-
-    $(content).insertAfter(".dataTables_filter");
-  }
 });
 
 $(document).on("click", "#deletes", function () {
@@ -424,7 +412,7 @@ $(document).on("click", "#delete_selected", function () {
           }
         }
       }
-      success("The groups information has been deleted successfully.");
+      warning("The groups information has been deleted successfully.");
 
     },
   });
@@ -442,8 +430,7 @@ $(document).ready(function () {
   }).draw();
 });
 $(document).click(function (e) {
-  a = $(".get_privilege").val();
-  if (a == 'true') {
+  if (full_access) {
     var number = $("#table_group tbody :checkbox:checked").length;
 
     if (parseInt(number) > 0) {

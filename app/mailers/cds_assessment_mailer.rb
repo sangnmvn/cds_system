@@ -23,14 +23,20 @@ class CdsAssessmentMailer < ApplicationMailer
 
   def user_add_more_evidence
     @name = params[:user_name]
-    @reviewer_names = params[:reviewers].map(&:first).join(",")
+    @reviewer_names = params[:reviewers].map(&:first).join(", ")
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @slots = params[:slots]
     @current_user = params[:current_user]
+    @emails = ""
     params[:reviewers].each do |reviewer|
-      mail(to: reviewer.last, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
+      if @emails == ""
+        @emails += reviewer.last
+      else
+        @emails += ", " + reviewer.last
+      end
     end
+    mail(to: @emails, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
   end
 
   def reviewer_request_update
@@ -51,7 +57,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @slot_id = params[:slot_id]
     @competency_name = params[:competency_name]
     staff = params[:staff]
-    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @staff_name = staff.account
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @emails = staff.email
@@ -61,19 +67,25 @@ class CdsAssessmentMailer < ApplicationMailer
   def staff_withdraw_CDS_CDP
     @account = params[:account]
     @name = params[:user_name]
-    @reviewer_names = params[:reviewers].map(&:first).join(",")
+    @reviewer_names = params[:reviewers].map(&:first).join(", ")
     @from_date = params[:from_date]
     @to_date = params[:to_date]
+    @emails = ""
     params[:reviewers].each do |reviewer|
-      mail(to: reviewer.last, subject: "[CDS system] Withdraw CDS/CDP assessment of #{@account}")
+      if @emails == ""
+        @emails += reviewer.last
+      else
+        @emails += ", " + reviewer.last
+      end
     end
+    mail(to: @emails, subject: "[CDS system] Withdraw CDS/CDP assessment of #{@account}")
   end
 
   def reviewer_cancelled_request_more_evidences
     @slot_id = params[:slot_id]
     @competency_name = params[:competency_name]
     staff = params[:staff]
-    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @staff_name = staff.account
     @recommend = params[:recommend]
     @emails = staff.email
 
@@ -82,12 +94,11 @@ class CdsAssessmentMailer < ApplicationMailer
 
   def email_to_pm
     pm = params[:pm]
-    @pm_name = pm.first_name + pm.last_name.split(" ").map { |x| x.chr }.join
+    @pm_name = pm.account
     staff = params[:staff]
-    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @staff_name = staff.account
     @emails = pm.email
-
-    mail(to: @emails, subject: "[CDS system] Notify to approve CDS for#{@staff_name}")
+    mail(to: @emails, subject: "[CDS system] Notify to approve CDS for #{@staff_name}")
   end
 
   def pm_approve_cds
@@ -95,7 +106,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @level_number = params[:level_number]
     @title_number = params[:title_number]
     staff = params[:staff]
-    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @staff_name = staff.account
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @emails = staff.email
@@ -108,7 +119,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @level_number = params[:level_number]
     @title_number = params[:title_number]
     staff = params[:staff]
-    @staff_name = staff.first_name + staff.last_name.split(" ").map { |x| x.chr }.join
+    @staff_name = staff.account
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @emails = staff.email

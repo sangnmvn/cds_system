@@ -45,7 +45,7 @@ User.create([
   { id: 11, email: "trucdtt@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Trúc", last_name: "Dư Thị Thanh", account: "TrucDTT", company_id: 3, joined_date: DateTime.parse("2016-05-16"), gender: false },
   { id: 12, email: "thihq@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Thi", last_name: "Hà Quang", account: "ThiHQ", role_id: "1", company_id: 3, joined_date: DateTime.parse("2017-06-05"), gender: true },
   { id: 13, email: "phatnt@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phát", last_name: "Nguyễn Tấn", account: "PhatNT", role_id: "1", company_id: 3, joined_date: DateTime.parse("2017-08-01"), gender: true },
-  { id: 14, email: "phuocnhh@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phước", last_name: "Nguyễn Hồ Hải", account: "PhuongNHH", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-05-21"), gender: true },
+  { id: 14, email: "phuocnhh@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phước", last_name: "Nguyễn Hồ Hải", account: "PhuocNHH", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-05-21"), gender: true },
   { id: 15, email: "toanpd@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Toàn", last_name: "Phạm Đức", account: "ToanPD", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-07-09"), gender: true },
   { id: 16, email: "daonth@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Đào", last_name: "Nguyễn Thị Hồng", account: "DaoNTH", company_id: 3, joined_date: DateTime.parse("2018-09-04"), gender: false },
   { id: 17, email: "hienltv@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Hiển", last_name: "Lê Tấn Vinh", account: "HienLTV", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-11-08"), gender: true },
@@ -393,9 +393,9 @@ ProjectMember.create([
   { id: 166, user_id: 167, project_id: 16 },
 ])
 
-Group.create!(id: 1, name: "Administration", description: "Administration", status: 1, privileges: "1,2,4,5,7,9,10,13,14,15,16,17,19,18,20,21,22,24,25")
+Group.create!(id: 1, name: "Administration", description: "Administration", status: 1, privileges: "1,2,3,4,5,6,7,9,10,13,14,15,16,17,24,18,19,20,21,22,23,25")
 Group.create!(id: 2, name: "BOD", description: "BOD", status: 1, privileges: "10")
-Group.create!(id: 3, name: "HR", description: "HR", status: 1, privileges: "9,10,13")
+Group.create!(id: 3, name: "HR", description: "HR", status: 1, privileges: "1,2,3,4,5,6,7,9,10,13,14,15,16,17,24,18,19,20,21,22,23,25")
 Group.create!(id: 4, name: "Manager", description: "Manager", status: 1, privileges: "1")
 Group.create!(id: 5, name: "Reviewer", description: "Reviewer", status: 1, privileges: "16")
 Group.create!(id: 6, name: "Staff", description: "Staff", status: 1, privileges: "15,19,23")

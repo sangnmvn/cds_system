@@ -2,11 +2,15 @@ class GroupsController < ApplicationController
   before_action :set_group, only: [:show, :edit, :update, :destroy]
   layout "system_layout"
   before_action :get_privilege_id
-  before_action :redirect_to_index
+  before_action :redirect_to_index, only: [:index, :get_data, :show]
+  FULL_ACCESS = 6
+  VIEW = 7
   # GET /groups
   # GET /groups.json
   def index
     @groups = Group.all.order(:id => :desc).where(is_delete: false)
+    @full_access = @privilege_array.include?(FULL_ACCESS)
+    @view = @privilege_array.include?(VIEW)
   end
 
   # GET /groups/1
@@ -94,7 +98,7 @@ class GroupsController < ApplicationController
   private
 
   def redirect_to_index
-    redirect_to root_path if !(@privilege_array.include?(4) || @privilege_array.include?(5))
+    redirect_to root_path unless (@privilege_array & [FULL_ACCESS, VIEW]).any?
   end
 
   # Use callbacks to share common setup or constraints between actions.

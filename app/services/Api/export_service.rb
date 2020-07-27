@@ -1,6 +1,7 @@
 module Api
   class ExportService < BaseService
-    FILE_CLEAN_UP_TIME_IN_SECONDS = 10 * 60
+    FILE_CLEAN_UP_TIME_IN_SECONDS = 10 * 60 # for downloaded file
+    TEMP_FILE_CLEAN_UP_TIME_IN_SECONDS = 30 # for temporary
     ZOOM_SCALE = 100
     ROMAN_NUMBERS = {
       1000 => "M",
@@ -90,36 +91,7 @@ module Api
       sheet
     end
 
-    def repack_zip_if_multiple(file_names, zip_file_name = nil)
-      # - Turn files into zip if multiple files
-      # Caution: DELETE all file if ZIP is applied
-      # - Else return the current file without deletion
-      # If multiple files download .zip, if 1 file download the only file
-      if file_names.length.zero?
-        nil
-      elsif file_names.length == 1
-        file_names[0]
-      else
-        folder = "public/"
-        File.delete(folder + zip_file_name) if File.exist?(folder + zip_file_name)
-        Zip::File.open(folder + zip_file_name, Zip::File::CREATE) do |zip_file|
-          file_names.each do |file_name|
-            # Two arguments:
-            # - The name of the file as it will appear in the archive
-            # - The original file, including the path to find it
-            in_file_name = File.join(folder, file_name)
-            zip_file.add(file_name, in_file_name) { true }
-          end
-        end
-        file_names.each do |file_name|
-          in_file_name = File.join(folder, file_name)
-          File.delete(in_file_name) if File.exist?(in_file_name)
-        end
-        zip_file_name
-      end
-    end
-
-    def schedule_file_for_clean_up(file_name)
+    def schedule_file_for_clean_up(file_name, time_out = FILE_CLEAN_UP_TIME_IN_SECONDS)
       # Delete the file after FILE_CLEAN_UP_TIME seconds
       # 1. every second check if the file is replaced
       #-> File belongs to new requests and current requests are overwritten
@@ -130,7 +102,7 @@ module Api
       # get original creation time
       creation_time = f.ctime
       Thread.new do
-        (0...FILE_CLEAN_UP_TIME_IN_SECONDS).each do |_i|
+        (0...time_out).each do |_i|
           sleep 1
           begin
             f = File.new("public/#{file_name}")
@@ -153,6 +125,34 @@ module Api
       end
     end
 
+    def repack_zip_if_multiple(file_names, zip_file_name = nil)
+      # - Turn files into zip if multiple files
+      # Caution: DELETE all file if ZIP is applied
+      # - Else return the current file without deletion
+      # If multiple files download .zip, if 1 file download the only file
+      if file_names.length.zero?
+        nil
+      elsif file_names.length == 1
+        file_names[0]
+      else
+        folder = "public/"
+        File.delete(folder + zip_file_name) if File.exist?(folder + zip_file_name)
+        Zip::File.open(folder + zip_file_name, Zip::File::CREATE) do |zip_file|
+          file_names.each do |file_name|
+            # Two arguments:
+            # - The name of the file as it will appear in the archive
+            # - The original file, including the path to find it
+            in_file_name = File.join(folder, file_name)
+            zip_file.add(file_name, in_file_name) { true }
+          end
+        end
+        file_names.each do |file_name|
+          schedule_file_for_clean_up(file_name, TEMP_FILE_CLEAN_UP_TIME_IN_SECONDS)
+        end
+        zip_file_name
+      end
+    end
+
     def data_users_up_title_export
       filter_users = {}
       filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
@@ -170,9 +170,6 @@ module Api
           second[schedule.company_id] = schedule.period_id
         end
       end
-      all_keys = first.keys & second.keys
-      first.select! { |k, v| all_keys.include?(k) }
-      second.select! { |k, v| all_keys.include?(k) }
 
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
@@ -183,6 +180,7 @@ module Api
           level: title.level,
           title: title.title,
           name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = {}
@@ -200,8 +198,9 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if title.rank <= prev_period[:rank]
-
+        # prev_peroid = nil -> user has 1 assessment only and this counts as an improvement
+        next if prev_period.present? && (title.rank <= prev_period[:rank] || title&.role_name != prev_period[:role_name])
+        prev_period ||= {}
         company_id = title&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
@@ -278,6 +277,7 @@ module Api
           level: title.level,
           title: title.title,
           name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = {}
@@ -295,7 +295,7 @@ module Api
 
       title_first.map do |title|
         prev_period = h_previous_period[title.user_id]
-        next if title.rank >= prev_period[:rank]
+        next if prev_period.nil? || title.rank >= prev_period[:rank] || title&.role_name != prev_period[:role_name]
 
         company_id = title&.user&.company_id
         if results[company_id].nil?
@@ -403,7 +403,7 @@ module Api
           full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
           rank: title&.rank,
-          title: title&.title.name,
+          title: title&.title&.name,
           level: title&.level,
           prev_period: title&.period_keep&.id,
           period_from_name: title&.period_keep&.format_to_date,
@@ -780,7 +780,7 @@ module Api
           level_up_sheet.rows[-1].cells[7].style = number_format
           level_up_sheet.rows[-1].cells[8].style = number_format
         end
-        level_up_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
+        level_up_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
@@ -851,7 +851,7 @@ module Api
           level_down_sheet.rows[-1].cells[7].style = number_format
           level_down_sheet.rows[-1].cells[8].style = number_format
         end
-        level_down_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
+        level_down_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
@@ -897,7 +897,7 @@ module Api
 
         no_change_sheet = set_up_sheet_view(workbook, "No Change List")
         no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        no_change_sheet.add_row ["No Change Title in period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
+        no_change_sheet.add_row ["List of Employees Has No Change Level", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.rows[1].cells[0].style = title_format
         no_change_sheet.merge_cells "A1:J1"
         no_change_sheet.merge_cells "A2:J2"
@@ -912,7 +912,7 @@ module Api
           no_change_sheet.rows[-1].cells[5].style = number_format
           no_change_sheet.rows[-1].cells[6].style = number_format
         end
-        no_change_sheet.column_widths 5, 30, 30, 20, 20, 5, 5, 30 # run at last
+        no_change_sheet.column_widths 5, 30, 30, 15, 32, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
@@ -985,11 +985,11 @@ module Api
           title_comparison_sheet.rows[-1].cells[4].style = number_format
           title_comparison_sheet.rows[-1].cells[5].style = number_format
           # underline increased value
-          title_comparison_sheet.rows[-1].cells[6].style = result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
-          title_comparison_sheet.rows[-1].cells[7].style = result[:rank] > result[:rank_prev] ? number_improved_format : number_format
-          title_comparison_sheet.rows[-1].cells[8].style = result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev]) ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[6].style = result[:same_role] && result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
+          title_comparison_sheet.rows[-1].cells[7].style = result[:same_role] && result[:rank] > result[:rank_prev] ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[8].style = result[:same_role] && (result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev])) ? number_improved_format : number_format
         end
-        title_comparison_sheet.column_widths 5, 30, 30, 20, 5, 5, 20, 5, 5, 30 # run at last
+        title_comparison_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"
