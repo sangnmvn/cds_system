@@ -5,9 +5,12 @@
 <%= javascript_include_tag 'table_template_excel.js', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template_index_step1', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :template_management %>
-
-<div id="alert-success" class="alert alert-success" data-alert="alert"><div id="content-alert-success"></div></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
+<div id="alert-success" class="alert alert-success" data-alert="alert">
+  <div id="content-alert-success"></div>
+</div>
+<div id="alert-danger" class="alert alert-danger" data-alert="alert">
+  <div id="content-alert-fail"></div>
+</div>
 <div class="container-fluid">
   <div class="template-header">
     <span class="title">Template List</span>
@@ -15,7 +18,6 @@
       <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
     </div>
   </div>
-  
   <div class="template-table">
     <table class="table table-responsive-sm" id="template-index">
       <thead>
@@ -32,28 +34,27 @@
       </thead>
       <tbody>
         <% @templates.each_with_index do |template,index| %>
-        <tr>
-          <td class="num"><%= index+1 %></td>
-          <td><%= link_to(template.name, edit_template_path(template.id), class: "edit_template") %></td>
-          <td><%= template.description %></td>
-          <td><%= template.role_name %></td>
-          <td><%= template.updated_at.strftime("%b %m, %Y") %></td>
-          <td><%= template.updated_by %></td>
-          <td><%= template.status ? "Enable" : "Disable" %></td>
-          <td class="action">
-            <% if @is_full_assess %>
-              <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, edit_template_path(template.id), { class: "edit_template", title: "Edit Template" }) %> &nbsp;
-              <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", {class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel", method: "post" }) %>&nbsp;
-              <%= link_to(('<i class="fa fa-file-o icon" style="color:##4472c4"></i>').html_safe, "#", {  class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS", method: "post" }) %>&nbsp;
-              <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", { class: "delete_icon", value: template.id, remote: true, title: "Delete Template", "data-id": template.id, "data-toggle": "modal", "data-target": "#modal_warning_close" }) %>
-            <% else %>
-              <%= link_to(('<i class="far fa-eye icon" style="color:blue"></i>').html_safe, edit_template_path(template.id), { class: "view_template", title: "View Template" }) %>&nbsp;&nbsp;
-              <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", {class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel", method: "post" }) %>&nbsp;
-              <%= link_to(('<i class="fa fa-file-o icon" style="color:##4472c4"></i>').html_safe, "#", {  class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS", method: "post" }) %>
-              <i class="fa fa-trash icon" style="color:#cccc"></i>
-            <% end %>
-          </td>
-        </tr>
+          <tr>
+            <td class="num"><%= index+1 %></td>
+            <td><%= link_to(template.name, edit_template_path(template.id), class: "edit_template") %></td>
+            <td><%= template.description %></td>
+            <td><%= template.role_name %></td>
+            <td><%= template.updated_at.strftime("%b %m, %Y") %></td>
+            <td><%= template.updated_by %></td>
+            <td><%= template.status ? "Enable" : "<span class='red'>Disable</span>".html_safe %></td>
+            <td class="action">
+              <% if @is_full_assess %>
+                <%= link_to(('<i class="fa fa-pencil icon" style="color:#fc9803"></i>').html_safe, edit_template_path(template.id), { class: "edit_template", title: "Edit Template" }) %> &nbsp;
+                <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", {class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel", method: "post" }) %>&nbsp;
+                <%= link_to(('<i class="fa fa-file-o icon" style="color:##4472c4"></i>').html_safe, "#", {  class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS", method: "post" }) %>&nbsp;
+                <%= link_to(('<i class="fa fa-trash icon" style="color:red"></i>').html_safe, "#", { class: "delete_icon", value: template.id, remote: true, title: "Delete Template", "data-id": template.id, "data-toggle": "modal", "data-target": "#modal_warning_close" }) %>
+              <% else %>
+                <%= link_to(('<i class="far fa-eye icon" style="color:blue"></i>').html_safe, edit_template_path(template.id), { class: "view_template", title: "View Template" }) %>&nbsp;&nbsp;
+                <%= link_to(('<i class="fa fa-file-excel-o icon" style="color:green"></i>').html_safe, "#", {class: "export_excel_icon", "data-template_id": template.id, "data-ext": "xlsx", title: "Export Excel", method: "post" }) %>&nbsp;
+                <%= link_to(('<i class="fa fa-file-o icon" style="color:##4472c4"></i>').html_safe, "#", {  class: "export_excel_icon", "data-template_id": template.id, "data-ext": "ots", title: "Export OTS", method: "post" }) %>
+              <% end %>
+            </td>
+          </tr>
         <% end %>
       </tbody>
     </table>

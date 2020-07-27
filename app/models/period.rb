@@ -4,6 +4,12 @@ class Period < ApplicationRecord
   has_many :schedules, dependent: :destroy
   has_many :title_histories
   has_many :summary_comments
+  validate :check_period_status
+
+  def check_period_status
+    errors.add(:from_date, "From date must be greater or equal to today") if from_date.midnight < Date.today.midnight
+    errors.add(:to_date, "To date must be greater than from date") if to_date.midnight < from_date.midnight
+  end
 
   def format_name
     return "New" if from_date.nil? || to_date.nil?

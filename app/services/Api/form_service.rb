@@ -182,7 +182,7 @@ module Api
                 form_slot_id: form_slot_id_of_current_users, user_id: approver.approver_id)
         reviewer = User.where(id: approver.approver_id).pluck(:account, :email)
       end
-      old_comment = Comment.includes(:form_slot).where(form_slots: {form_id: params[:form_id]}, is_delete: true)
+      old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
       old_comment.destroy_all
       if form_slot_ids.present?
         period = Form.includes(:period).find(params[:form_id]).period
@@ -255,7 +255,7 @@ module Api
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
       form ||= Form.new(user_id: current_user.id, template_id: template_id, role_id: role_id, status: "New", is_delete: false)
-      
+
       all_approver_save = reset_all_approver_submit_status(current_user.id)
       if form.save && all_approver_save
         slot_ids.map do |id|
@@ -411,9 +411,9 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order(updated_at: :desc)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period.format_name, form.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
       data_filter
@@ -445,13 +445,31 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period.format_name, form.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 
       data_filter
+    end
+
+    def get_line_manager_miss_list
+      form_id = params[:form_id]
+      latest_period = Form.find_by(id: form_id).period_id
+      staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
+      reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck(:slot_id)
+      staff_slot_ids = staff_slots.difference(reviewer_slots)
+      slots = Slot.includes(:competency).where(id: staff_slot_ids).order("competencies.location", :slot_id, :level)
+      results = {}
+      competency_locations = {}
+      slots.each do |slot|
+        competency_name = slot.competency.name
+        results[competency_name] ||= []
+        competency_locations[slot.competency.id] ||= get_location_slot(slot.competency.id)
+        results[competency_name] << competency_locations[slot.competency.id][slot.id]
+      end
+      results
     end
 
     def data_filter_cds_approve
@@ -480,9 +498,9 @@ module Api
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
       end
 
-      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period)
+      forms = Form.where(user_id: user_ids).where.not(status: "New").includes(:period).order("periods.from_date DESC")
       forms.each do |form|
-        period = format_filter(form.period&.format_name, form&.period_id)
+        period = format_filter(form&.period&.format_name, form&.period_id)
         data_filter[:periods] << period unless data_filter[:periods].include?(period)
       end
 

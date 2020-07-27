@@ -28,6 +28,10 @@ class FormsController < ApplicationController
     render json: @form_service.get_summary_comment
   end
 
+  def get_line_manager_miss_list
+    render json: @form_service.get_line_manager_miss_list
+  end
+
   def save_summary_comment
     render json: @form_service.save_summary_comment
   end
@@ -192,7 +196,11 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    return render json: { status: form.status } if form.present?
+    if @is_reviewer || @is_approver
+      h_result = @form_service.get_line_manager_miss_list
+    end
+
+    return render json: { data: h_result, status: form.status } if form.present?
     render json: { status: "fail" }
   end
 
@@ -359,10 +367,9 @@ class FormsController < ApplicationController
   end
 
   def check_privilege
-    get_privilege_assessment
-    if (@is_reviewer || @is_approver)
+    if (params[:action] == "cds_review")
       check_line_manager_privilege
-    else
+    elsif (params[:action] == "index_cds_cdp")
       check_staff_privilege
     end
   end

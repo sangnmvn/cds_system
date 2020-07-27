@@ -1,0 +1,22 @@
+<div class="modal fade" id="modal_approver_submit" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header head-myheader">
+        <h4 class="modal-title" style="text-align: center">Warning!</h4>
+        <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: left;">
+        <input type="hidden" value="1" id="request_more_evidence_recommend">
+        <p>The following slots have not been reviewed by you or have been conflicted on commitment between you and staff:</p>
+        <span style="font-weight: bold" class="slot_id" id="data_slot"></span>
+        <div id="modal_approver_content">  </div>
+        <div id="modal_approver_confirm">Please review it or request update from staff before doing this action.</div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
