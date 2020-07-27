@@ -1,3 +1,11 @@
+function setHeightTableTitleMapping() {
+  h = $(".dynamic-title-header-col").outerHeight()
+  title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
+  title_rank_col.outerHeight(h)
+  title_rank_col.css('text-align', 'center');
+  title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
+}
+
 function loadTitleMappingForEdit() {
   role_id = global_role_id;
 
@@ -136,21 +144,14 @@ function loadTitleMappingForEdit() {
         $('#btn_save').addClass("btn-primary").removeClass("btn-secondary")
       })
       checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
-
-      // set height
-      h = $(".dynamic-title-header-col").outerHeight()
-      title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
-      title_rank_col.outerHeight(h)
-      title_rank_col.css('text-align','center');
-      title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
-      
+      setHeightTableTitleMapping()
     }
   });
 }
 
 $(document).ready(function () {
   loadTitleMappingForEdit();
-  
+
 });
 
 function checkPrivilege(edit, view) {

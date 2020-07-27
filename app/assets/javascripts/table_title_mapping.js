@@ -1,3 +1,11 @@
+function setHeightTableTitleMapping() {
+    h = $(".dynamic-title-header-col").outerHeight()
+    title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
+    title_rank_col.outerHeight(h)
+    title_rank_col.css('text-align', 'center');
+    title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
+}
+
 function loadTitleMappingForAdd() {
     role_id = $("#role_id").val();
     $.ajax({
@@ -92,11 +100,7 @@ function loadTitleMappingForAdd() {
 $(document).ready(function () {
     //loadTitleMappingForAdd()
     // set height
-    h = $(".dynamic-title-header-col").outerHeight()
-    title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
-    title_rank_col.outerHeight(h)
-    title_rank_col.css('text-align','center');
-    title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
+    setHeightTableTitleMapping()
 });
 
 function checkPrivilege(edit, view) {
