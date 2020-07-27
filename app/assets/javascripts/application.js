@@ -97,31 +97,31 @@ $(document).ready(function () {
 });
 
 function checkPrivilege() {
-  if (!privilege_array.includes(organization)) {
+  if (!privilege_array.split(",").includes(organization)) {
     $(".privilate-organization-settings").css("display", "none");
   }
-  if (!privilege_array.includes(view_user_group_management) && !privilege_array.includes(full_access_on_user_group_management)) {
+  if (!privilege_array.split(",").includes(view_user_group_management) && !privilege_array.split(",").includes(full_access_on_user_group_management)) {
     $(".privilate-user-group-management").css("display", "none");
   }
-  if (!privilege_array.includes(full_access_on_template_management) && !privilege_array.includes(view_template_management)) {
+  if (!privilege_array.split(",").includes(full_access_on_template_management) && !privilege_array.split(",").includes(view_template_management)) {
     $(".privilate-template").css("display", "none");
   }
-  if (!privilege_array.includes(view_level_mapping_management) && !privilege_array.includes(full_access_on_level_mapping_management)) {
+  if (!privilege_array.split(",").includes(view_level_mapping_management) && !privilege_array.split(",").includes(full_access_on_level_mapping_management)) {
     $(".privilate-level-mapping").css("display", "none");
   }
-  if (!privilege_array.includes(view_user_on_my_company) && !privilege_array.includes(full_access_on_all_companies) && !privilege_array.includes(add_reviewers_to_user_on_my_project) && !privilege_array.includes(add_approver_to_user_on_my_project) && !privilege_array.includes(full_access_on_my_company)) {
+  if (!privilege_array.split(",").includes(view_user_on_my_company) && !privilege_array.split(",").includes(full_access_on_all_companies) && !privilege_array.split(",").includes(add_reviewers_to_user_on_my_project) && !privilege_array.split(",").includes(add_approver_to_user_on_my_project) && !privilege_array.split(",").includes(full_access_on_my_company)) {
     $(".privilate-user-management").css("display", "none");
   }
-  if (!privilege_array.includes(full_access_on_schedule_project) && !privilege_array.includes(full_access_on_schedule_company)) {
+  if (!privilege_array.split(",").includes(full_access_on_schedule_project) && !privilege_array.split(",").includes(full_access_on_schedule_company)) {
     $(".privilate-schedule-management").css("display", "none");
   }
-  if (!privilege_array.includes(full_access_on_all_companies_dashboard) && !privilege_array.includes(full_access_on_my_company_dashboard) && !privilege_array.includes(full_access_on_my_project) && !privilege_array.includes(view_my_dashboard)) {
+  if (!privilege_array.split(",").includes(full_access_on_all_companies_dashboard) && !privilege_array.split(",").includes(full_access_on_my_company_dashboard) && !privilege_array.split(",").includes(full_access_on_my_project) && !privilege_array.split(",").includes(view_my_dashboard)) {
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.includes(review_CDS_CDP_assessment) && !privilege_array.includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.includes(approve_CDS_CDP_assessment)) {
+  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment)) {
     $(".privilate-cds-cdp-review").css("display", "none");
   }
-  if (!privilege_array.includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.includes(view_CDS_CDP_Assessment)) {
+  if (!privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(view_CDS_CDP_Assessment)) {
     $(".privilate-cds-cdp-assessment").css("display", "none");
   }
 }
