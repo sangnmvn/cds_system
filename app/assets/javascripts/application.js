@@ -40,9 +40,9 @@ String.prototype.formatUnicorn =
       var t = typeof arguments[0];
       var key;
       var args =
-        "string" === t || "number" === t
-          ? Array.prototype.slice.call(arguments)
-          : arguments[0];
+        "string" === t || "number" === t ?
+        Array.prototype.slice.call(arguments) :
+        arguments[0];
       for (key in args) {
         str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
       }
@@ -53,7 +53,8 @@ String.prototype.formatUnicorn =
 // sort json arary by keys
 function sortByKey(array, key) {
   return array.sort(function (a, b) {
-    var x = a[key]; var y = b[key];
+    var x = a[key];
+    var y = b[key];
     return ((x < y) ? -1 : ((x > y) ? 1 : 0));
   });
 }
@@ -124,6 +125,16 @@ function checkPrivilege() {
     $(".privilate-cds-cdp-assessment").css("display", "none");
   }
 }
+// modified from https://stackoverflow.com/a/52008131/1461204
+const zoomEvent = new Event('zoom')
+let currentRatio = window.devicePixelRatio
+
+function checkZooming() {
+  if (currentRatio !== window.devicePixelRatio) {
+    window.dispatchEvent(zoomEvent)
+  }
+}
+window.addEventListener('resize', checkZooming)
 
 $(document).on('click', '.logout-icon', function () {
   $('#logout')[0].click();

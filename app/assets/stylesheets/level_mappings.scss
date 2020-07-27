@@ -24,7 +24,20 @@
     width: 25%;
     position: absolute;
     margin-left: -31%;
-    z-index: 1;
+    z-index: 1;    
+    border-left: 0.13em solid #0066CC;
+}
+
+.table-new-title-mapping > thead > tr > td:nth-child(1),
+.table-edit-title-mapping > thead > tr > td:nth-child(1),
+.table-new-title-mapping > thead > tr > td:nth-child(2),
+.table-edit-title-mapping > thead > tr > td:nth-child(2) {
+    border-top: 0.13em solid #0066CC;
+}
+
+.table-new-title-mapping > tbody > tr:nth-last-child(1) > td,
+.table-edit-title-mapping > tbody > tr:nth-last-child(1) > td{
+    border-bottom: 0.13em solid #0066CC;
 }
     
 .table-new-title-mapping > * > tr > td:nth-child(2),
@@ -61,7 +74,7 @@
 .table-new-title-mapping > * > tr > .competency-row,
 .table-edit-title-mapping > * > tr > .dynamic-title-header-col,
 .table-edit-title-mapping > * > tr > .competency-row { 
-    max-width: 150px;
+    max-height: 100px;
     min-width: 100px;  
 }
 

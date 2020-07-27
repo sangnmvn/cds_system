@@ -458,7 +458,7 @@ module Api
       form_id = params[:form_id]
       latest_period = Form.find_by(id: form_id).period_id
       staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
-      reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck("slot_id")
+      reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck(:slot_id)
       staff_slot_ids = staff_slots.difference(reviewer_slots)
       slots = Slot.includes(:competency).where(id: staff_slot_ids).order("competencies.location", :slot_id, :level)
       results = {}

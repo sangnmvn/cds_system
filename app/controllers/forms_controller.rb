@@ -199,11 +199,9 @@ class FormsController < ApplicationController
     get_privilege_assessment
     if @is_reviewer || @is_approver
       h_result = @form_service.get_line_manager_miss_list
-      h_result[:status] = form.status
-    else
-      h_result = { status: form.status }
     end
-    return render json: h_result if form.present?
+
+    return render json: { data: h_result, status: form.status } if form.present?
     render json: { status: "fail" }
   end
 

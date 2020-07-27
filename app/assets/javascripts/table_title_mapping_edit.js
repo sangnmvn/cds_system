@@ -2,8 +2,9 @@ function setHeightTableTitleMapping() {
   h = $(".dynamic-title-header-col").outerHeight()
   title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
   title_rank_col.outerHeight(h)
+  h = $(".dynamic-title-header-col").css("height")
   title_rank_col.css('text-align', 'center');
-  title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
+  title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%  
 }
 
 function loadTitleMappingForEdit() {
@@ -150,8 +151,10 @@ function loadTitleMappingForEdit() {
 }
 
 $(document).ready(function () {
-  loadTitleMappingForEdit();
-
+  loadTitleMappingForEdit();  
+  window.addEventListener('zoom', () => {
+    setHeightTableTitleMapping();
+  })    
 });
 
 function checkPrivilege(edit, view) {

@@ -963,8 +963,8 @@ $(document).ready(function () {
             window.location.href = "/forms/index_cds_cdp"
           });
         } else {
-          delete response["status"]
-          if (jQuery.isEmptyObject(response)) {
+          h_data = response.data;
+          if (jQuery.isEmptyObject(h_data)) {
             var data_conflict = findConflictinArr(conflict_commits)
             var str = ""
             if (data_conflict && (is_reviewer || is_approver)) {
@@ -985,9 +985,9 @@ $(document).ready(function () {
             }
           } else {
             str = ""
-            for (var competency_name in response) {
+            for (var competency_name in h_data) {
               str += "<p>\u2022 " + competency_name + ": ";
-              slots = response[competency_name];
+              slots = h_data[competency_name];
               str += slots.join(", ");
               str += "</p>";
             }

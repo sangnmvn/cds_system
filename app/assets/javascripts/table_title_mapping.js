@@ -2,9 +2,12 @@ function setHeightTableTitleMapping() {
     h = $(".dynamic-title-header-col").outerHeight()
     title_rank_col = $(".dynamic-title-header-col").closest("tr").find(":not(.dynamic-title-header-col")
     title_rank_col.outerHeight(h)
+    h = $(".dynamic-title-header-col").css("height")
     title_rank_col.css('text-align', 'center');
     title_rank_col.css("padding-top", (h * 0.4) + "px") // padding-top: 40%
-}
+  }
+  
+
 
 function loadTitleMappingForAdd() {
     role_id = $("#role_id").val();
@@ -98,10 +101,12 @@ function loadTitleMappingForAdd() {
 }
 
 $(document).ready(function () {
-    //loadTitleMappingForAdd()
-    // set height
-    setHeightTableTitleMapping()
+    window.addEventListener('zoom', () => {
+        setHeightTableTitleMapping();
+      })    
 });
+
+
 
 function checkPrivilege(edit, view) {
     if (!edit && !view)
