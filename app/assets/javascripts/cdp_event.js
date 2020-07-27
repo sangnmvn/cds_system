@@ -14,21 +14,15 @@ $(document).on("click", ".approval-assessment", function () {
       str = ""
       if (data_conflict) {
         str = data_conflict
-      }
-      // keep text only
-      for (var key in response) {
-        if (key == parseInt(key, 10)) {
-          delete response[key];
-        }
-      }
+      }      
       if (jQuery.isEmptyObject(response)) {
         $('#modal_approve_cds').modal('show');
       } else {
         for (var competency_name in response) {
-          str += "\u2022 " + competency_name + ": ";
+          str += "<p>\u2022 " + competency_name + ": ";
           slots = response[competency_name];
           str += slots.join(", ");
-          str += "<br>"
+          str += "</p>"
         }
 
         $("#modal_approver_content").html(str);
