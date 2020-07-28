@@ -972,6 +972,7 @@ module Api
       user = User.find(form.user_id)
       period = Period.find(form.period_id)
       if form.is_approved
+        user.update(title_id: calculate_result[:expected_title][:title_id])
         Async.await do
           CdsAssessmentMailer.with(staff: user, rank_number: form.rank, level_number: form.level, title_number: form.title&.name, from_date: period.from_date, to_date: period.to_date).pm_re_approve_cds.deliver_later(wait: 3.seconds)
         end
