@@ -83,6 +83,9 @@ function loadDataAssessment(data_filter) {
         ],
         "order": [[1, "desc"]],
       });
+      if (response.length == 0) {
+        $('.paginate_button').addClass('disabled')
+      }
     },
     error: function () {
       $(".table-cds-assessment-manager-list tbody").html(temp);

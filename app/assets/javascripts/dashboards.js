@@ -174,7 +174,7 @@ $(document).ready(function () {
       },
       success: function (response) {
         if (response.data == 'fails')
-          fails("User does not have CDS/CDP on the system");
+          fails("This user has not had CDS/CDP on the system");
         else
           window.location.href = response.data
       },

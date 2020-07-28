@@ -41,7 +41,7 @@ class UserGroupsController < ApplicationController
         UserGroup.create(group_id: id_group, user_id: user)
       }
     end
-    @group = Group.find(params[:id])
+    @group = Group.find_by_id(params[:id])
     number = UserGroup.where(group_id: @group.id).count
     status_group = @group.status ? "Enable" : "Disable"
 

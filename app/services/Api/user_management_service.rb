@@ -157,14 +157,14 @@ module Api
     end
 
     def calulate_data_user_by_seniority
-      h_males = data_users_by_seniority
+      h_users = data_users_by_seniority
       list = ["<3", "3-5", "5-7", "7-10", ">10"]
       data = list.map do |i|
-        next if h_males[i].nil?
-        value = h_males[i] / 2.0
+        next if h_users[i].nil?
+        value = h_users[i] / 2.0
         { group: i, left: value, right: value }
       end.compact
-      total = h_males.values.sum
+      total = h_users.values.sum
       { data: data, total: total }
     end
 
@@ -261,12 +261,12 @@ module Api
     end
 
     def calulate_data_user_by_title
-      h_males = data_users_by_title
-      data = h_males.keys.map do |i|
-        value = h_males[i] / 2.0
+      h_users = data_users_by_title
+      data = h_users.keys.map do |i|
+        value = h_users[i] / 2.0
         { group: i, left: value, right: value }
       end
-      total = h_males.values.sum
+      total = h_users.values.sum
       { data: data, total: total }
     end
 

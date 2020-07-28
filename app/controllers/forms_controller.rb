@@ -5,10 +5,10 @@ class FormsController < ApplicationController
   before_action :export_service
   before_action :get_privilege_id
   before_action :check_privilege
-  VIEW_CDS_CDP_ASSESSMENT = 24
+  VIEW_CDS_CDP_ASSESSMENT = 15
   REVIEW_CDS = 16
   APPROVE_CDS = 17
-  FULL_ACCESS = 15
+  FULL_ACCESS = 24
 
   def index_cds_cdp
     form = Form.find_by(user_id: current_user.id)
@@ -386,7 +386,7 @@ class FormsController < ApplicationController
   end
 
   def check_staff_privilege
-    redirect_to root_path unless @privilege_array.include?(FULL_ACCESS)
+    redirect_to root_path unless @privilege_array.include?(VIEW_CDS_CDP_ASSESSMENT)
   end
 
   def check_line_manager_privilege

@@ -21,6 +21,10 @@ $(document).ready(function () {
     setDisplayHelp('.show-help-2');
     document.getElementsByClassName("show-help-2")[0].scrollIntoView();
   });
+  $('.help-administration').click(function () {
+    setDisplayHelp('.show-help-2');
+    document.getElementsByClassName("show-help-administration")[0].scrollIntoView();
+  });
   $('.help-2-1').click(function () {
     setDisplayHelp('.show-help-2');
     document.getElementsByClassName("show-help-2-1")[0].scrollIntoView();
