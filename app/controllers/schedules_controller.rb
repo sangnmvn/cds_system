@@ -46,7 +46,7 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.company.name)
       if check_pm?
         project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
-        project_name = Project.find(project_ids).pluck(:name).join(", ")
+        project_name = Project.where(id: project_ids).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
 
@@ -120,7 +120,7 @@ class SchedulesController < ApplicationController
   end
 
   def show
-    @schedule = Schedule.includes(:company, :period).find(params[:id])
+    @schedule = Schedule.includes(:company, :period).find_by_id(params[:id])
 
     respond_to do |format|
       format.js
@@ -175,7 +175,7 @@ class SchedulesController < ApplicationController
       temp_params[:_type] = "PM"
 
       # reuse existing period of parents
-      period = Period.find(schedule_parent_id)
+      period = Period.find_by_id(schedule_parent_id)
       parent_schedule = Schedule.where(period_id: period.id).first
       temp_params[:period_id] = period.id
       temp_params[:notify_hr] = parent_schedule.notify_hr
@@ -194,7 +194,7 @@ class SchedulesController < ApplicationController
   end
 
   def edit_page
-    schedule = Schedule.find(params[:id])
+    schedule = Schedule.find_by_id(params[:id])
     @is_pm = check_pm?
     @is_hr = check_hr?
     project_ids = ProjectMember.where(user_id: current_user.id, is_managent: 1).pluck(:project_id)
@@ -234,14 +234,14 @@ class SchedulesController < ApplicationController
   end
 
   def destroy_page
-    schedule = Schedule.find(params[:id])
+    schedule = Schedule.find_by_id(params[:id])
     render json: { status: true, id: schedule.id }
   end
 
   def destroy
     schedule = Schedule.find_by(id: params[:id], status: "New")
     return render json: { status: false } if schedule.nil?
-    period = Period.find(schedule.period_id)
+    period = Period.find_by_id(schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
     ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
     if period.destroy && schedule.destroy
@@ -254,12 +254,11 @@ class SchedulesController < ApplicationController
 
   def destroy_multiple
     if params[:schedule_ids] != nil
-      schedule = Schedule.find(params[:schedule_ids])
+      schedule = Schedule.includes(:period).where(id: params[:schedule_ids])
 
       schedule.each do |schedule|
-        period = Period.find(schedule.period_id)
         user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-        ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
+        ScheduleMailer.with(user: user.to_a, period: schedule.period).del_mailer.deliver_later(wait: 1.minute)
         schedule.destroy
       end
       render json: { status: true }
@@ -282,14 +281,12 @@ class SchedulesController < ApplicationController
       temp_params.delete(:notify_member)
     end
 
-    @schedule = Schedule.find(params[:id])
     if @schedule.update(temp_params)
       user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
-      @period = Period.find(@schedule.period_id)
       if check_hr?
-        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_hr.deliver_later(wait: 1.minute)
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_hr.deliver_later(wait: 1.minute)
       elsif check_pm?
-        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).edit_mailer_pm.deliver_later(wait: 1.minute)
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_pm.deliver_later(wait: 1.minute)
       end
       @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
       render json: { status: true }
@@ -314,7 +311,7 @@ class SchedulesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_schedule
-    @schedule = Schedule.find(params[:id])
+    @schedule = Schedule.includes(:period).find_by_id(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
