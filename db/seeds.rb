@@ -13,11 +13,11 @@ LineManager.delete_all
 Comment.delete_all
 FormSlot.delete_all
 Form.delete_all
-#Slot.delete_all
+Slot.delete_all
 TitleMapping.delete_all
 TitleCompetencyMapping.delete_all
-#Competency.delete_all
-#Template.delete_all
+Competency.delete_all
+Template.delete_all
 LevelMapping.delete_all
 Title.delete_all
 Approver.delete_all
