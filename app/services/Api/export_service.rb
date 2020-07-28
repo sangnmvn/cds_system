@@ -749,7 +749,6 @@ module Api
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
@@ -759,21 +758,22 @@ module Api
         level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_up_sheet.add_row ["Promotion in the Last Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_up_sheet.rows[1].cells[0].style = title_format
+        level_up_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_up_sheet.merge_cells "A1:J1"
         level_up_sheet.merge_cells "A2:J2"
         level_up_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
         level_up_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
-        level_up_sheet.merge_cells "A3:A4"
-        level_up_sheet.merge_cells "B3:B4"
-        level_up_sheet.merge_cells "C3:C4"
-        level_up_sheet.merge_cells "D3:F3"
-        level_up_sheet.merge_cells "G3:I3"
-        level_up_sheet.merge_cells "J3:J4"
+        level_up_sheet.merge_cells "A4:A5"
+        level_up_sheet.merge_cells "B4:B5"
+        level_up_sheet.merge_cells "C4:C5"
+        level_up_sheet.merge_cells "D4:F4"
+        level_up_sheet.merge_cells "G4:I4"
+        level_up_sheet.merge_cells "J4:J5"
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
           level_up_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
           level_up_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 7, 8].include?(index) }.each { |element| element.style = normal_format }
-          level_up_sheet.rows[-1].cells[0].style = index_format
+          level_up_sheet.rows[-1].cells[0].style = number_format
           level_up_sheet.rows[-1].cells[2].style = email_format
           level_up_sheet.rows[-1].cells[4].style = number_format
           level_up_sheet.rows[-1].cells[5].style = number_format
@@ -820,7 +820,6 @@ module Api
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         # create sheet
@@ -830,21 +829,22 @@ module Api
         level_down_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_down_sheet.add_row ["Demotion Employee in the Last Period [#{h_data[:period_name]}]", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_down_sheet.rows[1].cells[0].style = title_format
+        level_down_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         level_down_sheet.merge_cells "A1:J1"
         level_down_sheet.merge_cells "A2:J2"
         level_down_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
         level_down_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
-        level_down_sheet.merge_cells "A3:A4"
-        level_down_sheet.merge_cells "B3:B4"
-        level_down_sheet.merge_cells "C3:C4"
-        level_down_sheet.merge_cells "D3:F3"
-        level_down_sheet.merge_cells "G3:I3"
-        level_down_sheet.merge_cells "J3:J4"
+        level_down_sheet.merge_cells "A4:A5"
+        level_down_sheet.merge_cells "B4:B5"
+        level_down_sheet.merge_cells "C4:C5"
+        level_down_sheet.merge_cells "D4:F4"
+        level_down_sheet.merge_cells "G4:I4"
+        level_down_sheet.merge_cells "J4:J5"
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
           level_down_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
           level_down_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 7, 8].include?(index) }.each { |element| element.style = normal_format }
-          level_down_sheet.rows[-1].cells[0].style = index_format
+          level_down_sheet.rows[-1].cells[0].style = number_format
           level_down_sheet.rows[-1].cells[2].style = email_format
           level_down_sheet.rows[-1].cells[4].style = number_format
           level_down_sheet.rows[-1].cells[5].style = number_format
@@ -891,7 +891,6 @@ module Api
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
 
@@ -899,6 +898,7 @@ module Api
         no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.add_row ["List of Employees Has No Change Level", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.rows[1].cells[0].style = title_format
+        no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.merge_cells "A1:J1"
         no_change_sheet.merge_cells "A2:J2"
         no_change_sheet.add_row ["No.", "Employee Name", "Email", "From Period", "Title", "Rank", "Level", "Notes"], :style => table_header_format
@@ -907,7 +907,7 @@ module Api
         filtered_data_arr.each_with_index do |result, index|
           no_change_sheet.add_row [index + 1, result[:full_name], result[:email], result[:period_from_name], result[:title], result[:rank], result[:level], ""]
           no_change_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 5, 6].include?(index) }.each { |element| element.style = normal_format }
-          no_change_sheet.rows[-1].cells[0].style = index_format
+          no_change_sheet.rows[-1].cells[0].style = number_format
           no_change_sheet.rows[-1].cells[2].style = email_format
           no_change_sheet.rows[-1].cells[5].style = number_format
           no_change_sheet.rows[-1].cells[6].style = number_format
@@ -954,7 +954,6 @@ module Api
         table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         normal_improved_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
         normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
         number_improved_format = workbook.styles.add_style(:sz => 11, :b => true, :u => true, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
@@ -966,21 +965,22 @@ module Api
         title_comparison_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         title_comparison_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], :style => title_format
         title_comparison_sheet.rows[1].cells[0].style = title_format
+        title_comparison_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
         title_comparison_sheet.merge_cells "A1:J1"
         title_comparison_sheet.merge_cells "A2:J2"
         title_comparison_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
         title_comparison_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
-        title_comparison_sheet.merge_cells "A3:A4"
-        title_comparison_sheet.merge_cells "B3:B4"
-        title_comparison_sheet.merge_cells "C3:C4"
-        title_comparison_sheet.merge_cells "D3:F3"
-        title_comparison_sheet.merge_cells "G3:I3"
-        title_comparison_sheet.merge_cells "J3:J4"
+        title_comparison_sheet.merge_cells "A4:A5"
+        title_comparison_sheet.merge_cells "B4:B5"
+        title_comparison_sheet.merge_cells "C4:C5"
+        title_comparison_sheet.merge_cells "D4:F4"
+        title_comparison_sheet.merge_cells "G4:I4"
+        title_comparison_sheet.merge_cells "J4:J5"
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
           title_comparison_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
           title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
-          title_comparison_sheet.rows[-1].cells[0].style = index_format
+          title_comparison_sheet.rows[-1].cells[0].style = number_format
           title_comparison_sheet.rows[-1].cells[2].style = email_format
           title_comparison_sheet.rows[-1].cells[4].style = number_format
           title_comparison_sheet.rows[-1].cells[5].style = number_format
