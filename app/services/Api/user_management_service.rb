@@ -169,15 +169,16 @@ module Api
     end
 
     def data_users_by_title
-      if params[:role_id] && params[:role_id].length == 1
-        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.name").count
+      if params[:role_id] && params[:role_id].first != "All" && params[:role_id].length == 1
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6, title_id: nil).group("titles.name").count
         h_users = {}
         users.each do |key, value|
           h_users[key] = value
         end
         return h_users
       end
-      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.rank").count
+      
+      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6, title_id: nil).group("titles.rank").count
       h_users = { "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
       users.each do |key, value|
         case key
@@ -454,9 +455,9 @@ module Api
         is_delete: false,
       }
 
-      filter[:company_id] = params[:company_id].split(",").map(&:to_i) if params[:company_id].present? && params[:company_id] != "All"
-      filter[:role_id] = params[:role_id].split(",").map(&:to_i) if params[:role_id].present? && params[:role_id] != "All"
-      filter[:project_members] = { project_id: params[:project_id].split(",").map(&:to_i) } if params[:project_id].present? && params[:project_id] != "All"
+      filter[:company_id] = params[:company_id].map(&:to_i) if params[:company_id].present? && params[:company_id].first != "All"
+      filter[:role_id] = params[:role_id].map(&:to_i) if params[:role_id].present? && params[:role_id].first != "All"
+      filter[:project_members] = { project_id: params[:project_id].map(&:to_i) } if params[:project_id].present? && params[:project_id].first != "All"
 
       filter
     end

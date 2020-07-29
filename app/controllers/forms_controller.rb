@@ -358,10 +358,49 @@ class FormsController < ApplicationController
     render json: data
   end
 
+  def data_filter_projects
+    if params[:company_id].first == "0"
+      projects = Project.select("projects.name as name", :id)
+    else
+      projects = Project.select("projects.name as name", :id).where(company_id: params[:company_id])
+    end
+
+    render json: { projects: projects || [] }
+  end
+
+  def data_filter_users
+    if @privilege_array.include?(FULL_ACCESS)
+      user_ids = User.where(is_delete: false)
+    elsif @privilege_array.include?(APPROVE_CDS)
+      user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+    elsif @privilege_array.include?(REVIEW_CDS)
+      project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
+      user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
+    else
+      redirect_to root_path
+    end
+
+    filter = { id: user_ids }
+    filter[:company_id] = params[:company_id] unless params[:company_id].length == 1 && params[:company_id].first == "0"
+    filter[:role_id] = params[:role_id] unless params[:role_id].length == 1 && params[:role_id].first == "0"
+
+    users = User.includes(:project_members).where(filter)
+    unless params[:project_id].length == 1 && params[:project_id].first == "0"
+      users = users.where(project_members: { project_id: params[:project_id] })
+    end
+
+    results = users.map do |user|
+      {
+        id: user.id,
+        name: user.format_name_vietnamese,
+      }
+    end
+    render json: { users: results || [] }
+  end
+
   private
 
   def get_privilege_assessment
-
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
     user_id = user_id.present? ? user_id : current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
@@ -402,12 +441,12 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params[:offset] = params[:iDisplayStart] || "0"
-    params[:user_ids] = params[:user_ids] || "0"
-    params[:company_ids] = params[:company_ids] || "0"
-    params[:project_ids] = params[:project_ids] || "0"
-    params[:period_ids] = params[:period_ids] || "50"
-    params[:role_ids] = params[:role_ids] || "0"
+    params[:offset] = params[:iDisplayStart]
+    params[:user_ids] = params[:user_ids]
+    params[:company_ids] = params[:company_ids]
+    params[:project_ids] = params[:project_ids]
+    params[:period_ids] = params[:period_ids]
+    params[:role_ids] = params[:role_ids]
 
     params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,

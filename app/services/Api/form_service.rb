@@ -397,11 +397,12 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
+      data_filter[:roles].compact!
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
@@ -431,11 +432,12 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
+      data_filter[:roles].compact!
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
@@ -485,12 +487,12 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
-
+      data_filter[:roles].compact!
       project_members.each do |project_member|
         project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
@@ -1338,24 +1340,24 @@ module Api
       filter_users = {}
       filter = {}
 
-      unless params[:user_ids] == "0"
-        filter_users[:id] = params[:user_ids].split(",").map(&:to_i)
+      if params[:user_ids] && params[:user_ids] == "0"
+        filter_users[:id] = params[:user_ids].map(&:to_i)
       end
 
-      unless params[:role_ids] == "0"
-        filter_users[:role_id] = params[:role_ids].split(",").map(&:to_i)
+      if params[:role_ids] && params[:role_ids] == "0"
+        filter_users[:role_id] = params[:role_ids].map(&:to_i)
       end
 
-      unless params[:company_ids] == "0"
-        filter_users[:company_id] = params[:company_ids].split(",").map(&:to_i)
+      if params[:company_ids] && params[:company_ids] == "0"
+        filter_users[:company_id] = params[:company_ids].map(&:to_i)
       end
 
-      unless params[:period_ids] == "0"
-        filter[:period_id] = params[:period_ids].split(",").map(&:to_i || 0)
+      if params[:period_ids] && params[:period_ids] == "0"
+        filter[:period_id] = params[:period_ids].map(&:to_i || 0)
       end
 
-      unless params[:project_ids] == "0"
-        filter[:project_id] = params[:project_ids].split(",").map(&:to_i || 0)
+      if params[:project_ids] && params[:project_ids] == "0"
+        filter[:project_id] = params[:project_ids].map(&:to_i || 0)
       end
 
       filter[:filter_users] = filter_users

@@ -197,6 +197,8 @@
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <script>
   var is_staff =  <%= !@can_view_chart && @can_view_career %>;
+  var is_change_company = false;
+  var curr_company_ids = [];
 </script>
 <script type="text/javascript" src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
 <script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>

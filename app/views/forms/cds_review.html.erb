@@ -1,8 +1,6 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'cdp_assessment', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'form_review_export', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :cds_review %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
@@ -61,7 +59,15 @@
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <%= render 'modal_reject_cds' %>
 <script>
-  var form_id = ""
-  var user_id = ""
-  var Period = ""
+  var form_id = "";
+  var user_id = "";
+  var Period = "";
+  var is_change_company = false;
+  var is_change_project = false;
+  var is_change_role = false;
+  var curr_company_ids = []; 
+  var curr_project_ids = [];
+  var curr_role_ids = [];
 </script>
+<%= javascript_include_tag 'form_cds_review', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'form_review_export', 'data-turbolinks-track': 'reload' %>

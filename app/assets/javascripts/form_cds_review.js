@@ -15,6 +15,10 @@ function loadDataAssessment(data_filter) {
     },
     dataType: "json",
     success: function (response) {
+      if (response.length == 0) {
+        temp = '<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>'
+        $('.paginate_button').addClass('disabled')
+      }
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
         var this_element = `<tr id='period_id_{id}'> 
@@ -70,22 +74,20 @@ function loadDataAssessment(data_filter) {
         temp += this_element;
       };
       $(".table-cds-assessment-manager-list tbody").html(temp);
-      $(".table-cds-assessment-manager-list").DataTable({
-        "bLengthChange": false,
-        "bFilter": false,
-        "bAutoWidth": false,
-        "columnDefs": [
-          {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0,
-          }
-        ],
-        "order": [[1, "desc"]],
-      });
-      if (response.length == 0) {
-        $('.paginate_button').addClass('disabled')
-      }
+      if (response.length > 0)
+        $(".table-cds-assessment-manager-list").DataTable({
+          "bLengthChange": false,
+          "bFilter": false,
+          "bAutoWidth": false,
+          "columnDefs": [
+            {
+              "searchable": false,
+              "orderable": false,
+              "targets": 0,
+            }
+          ],
+          "order": [[1, "desc"]],
+        });
     },
     error: function () {
       $(".table-cds-assessment-manager-list tbody").html(temp);
@@ -106,16 +108,6 @@ function loadDataAssessment(data_filter) {
   })
 }
 
-function loadFilterReview() {
-  $(".filter_review").click(function () {
-    $(".filter-condition").toggle();
-    if ($('a.filter_review i').hasClass('fa-chevron-down'))
-      $('a.filter_review i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-    else
-      $('a.filter_review i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
-  });
-}
-
 function loadDataFilter() {
   $.ajax({
     type: "GET",
@@ -126,54 +118,11 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
-      $('.company-filter').html(' <select name="company_filter" id="company_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
-      $('.project-filter').html('<select name="project_filter" id="project_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
-      $('.role-filter').html('<select name="role_filter" id="role_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
-      $('.user-filter').html('<select name="user_filter" id="user_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
-      $('.period-filter').html('<select name="period_filter" id="period_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>');
-      if (response.companies.length > 1)
-        $('<option value="0" selected>All</option>').appendTo("#company_filter");
-      if (response.roles.length > 1)
-        $('<option value="0" selected>All</option>').appendTo("#role_filter");
-      if (response.projects.length > 1)
-        $('<option value="0" selected>All</option>').appendTo("#project_filter");
-      if (response.users.length > 1)
-        $('<option value="0" selected>All</option>').appendTo("#user_filter");
-
-      $.each(response.companies, function (k, v) {
-        if (k == 0 && response.companies.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#company_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");
-      });
-      $.each(response.projects, function (k, v) {
-        if (k == 0 && response.projects.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#project_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#project_filter");
-      });
-      $.each(response.roles, function (k, v) {
-        if (v) {
-          if (k == 0 && response.roles.length == 1)
-            $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
-          else
-            $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
-        }
-      });
-      $.each(response.users, function (k, v) {
-        if (k == 0 && response.users.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#user_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#user_filter");
-      });
-      $.each(response.periods, function (k, v) {
-        if (k == 0)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#period_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#period_filter");
-      });
-      $("#company_filter, #project_filter, #role_filter, #user_filter, #period_filter").bsMultiSelect({});
-      customizeFilter();
+      setupDataFilter('company_filter', '.company-filter', response.companies);
+      setupDataFilter('project_filter', '.project-filter', response.projects);
+      setupDataFilter('role_filter', '.role-filter', response.roles);
+      setupDataFilter('user_filter', '.user-filter', response.users);
+      setupDataFilter('period_filter', '.period-filter', response.periods);
       data_filter = apllyFilter();
       loadDataAssessment(data_filter)
     }
@@ -182,160 +131,27 @@ function loadDataFilter() {
 
 function apllyFilter() {
   var data = {
-    company: $('#company_filter').val().join(),
-    project: $('#project_filter').val().join(),
-    role: $('#role_filter').val().join(),
-    user: $('#user_filter').val().join(),
-    period: $('#period_filter').val().join(),
+    company: $('#company_filter').val(),
+    project: $('#project_filter').val(),
+    role: $('#role_filter').val(),
+    user: $('#user_filter').val(),
+    period: $('#period_filter').val(),
   }
   return data
 }
 
-function customizeFilter() {
-  $(".company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
-    max = $('.company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
-    length = $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.company-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.company-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
-    }
-  });
-  $(".role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
-    max = $('.role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
-    length = $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.role-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.role-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
-    }
-  });
-  $(".project-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
-    max = $('.project-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
-    length = $('.project-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.project-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.project-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.project-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.project-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.project-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
-    }
-    $(this).closest('tr').find('#user_name').html()
-  });
-  $(".user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
-    max = $('.user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
-    length = $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.user-filter .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.user-filter .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
-    }
-  });
-}
-
 $(document).ready(function () {
-  loadFilterReview();
+  $(".filter_review").click(function () {
+    $(".filter-condition").toggle();
+    $('a.filter_review i').toggleClass('fa-chevron-down fa-chevron-up');
+  });
   loadDataFilter();
   $(".apply-filter").click(function () {
     data_filter = apllyFilter();
     loadDataAssessment(data_filter);
   });
 
-  $('.item-filter-review').change(function(){
+  $('.item-filter-review').change(function () {
     $('.reset-filter').removeClass('disabled');
   });
 
@@ -374,4 +190,182 @@ $(document).ready(function () {
     });
     $('#modal_reject_cds').modal('hide');
   });
+
+  $(document).on('click', function () {
+    if ($('.company-filter .focus').length) {
+      is_change_company = !_.isEqual(curr_company_ids, $('#company_filter').val());
+      curr_company_ids = $('#company_filter').val();
+      return;
+    }
+    if (is_change_company) {
+      loadProjectFilter();
+      loadUserFilter();
+      is_change_company = false
+    }
+
+    if ($('.project-filter .focus').length) {
+      is_change_project = !_.isEqual(curr_project_ids, $('#project_filter').val());
+      curr_project_ids = $('#project_filter').val();
+      return;
+    }
+    if (is_change_project) {
+      loadUserFilter();
+      is_change_project = false
+    }
+
+    if ($('.role-filter .focus').length) {
+      is_change_role = !_.isEqual(curr_role_ids, $('#role_filter').val());
+      curr_role_ids = $('#role_filter').val();
+      return;
+    }
+    if (is_change_role) {
+      loadUserFilter();
+      is_change_role = false
+    }
+  });
 });
+
+function setupDataFilter(id, class_name, data) {
+  $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`);
+  id = '#' + id
+  if (data.length > 1 && id != "#period_filter")
+    $('<option value="0" selected>All</option>').appendTo(id);
+  $.each(data, function (k, v) {
+    if (k == 0 && (id == "#period_filter" || data.length == 1))
+      $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo(id);
+    else
+      $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(id);
+  });
+
+  $(id).bsMultiSelect({
+    setSelected: (opt, val) => {
+      opt.selected = val
+      let rs = $(id).val()
+      if (!val)
+        if (opt.innerText == "All") {
+          if (rs.length == 0 || rs[0] == "All") {
+            if (id == "#company_filter") {
+              loadProjectFilter();
+              loadUserFilter();
+            } else if (id == "#role_filter" || id == "#project_filter")
+              loadUserFilter();
+          }
+        } else {
+          if (rs[0] != "All") {
+            if (id == "#company_filter") {
+              loadProjectFilter();
+              loadUserFilter();
+            } else if (id == "#role_filter" || id == "#project_filter")
+              loadUserFilter();
+          }
+        }
+    }
+  });
+
+  if (data.length == 0) {
+    $(class_name + 'input').attr('placeholder', 'No data');
+    return;
+  }
+  $(class_name + " .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
+    max = $(class_name + ' .dashboardcode-bsmultiselect ul.dropdown-menu li').length;
+    length = $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge').length;
+    arr = [];
+    locate_all = 0;
+    all = false;
+    current = $(this).text();
+    for (i = 1; i <= length; i++) {
+      text = $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
+      if (text != "All")
+        arr.push(i)
+      else if (text == "All") {
+        all = true
+        locate_all = i
+      }
+    }
+
+    if (current == "All") {
+      $.each(arr, function (index, value) {
+        $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
+      });
+
+      if (id == "#company_filter") {
+        loadProjectFilter();
+        loadUserFilter();
+      } else if (id == "#role_filter" || id == "#project_filter")
+        loadUserFilter();
+      return ""
+    } else if (current != "All" && locate_all != 0) {
+      $.each(arr, function (index, value) {
+        $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + locate_all + ') .close').click();
+      });
+    }
+    if (arr.length == max - 1 && all == false) {
+      $.each(arr, function (index, value) {
+        $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
+      });
+      $(class_name + ' .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
+    }
+
+    if (id == "#company_filter") {
+      loadProjectFilter();
+      loadUserFilter();
+    } else if (id == "#role_filter" || id == "#project_filter")
+      loadUserFilter();
+  });
+}
+
+function loadProjectFilter() {
+  let arrCompany = $('#company_filter').val();
+  if (arrCompany.length > 0 && arrCompany[0] == "0")
+    arrCompany.splice(0, 1);
+  let company_id = _.isEmpty(arrCompany) ? ["0"] : arrCompany;
+
+  $.ajax({
+    url: "/forms/data_filter_projects",
+    data: {
+      company_id: company_id
+    },
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+      setupDataFilter("project_filter", '.project-filter', response.projects)
+    }
+  });
+}
+
+function loadUserFilter() {
+
+  let arrCompany = $('#company_filter').val();
+  if (arrCompany.length > 0 && arrCompany[0] == "0")
+    arrCompany.splice(0, 1);
+  let company_id = _.isEmpty(arrCompany) ? ["0"] : arrCompany;
+
+  let arrProject = $('#project_filter').val();
+  if (arrProject.length > 0 && arrProject[0] == "0")
+    arrProject.splice(0, 1);
+  let project_id = _.isEmpty(arrProject) ? ["0"] : arrProject;
+
+  let arrRole = $('#role_filter').val();
+  if (arrRole.length > 0 && arrRole[0] == "0")
+    arrRole.splice(0, 1);
+  let role_id = _.isEmpty(arrRole) ? ["0"] : arrRole;
+
+  $.ajax({
+    url: "/forms/data_filter_users",
+    data: {
+      company_id: company_id,
+      project_id: project_id,
+      user_id: user_id,
+      role_id: role_id
+    },
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+      setupDataFilter("user_filter", '.user-filter', response.users)
+    }
+  });
+}

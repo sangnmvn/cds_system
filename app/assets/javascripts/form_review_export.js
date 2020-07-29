@@ -9,7 +9,7 @@ function resetExportIconColor() {
 }
 
 function checkPeriodFilter() {
-  return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1)
+  return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.length > 1)
 }
 
 function callAjaxExport(ext) {

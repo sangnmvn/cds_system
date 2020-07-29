@@ -88,6 +88,8 @@ Rails.application.routes.draw do
       post :withdraw_cds
       post :export_excel_cds_review
       post :get_line_manager_miss_list
+      post :data_filter_projects
+      post :data_filter_users
     end
   end
   resources :templates do
@@ -155,6 +157,7 @@ Rails.application.routes.draw do
       post :export_keep_title
       post :data_latest_baseline
       post :load_form_cds_staff
+      post :data_filter_projects
     end
   end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
@@ -190,7 +193,7 @@ Rails.application.routes.draw do
       delete :delete_role
       delete :delete_title
     end
-  end 
+  end
   resources :help do
     collection do
       get :index
