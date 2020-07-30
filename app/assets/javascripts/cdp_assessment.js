@@ -951,9 +951,9 @@ $(document).ready(function () {
             $('a.submit-assessment').addClass('disabled');
             $('a.withdraw-assessment').removeClass('d-none');
             $('a.withdraw-assessment').removeClass('disabled');
-            checkStatusFormStaff("Awaiting Review")
-            status = "Awaiting Review"
-            $("#status").html("(Awaiting Review)")
+            status = response.status
+            checkStatusFormStaff(status)
+            $("#status").html(`(${status})`)
           } else {
             fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
           }

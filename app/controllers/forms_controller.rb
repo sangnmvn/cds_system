@@ -218,7 +218,7 @@ class FormsController < ApplicationController
   end
 
   def preview_result
-    return  if params[:form_id].nil?
+    return if params[:form_id].nil?
     form = Form.includes(:title).find_by_id(params[:form_id])
 
     @form_id = form.id
@@ -260,9 +260,9 @@ class FormsController < ApplicationController
       period = schedules.last.period_id
     end
 
-    render json: { status: "success" } if form.update(period_id: period, status: status, submit_date: DateTime.now)
+    render json: { status: "success", form_status: status } if form.update(period_id: period, status: status, submit_date: DateTime.now)
     user = form.user
-    period = Period.find_by(id: schedules.last.period_id)
+    period = Period.find_by_id(period)
     old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
     old_comment.destroy_all
     Async.await do

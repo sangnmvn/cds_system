@@ -29,15 +29,14 @@
       <% else %>
         <p>There is no period to submit your CDS/CDP. Please contact your Administrator to setup.</p>
       <% end %>
-      </div>
-      <div class="modal-footer" style="justify-content: center;">
-        <% if @period.present? || @hash[:is_submit_late] %>
-          <button type="button" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
-          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
-        <% else %>
-          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
-        <% end %>
-      </div>
+    <div class="modal-footer" style="justify-content: center;">
+      <% if @period.present? || @hash[:is_submit_late] %>
+        <button type="button" class="btn btn-primary confirm-submit-cds">Yes</button>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
+      <% else %>
+        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
+      <% end %>
     </div>
   </div>
+</div>
 </div>
