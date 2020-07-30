@@ -24,7 +24,7 @@ table.dataTable {
 
 #table_user_management tr.odd>th {
     font-size: 16px;
-    background: #4472c4;
+    background-color: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
     border: 1px solid black;
@@ -40,14 +40,14 @@ table.dataTable tbody td {
 
 #table_user_management tr.even>td {
     font-size: 16px;
-    background: #cfd5ea;
+    background-color: #cfd5ea;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
 
 #table_user_management tr.odd>td {
     font-size: 16px;
-    background: #E9ebf5;
+    background-color: #E9ebf5;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
@@ -128,7 +128,7 @@ table.dataTable tbody td {
 
 .panel_contents table tr.odd>th {
     font-size: 14px;
-    background: #4472c4;
+    background-color: #4472c4;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
 }
@@ -139,14 +139,12 @@ table.dataTable tbody td {
 
 .panel_contents table tr.even>td {
     font-size: 12px;
-    background: rgb(0, 198, 224);
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
 }
 
 .panel_contents table tr.odd>td {
     font-size: 12px;
-    background: #009ED0;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
 }
@@ -154,10 +152,6 @@ table.dataTable tbody td {
 
 .table-mytable {
     text-align: center;
-
-    tbody tr:nth-of-type(odd) {
-        background-color: #C6E2FF;
-    }
 
     thead {
         background-color: #4472c4;
@@ -263,18 +257,12 @@ tr {
 }
 
 .dataTables_wrapper .dataTables_filter input {
-    background-image: url(/assets/search-3-16.png);
     background-repeat: no-repeat;
     background-position: right center;
     outline: 0;
 }
 
-table.dataTable thead .sorting {
-    background-image: url(/assets/sort_both.png);
-}
-
 #table_user_management tr.odd>th {
-    background-image: url(/assets/sort_both.png);
     background-repeat: no-repeat;
     background-position: right center;
     outline: 0;

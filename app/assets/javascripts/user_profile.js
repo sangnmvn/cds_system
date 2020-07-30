@@ -37,8 +37,6 @@ $(document).ready(function () {
 
   $("#edit_location").click(function () {
     $("#modal_edit_location").modal("show");
-    $('#provinces option[text="' + select_provinces.trim() + '"]').attr("selected", "selected");
-    $('#district option[value="' + select_district.trim() + '"]').attr("selected", "selected");
   })
 
   $("#change_password").click(function () {
