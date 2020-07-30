@@ -144,8 +144,8 @@ function myJS_data_event() {
   });
 
   $('.close_modal').click(function () {
-      $('#table_left:visible').DataTable().search('');
-      $('#table_right:visible').DataTable().search('');
+    $('#table_left:visible').DataTable().search('');
+    $('#table_right:visible').DataTable().search('');
   });
   // Add index column in table left
   $('#table_left:visible').DataTable().on('order.dt search.dt', function () {
@@ -305,7 +305,7 @@ function myAjax() {
         $.each(response, function (i, e) { //duyet mang doi tuong
           table = $("#table_right:visible").dataTable();
           table.fnAddData([
-            "<td style='text-align: right'>" + (i+1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
+            "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
           ]);
         });
         $('.dataTables_length').attr("style", "display:none");
@@ -323,12 +323,16 @@ function myAjax() {
       },
       dataType: "json",
       success: function (response) {
+        if (response.length == 0) {
+          $("#table_left tbody").html('<tr><td colspan="4" class="type-icon">No data available in this table</td></tr>')
+          return;
+        }
         $("#table_left:visible").dataTable().fnClearTable(); //xoa du lieu cũ của table
         //xoa du lieu cũ của table
         $(response).each(
           function (i, e) { //duyet mang doi tuong
             $("#table_left:visible").dataTable().fnAddData([
-              "<td style='text-align: right'>" + (i+1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
+              "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
             ]);
           }
         );

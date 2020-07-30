@@ -272,10 +272,18 @@ module Api
       user_review_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false).select(:user_id)
       forms = []
       if @privilege_array.include?(APPROVE_CDS)
-        forms += Form.where(user_id: user_approve_ids, period_id: filter[:period_id], status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+        forms += if (filter[:period_id])
+            Form.where(user_id: user_approve_ids, period_id: filter[:period_id], status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          else
+            Form.where(user_id: user_approve_ids, status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          end
       end
       if @privilege_array.include?(REVIEW_CDS)
-        forms += Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+        forms += if (filter[:period_id])
+            Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: ["Awaiting Review", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          else
+            Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: ["Awaiting Review", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
       forms.map do |form|
@@ -865,8 +873,10 @@ module Api
       h_level_mapping.each do |key, value|
         is_pass = true
         value.each do |val|
-          count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
-          is_pass = count >= val.quantity
+          if h_competency_type[val.competency_type]
+            count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
+            is_pass = count >= val.quantity
+          end
         end
 
         if is_pass

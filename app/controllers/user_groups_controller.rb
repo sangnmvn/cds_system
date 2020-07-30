@@ -6,7 +6,7 @@ class UserGroupsController < ApplicationController
 
   def load_user
     user_groups = UserGroup.where(group_id: params[:id]).pluck(:user_id)
-    list_user = User.where.not(is_delete: true, id: user_groups, status: false)
+    list_user = User.where(is_delete: false, status: true).where.not(id: user_groups)
     render json: list_user
   end
 
@@ -16,17 +16,17 @@ class UserGroupsController < ApplicationController
   end
 
   def load_user_group
-    @kq = UserGroup.includes(:group, :user).where(group_id: params[:id])
+    user_groups = UserGroup.includes(:group, :user).where(group_id: params[:id])
     arr = Array.new
-    @kq.each { |kq|
+    user_groups.each { |user_group|
       arr << {
-        id: kq.id,
-        group_name: kq.group.name,
-        user_id: kq.user_id,
-        group_id: kq.group_id,
-        first_name: kq.user.first_name,
-        last_name: kq.user.last_name,
-        email: kq.user.email,
+        id: user_group.id,
+        group_name: user_group.group.name,
+        user_id: user_group.user_id,
+        group_id: user_group.group_id,
+        first_name: user_group.user.first_name,
+        last_name: user_group.user.last_name,
+        email: user_group.user.email,
       }
     }
     render json: arr

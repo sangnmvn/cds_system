@@ -118,7 +118,7 @@ function checkPrivilege() {
   if (!privilege_array.split(",").includes(full_access_on_all_companies_dashboard) && !privilege_array.split(",").includes(full_access_on_my_company_dashboard) && !privilege_array.split(",").includes(full_access_on_my_project) && !privilege_array.split(",").includes(view_my_dashboard)) {
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment)) {
+  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment)) {
     $(".privilate-cds-cdp-review").css("display", "none");
   }
   if (!privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(view_CDS_CDP_Assessment)) {

@@ -201,7 +201,7 @@ module Api
       title_histories = TitleHistory.joins(:period).where(user_id: user_id).order("periods.to_date")
       h_rank_empty = {
         period: "",
-        current_user.role.name => nil,
+        current_user.role&.name => nil,
       }
       role_names = title_histories.pluck(:role_name).uniq
       role_names.each do |role_name|

@@ -951,7 +951,7 @@ $(document).ready(function () {
             $('a.submit-assessment').addClass('disabled');
             $('a.withdraw-assessment').removeClass('d-none');
             $('a.withdraw-assessment').removeClass('disabled');
-            status = response.status
+            status = response.form_status
             checkStatusFormStaff(status)
             $("#status").html(`(${status})`)
           } else {
