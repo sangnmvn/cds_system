@@ -35,7 +35,7 @@ function loadDataAssessment(data_filter) {
             <td class="type-text">{review_date}</td>
             <td class="type-text" id="status">{status}</td> 
             <td class="type-icon"> 
-              <a href='/forms/preview_result?form_id={id}'>
+              <a href='/forms/preview_result?form_id={id}' title="View result">
                 <i class='far fa-eye icon-list' style='color:#4F94CD'></i>
               </a>
               &nbsp;`.formatUnicorn({
@@ -56,13 +56,13 @@ function loadDataAssessment(data_filter) {
         });
         if (form.is_approver) {
           if (form.status == "Done" && form.is_open_period) {
-            this_element += `<a class='reject-cds-cdp' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#'>
+            this_element += `<a class='reject-cds-cdp' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#' title="Reject CDS/CDP">
           <i class='fas fa-thumbs-down icon-list icon-reject' style='color:blue'></i>
               </a> 
             </td> 
           </tr>`
           } else {
-            this_element += `<a class='reject-cds-cdp disabled' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#'>
+            this_element += `<a class='reject-cds-cdp disabled' data-id='${form.id}' data-user-id='${form.user_id}' data-period-cds='${form.period_name}' href='#' title="Approve CDS/CDP">
           <i class='fas fa-thumbs-down icon-list icon-reject' style='color:#6c757d'></i>
               </a> 
             </td> 
@@ -90,20 +90,7 @@ function loadDataAssessment(data_filter) {
         });
     },
     error: function () {
-      $(".table-cds-assessment-manager-list tbody").html(temp);
-      $(".table-cds-assessment-manager-list").DataTable({
-        "bLengthChange": false,
-        "bFilter": false,
-        "bAutoWidth": false,
-        "columnDefs": [
-          {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0,
-          }
-        ],
-        "order": [[1, "desc"]],
-      });
+      $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>');
     }
   })
 }
@@ -190,39 +177,6 @@ $(document).ready(function () {
     });
     $('#modal_reject_cds').modal('hide');
   });
-
-  $(document).on('click', function () {
-    if ($('.company-filter .focus').length) {
-      is_change_company = !_.isEqual(curr_company_ids, $('#company_filter').val());
-      curr_company_ids = $('#company_filter').val();
-      return;
-    }
-    if (is_change_company) {
-      loadProjectFilter();
-      loadUserFilter();
-      is_change_company = false
-    }
-
-    if ($('.project-filter .focus').length) {
-      is_change_project = !_.isEqual(curr_project_ids, $('#project_filter').val());
-      curr_project_ids = $('#project_filter').val();
-      return;
-    }
-    if (is_change_project) {
-      loadUserFilter();
-      is_change_project = false
-    }
-
-    if ($('.role-filter .focus').length) {
-      is_change_role = !_.isEqual(curr_role_ids, $('#role_filter').val());
-      curr_role_ids = $('#role_filter').val();
-      return;
-    }
-    if (is_change_role) {
-      loadUserFilter();
-      is_change_role = false
-    }
-  });
 });
 
 function setupDataFilter(id, class_name, data) {
@@ -243,7 +197,7 @@ function setupDataFilter(id, class_name, data) {
       let rs = $(id).val()
       if (!val)
         if (opt.innerText == "All") {
-          if (rs.length == 0 || rs[0] == "All") {
+          if (rs.length == 0 || rs[0] == "0") {
             if (id == "#company_filter") {
               loadProjectFilter();
               loadUserFilter();
@@ -251,7 +205,7 @@ function setupDataFilter(id, class_name, data) {
               loadUserFilter();
           }
         } else {
-          if (rs[0] != "All") {
+          if (rs[0] != "0") {
             if (id == "#company_filter") {
               loadProjectFilter();
               loadUserFilter();
@@ -263,7 +217,7 @@ function setupDataFilter(id, class_name, data) {
   });
 
   if (data.length == 0) {
-    $(class_name + 'input').attr('placeholder', 'No data');
+    $(class_name + ' input').attr('placeholder', 'No data');
     return;
   }
   $(class_name + " .dashboardcode-bsmultiselect ul.dropdown-menu li").click(function () {
@@ -289,7 +243,7 @@ function setupDataFilter(id, class_name, data) {
       });
 
       if (id == "#company_filter") {
-        loadProjectFilter();
+        loadProjectFilter(["0"]);
         loadUserFilter();
       } else if (id == "#role_filter" || id == "#project_filter")
         loadUserFilter();
@@ -300,9 +254,6 @@ function setupDataFilter(id, class_name, data) {
       });
     }
     if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $(class_name + ' .dashboardcode-bsmultiselect .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
       $(class_name + ' .dashboardcode-bsmultiselect ul.dropdown-menu li:nth-child(1)').click();
     }
 
@@ -314,11 +265,12 @@ function setupDataFilter(id, class_name, data) {
   });
 }
 
-function loadProjectFilter() {
-  let arrCompany = $('#company_filter').val();
+function loadProjectFilter(company_id = []) {
+  var arrCompany = $('#company_filter').val();
   if (arrCompany.length > 0 && arrCompany[0] == "0")
     arrCompany.splice(0, 1);
-  let company_id = _.isEmpty(arrCompany) ? ["0"] : arrCompany;
+  if (_.isEmpty(company_id))
+    var company_id = _.isEmpty(arrCompany) ? ["0"] : arrCompany;
 
   $.ajax({
     url: "/forms/data_filter_projects",
@@ -336,7 +288,6 @@ function loadProjectFilter() {
 }
 
 function loadUserFilter() {
-
   let arrCompany = $('#company_filter').val();
   if (arrCompany.length > 0 && arrCompany[0] == "0")
     arrCompany.splice(0, 1);

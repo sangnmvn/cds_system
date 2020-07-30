@@ -58,7 +58,7 @@ module Api
         current_user_data.push(user.company.name)
         # column action
         current_user_data.push("<div style='text-align: center'>
-            <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
+            <a class='action_icon edit_icon' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
               <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
             </a>
               <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href='javascript:;'>

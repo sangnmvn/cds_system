@@ -17,7 +17,7 @@ function drawPieChart(data, total, id, name) {
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("transform", "translate(" + width / 4 + "," + height / 2 + ")");
+    .attr("transform", "translate(" + (width / 4 + 30) + "," + height / 2 + ")");
 
   // append text total to avg
   svg.append('text')
@@ -85,7 +85,7 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value +' ('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
+    .text(function (d) { return d.data.value + ' (' + (d.data.value / total * 100).toFixed(2) + '%)'; })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
@@ -106,7 +106,7 @@ function drawPieChart(data, total, id, name) {
     .attr('transform', function (d, i) {
       var maxItemOneColumn = Math.ceil(color.domain().length / 2)
       if (maxItemOneColumn < 3)
-        maxItemOneColumn = color.domain().length 
+        maxItemOneColumn = color.domain().length
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
       var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 130)

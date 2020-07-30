@@ -16,43 +16,41 @@
         Filter
       </a>
       &nbsp;
-      <span>Export</span>
-      <a id="export_excel_cds_review"><i class="fa fa-file-excel-o icon icon-export-cds-review"  style="color: green"></i></a>
-      <a id="export_pdf_cds_review"><i class="fa fa-file-pdf-o icon icon-export-cds-review"  style="color: #a96f6f" aria-hidden="true"></i><a>
-        </div>
-        <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-        <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
-        <%= render 'modal_delete_cds' %>
-      </div>
+      <span>Export:</span>
+      <a id="export_excel_cds_review"><i class="fa fa-file-excel-o icon icon-export-cds-review" title="Export Excel"  style="color: green"></i></a>
+      <a id="export_pdf_cds_review"><i class="fa fa-file-pdf-o icon icon-export-cds-review" title="Export PDF"  style="color: #a96f6f" aria-hidden="true"></i></a>
+      <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+      <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+      <%= render 'modal_delete_cds' %>
     </div>
   </div>
-  <div class="col-12 filter-assessment-review">
-    <%= render "filter_review" %>
-  </div>
-  <div class="row" >
-    <div class="col-12" style="">
-      <table class="table table-primary table-responsive-sm table-cds-assessment-manager-list table-mytable">
-        <thead>
-          <tr>
-            <th data-orderable="false">No.</th>
-            <th>Period</th>
-            <th>User Name</th>
-            <th>Project</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Title</th>
-            <th>Rank</th>
-            <th>Level</th>
-            <th>CDS Submitted Date</th>
-            <th>Reviewed Date</th>
-            <th>Status</th>
-            <th data-orderable="false">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-    </div>
+</div>
+<div class="col-12 filter-assessment-review">
+  <%= render "filter_review" %>
+</div>
+<div class="row" >
+  <div class="col-12" style="">
+    <table class="table table-primary table-responsive-sm table-cds-assessment-manager-list table-mytable">
+      <thead>
+        <tr>
+          <th data-orderable="false">No.</th>
+          <th>Period</th>
+          <th>User Name</th>
+          <th>Project</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Title</th>
+          <th>Rank</th>
+          <th>Level</th>
+          <th>CDS Submitted Date</th>
+          <th>Reviewed Date</th>
+          <th>Status</th>
+          <th data-orderable="false">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
   </div>
 </div>
 <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
@@ -65,7 +63,7 @@
   var is_change_company = false;
   var is_change_project = false;
   var is_change_role = false;
-  var curr_company_ids = []; 
+  var curr_company_ids = [];
   var curr_project_ids = [];
   var curr_role_ids = [];
 </script>

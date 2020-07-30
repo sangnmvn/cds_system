@@ -56,13 +56,13 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.status)
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
         current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
       else
         current_schedule_data.push("")

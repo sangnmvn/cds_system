@@ -1,46 +1,50 @@
 <%= stylesheet_link_tag 'form', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'preview_result', media: 'all', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :view_result_assessment, @form_id %>
-<nav aria-label="breadcrumb" class="breadcrumb-preview-result">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active"><%= @title %></li>
-  </ol>
-</nav>
-<div class="container-fluid illustration">
-  <div class="row" style="margin-right: 0px;">
-    <table id="view_results_new" class="table table-primary table-responsive-sm table-mytable table-review-result">
-      <thead>
-        <tr>
-          <th class="th-sm competency" rowspan="2">Competency</th>
-          <th class="th-sm title-competency" colspan="3">By Competency</th>
-          <th class="th-sm" colspan="3">Previous Period</th>
-          <th class="th-sm currently-header" colspan="3">Currently Expected</th>
-          <th class="th-sm" colspan="3">Next Period</th>
-        </tr>
-        <tr>
-          <th class="th-sm title-competency">Title</th>
-          <th class="th-sm rank">Rank</th>
-          <th class="th-sm level">Level</th>
-          <th class="th-sm title-staff">Title</th>
-          <th class="th-sm rank">Rank</th>
-          <th class="th-sm level">Level</th>
-          <th class="th-sm title-staff currently-header">Title</th>
-          <th class="th-sm rank currently-header">Rank</th>
-          <th class="th-sm level currently-header">Level</th>
-          <th class="th-sm title-staff">Title</th>
-          <th class="th-sm rank">Rank</th>
-          <th class="th-sm level">Level</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-    <div class="col-12" style="padding-right: 0px">
-      <%= render 'form_preview_result'%>
+<% if @form_id.nil? %>
+  <%= render 'no_data_view_result'%>
+<% else %>
+  <nav aria-label="breadcrumb" class="breadcrumb-preview-result">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><%= @title %></li>
+    </ol>
+  </nav>
+  <div class="container-fluid illustration">
+    <div class="row" style="margin-right: 0px;">
+      <table id="view_results_new" class="table table-primary table-responsive-sm table-mytable table-review-result">
+        <thead>
+          <tr>
+            <th class="th-sm competency" rowspan="2">Competency</th>
+            <th class="th-sm title-competency" colspan="3">By Competency</th>
+            <th class="th-sm" colspan="3">Previous Period</th>
+            <th class="th-sm currently-header" colspan="3">Currently Expected</th>
+            <th class="th-sm" colspan="3">Next Period</th>
+          </tr>
+          <tr>
+            <th class="th-sm title-competency">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+            <th class="th-sm title-staff">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+            <th class="th-sm title-staff currently-header">Title</th>
+            <th class="th-sm rank currently-header">Rank</th>
+            <th class="th-sm level currently-header">Level</th>
+            <th class="th-sm title-staff">Title</th>
+            <th class="th-sm rank">Rank</th>
+            <th class="th-sm level">Level</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <div class="col-12" style="padding-right: 0px">
+        <%= render 'form_preview_result'%>
+      </div>
     </div>
   </div>
-</div>
-<script>
-  var form_id = <%= @form_id %>;
-</script>
-<%= javascript_include_tag 'preview_result', 'data-turbolinks-track': 'reload' %>
+  <script>
+    var form_id = <%= @form_id %>;
+  </script>
+  <%= javascript_include_tag 'preview_result', 'data-turbolinks-track': 'reload' %>
+<% end %>

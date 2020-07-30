@@ -39,9 +39,9 @@ function loadDataAssessmentList() {
               <td class="type-number">{title}</td> 
               <td class="type-text">{status}</td>
               <td class="type-icon"> 
-                <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}'></i></a>
+                <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}' title="Edit CDS/CDP"></i></a>
                 &nbsp;
-                <a class='{status_class}' data-id='{id}' data-period-cds='{period}' href='#'>
+                <a class='{status_class}' data-id='{id}' data-period-cds='{period}' href='#' title="Delete CDS/CDP">
                   <i class='fa fa-trash icon' style='color: {color_delete}'></i>
                 </a> 
               </td> 
@@ -62,6 +62,9 @@ function loadDataAssessmentList() {
         temp += this_element;
       }
       $(".table-cds-assessment-list tbody").html(temp);
+      
+      if (response.length == 0)
+        return; 
       var table = $(".table-cds-assessment-list").DataTable({
         "bLengthChange": false,
         "bFilter": false,

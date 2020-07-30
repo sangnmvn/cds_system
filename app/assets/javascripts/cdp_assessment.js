@@ -130,8 +130,8 @@ function loadDataSlots(response) {
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
       <div class="col-2 div-slot div-icon">
-        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed,  e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
-        <i class="fas ${chooseClassIconBatery(e.tracking.final_point,e.tracking.point)} ${checkColorbatery(e.tracking.is_passed,e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point,e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit,false)}"></i>
+        <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed, e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
+        <i class="fas ${chooseClassIconBatery(e.tracking.final_point, e.tracking.point)} ${checkColorbatery(e.tracking.is_passed, e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point, e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit, false)}"></i>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-yellow"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
@@ -152,7 +152,7 @@ function loadDataSlots(response) {
               <option value="uncommit" ${checkCommmit(!e.tracking.is_commit)}> Un-commit </option>`
     if (check_5_month)
       temp += `<option value="commit_cds" ${checkCommmit(e.tracking.is_commit)}> Commit CDS</option>`
-    temp += `<option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit,"CDP")}> Commit CDP</option>
+    temp += `<option value="commit_cdp" ${checkData(e.tracking.point, e.tracking.is_commit, "CDP")}> Commit CDP</option>
             </select>
           </div>
       </div>
@@ -203,8 +203,8 @@ function loadDataSlots(response) {
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
                   <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
-                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDS")}> Commit CDS</option>
-                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" &&  !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit,"CDP")}> Commit CDP</option>
+                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
+                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDP")}> Commit CDP</option>
                   </select>
                 </td>
                 <td>
@@ -242,8 +242,8 @@ function loadDataSlots(response) {
                     <td>
                       <select class="form-control select-commit approver-commit ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? "" : "approver-self"}" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])} ${e.tracking.comment_type == "CDS" ? "disabled" : ""} >
                       <option value="uncommit" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
-                      <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDS")}> Commit CDS</option>
-                      <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1],lst_approver[4], "CDP")}> Commit CDP</option>
+                      <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1], lst_approver[4], "CDS")}> Commit CDS</option>
+                      <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1], lst_approver[4], "CDP")}> Commit CDP</option>
                       </select>
                     </td>
                     <td>
@@ -429,7 +429,7 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        $("tbody#data_summary").html("");
+        $("tbody#data_summary").html(`<tr><td colspan='4'>No data available in table</td></tr>`);
         if (response.length > 0) {
           var body = ""
           $(response).each(
@@ -447,21 +447,21 @@ $(document).ready(function () {
             }
           )
           $("tbody#data_summary").html(body)
+          $("#table_summary_comment").DataTable({
+            "retrieve": true,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bAutoWidth": false,
+            "columnDefs": [{
+              "searchable": false,
+              "orderable": false,
+              "targets": 0,
+            },],
+            "order": [
+              [1, "asc"]
+            ],
+          });
         }
-        var table = $("#table_summary_comment").DataTable({
-          "retrieve": true,
-          "bLengthChange": false,
-          "bFilter": false,
-          "bAutoWidth": false,
-          "columnDefs": [{
-            "searchable": false,
-            "orderable": false,
-            "targets": 0,
-          }, ],
-          "order": [
-            [1, "asc"]
-          ],
-        });
         $('#modal_summary_assessment').modal('show')
       }
     })
@@ -824,7 +824,7 @@ $(document).ready(function () {
           temp += `
               <tr>
                 <td rowspan="${length}">${i}</td>
-                <td rowspan="${length}">${response[i].point > 0 ? "CDS" : "CDP" }</td>
+                <td rowspan="${length}">${response[i].point > 0 ? "CDS" : "CDP"}</td>
                 <td rowspan="${length}">${getValueStringPoint(response[i].point)}</td>
                 <td rowspan="${length}">${response[i].evidence}</td>
                 <td>${response[i].recommends[0].recommends}</td>
@@ -837,7 +837,7 @@ $(document).ready(function () {
             temp += `
                 <tr>
                   <td>${response[i].recommends[x].recommends}</td>
-                  <td>${response[i].recommends[x].given_point > 0 ? "CDS" : "CDP" }</td>
+                  <td>${response[i].recommends[x].given_point > 0 ? "CDS" : "CDP"}</td>
                   <td>${getValueStringPoint(response[i].recommends[x].given_point)}</td>
                   <td>${response[i].recommends[x].name}</td>
                   <td>${response[i].recommends[x].reviewed_date}</td>
@@ -997,7 +997,7 @@ $(document).ready(function () {
             if (str != "") {
               $("#content_modal_conflict").html(str);
               $('#modal_conflict').modal('show');
-            } else{
+            } else {
               $('#modal_period').modal('show');
             }
           } else {
@@ -1190,7 +1190,6 @@ function autoSaveStaff(row) {
             current_change = current_change;
           else
             current_change = max;
-          debugger
           var competency_id = $('div.show').data("competency-id")
           $('div.show table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
           $("tr[data-id-competency=" + competency_id + "]").children()[2].innerText = response.data

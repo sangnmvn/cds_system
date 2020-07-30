@@ -169,19 +169,6 @@ $(document).ready(function () {
       },
     });
   });
-
-  // $(document).on('click', function () {
-  //   if ($('.company-filter .focus').length) {
-  //     is_change_company = !_.isEqual(curr_company_ids, $('#company_filter').val());
-  //     curr_company_ids = $('#company_filter').val();
-  //     return;
-  //   }
-
-  //   if (is_change_company) {
-  //     loadProjectFilter();
-  //     is_change_company = false
-  //   }
-  // });
 });
 
 function loadDataFilter() {
@@ -217,30 +204,34 @@ function paramFilter() {
 
 function setupDataFilter(id, class_name, data) {
   $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
+  id = '#' + id
   if (data.length > 1)
-    $('<option value="All" selected>All</option>').appendTo("#" + id);
+    $('<option value="All" selected>All</option>').appendTo(id);
   data.forEach(function (value, index) {
     if (index == 0 && data.length == 1)
-      $('<option value="' + value.id + '" selected>' + value.name + "</option>").appendTo("#" + id);
+      $('<option value="' + value.id + '" selected>' + value.name + "</option>").appendTo(id);
     else
-      $('<option value="' + value.id + '">' + value.name + "</option>").appendTo("#" + id);
+      $('<option value="' + value.id + '">' + value.name + "</option>").appendTo(id);
   });
-  $("#" + id).bsMultiSelect({
+  $(id).bsMultiSelect({
     setSelected: (opt, val) => {
       opt.selected = val
-      let rs = $("#" + id).val()
+      let rs = $(id).val()
       if (!val)
         if (opt.innerText == "All") {
           if (rs.length == 0 || rs[0] == "All") {
-            loadProjectFilter()
+            if (id == "#company_filter")
+              loadProjectFilter();
           }
         } else {
           if (rs[0] != "All") {
-            loadProjectFilter()
+            if (id == "#company_filter")
+              loadProjectFilter();
           }
         }
     }
   });
+
   if (data.length == 0) {
     $(class_name + ' input').attr('placeholder', 'No data');
     return;
@@ -265,7 +256,8 @@ function setupDataFilter(id, class_name, data) {
       $.each(arr, function (index, value) {
         $(class_name + ' .form-control li.badge:nth-child(' + value + ') .close').click();
       });
-      loadProjectFilter()
+      if (id == "#company_filter")
+        loadProjectFilter(["All"]);
       return ""
     } else if (current != "All" && locate_all != 0) {
       $.each(arr, function (index, value) {
@@ -273,21 +265,21 @@ function setupDataFilter(id, class_name, data) {
       });
     }
     if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $(class_name + ' .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
       $(class_name + ' ul.dropdown-menu li:nth-child(1)').click();
     };
-    loadProjectFilter()
+    if (id == "#company_filter")
+      loadProjectFilter();
   });
 
 }
 
-function loadProjectFilter() {
-  let arrABC = $('#company_filter').val()
-  if (arrABC.length > 0 && arrABC[0] == "All")
-    arrABC.splice(0, 1)
-  let company_id = _.isEmpty(arrABC) ? ["All"] : arrABC;
+function loadProjectFilter(company_id = []) {
+  var arrCompany = $('#company_filter').val();
+  if (arrCompany.length > 0 && arrCompany[0] == "All")
+    arrCompany.splice(0, 1);
+  if (_.isEmpty(company_id))
+    var company_id = _.isEmpty(arrCompany) ? ["All"] : arrCompany;
+
   $.ajax({
     url: "/dashboards/data_filter_projects",
     data: {

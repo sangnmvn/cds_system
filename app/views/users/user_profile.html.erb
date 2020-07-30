@@ -38,7 +38,7 @@
               </div>
               <div class="text-contact-left" id="p_birthday">
                 <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
-                &nbsp; <%= @user.date_of_birth ? @ser.date_of_birth.to_s(:long) : "N/A" %>
+                &nbsp; <%= @user.date_of_birth ? @user.date_of_birth.to_s(:long) : "N/A" %>
               </div>
               <div class="text-contact-left">
                 <% if @is_user %>
