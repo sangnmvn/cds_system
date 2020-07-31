@@ -6,8 +6,16 @@ class UserGroupsController < ApplicationController
 
   def load_user
     user_groups = UserGroup.where(group_id: params[:id]).pluck(:user_id)
-    list_user = User.where(is_delete: false, status: true).where.not(id: user_groups)
-    render json: list_user
+    users = User.where(is_delete: false, status: true).where.not(id: user_groups)
+    data = users.map do |user|
+      {
+        user_id: user.id,
+        full_name: user.format_name_vietnamese,
+        account: user.account,
+        email: user.email,
+      }
+    end
+    render json: data
   end
 
   def load_group
@@ -24,8 +32,8 @@ class UserGroupsController < ApplicationController
         group_name: user_group.group.name,
         user_id: user_group.user_id,
         group_id: user_group.group_id,
-        first_name: user_group.user.first_name,
-        last_name: user_group.user.last_name,
+        full_name: user_group.user.format_name_vietnamese,
+        account: user_group.user.account,
         email: user_group.user.email,
       }
     }

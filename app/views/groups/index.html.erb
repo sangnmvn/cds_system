@@ -49,6 +49,9 @@
 </div>
 <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<script>
+  var full_access = <%= @full_access %>;
+</script>
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'user_group', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>

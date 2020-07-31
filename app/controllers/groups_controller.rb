@@ -13,6 +13,20 @@ class GroupsController < ApplicationController
     @view = @privilege_array.include?(VIEW)
   end
 
+  def load_data_groups
+    groups = Group.distinct.left_outer_joins(:user_group).where(is_delete: false).order(created_at: :desc)
+    data = groups.map do |group|
+      {
+        id: group.id,
+        name: group.name,
+        description: group.description,
+        number_user: group.user_group.count,
+        status: group.status,
+      }
+    end
+    render json: data
+  end
+
   # GET /groups/1
   # GET /groups/1.json
   def show

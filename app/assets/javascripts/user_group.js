@@ -305,7 +305,7 @@ function myAjax() {
         $.each(response, function (i, e) { //duyet mang doi tuong
           table = $("#table_right:visible").dataTable();
           table.fnAddData([
-            "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.first_name, e.last_name
+            "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_right' value='" + e.user_id + "'/></div>", e.full_name, e.account
           ]);
         });
         $('.dataTables_length').attr("style", "display:none");
@@ -332,7 +332,7 @@ function myAjax() {
         $(response).each(
           function (i, e) { //duyet mang doi tuong
             $("#table_left:visible").dataTable().fnAddData([
-              "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left'value='" + e.id + "'/></div>", e.first_name, e.last_name
+              "<td style='text-align: right'>" + (i + 1) + "</td>", "<div style='text-align:center'><input type='checkbox' class='mycontrol cb_left' value='" + e.user_id + "'/></div>", e.full_name, e.account
             ]);
           }
         );

@@ -48,6 +48,7 @@ Rails.application.routes.draw do
     collection do
       get "get_data"
       delete "destroy_multiple"
+      post :load_data_groups
     end
   end
   resources :forms do
