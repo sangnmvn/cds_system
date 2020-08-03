@@ -2,17 +2,17 @@
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
-      <th data-sort-ignore="true" style="width:4%;background-image:none;text-align:center">
+      <th data-sort-ignore="true" style="width:4%;text-align:center">
         <div class="resource_selection_toggle_cell">
           <input type="checkbox" id="selectAll">
         </div>
       </th>
       <th scope="col" data-orderable="false" class="id" style="width:4%;text-align:center">No.</th>
-      <th scope="col" data-orderable="false" class="name"  style="width:30%;text-align:center">Name</th>
-      <th scope="col" data-orderable="false" class="description" style="text-align:center">Description</th>
-      <th scope="col" data-orderable="false" class="n_user"  style="width:10%;text-align:center">Number of User</th>
-      <th scope="col" data-orderable="false" class="status"  style="width:10%;text-align:center">Status</th>
-      <th scope="col" class="action"style="width:7%;background-image:none;text-align:center">Action</th>
+      <th scope="col" class="name" style="width:30%;text-align:center">Name</th>
+      <th scope="col" class="description" style="text-align:center">Description</th>
+      <th scope="col" class="n_user" style="width:10%;text-align:center">Number of User</th>
+      <th scope="col" class="status" style="width:10%;text-align:center">Status</th>
+      <th scope="col" data-orderable="false" class="action"style="width:7%;text-align:center">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -20,8 +20,8 @@
       <tr id= "<%= "group_#{group.id}" %>" >
         <td class="selectable" style="text-align:center">
           <div class="resource_selection_cell">
-            <input type="hidden" id=<%= "batch_action_item_#{group.id}"%> value="0" class="collection-selection" name="collection_selection[]">
-            <%= check_box_tag "group_ids[]", group.id, false, class: 'selectable selectable_check',  name: 'checkbox' %>
+            <input type="hidden" id=<%= "batch_action_item_#{group.id}" %> value="0" class="collection-selection" name="collection_selection[]">
+            <%= check_box_tag "group_ids[]", group.id, false, class: "selectable selectable_check", name: "checkbox" %>
           </div>
         </td>
         <td class="id number" style="text-align:right"><%= "#{index + 1}" %></td>
@@ -36,25 +36,21 @@
           <% end %>
         </td>
         <td class="action" style="text-align:center"><% if @full_access %>
-            <%= 
-                links = []
-                links << link_to('<i class="fa fa-pencil icon" style="color:#fc9803"></i>'.html_safe, "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id,title: 'Edit Group', :'data-toggle' => 'tooltip'})
-                links << link_to('<i class="fa fa-key"></i>'.html_safe,"#",{ class: "action_icon key_icon", :"data-id" => group.id, :"data-toggle" => "modal",title: 'Assign Privileges To Group', :"data-target" => "#modalPrivilege"})
-                links << link_to('<i class="fa fa-users"></i>'.html_safe,"#",{ class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal",title: 'Assign Users to Group'})
-                 links << link_to('<i class="fa fa-trash icon" style="color:red"></i>'.html_safe, "javascript:void(0)", { class: "action_icon del_btn",  :"data-group" => group.id,title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
-                links.join(" ").html_safe      
-            %>
-          <%end%>
-          <% if @view && !@full_access%>
-            <%= 
-                links = []
-                links << link_to('<i class="fa fa-pencil icon" style="color:rgb(77, 79, 78)"></i>'.html_safe, "#", { class: "action_icon",title: 'Edit Group', :'data-toggle' => 'tooltip'})
-                links << link_to('<i class="fa fa-key" style="color:rgb(77, 79, 78)"></i>'.html_safe,"#",{ class: "action_icon ", :"data-toggle" => "modal",title: 'Assign Privileges To Group'})
-                links << link_to('<i class="fa fa-users" style="color:rgb(77, 79, 78)"></i>'.html_safe,"#",{ class: "action_icon", :"data-toggle" => "modal", title: 'Assign Users to Group'})
-                 links << link_to('<i class="fa fa-trash icon" style="color:rgb(77, 79, 78)"></i>'.html_safe, "javascript:void(0)", { class: "action_icon", title: 'Delete Group', :'data-toggle' => 'tooltip'})                 
-                links.join(" ").html_safe      
-            %>
-          <%end%>
+            <%= links = []
+                links << link_to('<i class="fa fa-pencil icon" style="color:#fc9803"></i>'.html_safe, "#", { class: "action_icon edit_icon btn-edit-group", :"data-id" => group.id, title: "Edit Group", :'data-toggle' => "tooltip" })
+                links << link_to('<i class="fa fa-key"></i>'.html_safe, "#", { class: "action_icon key_icon", :"data-id" => group.id, :"data-toggle" => "modal", title: "Assign Privileges To Group", :"data-target" => "#modalPrivilege" })
+                links << link_to('<i class="fa fa-users"></i>'.html_safe, "#", { class: "action_icon user_group_icon", :"data-id" => group.id, :"data-toggle" => "modal", :"data-target" => "#AssignModal", title: "Assign Users to Group" })
+                links << link_to('<i class="fa fa-trash icon" style="color:red"></i>'.html_safe, "javascript:void(0)", { class: "action_icon del_btn", :"data-group" => group.id, title: "Delete Group", :'data-toggle' => "tooltip" })
+                links.join(" ").html_safe %>
+          <% end %>
+          <% if @view && !@full_access %>
+            <%= links = []
+                links << link_to('<i class="fa fa-pencil icon" style="color:rgb(77, 79, 78)"></i>'.html_safe, "#", { class: "action_icon", title: "Edit Group", :'data-toggle' => "tooltip" })
+                links << link_to('<i class="fa fa-key" style="color:rgb(77, 79, 78)"></i>'.html_safe, "#", { class: "action_icon ", :"data-toggle" => "modal", title: "Assign Privileges To Group" })
+                links << link_to('<i class="fa fa-users" style="color:rgb(77, 79, 78)"></i>'.html_safe, "#", { class: "action_icon", :"data-toggle" => "modal", title: "Assign Users to Group" })
+                links << link_to('<i class="fa fa-trash icon" style="color:rgb(77, 79, 78)"></i>'.html_safe, "javascript:void(0)", { class: "action_icon", title: "Delete Group", :'data-toggle' => "tooltip" })
+                links.join(" ").html_safe %>
+          <% end %>
         </td>
       </tr>
     <% end %>
