@@ -47,8 +47,8 @@
           <% @competencies.each do |competency| %>
             <tr>
               <td style="width:400px" class="form-competency-name fixed-column column-1"><%= competency.name %></td>
-              <% @slots.each do |slot| %>
-                <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name][slot].nil? %>"><%= @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
+              <% @slots.each_with_index do |slot, i| %>
+                <td class="slot <%= @result[competency.name][slot][:type] + " " + @result[competency.name][slot][:class] unless @result[competency.name].nil? || @result[competency.name][slot].nil? %>"><%= @result[competency.name].nil? || @result[competency.name][slot].nil? ? "" : @result[competency.name][slot][:value] %></td>
               <% end %>
             </tr>
           <% end %>

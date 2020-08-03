@@ -170,14 +170,14 @@ module Api
 
     def data_users_by_title
       if params[:role_id] && params[:role_id].first != "All" && params[:role_id].length == 1
-        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6, title_id: nil).group("titles.name").count
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(title_id: nil).group("titles.name").count
         h_users = {}
         users.each do |key, value|
           h_users[key] = value
         end
         return h_users
       end
-      
+
       users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6, title_id: nil).group("titles.rank").count
       h_users = { "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
       users.each do |key, value|
@@ -461,8 +461,6 @@ module Api
 
       filter
     end
-
-    private
 
     def user_params
       {

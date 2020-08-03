@@ -8,6 +8,10 @@ function loadDataAssessmentList() {
     data: {},
     dataType: "json",
     success: function (response) {
+      if (response.length == 0) {
+        $(".table-cds-assessment-list tbody").html('<tr><td colspan="10" class="type-icon">No data available this table</td></tr>')
+        return;
+      }
       var temp = "";
       for (var i = 0; i < response.length; i++) {
         var form = response[i];
@@ -28,15 +32,17 @@ function loadDataAssessmentList() {
           color_delete = "gray";
           status_class = "";
           color_edit = "gray";
-          link = "#";          
+          link = "#";
         }
         var this_element = `<tr id='period_id_{id}'> 
               <td class="type-number"></td> 
               <td class="type-text"><a href='{link_view}'>{period}</a></td> 
               <td class="type-text">{role}</td> 
-              <td class="type-text">{level}</td> 
-              <td class="type-number">{rank}</td> 
               <td class="type-number">{title}</td> 
+              <td class="type-number">{rank}</td> 
+              <td class="type-text">{level}</td>
+              <td class="type-text">{submit_date}</td>
+              <td class="type-text">{approved_date}</td>
               <td class="type-text">{status}</td>
               <td class="type-icon"> 
                 <a data-id='{id}' href='{link}'><i class='fa fa-pencil icon' style='color: {color_edit}' title="Edit CDS/CDP"></i></a>
@@ -54,6 +60,8 @@ function loadDataAssessmentList() {
           level: form.level,
           rank: form.rank,
           title: form.title,
+          approved_date: form.approved_date,
+          submit_date: form.submit_date,
           status: form.status,
           color_delete: color_delete,
           color_edit: color_edit,
@@ -62,9 +70,7 @@ function loadDataAssessmentList() {
         temp += this_element;
       }
       $(".table-cds-assessment-list tbody").html(temp);
-      
-      if (response.length == 0)
-        return; 
+
       var table = $(".table-cds-assessment-list").DataTable({
         "bLengthChange": false,
         "bFilter": false,
@@ -75,8 +81,7 @@ function loadDataAssessmentList() {
             "orderable": false,
             "targets": 0,
           }
-        ],
-        "order": [[1, "desc"]],
+        ]
       });
       table.on("order.dt search.dt", function () {
         table.column(0, { search: "applied", order: "applied" })

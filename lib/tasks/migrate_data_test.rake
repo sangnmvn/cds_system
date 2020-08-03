@@ -1,22 +1,13 @@
-namespace :cds_system do
-  def connection
-    config = Rails.application.config.database_configuration[Rails.env]
+namespace :cds_system_test do
+  def connection_test
+    config = Rails.application.config.database_configuration["test"]
     ActiveRecord::Base.establish_connection(config)
   end
 
-  #rails db:drop && rails db:create && rails db:migrate
-  #rake cds_system:excute_first_rake
-  #rails db:seed
-  #rake cds_system:excute_migrate_slots
-  #rake cds_system:excute_migrate_titles
-  #rake cds_system:migrate_data_title_histories
-  #rake cds_assessment:migrate_data_user_assessment_ChiTL
-  #rake cds_assessment:migrate_data_user_assessment_DanhTH
-  #rake cds_assessment:migrate_data_user_assessment_DucNH
-  #rake cds_assessment:migrate_data_user_assessment_HungNVP
-  #rake cds_assessment:migrate_data_user_assessment_NinhNT
-  #rake cds_assessment:migrate_data_user_assessment_ThoPH
-  #rake cds_assessment:migrate_data_user_assessment_TuyenHTK
+  # rails db:drop RAILS_ENV=test && rails db:create RAILS_ENV=test && rails db:migrate RAILS_ENV=test
+  # rake cds_system_test:excute_first_rake
+  # rake db:seed RAILS_ENV=test
+  # rake cds_system_test:excute_migrate_slots
 
   desc "insert first data for system"
   task excute_first_rake: [:migrate_data_companies, :migrate_data_roles]
@@ -24,11 +15,9 @@ namespace :cds_system do
   desc "insert all data for system"
   task excute_migrate_slots: [:migrate_data_slots_dev, :migrate_data_slots_ba, :migrate_data_slots_qc, :migrate_data_slots_pm,
                               :migrate_data_slots_sm, :migrate_data_slots_devops, :migrate_data_slots_oe, :migrate_data_slots_ma,
-                              :migrate_data_slots_ts]
-  task excute_migrate_titles: [:migrate_data_title_dev, :migrate_data_title_ba, :migrate_data_title_qc,
-                               :migrate_data_title_pm, :migrate_data_title_sm, :migrate_data_title_devops, :migrate_data_title_oe,
-                               :migrate_data_title_ma, :migrate_data_title_ts]
-
+                              :migrate_data_slots_ts, :migrate_data_title_dev, :migrate_data_title_ba, :migrate_data_title_qc,
+                              :migrate_data_title_pm, :migrate_data_title_sm, :migrate_data_title_devops, :migrate_data_title_oe,
+                              :migrate_data_title_ma, :migrate_data_title_ts]
   desc "insert data for table companies"
   task :migrate_data_companies do
     sql = <<-SQL
@@ -39,7 +28,7 @@ namespace :cds_system do
         (4, 'Atalink', 1, now(), now());
     SQL
 
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql)
   end
 
@@ -65,15 +54,15 @@ namespace :cds_system do
         (16, 'BOD', 'BOD', 'BOD', null, now(), now());
     SQL
 
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql)
   end
 
   desc "insert slots for developers"
   task :migrate_data_slots_dev do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values
-        (1, 'CDS/CDP for Developers', "Template Career Development Plan / Career Development System For Developers", 1, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values
+        (1, 'CDS/CDP for Developers', "Template Career Development Plan / Career Development System For Developers", 1, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -151,7 +140,7 @@ namespace :cds_system do
         (60, 'Basic understanding of file management, process management, memory management, cpu management in Windows and Linux & Operating System that one is working on.', '<p>Yêu cầu cả trên Windows, Linux, và OS mà dev đang phát triển (như iOS, MacOS ....) phải biết những thứ sau:<br />- Biết được trong hệ điều hành có những file/folder nào, mục đích chính của chúng dùng để làm gì → để khi cần lấy file, sửa đổi file thì có thể biết được ngay phải lấy ở đâu, có ảnh hưởng đến hệ thống không<br />- Biết được file / folder có những thuộc tính nào, cách thay đổi thuộc tính file/folder như thế nào → mức độ căn bản nhất của security<br />- Có chút khái niệm về FAT, NTFS, Ext → hiểu sơ được file trong ổ cứng được quản lý thế nào<br />- Biết được các trạng thái, vòng đời, cách xem thông tin process trong hệ thống, cách terminate process<br />- Biết sơ qua các loại memory như main memory, swap, page, cache memory, biết cách tìm thông tin memory trong hệ thống như thế nào<br />- Có kiến thức cơ bản về CPU, như tốc độ CPU là gì, cache là gì, tìm những thông tin này ở đâu trong hệ điều hành, hệ điều hành phân phát CPU cho các process như thế nào (mức độ căn bản)<br />→ Slot này giúp dev hiểu được sự tương tác giữa ứng dụng và hệ diều hành ở mức độ căn bản</p>', 1, 5, 60, now(), now()),
         (61, 'Basic understanding of common concepts in programming paradigms (i.e OOP, Encapsulation, Inheritance, Design patterns, function, method, etc.)', '<p>Có thể diễn đạt được cho người khác hiểu các khái niệm dùng trong lập trình như Encapsulation, Inheritance, Polymorphism, function, method, attribute, property, design pattern<br />→ Slot này giúp dev có thể communicate với nhau bằng các thuật ngữ kỹ thuật dễ dàng hơn, giúp dev đọc hiểu các tài liệu lập trình dễ dàng</p><p>Có thể sinh viên ra trường thì mặc định biết rồi (có bằng tốt nghiệp)</p>', 1, 5, 61, now(), now()),
         (62, 'Understand Tree, Graph, simple greedy and divide and conquer algorithms.', "<p>Hiểu được cấu trúc của Tree, Graph, khác nhau cơ bản giữa Tree với Graph.<br />Hiểu được khái niệm của greedy, divide &amp; conquer algorithm.<br />Hiểu được một số giải thuật đơn giản như merge sort, quick sort, binary search, Dijkstra's Minimal Spanning Tree.</p>", 2, 5, 62, now(), now()),
-        (63, 'Understand advanced operating systems concepts like kernel mode vs user mode, multi-threading, synchronization primitives and how they’re implemented.', '<p>Biết được kernel mode và user mode là gì, sự khác nhau giữa chúng, ở điều kiện nào thì ứng dụng sẽ chạy ở user mode, kernel mode.<br />Hiểu được thread và process khác nhau thế nào, multithreaded application là thế nào, biết được những vấn đề sẽ gặp phải trong multithreading programming, và cách giải quyết những vấn đề đó như thế nào<br />Biết được những cơ chế để dồng bộ hóa như mutex, semaphore.... hiểu được trong trường hợp nào nào sử dụng cơ chế nào<br />Hiểu được cơ chế locking, khi nào cần sử dụng, sử dụng như thế nào, có sự hiểu biết cơ bản locking được hiện thực như thế nào.</p>', 2, 5, 63, now(), now()),
+        (63, 'Understand advanced operating systems concepts like kernel mode vs user mode, multi-threading, synchronization primitives and how they’re implemented.', '<p>Biết được kernel mode và user mode là gì, sự khác nhau giữa chúng, ở điều kiện nào thì ứng dụng sẽ chạy ở user mode, kernel mode.<br />Hiểu được thread và process khác nhau thế nào, multithreaded application là thế nào, biết được những vấn đề sẽ gặp phải trong multithreading programming, và cách giải quyết những vấn đề đó như thế nào<br />Biết được những cơ chế để dồng bộ hóa như mutex, semaphore.... hiểu được trong trường hợp nào nên sử dụng cơ chế nào<br />Hiểu được cơ chế locking, khi nào cần sử dụng, sử dụng như thế nào, có sự hiểu biết cơ bản locking được hiện thực như thế nào.</p>', 2, 5, 63, now(), now()),
         (64, 'Understand common network protocols (TCP / UDP, SSH, FTP, SFTP, SMTP, HTTP, HTTPs, WS, IMAP)  and able to work with at least three of them in code.', '<p>Hiểu được sự khác nhau giữa TCP vs UDP, IMAP vs SMTP, HTTP vs HTTPS vs Websocket, SSH vs FTP vs SFTP, biết được chúng được dùng trong những trường hợp nào<br />Có bằng chứng đã làm việc với ít nhất 3 protocol ở mức độ code (sử dụng thư viện là ok)<br />→ Slot này yêu cầu developer có sự hiểu biết về những network protocol cơ bản và hay được sử dụng, dồng thời yêu cầu dev có thể ứng dụng những protocol này trong code</p>', 2, 5, 64, now(), now()),
         (65, 'Understand and able to work with common cryptography algorithms / functions like Base32/64, SHA, MD5, AES, DES, RSA, etc.', '<p>Hiểu được ứng dụng của các thuật toán mã hóa hay được sử dụng như Base32/64, SHA, MD5, DES, RSA, AES...<br />Biết được mức độ bảo mật của chúng, trong trường hợp nào nên sử dụng loại nào, có bằng chứng sử dụng những thuật toán mã hóa này trong code<br />→ Những ứng dụng cần đến bảo mật thì không thể thiếu những kiến thức căn bản như trong slot này</p>', 2, 5, 65, now(), now()),
         (66, 'Very good understanding of entire programming stack: hardware (CPU + Memory + Cache + Interrupts + microcode), binary code, assembly, static and dynamic linking, compilation, interpretation, JIT compilation, garbage collection, heap, stack, memory addressing…', '<p>Có thể giải thích cho người khác hiểu những khái niệm này<br />Có kiến thức tốt về những khái niệm này (có thể giải thích cho người khác), biết được một ứng dụng khi chuyển hóa từ code sang mã máy sẽ qua những giai đoạn nào, khi được chạy nó tương tác với các thư viện, bộ nhớ, hệ điều hành, phần cứng như thế nào<br />→ Có sự hiểu biết chi tiết về sự hoạt động / tương tác của một ứng dụng trên nền tảng hệ điều hành + phần cứng → giúp cho việc optimize application được hiệu quả</p>', 3, 5, 66, now(), now()),
@@ -200,7 +189,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -209,8 +198,8 @@ namespace :cds_system do
   desc "insert slots for business analyst"
   task :migrate_data_slots_ba do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values
-        (2, 'CDS/CDP for Business Analyst', "Template Career Development Plan / Career Development System For Business Analyst", 2, 1, true,now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values
+        (2, 'CDS/CDP for Business Analyst', "Template Career Development Plan / Career Development System For Business Analyst", 2, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -235,7 +224,7 @@ namespace :cds_system do
         (113, 'Capable of locating and effectively using detailed information from the BESTARION Portal, Mantis, SVN, HRM,…', '', 1, 18, 113, now(), now()),
         (114, 'Recognized as a proactive member of the team.', "<p>Là một thành viên đóng góp tích cực cho nhóm / dự án. Nằm trong số những người đóng góp hàng đầu cho dự án.</p><p><em><span style='text-decoration: underline;'><strong>Phản ví dụ:</strong></span> Khoảng 4:00 PM thấy ứng dụng cho khách hàng [bản production] deploy tại www.abc.com bị down và không giải quyết được. 5:30 PM cứ thế đi về nhà mà không báo cho cấp trên để giải quyết triệt để.</em></p>", 2, 18, 114, now(), now()),
         (115, 'Complete critical tasks on time.', "<p><strong>Critical tasks:</strong> Những công việc quan trọng, chủ chốt, cốt lõi trong dự án, trong bộ phận mà nhân viên tham gia, ở góc độ vai trò tương ứng.</p><p><span style='text-decoration: underline;'><em><strong>Ví dụ:</strong></em></span><br /><em>Nhân viên làm Business Analyst trong một dự án thì critical tasks là những công việc chủ chốt, cốt lõi liên quan đến phân tích yêu cầu khách hàng</em></p><p><em>Nhân viên làm Developer trong một dự án thì critical tasks là những công việc liên quan đến thiết kế / tài liệu hóa / lập trình / sửa bugs của những thứ quan trọng, chủ chốt, cốt lõi.</em></p><p><em>Nhân viên làm Tester trong một dự án thì thì critical tasks là những công việc liên quan đến việc phát triển test plan / test cases / tiến hành test execution của những thứ quan trọng, chủ chốt, cốt lõi trong dự án.</em></p>", 2, 18, 115, now(), now()),
-        (116, 'Able to represent the skills and capabilities of your department / practice unit / business unit. ', "<p><strong>Represent:</strong> Đại diện.</p><p>Có nhiều mức độ đại diện. <em><span style='text-decoration: underline;'><strong>Ví dụ:</strong></span></em></p><p><em>Đại diện cho dự án để training cho một nhân viên mới, training cho sinh viên thực tập về kiến thức, kỹ năng ở vai trò của mình;</em></p><p><em>Đại diện cho dự án để làm việc với dự án khác; đại diện cho dự án làm việc với khách hàng;</em></p><p><em>Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận;</em></p><p><em>Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần.</em></p><p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần.</p>", 2, 18, 116, now(), now()),
+        (116, 'Able to represent the skills and capabilities of your department / practice unit / business unit. ', "<p><strong>Represent:</strong> Đại diện.</p><p>Có nhiều mức độ đại diện. <em><span style='text-decoration: underline;'><strong>Ví dụ:</strong></span></em></p><p><em>Đại diện cho dự án để training cho một nhân viên mới, training cho sinh viên thực tập về kiến thức, kỹ năng ở vai trò của mình;</em></p><p><em>Đại diện cho dự án để làm việc với dự án khác; đại diện cho dự án làm việc với khách hàng;</em></p><p><em>Có khả năng chịu trách nhiệm chính trong dự án về chuyên môn mà mình đang đảm nhận;</em></p><p><em>Đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc v���i bất cứ đối tượng nào khi cần.</em></p><p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục liên quan đến khả năng chịu trách nhiệm chính về chuyên môn trong dự án hiện tại và có khả năng đại diện cho bộ phận chuyên môn của mình ở phạm vi công ty để làm việc với bất cứ đối tượng nào khi cần.</p>", 2, 18, 116, now(), now()),
         (117, 'Recognized internally as a solid knowledge resource.', 'Cứ có vấn đề gì về mảng kiến thức mà cần trợ giúp / câu trả lời là nghĩ ngay đến nhân viên này', 3, 18, 117, now(), now()),
         (118, 'Successfully complete tasks and assignments independently and supervise the work of others as requested.', '<p>Nhân viên sẽ được đánh giá pass slot này nếu có bằng chứng thuyết phục:<br />- Khi được giao việc thì hoàn tất được công việc một cách độc lập, không cần có sự chỉ dẫn về cách làm, và<br />- Có thể hướng dẫn, hỗ trợ, giám sát người khác [vài người] hoàn tất công việc</p>', 3, 18, 118, now(), now()),
         (119, 'Regularly requested by Company or Business Unit leadership and clients for advice and guidance.', '<p>Có khả năng tư vấn, định hướng, dẫn đường cho công ty hoặc khách hàng về: <br />- Chuyên môn kỹ thuật ở vai trò mình nắm giữ, hoặc <br />- Trong những vấn đề liên quan đến hoạt động chung của công ty</p>', 3, 18, 119, now(), now()),
@@ -333,7 +322,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -342,8 +331,8 @@ namespace :cds_system do
   desc "insert slots for quality control"
   task :migrate_data_slots_qc do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values
-        (3, 'CDS/CDP for Quality Control', "Template Career Development Plan / Career Development System For Quality Control", 3, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values
+        (3, 'CDS/CDP for Quality Control', "Template Career Development Plan / Career Development System For Quality Control", 3, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -499,7 +488,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -508,8 +497,8 @@ namespace :cds_system do
   desc "insert slots for project manager"
   task :migrate_data_slots_pm do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values
-        (4, 'CDS/CDP for Project Manager', "Template Career Development Plan / Career Development System For Project Manager", 4, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values
+        (4, 'CDS/CDP for Project Manager', "Template Career Development Plan / Career Development System For Project Manager", 4, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -633,7 +622,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -642,7 +631,7 @@ namespace :cds_system do
   desc "insert slots for scrum master"
   task :migrate_data_slots_sm do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values(5, 'CDS/CDP for Scrum Master', "Template Career Development Plan / Career Development System For Scrum Master", 5, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values(5, 'CDS/CDP for Scrum Master', "Template Career Development Plan / Career Development System For Scrum Master", 5, 1, now(), now());
     SQL
     sql_competency = <<-SQL
     insert into competencies(id, name, `desc`, _type, template_id, location, created_at, updated_at) values
@@ -748,7 +737,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -757,7 +746,7 @@ namespace :cds_system do
   desc "insert slots for devops"
   task :migrate_data_slots_devops do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values(6, 'CDS/CDP for DevOps', "Template Career Development Plan / Career Development System For DevOps", 6, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values(6, 'CDS/CDP for DevOps', "Template Career Development Plan / Career Development System For DevOps", 6, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -817,12 +806,12 @@ namespace :cds_system do
         (570, 'Recognized as possessing excellent communication and facilitation skills as well as negotiation skills.', 'Không chỉ excellent về communications mà còn là excellent về negotiation. Có thể thương lượng những vấn đề mà người khác không thể thương lượng nổi', 5, 46, 36, now(), now()),
         (571, 'Demonstrate effective skills in influencing Firm culture.', 'Trong quá trình làm việc ở công ty: Có kỹ năng và ảnh hưởng ở mức độ văn hóa của tổ chức', 5, 46, 37, now(), now()),
         (572, 'Demonstrate appropriate interpersonal skills required to serve as Executive Sponsor in key client relationships and/or represents LARION in strategic business partnerships.', 'Là người đại diện công ty để thiết lập và duy trì mối quan hệ với những khách hàng chủ chốt, quan trọng của công ty. Đại diện công ty trong các mối quan hệ kinh doanh chiến lược. “Không có tôi thì không xong”', 5, 46, 38, now(), now()),
-        (573, 'Able to improve skill knowledge to adapt yourself to new requirements', '<p>Bằng chứng [bao gồm, không chỉ gồm]:</p><p>Đơn giản nhất là hoàn tất training plan cho newcomer và được đánh giá tốt [đúng hạn, kết quả kiểm tra tốt chẳng hạn]</p><p>Tham gia các khóa huấn luyện của công ty và thi lần đầu là pass ngay</p><p>Nâng cao trình độ Anh văn đúng thời điểm như đã cam kết với công ty</p><p>Tìm hiểu vấn đề mới để giải quyết công việc trong dự án đạt đúng ước lượng hợp lý đã đề ra</p>', 1, 47, 39, now(), now()),
-        (574, 'Able to write report if having any request', 'Good meeting minutes, các báo cáo về một vấn đề nào đó khi được yêu cầu', 1, 47, 40, now(), now()),
-        (575, 'Estimate how much time one has, to allocate it effectively, and to stay within time limits and deadlines.', '<p>Thể hiện ở 2 khía cạnh:</p><p>Với chừng đó thời gian có được thì cần hoàn tất khối lượng công việc tương xứng ==&gt; đây là thứ cần được hỏi và trả lời hàng ngày:<strong> Do I finish a reasonable amount of tasks today? Do the peer / direct manager / customer happy with my achievement?</strong> Nếu thời gian đang được sử dụng không hiệu quả do yếu tố khách quan thì cần có phản hồi với những người có liên quan [ví dụ: suốt ngày đi họp mà lại sử dụng thời gian họp kém hiệu quả …]</p><p>Với chừng đó thời gian có được thì không over-commit để rồi không đạt được commitment</p>', 1, 47, 41, now(), now()),
-        (576, 'Arrange and finish tasks creatively', '', 1, 47, 42, now(), now()),
-        (577, 'Complete assigned tasks within scheduled completion dates. Communicate potential issues as soon as they are known.', '', 1, 47, 43, now(), now()),
-        (578, 'Prioritize duties in a manner consistent with project objectives / goal', '', 1, 47, 44, now(), now()),
+        (573, 'Able to improve skill knowledge to adapt yourself to new requirements', '<p>Bằng chứng [bao gồm, không chỉ gồm]:</p><p>Đơn giản nhất là hoàn tất training plan cho newcomer và được đánh giá tốt [đúng hạn, kết quả kiểm tra tốt chẳng hạn]</p><p>Tham gia các khóa huấn luyện của công ty và thi lần đầu là pass ngay</p><p>Nâng cao trình độ Anh văn đúng thời điểm như đã cam kết với công ty</p><p>Tìm hiểu vấn đề mới để giải quyết công việc trong dự án đạt đúng ước lượng hợp lý đã đề ra</p>', 2, 47, 39, now(), now()),
+        (574, 'Able to write report if having any request', 'Good meeting minutes, các báo cáo về một vấn đề nào đó khi được yêu cầu', 2, 47, 40, now(), now()),
+        (575, 'Estimate how much time one has, to allocate it effectively, and to stay within time limits and deadlines.', '<p>Thể hiện ở 2 khía cạnh:</p><p>Với chừng đó thời gian có được thì cần hoàn tất khối lượng công việc tương xứng ==&gt; đây là thứ cần được hỏi và trả lời hàng ngày:<strong> Do I finish a reasonable amount of tasks today? Do the peer / direct manager / customer happy with my achievement?</strong> Nếu thời gian đang được sử dụng không hiệu quả do yếu tố khách quan thì cần có phản hồi với những người có liên quan [ví dụ: suốt ngày đi họp mà lại sử dụng thời gian họp kém hiệu quả …]</p><p>Với chừng đó thời gian có được thì không over-commit để rồi không đạt được commitment</p>', 2, 47, 41, now(), now()),
+        (576, 'Arrange and finish tasks creatively', '', 2, 47, 42, now(), now()),
+        (577, 'Complete assigned tasks within scheduled completion dates. Communicate potential issues as soon as they are known.', '', 2, 47, 43, now(), now()),
+        (578, 'Prioritize duties in a manner consistent with project objectives / goal', '', 2, 47, 44, now(), now()),
         (579, 'Organize tasks and make an effective plan for own task', 'Hoàn tất tasks đúng hạn như ước lượng hợp lý đã đề ra', 2, 47, 45, now(), now()),
         (580, 'Complete critical tasks on time.', 'Hoàn tất critical tasks đúng hạn.', 2, 47, 46, now(), now()),
         (581, 'Demonstrate exceptional time management and prioritization skills', '<p>Khả năng quản lý thời gian mà mình có; khả năng đặt độ ưu tiên các tasks.</p><p>Bằng chứng: Hoàn tất tốt công việc khi cùng lúc tham gia nhiều dự án / nhiều việc xen kẽ nhau</p>', 2, 47, 47, now(), now()),
@@ -952,7 +941,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -961,7 +950,7 @@ namespace :cds_system do
   desc "insert slots for oparation engineer"
   task :migrate_data_slots_oe do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values(7, 'CDS/CDP for Operations Engineer', "Template Career Development Plan / Career Development System For Operations Engineer", 7, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values(7, 'CDS/CDP for Operations Engineer', "Template Career Development Plan / Career Development System For Operations Engineer", 7, 1, now(), now());
     SQL
     sql_competency = <<-SQL
       insert into competencies(id, name, `desc`, _type, template_id, location, created_at, updated_at) values
@@ -1074,7 +1063,7 @@ namespace :cds_system do
         (801, 'Ability to work with two scripting languages at a basic level, or with one at advanced level (e.g. bash / shell, Perl, Python, Ruby, VBScript, Powershell).', '<p><strong>Basic</strong>: basic data type, control statements (if/else, loop, switch etc..), work with files<br /><strong>Advanced</strong>: work with network, signal, use/create library, almost everything</p>', 2, 63, 801, now(), now()),
         (802, 'Demonstrate the ability to work well with debugger, profiling tools, review other source code and able to detect defects and explain techniques to fix defects.', '<p>- Thường sử dụng debugger, profiling tool<br />- Thường reivew source code của người khác, hướng dẫn họ fix bug / implement features</p>', 2, 63, 802, now(), now()),
         (803, 'Work effectively with Regular Expression.', '<p>Có thể sử dụng regex trong hầu hết các trường hợp, có thể train cho người khác. Sử dụng regex không chỉ trong lập trình, mà còn sử dụng trong tool (search files, thay thế text ….)</p>', 2, 63, 803, now(), now()),
-        (804, 'Proficiency in one and familiar with another major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java etc.)', '<p><strong>Proficiency</strong>: hiểu và làm việc tốt với những thứ căn bản, và một số thứ nâng cao, không cần ai hướng dẫn, khi gặp vấn đề khó có thể tự tìm cách giải quyết (google chẳng hạn)<br />Có bằng chứng giúp đỡ người khác giải quyết ván đề kỹ thuật hoặc training<br />(Đã tham gia làm dev / lead của dự liên quan đến Ruby ít nhất 6 tháng --&gt; tính là proficient Ruby, tương tự cho các ngôn ngữ khác)<br />Fresher thì cần ít nhất 2 năm để có thể gọi là proficiency. Còn với middle cần ít nhất 6 tháng. Không bắt bược phải là ngôn ngữ lập trình chính như là ruby, có thể là Golang, React,…</p>', 2, 63, 804, now(), now()),
+        (804, 'Proficiency in one and familiar with another major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java etc.)', '<p><strong>Proficiency</strong>: hiểu và làm việc tốt với những thứ căn bản, và một số thứ nâng cao, không cần ai hướng dẫn, khi gặp vấn đề khó có thể tự tìm cách giải quyết (google chẳng hạn)<br />Có bằng chứng giúp đỡ người khác giải quyết vấn đ����� kỹ thuật hoặc training<br />(Đã tham gia làm dev / lead của dự án liên quan đến Ruby ít nhất 6 tháng --&gt; tính là proficient Ruby, tương tự cho các ngôn ngữ khác)<br />Fresher thì cần ít nhất 2 năm để có thể gọi là proficiency. Còn với middle cần ít nhất 6 tháng. Không bắt bược phải là ngôn ngữ lập trình chính như là ruby, có thể là Golang, React,…</p>', 2, 63, 804, now(), now()),
         (805, 'The ability to design good queries, can detect performance issues, N + 1 problem, proficiency in analyze and give advice on how to optimize it.', '<p>Apply phần nâng cao của ngôn ngữ database để detect issues, improve performance, optimize query</p>', 2, 63, 805, now(), now()),
         (806, 'Very good in administration, performance optimization and query/index optimization for databases (SQL and NoSQL) or search engine', '<p>- Có bằng chứng cài đặt, cấu hình bảo mật cho database<br />- Đã làm những việc liên quan đến optimize database performance: benchmark, analyze, performance tunning<br />- Đã viết những câu query phức tạp, tương tác với khối lượng dữ liệu lớn, nhiều nguồn dữ liệu khác nhau nhưng tốc độ chạy tốt<br />- Viết index có performance tốt<br />- Cài đặt, cấu hình, sử dụng các search engine như Solr, Elastic search. Có thể viết được hầu hết các dạng query khác nhau.</p>', 3, 63, 806, now(), now()),
         (807, 'Proficiency in two major programming languages (e.g. C/C++, VB.NET, C#, Ruby on Rails, Java, etc.)', '', 3, 63, 807, now(), now()),
@@ -1084,7 +1073,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -1093,7 +1082,7 @@ namespace :cds_system do
   desc "insert slots for medical analyst"
   task :migrate_data_slots_ma do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values(8, 'CDS/CDP for Medical Analyst', "Template Career Development Plan / Career Development System For Medical Analyst", 8, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values(8, 'CDS/CDP for Medical Analyst', "Template Career Development Plan / Career Development System For Medical Analyst", 8, 1, now(), now());
     SQL
     sql_competency = <<-SQL
       insert into competencies(id, name, `desc`, _type, template_id, location, created_at, updated_at) values
@@ -1184,7 +1173,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -1193,7 +1182,7 @@ namespace :cds_system do
   desc "insert slots for teachnical support"
   task :migrate_data_slots_ts do
     sql_template = <<-SQL
-      insert into templates(id, name, description, role_id, user_id, status, created_at, updated_at) values(9, 'CDS/CDP for Technical Support', "Template Career Development Plan / Career Development System For Technical Support", 9, 1, true, now(), now());
+      insert into templates(id, name, description, role_id, user_id, created_at, updated_at) values(9, 'CDS/CDP for Technical Support', "Template Career Development Plan / Career Development System For Technical Support", 9, 1, now(), now());
     SQL
 
     sql_competency = <<-SQL
@@ -1220,7 +1209,7 @@ namespace :cds_system do
         (897, 'Regularly requested by Company or Business Unit leadership and clients for advice and guidance.', '<p>Có khả năng tư vấn, định hướng, dẫn đường cho công ty và khách hàng về Chuyên môn kỹ thuật ở vai trò mình nắm giữ, hoặc</p><p>Trong những vấn đề liên quan đến hoạt động chung của công ty</p><p>Có thể mở rộng được những hướng phát triển của công ty (ở góc độ xử lý big data)</p>', 3, 69, 897, now(), now()),
         (898, 'Identify problems, think through potential solutions then communicate and/or escalate appropriately.', '<p><strong>Biết nhận diện vấn đề:</strong><br />Biết được thế nào là một Problem, khi sự việc diễn ra phải biết được có Problem trong đó hay không.</p><p><strong>Có tìm giải pháp để giải quyết vấn đề:</strong><br />Cố gắng tìm ra solution, sau đó thông báo cách giải quyết hoặc nếu không giải quyết được thì cũng vẫn phải thông báo để người khác giải quyết thay mình.</p><p>Khi báo vấn đề lên cấp trên phải biết báo đúng người đúng việc.</p><p>Ghi chú: bản thân có thể không giải quyết được vấn đề nhưng biết nhận diện và raise lên vấn đề mà mình hoặc người khác gặp phải</p>', 1, 70, 898, now(), now()),
         (899, 'Identify and solve simple problems independently (for example: recognizing changes in scope and communicating them).', '<p><strong>Biết nhận diện vấn đề:</strong><br />- Biết được thế nào là một Problem, khi sự việc diễn ra phải biết được có Problem trong đó hay không. <br />- Biết được những vấn đề nào bản thân có thể tự giảii quyết, những vấn đề nào cần xin ý kiến/phê duyệt của cấp trên</p><p><strong>Tìm giải pháp và giải quyết vấn đề:</strong><br />Tìm ra solution và tự giải quyết vấn đề<br />Phản VD: giải quyết vấn đề nhưng làm phát sinh vấn đề mới, gây hậu quả nghiêm trọng</p><p><strong>Đánh giá kết quả thực hiện:</strong><br />Đánh giá kết quả thực hiện và rút ra bài học cho mình và cho người khác</p>', 2, 70, 899, now(), now()),
-        (900, 'Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and/or sensitive).', '<p>Đề xuất/hỗ trợ/tham gia trong việc giải quyết các vấn đề tạp và mang lại hiệu quả cao</p><p><strong>Vấn đề phức tạp:</strong> <br />- Các issue/bug đặc biệt nghiêm trọng ảnh hưởng đến doanh thu/chi phí/uy tín/deadline của dự án/công ty/khách hàng<br />- Cải tiến các quy trình ở mức độ dự án<br />- Tìm ra phương thức thực hiện hiệu quả các đầu task khó/mới/phức tạp, task mà khách hàng đặc biệt quan tâm<br />- Vấn đề phức tạp phải có kết quả để so sánh tính hiệu quả</p>', 2, 70, 900, now(), now()),
+        (900, 'Provide assistance in solving complex problems (complex – technically difficult, opposing viewpoints, risky, and/or sensitive).', '<p>Đề xuất/hỗ tr��/tham gia trong việc giải quyết các vấn đề phức tạp và mang lại hiệu quả cao</p><p><strong>Vấn đề phức tạp:</strong> <br />- Các issue/bug đặc biệt nghiêm trọng ảnh hưởng đến doanh thu/chi phí/uy tín/deadline của dự án/công ty/khách hàng<br />- Cải tiến các quy trình ở mức độ dự án<br />- Tìm ra phương thức thực hiện hiệu quả các đầu task khó/mới/phức tạp, task mà khách hàng đặc biệt quan tâm<br />- Vấn đề phức tạp phải có kết quả để so sánh tính hiệu quả</p>', 2, 70, 900, now(), now()),
         (901, 'Peer and/or next level management are likely to attend these meetings. ', '<p>Có khả năng chủ trì hiệu quả các buổi họp:<br />- Với những người cùng cấp<br />- Với cấp quản lý cao hơn<br />- Với khách hàng hoặc các stakeholder ngoài dự án liên quan đến các vấn đề trong dự án</p><p>Có khả chủ trì nhiều loại meeting</p><p><strong>Các buổi họp hiệu quả:</strong><br />- Phải đạt được mục tiêu đề ra trước buổi họp<br />- Control được nội dung buổi họp (không để buổi họp đi lan man lạc đề, làm tốn thời gian)<br />- Sử dụng hiệu quả thời gian họp<br />- Khi có Action Items thì follow up cho đến khi có kết quả theo deadline của từng Action Items</p>', 2, 70, 901, now(), now()),
         (902, 'Possess and use good diagnosis/troubleshooting skills.', '<p>Sở hữu những kỹ năng / công cụ (có thể là những chiêu trò) đặc biệt nằm ngoài những thứ Standard của dự án để tìm ra vấn đề / giải quyết vấn đề một cách nhanh chóng, hiệu quả.</p><p>Khi được distribute vấn đề mới / vấn đề quan trọng:<br />- Nhìn thấy/dự đoán các rủi ro phát sinh từ việc thực hiện hoặc từ vấn đề khác có liên quan<br />- Đưa ra giải pháp/cách thực hiện hiệu quả và được cấp quản lý công nhận</p>', 2, 70, 902, now(), now()),
         (903, 'Identifies and solves complex or sensitive problems (for example: associate performance, project scope issues, and priority changes or resolving multiple conflicting agendas). ', '<p>Không cần hỏi người khác về giải pháp cho vấn đề phức tạp đang gặp phải.</p><p>Thế nào là vấn đề phức tạp hoặc nhạy cảm?</p><p>+ Yêu cầu khách hàng phức tạp, đòi hỏi độ chính xác cao, xử lý phức tạp, bị áp lực về thời gian / chi phí.<br />+ Phải xử lý các vấn đề phức tạp đồng thời<br />+ Yêu cầu mới từ khách hàng, cần tìm ra giải pháp hiệu quả về chi phí và chất lượng công việc; hướng dẫn MA cách thực hiện, giám sát cách thực hiện, chịu trách nhiệm chính về đầu task (chất lượng, tiến độ, chi phí)<br />+ Khối lượng công việc cần 2 người làm, nhưng do thiếu nhân lực và bị áp lực về thời gian nên chỉ 1 người làm và vẫn đáp ứng được deadline, chất lượng công việc</p>', 3, 70, 903, now(), now()),
@@ -1286,7 +1275,7 @@ namespace :cds_system do
     SQL
 
     # execute query
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_template)
     ActiveRecord::Base.connection.execute(sql_competency)
     ActiveRecord::Base.connection.execute(sql_slot)
@@ -1384,7 +1373,7 @@ namespace :cds_system do
         (49, 1, 7, 7, 400, now(), now());
     SQL
 
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1467,7 +1456,7 @@ namespace :cds_system do
         (84, 1, 11, 25, 399, now(), now()),
         (85, 1, 11, 26, 401, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1541,7 +1530,7 @@ namespace :cds_system do
       (124, 1, 15, 16, 300, now(), now()),
       (125, 1, 15, 17, 300, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1605,7 +1594,7 @@ namespace :cds_system do
       (148, 1, 18, 33, 299, now(), now()),
       (149, 1, 18, 34, 300, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1670,7 +1659,7 @@ namespace :cds_system do
         (175, 1, 21, 42, 200, now(), now()),
         (176, 1, 21, 43, 300, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1778,7 +1767,7 @@ namespace :cds_system do
       (240, 1, 26, 55, 401, now(), now()),
       (241, 1, 26, 56, 400, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1873,7 +1862,7 @@ namespace :cds_system do
         (289, 1, 33, 62, 400, now(), now()),
         (290, 1, 33, 63, 400, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -1957,7 +1946,7 @@ namespace :cds_system do
         (324, 1, 40, 67, 500, now(), now()),
         (325, 1, 40, 68, 400, now(), now());
     SQL
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
@@ -2039,479 +2028,9 @@ namespace :cds_system do
       (359, 1, 47, 73, 400, now(), now());
     SQL
 
-    connection
+    connection_test
     ActiveRecord::Base.connection.execute(sql_title)
     ActiveRecord::Base.connection.execute(sql_level_mapping)
     ActiveRecord::Base.connection.execute(sql_title_mapping)
-  end
-
-  # run migrate_data_companies
-  # run migrate_data_roles
-  # then run seed
-  # then run this file
-  desc "insert data for table title histories"
-  task :migrate_data_title_histories do
-    sql_period = <<-SQL
-      insert into periods(id, from_date, to_date, status, created_at, updated_at) values
-        (1, '2019-11-01', '2020-04-30', 'Done', now(), now()),
-        (2, '2019-04-01', '2019-04-30', 'Done', now(), now()),
-        (3, '2018-12-01', '2018-12-30', 'Done', now(), now()),
-        (4, '2017-12-01', '2017-12-30', 'Done', now(), now()),
-        (5, '2016-12-01', '2016-12-30', 'Done', now(), now()),
-        (6, '2015-12-01', '2015-12-30', 'Done', now(), now());
-        SQL
-
-    sql_schedule = <<-SQL
-      insert into schedules(id, user_id, company_id, period_id, start_date, end_date_hr,
-      notify_hr, `desc`, status, created_at, updated_at) values
-        (1, 1, 2, 1, '2020-04-01', '2020-04-30', 3, "Period 2020 Bestarion", "Done", now(), now()), 
-        (2, 1, 3, 1, '2020-04-01', '2020-04-30', 3, "Period 2020 Larion", "Done", now(), now()),
-        (3, 1, 4, 1, '2020-04-01', '2020-04-30', 3, "Period 2020 Atalink", "Done", now(), now()),
-        
-        (4, 1, 2, 2, '2019-04-01', '2019-04-30', 3, "Period 2019 Bestarion", "Done", now(), now()), 
-        (5, 1, 3, 2, '2019-04-01', '2019-04-30', 3, "Period 2019 Larion", "Done", now(), now()),
-        (6, 1, 4, 2, '2019-04-01', '2019-04-30', 3, "Period 2019 Atalink", "Done", now(), now()),
-
-        (7, 1, 2, 3, '2018-12-01', '2018-12-30', 3, "Period 2018 Bestarion", "Done", now(), now()), 
-        (8, 1, 3, 3, '2018-12-01', '2018-12-30', 3, "Period 2018 Larion", "Done", now(), now()),
-        (9, 1, 4, 3, '2018-12-01', '2018-12-30', 3, "Period 2018 Atalink", "Done", now(), now()),
-
-        (10, 1, 2, 4, '2017-12-01', '2017-12-30', 3, "Period 2017 Bestarion", "Done", now(), now()), 
-        (11, 1, 3, 4, '2017-12-01', '2017-12-30', 3, "Period 2017 Larion", "Done", now(), now()),
-        (12, 1, 4, 4, '2017-12-01', '2017-12-30', 3, "Period 2017 Atalink", "Done", now(), now()),
-
-        (13, 1, 2, 5, '2016-12-01', '2016-12-30', 3, "Period 2016 Bestarion", "Done", now(), now()), 
-        (14, 1, 3, 5, '2016-12-01', '2016-12-30', 3, "Period 2016 Larion", "Done", now(), now()),
-        (15, 1, 4, 5, '2016-12-01', '2016-12-30', 3, "Period 2016 Atalink", "Done", now(), now()),
-
-        (16, 1, 2, 6, '2015-12-01', '2015-12-30', 3, "Period 2015 Bestarion", "Done", now(), now()), 
-        (17, 1, 3, 6, '2015-12-01', '2015-12-30', 3, "Period 2015 Larion", "Done", now(), now()),
-        (18, 1, 4, 6, '2015-12-01', '2015-12-30', 3, "Period 2015 Atalink", "Done", now(), now());
-    SQL
-
-    sql_title_history = <<-SQL
-    insert into title_histories(id, level, title, rank, user_id, role_name, period_id, created_at, updated_at) values
-          (1, 3, 'Associate Technical Architect', 4, 2, 'Developer', 1, now(), now()),
-          (2, 3, 'Associate Technical Architect', 4, 6, 'Developer', 1, now(), now()),
-          (3, 2, 'Senior Developer', 3, 8, 'Developer', 1, now(), now()),
-          (4, 2, 'Senior Developer', 3, 12, 'Developer', 1, now(), now()),
-          (5, 4, 'Senior Developer', 3, 13, 'Developer', 1, now(), now()),
-          (6, 5, 'Developer', 2, 14, 'Developer', 1, now(), now()),
-          (7, 5, 'Developer', 2, 15, 'Developer', 1, now(), now()),
-          (8, 2, 'Developer', 2, 17, 'Developer', 1, now(), now()),
-          (9, 3, 'Developer', 2, 18, 'Developer', 1, now(), now()),
-          (10, 1, 'CDO', 1, 19, 'CDO', 1, now(), now()),
-          (11, 2, 'Developer', 2, 20, 'Developer', 1, now(), now()),
-          (12, 4, 'Developer', 2, 21, 'Developer', 1, now(), now()),
-          (13, 2, 'Developer', 2, 23, 'Developer', 1, now(), now()),
-          (14, 2, 'Project Manager', 2, 25, 'Project Manager', 1, now(), now()),
-          (15, 3, 'Developer', 2, 26, 'Developer', 1, now(), now()),
-          (16, 3, 'Senior Developer', 3, 27, 'Developer', 1, now(), now()),
-          (17, 4, 'Developer', 2, 28, 'Developer', 1, now(), now()),
-          (18, 2, 'Senior Developer', 3, 29, 'Developer', 1, now(), now()),
-          (19, 4, 'Developer', 2, 30, 'Developer', 1, now(), now()),
-          (20, 5, 'Senior Developer', 3, 31, 'Developer', 1, now(), now()),
-          (21, 5, 'Developer', 2, 32, 'Developer', 1, now(), now()),
-          (22, 5, 'Developer', 2, 33, 'Developer', 1, now(), now()),
-          (23, 2, 'Senior Developer', 3, 34, 'Developer', 1, now(), now()),
-          (24, 4, 'Developer', 2, 35, 'Developer', 1, now(), now()),
-          (25, 1, 'Solution Architect', 5, 38, 'Developer', 1, now(), now()),
-          (26, 4, 'Associate Project Manager', 1, 39, 'Project Manager', 1, now(), now()),
-          (27, 1, 'Scrum Master', 2, 40, 'Scrum Master', 1, now(), now()),
-          (28, 5, 'Senior Medical Analyst', 2, 41, 'Medical Analyst', 1, now(), now()),
-          (29, 1, 'Senior Quality Controller', 3, 42, 'Quality Control', 1, now(), now()),
-          (30, 5, 'Technical Support', 2, 43, 'Technical Support', 1, now(), now()),
-          (31, 5, 'Senior Medical Analyst', 2, 44, 'Medical Analyst', 1, now(), now()),
-          (32, 5, 'Senior Medical Analyst', 2, 45, 'Medical Analyst', 1, now(), now()),
-          (33, 1, 'Senior Project Manager', 3, 46, 'Project Manager', 1, now(), now()),
-          (34, 5, 'Senior Medical Analyst', 2, 47, 'Medical Analyst', 1, now(), now()),
-          (35, 5, 'Senior Medical Analyst', 2, 48, 'Medical Analyst', 1, now(), now()),
-          (36, 5, 'Quality Controller', 2, 49, 'Quality Control', 1, now(), now()),
-          (37, 4, 'Data Technical Support ', 2, 50, 'Technical Support', 1, now(), now()),
-          (38, 5, 'Senior Business Analyst', 3, 51, 'Business Analyst', 1, now(), now()),
-          (39, 5, 'Developer', 2, 52, 'Developer', 1, now(), now()),
-          (40, 2, 'Senior Operations Engineer', 3, 53, 'Operations Engineer', 1, now(), now()),
-          (41, 2, 'Associate Business Analyst', 1, 54, 'Business Analyst', 1, now(), now()),
-          (42, 2, 'Senior Developer', 3, 55, 'Developer', 1, now(), now()),
-          (43, 4, 'Business Analyst', 2, 56, 'Business Analyst', 1, now(), now()),
-          (44, 4, 'Medical Analyst', 1, 57, 'Medical Analyst', 1, now(), now()),
-          (45, 4, 'Operations Engineer', 2, 58, 'Operations Engineer', 1, now(), now()),
-          (46, 4, 'Medical Analyst', 1, 59, 'Medical Analyst', 1, now(), now()),
-          (47, 3, 'Developer', 2, 60, 'Developer', 1, now(), now()),
-          (48, 4, 'Quality Controller', 2, 61, 'Quality Control', 1, now(), now()),
-          (49, 2, 'Developer', 2, 62, 'Developer', 1, now(), now()),
-          (50, 2, 'Medical Analyst', 1, 63, 'Medical Analyst', 1, now(), now()),
-          (51, 5, 'Quality Controller', 2, 64, 'Quality Control', 1, now(), now()),
-          (52, 1, 'Senior Quality Controller', 3, 65, 'Quality Control', 1, now(), now()),
-          (53, 4, 'Developer', 2, 66, 'Developer', 1, now(), now()),
-          (54, 1, 'Scrum Master', 2, 67, 'Scrum Master', 1, now(), now()),
-          (55, 4, 'Developer', 2, 68, 'Developer', 1, now(), now()),
-          (56, 1, 'Developer', 2, 69, 'Developer', 1, now(), now()),
-          (57, 1, 'Developer', 2, 70, 'Developer', 1, now(), now()),
-          (58, 1, 'Operations Engineer', 2, 71, 'Operations Engineer', 1, now(), now()),
-          (59, 1, 'Associate SysOps Administrator', 1, 72, 'DevOps', 1, now(), now()),
-          (60, 1, 'Medical Analyst', 1, 73, 'Medical Analyst', 1, now(), now()),
-          (61, 4, 'Business Analyst', 2, 74, 'Business Analyst', 1, now(), now()),
-          (62, 1, 'Associate Business Analyst', 1, 75, 'Business Analyst', 1, now(), now()),
-          (63, 2, 'Developer', 2, 76, 'Developer', 1, now(), now()),
-          (64, 1, 'Quality Controller', 2, 77, 'Quality Control', 1, now(), now()),
-          (65, 3, 'Developer', 2, 78, 'Developer', 1, now(), now()),
-          (66, 1, 'Technical Support', 1, 79, 'Technical Support', 1, now(), now()),
-          (67, 2, 'Medical Analyst', 1, 80, 'Medical Analyst', 1, now(), now()),
-          (68, 1, 'Associate Business Analyst', 2, 81, 'Business Analyst', 1, now(), now()),
-          (69, 1, 'Technical Support', 1, 82, 'Technical Support', 1, now(), now()),
-          (70, 1, 'Associate Quality Controller', 1, 83, 'Quality Control', 1, now(), now()),
-          (71, 4, 'Business Analyst', 2, 84, 'Business Analyst', 1, now(), now()),
-          (72, 1, 'Associate Developer', 1, 85, 'Developer', 1, now(), now()),
-          (73, 5, 'Developer', 2, 86, 'Developer', 1, now(), now()),
-          (74, 1, 'Associate Business Analyst', 1, 98, 'Business Analyst', 1, now(), now()),
-          (75, 1, 'Associate Quality Controller', 1, 88, 'Quality Control', 1, now(), now()),
-          (76, 2, 'Associate Quality Controller', 1, 89, 'Quality Control', 1, now(), now()),
-          (77, 1, 'Associate SysOps Administrator', 1, 90, 'DevOps', 1, now(), now()),
-          (78, 1, 'Operations Engineer', 2, 91, 'Operations Engineer', 1, now(), now()),
-          (79, 1, 'Medical Analyst', 1, 92, 'Medical Analyst', 1, now(), now()),
-          (80, 1, 'Medical Analyst', 1, 93, 'Medical Analyst', 1, now(), now()),
-          (81, 1, 'Accounting Supervisor', 1, 94, 'Finance Accountant', 1, now(), now()),
-          (82, 1, 'Data Entry', 1, 95, 'Data Entry', 1, now(), now()),
-          (83, 1, 'Data Entry', 1, 96, 'Data Entry', 1, now(), now()),
-          (84, 1, 'Associate Medical Analyst', 1, 97, 'Medical Analyst', 1, now(), now()),
-          (85, 1, 'Associate Quality Controller', 1, 99, 'Quality Control', 1, now(), now()),
-          (86, 4, 'Developer', 2, 102, 'Developer', 1, now(), now()),
-          (87, 2, 'Developer', 2, 103, 'Developer', 1, now(), now()),
-          (88, 4, 'Senior Business Analyst', 3, 120, 'Business Analyst', 1, now(), now()),
-          (89, 5, 'Quality Controller', 2, 122, 'Quality Control', 1, now(), now()),
-          (90, 4, 'Developer', 2, 123, 'Developer', 1, now(), now()),
-          (91, 5, 'Developer', 2, 124, 'Developer', 1, now(), now()),
-          (92, 4, 'Quality Controller', 2, 127, 'Quality Control', 1, now(), now()),
-          (93, 2, 'Senior Quality Controller', 3, 129, 'Quality Control', 1, now(), now()),
-          (94, 3, 'Business Analyst', 2, 130, 'Business Analyst', 1, now(), now()),
-          (95, 1, 'Associate Solution Architect', 4, 131, 'Developer', 1, now(), now()),
-          (96, 3, 'DevOps', 2, 132, 'DevOps', 1, now(), now()),
-          (97, 3, 'Associate Business Analyst', 1, 133, 'Business Analyst', 1, now(), now()),
-          (98, 5, 'Senior Developer', 3, 134, 'Developer', 1, now(), now()),
-          (99, 2, 'Associate Quality Controller', 1, 136, 'Quality Control', 1, now(), now()),
-          (100, 1, 'Associate Quality Controller', 1, 137, 'Quality Control', 1, now(), now()),
-          (101, 3, 'Developer', 2, 140, 'Developer', 1, now(), now()),
-          (102, 2, 'Developer', 2, 141, 'Developer', 1, now(), now()),
-          (103, 1, 'Developer', 2, 145, 'Developer', 1, now(), now()),
-          (104, 1, 'Developer', 2, 146, 'Developer', 1, now(), now()),
-          (105, 1, 'DevOps', 2, 148, 'DevOps', 1, now(), now()),
-          (106, 2, 'Associate Technical Architect', 4, 2, 'Developer', 2, now(), now()),
-          (107, 5, 'Associate Solution Architect', 2, 6, 'Developer', 2, now(), now()),
-          (108, 4, 'Developer', 2, 8,  'Developer', 2, now(), now()),
-          (109, 1, 'Developer', 0, 12, 'Developer', 2, now(), now()),  
-          (110, 1, 'Developer', 2, 13, 'Developer', 2, now(), now()),
-          (111, 5, 'Developer', 2, 14, 'Developer', 2, now(), now()),
-          (112, 5, 'Developer', 2, 15, 'Developer', 2, now(), now()),
-          (113, 2, 'Developer', 2, 17, 'Developer', 2, now(), now()),
-          (114, 3, 'Developer', 2, 18, 'Developer', 2, now(), now()),
-          (115, 2, 'Developer', 2, 20, 'Developer', 2, now(), now()),
-          (116, 4, 'Developer', 2, 21, 'Developer', 2, now(), now()),
-          (117, 2, 'Project Manager', 2, 25, 'Project Manager', 2, now(), now()),
-          (118, 1, 'Solution Architect', 5, 38, 'Developer', 2, now(), now()),
-          (119, 5, 'Senior Medical Analyst', 3, 39, 'Medical Analyst', 2, now(), now()),
-          (120, 3, 'Senior Business Analyst', 3, 40, 'Business Analyst', 2, now(), now()),
-          (121, 4, 'Senior Medical Analyst', 2, 41, 'Medical Analyst', 2, now(), now()),
-          (122, 1, 'Senior Quality Controller', 3, 42, 'Quality Control', 2, now(), now()),
-          (123, 1, 'Developer', 2, 43, 'Developer', 2, now(), now()),
-          (124, 4, 'Senior Medical Analyst', 2, 44, 'Medical Analyst', 2, now(), now()),
-          (125, 4, 'Senior Medical Analyst', 2, 45, 'Medical Analyst', 2, now(), now()),
-          (126, 1, 'Project Manager', 2, 46,        'Project Manager', 2, now(), now()),
-          (127, 4, 'Senior Medical Analyst', 2, 47, 'Medical Analyst', 2, now(), now()),
-          (128, 1, 'Senior Medical Analyst', 2, 48, 'Medical Analyst', 2, now(), now()),
-          (129, 4, 'Quality Controller', 2, 49, 'Quality Control', 2, now(), now()),
-          (130, 2, 'Associate Data Technical Support', 1, 50, 'Technical Support', 2, now(), now()),
-          (131, 5, 'Senior Business Analyst', 3, 51, 'Business Analyst', 2, now(), now()),
-          (132, 1, 'Developer', 2, 52, 'Developer', 2, now(), now()),
-          (133, 2, 'Senior Developer', 3, 53, 'Developer', 2, now(), now()),
-          (134, 2, 'Associate Business Analyst', 1, 54, 'Business Analyst', 2, now(), now()),
-          (135, 2, 'Senior Developer', 3, 55, 'Developer', 2, now(), now()),
-          (136, 2, 'Associate Business Analyst', 1, 56, 'Business Analyst', 2, now(), now()),
-          (137, 1, 'Medical Analyst', 1, 57, 'Medical Analyst', 2, now(), now()),
-          (138, 1, 'Associate Developer', 1, 58, 'Developer', 2, now(), now()),
-          (139, 1, 'Medical Analyst', 1, 59, 'Medical Analyst', 2, now(), now()),
-          (140, 1, 'Developer', 2, 60, 'Developer', 2, now(), now()),
-          (141, 3, 'Quality Controller', 2, 61, 'Quality Control', 2, now(), now()),
-          (142, 2, 'Associate Developer', 1, 62, 'Developer', 2, now(), now()),
-          (143, 1, 'Medical Analyst', 1, 63, 'Medical Analyst', 2, now(), now()),
-          (144, 4, 'Quality Controller', 2, 64, 'Quality Control', 2, now(), now()),
-          (145, 1, 'Senior Quality Controller', 3, 65, 'Quality Control', 2, now(), now()),
-          (146, 1, 'Associate Developer', 1, 66, 'Developer', 2, now(), now()),
-          (147, 4, 'Senior Developer', 3, 67, 'Developer', 2, now(), now()),
-          (148, 2, 'Associate Developer', 1, 68, 'Developer', 2, now(), now()),
-          (149, 1, 'Associate Developer', 1, 69, 'Developer', 2, now(), now()),
-          (150, 1, 'Associate Developer', 1, 70, 'Developer', 2, now(), now()),
-          (151, 1, 'Associate Developer', 1, 71, 'Developer', 2, now(), now()),
-          (152, 1, 'Associate Developer', 1, 72, 'Developer', 2, now(), now()),
-          (153, 3, 'Associate Business Analyst', 1, 74, 'Business Analyst', 2, now(), now()),
-          (154, 1, 'Medical Analyst', 1, 75, 'Medical Analyst', 2, now(), now()),
-          (155, 1, 'Associate Developer', 1, 76, 'Developer', 2, now(), now()),
-          (156, 2, 'Quality Controller', 2, 77, 'Quality Control', 2, now(), now()),
-          (157, 1, 'Developer', 2, 78, 'Developer', 2, now(), now()),
-          (158, 3, 'Developer', 2, 86, 'Developer', 2, now(), now()),
-          (159, 3, 'Quality Controller', 2, 101, 'Quality Control', 2, now(), now()),
-          (160, 3, 'Senior Developer', 3, 102, 'Developer', 2, now(), now()),
-          (161, 5, 'Developer', 2, 103, 'Developer', 2, now(), now()),
-          (162, 4, 'Senior Business Analyst', 3, 120, 'Business Analyst', 2, now(), now()),
-          (163, 5, 'Quality Controller', 2, 122, 'Quality Control', 2, now(), now()),
-          (164, 2, 'Senior Quality Controller', 3, 129, 'Quality Control', 2, now(), now()),
-          (165, 3, 'Business Analyst', 2, 130, 'Business Analyst', 2, now(), now()),
-          (166, 5, 'Senior Developer', 3, 158, 'Developer', 2, now(), now()),
-          (167, 2, 'Associate Technical Architect', 4, 2, 'Developer', 3, now(), now()),
-          (168, 5, 'Developer', 2, 6,  'Developer', 3, now(), now()),
-          (169, 4, 'Developer', 2, 8,  'Developer', 3, now(), now()),
-          (170, 1, 'Developer', 0, 12, 'Developer', 3, now(), now()),
-          (171, 1, 'Developer', 2, 13, 'Developer', 3, now(), now()),
-          (172, 2, 'Associate Technical Architect', 4, 38, 'Developer', 3, now(), now()),
-          (173, 5, 'Senior Medical Analyst', 3, 39, 'Medical Analyst', 3, now(), now()),
-          (174, 4, 'Business Analyst', 2, 40, 'Business Analyst', 3, now(), now()),
-          (175, 5, 'Medical Analyst', 2, 41, 'Medical Analyst', 3, now(), now()),
-          (176, 1, 'Senior Quality Control', 3, 42, 'Quality Control', 3, now(), now()),
-          (177, 0, 'Technical Support', 0, 43, 'Technical Support', 3, now(), now()),
-          (178, 5, 'Medical Analyst', 2, 44, 'Medical Analyst', 3, now(), now()),
-          (179, 5, 'Medical Analyst', 2, 45, 'Medical Analyst', 3, now(), now()),
-          (180, 4, 'Project Manager', 1, 46, 'Project Manager', 3, now(), now()),
-          (181, 5, 'Medical Analyst', 2, 47, 'Medical Analyst', 3, now(), now()),
-          (182, 2, 'Medical Analyst', 2, 48, 'Medical Analyst', 3, now(), now()),                    
-          (183, 2, 'Associate Quality Controller', 1, 49, 'Quality Control', 3, now(), now()),
-          (184, 2, 'Associate Technical Support', 1, 50, 'Technical Support', 3, now(), now()),
-          (185, 4, 'Business Analyst', 2, 51, 'Business Analyst', 3, now(), now()),
-          (186, 1, 'Developer', 2, 52, 'Developer', 3, now(), now()),
-          (187, 2, 'Developer', 3, 53, 'Developer', 3, now(), now()),
-          (188, 2, 'Associate Business Analyst', 1, 54, 'Business Analyst', 3, now(), now()),
-          (189, 5, 'Developer', 2, 55, 'Developer', 3, now(), now()),
-          (190, 2, 'Associate Business Analyst', 1, 56, 'Business Analyst', 3, now(), now()),
-          (191, 1, 'Associate Medical Analyst', 1, 57, 'Medical Analyst', 3, now(), now()),
-          (192, 1, 'Associate Developer', 1, 58, 'Developer', 3, now(), now()),
-          (193, 1, 'Medical Analyst', 1, 59, 'Medical Analyst', 3, now(), now()),
-          (194, 1, 'Developer', 2, 60, 'Developer', 3, now(), now()),
-          (195, 0, 'Quality Controller', 0, 61, 'Quality Control', 3, now(), now()),
-          (196, 2, 'Associate Developer', 1, 62, 'Developer', 3, now(), now()),
-          (197, 1, 'Medical Analyst', 1, 63, 'Medical Analyst', 3, now(), now()),
-          (198, 2, 'Associate Quality Controller', 1, 64, 'Quality Control', 3, now(), now()),
-          (199, 1, 'Senior Quality Controller', 3, 65, 'Quality Control', 3, now(), now()),
-          (200, 1, 'Associate Developer', 1, 66, 'Developer', 3, now(), now()),
-          (201, 4, 'Senior Developer', 3, 67, 'Developer', 3, now(), now()),
-          (202, 2, 'Associate Developer', 1, 68, 'Developer', 3, now(), now()),
-          (203, 0, 'Associate Developer', 0, 69, 'Developer', 3, now(), now()),
-          (204, 1, 'Associate Developer', 1, 70, 'Developer', 3, now(), now()),
-          (205, 1, 'Associate Developer', 1, 71, 'Developer', 3, now(), now()),
-          (206, 3, 'Associate Business Analyst', 1, 74, 'Business Analyst', 3, now(), now()),
-          (207, 1, 'Medical Analyst', 1, 75, 'Medical Analyst', 3, now(), now()),
-          (208, 0, 'Associate Developer', 0, 76, 'Developer', 3, now(), now()),
-          (209, 0, 'Developer', 0, 78, 'Developer', 3, now(), now()),
-          (210, 3, 'Developer', 2, 86, 'Developer', 3, now(), now()),
-          (211, 2, 'Quality Controller', 1, 101, 'Quality Control', 3, now(), now()),
-          (212, 2, 'Associate Developer', 1, 102, 'Developer', 3, now(), now()),
-          (213, 2, 'Associate Developer', 1, 103, 'Developer', 3, now(), now()),
-          (214, 5, 'Senior Developer', 3, 120, 'Developer', 3, now(), now()),
-          (215, 4, 'Senior Medical Analyst ', 3, 121, 'Medical Analyst', 3, now(), now()),
-          (216, 5, 'Developer', 2, 122, 'Developer', 3, now(), now()),
-          (217, 4, 'Senior Developer', 3, 129, 'Developer', 3, now(), now()),
-          (218, 5, 'Senior Developer', 3, 158, 'Developer', 3, now(), now()),
-          (219, 2, 'Associate Technical Architect', 4, 2, 'Developer', 4, now(), now()),
-          (220, 5, 'Developer', 2, 6, 'Developer', 4, now(), now()),
-          (221, 4, 'Developer', 2, 8,  'Developer', 4, now(), now()),
-          (222, 1, 'Developer', 0, 12, 'Developer', 4, now(), now()),
-          (223, 1, 'Developer', 2, 13, 'Developer', 4, now(), now()),
-          (224, 3, 'Associate Technical Architect', 4, 38, 'Developer', 4, now(), now()),
-          (225, 5, 'Senior Medical Analyst', 3, 39, 'Medical Analyst', 4, now(), now()),
-          (226, 4, 'Senior Business Analyst', 3, 40, 'Business Analyst', 4, now(), now()),
-          (227, 4, 'Medical Analyst', 2, 41, 'Medical Analyst', 4, now(), now()),
-          (228, 5, 'Senior Developer', 3, 42, 'Developer', 4, now(), now()),
-          (229, 5, 'Technical Support', 2, 43, 'Technical Support', 4, now(), now()),
-          (230, 4, 'Medical Analyst', 2, 44, 'Medical Analyst', 4, now(), now()),
-          (231, 4, 'Medical Analyst', 2, 45, 'Medical Analyst', 4, now(), now()),
-          (232, 2, 'Associate Project Manager', 4, 46, 'Project Manager', 4, now(), now()),
-          (233, 3, 'Medical Analyst', 2, 47, 'Medical Analyst', 4, now(), now()),
-          (234, 4, 'Associate Medical Analyst', 1, 48, 'Medical Analyst', 4, now(), now()),
-          (235, 4, 'Developer', 2, 49, 'Developer', 4, now(), now()),
-          (236, 2, 'Associate Technical Support', 1, 50, 'Technical Support', 4, now(), now()),
-          (237, 4, 'Senior Developer', 3, 51, 'Developer', 4, now(), now()),
-          (238, 1, 'Developer', 2, 52, 'Developer', 4, now(), now()),
-          (239, 2, 'Developer', 2, 53, 'Developer', 4, now(), now()),
-          (240, 4, 'Developer', 2, 55, 'Developer', 4, now(), now()),
-          (241, 2, 'Associate Developer', 1, 56, 'Developer', 4, now(), now()),
-          (242, 1, 'Associate Medical Analyst', 0, 57, 'Medical Analyst', 4, now(), now()),
-          (243, 1, 'Developer', 2, 60, 'Developer', 4, now(), now()),
-          (244, 3, 'Developer', 2, 86, 'Developer', 4, now(), now()),
-          (245, 5, 'Senior Developer', 3, 120, 'Developer', 4, now(), now()),
-          (246, 5, 'Medical Analyst', 2, 121, 'Medical Analyst', 4, now(), now()),
-          (247, 5, 'Developer', 2, 122, 'Developer', 4, now(), now()),
-          (248, 4, 'Senior Developer', 3, 129, 'Developer', 4, now(), now()),
-          (249, 5, 'Senior Developer', 3, 158, 'Developer', 4, now(), now()),
-          (250, 2, 'Associate Technical Architect', 4, 2, 'Developer', 5, now(), now()),
-          (251, 5, 'Developer', 2, 6, 'Developer', 5, now(), now()),
-          (252, 3, 'Developer', 2, 8, 'Developer', 5, now(), now()),
-          (253, 5, 'Senior Developer', 3, 38, 'Developer', 5, now(), now()),
-          (254, 4, 'Senior Medical Analyst', 3, 39, 'Medical Analyst', 5, now(), now()),
-          (255, 4, 'Senior Business Analyst', 3, 40, 'Business Analyst', 5, now(), now()),
-          (256, 3, 'Medical Analyst', 2, 41, 'Medical Analyst', 5, now(), now()),
-          (257, 3, 'Developer', 3, 42, 'Developer', 5, now(), now()),
-          (258, 5, 'Technical Support', 2, 43, 'Technical Support', 5, now(), now()),
-          (259, 1, 'Medical Analyst', 2, 44, 'Medical Analyst', 5, now(), now()),
-          (260, 1, 'Medical Analyst', 2, 45, 'Medical Analyst', 5, now(), now()),
-          (261, 5, 'Senior Developer', 3, 46, 'Developer', 5, now(), now()),
-          (262, 1, 'Medical Analyst', 2, 47, 'Medical Analyst', 5, now(), now()),
-          (263, 3, 'Associate Medical Analyst', 1, 48, 'Medical Analyst', 5, now(), now()),
-          (264, 3, 'Developer', 2, 49, 'Developer', 5, now(), now()),
-          (265, 1, 'Associate Technical Support', 1, 50, 'Technical Support', 5, now(), now()),
-          (266, 4, 'Developer', 2, 51, 'Developer', 5, now(), now()),
-          (267, 1, 'Developer', 2, 52, 'Developer', 5, now(), now()),
-          (268, 1, 'Developer', 2, 60, 'Developer', 5, now(), now()),
-          (269, 1, 'Developer', 2, 86, 'Developer', 5, now(), now()),
-          (270, 5, 'Senior Developer', 3, 120, 'Developer', 5, now(), now()),
-          (271, 2, 'Medical Analyst', 2, 121, 'Medical Analyst', 5, now(), now()),
-          (272, 4, 'Developer', 2, 122, 'Developer', 5, now(), now()),
-          (273, 3, 'Developer', 3, 129, 'Developer', 5, now(), now()),
-          (274, 5, 'Senior Developer', 3, 158, 'Developer', 5, now(), now()),
-          (275, 2, 'Associate Technical Architect', 4, 2, 'Developer', 6, now(), now()),
-          (276, 3, 'Developer', 2, 6, 'Developer', 6, now(), now()),
-          (277, 1, 'Developer', 2, 8, 'Developer', 6, now(), now()),
-          (278, 5, 'Senior Developer', 3, 38, 'Developer', 6, now(), now()),
-          (279, 4, 'Senior Medical Analyst', 3, 39, 'Medical Analyst', 6, now(), now()),
-          (280, 4, 'Senior Business Analyst', 3, 40, 'Business Analyst', 6, now(), now()),
-          (281, 3, 'Medical Analyst', 2, 41, 'Medical Analyst', 6, now(), now()),
-          (282, 3, 'Developer', 3, 42, 'Developer', 6, now(), now()),
-          (283, 5, 'Technical Support', 2, 43, 'Technical Support', 6, now(), now()),
-          (284, 1, 'Medical Analyst', 2, 44, 'Medical Analyst', 6, now(), now()),
-          (285, 1, 'Medical Analyst', 2, 45, 'Medical Analyst', 6, now(), now()),
-          (286, 5, 'Senior Developer', 3, 46, 'Developer', 6, now(), now()),
-          (287, 1, 'Medical Analyst', 2, 47, 'Medical Analyst', 6, now(), now()),
-          (288, 3, 'Associate Medical Analyst', 1, 48, 'Medical Analyst', 6, now(), now()),
-          (289, 3, 'Developer', 2, 49, 'Developer', 6, now(), now()),
-          (290, 1, 'Associate Technical Support', 1, 50, 'Technical Support', 6, now(), now()),
-          (291, 4, 'Developer', 2, 51, 'Developer', 6, now(), now()),
-          (292, 1, 'Developer', 2, 52, 'Developer', 6, now(), now()),
-          (293, 1, 'Developer', 2, 60, 'Developer', 6, now(), now()),
-          (294, 1, 'Associate Developer', 2, 86, 'Developer', 6, now(), now()),
-          (295, 4, 'Senior Developer', 3, 120, 'Developer', 6, now(), now()),
-          (296, 2, 'Medical Analyst', 2, 121, 'Medical Analyst', 6, now(), now()),
-          (297, 3, 'Developer', 2, 122, 'Developer', 6, now(), now()),
-          (298, 3, 'Developer', 3, 129, 'Developer', 6, now(), now()),
-          (299, 5, 'Developer', 3, 158, 'Developer', 6, now(), now()); 
-         SQL
-
-    sql_form = <<-SQL
-    insert into forms (id, template_id, is_approved, period_id, user_id, number_keep, period_keep_id, rank, level, role_id, status, title_id, created_at, updated_at) values
-        (1, 1, 1, 1, 2, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
-        (2, 1, 1, 1, 6, 0, null, 4, 3, 1, 'Done', 3, now(), now()),
-        (3, 1, 1, 1, 8, 0, null, 3, 2, 1, 'Done', 2, now(), now()),
-        (4, 1, 1, 1, 12, 0, null, 3, 2, 1, 'Done', 2, now(), now()),
-        (5, 1, 1, 1, 13, 0, null, 3, 4, 1, 'Done', 4, now(), now()),
-        (6, 1, 1, 1, 14, 1, 1, 2, 5, 1, 'Done', 5, now(), now()),
-        (7, 1, 1, 1, 15, 1, 1, 2, 5, 1, 'Done', 5, now(), now()),
-        (8, 1, 1, 1, 17, 1, 1, 2, 2, 1, 'Done', 2, now(), now()),
-        (9, 1, 1, 1, 18, 1, 1, 2, 3, 1, 'Done', 3, now(), now()),
-        (10, null, 1, 1, 19, 0, null, 1, 1, 14, 'Done', null, now(), now()),
-        (11, 1, 1, 1, 20, 1, 1, 2, 2, 1, 'Done', 2, now(), now()),
-        (12, 1, 1, 1, 21, 1, 1, 2, 4, 1, 'Done', 4, now(), now()),
-        (13, 1, 1, 1, 23, 0, null, 2, 2, 1, 'Done', 2, now(), now()),
-        (14, null, 1, 1, 25, 1, 1, 2, 2, 4, 'Done', 17, now(), now()),
-        (15, 1, 1, 1, 26, 0, null, 2, 3, 1, 'Done', 3, now(), now()),
-        (16, 1, 1, 1, 27, 0, null, 3, 3, 1, 'Done', 3, now(), now()),
-        (17, 1, 1, 1, 28, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (18, 1, 1, 1, 29, 0, null, 3, 2, 1, 'Done', 2, now(), now()),
-        (19, 1, 1, 1, 30, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (20, 1, 1, 1, 31, 0, null, 3, 5, 1, 'Done', 5, now(), now()),
-        (21, 1, 1, 1, 32, 0, null, 2, 5, 1, 'Done', 5, now(), now()),
-        (22, 1, 1, 1, 33, 0, null, 2, 5, 1, 'Done', 5, now(), now()),
-        (23, 1, 1, 1, 34, 0, null, 3, 2, 1, 'Done', 2, now(), now()),
-        (24, 1, 1, 1, 35, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (25, null, 1, 1, 38, 1, 1, 5, 1, 1, 'Done', 5, now(), now()),
-        (26, 4, 1, 1, 39, 0, null, 1, 4, 4, 'Done', 16, now(), now()),
-        (27, 5, 1, 1, 40, 0, null, 2, 1, 5, 'Done', 19, now(), now()),
-        (28, 8, 1, 1, 41, 0, null, 2, 5, 8, 'Done', 38, now(), now()),
-        (29, 5, 1, 1, 42, 1, 1, 3, 1, 5, 'Done', 19, now(), now()),
-        (30, 9, 1, 1, 43, 0, null, 2, 5, 9, 'Done', 45, now(), now()),
-        (31, 8, 1, 1, 44, 0, null, 2, 5, 8, 'Done', 38, now(), now()),
-        (32, 8, 1, 1, 45, 0, null, 2, 5, 8, 'Done', 38, now(), now()),
-        (33, 4, 1, 1, 46, 0, null, 3, 1, 4, 'Done', 16, now(), now()),
-        (34, 8, 1, 1, 47, 0, null, 2, 5, 8, 'Done', 38, now(), now()),
-        (35, 8, 1, 1, 48, 0, null, 2, 5, 8, 'Done', 38, now(), now()),
-        (36, 3, 1, 1, 49, 0, null, 2, 5, 3, 'Done', 13, now(), now()),
-        (37, 9, 1, 1, 50, 0, null, 2, 4, 9, 'Done', 44, now(), now()),
-        (38, 2, 1, 1, 51, 1, 1, 3, 5, 2, 'Done', 10, now(), now()),
-        (39, 1, 1, 1, 52, 0, null, 2, 5, 1, 'Done', 5, now(), now()),
-        (40, 7, 1, 1, 53, 0, null, 3, 2, 7, 'Done', 28, now(), now()),
-        (41, null, 1, 1, 54, 2, 2, 1, 2, 2, 'Done', 8, now(), now()),
-        (42, 1, 1, 1, 55, 1, 1, 3, 2, 1, 'Done', 2, now(), now()),
-        (43, null, 1, 1, 56, 0, null, 2, 4, 2, 'Done', 9, now(), now()),
-        (44, null, 1, 1, 57, 0, null, 1, 4, 8, 'Done', 35, now(), now()),
-        (45, 7, 1, 1, 58, 0, null, 2, 4, 7, 'Done', 30, now(), now()),
-        (46, 8, 1, 1, 59, 0, null, 1, 4, 8, 'Done', 37, now(), now()),
-        (47, 1, 1, 1, 60, 0, null, 2, 3, 1, 'Done', 3, now(), now()),
-        (48, 3, 1, 1, 61, 0, null, 2, 4, 3, 'Done', 15, now(), now()),
-        (49, 1, 1, 1, 62, 0, null, 2, 2, 1, 'Done', 2, now(), now()),
-        (50, 8, 1, 1, 63, 0, null, 1, 2, 8, 'Done', 35, now(), now()),
-        (51, 3, 1, 1, 64, 0, null, 2, 5, 3, 'Done', 13, now(), now()),
-        (52, 3, 1, 1, 65, 2, 2, 3, 1, 3, 'Done', 14, now(), now()),
-        (53, 1, 1, 1, 66, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (54, 5, 1, 1, 67, 0, null, 2, 1, 5, 'Done', 19, now(), now()),
-        (55, 1, 1, 1, 68, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (56, 1, 1, 1, 69, 0, null, 2, 1, 1, 'Done', 1, now(), now()),
-        (57, 1, 1, 1, 70, 0, null, 2, 1, 1, 'Done', 1, now(), now()),
-        (58, null, 1, 1, 71, 0, null, 2, 1, 7, 'Done', 28, now(), now()),
-        (59, 6, 1, 1, 72, 0, null, 1, 1, 6, 'Done', 22, now(), now()),
-        (60, 8, 1, 1, 73, 0, null, 1, 1, 8, 'Done', 34, now(), now()),
-        (61, 2, 1, 1, 74, 0, null, 2, 4, 2, 'Done', 11, now(), now()),
-        (62, null, 1, 1, 75, 0, null, 1, 1, 2, 'Done', 8, now(), now()),
-        (63, 1, 1, 1, 76, 0, null, 2, 2, 1, 'Done', 2, now(), now()),
-        (64, 1, 1, 1, 70, 0, null, 2, 1, 1, 'Done', 1, now(), now()),
-        (65, 1, 1, 1, 78, 0, null, 2, 3, 1, 'Done', 3, now(), now()),
-        (66, 9, 1, 1, 79, 0, null, 1, 1, 9, 'Done', 41, now(), now()),
-        (67, 8, 1, 1, 80, 0, null, 1, 2, 8, 'Done', 35, now(), now()),
-        (68, 2, 1, 1, 81, 0, null, 2, 1, 2, 'Done', 8, now(), now()),
-        (69, 9, 1, 1, 82, 0, null, 1, 1, 9, 'Done', 41, now(), now()),
-        (70, 3, 1, 1, 83, 0, null, 1, 1, 3, 'Done', 12, now(), now()),
-        (71, 2, 1, 1, 84, 0, null, 2, 4, 2, 'Done', 11, now(), now()),
-        (72, 1, 1, 1, 85, 0, null, 1, 1, 1, 'Done', 1, now(), now()),
-        (73, 1, 1, 1, 86, 0, null, 2, 5, 1, 'Done', 5, now(), now()),
-        (74, 2, 1, 1, 98, 0, null, 1, 1, 2, 'Done', 8, now(), now()),
-        (75, 3, 1, 1, 88, 0, null, 1, 1, 3, 'Done', 12, now(), now()),
-        (76, 3, 1, 1, 89, 0, null, 1, 2, 3, 'Done', 13, now(), now()),
-        (77, 6, 1, 1, 90, 0, null, 1, 1, 6, 'Done', 22, now(), now()),
-        (78, null, 1, 1, 91, 0, null, 2, 1, 7, 'Done', 28, now(), now()),
-        (79, 8, 1, 1, 92, 0, null, 1, 1, 8, 'Done', 34, now(), now()),
-        (80, 8, 1, 1, 93, 0, null, 1, 1, 8, 'Done', 34, now(), now()),
-        (81, null, 1, 1, 94, 0, null, 1, 1, 15, 'Done', null, now(), now()),
-        (82, null, 1, 1, 95, 0, null, 1, 1, 13, 'Done', null, now(), now()),
-        (83, null, 1, 1, 96, 0, null, 1, 1, 13, 'Done', null, now(), now()),
-        (84, 8, 1, 1, 97, 0, null, 1, 1, 8, 'Done', 34, now(), now()),
-        (85, 3, 1, 1, 99, 0, null, 1, 1, 3, 'Done', 12, now(), now()),
-        (86, 3, 1, 2, 101, 0, null, 2, 3, 3, 'Done', 14, now(), now()),
-        (87, 1, 1, 1, 102, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (88, 1, 1, 1, 103, 0, null, 2, 2, 1, 'Done', 2, now(), now()),
-        (89, 2, 1, 1, 120, 1, 1, 3, 4, 2, 'Done', 11, now(), now()),
-        (90, 8, 1, 3, 121, 0, null, 3, 4, 8, 'Done', 37, now(), now()),
-        (91, 3, 1, 1, 122, 1, 1, 2, 5, 3, 'Done', 13, now(), now()),
-        (92, 1, 1, 1, 123, 0, null, 2, 4, 1, 'Done', 4, now(), now()),
-        (93, 1, 1, 1, 124, 0, null, 2, 5, 1, 'Done', 5, now(), now()),
-        (94, 3, 1, 1, 127, 0, null, 2, 4, 3, 'Done', 15, now(), now()),
-        (95, null, 1, 1, 129, 1, 1, 3, 2, 3, 'Done', 14, now(), now()),
-        (96, 2, 1, 1, 130, 1, 1, 2, 3, 2, 'Done', 10, now(), now()),
-        (97, null, 1, 1, 131, 0, null, 4, 1, 1, 'Done', 4, now(), now()),
-        (98, 6, 1, 1, 132, 0, null, 2, 3, 6, 'Done', 24, now(), now()),
-        (99, 2, 1, 1, 133, 0, null, 1, 3, 2, 'Done', 10, now(), now()),
-        (100, null, 1, 1, 134, 0, null, 3, 5, 1, 'Done', 3, now(), now()),
-        (101, 1, 1, 1, 136, 0, null, 1, 2, 1, 'Done', 2, now(), now()),
-        (102, 3, 1, 1, 137, 0, null, 1, 1, 3, 'Done', 12, now(), now()),
-        (103, 1, 1, 1, 140, 0, null, 2, 3, 1, 'Done', 3, now(), now()),
-        (104, 1, 1, 1, 141, 0, null, 2, 2, 1, 'Done', 2, now(), now()),
-        (105, 1, 1, 1, 145, 0, null, 2, 1, 1, 'Done', 1, now(), now()),
-        (106, 1, 1, 1, 146, 0, null, 2, 1, 1, 'Done', 1, now(), now()),
-        (107, 6, 1, 1, 148, 0, null, 2, 1, 6, 'Done', 22, now(), now()),
-        (108, 1, 1, 1, 100, 0, null, null, null, 1, 'Done', 2, now(), now()),
-        (109, 3, 1, 1, 77, 0, null, null, null, 3, 'Done', 13, now(), now()),
-        (110, 2, 1, 1, 87, 0, null, null, null, 2, 'Done', 8, now(), now());
-    SQL
-
-    connection
-    ActiveRecord::Base.transaction do
-      ActiveRecord::Base.connection.execute(sql_period)
-      ActiveRecord::Base.connection.execute(sql_schedule)
-      ActiveRecord::Base.connection.execute(sql_title_history)
-      ActiveRecord::Base.connection.execute(sql_form)
-    end
   end
 end

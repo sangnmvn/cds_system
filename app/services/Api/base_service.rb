@@ -19,6 +19,7 @@ module Api
     end
 
     def format_long_date(date)
+      return "N/A" if date.nil?
       return date.strftime("%b %d, %Y") if date.is_a?(Date) || date.is_a?(DateTime)
       ""
     end

@@ -225,8 +225,11 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
+    
+    @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
-    @slots = @result.values.map(&:keys).flatten.uniq.sort
+    
+    @slots = @form_service.get_location_slot(@competencies.pluck(:id)).values.flatten.uniq.sort
   end
 
   def data_view_result
@@ -282,7 +285,7 @@ class FormsController < ApplicationController
       user = User.find_by_id(params[:user_id])
       if approvers.where(is_submit_cds: false, is_approver: false).count.zero?
         form = Form.where(id: params[:form_id])
-        return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", review_date: DateTime.now())
+        return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", approved_date: DateTime.now())
         Async.await do
           user_pms.each do |user_pm|
             CdsAssessmentMailer.with(staff: user, pm: user_pm.approver).email_to_pm.deliver_later(wait: 5.seconds)

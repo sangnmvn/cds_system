@@ -32,7 +32,7 @@ function loadDataAssessment(data_filter) {
             <td class="type-number">{rank}</td> 
             <td class="type-number">{level}</td> 
             <td class="type-text">{submit_date}</td>
-            <td class="type-text">{review_date}</td>
+            <td class="type-text">{approved_date}</td>
             <td class="type-text" id="status">{status}</td> 
             <td class="type-icon"> 
               <a href='/forms/preview_result?form_id={id}' title="View result">
@@ -44,7 +44,7 @@ function loadDataAssessment(data_filter) {
           email: form.email,
           user_name: form.user_name,
           project: form.project,
-          review_date: form.review_date,
+          approved_date: form.approved_date,
           submit_date: form.submit_date,
           period: form.period_name,
           role: form.role_name,

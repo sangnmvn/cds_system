@@ -7,6 +7,6 @@ class AddColumnsToForms < ActiveRecord::Migration[6.0]
     add_column :forms, :status, :string
     add_column :forms, :is_delete, :boolean, default: false
     add_column :forms, :submit_date, :date
-    add_column :forms, :review_date, :date
+    add_column :forms, :approved_date, :date
   end
 end
