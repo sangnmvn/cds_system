@@ -31,8 +31,8 @@ Project.delete_all
 Group.delete_all
 ProjectMember.delete_all
 
-User.create(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3))
-User.create([
+User.create!(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3))
+User.create!([
   { id: 2, title_id: 4, email: "luanvk@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Luân", last_name: "Võ Kinh", account: "LuanVK", role_id: "1", company_id: 3, joined_date: DateTime.parse("2006-01-10"), gender: true },
   { id: 3, title_id: nil, email: "phongbq@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phong", last_name: "Bùi Quang", account: "PhongBQ", company_id: 3, joined_date: DateTime.parse("2013-09-09"), gender: true },
   { id: 4, title_id: nil, email: "phuonghq@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Phương", last_name: "Hồ Quế", account: "PhuongHQ", company_id: 3, joined_date: DateTime.parse("2010-03-15"), gender: false },

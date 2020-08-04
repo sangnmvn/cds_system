@@ -111,7 +111,7 @@ module Api
     end
 
     def data_users_by_gender
-      users = User.left_outer_joins(:project_members).where(filter_users).group(:gender).count
+      users = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).group(:gender).count
 
       h_users = {}
       h_users[:Male] = users[true] if users[true]
@@ -121,7 +121,7 @@ module Api
     end
 
     def data_users_by_role
-      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil).group("roles.name").count
+      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.name").count
 
       { data: h_users, total: h_users.values.sum }
     end
@@ -134,7 +134,7 @@ module Api
     end
 
     def data_users_by_seniority
-      users = User.joins(:project_members).where(filter_users).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
+      users = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
       users.each do |key, value|
         case key
@@ -170,16 +170,21 @@ module Api
 
     def data_users_by_title
       if params[:role_id] && params[:role_id].first != "All" && params[:role_id].length == 1
-        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(title_id: nil).group("titles.name").count
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(id: 1).group("titles.name").count
         h_users = {}
         users.each do |key, value|
-          h_users[key] = value
+          if key.nil?
+            h_users["No Title"] = value
+          else
+            h_users[key] = value
+          end
         end
         return h_users
       end
 
-      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6, title_id: nil).group("titles.rank").count
-      h_users = { "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
+      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(id: 1).group("titles.rank").count
+      h_users = { "No Title" => 0, "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
+
       users.each do |key, value|
         case key
         when 1
@@ -189,7 +194,9 @@ module Api
         when 3
           h_users["Senior"] = value
         when 4..20
-          h_users["> Senior"] = value
+          h_users["> Senior"] += value
+        else
+          h_users["No Title"] = value
         end
       end
       h_users.select { |key, value| value > 0 }
@@ -198,7 +205,7 @@ module Api
     def data_career_chart(user_id = nil)
       has_cdp = false
       user_id ||= current_user.id
-      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order("periods.to_date")
+      title_histories = TitleHistory.joins(:period).where(user_id: user_id).where.not(id: 1).order("periods.to_date")
       h_rank_empty = {
         period: "",
         current_user.role&.name => nil,
@@ -272,7 +279,7 @@ module Api
     end
 
     def data_users_up_title
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      user_ids = User.joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}

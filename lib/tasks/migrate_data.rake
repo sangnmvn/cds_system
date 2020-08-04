@@ -2507,11 +2507,9 @@ namespace :cds_system do
     SQL
 
     connection
-    ActiveRecord::Base.transaction do
-      ActiveRecord::Base.connection.execute(sql_period)
-      ActiveRecord::Base.connection.execute(sql_schedule)
-      ActiveRecord::Base.connection.execute(sql_title_history)
-      ActiveRecord::Base.connection.execute(sql_form)
-    end
+    ActiveRecord::Base.connection.execute(sql_period)
+    ActiveRecord::Base.connection.execute(sql_schedule)
+    ActiveRecord::Base.connection.execute(sql_title_history)
+    ActiveRecord::Base.connection.execute(sql_form)
   end
 end

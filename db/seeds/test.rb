@@ -31,7 +31,7 @@ Project.delete_all
 Group.delete_all
 ProjectMember.delete_all
 
-User.create(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3))
+User.create!(id: 1, email: "admin@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "admin", last_name: "admin", account: "admin", role_id: "1", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2), title_id: rand(1..3))
 
 User.create([
   { id: 2, role_id: 1, email: "staff01@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "staff01", last_name: "staff", account: "staff01", company_id: 3, joined_date: rand(12).years.ago, gender: rand(2) },

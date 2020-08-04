@@ -19,12 +19,6 @@ class User < ApplicationRecord
   has_many :approvers, :class_name => "Approver", :foreign_key => "approver_id", :dependent => :destroy
   has_many :approvees, :class_name => "Approver", :foreign_key => "user_id", :dependent => :destroy
 
-  validates :account, presence: true, uniqueness: true
-  validates :email, presence: true, uniqueness: true
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :gender, presence: true
-
   scope :search_user, ->(search) {
           where("users.email LIKE :search OR first_name LIKE :search OR last_name LIKE :search", search: "%#{search}%") if search.present?
         }
