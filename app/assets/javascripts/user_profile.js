@@ -1,7 +1,7 @@
 $(document).ready(function () {
-  var start_date = new Date(Date.parse(01-01-1945));
+  var start_date = new Date(Date.parse(01 - 01 - 1945));
   var end_date = new Date();
-  end_date.setDate(end_date.getDate()-(365*16));
+  end_date.setDate(end_date.getDate() - (365 * 16));
   $("#birthday").datepicker({
     todayBtn: "linked",
     todayHighlight: true,
@@ -117,16 +117,23 @@ $(document).ready(function () {
   $("#modal_change_password #confirm_pass").keyup(function () {
     if ($(this).val() != $("#new_pass").val()) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_confirm").html("Confirm password isn't equal new password!")
+      $("#error_confirm").html("Confirm password isn't equal new password.")
     } else {
-      $(this).addClass("is-valid").removeClass("is-invalid")
-      $("#error_confirm").html("")
+      if ($("#new_pass").hasClass("is-invalid")) {
+        $(this).addClass("is-invalid").removeClass("is-valid")
+        $("#error_confirm").html("Min of 8 characters and must have: a uppercase, a downcase, a special character, a number.")
+      } else {
+        $(this).addClass("is-valid").removeClass("is-invalid")
+        $("#error_confirm").html("")
+      }
     }
     changeBtnSave("btn_change_password", true, true)
   })
 
   $("#modal_change_password #new_pass").keyup(function () {
     //var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    $("#modal_change_password #confirm_pass").val("");
+    $("#modal_change_password #confirm_pass").removeClass("is-invalid").removeClass("is-valid")
     var regex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,32}$/;
     var pass = $(this).val()
     if (pass == "") {
@@ -134,7 +141,7 @@ $(document).ready(function () {
       $("#error_new_pass").html("Please enter new password")
     } else if (!regex.test(pass)) {
       $(this).addClass("is-invalid").removeClass("is-valid")
-      $("#error_new_pass").html("Min of 8 characters and must have: a uppercase, a downcase, a symbol, a number")
+      $("#error_new_pass").html("Min of 8 characters and must have: a uppercase, a downcase, a special character, a number.")
     } else {
       $(this).addClass("is-valid").removeClass("is-invalid")
       $("#error_new_pass").html("")
@@ -150,7 +157,7 @@ $(document).ready(function () {
       $("#error_old_pass").html("")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_old_pass").html("Please enter old password")
+      $("#error_old_pass").html("Please enter old password.")
     }
   })
 
@@ -161,7 +168,7 @@ $(document).ready(function () {
       checkName(first_name, "first_name", "error_first_name")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_first_name").html("First name must be from 1 to 32 characters")
+      $("#error_first_name").html("First name must be from 1 to 32 characters.")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -172,7 +179,7 @@ $(document).ready(function () {
       checkPhoneNumber(phone_number, "phone_number", "error_phone_number")
     } else {
       $(this).addClass("is-invalid")
-      $("#error_phone_number").html("Please enter phone number")
+      $("#error_phone_number").html("Please enter phone number.")
       changeBtnSave("btn_save_contact", false)
     }
   })
@@ -228,7 +235,7 @@ function changeBtnSave(btn, bool, type) {
     var old_pass = $("#old_pass").val()
     var new_pass = $("#new_pass").val()
     var confirm_pass = $("#confirm_pass").val()
-    if (old_pass && new_pass && confirm_pass && (new_pass == confirm_pass)) {
+    if (old_pass && new_pass && confirm_pass && (new_pass == confirm_pass) && !$("#new_pass").hasClass("is-invalid")) {
       $('#' + btn).attr("disabled", false);
       $('#' + btn).addClass("btn-primary").removeClass("btn-secondary")
     } else {
@@ -258,17 +265,17 @@ function checkEmptyData() {
   var status = true
   if ($("#old_pass").val() == "") {
     $("#old_pass").addClass("is-invalid")
-    $("#error_old_pass").html("Please enter old password")
+    $("#error_old_pass").html("Please enter old password.")
     status = false
   }
   if ($("#new_pass").val() == "") {
     changeClassStatus($("#new_pass"))
-    $("#error_new_pass").html("Please enter new password")
+    $("#error_new_pass").html("Please enter new password.")
     status = false
   }
   if ($("#confirm_pass").val() == "") {
     changeClassStatus($("#confirm_pass"))
-    $("#error_confirm").html("Please enter confirm password")
+    $("#error_confirm").html("Please enter confirm password.")
     status = false
   }
   return status
@@ -300,7 +307,7 @@ function checkName(input, idinput, idspan) {
 function checkPhoneNumber(input, idinput, idspan) {
   var regex = /^[0-9\-\+]{9,12}$/
   if (!regex.test(input)) {
-    $("#" + idspan).html("Must is valid phone number and maximum number is 12")
+    $("#" + idspan).html("Must is valid phone number and maximum number is 12.")
     $("#" + idinput).addClass("is-invalid")
     changeBtnSave("btn_save_contact", false)
   } else {
