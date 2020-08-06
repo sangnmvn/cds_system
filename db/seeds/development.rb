@@ -50,7 +50,7 @@ User.create!([
   { id: 16, title_id: nil, email: "daonth@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Đào", last_name: "Nguyễn Thị Hồng", account: "DaoNTH", company_id: 3, joined_date: DateTime.parse("2018-09-04"), gender: false },
   { id: 17, title_id: 2, email: "hienltv@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Hiển", last_name: "Lê Tấn Vinh", account: "HienLTV", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-11-08"), gender: true },
   { id: 18, title_id: 2, email: "hoabta@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Hoa", last_name: "Bùi Thị Ánh", account: "HoaBTA", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-11-08"), gender: false },
-  { id: 19, title_id: nil, email: "danhth@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Danh", last_name: "Thái Hoàng", account: "DanhTH", company_id: 3, joined_date: DateTime.parse("2018-11-26"), gender: true },
+  { id: 19, title_id: nil, email: "danhth@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Danh", last_name: "Thái Hoàng", account: "DanhTH", role_id: 14, company_id: 3, joined_date: DateTime.parse("2018-11-26"), gender: true },
   { id: 20, title_id: 2, email: "thintm@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Thi", last_name: "Nguyễn Thị Minh", account: "ThiNTM", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-11-26"), gender: false },
   { id: 21, title_id: 2, email: "nhannh@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Nhân", last_name: "Nguyễn Hữu", account: "NhanNH", role_id: "1", company_id: 3, joined_date: DateTime.parse("2018-11-26"), gender: true },
   { id: 22, title_id: nil, email: "lydt@larion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Lý", last_name: "Đỗ Thị", account: "LyDT", company_id: 3, joined_date: DateTime.parse("2019-03-18"), gender: false },
@@ -199,7 +199,7 @@ User.create!([
   { id: 165, title_id: nil, email: "thangnd@atalink.vn", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Thăng", last_name: "Nguyễn Đức", account: "ThangND", role_id: "1", company_id: 4, joined_date: DateTime.parse("2020-07-01"), gender: true },
   { id: 166, title_id: nil, email: "lyvtb@atalink.vn", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Lý", last_name: "Võ Thị Bảo", account: "LyVTB", company_id: 4, joined_date: DateTime.parse("2020-07-01"), gender: false },
   { id: 167, title_id: nil, email: "nhungnth@atalink.vn", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Nhung", last_name: "Nguyễn Thị Hồng", account: "NhungNTH", company_id: 4, joined_date: DateTime.parse("2020-07-06"), gender: false },
-  { id: 168, title_id: nil, email: "hungnvp@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Hùng", last_name: "Nguyễn Văn Phi", account: "hungNVP", company_id: 2, joined_date: DateTime.parse("2013-07-06"), gender: true },
+  { id: 168, title_id: nil, email: "hungnvp@bestarion.com", password: "123QWEasd", password_confirmation: "123QWEasd", first_name: "Hùng", last_name: "Nguyễn Văn Phi", account: "hungNVP", role_id: 17, company_id: 2, joined_date: DateTime.parse("2013-07-06"), gender: true },
 ])
 
 Project.create([

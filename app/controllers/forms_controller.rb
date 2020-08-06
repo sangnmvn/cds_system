@@ -88,6 +88,7 @@ class FormsController < ApplicationController
 
     @user = {
       format_name: user.format_name,
+      account: user.account,
       role_name: user.role&.name || "",
     }
     @hash = {}
