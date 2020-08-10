@@ -85,7 +85,7 @@ class FormsController < ApplicationController
       else
         current_user
       end
-
+    return redirect_to index_cds_cdp_forms_path if user.nil?
     @user = {
       format_name: user.format_name,
       account: user.account,
@@ -100,9 +100,11 @@ class FormsController < ApplicationController
       }
     end
     if params[:title_history_id].present?
+      title_history = TitleHistory.find_by_id(params[:title_history_id])
+      return redirect_to index_cds_cdp_forms_path if title_history.nil?
       @hash[:is_submit_late] = false
       @hash[:status] = "Done"
-      @hash[:title_history_id] = params[:title_history_id]
+      @hash[:title_history_id] = title_history.id
       @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
       return @hash
     end
@@ -226,10 +228,10 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-    
+
     @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
-    
+
     @slots = @form_service.get_location_slot(@competencies.pluck(:id)).values.flatten.uniq.sort
   end
 
