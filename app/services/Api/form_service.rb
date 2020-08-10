@@ -276,16 +276,21 @@ module Api
       forms = []
       if @privilege_array.include?(APPROVE_CDS)
         forms += if (filter[:period_id])
-            Form.where(user_id: user_approve_ids, period_id: filter[:period_id], status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+            Form.includes(:period, :role, :title).where(user_id: user_approve_ids, period_id: filter[:period_id],
+                                                        status: ["Awaiting Approval", "Done"])
+              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
           else
-            Form.where(user_id: user_approve_ids, status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+            Form.includes(:period, :role, :title).where(user_id: user_approve_ids, status: ["Awaiting Approval", "Done"])
+              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
       if @privilege_array.include?(REVIEW_CDS)
         forms += if (filter[:period_id])
-            Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: ["Awaiting Review", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+            Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
+              .where.not(status: ["Awaiting Approval", "New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           else
-            Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: ["Awaiting Review", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+            Form.includes(:period, :role, :title).where(user_id: user_review_ids.pluck(:user_id))
+              .where.not(status: ["Awaiting Approval", "New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)

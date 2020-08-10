@@ -65,7 +65,7 @@ class UsersController < ApplicationController
     @user = User.find_by(id: id)
     @is_user = id == current_user.id
     @project = Project.includes(:project_members).where("project_members.user_id": id, is_enabled: true).pluck(:name).join(", ")
-    form = Form.find_by(user_id: id)
+    form = Form.find_by(user_id: id, is_delete: false)
     @form = (form.blank? || form.title.blank?) ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 
@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     project_id = user.map(&:project_id)
 
     current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
-    reviewers = User.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+    reviewers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     h_reviewers = []
     reviewers.each do |reviewer|

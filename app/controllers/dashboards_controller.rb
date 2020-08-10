@@ -109,7 +109,7 @@ class DashboardsController < ApplicationController
   def data_latest_baseline
     return render json: { data: "fails" } unless @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
 
-    form = Form.includes(:title).find_by_user_id(current_user.id)
+    form = Form.includes(:title).find_by(user_id: current_user.id, is_delete: false)
     return render json: { data: "fails" } if form.nil?
     result = @form_services.preview_result(form)
     competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)

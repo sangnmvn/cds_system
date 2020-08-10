@@ -11,7 +11,7 @@ class FormsController < ApplicationController
   FULL_ACCESS = 24
 
   def index_cds_cdp
-    form = Form.find_by(user_id: current_user.id)
+    form = Form.find_by(user_id: current_user.id, is_delete: false)
     @check_status = form.nil? || form&.status == "Done"
   end
 
@@ -144,7 +144,7 @@ class FormsController < ApplicationController
       }
     end
 
-    form = Form.where(id: params[:form_id]).first
+    form = Form.find_by_id(params[:form_id])
     user = User.includes(:role).find_by_id(params[:user_id])
     approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])
 
