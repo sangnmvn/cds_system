@@ -513,14 +513,6 @@ function formatDataAssignUsers(data, type_table) {
     </tbody>
   </table>`);
 
-  if (data == undefined || data.length == 0) {
-    $('.select-all-' + type_table).prop('disabled', true);
-    $(`#table_${type_table} tbody`).html(`
-      <tr class="type-icon notice">
-        <th class="type-icon" style="background-color: #cfd5ea" colspan=4>No data available on this table</th>
-      </tr>`)
-    return;
-  }
   $('.select-all-' + type_table).prop('disabled', false);
   tmp = ""
   data.forEach(function (user, index) {
@@ -559,6 +551,15 @@ function formatDataAssignUsers(data, type_table) {
   });
   $(".dataTables_length").addClass("bs-select");
 
+  if (data == undefined || data.length == 0) {
+    $('.select-all-' + type_table).prop('disabled', true);
+    $(`#table_${type_table}_user .paginate_button`).prop('disabled', true);
+    $(`#table_${type_table} tbody`).html(`
+      <tr class="type-icon notice">
+        <th class="type-icon" style="background-color: #cfd5ea" colspan=4>No data available on this table</th>
+      </tr>`);
+    return;
+  }
   table.on("order.dt search.dt", function () {
     table.column(0, { search: "applied", order: "applied" })
       .nodes().each(function (cell, i) {
