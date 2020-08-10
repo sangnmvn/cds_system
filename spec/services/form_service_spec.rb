@@ -54,10 +54,6 @@ RSpec.describe Api::FormService, type: :request do
     @form_service.get_competencies(FORM_NIL).should eql(false)
   end
 
-  it "get_competencies_reviewer" do
-    @form_service.get_competencies_reviewer(FORM_NIL).should eql(false)
-  end
-
   it "get_summary_comment" do
     @form_service.get_summary_comment.should be_blank
   end

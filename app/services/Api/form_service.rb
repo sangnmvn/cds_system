@@ -23,33 +23,32 @@ module Api
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
       return false if form.nil?
+
+      competencies = Competency.includes(:slots).where(template_id: form.template_id)
+      hash = {}
+      competencies.each do |competency|
+        hash[competency.name] = {
+          type: competency.sort_type,
+          id: competency.id,
+          levels: {},
+        }
+        competency.slots.group("slots.level").count.each do |key, value|
+          hash[competency.name][:levels][key] = {
+            total: value,
+            current: 0,
+          }
+        end
+      end
+
       slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
       slots = slots.where(level: params[:level]) if params[:level].present?
-      hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
       form_slots = get_point_for_result(form_slots)
       result = preview_result(form)
 
       slots.map do |slot|
-        key = slot.competency.name
-        if hash[key].nil?
-          hash[key] = {
-            type: slot.competency.sort_type,
-            id: slot.competency_id,
-            levels: {},
-            level_point: calculate_level(result[key]) || "N/A",
-          }
-        end
-
-        if hash[key][:levels][slot.level].nil?
-          hash[key][:levels][slot.level] = {
-            total: 0,
-            current: 0,
-          }
-        end
-
-        hash[key][:levels][slot.level][:total] += 1
         data = form_slots[slot.id]
+        next if data.nil?
         value = data[:final_point] || data[:point]
         value = data[:point] if data[:is_change]
         if current_user.id != form.user_id
@@ -59,57 +58,9 @@ module Api
             value = data[:final_point] || value
           end
         end
-        hash[key][:levels][slot.level][:current] += 1 if value > 2
+        hash[slot.competency.name][:levels][slot.level][:current] += 1 if value > 2
       end
-      hash
-    end
 
-    def get_competencies_reviewer(form_id = nil, user_id = nil)
-      return get_old_competencies if params[:title_history_id].present?
-      if form_id.present?
-        form = Form.find_by_id(form_id)
-      else
-        form = Form.find_by(user_id: user_id, is_delete: false)
-      end
-      return false if form.nil?
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
-      slots = slots.where(level: params[:level]) if params[:level].present?
-      hash = {}
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
-      form_slots = get_point_for_result(form_slots)
-      result = preview_result(form)
-
-      slots.map do |slot|
-        key = slot.competency.name
-        if hash[key].nil?
-          hash[key] = {
-            type: slot.competency.sort_type,
-            id: slot.competency_id,
-            levels: {},
-            level_point: calculate_level(result[key]),
-          }
-        end
-
-        if hash[key][:levels][slot.level].nil?
-          hash[key][:levels][slot.level] = {
-            total: 0,
-            current: 0,
-          }
-        end
-
-        hash[key][:levels][slot.level][:total] += 1
-        data = form_slots[slot.id]
-        value = data[:final_point] || data[:point]
-        value = data[:point] if data[:is_change]
-        if current_user.id != form.user_id
-          if privilege_array.include?(REVIEW_CDS)
-            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
-            value = data[:final_point] || value
-          end
-        end
-        hash[key][:levels][slot.level][:current] += 1 if value > 2
-      end
       hash
     end
 

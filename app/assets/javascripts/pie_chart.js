@@ -5,13 +5,13 @@ function drawPieChart(data, total, id, name) {
   var height = $(id).height() - 30;
   var legendRectSize = 18;
   var legendSpacing = 4;
-  var fix_width = 130;
-  var is_small_screen = document.body.offsetWidth < 1500
+  var fix_width = 110;
+  var is_small_screen = document.body.offsetWidth < 1500;
   if (is_small_screen) {
     fix_width = 80;
-    data = data.data_small ||  data.data // gender's chart hasn't data small
+    data = data.data_small ||  data.data; // gender's chart hasn't data small
   } else {
-    data = data.data
+    data = data.data;
   }
 
   if (data.length == 0)
@@ -113,13 +113,13 @@ function drawPieChart(data, total, id, name) {
     .append('g')
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
-      var maxItemOneColumn = Math.ceil(color.domain().length / 2)
+      var maxItemOneColumn = Math.ceil(color.domain().length / 2);
       if (maxItemOneColumn < 3)
-        maxItemOneColumn = color.domain().length
+        maxItemOneColumn = color.domain().length;
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
-      var w = (i < maxItemOneColumn) ? ((width / 3 ) + 15) : (width / 3 + fix_width)
-      var h = vert - height / 4
+      var w = (i < maxItemOneColumn) ? ((width / 3 ) + (is_small_screen ? 15 : -25)) : (width / 3 + fix_width);
+      var h = vert - height / 4;
 
       return 'translate(' + w + ',' + h + ')';
     });

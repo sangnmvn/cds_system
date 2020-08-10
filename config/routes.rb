@@ -64,7 +64,6 @@ Rails.application.routes.draw do
       post :data_view_result
       post :get_competencies
       post :cancel_request
-      post :get_competencies_reviewer
       get :cdp_assessment
       get :index_cds_cdp
       post :request_update_cds

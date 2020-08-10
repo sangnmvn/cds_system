@@ -10,6 +10,7 @@ $odd-color: #CFD5EA;
 .dataTables_info {
     margin-left: 25px !important;
 }
+
 .item-row {
     border: 1px solid;
 }
@@ -110,10 +111,10 @@ rect {
     button span {
         color: red;
     }
+}
 
-    .item-filter-dashboard {
-        padding: 5px;
-    }
+.item-filter-dashboard {
+    padding-bottom: 7px;
 }
 
 .title-table {
@@ -230,10 +231,12 @@ rect {
 
         .baseline-cds {
             width: 50%;
+
             // background-color: #dae7ff;
             #table_baseline {
                 // background-color: #dae7ff;
                 width: 98% !important;
+
                 .first-column {
                     width: 10%;
                 }

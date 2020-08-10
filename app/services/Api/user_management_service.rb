@@ -307,7 +307,7 @@ module Api
       user_ids = []
 
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].present? && h_old[title.user_id][:role] != title.role_name && h_old[title.user_id][:rank] >= title.rank
+        next if h_old[title.user_id].present? && (h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] >= title.rank)
         data = {
           user_id: title.user_id,
           title_history_id: title.id,

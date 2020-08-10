@@ -1,8 +1,12 @@
+/*jshint esversion: 6 */
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff", "#e34856", "#8a103d", "#255381"]
+var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff",
+  "#e34856", "#8a103d", "#255381", "#8077b6", "#0193cf", "#49176e", "#273691", "#0596d7"
+];
 
 function drawChartGender(data_filter) {
   $.ajax({
@@ -13,7 +17,7 @@ function drawChartGender(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response, response.total, "#chart_gender", "Number of Employee(s) by Gender")
+      drawPieChart(response, response.total, "#chart_gender", "Number of Employee(s) by Gender");
     }
   });
 }
@@ -27,7 +31,7 @@ function drawChartRole(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response, response.total, "#chart_role", "Number of Employee(s) by Role")
+      drawPieChart(response, response.total, "#chart_role", "Number of Employee(s) by Role");
     }
   });
 }
@@ -41,10 +45,10 @@ function drawChartTitle(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      sleep(1000)
+      sleep(1000);
       drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employee(s) by Title", "Rank");
     }
-  })
+  });
 }
 
 function drawChartSeniority(data_filter) {
@@ -70,12 +74,11 @@ function drawChartCareer() {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      sleep(1000)
+      sleep(1000);
       if (response.data == "fails" || response.data.length <= 1) {
-        $("#my_career ").html('')
-        $("#my_career").css('height', 'auto')
-      }
-      else
+        $("#my_career ").html('');
+        $("#my_career").css('height', 'auto');
+      } else
         drawLineChart(response.data, response.has_cdp, "#chart_my_career");
     }
   });
@@ -83,14 +86,14 @@ function drawChartCareer() {
 
 function drawChart(data_filter = {}) {
   // get data and draw chart gender
-  drawChartGender(data_filter)
+  drawChartGender(data_filter);
   // get data and draw chart role
-  drawChartRole(data_filter)
-  sleep(1000)
+  drawChartRole(data_filter);
+  sleep(1000);
   // get data and draw chart seniority
-  drawChartSeniority(data_filter)
+  drawChartSeniority(data_filter);
   // get data and draw chart title
-  drawChartTitle(data_filter)
+  drawChartTitle(data_filter);
   // get data and draw chart my career
 }
 
@@ -165,7 +168,7 @@ $(document).ready(function () {
         if (response.data == 'fails')
           fails("This user has not had CDS/CDP on the system");
         else
-          window.location.href = response.data
+          window.location.href = response.data;
       },
     });
   });
@@ -181,6 +184,7 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
+      if (response.status == "fails") return;
       setupDataFilter("company_filter", '.company-filter', response.companies);
       setupDataFilter("project_filter", '.project-filter', response.projects);
       setupDataFilter("role_filter", '.role-filter', response.roles);
@@ -199,13 +203,13 @@ function paramFilter() {
     company_id: $('#company_filter').val(),
     project_id: $('#project_filter').val(),
     role_id: $('#role_filter').val(),
-  }
+  };
 }
 
 function setupDataFilter(id, class_name, data) {
-  $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
-  id = '#' + id
-  if (data.length > 1)
+  $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`);
+  id = '#' + id;
+  if (data && data.length > 1)
     $('<option value="All" selected>All</option>').appendTo(id);
   data.forEach(function (value, index) {
     if (index == 0 && data.length == 1)
@@ -215,8 +219,8 @@ function setupDataFilter(id, class_name, data) {
   });
   $(id).bsMultiSelect({
     setSelected: (opt, val) => {
-      opt.selected = val
-      let rs = $(id).val()
+      opt.selected = val;
+      let rs = $(id).val();
       if (!val)
         if (opt.innerText == "All") {
           if (rs.length == 0 || rs[0] == "All") {
@@ -246,10 +250,10 @@ function setupDataFilter(id, class_name, data) {
     for (i = 1; i <= length; i++) {
       text = $(class_name + ' .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
       if (text != "All")
-        arr.push(i)
+        arr.push(i);
       else if (text == "All") {
-        all = true
-        locate_all = i
+        all = true;
+        locate_all = i;
       }
     }
     if (current == "All") {
@@ -258,7 +262,7 @@ function setupDataFilter(id, class_name, data) {
       });
       if (id == "#company_filter")
         loadProjectFilter(["All"]);
-      return ""
+      return "";
     } else if (current != "All" && locate_all != 0) {
       $.each(arr, function (index, value) {
         $(class_name + ' .form-control li.badge:nth-child(' + locate_all + ') .close').click();
@@ -266,7 +270,7 @@ function setupDataFilter(id, class_name, data) {
     }
     if (arr.length == max - 1 && all == false) {
       $(class_name + ' ul.dropdown-menu li:nth-child(1)').click();
-    };
+    }
     if (id == "#company_filter")
       loadProjectFilter();
   });
@@ -278,7 +282,7 @@ function loadProjectFilter(company_id = []) {
   if (arrCompany.length > 0 && arrCompany[0] == "All")
     arrCompany.splice(0, 1);
   if (_.isEmpty(company_id))
-    var company_id = _.isEmpty(arrCompany) ? ["All"] : arrCompany;
+    company_id = _.isEmpty(arrCompany) ? ["All"] : arrCompany;
 
   $.ajax({
     url: "/dashboards/data_filter_projects",
@@ -290,7 +294,7 @@ function loadProjectFilter(company_id = []) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      setupDataFilter("project_filter", '.project-filter', response.projects)
+      setupDataFilter("project_filter", '.project-filter', response.projects);
     }
   });
 }

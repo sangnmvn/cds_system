@@ -59,10 +59,6 @@ class FormsController < ApplicationController
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
-  def get_competencies_reviewer
-    render json: @form_service.get_competencies_reviewer(form_params[:form_id])
-  end
-
   def cds_review
     @companies = Company.all
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
@@ -154,11 +150,11 @@ class FormsController < ApplicationController
       user_id: params[:user_id],
       user_name: user.format_name,
       form_id: form.id,
-      status: (!approver.is_approver && approver.is_submit_cds) ? "Submited" : form.status,
+      status: (!approver&.is_approver && approver&.is_submit_cds) ? "Submited" : form.status,
       title: "CDS/CDP of #{user.role.name} - #{user.account}",
-      is_submit: approver.is_submit_cds,
-      is_approver: approver.is_approver,
-      is_reviewer: !approver.is_approver,
+      is_submit: approver&.is_submit_cds || false,
+      is_approver: approver&.is_approver || false,
+      is_reviewer: !approver&.is_approver || false,
       is_submit_late: form.is_submit_late,
     }
   end
