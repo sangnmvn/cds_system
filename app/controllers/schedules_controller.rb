@@ -151,7 +151,7 @@ class SchedulesController < ApplicationController
           @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
           user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
           # send mail
-          # ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
+          ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
 
           render json: { status: true }
         else
@@ -243,7 +243,7 @@ class SchedulesController < ApplicationController
     return render json: { status: false } if schedule.nil?
     period = Period.find_by_id(schedule.period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-    # ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
+    ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
     if period.destroy && schedule.destroy
       #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
       render json: { status: true }
@@ -283,11 +283,11 @@ class SchedulesController < ApplicationController
 
     if @schedule.update(temp_params)
       user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": @schedule.company_id)
-      # if check_hr?
-      #   ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_hr.deliver_later(wait: 1.minute)
-      # elsif check_pm?
-      #   ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_pm.deliver_later(wait: 1.minute)
-      # end
+      if check_hr?
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_hr.deliver_later(wait: 1.minute)
+      elsif check_pm?
+        ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_pm.deliver_later(wait: 1.minute)
+      end
       @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
       render json: { status: true }
     else

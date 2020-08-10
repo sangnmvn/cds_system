@@ -671,7 +671,7 @@ function action_add() {
 
     if (notify_hr < 0) {
       temp = false;
-      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder must be greater than current date.</span></div>')
+      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
     }
 
     if (notify_member == "") {
@@ -681,7 +681,7 @@ function action_add() {
 
     if (notify_member < 0) {
       temp = false;
-      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder must be greater than current date.</span></div>')
+      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
     }
 
     if (temp == true) {
@@ -924,9 +924,19 @@ function action_edit() {
 
     if (notify_hr < 0) {
       temp = false;
-      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Notice date must be greater than current date.</span>')
+      $('#notify_hr').closest('div').children('em').after('<br><span class="error">Reminder does not exceed date range from Start Date to End Date.</span>')
     }
 
+    if (notify_member == "") {
+      temp = false;
+      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
+    }
+
+    if (notify_member < 0) {
+      temp = false;
+      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
+    }
+    
     if (temp == true) {
       if (user_role == "HR") {
         input_data = {
