@@ -23,6 +23,11 @@ module Api
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
       return false if form.nil?
+      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      slots = slots.where(level: params[:level]) if params[:level].present?
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
+      form_slots = get_point_for_result(form_slots)
+      result = preview_result(form)
 
       competencies = Competency.includes(:slots).where(template_id: form.template_id)
       hash = {}
@@ -31,6 +36,7 @@ module Api
           type: competency.sort_type,
           id: competency.id,
           levels: {},
+          level_point: calculate_level(result[competency.name]) || "N/A",
         }
         competency.slots.group("slots.level").count.each do |key, value|
           hash[competency.name][:levels][key] = {
@@ -39,12 +45,6 @@ module Api
           }
         end
       end
-
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
-      slots = slots.where(level: params[:level]) if params[:level].present?
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
-      form_slots = get_point_for_result(form_slots)
-      result = preview_result(form)
 
       slots.map do |slot|
         data = form_slots[slot.id]
