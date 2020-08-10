@@ -7,7 +7,9 @@ Rails.application.routes.draw do
       get :load_user_group
       get :load_user
       get :load_group
-      get :save_user_group
+      post :save_user_group
+      post :load_privileges
+      post :data_assign_user
     end
   end
   # devise_for :users

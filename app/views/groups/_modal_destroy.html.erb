@@ -1,18 +1,21 @@
-
+<div class="modal fade modal-form-edit-user" id="modalDelete">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete Group</h5>
+        <h5 class="modal-title">Confirm Delete Group</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Do you want to delete this groups?</p>
-         <%= text_field_tag 'group_id', group.id,type: 'hidden', class: 'form-control' %>
+        <p>Do you want to delete this group?</p>
       </div>
       <div class="modal-footer">
-      <div class="col-12 p-3 text-center">
-      <button type="button" class="btn btn-primary" id="btn_modal_delete" onclick="delete_group();">Yes</button>
-      <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
-        
+        <div class="col-12 p-3 text-center">
+          <button type="button" class="btn btn-primary" id="btn_confirm_delete">Yes</button>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
         </div>
       </div>
+    </div>
+  </div>
+</div>

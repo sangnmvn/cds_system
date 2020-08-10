@@ -1,65 +1,40 @@
 class UserGroupsController < ApplicationController
-  layout "system_layout"
+  layout :system_layout
+  before_action :user_group_service
 
   def index
   end
 
-  def load_user
-    user_groups = UserGroup.where(group_id: params[:id]).pluck(:user_id)
-    users = User.where(is_delete: false, status: true).where.not(id: user_groups)
-    data = users.map do |user|
-      {
-        user_id: user.id,
-        full_name: user.format_name_vietnamese,
-        account: user.account,
-        email: user.email,
-      }
-    end
-    render json: data
+  def data_assign_user
+    available_users = @user_group_service.data_avalable_user
+    selected_users = @user_group_service.data_user_group
+
+    render json: { available_users: available_users, selected_users: selected_users }
   end
 
-  def load_group
-    group = Group.find_by_id(params[:id])
-    render json: group
-  end
+  def load_privileges
+    group_pri = Group.find_by_id(params[:group_id]).privileges&.split(",") || []
+    table_right = group_pri.uniq.map { |pri_id| Settings.privileges[pri_id].to_h }
+    table_left = Settings.privileges.map { |_, value| value.to_h } - table_right
 
-  def load_user_group
-    user_groups = UserGroup.includes(:group, :user).where(group_id: params[:id])
-    arr = Array.new
-    user_groups.each { |user_group|
-      arr << {
-        id: user_group.id,
-        group_name: user_group.group.name,
-        user_id: user_group.user_id,
-        group_id: user_group.group_id,
-        full_name: user_group.user.format_name_vietnamese,
-        account: user_group.user.account,
-        email: user_group.user.email,
-      }
-    }
-    render json: arr
+    render json: { left: table_left, right: table_right }
   end
 
   def save_user_group
-    list_users = params[:list]
-    id_group = params[:id]
-    UserGroup.delete_by(group_id: id_group)
-    if list_users.present?
-      list_users.each { |user|
-        UserGroup.create(group_id: id_group, user_id: user)
-      }
-    end
-    @group = Group.find_by_id(params[:id])
-    number = UserGroup.where(group_id: @group.id).count
-    status_group = @group.status ? "Enable" : "Disable"
+    status = "success"
+    status = "fails" unless UserGroup.delete_by(group_id: params[:group_id], user_id: params[:user_delete])
 
-    render :json => { number: number, id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
+    params[:user_add].each do |user_id|
+      status = "fails" unless UserGroup.create(group_id: params[:group_id], user_id: user_id)
+    end
+
+    render json: { status: status }
   end
 
   def show_privileges
     group_pri = Group.find_by_id(params[:id]).privileges&.split(",") || []
     table_right = group_pri.uniq.map { |pri_id| Settings.privileges[pri_id].to_json }
-    table_left = Settings.privileges.map { |k, value| value.to_json } - table_right
+    table_left = Settings.privileges.map { |_, value| value.to_json } - table_right
     render json: { left: table_left, right: table_right }
   end
 
@@ -67,5 +42,11 @@ class UserGroupsController < ApplicationController
     group_id = params[:group_id]
     data = params[:data]&.join(",") || ""
     Group.where(id: group_id).update(privileges: data)
+  end
+
+  private
+
+  def user_group_service
+    @user_group_service ||= Api::UserGroupService.new(params, current_user)
   end
 end

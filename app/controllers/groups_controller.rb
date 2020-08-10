@@ -1,30 +1,30 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: %i[show edit update destroy]
   layout "system_layout"
   before_action :get_privilege_id
-  before_action :redirect_to_index, only: [:index, :get_data, :show]
+  before_action :redirect_to_index, only: %i[index load_data_groups show]
   FULL_ACCESS = 6
   VIEW = 7
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.all.order(:id => :desc).where(is_delete: false)
     @full_access = @privilege_array.include?(FULL_ACCESS)
     @view = @privilege_array.include?(VIEW)
   end
 
   def load_data_groups
-    groups = Group.distinct.left_outer_joins(:user_group).where(is_delete: false).order(created_at: :desc)
+    groups = Group.select(:id, :name, :description, :status).where(is_delete: false).order(created_at: :desc)
+    h_count = Group.joins(:user_group).where(is_delete: false).group("user_groups.group_id").count
     data = groups.map do |group|
       {
         id: group.id,
         name: group.name,
         description: group.description,
-        number_user: group.user_group.count,
-        status: group.status,
+        number_users: h_count[group.id] || 0,
+        status: group.status ? "Enable" : "Disable",
       }
     end
-    render json: data
+    render json: { data: data }
   end
 
   # GET /groups/1
@@ -46,7 +46,9 @@ class GroupsController < ApplicationController
   def create
     params[:status] = params[:status] == "Enable" ? 1 : 0
     @group = Group.new(group_params)
-    return render json: { status: "exist" } if Group.where(name: params[:name]).present?
+    group = Group.find_by_name(params[:name])
+    return render json: { status: "exist" } if group.present?
+
     if @group.save
       status_group = @group.status ? "Enable" : "Disable"
       render json: { status: "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
@@ -73,39 +75,12 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    @group = Group.find(params[:id])
+    @group = Group.find_by(params[:id])
     if @group.update_attribute(:is_delete, true)
       UserGroup.delete_by(group_id: @group.id)
-      status_group = @group.status ? "Enable" : "Disable"
-      render json: { status: "success", id: @group.id, name: @group.name, status_group: status_group, desc: @group.description }
+      render json: { status: "success" }
     else
       render json: { status: "fail" }
-    end
-  end
-
-  def get_data
-    group = Group.where(id: params[:id])
-    render json: { group: group }
-  end
-
-  def destroy_page
-    @group_destroy = Group.find(params[:id])
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def destroy_multiple
-    if params[:group_ids] != nil
-      @group = Group.find(params[:group_ids])
-      id = []
-      @group.each do |group|
-        group.update_attribute(:is_delete, true)
-        UserGroup.delete_by(group_id: group.id)
-        id << group.id
-      end
-      render json: { id: id }
     end
   end
 

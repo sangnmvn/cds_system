@@ -1,12 +1,6 @@
 <%= stylesheet_link_tag 'jquery.dataTables.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'user_group', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%= stylesheet_link_tag 'group', media: 'all', 'data-turbolinks-track': 'reload' %>
-<input type="hidden" value="<%= true %>" class="get_privilege">
+<%= stylesheet_link_tag 'group_new', media: 'all', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :groups %>
-<script>
-  var full_access = <%= @full_access %>
-  var view = <%= @view %>
-</script>
 <!-- Modal show -->
 <div id="modal_content" class="modal_destroy">
   <div class="modal fade modal-form-add" id="modal_destroy" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -18,40 +12,42 @@
 </div>
 <div class="container-fluid">
   <div class="container-fluid">
-    <!-- Control the column width, and how they should appear on different devices -->
     <div class="row">
-      <div class="col-sm-12">
-        <% if @full_access %>
-          <%= render 'add'  %>
-          <%= render 'delete_selected'%>
-          <%= render 'edit'  %>
-          <%= render 'assign_user'  %>
-          <%= render 'privilege'%>
-        <%end%>
-      </div>
-      <div class="col-sm-12">
-        <div class="col-sm-12 table_group_wrapper">
-          <!-- table -->
-          <%= render partial: 'groups', locals: {groups: @groups} %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-2">
-        </div>
-        <div class="col-sm-10">
-        </div>
+      <div class="col-sm-12 table-group-wrapper">
+        <table class="table table-striped table-bordered table-sm table-group" id="table_group">
+          <thead>
+            <tr>
+              <th class="type-icon no">No.</th>
+              <th class="type-icon name" >Name</th>
+              <th class="type-icon description">Description</th>
+              <th class="type-icon number-user">Number of User</th>
+              <th class="type-icon status">Status</th>
+              <th class="type-icon action">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
-</div>
-</div>
-</div>
+<% if @full_access %>
+  <%= render 'add'  %>
+  <%= render 'edit'  %>
+  <%= render 'assign_user'  %>
+  <%= render 'privilege'%>
+  <%= render 'modal_destroy'%>
+<%end%>
 <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
 <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 <script>
   var full_access = <%= @full_access %>;
+  var view = <%= @view %>;
+  var is_sending = false;
+  var delete_users_group = [];
+  var add_users_group = [];
+  var current_users_group = [];
 </script>
 <%= javascript_include_tag 'bootbox.all', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'user_group', 'data-turbolinks-track': 'reload' %>
-<%= javascript_include_tag 'group', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'group_new', 'data-turbolinks-track': 'reload' %>

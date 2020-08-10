@@ -23,6 +23,10 @@ $color-disable: #afaaaa;
     display: none;
 }
 
+.disabled {
+    cursor: default !important;
+}
+
 .table-mytable tbody tr:nth-of-type(even) {
     background-color: #E9EBF5;
 }
@@ -174,7 +178,7 @@ $color-disable: #afaaaa;
     color: #fff;
 }
 
-.resource_selection_toggle_cell {
+.resource-selection-toggle-cell {
     text-align: center;
     vertical-align: middle;
 }

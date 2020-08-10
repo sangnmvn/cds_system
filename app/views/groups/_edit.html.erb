@@ -9,7 +9,6 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <!-- Modal body -->
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
@@ -17,56 +16,50 @@
               <p style="color:red">(*) required fields</p>
             </div>
             <div class="col-sm-12">
-              <%# group name %>
               <div class="row">
                 <div class="col-sm-3">
                   <label>Group Name (*)</label>
                 </div>
                 <div class="col-sm-9">
-                  <%= text_field_tag 'name', nil, class: 'form-control edit-group', placeholder: 'Please enter group name' %>
+                  <%= text_field_tag 'edit_group_name', nil, class: 'form-control edit-group', placeholder: 'Please enter group name' %>
                 </div>
               </div>
               <br>
-              <%# status %>
               <div class="row">
                 <div class="col-sm-3">
                   <label>Status (*)</label>
                 </div>
                 <div class="col-sm-9">
-                  <span><%= radio_button_tag 'status', "Enable", false, class: "status-edit" %> Enable<span>
-                      &emsp;
-                      <span><%= radio_button_tag 'status', "Disable", false, class: "status-edit" %> Disable<span>
-                          <div id="error-status"></div>
-                        </div>
-                      </div>
-                      <br>
-                      <%# Description %>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <label>Description</label>
-                        </div>
-                        <div class="col-sm-9">
-                          <%= text_area_tag 'desc', nil, rows: 5, style: 'width:100%;', class: 'edit-desc' %>
-                        </div>
-                      </div>
-                      <br>
-                    </div>
-                  </div>
-                  <div style="text-align: center">
-                    <%= hidden_field(:group, :id) %>
-                    
-                  </div>
-                  <%# end container  %>
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer" style="justify-content: center;">
-                  <button type="button" class="btn btn-primary" id="btn-submit-edit-user-group">Save</button>
-                  <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+                  <span><%= radio_button_tag 'edit_status', "Enable", false, class: "status-edit" %> Enable</span>
+                  &emsp;
+                  <span><%= radio_button_tag 'edit_status', "Disable", false, class: "status-edit" %> Disable</span>
+                  <div id="error-status"></div>
                 </div>
               </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Description</label>
+                </div>
+                <div class="col-sm-9">
+                  <%= text_area_tag 'edit_group_description', nil, rows: 5, style: 'width:100%;', class: 'edit-desc' %>
+                </div>
+              </div>
+              <br>
             </div>
           </div>
+          <div style="text-align: center">
+            <%= hidden_field(:group, :id) %>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: center;">
+          <button class="btn btn-primary" id="edit_save">Save</button>
+          <button class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+</div>
+</div>
+</div>
