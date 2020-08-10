@@ -122,8 +122,9 @@ module Api
 
     def data_users_by_role
       h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.name").count
+      h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.abbreviation").count
 
-      { data: h_users, total: h_users.values.sum }
+      { data: h_users, data_small: h_users_small, total: h_users.values.sum }
     end
 
     def edit_user_profile

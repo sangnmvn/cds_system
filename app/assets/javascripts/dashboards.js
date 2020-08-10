@@ -13,7 +13,7 @@ function drawChartGender(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employee(s) by Gender")
+      drawPieChart(response, response.total, "#chart_gender", "Number of Employee(s) by Gender")
     }
   });
 }
@@ -27,7 +27,7 @@ function drawChartRole(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_role", "Number of Employee(s) by Role")
+      drawPieChart(response, response.total, "#chart_role", "Number of Employee(s) by Role")
     }
   });
 }

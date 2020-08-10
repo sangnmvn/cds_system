@@ -767,6 +767,7 @@ module Api
           value = data[:point]
           value_cdp = data[:point_cdp]
         end
+
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
@@ -776,10 +777,11 @@ module Api
             value_cdp = data[:final_point_cdp] || value_cdp
           end
         end
+
         type = "new"
         class_name = ""
         if data[:is_change]
-          class_name = if value_cdp && value.zero?
+          class_name = if !value_cdp.zero? && value.zero?
               "slot-cdp"
             elsif value > 2
               type = "assessed"
