@@ -9,13 +9,13 @@ function check_status(start, end, status_id) {
   end = Date.parse(end);
   let toDay = new Date()
   toDay = toDay.setHours(0, 0, 0, 0);
-  if (start <= toDay && end >= toDay)  {
+  if (start <= toDay && end >= toDay) {
     $(status_id).val("In-progress");
   }
   if (start > toDay) {
     $(status_id).val("New");
   }
-  if(toDay > end) {
+  if (toDay > end) {
     $(status_id).val("Done");
   }
 }
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     $('select[name=company] option:eq(1)').attr('selected', 'selected');
     //$('select[name=company]').attr("disabled", "true");
-    
+
   });
   $("#add_schedule_button").on("click", function () {
     $.ajax({
@@ -95,7 +95,7 @@ $(document).ready(function () {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
       },
       success: function (res) {
-        tpl = '<option value="">Please select a company</option>'
+        tpl = '<option value="">Please select a Company</option>'
         for (var i = 0; i < res.length; i++) {
           tpl += `<option value="${res[i][1]}">${res[i][0]}</option>`
         }
@@ -138,7 +138,6 @@ $(document).ready(function () {
     }
   })
 
-
   check_selectAll();
   action_add();
   action_edit();
@@ -148,7 +147,7 @@ $(document).ready(function () {
   $(attr_id_notify).change(function () {
     check_notify(end_date_id, attr_id_notify)
   })
-  
+
   $('#end_date').change(function () {
     var start = $(start_date_id).val();
     var end = $(end_date_id).val();
@@ -157,41 +156,41 @@ $(document).ready(function () {
 
   $("#schedule_table").dataTable({
     columnDefs: [{
-        "orderable": false,
-        "targets": 0
-      },
-      {
-        "orderable": true,
-        "targets": 1
-      },
-      {
-        "orderable": true,
-        "targets": 2
-      },
-      {
-        "orderable": true,
-        "targets": 3
-      },
-      {
-        "orderable": false,
-        "targets": 4
-      },
-      {
-        "orderable": false,
-        "targets": 5
-      },
-      {
-        "orderable": false,
-        "targets": 6
-      },
-      {
-        "orderable": false,
-        "targets": 7
-      },
-      {
-        "orderable": false,
-        "targets": 8
-      },
+      "orderable": false,
+      "targets": 0
+    },
+    {
+      "orderable": false,
+      "targets": 1
+    },
+    {
+      "orderable": true,
+      "targets": 2
+    },
+    {
+      "orderable": true,
+      "targets": 3
+    },
+    {
+      "orderable": false,
+      "targets": 4
+    },
+    {
+      "orderable": false,
+      "targets": 5
+    },
+    {
+      "orderable": false,
+      "targets": 6
+    },
+    {
+      "orderable": false,
+      "targets": 7
+    },
+    {
+      "orderable": false,
+      "targets": 8
+    },
     ],
     bDestroy: true,
     asStripeClasses: ["even", "odd"],
@@ -211,7 +210,7 @@ $(document).ready(function () {
 
   })
 
-  $('input[aria-controls="schedule_table"]').attr("placeholder", "Search by schedule name, company name")
+  $('input[aria-controls="schedule_table"]').attr("placeholder", "Search by Schedule Name, Company Name")
   $('input[aria-controls="schedule_table"]').attr('size', 32);
 
   $("#schedule_table_length").remove();
@@ -375,30 +374,21 @@ function on_click_btn() {
         $("#start_date").datepicker("setDate", start_date);
         $("#end_date").datepicker("setDate", end_date);
 
-        
-        $("select[name=company]").html(
-          '<option value="">Please select a company</option> \
-          <option value="{company_id}" selected="selected">{company_name}</option> \
-          '.formatUnicorn({
-            company_id: result.company_id,
-            company_name: result.company_name
-          }))
 
-          
+        $("select[name=company]").html(
+          `<option value="">Please select a Company</option>
+          <option value="{company_id}" selected="selected">{company_name}</option>
+          `.formatUnicorn({ company_id: result.company_id, company_name: result.company_name }))
+
+
         $("select[name=project]").html(
-          '<option value="">Please select a project</option> \
-          <option value="{project_id}" selected="selected">{project_name}</option> \
-          '.formatUnicorn({
-          project_id: result.project_id,
-          project_name: result.project_name
-          }))
+          `<option value="">Please select a Project</option>
+          <option value="{project_id}" selected="selected">{project_name}</option>
+          `.formatUnicorn({ project_id: result.project_id, project_name: result.project_name }))
         $("select[name=schedule_hr_parent]").html(
-          '<option value="">Please select an assessment period</option> \
-           <option value="{period_id}" selected="selected"">{assessment_period}</option> \
-          '.formatUnicorn({
-            period_id: result.period_id,
-            assessment_period: result.assessment_period
-          }))
+          `<option value="">Please select an Assessment Period</option>
+          <option value="{period_id}" selected="selected"">{assessment_period}</option>
+          `.formatUnicorn({ period_id: result.period_id, assessment_period: result.assessment_period }))
 
         $("#notify_member").val(result.notify_employee);
         $("#status").val(result.status);
@@ -427,7 +417,7 @@ function on_click_btn() {
         datepicker_setup([attr_start_date_id, attr_end_date_id, attr_end_date_member_id, attr_end_date_reviewer_id], [attr_from_date, attr_to_date]);
         change_notify(attr_end_date_id, attr_id_notify);
 
-        action_edit();                
+        action_edit();
       }
     });
   });
@@ -512,8 +502,7 @@ function datepicker_setup(arr_date, period_date) {
     }
   }
 
-  if ($("#schedule_task").val() == "edit")
-  {
+  if ($("#schedule_task").val() == "edit") {
     for (i = 0; i <= period_date.length; i++) {
       $(period_date[i]).datepicker('destroy');
       $(period_date[i]).datepicker({
@@ -521,11 +510,10 @@ function datepicker_setup(arr_date, period_date) {
         todayHighlight: true,
         autoclose: true,
         format: "M dd, yyyy"
-     })
+      })
     }
   }
-  else
-  {
+  else {
     for (i = 0; i <= period_date.length; i++) {
       $(period_date[i]).datepicker('destroy');
       $(period_date[i]).datepicker({
@@ -534,7 +522,7 @@ function datepicker_setup(arr_date, period_date) {
         startDate: toDay,
         autoclose: true,
         format: "M dd, yyyy"
-     })
+      })
     }
   }
 }
@@ -571,53 +559,53 @@ function action_add() {
     // check date start and end
     if (project_id == '' && user_role == "PM") {
       temp = false;
-      $('#project').after('<div class="offset-sm-12 col-sm-12"><span class="error">Project ID cannot be blank.</span></div>');
+      $('#project').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select a Project.</span></div>');
     }
 
     if (period_id == '' && user_role == "PM") {
       temp = false;
-      $('#schedule_hr_parent').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period ID cannot be blank.</span></div>');
+      $('#schedule_hr_parent').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select an Assessment Period.</span></div>');
     }
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
-      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date must be greater than start date.</span></div>')
+      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
     }
 
     if (Date.parse(from_date) >= Date.parse(to_date)) {
       temp = false;
-      $('#to_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period end date must be greater than period start date.</span></div>')
+      $('#to_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
     }
 
     if (Date.parse(start_date) < Date.parse(from_date)) {
       temp = false;
-      $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Start date must be greater than period from date.</span></div>')
+      $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
     }
 
     if (user_role == "PM") {
       if (Date.parse(end_date_member) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be greater than start date.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be greater than start date.</span></div>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date for HR.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be less than End Date HR.</span></div>');
       } else if (end_date_member == "") {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Member.</span></div>')
       }
 
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start date must be less than end date for reviewer.</span></div>');
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be less than End Date Reviewer.</span></div>');
       } else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for member must be less than end date for reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be less than End Date Reviewer.</span></div>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be less than end date for HR.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Reviewer must be less than End Date HR.</span></div>')
       } else if (end_date_reviewer == "") {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Reviewer.</span></div>')
       }
     }
 
@@ -629,61 +617,71 @@ function action_add() {
 
     if (end_date_member_reminder > end_date_reviewer) {
       temp = false;
-      $('#end_date_reviewer').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date for reviewer must be greater than end date for member reminder.</span></div>');
+      $('#end_date_reviewer').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Reviewer must be greater than End Date Member reminder.</span></div>');
     }
 
     var start_date_val = new Date(start_date);
 
     if (end_date_member_reminder <= start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
+      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member reminder must be greater than End Date Member reminder.</span></div>')
     } else if (end_date_reviewer_reminder <= start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date member reminder must be greater than end date member reminder.</span></div>')
+      $('#notify_member_content').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member reminder must be greater than End Date Member reminder.</span></div>')
     }
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
       temp = false;
-      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End date must be greater than start date.</span></div>')
+      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
     }
 
     if (from_date == "") {
       temp = false;
-      $('#from_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter from date.</span></div>')
+      $('#from_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter From Date.</span></div>')
     }
     if (to_date == "") {
       temp = false;
-      $('#to_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter to date.</span></div>')
+      $('#to_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter To Date.</span></div>')
     }
     if (start_date == "") {
       temp = false;
-      $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter start date.</span></div>')
+      $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Start Date.</span></div>')
     }
 
     if (end_date == "") {
       temp = false;
-      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date.</span></div>')
+      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date.</span></div>')
     }
     // end check date
 
     if (schedule_name == "") {
       temp = false;
-      $('#desc').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter schedule name.</span></div>')
+      $('#desc').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Schedule Name.</span></div>')
     }
 
     if (company == "") {
       temp = false;
-      $('#company').after('<div class="offset-sm-12 col-sm-12"><span class="error">Company name cannot be blank.</span></div>')
+      $('#company').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select a Company.</span></div>')
     }
 
     if (notify_hr == "") {
       temp = false;
-      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter notify date.</span></div>')
+      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
     }
 
     if (notify_hr < 0) {
       temp = false;
-      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Notify date must be greater than current date.</span></div>')
+      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder must be greater than current date.</span></div>')
+    }
+
+    if (notify_member == "") {
+      temp = false;
+      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
+    }
+
+    if (notify_member < 0) {
+      temp = false;
+      $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder must be greater than current date.</span></div>')
     }
 
     if (temp == true) {
@@ -802,7 +800,7 @@ function action_add() {
   });
 
   $('select[name=company] option:eq(1)').attr('selected', 'selected');
-  $('select[name=company]').attr("disabled", "true");  
+  $('select[name=company]').attr("disabled", "true");
 }
 
 function action_edit() {
@@ -836,17 +834,17 @@ function action_edit() {
 
     if (end_date_member_reminder > end_date_reviewer) {
       temp = false;
-      $('#end_date_reviewer').after('<span class="error">End date reviewer must be greater than end date member reminder.</span>')
+      $('#end_date_reviewer').after('<span class="error">End date reviewer must be greater than End Date Member reminder.</span>')
     }
 
     var start_date_val = new Date(start_date);
 
     if (end_date_member_reminder <= start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
+      $('#notify_member_content').after('<br><span class="error">End Date Member reminder must be greater than End Date Member reminder.</span>')
     } else if (end_date_reviewer_reminder <= start_date_val) {
       temp = false;
-      $('#notify_member_content').after('<br><span class="error">End date member reminder must be greater than end date member reminder.</span>')
+      $('#notify_member_content').after('<br><span class="error">End Date Member reminder must be greater than End Date Member reminder.</span>')
     }
 
     if (Date.parse(start_date) >= Date.parse(end_date)) {
@@ -867,27 +865,27 @@ function action_edit() {
     if (user_role == "PM") {
       if (Date.parse(end_date_member) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_member_id).after('<span class="error">End date for member must be greater than start date.</span>');
+        $(end_date_member_id).after('<span class="error">End Date Member must be greater than start date.</span>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<span class="error">End date for member must be less than end date.</span>');
+        $(end_date_member_id).after('<span class="error">End Date Member must be less than end date.</span>');
       } else if (end_date_member == "") {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for member.</span></div>')
+        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Member.</span></div>')
       }
 
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">Start date must be less than end date for reviewer.</span>');
+        $(end_date_reviewer_id).after('<span class="error">Start date must be less than End Date Reviewer.</span>');
       } else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">End date for member must be less than end date for reviewer.</span>')
+        $(end_date_reviewer_id).after('<span class="error">End Date Member must be less than End Date Reviewer.</span>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<span class="error">End date for reviewer must be less than end date.</span>')
+        $(end_date_reviewer_id).after('<span class="error">End Date Reviewer must be less than end date.</span>')
       } else if (end_date_reviewer == "") {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter end date for reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Reviewer.</span></div>')
       }
     }
 
@@ -992,7 +990,7 @@ function delete_schedule() {
     headers: {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
-    beforeSend: function () {},
+    beforeSend: function () { },
     success: function (res) {
       $('.lmask').hide();
       check_selectAll();
