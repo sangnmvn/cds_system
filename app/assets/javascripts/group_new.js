@@ -535,6 +535,9 @@ function formatDataAssignUsers(data, type_table) {
       "searchPlaceholder": "Search by Full Name, Account",
       "info": " _START_ - _END_ of _TOTAL_"
     },
+    "fnDrawCallback": function (dataSource) {
+      nextPagePopupAssign(type_table);
+    },
     "columnDefs": [
       {
         "searchable": false,
@@ -607,6 +610,9 @@ function eventButtonLeftRightAssign(main_type, diff_type) {
       $(`#table_${diff_type} tbody`).html('<tr><th class="type-icon" style="background-color: #cfd5ea" colspan="4">No data available on this table</th></tr>');
       $(`.select-all-${diff_type}`).prop('disabled', true);
     }
+    $(`.table-${diff_type} tbody :checkbox:checked`).each(function (index, el) {
+      $(el).click();
+    });
   });
 }
 
@@ -637,14 +643,22 @@ function addAssignUser(group) {
   })
 }
 
-function searchChange(main_type) {
-  $(`#table_${main_type}_filter input`).on('keyup', function () {
-    if ($(`#table_${main_type} tbody :checkbox`).length == 0) {
-      $(`#table_${main_type} tbody`).html('<tr><th class="type-icon" style="background-color: #cfd5ea" colspan="4">No data available on this table</th></tr>');
-      $(`.select-all-${main_type}`).prop('disabled', true);
+function searchChange(type_table) {
+  $(`#table_${type_table}_filter input`).on('keyup', function () {
+    if ($(`#table_${type_table} tbody :checkbox`).length == 0) {
+      $(`#table_${type_table} tbody`).html('<tr><th class="type-icon" style="background-color: #cfd5ea" colspan="4">No data available on this table</th></tr>');
+      $(`.select-all-${type_table}`).prop('disabled', true);
     } else {
-      $(`.select-all-${main_type}`).prop('disabled', false);
+      $(`.select-all-${type_table}`).prop('disabled', false);
     }
   })
 }
 
+function nextPagePopupAssign(type_table) {
+  $(`#table_${type_table}_user .paginate_button`).on('click', function () {
+    $('.select-all-' + type_table).click();
+    $(`.table-${type_table} tbody :checkbox:checked`).each(function (index, el) {
+      $(el).click();
+    });
+  })
+}
