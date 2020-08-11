@@ -423,7 +423,7 @@ function eventButtonLeftRight(main_type, diff_type) {
 }
 
 function savePrivileges(group_id) {
-  $('#save_group').on('click', function () {
+  $('#save_group').off('click').on('click', function () {
     $('#save_group').prop('disabled', true);
     var save_arr = [];
     $(`.table-right tbody :checkbox`).each(function (key, value) {
