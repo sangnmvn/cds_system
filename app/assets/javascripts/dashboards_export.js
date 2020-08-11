@@ -12,7 +12,7 @@ function callAjaxExport(url, ext, number_period_keep) {
     success: function (response) {
       // download this file in NEW TAB
       if (response.file_path == "") {
-        alert("File is empty!");
+        fails("There is no data to export. Please select another filter.");
       } else {
         window.open("/" + response.file_path, '_blank');
       }

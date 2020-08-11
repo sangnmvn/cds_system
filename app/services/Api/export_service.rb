@@ -154,11 +154,6 @@ module Api
     end
 
     def data_users_up_title_export
-      filter_users = {}
-      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
-      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
-
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
@@ -184,8 +179,8 @@ module Api
         }
       end
       results = {}
-      companies_id = @params[:company_id]
-      if companies_id == "All"
+      companies_id = filter_users[:company_id]
+      if companies_id.nil?
         companies = Company.all
       else
         companies = Company.where(id: companies_id)
@@ -213,6 +208,7 @@ module Api
             period_prev_name: prev_period[:name],
           }
         end
+
         results[company_id][:users] << {
           full_name: title&.user&.format_name_vietnamese,
           email: title&.user&.email,
@@ -224,34 +220,11 @@ module Api
           title_prev: prev_period[:title],
         }
       end
-      # results = {}
-      # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
-      #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
-      #               { full_name: "Nguyen Van D", email: "nguyenvand@gmail.com", rank: 4, level: 2, title: "Title 4-2", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
-      #               { full_name: "Nguyen Van E", email: "nguyenvane@gmail.com", rank: 2, level: 5, title: "Title 2-5", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van F", email: "nguyenvanf@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van G", email: "nguyenvang@gmail.com", rank: 4, level: 1, title: "Title 3-1", rank_prev: 3, level_prev: 1, title_prev: "Title 3-1" },
-      #               { full_name: "Nguyen Van H", email: "nguyenvanha@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van I", email: "nguyenvani@gmail.com", rank: 2, level: 3, title: "Title 2-3", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" }]
-      # results[3] = {}
-      # results[3][:users] = temp_users
-      # results[3][:company_name] = h_companies[3]
-      # results[3][:period] = 50
-      # results[3][:prev_period] = 40
-      # results[3][:period_excel_name] = "20200901"
-      # results[3][:period_name] = "09/2020"
-      # results[3][:period_prev_name] = "02/2020"
 
       { data: results }
     end
 
     def data_users_down_title_export
-      filter_users = {}
-      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
-      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
-      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
-
       user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
 
@@ -321,49 +294,11 @@ module Api
         }
       end
 
-      # results = {}
-      # temp_users = [{ full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-      #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-      #               { full_name: "Nguyen Duc D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
-      #               { full_name: "Nguyen Duc E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc F", email: "nguyenducf@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc G", email: "nguyenducg@gmail.com", rank_prev: 4, level_prev: 1, title_prev: "Title 3-1", rank: 3, level: 1, title: "Title 3-1" },
-      #               { full_name: "Nguyen Duc H", email: "nguyenducha@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc I", email: "nguyenduci@gmail.com", rank_prev: 2, level_prev: 3, title_prev: "Title 2-3", rank: 1, level: 1, title: "Title 1-1" }]
-      # results[3] = {}
-      # results[3][:users] = temp_users
-      # results[3][:company_name] = h_companies[3]
-      # results[3][:period] = 50
-      # results[3][:prev_period] = 40
-      # results[3][:period_excel_name] = "20200901"
-      # results[3][:period_name] = "09/2020"
-      # results[3][:period_prev_name] = "02/2020"
-
-      # temp_users = [{ full_name: "Nguyen Minh A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-      #               { full_name: "Nguyen Minh B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Minh C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-      #               { full_name: "Nguyen Minh D", email: "nguyenducd@gmail.com", rank_prev: 4, level_prev: 2, title_prev: "Title 4-2", rank: 3, level: 1, title: "Title 3-1" },
-      #               { full_name: "Nguyen Minh E", email: "nguyenduce@gmail.com", rank_prev: 2, level_prev: 5, title_prev: "Title 2-5", rank: 1, level: 1, title: "Title 1-1" }]
-      # results[2] = {}
-      # results[2][:users] = temp_users
-      # results[2][:company_name] = h_companies[2]
-      # results[2][:period] = 50
-      # results[2][:prev_period] = 40
-      # results[2][:period_excel_name] = "20200901"
-      # results[2][:period_name] = "09/2020"
-      # results[2][:period_prev_name] = "02/2020"
-
       { data: results }
     end
 
     def data_users_keep_title_export
       number_keep = @params[:number_period_keep].to_i
-      filter_users = {}
-      filter_users[:company_id] = @params[:company_id] unless @params[:company_id] == "All"
-      filter_users[:"project_members.project_id"] = @params[:project_id] unless @params[:project_id] == "All"
-      filter_users[:role_id] = @params[:role_id] unless @params[:role_id] == "All"
-
       if filter_users[:company_id].nil?
         companies = Company.all
       else
@@ -409,22 +344,6 @@ module Api
           period_from_name: title&.period_keep&.format_to_date,
         }
       end
-
-      # results = {}
-      # temp_users = [{ full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, title: "Title 2-1", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 3, level: 2, title: "Title 3-2", period_from_name: "08/2019" },
-      #               { full_name: "Le Khac D", email: "lekhacd@gmail.com", rank: 4, level: 2, title: "Title 4-2", period_from_name: "08/2019" },
-      #               { full_name: "Le Khac E", email: "lekhace@gmail.com", rank: 2, level: 5, title: "Title 2-5", period_from_name: "08/2019" },
-      #               { full_name: "Le Khac F", email: "lekhacf@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "08/2019" },
-      #               { full_name: "Le Khac G", email: "lekhacg@gmail.com", rank: 4, level: 1, title: "Title 3-1", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac H", email: "lekhaca@gmail.com", rank: 2, level: 2, title: "Title 2-2", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac I", email: "lekhaci@gmail.com", rank: 2, level: 3, title: "Title 2-3", period_from_name: "02/2019" }]
-      # results[3] = {}
-      # results[3][:users] = temp_users
-      # results[3][:company_name] = h_companies[3]
-      # results[3][:period_excel_name] = "20200901"
-      # results[3][:period_name] = "09/2020"
 
       { data: results }
     end
@@ -732,6 +651,7 @@ module Api
       out_data = data_users_up_title_export
       h_list = out_data[:data]
       out_file_names = []
+
       return "" if out_data.nil? || out_data.empty? || h_list.nil?
       return "" if h_list.keys.empty?
 
@@ -793,6 +713,7 @@ module Api
           out_file_names << File.basename("#{out_file_name}.pdf")
         end
       end
+      
       zip_file_name = "CDS_Promotion_Employee_List.zip"
       final_file_name = repack_zip_if_multiple(out_file_names, zip_file_name)
       schedule_file_for_clean_up(final_file_name)
@@ -1014,5 +935,20 @@ module Api
         File.delete(file_name) if File.exist?(file_name)
       end
     end
+  end
+
+  private
+
+  def filter_users
+    filter = {
+      status: true,
+      is_delete: false,
+    }
+
+    filter[:company_id] = params[:company_id].map(&:to_i) if params[:company_id].present? && params[:company_id].first != "All"
+    filter[:role_id] = params[:role_id].map(&:to_i) if params[:role_id].present? && params[:role_id].first != "All"
+    filter[:project_members] = { project_id: params[:project_id].map(&:to_i) } if params[:project_id].present? && params[:project_id].first != "All"
+
+    filter
   end
 end

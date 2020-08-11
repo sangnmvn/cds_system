@@ -1,7 +1,7 @@
 // filter select company
 $(document).ready(function () {
   var end_date = new Date();
-  end_date.setDate(end_date.getDate()-1);
+  end_date.setDate(end_date.getDate() - 1);
   $(".joined-date").datepicker({
     todayBtn: "linked",
     todayHighlight: true,
@@ -358,9 +358,9 @@ function checkName(input) {
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
-  var user_account = $(this).data("user_firstname") + " " + $(this).data("user_lastname");
+  var user_full_name = $(this).data("user_full_name");
   $(".delete_id").val(user_id);
-  $(".display_user_account_delete").html(user_account);
+  $(".display_user_account_delete").html(user_full_name);
 });
 
 function colorDisabledRowUser() {
@@ -423,17 +423,17 @@ function setup_dataTable() {
         "infoFiltered": ""
       },
       "columnDefs": [{
-          "orderable": false,
-          "targets": 0
-        },
-        {
-          "orderable": false,
-          "targets": 1
-        },
-        {
-          "orderable": false,
-          "targets": 9
-        },
+        "orderable": false,
+        "targets": 0
+      },
+      {
+        "orderable": false,
+        "targets": 1
+      },
+      {
+        "orderable": false,
+        "targets": 9
+      },
       ],
     });
 
@@ -677,7 +677,6 @@ $(document).on("click", "#btn_modal_edit_user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
     $("#modalDeleteMultipleUsers").modal("show");
@@ -721,7 +720,6 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
     },
   });
 });
-
 
 // status user
 $(document).on("click", ".status_icon", function () {
@@ -768,6 +766,7 @@ $(document).on("click", "#btn-disable-multiple-users", function () {
     $(".display_number_users_disable").html("Please select the user you want disable ?");
   }
 });
+
 $(document).on("click", "#btn-enable-multiple-users", function () {
 
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
@@ -812,6 +811,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
     },
   });
 });
+
 $(document).on("click", ".btn-modal-enable-multiple-users", function () {
   var arr_id_user = [];
   $("#table_user_management tbody :checkbox:checked").each(function () {
@@ -842,5 +842,32 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
         fails("Disable");
       }
     },
+  });
+});
+
+$(document).on("click", ".reset-password", function () {
+  $('#confirm_reset_password').val($(this).data('user_id'));
+  $('.user-account-confirm-password').text($(this).data('user_account'));
+  $('#modalResetPassword').modal();
+});
+
+$(document).on("click", "#confirm_reset_password", function () {
+  $.ajax({
+    url: "/users/reset_password",
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      id: $(this).val()
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modalResetPassword').modal('hide');
+      if (response.status == 'success')
+        warning(`You have reset password for ${response.account} successfully.`);
+      else
+        fails("Can't reset password.");
+    }
   });
 });

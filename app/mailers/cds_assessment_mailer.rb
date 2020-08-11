@@ -18,7 +18,7 @@ class CdsAssessmentMailer < ApplicationMailer
         @emails += ", " + approver.email
       end
     end
-    mail(to: @emails, subject: "[CDS system] CDS/CDP Assessment Request to #{@action} CDS assessment for #{@name}")
+    mail(to: @emails, subject: "[CDS System] CDS/CDP Assessment Request to #{@action} CDS assessment for #{@name}")
   end
 
   def user_add_more_evidence
@@ -36,7 +36,7 @@ class CdsAssessmentMailer < ApplicationMailer
         @emails += ", " + reviewer.last
       end
     end
-    mail(to: @emails, subject: "[CDS system] Notify to review CDS/CDP assessment updates for #{@name}")
+    mail(to: @emails, subject: "[CDS System] Notify to review CDS/CDP assessment updates for #{@name}")
   end
 
   def reviewer_request_update
@@ -44,13 +44,13 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @slots = params[:slots]
-    mail(to: params[:staff].email, subject: "[CDS system] Request to update your CDS/CDP assessment")
+    mail(to: params[:staff].email, subject: "[CDS System] Request to update your CDS/CDP assessment")
   end
 
   def reviewer_cancel_request_update
     @name = params[:staff].account
     @slots = params[:slots]
-    mail(to: params[:staff].email, subject: "[CDS system] Cancel the request to update your CDS/CDP assessment")
+    mail(to: params[:staff].email, subject: "[CDS System] Cancel the request to update your CDS/CDP assessment")
   end
 
   def reviewer_requested_more_evidences
@@ -61,7 +61,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @from_date = params[:from_date]
     @to_date = params[:to_date]
     @emails = staff.email
-    mail(to: @emails, subject: "[CDS system] Request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+    mail(to: @emails, subject: "[CDS System] Request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
   end
 
   def staff_withdraw_CDS_CDP
@@ -78,7 +78,7 @@ class CdsAssessmentMailer < ApplicationMailer
         @emails += ", " + reviewer.last
       end
     end
-    mail(to: @emails, subject: "[CDS system] Withdraw CDS/CDP assessment of #{@account}")
+    mail(to: @emails, subject: "[CDS System] Withdraw CDS/CDP assessment of #{@account}")
   end
 
   def reviewer_cancelled_request_more_evidences
@@ -89,7 +89,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @recommend = params[:recommend]
     @emails = staff.email
 
-    mail(to: @emails, subject: "[CDS system] Cancel the request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
+    mail(to: @emails, subject: "[CDS System] Cancel the request to update your CDS assessment – competency #{@competency_name}/slot #{@slot_id}")
   end
 
   def email_to_pm
@@ -98,7 +98,7 @@ class CdsAssessmentMailer < ApplicationMailer
     staff = params[:staff]
     @staff_name = staff.account
     @emails = pm.email
-    mail(to: @emails, subject: "[CDS system] Notify to approve CDS for #{@staff_name}")
+    mail(to: @emails, subject: "[CDS System] Notify to approve CDS for #{@staff_name}")
   end
 
   def pm_approve_cds
@@ -111,7 +111,7 @@ class CdsAssessmentMailer < ApplicationMailer
     @to_date = params[:to_date]
     @emails = staff.email
 
-    mail(to: @emails, subject: "[CDS system] Temporary CDS title in period [from #{@from_date} to #{@to_date}]")
+    mail(to: @emails, subject: "[CDS System] Temporary CDS title in period [from #{@from_date} to #{@to_date}]")
   end
 
   def pm_re_approve_cds
@@ -124,6 +124,6 @@ class CdsAssessmentMailer < ApplicationMailer
     @to_date = params[:to_date]
     @emails = staff.email
 
-    mail(to: @emails, subject: "[CDS system] Temporary CDS title in period [from #{@from_date} to #{@to_date}] (update)")
+    mail(to: @emails, subject: "[CDS System] Temporary CDS title in period [from #{@from_date} to #{@to_date}] (update)")
   end
 end

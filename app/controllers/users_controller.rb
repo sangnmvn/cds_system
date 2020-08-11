@@ -283,6 +283,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def reset_password
+    user = User.find_for_authentication(id: params[:id])
+    return render json: { status: "success" } unless user.update(password: PASSWORD_DEFAULT)
+    Async.await do
+      UserMailer.with(account: user.account, email: user.email).reset_password_notif.deliver_later(wait: 30.seconds)
+    end
+    render json: { status: "success", account: user.account }
+  end
+
   private
 
   def format_data_load_add_reviewer(approver, current_approver, approve = true)

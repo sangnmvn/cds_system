@@ -1218,48 +1218,6 @@ module Api
       hash
     end
 
-    def get_recommend_appover(hash, form_slot)
-      period_id = 0
-      forms = Form.where(id: form_slot.form_id)
-      user_id = forms.pluck(:user_id)
-      project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
-      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-      user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
-      user_groups.each do |user|
-        line = LineManager.where(form_slot_id: form_slot, user_id: user.user_id).order(updated_at: :desc).first
-        if (line.blank?)
-          hash[:recommends] << {
-            given_point: "",
-            recommends: "",
-            name: User.find(user.user_id).account,
-            flag: "",
-            user_id: User.find(user.user_id).id,
-            is_final: "",
-            is_commit: "",
-            is_pm: true,
-          }
-        else
-          break if !period_id.zero? && period_id != line.period_id
-          period_id = line.period_id
-          if line.final && (line.given_point || 0) > 2
-            hash[:is_passed] = true
-            hash[:final_point] = line.given_point
-          end
-          hash[:recommends] << {
-            given_point: line.given_point || 0,
-            recommends: line.recommend || "",
-            name: User.find(line.user_id).account,
-            flag: line.flag || "",
-            user_id: line.user_id,
-            is_final: line.final,
-            is_commit: line.is_commit,
-            is_pm: true,
-          }
-        end
-      end
-      hash
-    end
-
     def get_recommend_by_period(line_managers)
       line_managers.map do |line|
         {
