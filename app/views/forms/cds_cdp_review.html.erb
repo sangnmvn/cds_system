@@ -68,8 +68,10 @@
 <div><%= render "modal_confirm_request" %></div>
 <div><%= render "modal_conflict" %></div>
 <div><%= render "modal_reject_cds" %></div>
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
 <script>
   var form_id = <%= @hash[:form_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;

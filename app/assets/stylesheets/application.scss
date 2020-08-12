@@ -11,17 +11,25 @@ $color-disable: #afaaaa;
 
 @import "bootstrap-datepicker";
 
+.error {
+    color: red;
+    padding-top: 3px;
+    padding-left: 5px;
+    font-size: 10px;
+}
+
 #alert-success,
 #alert-danger,
 #alert-warning {
     position: fixed;
     z-index: 3400;
     top: 10%;
-    left: 40%;
+    left: 35%;
     margin: 0 auto;
     text-align: center;
     display: none;
 }
+
 
 .disabled {
     cursor: default !important;

@@ -194,7 +194,10 @@
     </div>
   <% end %>
 </div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+</div>
 <script>
   var is_staff =  <%= !@can_view_chart && @can_view_career %>;
   var is_change_company = false;

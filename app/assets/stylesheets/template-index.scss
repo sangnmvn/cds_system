@@ -60,7 +60,6 @@ table thead {
 
 .add-template {
     display: inline-block;
-    float: right;
     padding-left: 10px;
 }
 
@@ -82,16 +81,6 @@ table thead {
     font-weight: bold;
 }
 
-#alert-success,
-#alert-danger {
-    position: absolute;
-    z-index: 3400;
-    top: 10%;
-    left: 50%;
-    margin: 0px auto;
-    text-align: center;
-    display: none;
-}
 
 #add_template_button {
     font-size: 80%;

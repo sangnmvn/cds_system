@@ -41,8 +41,8 @@ String.prototype.formatUnicorn =
       var key;
       var args =
         "string" === t || "number" === t ?
-        Array.prototype.slice.call(arguments) :
-        arguments[0];
+          Array.prototype.slice.call(arguments) :
+          arguments[0];
       for (key in args) {
         str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
       }
@@ -97,6 +97,7 @@ $(document).ready(function () {
 });
 
 function checkPrivilege() {
+  if (!privilege_array) return;
   if (!privilege_array.split(",").includes(organization)) {
     $(".privilate-organization-settings").css("display", "none");
   }

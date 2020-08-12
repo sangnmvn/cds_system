@@ -1,6 +1,3 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
   body{
       background:#70b3fb;
@@ -24,20 +21,8 @@
       width:40%;
       margin-bottom:10%;
   }
-  .btnForget{
-  
+  .btn-send{
       border:none;
-  }
-  .forget-password .dropdown{
-      width: 100%;
-      border: 1px solid #ced4da;
-      border-radius: .25rem;
-  }
-  .forget-password .dropdown button{
-      width: 100%;
-  }
-  .forget-password .dropdown ul{
-      width: 100%;
   }
 </style>
 <div class="container forget-password">
@@ -50,15 +35,14 @@
             <h2 class="text-center">Forgot Password?</h2>
             <p>You can reset your password here.</p>
             <form id="register-form" role="form" autocomplete="off" class="form" method="post">
-              <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-                <%= render "devise/shared/error_messages", resource: resource %>
+              <%= form_with(url: "/users/reset_password", method: "post") do |f| %>
                 <div class="form-group">
                   <div class="input-group">
-                    <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control",placeholder:"Please input your email" %>
+                    <input autofocus="autofocus" autocomplete="email" class="form-control" placeholder="Please input your email" type="email" name="email" id="email">
                   </div>
                 </div>
                 <div class="form-group">
-                  <%= f.submit "Send", class:"btn btn-lg btn-primary btn-block btnForget"%>
+                  <a class="btn btn-lg btn-primary btn-block btn-send" id="send_mail_forget_password" href="javascript:;">Send</a>
                   <%= render "users/shared/links" %>
                 </div>
               <% end %>
@@ -69,3 +53,8 @@
     </div>
   </div>
 </div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
+<%= javascript_include_tag 'password', 'data-turbolinks-track': 'reload' %>

@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get "periods/show"
 
-  devise_for :users
+  devise_for :users do
+    get "/users/sign_out" => "devise/sessions#destroy"
+    post "/users/create" => "users#create"
+  end
+
   resources :user_groups do
     collection do
       get :load_user_group
@@ -12,11 +16,7 @@ Rails.application.routes.draw do
       post :data_assign_user
     end
   end
-  # devise_for :users
-  devise_scope :users do
-    get "/users/sign_out" => "devise/sessions#destroy"
-    post "/users/create" => "users#create"
-  end
+
   resources :users do
     collection do
       get :check_emai_account
@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       post :add_approver
       post :add_reviewer_to_database
       post :reset_password
+      post :forgot_password
     end
   end
 

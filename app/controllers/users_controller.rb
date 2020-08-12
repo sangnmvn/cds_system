@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
-  before_action :get_privilege_id, :user_management_services
-  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
+  before_action :get_privilege_id, :user_management_services, except: [:forgot_password, :change_forgot_password]
+  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password, :forgot_password, :change_forgot_password]
+  skip_before_action :authenticate_user!, :only => [:forgot_password]
+
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   FULL_ACCESS = 1
@@ -290,6 +292,15 @@ class UsersController < ApplicationController
       UserMailer.with(account: user.account, email: user.email).reset_password_notif.deliver_later(wait: 30.seconds)
     end
     render json: { status: "success", account: user.account }
+  end
+
+  def forgot_password
+    user = User.find_for_authentication(email: params[:email])
+    return render json: { status: "fails" } if user.nil?
+    Async.await do
+      user.send_reset_password_instructions
+    end
+    render json: { status: "success" }
   end
 
   private
