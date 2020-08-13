@@ -258,7 +258,7 @@ class SchedulesController < ApplicationController
 
       schedule.each do |schedule|
         user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-        # ScheduleMailer.with(user: user.to_a, period: schedule.period).del_mailer.deliver_later(wait: 1.minute)
+        ScheduleMailer.with(user: user.to_a, period: schedule.period).del_mailer.deliver_later(wait: 1.minute)
         schedule.destroy
       end
       render json: { status: true }

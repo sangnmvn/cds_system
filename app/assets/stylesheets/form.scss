@@ -372,22 +372,6 @@ $color-disable: #afaaaa;
     }
 }
 
-.fail-slot {
-    color: red;
-}
-
-.pass-slot {
-    color: yellow;
-}
-
-.pass-slot:hover {
-    color: white;
-}
-
-.fail-slot:hover {
-    color: red;
-}
-
 .illustration .title {
     border: 1px solid #42719a;
     border-radius: 10px;
@@ -724,30 +708,6 @@ select:disabled {
                 left: 460px
             }
         }
-    }
-}
-
-.assessed {
-    background-color: #239B56 !important;
-
-    &.btn {
-        border: 1px solid #42719a;
-    }
-}
-
-.re-assessed-slots {
-    background-color: #4daae8 !important;
-
-    &.btn {
-        border: 1px solid #42719a;
-    }
-}
-
-.new {
-    background-color: white !important;
-
-    &.btn {
-        border: 1px solid #42719a;
     }
 }
 

@@ -2,14 +2,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title " style="text-align: center">Confirm Submit CDS</h4>
+        <h4 class="modal-title " style="text-align: center">Confirm Submit CDS/CDP Assessment</h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
-        <% if @period.present? %>
-          <p>Please select period for this CDS assessment.</p>
+        <% if !@hash[:resubmit] && @period.present? %>
+          <p>Please select period for this CDS/CDP Assessment.</p>
           <div class="row">
             <div class="col-2">
               Period:
@@ -23,20 +23,20 @@
             </div>
           </div>
         </div>
-        <p>Are you sure you want to submit this CDS for review / approval ?</p>
-      <% elsif @hash[:is_submit_late]%>
-        <p>Are you sure you want to submit this CDS for review / approval ?</p>
+        <p>Are you sure you want to submit this CDS/CDP for review/approval?</p>
+      <% elsif @hash[:is_submit_late] || @hash[:resubmit] %>
+        <p>Are you sure you want to submit this CDS/CDP for review/approval?</p>
       <% else %>
         <p>There is no period to submit your CDS/CDP. Please contact your Administrator to setup.</p>
       <% end %>
-    <div class="modal-footer" style="justify-content: center;">
-      <% if @period.present? || @hash[:is_submit_late] %>
-        <button type="button" class="btn btn-primary confirm-submit-cds">Yes</button>
-        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
-      <% else %>
-        <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
-      <% end %>
+      <div class="modal-footer" style="justify-content: center;">
+        <% if @period.present? || @hash[:is_submit_late] %>
+          <button type="button" class="btn btn-primary confirm-submit-cds">Yes</button>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
+        <% else %>
+          <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
 </div>

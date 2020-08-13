@@ -338,7 +338,7 @@ function hightlightChangeCompetency(id, level) {
   for (var i = 0; i < list_competency.length; i++) {
     if ($("#card" + i).attr("data-id-competency") == id) {
       $("#card" + i).css('backgroundColor', '#FBE5D6')
-      $("#collapse" + i).find('tr')[level].style.backgroundColor = '#99CCFF'
+      $("#collapse" + i).find('tr')[level].style.backgroundColor = '#FBE5D6'
     }
   }
 }

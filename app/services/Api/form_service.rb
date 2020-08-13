@@ -23,7 +23,7 @@ module Api
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
       return false if form.nil?
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      slots = Slot.distinct(:id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id).group(:id)
       slots = slots.where(level: params[:level]) if params[:level].present?
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
       form_slots = get_point_for_result(form_slots)
@@ -327,25 +327,6 @@ module Api
           same_role: prev_period[:role_name]&.downcase&.strip == title&.role_name&.downcase&.strip,
         }
       end
-      # results = {}
-      # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
-      #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
-      #               { full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-      #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-      #               { full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-1", title_prev: "Title 2-1", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-2", title_prev: "Title 2-2", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 3-2", title_prev: "Title 3-2", period_from_name: "08/2019" }]
-
-      # results[3] = {}
-      # results[3][:users] = temp_users
-      # results[3][:company_name] = h_companies[3]
-      # results[3][:period] = 50
-      # results[3][:prev_period] = 40
-      # results[3][:period_excel_name] = "20200901"
-      # results[3][:period_name] = "09/2020"
-      # results[3][:period_prev_name] = "02/2020"
 
       { data: results }
     end
@@ -509,7 +490,7 @@ module Api
         competency_id: param[:competency_id],
       }
       filter[:level] = param[:level] if param[:level].present?
-      slots = Slot.search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id)
+      slots = Slot.distinct(:id).search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id).group(:id)
       hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
@@ -572,16 +553,17 @@ module Api
     end
 
     def save_cds_staff
+      form = Form.find_by_id(params[:form_id])
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
-        form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        form = Form.find_by(id: params[:form_id])
+        form_slot = FormSlot.find_by(slot_id: params[:slot_id], form_id: params[:form_id])
+        form_slot.update(re_assess: true) if LineManager.where.not(period_id: form.period_id).present?
         return false if form.nil?
         if params[:point].present?
           comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
           old_comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
         else
           old_comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
-          comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
+          comment = Comment.find_by(form_slot_id: form_slot.id, point: nil)
         end
         is_commit = params[:is_commit] == "true"
         line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange", period_id: form.period_id)
@@ -593,7 +575,6 @@ module Api
         old_comment.update(is_delete: true) if old_comment.present?
         form_slot.update(is_change: true)
       end
-      form = Form.find_by_id(params[:form_id])
       result = preview_result(form)
       calculate_level(result[form_slot.slot.competency.name])
     end
@@ -731,18 +712,11 @@ module Api
 
         type = "new"
         class_name = ""
-        if data[:is_change]
-          class_name = if !value_cdp.zero? && value.zero?
-              "slot-cdp"
-            elsif value > 2
-              type = "assessed"
-              "pass-slot"
-            else
-              type = "assessed"
-              "fail-slot"
-            end
-        end
-
+        type = "assessed" if data[:is_change]
+        type = "re-assessed-slots" if data[:re_assess]
+        class_name = "slot-cdp" if !value_cdp.zero? && value.zero?
+        class_name = "fail-slot" if !value.zero? && value < 3
+        class_name = "pass-slot" if !value.zero? && value > 2
         h_slot = {
           value: value,
           value_cdp: value_cdp,
@@ -981,7 +955,13 @@ module Api
 
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
-      return "fail" if form.nil?
+      if form.nil?
+        form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
+        return "fail" if form.nil?
+        count_approver = Approver.where(user_id: current_user.id).count
+        return "fail" if !count_approver.zero? && count_approver > 1
+      end
+
       return "fail" unless reset_all_approver_submit_status(current_user.id)
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
@@ -1314,6 +1294,7 @@ module Api
           point_cdp: point_cdp || 0,
           is_commit: comments&.is_commit,
           is_change: form_slot.is_change,
+          re_assess: form_slot.re_assess,
           final_point_cdp: recommends[:final_point_cdp],
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],

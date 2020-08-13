@@ -88,7 +88,7 @@ class FormsController < ApplicationController
       role_name: user.role&.name || "",
     }
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where(status: "In-progress").order("periods.to_date")
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -120,6 +120,7 @@ class FormsController < ApplicationController
       @form_service.create_form_slot(form) if form_slot.empty?
     end
     @hash[:is_submit_late] = form.is_submit_late
+    @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-Progress")
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
