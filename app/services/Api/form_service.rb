@@ -948,7 +948,7 @@ module Api
         end
       end
       return "fail" unless form.update(is_approved: true, status: "Done")
-      FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
+      FormSlot.where(form_id: form.id, is_change: true, re_assess: true).update(is_change: false, re_assess: false)
 
       "success"
     end
