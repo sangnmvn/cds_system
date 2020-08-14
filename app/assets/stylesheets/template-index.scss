@@ -2,9 +2,10 @@ table {
     table-layout: fixed;
 }
 
-.red{
+.red {
     color: #ff0000;
 }
+
 #template-index th,
 td {
     border: 1px solid #fff;
@@ -61,13 +62,14 @@ table thead {
 .add-template {
     display: inline-block;
     padding-left: 10px;
-}
 
-.add-template button {
-    height: 100%;
-    border: 0;
-    background-color: #8da8db;
-    padding: 0 5px 0 0;
+    button {
+        float: right;
+        height: 100%;
+        border: 0;
+        background-color: #8da8db;
+        padding: 0 5px 0 0;
+    }
 }
 
 .breadcrumb a,

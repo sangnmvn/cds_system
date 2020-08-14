@@ -108,7 +108,9 @@ $(document).ready(function () {
       $("#ErrorDesc").attr("style", "display:block")
   })
   $(".nexttoStep3").click(function () {
-    templateId = $('#msform .row .id-template').attr("value")
+    templateId = $('#msform .row .id-template').attr("value");
+    $('#name').val('');
+    $('#desc').val('');
     loadCompetency(templateId);
     checkStatusTemplate(templateId);
     $("#hideIdSlot").html("");

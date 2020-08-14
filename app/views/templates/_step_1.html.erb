@@ -7,10 +7,10 @@
           <p style="color:red; text-align: left">(*) required fields</p>
           <%# Template name %>
           <div class="row">
-            <div class="col-md-2" style="text-align: left">
+            <div class="col-md-3" style="text-align: left">
               <label>Template Name (*)</label>
             </div>
-            <div class="col-md-10 name">
+            <div class="col-md name">
               <%= text_field_tag 'template', defined?(@template) ? @template[:name] : nil, class: 'val-input-step1 form-control border-primary', placeholder: 'Please enter template name' %>
               <div class="error"></div>
             </div>
@@ -18,10 +18,10 @@
           <br>
           <%# Role %>
           <div class="row">
-            <div class="col-md-2" style="text-align: left">
+            <div class="col-md-3" style="text-align: left">
               <label>Role (*)</label>
             </div>
-            <div class="col-md-4 role">
+            <div class="col-md role">
               <% if @current_role_id%>
                 <%= select_tag "role", options_from_collection_for_select(@roles, :id, :name, @current_role_id), class: 'val-input-step1 form-control border-primary' %>
               <% else %>
@@ -33,10 +33,10 @@
           <br>
           <%# Description %>
           <div class="row">
-            <div class="col-md-2" style="text-align: left">
+            <div class="col-md-3" style="text-align: left">
               <label>Description</label>
             </div>
-            <div class="col-md-10 description">
+            <div class="col-md description">
               <%= text_area_tag 'description',defined?(@template) ? @template[:description] : nil, rows: 5, style: 'width:100%;', class: 'val-input-step1 form-control border-primary' %>
               <div class="error"></div>
             </div>
@@ -44,11 +44,11 @@
           <br>
           <%# Status %>
           <div class="row">
-            <div class="col-md-2" style="text-align: left">
+            <div class="col-md-3" style="text-align: left">
               <label>Status</label>
             </div>
             <% if @template.present? %>
-              <div class="col-md-2 status_radio">
+              <div class="col-md-3 status_radio">
                 <%= radio_button_tag :status, 1, @template[:status], disabled: !( @template[:status] && @is_full_assess )%>
                 <%= label_tag(:status, "Enable") %>
               </div>
@@ -57,7 +57,7 @@
                 <%= label_tag(:status, "Disable") %>
               </div>
             <% else %>
-              <div class="col-md-2 status_radio" >
+              <div class="col-md-3 status_radio" >
                 <%= radio_button_tag :status, 1, false, disabled: true%>
                 <%= label_tag(:status, "Enable") %>
               </div>

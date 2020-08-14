@@ -11,9 +11,11 @@
 </div>
 <div class="container-fluid">
   <div class="template-header">
-    <span class="title">Template List</span>
-    <div class="add-template title">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
+    <div class="row">
+      <span class="title col-sm-3">Template List</span>
+      <div class="add-template title col-sm-9">
+        <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
+      </div>
     </div>
   </div>
   <div class="template-table">
