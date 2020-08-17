@@ -417,6 +417,7 @@ module Api
         competency_locations[slot.competency.id] ||= get_location_slot(slot.competency.id)
         results[competency_name] << competency_locations[slot.competency.id][slot.id]
       end
+
       results
     end
 
@@ -584,7 +585,13 @@ module Api
         if params[:type] == "CDS"
           Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          Comment.create!(is_commit: true, form_slot_id: params[:form_slot_id].to_i) if comment.nil?
+        else
+          Comment.where(form_slot_id: params[:form_slot_id].to_i).delete_all
+          form = Form.find_by_id(params[:form_id])
+          LineManager.where(form_slot_id: params[:form_slot_id].to_i, period_id: form.period_id).delete_all if form&.period
+          { status: "Delete" }
         end
       end
     end

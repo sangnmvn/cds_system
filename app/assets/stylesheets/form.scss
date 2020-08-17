@@ -58,17 +58,16 @@ $color-disable: #afaaaa;
     }
 
     #table_summary_comment {
-        td:nth-child(4) {
-            width: 60%;
-            text-align: left;
+        .period {
+            width: 20%;
         }
 
-        td:nth-child(3) {
-            text-align: left;
+        .user-name {
+            width: 15%;
         }
 
-        td:nth-child(2) {
-            text-align: left;
+        .commented-date {
+            width: 15%;
         }
     }
 }
@@ -140,54 +139,65 @@ $color-disable: #afaaaa;
 .table-cds-assessment-manager-list tr th {
     border: 1px solid white;
 }
+
 .table-cds-assessment-list {
     border: 2px solid #0066CC;
-	tr {
-		td {
-			padding: 0px 10px 0px 10px;
-			border: 1px solid white;
-			text-align: left;
-		}
-	}
-	thead {
-		tr {
-			th {
-				border: 1px solid white;
-			}
-		}
-	}
-	tbody {
-		tr {
-			td {
-				&:nth-child(1) {
-					width: 3%;
-				}
-				&:nth-child(2) {
-					width: 15%;
-				}
-				&:nth-child(3) {
-					width: 15%;
-				}
-				&:nth-child(4) {
-					width: 20%;
-					text-align: right !important;
-				}
-				&:nth-child(5) {
-					width: 5%;
-				}
-				&:nth-child(6) {
-					width: 5%;
-					text-align: left !important;
-				}
-				&:nth-child(7) {
-					width: 10%;
-				}
-				&:nth-child(8) {
-					width: 10%;
-				}
-			}
-		}
-	}
+
+    tr {
+        td {
+            padding: 0px 10px 0px 10px;
+            border: 1px solid white;
+            text-align: left;
+        }
+    }
+
+    thead {
+        tr {
+            th {
+                border: 1px solid white;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                &:nth-child(1) {
+                    width: 3%;
+                }
+
+                &:nth-child(2) {
+                    width: 15%;
+                }
+
+                &:nth-child(3) {
+                    width: 15%;
+                }
+
+                &:nth-child(4) {
+                    width: 20%;
+                    text-align: right !important;
+                }
+
+                &:nth-child(5) {
+                    width: 5%;
+                }
+
+                &:nth-child(6) {
+                    width: 5%;
+                    text-align: left !important;
+                }
+
+                &:nth-child(7) {
+                    width: 10%;
+                }
+
+                &:nth-child(8) {
+                    width: 10%;
+                }
+            }
+        }
+    }
 }
 
 .button-add-cds-assessment {
@@ -195,6 +205,7 @@ $color-disable: #afaaaa;
         color: #fff;
         background-color: #8da8db;
         border: none;
+
         &.disabled {
             background-color: #afaaaa;
         }

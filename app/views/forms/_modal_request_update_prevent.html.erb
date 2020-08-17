@@ -2,14 +2,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title " style="text-align: center">Warning</h4>
+        <h4 class="modal-title " style="text-align: center">Warning!</h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" style="text-align: left;">
         <p> There is at least one selected slot without comment.</p>
-        <p>Please enter comment if you want to request update from <%= @hash[:user_name] %>.</p>
+        <p>Please enter comment if you want to request update from <span style="font-weight: bold" id="staff_name"> <%= @hash[:user_account] %></span>.</p>
       </div>
       <div class="modal-footer" style="justify-content: center;">
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>

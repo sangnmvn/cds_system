@@ -114,7 +114,7 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
     },
     dataType: "json",
     success: function (response) {
-      success_message = "These slots have been requested more evidence successfully.";
+      success_message = "These slots have been requested more evidences successfully.";
       fails_message = "Can not requested"
       if (response.status == "success") {
         warning(success_message)

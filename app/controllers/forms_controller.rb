@@ -89,6 +89,7 @@ class FormsController < ApplicationController
     }
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
+
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -119,8 +120,9 @@ class FormsController < ApplicationController
       form_slot = FormSlot.where(form_id: form.id)
       @form_service.create_form_slot(form) if form_slot.empty?
     end
+
     @hash[:is_submit_late] = form.is_submit_late
-    @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-Progress")
+    @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-progress")
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
@@ -150,6 +152,7 @@ class FormsController < ApplicationController
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
+      user_account: user.account,
       form_id: form.id,
       status: (!approver&.is_approver && approver&.is_submit_cds) ? "Submited" : form.status,
       title: "CDS/CDP of #{user.role.name} - #{user.account}",
@@ -201,7 +204,7 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    if @is_reviewer || @is_approver
+    if (@privilege_array & [REVIEW_CDS, APPROVE_CDS]).any? && current_user.id != form.user_id
       h_result = @form_service.get_line_manager_miss_list
     end
 
@@ -408,11 +411,9 @@ class FormsController < ApplicationController
     user_id = user_id.present? ? user_id : current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-    @is_reviewer = false
     @is_approver = false
-    if @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
-      @is_reviewer = true
-    end
+    @is_reviewer = @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
+
     if @privilege_array.include?(APPROVE_CDS) && user_ids.include?(current_user.id)
       @is_reviewer = false
       @is_approver = true

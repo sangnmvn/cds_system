@@ -4,7 +4,7 @@
 <%= javascript_include_tag "cdp_event", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-<% breadcrumb :new_cdp %>
+<% breadcrumb :cds_cdp_review %>
 <div class="container-fluid">
   <div class="row" id="cdp_container_div2">
     <div class="col-md-4 div-header" ><span><%= @hash[:title] %></span><span id="status"><%= " (#{@hash[:status]})" %></span></div>
@@ -86,5 +86,6 @@
   var conflict_commits = {}
   var check_request_update = false;
   var user_name = "<%= @hash[:user_name] %>"
+  var user_account = "<%= @hash[:user_account] %>"
   loadDataPanel(form_id);
 </script>

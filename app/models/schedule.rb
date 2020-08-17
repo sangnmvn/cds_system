@@ -57,7 +57,7 @@ class Schedule < ApplicationRecord
       end_date = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
       today = Date.today.midnight
       if start_date <= today && end_date >= today
-        schedule.status = "In-Progress"
+        schedule.status = "In-progress"
       elsif today > start_date
         schedule.status = "New"
       elsif today > end_date
