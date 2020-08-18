@@ -381,7 +381,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
 }
 
 function checkDisableFormSlotsReviewer(tracking) {
-  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && !tracking.flag))
+  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "Orange"))
     return "disabled"
   return ""
 }
@@ -896,6 +896,8 @@ $(document).ready(function () {
       if (a.size > 0)
         str += `<p>&#8226;<b> ${key} / ${[...a].join()}</b></p>`
     });
+    if (str.split("<p>").length <= 2)
+      str = str.replace("<p>", "").replace("</p>", "");
     return str
   }
 

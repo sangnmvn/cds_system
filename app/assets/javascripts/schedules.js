@@ -31,13 +31,6 @@ function check_notify(end_date, notify) {
   }
 }
 
-
-function change_notify(end_date, notify) {
-  $(notify).change(function () {
-    check_notify(end_date, notify);
-  })
-}
-
 function reset_datepicker(arr_date) {
   for (i = 0; i <= arr_date.length; i++) {
     $(arr_date[i]).val('').datepicker('update');
@@ -127,10 +120,6 @@ $(document).ready(function () {
   action_add();
   view_schedule();
 
-
-  $(attr_id_notify).change(function () {
-    check_notify(end_date_id, attr_id_notify)
-  })
 
   $('#end_date').change(function () {
     var start = $(start_date_id).val();
@@ -270,7 +259,6 @@ function on_click_btn() {
         attr_end_date_reviewer_id = "#end_date_reviewer_edit"
 
         datepicker_setup([attr_start_date_id, attr_end_date_id, attr_end_date_member_id, attr_end_date_reviewer_id], [attr_from_date, attr_to_date]);
-        change_notify(attr_end_date_id, attr_id_notify);
       }
     });
   });
@@ -398,8 +386,6 @@ function on_click_btn() {
 
         }
         datepicker_setup([attr_start_date_id, attr_end_date_id, attr_end_date_member_id, attr_end_date_reviewer_id], [attr_from_date, attr_to_date]);
-        change_notify(attr_end_date_id, attr_id_notify);
-
       }
     });
   });
@@ -535,7 +521,7 @@ function action_add() {
     var project = $("#project").val();
     var schedule_task = $("#schedule_task").val();
     var temp = true;
-    $(".error").remove();
+    $(".error").parent().remove();
 
     // define date with moment
     var mm_start_date = moment(start_date);
@@ -562,6 +548,7 @@ function action_add() {
           <span class="error">
             Reminder of Member must be greater than Start Date HR and Current Date but lesser than End Date Member.
           </span>
+          <br>
           <span class="error">
             Reminder of Reviewer must be greater than End Date Member and Current Date but lesser than End Date Reviewer.
           </span>
