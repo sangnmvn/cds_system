@@ -713,7 +713,7 @@ module Api
           out_file_names << File.basename("#{out_file_name}.pdf")
         end
       end
-      
+
       zip_file_name = "CDS_Promotion_Employee_List.zip"
       final_file_name = repack_zip_if_multiple(out_file_names, zip_file_name)
       schedule_file_for_clean_up(final_file_name)
@@ -935,20 +935,22 @@ module Api
         File.delete(file_name) if File.exist?(file_name)
       end
     end
-  end
 
-  private
+    private
 
-  def filter_users
-    filter = {
-      status: true,
-      is_delete: false,
-    }
+    attr_accessor :params, :current_user
 
-    filter[:company_id] = params[:company_id].map(&:to_i) if params[:company_id].present? && params[:company_id].first != "All"
-    filter[:role_id] = params[:role_id].map(&:to_i) if params[:role_id].present? && params[:role_id].first != "All"
-    filter[:project_members] = { project_id: params[:project_id].map(&:to_i) } if params[:project_id].present? && params[:project_id].first != "All"
+    def filter_users
+      filter = {
+        status: true,
+        is_delete: false,
+      }
 
-    filter
+      filter[:company_id] = params[:company_id].map(&:to_i) if params[:company_id].present? && params[:company_id].first != "All"
+      filter[:role_id] = params[:role_id].map(&:to_i) if params[:role_id].present? && params[:role_id].first != "All"
+      filter[:project_members] = { project_id: params[:project_id].map(&:to_i) } if params[:project_id].present? && params[:project_id].first != "All"
+
+      filter
+    end
   end
 end
