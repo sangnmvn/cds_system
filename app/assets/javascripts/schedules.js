@@ -545,21 +545,6 @@ function action_add() {
     var mm_end_date_member = moment(end_date_member);
     var mm_end_date_reviewer = moment(end_date_reviewer);
 
-    if (mm_start_date.diff(mm_end_date, 'days') > 0) {
-      temp = false;
-      $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
-    }
-
-    if (mm_from_date.diff(mm_to_date, 'days') > 0) {
-      temp = false;
-      $('#to_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
-    }
-
-    if (mm_start_date.diff(mm_from_date, 'days') > 0) {
-      temp = false;
-      $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
-    }
-
     if (user_role == "PM") {
       if (!project_id) {
         temp = false;
@@ -632,7 +617,33 @@ function action_add() {
         temp = false;
         $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date.</span></div>')
       }
+
+      if (mm_start_date.diff(mm_end_date, 'days') > 0) {
+        temp = false;
+        $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
+      }
+
+      if (mm_from_date.diff(mm_to_date, 'days') > 0) {
+        temp = false;
+        $('#to_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
+      }
+
+      if (mm_start_date.diff(mm_from_date, 'days') > 0) {
+        temp = false;
+        $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
+      }
+
+      if (notify_hr == '') {
+        temp = false;
+        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
+      }
+
+      if (notify_hr < 0 || mm_end_date.diff(mm_start_date, 'days') < parseInt(notify_hr)) {
+        temp = false;
+        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
+      }
     }
+
     if (!schedule_name) {
       temp = false;
       $('#desc').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Schedule Name.</span></div>')
@@ -641,16 +652,6 @@ function action_add() {
     if (!company) {
       temp = false;
       $('#company').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select a Company.</span></div>')
-    }
-
-    if (notify_hr == '') {
-      temp = false;
-      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
-    }
-
-    if (notify_hr < 0 || mm_end_date.diff(mm_start_date, 'days') < parseInt(notify_hr)) {
-      temp = false;
-      $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
     }
 
     if (temp == true) {
