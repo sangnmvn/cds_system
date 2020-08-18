@@ -40,7 +40,18 @@ function initCheckbox() {
           data_checked_request[competency_name] = []
         if (!data_checked_request[competency_name].includes(slot_id))
           data_checked_request[competency_name].push(slot_id);
-        checked_set_is_empty_comment[chkbox_form_slot_id] = slot_wrapper.find("textarea.reviewer-self, textarea.approver-self").val().length == 0;
+        if (is_reviewer) {
+          let check = slot_wrapper.find("textarea.reviewer-self").val().length == 0;
+          if (slot_wrapper.find('.reviewer-commit').val() == 'commit_cds')
+            check = slot_wrapper.find('.reviewer-assessment').val() == null;
+          checked_set_is_empty_comment[chkbox_form_slot_id] = check;
+        }
+        if (is_approver) {
+          let check = slot_wrapper.find("textarea.approver-self").val().length == 0;
+          if (slot_wrapper.find('.approver-commit').val() == 'commit_cds')
+            check = slot_wrapper.find('.approver-assessment').val() == null;
+          checked_set_is_empty_comment[chkbox_form_slot_id] = check;
+        }
         if (slot_wrapper.find(".icon-flag").css('color') == "rgb(255, 165, 0)") {
           $("#button_cancel_request").removeClass("disabled");
           $("#icon_cancel_request").prop("style", "color:green");
