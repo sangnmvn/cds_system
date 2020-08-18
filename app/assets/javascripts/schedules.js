@@ -548,17 +548,17 @@ function action_add() {
     if (user_role == "PM") {
       if (!project_id) {
         temp = false;
-        $('#project').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select a Project.</span></div>');
+        $('#project').after('<div class="offset-sm-12"><span class="error">Please select a Project.</span></div>');
       }
 
       if (!period_id) {
         temp = false;
-        $('#schedule_hr_parent').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select an Assessment Period.</span></div>');
+        $('#schedule_hr_parent').after('<div class="offset-sm-12"><span class="error">Please select an Assessment Period.</span></div>');
       }
 
       if (notify_member < 0 || mm_end_date_member.diff(mm_start_date, 'days') < parseInt(notify_member) || mm_end_date_reviewer.diff(mm_start_date, 'days') < parseInt(notify_member)) {
         temp = false;
-        $('#notify_member').closest('div').children('em').after(`<div class="offset-sm-12 col-sm-12">
+        $('#notify_member').closest('div').children('em').after(`<div class="offset-sm-12">
           <span class="error">
             Reminder of Member must be greater than Start Date HR and Current Date but lesser than End Date Member.
           </span>
@@ -570,88 +570,88 @@ function action_add() {
 
       if (notify_member == "") {
         temp = false;
-        $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
+        $('#notify_member').closest('div').children('em').after('<div class="offset-sm-12"><span class="error">Please enter Reminder.</span></div>')
       }
 
       if (mm_start_date.diff(mm_end_date_member, 'days') >= 0) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be greater than start date.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12"><span class="error">End Date Member must be greater than start date.</span></div>');
       } else if (Date.parse(end_date_member) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be less than End Date HR.</span></div>');
+        $(end_date_member_id).after('<div class="offset-sm-12"><span class="error">End Date Member must be less than End Date HR.</span></div>');
       } else if (end_date_member == "") {
         temp = false;
-        $(end_date_member_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Member.</span></div>')
+        $(end_date_member_id).after('<div class="offset-sm-12"><span class="error">Please enter End Date Member.</span></div>')
       }
 
       if (Date.parse(end_date_reviewer) < Date.parse(start_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be less than End Date Reviewer.</span></div>');
+        $(end_date_reviewer_id).after('<div class="offset-sm-12"><span class="error">Start Date must be less than End Date Reviewer.</span></div>');
       } else if (Date.parse(end_date_reviewer) < Date.parse(end_date_member)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Member must be less than End Date Reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12"><span class="error">End Date Member must be less than End Date Reviewer.</span></div>')
       } else if (Date.parse(end_date_reviewer) > Date.parse(end_date)) {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date Reviewer must be less than End Date HR.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12"><span class="error">End Date Reviewer must be less than End Date HR.</span></div>')
       } else if (end_date_reviewer == "") {
         temp = false;
-        $(end_date_reviewer_id).after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date Reviewer.</span></div>')
+        $(end_date_reviewer_id).after('<div class="offset-sm-12"><span class="error">Please enter End Date Reviewer.</span></div>')
       }
     }
     else {
       if (!from_date) {
         temp = false;
-        $('#from_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter From Date.</span></div>')
+        $('#from_date').after('<div class="offset-sm-6"><span class="error">Please enter From Date.</span></div>')
       }
 
       if (!to_date) {
         temp = false;
-        $('#to_date').after('<div class="offset-sm-6 col-sm-6"><span class="error">Please enter To Date.</span></div>')
+        $('#to_date').after('<div class="offset-sm-6"><span class="error">Please enter To Date.</span></div>')
       }
       if (!start_date) {
         temp = false;
-        $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Start Date.</span></div>')
+        $('#start_date').after('<div class="offset-sm-12"><span class="error">Please enter Start Date.</span></div>')
       }
 
       if (!end_date) {
         temp = false;
-        $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter End Date.</span></div>')
+        $('#end_date').after('<div class="offset-sm-12"><span class="error">Please enter End Date.</span></div>')
       }
 
       if (mm_start_date.diff(mm_end_date, 'days') > 0) {
         temp = false;
-        $('#end_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
+        $('#end_date').after('<div class="offset-sm-12"><span class="error">End Date must be greater than Start Date.</span></div>')
       }
 
       if (mm_from_date.diff(mm_to_date, 'days') > 0) {
         temp = false;
-        $('#to_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
+        $('#to_date').after('<div class="offset-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
       }
 
       if (mm_start_date.diff(mm_from_date, 'days') > 0) {
         temp = false;
-        $('#start_date').after('<div class="offset-sm-12 col-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
+        $('#start_date').after('<div class="offset-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
       }
 
       if (notify_hr == '') {
         temp = false;
-        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Reminder.</span></div>')
+        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12"><span class="error">Please enter Reminder.</span></div>')
       }
 
       if (notify_hr < 0 || mm_end_date.diff(mm_start_date, 'days') < parseInt(notify_hr)) {
         temp = false;
-        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12 col-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
+        $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12"><span class="error">Reminder does not exceed date range from Start Date to End Date.</span></div>')
       }
     }
 
     if (!schedule_name) {
       temp = false;
-      $('#desc').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please enter Schedule Name.</span></div>')
+      $('#desc').after('<div class="offset-sm-12"><span class="error">Please enter Schedule Name.</span></div>')
     }
 
     if (!company) {
       temp = false;
-      $('#company').after('<div class="offset-sm-12 col-sm-12"><span class="error">Please select a Company.</span></div>')
+      $('#company').after('<div class="offset-sm-12"><span class="error">Please select a Company.</span></div>')
     }
 
     if (temp == true) {

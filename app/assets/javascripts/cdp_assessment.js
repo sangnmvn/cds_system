@@ -201,7 +201,7 @@ function loadDataSlots(response) {
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
                   <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
-                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
+                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" && e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
                   <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDP")}> Commit CDP</option>
                   </select>
                 </td>

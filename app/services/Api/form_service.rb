@@ -1136,9 +1136,7 @@ module Api
       end
       form_slots.map do |form_slot|
         comments = form_slot.comments.where(is_delete: false).first
-        if comments.nil?
-          comment_type = ""
-        else
+        if comments&.is_commit
           comment_type = comments.point.nil? ? "CDP" : "CDS"
         end
         recommends = get_recommend(form_slot)
@@ -1154,7 +1152,7 @@ module Api
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
-          comment_type: comment_type,
+          comment_type: comment_type || recommends[:comment_type],
         }
       end
       hash
@@ -1190,6 +1188,11 @@ module Api
             hash[:is_passed] = true
             hash[:final_point] = line.given_point
           end
+          comment_type = ""
+          
+          if line&.is_commit
+            comment_type = line.given_point.nil? ? "CDP" : "CDS"
+          end
           hash[:recommends] << {
             given_point: line.given_point || 0,
             recommends: line.recommend || "",
@@ -1197,7 +1200,8 @@ module Api
             flag: line.flag || "",
             user_id: line.user_id,
             is_final: line.final,
-            is_commit: line.is_commit,
+            comment_type: comment_type,
+            is_commit: line&.is_commit,
             is_pm: approver.is_approver,
           }
         end
