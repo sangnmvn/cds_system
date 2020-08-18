@@ -514,7 +514,8 @@ $(document).ready(function () {
       $("#modal_request_add_more_evidence #slot_id").html(findConflictinArr(data_checked_request))
       $("#modal_request_add_more_evidence").modal("show");
     } else {
-      // open warning model      
+      $("#modal_deny_request_update #data_slot").html(findConflictinArr(data_checked_request))
+      // open warning model
       $("#modal_deny_request_update").modal("show");
     }
   });
