@@ -49,7 +49,7 @@ jobs:
           command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
       - run:
           name: nodejs
-          command: sudo apt-get install libv8-dev
+          command: sudo apt install nodejs
       - run:
           name: Setup DB
           command: bundle exec rails db:create db:schema:load --trace
