@@ -1,15 +1,253 @@
+# This code is licensed from CircleCI to the user under the MIT license. See
+# https://circleci.com/orbs/registry/licensing for details.
 version: 2.1
-orbs:
-  ruby: circleci/ruby@0.1.2 
+
+description: |
+  Common commands for Ruby on Rails setup, code hygiene, and security checks
+  View this orb's source: https://github.com/Latermedia/circle-ci-ruby-rails-setup
+
+commands:
+  bundle-install:
+    description: Runs bundle install with cache restore and save
+    parameters:
+      path:
+        description: The path to install gems to
+        type: string
+        default: "vendor/bundle"
+      checksumfile:
+        description: A file to use as checksum for cache key, must be set for gems
+        type: string
+      cache-version:
+        description: A prefix to the cache key for versioning
+        type: string
+        default: "v1"
+      include-master-key:
+        description: Whether the master branch gemfile should be used as backup cache key, must be false for gems
+        type: boolean
+        default: true
+    steps:
+      - when:
+          condition: << parameters.include-master-key >>
+          steps:
+            - run:
+                name: Get the Gemfile.lock from the master branch
+                command: |
+                  git show master:Gemfile.lock > MasterGemfile.lock
+            - restore_cache:
+                keys:
+                  - << parameters.cache-version >>-dependencies-gem-{{ checksum "<< parameters.checksumfile >>" }}
+                  - << parameters.cache-version >>-dependencies-gem-{{ checksum "MasterGemfile.lock" }}
+                  - << parameters.cache-version >>-dependencies-gem-
+      - unless:
+          condition: << parameters.include-master-key >>
+          steps:
+            - run:
+                name: Output the checksum file
+                command: |
+                  echo << parameters.checksumfile >>
+            - restore_cache:
+                keys:
+                  - << parameters.cache-version >>-dependencies-gem-{{ checksum "<< parameters.checksumfile >>" }}
+                  - << parameters.cache-version >>-dependencies-gem-
+
+      - run:
+          name: Bundle install
+          command: >
+            bundle check --path << parameters.path >> ||
+            bundle install --jobs=4 --retry=3 --path << parameters.path >>
+
+      - run:
+          name: Clean up gems before we save
+          command: |
+            bundle clean --force
+
+      - save_cache:
+          key: << parameters.cache-version >>-dependencies-gem-{{ checksum  "<< parameters.checksumfile >>"  }}
+          paths:
+            - << parameters.path >>
+
+  bundle-audit:
+    description: Runs bundle-audit to check gem security
+    parameters:
+      ignore:
+        description: Vulnerabilities to ignore
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Dependencies security audit
+          command: >
+            bundle exec bundle-audit check --update
+            <<# parameters.ignore >> --ignore << parameters.ignore >> <</ parameters.ignore >>
+
+  brakeman:
+    description: Runs brakeman to check app security
+    parameters:
+      skip-exit-on-warn-error:
+        description: If true, CI run continues even if brakeman reports warnings or errors
+        type: boolean
+        default: false
+    steps:
+      - run:
+          name: Brakeman
+          command: >
+            bundle exec brakeman
+            <<# parameters.skip-exit-on-warn-error >> --no-exit-on-warn --no-exit-on-error
+            <</ parameters.skip-exit-on-warn-error >>
+
+  rubocop:
+    description: Runs rubocop with cache restore and save
+    parameters:
+      path:
+        description: The path of the rubocop cache
+        type: string
+        default: "../.cache/rubocop_cache"
+      cache-version:
+        description: A prefix to the cache key for versioning
+        type: string
+        default: "v1"
+    steps:
+      - restore_cache:
+          keys:
+            - << parameters.cache-version >>-rubocop-cache-{{ checksum ".rubocop.yml" }}-{{ .Branch }}
+            - << parameters.cache-version >>-rubocop-cache-{{ checksum ".rubocop.yml" }}-master
+            - << parameters.cache-version >>-rubocop-cache-{{ checksum ".rubocop.yml" }}
+
+      - run:
+          name: Rubocop
+          command: |
+            bundle exec rubocop --parallel
+
+      - save_cache:
+          key: << parameters.cache-version >>-rubocop-cache-{{ checksum ".rubocop.yml" }}-{{ .Branch }}-{{ epoch }}
+          paths:
+            - << parameters.path >>
+
+  restore-dependencies:
+    description: Runs bundle check after cache restore
+    parameters:
+      path:
+        description: The path where gems are installed
+        type: string
+        default: "vendor/bundle"
+      checksumfile:
+        description: A file to use as checksum for cache key, must be set for gems
+        type: string
+        default: "Gemfile.lock"
+      cache-version:
+        description: A prefix to the cache key for versioning
+        type: string
+        default: "v1"
+    steps:
+      - restore_cache:
+          keys:
+            - << parameters.cache-version >>-dependencies-gem-{{ checksum "<< parameters.checksumfile >>" }}
+
+      - run:
+          name: Setup bundler path
+          command: |
+            bundle check --path << parameters.path >>
+
+  restore-bootsnap-cache:
+    description: Restores bootsnap cache
+    parameters:
+      checksumfile:
+        description: A file to use as checksum for cache key, must be set for gems
+        type: string
+        default: "Gemfile.lock"
+      cache-version:
+        description: The prefix to the cache key
+        type: string
+        default: "v1"
+    steps:
+      - restore_cache:
+          keys:
+            - << parameters.cache-version >>-bootsnap-cache-{{ checksum "<< parameters.checksumfile >>" }}-{{ .Branch }}
+            - << parameters.cache-version >>-bootsnap-cache-{{ checksum "<< parameters.checksumfile >>" }}-master
+
+  save-bootsnap-cache:
+    description: Saves bootsnap cache
+    parameters:
+      path:
+        description: Path to folder to be cached
+        type: string
+        default: "tmp/bootsnap_cache"
+      cache-version:
+        description: The prefix to the cache key
+        type: string
+        default: "v1"
+      checksumfile:
+        description: A file to use as checksum for cache key, must be set for gems
+        type: string
+        default: "Gemfile.lock"
+    steps:
+      - save_cache:
+          key: << parameters.cache-version>>-bootsnap-cache-{{ checksum "<< parameters.checksumfile >>" }}-{{ .Branch }}-{{ epoch }}
+          paths:
+            - << parameters.path >>
+
+  build-gem:
+    description: Builds the ruby gem according to give package name's gemspec
+    parameters:
+      package_name:
+        description: The <package_name>.gemspec for the gem
+        type: string
+    steps:
+      - run:
+          name: Build gemspec
+          command: |
+            gem build << parameters.package_name >>.gemspec
+            echo "require 'rubygems'; puts Gem::Specification::load(\"<< parameters.package_name >>\").version" > build_verion.rb
+            echo "export GEM_VERSION=`ruby build_verion.rb`" >> $BASH_ENV
+
+  authenticate-push-github-packages:
+    description: Authenticates user to access github packages (Requires `GITHUB_TOKEN` to be set in env)
+    steps:
+      - run:
+          name: Configure credentials for gem registry
+          command: |
+            echo "authorizing according to https://docs.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-rubygems-for-use-with-github-packages"
+            if [[ -z "$GITHUB_TOKEN" ]]; then
+                echo "Must provide GITHUB_TOKEN in environment" 1>&2
+                exit 1
+            fi
+            mkdir -p "$HOME/.gem"
+            touch "$HOME/.gem/credentials"
+            chmod 0600 "$HOME/.gem/credentials"
+            printf -- "---\n:github: Bearer %s\n" "${GITHUB_TOKEN}" > "$HOME/.gem/credentials"
+
+  gem-push-github:
+    description: Published a built rubygem to given Github Package (always return true to prevent error on same version push)
+    parameters:
+      host:
+        description: "The host to which the Gem should be pushed"
+        type: string
+    steps:
+      - run:
+          name: Push Gem to GitHub package registry
+          command: |
+            gem push --verbose --key github --host << parameters.host >> *.gem || true
 
 jobs:
-  build:
+  bundle_setup:
+    parameters:
+      workspace:
+        description: "Workspace to set the initialization"
+        type: string
+      docker_image:
+        description: "Docker image to use"
+        default: "circleci/ruby:2.7.1"
+        type: string
+      checksumfile:
+        description: A file to use as checksum for cache key, must be set for gems
+        type: string
+        default: "Gemfile.lock"
     docker:
-      - image: circleci/ruby:2.6.3-stretch-node
-    executor: ruby/default
+      - image: << parameters.docker_image >>
+    working_directory: << parameters.workspace >>
     steps:
       - checkout
-      - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
+      - bundle-install:
+          include-master-key: false
+          checksumfile: << parameters.checksumfile >>
+      - bundle-audit
