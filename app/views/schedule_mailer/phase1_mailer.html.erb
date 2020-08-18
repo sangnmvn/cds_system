@@ -1,4 +1,4 @@
 <p>Dear all,</p>
 <p>Please complete your CDS Assessment in period <%= @period.from_date.strftime('%b %d, %Y') %> - <%= @period.to_date.strftime('%b %d, %Y') %> before: <%= @schedule.end_date_employee.strftime('%b %d, %Y') %></p>
 <p>Thank you</p>
-<p><%= "#{@sender.first_name} #{@sender.last_name}"%></p>
+<p><%= @sender %></p>
