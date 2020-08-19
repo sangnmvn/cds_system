@@ -58,6 +58,9 @@ $color-disable: #afaaaa;
     }
 
     #table_summary_comment {
+        th {
+            vertical-align: middle;
+        }
         .period {
             width: 20%;
         }
@@ -67,7 +70,7 @@ $color-disable: #afaaaa;
         }
 
         .commented-date {
-            width: 15%;
+            width: 18%;
         }
     }
 }

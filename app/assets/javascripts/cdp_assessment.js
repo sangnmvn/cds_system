@@ -448,10 +448,10 @@ $(document).ready(function () {
                 $("#id_summary").val(e.id)
               }
               body += `<tr id=${e.id}>
-                        <td class="period">${e.period}</td>
-                        <td class="user-name">${e.user_name}</td>
-                        <td class="comment">${e.comment}</td>
-                        <td class="commented-date">${e.comment_date}</td>
+                        <td class="type-text period">${e.period}</td>
+                        <td class="type-text user-name">${e.user_name}</td>
+                        <td class="type-text comment"><pre>${e.comment}</pre></td>
+                        <td class="type-text commented-date">${e.comment_date}</td>
                       </tr>`
             }
           )
@@ -470,6 +470,7 @@ $(document).ready(function () {
               [1, "asc"]
             ],
           });
+          $("#table_summary_comment").removeClass('no-footer')
         }
         $('#modal_summary_assessment').modal('show')
       }
