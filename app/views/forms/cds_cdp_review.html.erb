@@ -84,7 +84,7 @@
   var lst_slot = {};
   var check_5_month = true
   var conflict_commits = {}
-  var check_request_update = false;
+  var check_request_update = <%=  @hash[:is_disable_confirm_update] %>;
   var user_name = "<%= @hash[:user_name] %>"
   var user_account = "<%= @hash[:user_account] %>"
   loadDataPanel(form_id);

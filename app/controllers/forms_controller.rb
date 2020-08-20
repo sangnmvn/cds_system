@@ -120,7 +120,8 @@ class FormsController < ApplicationController
       form_slot = FormSlot.where(form_id: form.id)
       @form_service.create_form_slot(form) if form_slot.empty?
     end
-
+    h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
+    @hash[:is_disable_confirm_update] = h_slots.empty?
     @hash[:is_submit_late] = form.is_submit_late
     @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-progress")
     @hash[:form_id] = form.id
@@ -149,6 +150,7 @@ class FormsController < ApplicationController
     user = User.includes(:role).find_by_id(params[:user_id])
     approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])
 
+    h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
@@ -160,6 +162,7 @@ class FormsController < ApplicationController
       is_approver: approver&.is_approver || false,
       is_reviewer: !approver&.is_approver || false,
       is_submit_late: form.is_submit_late,
+      is_disable_confirm_update: h_slots.empty?,
     }
   end
 
@@ -456,6 +459,6 @@ class FormsController < ApplicationController
                   :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
                   :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
                   :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
-                  :cancel_slots, :summary_id, :comment, :ext)
+                  :cancel_slots, :summary_id, :comment, :ext, :position)
   end
 end

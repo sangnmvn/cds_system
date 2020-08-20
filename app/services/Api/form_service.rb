@@ -559,20 +559,27 @@ module Api
         form_slot = FormSlot.find_by(slot_id: params[:slot_id], form_id: params[:form_id])
         form_slot.update(re_assess: true) if LineManager.where.not(period_id: form.period_id).present?
         return false if form.nil?
+
         if params[:point].present?
           comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
-          old_comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
+          old_comment = Comment.find_by(form_slot_id: form_slot.id, point: nil)
         else
           old_comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
           comment = Comment.find_by(form_slot_id: form_slot.id, point: nil)
         end
+
         is_commit = params[:is_commit] == "true"
         line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange", period_id: form.period_id)
         if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: comment.flag.blank? ? "" : "yellow")
+          flag = comment.flag.blank? ? "" : "yellow"
+          re_update = comment.flag.present? ? "" : params[:position]
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: flag, re_update: re_update)
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: line_flag.blank? ? "" : "yellow")
+          flag = line_flag.flag.blank? ? "" : "yellow"
+          re_update = line_flag.flag.present?
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: flag, re_update: re_update)
         end
+
         old_comment.update(is_delete: true) if old_comment.present?
         form_slot.update(is_change: true)
       end
@@ -663,7 +670,7 @@ module Api
         approver_ids = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
         is_final = approver_ids.include? current_user.id
         comment_linemanager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
-        flag = comment_linemanager.blank? ? "" : comment_linemanager.flag
+        flag = comment_linemanager&.flag || ""
         flag = "#99FF33" if !is_final && staff_flag == "yellow"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag, final: is_final)
@@ -1189,7 +1196,7 @@ module Api
             hash[:final_point] = line.given_point
           end
           comment_type = ""
-          
+
           if line&.is_commit
             comment_type = line.given_point.nil? ? "CDP" : "CDS"
           end

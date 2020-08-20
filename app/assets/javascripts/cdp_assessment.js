@@ -1158,6 +1158,8 @@ function autoSaveStaff(row) {
   if (is_commit == "commit_cdp" || is_commit == "uncommit" || (is_commit == "commit_cds" && evidence != "" && parseInt(point) > 0)) {
     is_commit = is_commit != "uncommit"
     var slot_id = row.data("slot-id");
+    var position = row.data('location');
+
     $.ajax({
       type: "POST",
       url: "/forms/save_cds_assessment_staff",
@@ -1167,6 +1169,7 @@ function autoSaveStaff(row) {
         point: point,
         evidence: evidence,
         slot_id: slot_id,
+        position: position
       },
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
