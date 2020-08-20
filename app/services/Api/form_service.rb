@@ -452,9 +452,9 @@ module Api
       slots.each do |slot|
         hash[slot.level] = 0 if hash[slot.level].nil?
         s = slot_to_hash(slot, hash[slot.level], form_slots)
-        if filter_slots[:passed] && s[:tracking][:is_passed]
+        if filter_slots[:passed] && s[:tracking][:is_passed_prev]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:failed] && s[:tracking][:recommends].present? && !s[:tracking][:is_passed]
+        elsif filter_slots[:failed] && s[:tracking][:is_failed_prev]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:no_assessment] && s[:tracking][:point].zero? && !s[:tracking][:is_commit]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
@@ -1278,6 +1278,8 @@ module Api
       line_managers = form_slot.line_managers
       hash = {
         is_passed: false,
+        is_failed_prev: true,
+        is_passed_prev: false,
         recommends: [],
         final_point: 0,
         final_point_cdp: 0,
@@ -1285,7 +1287,12 @@ module Api
       period_id = 0
 
       line_managers.each do |line|
-        break if !period_id.zero? && period_id != line.period_id
+        if !period_id.zero? && period_id != line.period_id
+          check_fail = (line.given_point || 0) < 2
+          hash[:is_failed_prev] = check_fail
+          hash[:is_passed_prev] = !check_fail
+          break
+        end
         period_id = line.period_id
         if line.final
           if (line.given_point || 0) > 2
