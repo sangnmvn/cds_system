@@ -8,20 +8,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-6">
-            <label>Allow employees to submit late : </label>
-          </div>
-          <div class="col-3">
-            <label class="form-check-label">
-              <input type="radio" class="form-check-input submit-late" value="true" name="submit_late"><i>Accept</i>
-            </label>
-          </div>
-          <div class="col-3">
-            <label class="form-check-label">
-              <input type="radio" class="form-check-input submit-late" value="false" name="submit_late" checked><i>Refuse</i>
-            </label>
-          </div>
+        <div class="row" style="align-items: center; padding-left: 20px">
+          <input type="checkbox" id="submit_late" name="submit_late">&nbsp;
+          <span>Allow employees to submit late </span>
         </div>
         <hr/>
         <div class="row">
@@ -48,6 +37,5 @@
         </div>
       </div>
     </div>
-    <!-- hidden input to contains id-->
-    <div style="display: none;" class="add-reviewer-id-modal"></div>
   </div>
+</div>

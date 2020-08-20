@@ -10,41 +10,41 @@
         </button>
       </div>
       <!-- Modal body -->
-        <input type="hidden" value="<%= @user.id %>" id="user_id">
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-12">
-                <p style="color:red">(*) required fields</p>
+      <input type="hidden" value="<%= @user.id %>" id="user_id">
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <p style="color:red">(*) required fields</p>
+            </div>
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>First Name (*)</label>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" maxlength="32" id="first_name" class="form-control" value="<%= @user.first_name %>" placeholder="Please enter your first name" />
+                  <small id="error_first_name" class="text-danger"></small>
+                </div>
               </div>
-              <div class="col-sm-12">
-                <div class="row">
-                  <div class="col-sm-3">
-                    <label>First Name (*)</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <input type="text" maxlength="32" id="first_name" class="form-control" value="<%= @user.first_name %>" placeholder="Please enter your first name" />
-                    <small id="error_first_name" class="text-danger"></small>
-                  </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Last Name (*)</label>
                 </div>
-                <br>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <label>Last Name (*)</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <input type="text" maxlength="32" id="last_name"  class="form-control" value="<%= @user.last_name %>" placeholder="Please enter your last name" />
-                    <small id="error_last_name" class="text-danger"></small>
-                  </div>
+                <div class="col-sm-9">
+                  <input type="text" maxlength="32" id="last_name"  class="form-control" value="<%= @user.last_name %>" placeholder="Please enter your last name" />
+                  <small id="error_last_name" class="text-danger"></small>
                 </div>
-                <br>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <label>Gender</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <select class="form-control" id="gender">
-                      <option value="1" <%= @user.gender ? "selected" : "" %> >Male</option>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label>Gender</label>
+                </div>
+                <div class="col-sm-9">
+                  <select class="form-control" id="gender">
+                    <option value="1" <%= @user.gender ? "selected" : "" %> >Male</option>
                       <option value="0" <%= @user.gender ? "" : "selected" %> >Female</option>
                     </select>
                   </div>
@@ -88,6 +88,7 @@
           <button type="button" class="btn btn-secondary btn-save-edit" id="btn_save_contact" disabled>Save</button>
           <button type="button" class="btn btn-light border-dark cancel-edit-user-profile" data-dismiss="modal">Cancel</button>
         </div>
+      </div>
     </div>
   </div>
 </div>
