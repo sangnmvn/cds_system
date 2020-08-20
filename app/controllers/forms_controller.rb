@@ -121,7 +121,7 @@ class FormsController < ApplicationController
       @form_service.create_form_slot(form) if form_slot.empty?
     end
     h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
-    @hash[:is_disable_confirm_update] = h_slots.empty?
+    @hash[:is_disable_confirm_update] = h_slots.present?
     @hash[:is_submit_late] = form.is_submit_late
     @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-progress")
     @hash[:form_id] = form.id
@@ -162,7 +162,7 @@ class FormsController < ApplicationController
       is_approver: approver&.is_approver || false,
       is_reviewer: !approver&.is_approver || false,
       is_submit_late: form.is_submit_late,
-      is_disable_confirm_update: h_slots.empty?,
+      is_disable_confirm_update: h_slots.present?,
     }
   end
 
