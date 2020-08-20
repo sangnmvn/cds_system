@@ -575,8 +575,8 @@ module Api
           re_update = comment.flag.present? ? "" : params[:position]
           comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: flag, re_update: re_update)
         else
-          flag = line_flag.flag.blank? ? "" : "yellow"
-          re_update = line_flag.flag.present?
+          flag = line_flag&.flag.blank? ? "" : "yellow"
+          re_update = line_flag&.flag.present?
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: flag, re_update: re_update)
         end
 
@@ -850,10 +850,11 @@ module Api
         if is_pass
           expected_title[:level] = value.first.level
           expected_title[:rank] = value.first.title.rank
-          expected_title[:title] = value.first.title.desc
+          expected_title[:title] = value.first.title.name
           expected_title[:title_id] = value.first.title.id
         end
       end
+      
       h_competencies = competencies.map do |com|
         {
           id: com.id,
