@@ -19,6 +19,8 @@ module Api
       1 => "I",
     }
 
+    HEADER_CDS_REVIEW_LIST = ["No.", "Period", "User Name", "Email", "Project", "Role", "Title", "Rank", "Level", "Submitted Date", "Reviewed Date", "Status"]
+
     # for string operation
     NEVER_USE_CHARACTER = "Ω"
 
@@ -871,46 +873,40 @@ module Api
 
         out_file_name = "CDS_#{company_name}_Title_Comparison_List_in_Period_#{period_excel_name}"
         # formatting Excel
-        title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        table_header_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "2E75B8", :fg_color => "FFFFFF", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
-        normal_improved_format = workbook.styles.add_style(:sz => 11, :b => true, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        normal_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
-        index_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :center, :vertical => :top, :wrap_text => :true })
-        number_improved_format = workbook.styles.add_style(:sz => 11, :b => true, :u => true, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
-        number_format = workbook.styles.add_style(:sz => 11, :bg_color => "FFFFFF", :fg_color => "000000", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :right, :vertical => :top, :wrap_text => :true })
-        email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
+        title_format = workbook.styles.add_style(sz: 18, b: true, bg_color: "FFFFFF", fg_color: "2E75B8", font_name: "Calibri", border: { style: :thin, color: "FFFFFF", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :left, vertical: :center, wrap_text: :true })
+        table_header_format = workbook.styles.add_style(sz: 11, b: true, bg_color: "2E75B8", fg_color: "FFFFFF", font_name: "Calibri", border: { style: :thin, color: "FFFFFF", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :center, vertical: :center, wrap_text: :true })
+        normal_improved_format = workbook.styles.add_style(sz: 11, b: true, bg_color: "FFFFFF", fg_color: "000000", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :left, vertical: :center, wrap_text: :true })
+        normal_format = workbook.styles.add_style(sz: 11, bg_color: "FFFFFF", fg_color: "000000", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :left, vertical: :center, wrap_text: :true })
+        index_format = workbook.styles.add_style(sz: 11, bg_color: "FFFFFF", fg_color: "000000", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :center, vertical: :center, wrap_text: :true })
+        number_improved_format = workbook.styles.add_style(sz: 11, b: true, u: true, bg_color: "FFFFFF", fg_color: "000000", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :right, vertical: :center, wrap_text: :true })
+        number_format = workbook.styles.add_style(sz: 11, bg_color: "FFFFFF", fg_color: "000000", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :right, vertical: :center, wrap_text: :true })
+        email_format = workbook.styles.add_style(sz: 11, bg_color: "C0C0C0", fg_color: "017EAF", font_name: "Calibri", border: { style: :thin, color: "000000", edges: [:top, :bottom, :left, :right] }, alignment: { horizontal: :left, vertical: :center, wrap_text: :true })
         # create sheet
         title_comparison_sheet = set_up_sheet_view(workbook, "Title Comparison")
 
         title_comparison_sheet.sheet_view.zoom_scale = ZOOM_SCALE
         title_comparison_sheet.page_setup.set(fit_to_width: 1)
-        title_comparison_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        title_comparison_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], :style => title_format
-        title_comparison_sheet.rows[1].cells[0].style = title_format
-        title_comparison_sheet.merge_cells "A1:J1"
-        title_comparison_sheet.merge_cells "A2:J2"
-        title_comparison_sheet.add_row ["No.", "Employee Name", "Email", "Period #{h_data[:period_prev_name]}", "", "", "Period #{h_data[:period_name]}", "", "", "Notes"], :style => table_header_format
-        title_comparison_sheet.add_row ["", "", "", "Title", "Rank", "Level", "Title", "Rank", "Level", "Title"], :style => table_header_format
-        title_comparison_sheet.merge_cells "A3:A4"
-        title_comparison_sheet.merge_cells "B3:B4"
-        title_comparison_sheet.merge_cells "C3:C4"
-        title_comparison_sheet.merge_cells "D3:F3"
-        title_comparison_sheet.merge_cells "G3:I3"
-        title_comparison_sheet.merge_cells "J3:J4"
+        title_comparison_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], style: title_format, height: 30
+
+        final_column = ("A".."Z").to_a[HEADER_CDS_REVIEW_LIST.length - 1]
+        title_comparison_sheet.merge_cells "A1:#{final_column}1"
+
+        title_comparison_sheet.add_row HEADER_CDS_REVIEW_LIST, style: table_header_format, height: 20
+
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
-          title_comparison_sheet.add_row [index + 1, result[:full_name], result[:email], result[:title_prev], result[:rank_prev], result[:level_prev], result[:title], result[:rank], result[:level], ""]
+          title_comparison_sheet.add_row [index + 1, result[:period_name], result[:user_name], result[:email], result[:project], result[:role_name], result[:level], result[:rank], result[:title], result[:submit_date], result[:approved_date], result[:status]], height: 20
           title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
           title_comparison_sheet.rows[-1].cells[0].style = index_format
           title_comparison_sheet.rows[-1].cells[2].style = email_format
-          title_comparison_sheet.rows[-1].cells[4].style = number_format
-          title_comparison_sheet.rows[-1].cells[5].style = number_format
+          title_comparison_sheet.rows[-1].cells[4].style = normal_format
+          title_comparison_sheet.rows[-1].cells[5].style = normal_format
           # underline increased value
-          title_comparison_sheet.rows[-1].cells[6].style = result[:same_role] && result[:rank] > result[:rank_prev] ? normal_improved_format : normal_format
-          title_comparison_sheet.rows[-1].cells[7].style = result[:same_role] && result[:rank] > result[:rank_prev] ? number_improved_format : number_format
-          title_comparison_sheet.rows[-1].cells[8].style = result[:same_role] && (result[:rank] > result[:rank_prev] || (result[:level] > result[:level_prev] && result[:rank] == result[:rank_prev])) ? number_improved_format : number_format
+          title_comparison_sheet.rows[-1].cells[6].style = normal_format
+          title_comparison_sheet.rows[-1].cells[7].style = number_format
+          title_comparison_sheet.rows[-1].cells[8].style = number_format
         end
-        title_comparison_sheet.column_widths 5, 30, 30, 32, 5, 5, 32, 5, 5, 30 # run at last
+        title_comparison_sheet.column_widths 5, 30, 30, 30, 20, 20, 40, 10, 10, 20, 20, 20 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"

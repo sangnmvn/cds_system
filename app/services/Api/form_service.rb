@@ -256,42 +256,7 @@ module Api
       user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
-      first = {}
-      second = {}
-      # filter 1 period
-      # the latest schedule will be first, second will be previous of the filtered schedule
-      filtered_period = Period.find_by(id: filter[:period_id][0])
-
-      # UNCOMMENT the line below if you don't need dummy data
-      # return {} if filtered_period.nil?
-
-      schedules = Schedule.where(status: "Done").where("start_date <= ?", filtered_period&.to_date).order(end_date_hr: :desc)
-
-      schedules.map do |schedule|
-        if first[schedule.company_id].nil?
-          first[schedule.company_id] = schedule.period_id
-        elsif second[schedule.company_id].nil?
-          second[schedule.company_id] = schedule.period_id
-        end
-      end
-      same_keys = first.keys & second.keys
-      first = first.keep_if { |k, _| same_keys.include? k }
-      second = second.keep_if { |k, _| same_keys.include? k }
-      # UNCOMMENT the line below if you don't need dummy data
-      # return {} if first.empty? || second.empty?
-
-      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_previous_period = {}
-      title_second.map do |title|
-        h_previous_period[title.user_id] = {
-          rank: title.rank,
-          level: title.level,
-          title: title.title,
-          name: title&.period&.format_to_date,
-          role_name: title&.role_name,
-        }
-      end
+      forms = Form.includes([:user, :period]).where(user_id: user_ids, period_id: params[:period_ids])
       results = {}
       companies_id = filter[:filter_users][:company_id]
       h_companies = if companies_id.nil?
@@ -300,32 +265,19 @@ module Api
           Company.where(id: companies_id).pluck([:id, :name]).to_h
         end
 
-      title_first.map do |title|
-        prev_period = h_previous_period[title.user_id] || {}
-
-        company_id = title&.user&.company_id
+      forms.map do |form|
+        company_id = form&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
             users: [],
             company_name: h_companies[company_id],
-            period: first[company_id],
-            prev_period: second[company_id],
-            period_excel_name: title&.period&.format_excel_name,
-            period_name: title&.period&.format_to_date,
-            period_prev_name: prev_period[:name],
+            period: form.period_id,
+            period_excel_name: form&.period&.format_excel_name,
+            period_name: form&.period&.format_to_date,
           }
         end
-        results[company_id][:users] << {
-          full_name: title&.user&.format_name_vietnamese,
-          email: title&.user&.email,
-          rank: title&.rank,
-          title: title&.title,
-          level: title&.level,
-          rank_prev: prev_period[:rank],
-          level_prev: prev_period[:level],
-          title_prev: prev_period[:title],
-          same_role: prev_period[:role_name]&.downcase&.strip == title&.role_name&.downcase&.strip,
-        }
+
+        results[company_id][:users] << format_form_cds_review(form)
       end
 
       { data: results }
@@ -854,7 +806,7 @@ module Api
           expected_title[:title_id] = value.first.title.id
         end
       end
-      
+
       h_competencies = competencies.map do |com|
         {
           id: com.id,
@@ -1242,14 +1194,14 @@ module Api
       hash
     end
 
-    def format_form_cds_review(form, user_approve_ids, periods)
+    def format_form_cds_review(form, user_approve_ids = [], periods = [])
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
         user_name: form.user&.format_name_vietnamese,
         project: form.user&.get_project,
         email: form.user&.email,
-        role_name: form.role&.desc,
+        role_name: form.role&.name,
         level: form.level || "N/A",
         rank: form.rank || "N/A",
         title: form.title&.name || "N/A",
@@ -1275,23 +1227,22 @@ module Api
       filter = {}
 
       if params[:user_ids] && params[:user_ids] != "0"
-        filter_users[:id] = params[:user_ids].map(&:to_i)
+        filter_users[:id] = params[:user_ids]
       end
-
       if params[:role_ids] && params[:role_ids] != "0"
-        filter_users[:role_id] = params[:role_ids].map(&:to_i)
+        filter_users[:role_id] = params[:role_ids]
       end
 
       if params[:company_ids] && params[:company_ids] != "0"
-        filter_users[:company_id] = params[:company_ids].map(&:to_i)
+        filter_users[:company_id] = params[:company_ids]
       end
 
       if params[:period_ids] && params[:period_ids] != "0"
-        filter[:period_id] = params[:period_ids].map(&:to_i || 0)
+        filter[:period_id] = params[:period_ids]
       end
 
       if params[:project_ids] && params[:project_ids] != "0"
-        filter[:project_id] = params[:project_ids].map(&:to_i || 0)
+        filter[:project_id] = params[:project_ids]
       end
 
       filter[:filter_users] = filter_users

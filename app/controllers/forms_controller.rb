@@ -449,16 +449,7 @@ class FormsController < ApplicationController
 
   def form_params
     params[:offset] = params[:iDisplayStart]
-    params[:user_ids] = params[:user_ids]
-    params[:company_ids] = params[:company_ids]
-    params[:project_ids] = params[:project_ids]
-    params[:period_ids] = params[:period_ids]
-    params[:role_ids] = params[:role_ids]
 
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
-                  :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
-                  :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
-                  :cancel_slots, :summary_id, :comment, :ext, :position)
+    params
   end
 end
