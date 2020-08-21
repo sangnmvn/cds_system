@@ -2,6 +2,7 @@ module Api
   class FormService < BaseService
     REVIEW_CDS = 16
     APPROVE_CDS = 17
+    HIGH_FULL_ACCESS = 26
     Time::DATE_FORMATS[:custom_datetime] = "%d/%m/%Y"
 
     def initialize(params, current_user)
@@ -54,7 +55,7 @@ module Api
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
+          elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
             value = data[:final_point] || value
           end
         end
@@ -226,7 +227,7 @@ module Api
       user_approve_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: true).select(:user_id)
       user_review_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false).select(:user_id)
       forms = []
-      if @privilege_array.include?(APPROVE_CDS)
+      if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         forms += if (filter[:period_id])
             Form.includes(:period, :role, :title).where(user_id: user_approve_ids, period_id: filter[:period_id],
                                                         status: ["Awaiting Approval", "Done"])
@@ -377,7 +378,6 @@ module Api
     def data_filter_cds_approve
       project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
       user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
-
       data_filter = {
         companies: [],
         projects: [],
@@ -385,6 +385,13 @@ module Api
         users: [],
         periods: [],
       }
+
+      users = User.where(id: user_ids).includes(:company, :role)
+      if @privilege_array.include?(HIGH_FULL_ACCESS)
+        user_ids = User.where(company_id: current_user.company_id).where.not(id: current_user.id).pluck(:id).uniq
+        project_members = ProjectMember.where(user_id: users.pluck(:id)).includes(:project)
+      end
+
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
@@ -672,7 +679,7 @@ module Api
           if privilege_array.include?(REVIEW_CDS)
             value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
             value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
+          elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
             value = data[:final_point] || value
             value_cdp = data[:final_point_cdp] || value_cdp
           end
@@ -1229,22 +1236,22 @@ module Api
       filter_users = {}
       filter = {}
 
-      if params[:user_ids] && params[:user_ids] != "0"
+      if params[:user_ids] && params[:user_ids].first != "0"
         filter_users[:id] = params[:user_ids]
       end
-      if params[:role_ids] && params[:role_ids] != "0"
+      if params[:role_ids] && params[:role_ids].first != "0"
         filter_users[:role_id] = params[:role_ids]
       end
 
-      if params[:company_ids] && params[:company_ids] != "0"
+      if params[:company_ids] && params[:company_ids].first != "0"
         filter_users[:company_id] = params[:company_ids]
       end
 
-      if params[:period_ids] && params[:period_ids] != "0"
+      if params[:period_ids] && params[:period_ids].first != "0"
         filter[:period_id] = params[:period_ids]
       end
 
-      if params[:project_ids] && params[:project_ids] != "0"
+      if params[:project_ids] && params[:project_ids].first != "0"
         filter[:project_id] = params[:project_ids]
       end
 
