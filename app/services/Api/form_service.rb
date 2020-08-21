@@ -116,9 +116,9 @@ module Api
       form_slot_ids = {}
       if user_of_form.user.id == current_user.id #check staff or reviewer
         #form slot have comment_flag_yellows
-        form_slot_id_in_comments = Comment.includes(:form_slot).
-          where(form_slots: { form_id: params[:form_id] }, flag: "yellow", is_delete: false).
-          pluck(:form_slot_id).uniq
+        comments = Comment.includes(:form_slot).
+          where(form_slots: { form_id: params[:form_id] }, flag: "yellow", is_delete: false)
+        form_slot_id_in_comments = comments.pluck(:form_slot_id).uniq
         #line manager have orange flag
         form_slot_ids = LineManager.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "orange", period_id: user_of_form.period_id,
@@ -138,6 +138,7 @@ module Api
       old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
       old_comment.destroy_all if old_comment.present?
       if form_slot_ids.present?
+        comments.update(re_update: false)
         period = Form.includes(:period).find(params[:form_id]).period
         form_slots = FormSlot.includes(slot: [:competency]).
           where(id: form_slot_ids.pluck(:form_slot_id).uniq)
@@ -490,6 +491,7 @@ module Api
             evidence: slot_history.evidence || "",
             point: slot_history.point || 0,
             is_commit: false,
+            re_update: false,
           },
         }
         if form_slots.present?
@@ -1108,6 +1110,7 @@ module Api
           point: comments&.point || 0,
           flag: comments&.flag || "",
           is_commit: comments&.is_commit,
+          re_update: comments&.re_update,
           is_change: form_slot.is_change || false,
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],

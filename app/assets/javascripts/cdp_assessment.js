@@ -212,8 +212,8 @@ function loadDataSlots(response) {
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
                   <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
-                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" && e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
-                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && e.tracking.recommends[i].is_commit ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDP")}> Commit CDP</option>
+                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
+                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDP")}> Commit CDP</option>
                   </select>
                 </td>
                 <td>
@@ -297,7 +297,7 @@ function checkStatusFormStaff(status) {
       break;
     case "Awaiting Review" || "Awaiting Approval":
       $(".input-staff").each(function (i, e) {
-        e.disabled = true
+        // e.disabled = true
       })
       break;
   }
@@ -392,7 +392,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
 }
 
 function checkDisableFormSlotsReviewer(tracking) {
-  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange"))
+  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange" && !tracking.re_update))
     return "disabled"
   return ""
 }
