@@ -135,6 +135,7 @@ $(document).ready(function () {
   loadDataFilter();
   $(".apply-filter").click(function () {
     data_filter = apllyFilter();
+    localStorage.filterReviewList = JSON.stringify(data_filter);
     loadDataAssessment(data_filter);
   });
 
@@ -143,9 +144,11 @@ $(document).ready(function () {
   });
 
   $(".reset-filter").click(function () {
+    localStorage.filterReviewList = "";
     $(this).addClass('disabled');
     loadDataFilter();
   });
+
   $(document).on("click", ".reject-cds-cdp", function () {
     user_name = $(this).closest('tr').find('#user_name').html()
     user_id = $(this).data('userId')
@@ -153,6 +156,7 @@ $(document).ready(function () {
     $("#content_reject").html("Are you sure you want to reject CDS/CDP assessment of " + user_name + "?");
     $('#modal_reject_cds').modal('show');
   })
+
   $(document).on("click", "#confirm_yes_reject_cds", function () {
     $.ajax({
       type: "POST",
@@ -181,6 +185,7 @@ $(document).ready(function () {
 
 function setupDataFilter(id, class_name, data) {
   $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`);
+  key_filter = id.split('_')[0]
   id = '#' + id
   if (data.length > 1 && id != "#period_filter")
     $('<option value="0" selected>All</option>').appendTo(id);
@@ -190,6 +195,11 @@ function setupDataFilter(id, class_name, data) {
     else
       $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(id);
   });
+  if (localStorage.filterReviewList) {
+    $('.reset-filter').removeClass('disabled');
+    let filter = JSON.parse(localStorage.filterReviewList);
+    $(id).val(filter[key_filter]);
+  }
 
   $(id).bsMultiSelect({
     setSelected: (opt, val) => {

@@ -246,11 +246,21 @@ $(document).ready(function () {
   });
 
   $("#btn_filter").click(function () {
+    let company = $("#filter_company").val();
+    let project = $("#filter_project").val();
+    let role = $("#filter_role").val();
+
+    localStorage.filterUserMgmt = JSON.stringify({
+      company: company,
+      project: project,
+      role: role,
+    });
     $('#table_user_management').dataTable().fnDraw();
   });
 
   $("#btn_reset").click(function () {
     $('#btn_reset').addClass('disabled');
+    localStorage.filterUserMgmt = ""
     get_filter()
   });
 
@@ -294,6 +304,13 @@ function get_filter() {
       $('#filter_company').html(companies);
       $('#filter_project').html(projects);
       $('#filter_role').html(roles);
+      if (localStorage.filterUserMgmt) {
+        let filter = JSON.parse(localStorage.filterUserMgmt);
+        $('#filter_company').val(filter.company);
+        $('#filter_project').val(filter.project);
+        $('#filter_role').val(filter.role);
+        $('#btn_reset').removeClass('disabled');
+      }
       setup_dataTable();
     }
   })
@@ -375,6 +392,7 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
+      stateSave: true,
       fnServerParams: function (aoData) {
         company = $("#filter_company").val();
         project = $("#filter_project").val();

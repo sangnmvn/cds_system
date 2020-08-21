@@ -106,6 +106,7 @@ $(document).ready(function () {
   loadDataFilter();
   $(".apply-filter").click(function () {
     data_filter = paramFilter();
+    localStorage.filterDashboard = JSON.stringify(data_filter);
     drawChart(data_filter);
     loadDataUpTitle(data_filter);
     loadDataDownTitle(data_filter);
@@ -117,6 +118,7 @@ $(document).ready(function () {
   });
 
   $(".reset-filter").click(function () {
+    localStorage.filterDashboard = "";
     $(this).addClass('disabled');
     loadDataFilter();
   });
@@ -185,9 +187,9 @@ function loadDataFilter() {
     dataType: "json",
     success: function (response) {
       if (response.status == "fails") return;
-      setupDataFilter("company_filter", '.company-filter', response.companies);
-      setupDataFilter("project_filter", '.project-filter', response.projects);
-      setupDataFilter("role_filter", '.role-filter', response.roles);
+      setupDataFilter("company_filter", '.company-filter', response.companies, "company_id");
+      setupDataFilter("project_filter", '.project-filter', response.projects, "project_id");
+      setupDataFilter("role_filter", '.role-filter', response.roles, "role_id");
       curr_company_ids = $('#company_filter').val();
       data_filter = paramFilter();
       drawChart(data_filter);
@@ -206,7 +208,7 @@ function paramFilter() {
   };
 }
 
-function setupDataFilter(id, class_name, data) {
+function setupDataFilter(id, class_name, data, data_filter = "") {
   $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`);
   id = '#' + id;
   if (data && data.length > 1)
@@ -217,6 +219,12 @@ function setupDataFilter(id, class_name, data) {
     else
       $('<option value="' + value.id + '">' + value.name + "</option>").appendTo(id);
   });
+
+  if (localStorage.filterDashboard && data_filter) {
+    let filter = JSON.parse(localStorage.filterDashboard);
+    $(id).val(filter[data_filter]);
+  }
+
   $(id).bsMultiSelect({
     setSelected: (opt, val) => {
       opt.selected = val;
