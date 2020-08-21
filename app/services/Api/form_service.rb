@@ -225,7 +225,12 @@ module Api
       user_ids = User.where(filter[:filter_users]).pluck(:id)
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_approve_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: true).select(:user_id)
-      user_review_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false).select(:user_id)
+      reviewers = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false)
+      h_reviewers = {}
+      reviewers.each do |reviewer|
+        h_reviewers[reviewer.user_id] = reviewer.is_submit_cds
+      end
+      user_review_ids = reviewers.pluck(:user_id)
       forms = []
       if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         forms += if (filter[:period_id])
@@ -240,15 +245,15 @@ module Api
       if @privilege_array.include?(REVIEW_CDS)
         forms += if (filter[:period_id])
             Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
-              .where.not(status: ["Awaiting Approval", "New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           else
             Form.includes(:period, :role, :title).where(user_id: user_review_ids.pluck(:user_id))
-              .where.not(status: ["Awaiting Approval", "New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
-      periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
+      periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)     
       forms.map do |form|
-        format_form_cds_review(form, user_approve_ids.pluck(:user_id), periods)
+        format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
     end
 
@@ -1204,7 +1209,7 @@ module Api
       hash
     end
 
-    def format_form_cds_review(form, user_approve_ids = [], periods = [])
+    def format_form_cds_review(form, user_approve_ids = [], periods = [], h_reviewers = {})
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
@@ -1217,9 +1222,9 @@ module Api
         title: form.title&.name || "N/A",
         submit_date: format_long_date(form.submit_date),
         approved_date: format_long_date(form.approved_date),
-        status: form.status,
+        status: h_reviewers[form.user_id] ? "Submitted" : form.status,
         user_id: form.user&.id,
-        is_approver: (user_approve_ids.include? form.user&.id),
+        is_approver: (user_approve_ids.include? form.user_id),
         is_open_period: (periods.include? form.period_id),
       }
     end
