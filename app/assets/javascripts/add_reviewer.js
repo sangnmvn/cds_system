@@ -159,7 +159,7 @@ $(document).on('click', '#save_add_approver', function () {
     add_approver_ids: approvers,
     is_submit_late: $("#submit_late")[0].checked,
     remove_ids: [current_approvers],
-    add_reviewer: true,
+    add_reviewer: false,
   }
   ajaxAddReviewerApprover(params, '#save_add_approver')
 });
@@ -182,9 +182,9 @@ function ajaxAddReviewerApprover(params, btn_save_id) {
     success: function (response) {
       disableButtonSave(btn_save_id, true)
       if (response.status == "success")
-        warning(`Add ${params.add_reviewer ? "reviewer" : "approver"} for ${params.user_account} has been successfully!`);
+        warning(`Add ${params.add_reviewer ? "reviewer" : "approver"} for <b>${params.user_account}</b> has been successfully!`);
       else if (response.status == "fails")
-        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} for ${params.user_account}!`)
+        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} for <b>${params.user_account}</b>!`)
     }
   })
 }

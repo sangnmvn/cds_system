@@ -88,7 +88,7 @@ class UsersController < ApplicationController
     project_id = user.map(&:project_id)
 
     current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
-    reviewers = User.distinct.left_outer_joins(user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+    reviewers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     h_reviewers = []
     reviewers.each do |reviewer|
