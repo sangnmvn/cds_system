@@ -931,7 +931,6 @@ $(document).ready(function () {
           if (response.status == "success") {
             warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
             $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-            // NOT
             $('a.submit-assessment').addClass('d-none');
             $('#modal_period').modal('hide');
             $("#button_request_update").addClass("d-none")
@@ -944,6 +943,7 @@ $(document).ready(function () {
           } else {
             fails("Can't submit CDS/CDP.");
           }
+          $("#modal_reviewer_submit").modal('hide');
         }
       });
     } else {
