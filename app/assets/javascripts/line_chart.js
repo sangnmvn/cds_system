@@ -39,7 +39,9 @@ function drawLineChart(data, has_cdp, id) {
       values: data.map(function (d) {
         return {
           period: d.period,
-          rank: +d[name]
+          rank: +d[name].rank,
+          level: +d[name].level,
+          title: d[name].title
         };
       })
     };
@@ -56,18 +58,13 @@ function drawLineChart(data, has_cdp, id) {
 
   var yAxis = d3.axisLeft(y)
 
-  var min = d3.min(roles, function (c) {
-    return d3.min(c.values, function (v) {
-      return v.rank;
-    });
-  })
   var max = d3.max(roles, function (c) {
     return d3.max(c.values, function (v) {
       return v.rank;
     });
   })
 
-  y.domain([min, max]);
+  y.domain([0, max]);
 
   function getDashArray(data, dashedRanges, path) {
     const lengths = data.map(d => getPathLengthAtX(path, x(d.period) + x.bandwidth() / 2))
@@ -165,7 +162,9 @@ function drawLineChart(data, has_cdp, id) {
     .attr("y", 6)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
-
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
   var role = svg.selectAll(".role")
     .data(roles)
     .enter().append("g")
@@ -208,5 +207,21 @@ function drawLineChart(data, has_cdp, id) {
     .attr("r", 5)
     .style("fill", function (d) {
       return color(d.name);
+    })
+    .on("mouseover", function (d) {
+      div.transition()
+        .duration(200)
+        .style('display', 'block')
+        .style("opacity", 0.9);
+      div.html(`
+        <span>Title: ${d.title}</span></br>
+        <span>Rank: ${d.rank}</span></br>
+        <span>Level: ${d.level}</span></br>
+      `)
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+    })
+    .on("mouseout", function (d) {
+      div.style('display', 'none')
     });
 }

@@ -213,11 +213,19 @@ module Api
       title_histories = TitleHistory.joins(:period).where(user_id: user_id).where.not(id: 1).order("periods.to_date")
       h_rank_empty = {
         period: "",
-        current_user.role&.name => nil,
+        current_user.role&.name => {
+          rank: nil,
+          level: nil,
+          title: "",
+        },
       }
       role_names = title_histories.pluck(:role_name).uniq
       role_names.each do |role_name|
-        h_rank_empty[role_name] = nil
+        h_rank_empty[role_name] = {
+          rank: nil,
+          level: nil,
+          title: "",
+        }
       end
 
       arr_result = []
@@ -225,7 +233,11 @@ module Api
         # new hash empty
         h_rank = h_rank_empty.clone
         h_rank[:period] = title_history.period&.format_period_career
-        h_rank[title_history.role_name] = title_history.rank
+        h_rank[title_history.role_name] = {
+          rank: title_history.rank,
+          level: title_history.level,
+          title: title_history.title,
+        }
         arr_result << h_rank
       end
 
@@ -240,7 +252,11 @@ module Api
           h_rank = h_rank_empty.clone
           h_rank[:period] = schedule&.period&.format_period_career
           h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
-          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank] || 0
+          h_rank[form.role.name.to_sym] = {
+            rank: data_result[:expected_title][:rank] || 0,
+            level: data_result[:expected_title][:level] || 0,
+            title: data_result[:expected_title][:title] || "",
+          }
           arr_result << h_rank
         end
 
@@ -248,7 +264,11 @@ module Api
           has_cdp = true
           h_rank = h_rank_empty.clone
           h_rank[:period] = "Next Period"
-          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank] || 0
+          h_rank[form.role.name.to_sym] = {
+            rank: data_result[:cdp][:rank] || 0,
+            level: data_result[:cdp][:level] || 0,
+            title: data_result[:cdp][:title] || "",
+          }
           arr_result << h_rank
         end
       end
