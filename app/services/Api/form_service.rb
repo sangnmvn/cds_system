@@ -1050,9 +1050,9 @@ module Api
         comment.nil? ? Comment.create(form_slot_id: form_slot_id, flag: "orange") : comment.update(flag: "orange")
       end
       user_staff = User.find_by_id(params[:user_id])
-      # Async.await do
-      #   CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 3.seconds)
-      # end
+      Async.await do
+        CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 3.seconds)
+      end
       "success"
     end
 
