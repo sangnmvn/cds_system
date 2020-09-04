@@ -284,6 +284,9 @@ function loadDataSlots(response) {
   $('#content_slot').html(temp);
   checkChangeSlot();
   checkIsRequested();
+  setTimeout(function(){  if (is_submit) {
+    toggleInput(false);
+  } }, 3000);
 }
 
 function checkStatusFormStaff(status) {
