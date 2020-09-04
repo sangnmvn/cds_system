@@ -118,6 +118,8 @@ $(document).on("click", "#confirm_yes_request_add_more_evidence", function () {
       fails_message = "Can not requested"
       if (response.status == "success") {
         warning(success_message)
+        $("a.submit-assessment .fa-file-import").css("color", "#6c757d");
+        $('a.submit-assessment').removeClass('submit-assessment');
       } else {
         fails(fails_message);
       }
