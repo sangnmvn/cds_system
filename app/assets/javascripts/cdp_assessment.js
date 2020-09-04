@@ -283,6 +283,7 @@ function loadDataSlots(response) {
   })
   $('#content_slot').html(temp);
   checkChangeSlot();
+  checkIsRequested();
 }
 
 function checkStatusFormStaff(status) {
@@ -1359,6 +1360,24 @@ function checkChangeSlot() {
         hightlightChangeCompetency(e.competency_id, e.level);
       });
       $('#competency_panel').find('.show').parent().find('tr')[0].style.backgroundColor = '#7ba2ed';
+    }
+  });
+}
+
+function checkIsRequested() {
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_is_requested",
+    data: { form_id: form_id },
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    dataType: "json",
+    success: function (response) {
+      if (response.status == "success") {
+        $("a.submit-assessment .fa-file-import").css("color", "#6c757d");
+        $('a.submit-assessment').removeClass('submit-assessment');
+      }
     }
   });
 }

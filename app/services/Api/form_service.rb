@@ -79,6 +79,14 @@ module Api
       arr
     end
 
+    def get_is_requested
+      form_slots = FormSlot.includes(:comments).where(form_id: params[:form_id])
+      form_slots.each do |form_slot|
+        return "success" if form_slot.comments.where(flag: "orange").count > 0
+      end
+      "fail"
+    end
+
     def get_summary_comment
       form = Form.find_by(id: params[:form_id])
       summary_comments = SummaryComment.where(form_id: params[:form_id]).order(updated_at: :desc, period_id: :desc)
@@ -247,11 +255,11 @@ module Api
             Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
               .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           else
-            Form.includes(:period, :role, :title).where(user_id: user_review_ids.pluck(:user_id))
+            Form.includes(:period, :role, :title).where(user_id: user_review_ids)
               .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
-      periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)     
+      periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
       forms.map do |form|
         format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
@@ -1042,9 +1050,9 @@ module Api
         comment.nil? ? Comment.create(form_slot_id: form_slot_id, flag: "orange") : comment.update(flag: "orange")
       end
       user_staff = User.find_by_id(params[:user_id])
-      Async.await do
-        CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 3.seconds)
-      end
+      # Async.await do
+      #   CdsAssessmentMailer.with(staff: user_staff, from_date: period.from_date, to_date: period.to_date, slots: JSON.parse(slot_id)).reviewer_request_update.deliver_later(wait: 3.seconds)
+      # end
       "success"
     end
 

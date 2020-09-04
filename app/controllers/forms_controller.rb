@@ -179,6 +179,10 @@ class FormsController < ApplicationController
     render json: @form_service.get_slot_change
   end
 
+  def get_is_requested
+    render json: { status: @form_service.get_is_requested }
+  end
+
   def confirm_request
     return render json: { status: "success" } if @form_service.confirm_request
     render json: { status: "fail" }
@@ -418,7 +422,7 @@ class FormsController < ApplicationController
     @is_approver = false
     @is_reviewer = @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
 
-    if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?&& user_ids.include?(current_user.id)
+    if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any? && user_ids.include?(current_user.id)
       @is_reviewer = false
       @is_approver = true
     end
