@@ -71,7 +71,7 @@
   var check_5_month = <%= @check_5_month %>;
   var user_current = <%= current_user.id %>;
   var user_name = "<%= @hash[:user_name] %>"
-  var check_request_update = <%=  @hash[:is_disable_confirm_update] %>;
+  var check_request_update = "<%=  @hash[:is_disable_confirm_update] %>";
   var conflict_commits = {}
   loadDataPanel(form_id);
 </script>
