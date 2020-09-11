@@ -799,7 +799,7 @@ namespace :cds_assessment do
         (3880, '', 2, true, '', 3880, now(), now(), false),
         (3881, 'Đã pass ở kỳ trước', 3, true, '', 3881, now(), now(), false),
         (3882, 'Manage technical risks by logging task-related issues on vsts to keep track', 3, true, '', 3882, now(), now(), false),
-        (3883, '', 2, true, '', 3883, now(), now(), false),
+        (3883, 'Cần improve thêm', 3, true, '', 3883, now(), now(), false),
         (3884, '', 2, true, '', 3884, now(), now(), false),
         (3885, 'Đã pass ở kỳ trước', 3, true, '', 3885, now(), now(), false),
         (3886, 'Đã pass ở kỳ trước', 3, true, '', 3886, now(), now(), false),

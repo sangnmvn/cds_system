@@ -1321,7 +1321,7 @@ namespace :cds_assessment do
         (4905, 3, '20200728: tuyenhtk – với khách hàng meperia, bạn nắm được nhiệm vụ của cls và mong muốn của khách hàng, do đó việc priority task được thực hiện khá tốt', 39, true, '', 1, 4905, now(), now(), true),
         (4906, 3, '20200728: tuyenhtk – với khách hàng meperia, bạn nắm được nhiệm vụ của cls và mong muốn của khách hàng, do đó việc priority task được thực hiện khá tốt', 39, true, '', 1, 4906, now(), now(), true),
         (4907, 2, 'Tuyenhtk: như trong slot có mô tả: để pass slot này cần develo[ feature list / use cae model hoặc srs của 2-3 project vừa và nhỏ hoặc 1 project lớn. nên để pass được slot này thì phải làm công việc tương tự ở 2-3 dự án nhỏ hay trong 1 dự án lớn từ 50 người\\ncác bằng chứng của em thì ổn trong cls (nhưng cls chỉ thuộc 1 dạng project vừa & nhỏ)', 39, true, '', 1, 4907, now(), now(), true),
-        (4908, 0, 'Không đồng ý', 39, true, '', 1, 4908, now(), now(), true),
+        (4908, 1, 'Không đồng ý', 39, true, '', 1, 4908, now(), now(), true),
         (4909, 3, 'Tuyenhtk: đồng ý', 39, true, '', 1, 4909, now(), now(), true),
         (4910, 3, 'Tuyenhtk: đồng ý', 39, true, '', 1, 4910, now(), now(), true),
         (4911, 3, '20200728: tuyenhtk – đồng ý', 39, true, '', 1, 4911, now(), now(), true),
@@ -1333,9 +1333,9 @@ namespace :cds_assessment do
         (4917, 3, '20200728: tuyenhtk – đồng ý', 39, true, '', 1, 4917, now(), now(), true),
         (4918, 3, '20200728: tuyenhtk – đồng ý', 39, true, '', 1, 4918, now(), now(), true),
         (4919, 3, '20200728: tuyenhtk – đồng ý', 39, true, '', 1, 4919, now(), now(), true),
-        (4920, 0, 'Không đồng ý', 39, true, '', 1, 4920, now(), now(), true),
-        (4921, 0, 'Không đồng ý', 39, true, '', 1, 4921, now(), now(), true),
-        (4922, 0, 'Không đồng ý', 39, true, '', 1, 4922, now(), now(), true),
+        (4920, 1, 'Không đồng ý', 39, true, '', 1, 4920, now(), now(), true),
+        (4921, 1, 'Không đồng ý', 39, true, '', 1, 4921, now(), now(), true),
+        (4922, 1, 'Không đồng ý', 39, true, '', 1, 4922, now(), now(), true),
         (4923, 3, 'Tuyenhtk: update file scrum hàng ngày và follow các action tương ứng\\n\\n[mar 2019] tuyenhtk: chỉ đồng ý ở meet expectations. file scrum dự án không để track requirement mà dùng vào mục đích khác (phát hiện và xử lý kịp thời các vấn đề phát sinh từ member, theo dõi tiến độ công việc, priority task của member). tuy nhiên, cũng ghi nhận đề xuất của em và nó sẽ được đánh giá ở slot khác phù hợp hơn', 39, true, '', 1, 4923, now(), now(), true),
         (4924, 4, 'Tuyenhtk: có bằng chứng về việc verify các change requirement liên quan da/qbr report\\n\\n[mar 2019] tuyenhtk: đồng ý\\nbằng chứng thể hiện rõ ở việc change requirement trong mảng da/qbr. tuyenntt có thể analyze và đánh giá mức độ ảnh hưởng khi thêm / xóa / update 1 feature trong report', 39, true, '', 1, 4924, now(), now(), true),
         (4925, 3, 'Tuyenhtk: có bằng chứng về việc verify các change requirement liên quan da/qbr report (cần update lại bằng chứng)\\n\\n\\n[mar 2019] tuyenhtk: đồng ý\\nbằng chứng thể hiện rõ ở việc change requirement trong mảng da/qbr. tuyenntt có thể analyze và đánh giá mức độ ảnh hưởng khi thêm / xóa / update 1 feature trong report', 39, true, '', 1, 4925, now(), now(), true),
@@ -1529,13 +1529,13 @@ namespace :cds_assessment do
         (5113, 1, 'Không đồng ý', 39, true, '', 1, 5113, now(), now(), true),
         (5114, 3, 'Tuyenntt: agree\\n\\ntuyenhtk: đồng ý', 39, true, '', 1, 5114, now(), now(), true),
         (5115, 3, 'Trangptm: agree\\n\\ntuyenhtk: đồng ý', 39, true, '', 1, 5115, now(), now(), true),
-        (5116, 0, 'Không đồng ý', 39, true, '', 1, 5116, now(), now(), true),
-        (5117, 0, 'Không đồng ý', 39, true, '', 1, 5117, now(), now(), true),
-        (5118, 0, 'Không đồng ý', 39, true, '', 1, 5118, now(), now(), true),
-        (5119, 0, 'Không đồng ý', 39, true, '', 1, 5119, now(), now(), true),
-        (5120, 0, 'Không đồng ý', 39, true, '', 1, 5120, now(), now(), true),
-        (5121, 0, 'Không đồng ý', 39, true, '', 1, 5121, now(), now(), true),
-        (5122, 0, 'Không đồng ý', 39, true, '', 1, 5122, now(), now(), true),
+        (5116, 1, 'Không đồng ý', 39, true, '', 1, 5116, now(), now(), true),
+        (5117, 1, 'Không đồng ý', 39, true, '', 1, 5117, now(), now(), true),
+        (5118, 1, 'Không đồng ý', 39, true, '', 1, 5118, now(), now(), true),
+        (5119, 1, 'Không đồng ý', 39, true, '', 1, 5119, now(), now(), true),
+        (5120, 1, 'Không đồng ý', 39, true, '', 1, 5120, now(), now(), true),
+        (5121, 1, 'Không đồng ý', 39, true, '', 1, 5121, now(), now(), true),
+        (5122, 1, 'Không đồng ý', 39, true, '', 1, 5122, now(), now(), true),
         (5123, 3, 'Trangptm: agree\\n\\ntuyenhtk: đồng ý', 39, true, '', 1, 5123, now(), now(), true),
         (5124, 3, 'Trangptm: agree\\n\\ntuyenhtk: đồng ý', 39, true, '', 1, 5124, now(), now(), true),
         (5125, 3, 'Trangptm: agree\\n\\ntuyenhtk: đồng ý\\nhuyền chủ động raise vấn đề và được hướng dẫn call meeting với các stakeholder tương ứng. dù meeting vẫn còn vấn đề tồn đọng chưa giải quyết được, nhưng có solution để đi tiếp', 39, true, '', 1, 5125, now(), now(), true),
@@ -2315,7 +2315,6 @@ namespace :cds_assessment do
         (5323, 1, '', 5193, 26, '4b', 74, 209, now(), now()),
         (5324, 1, '', 5194, 26, '5a', 74, 210, now(), now());
     SQL
-    #### 5330 max ###############################################################
 
     connection
     ActiveRecord::Base.connection.execute(sql_approver)
