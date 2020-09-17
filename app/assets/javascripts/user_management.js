@@ -81,6 +81,10 @@ $(document).ready(function () {
 
   $(".tokenize-project").tokenize2();
 
+  $('.tokenize-project').on('tokenize:select', function(container){
+    $(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
+  });
+
   $("#btn_modal_add_user").click(function () {
     first_name = $("#first").val();
     last_name = $("#last").val();
@@ -561,6 +565,9 @@ $(document).on("click", ".edit_icon", function () {
           }
         });
         $(".tokenize-project").tokenize2();
+        $('.tokenize-project').on('tokenize:select', function(container){
+          $(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
+        });
       });
     },
   });

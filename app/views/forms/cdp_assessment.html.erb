@@ -5,9 +5,9 @@
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <% breadcrumb :new_cdp %>
 <div class="container-fluid">
-  <div class="row" id="cdp_container_div2">
-    <div class="col-md-4 div-header" ><%= "CDS & CDP #{@user[:role_name]} - #{@user[:account]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>
-    <div class="col-md-8 list-action filter-slots" style="text-align:right;">
+  <div class="row" id="cdp_container_div2" style=" display: inline-block; width: 100%;padding:0 10px">
+    <div class="div-header" style="display: inline-block; float: left"><%= "CDS & CDP #{@user[:role_name]} - #{@user[:account]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>
+    <div class="list-action filter-slots" style="text-align:right; display: inline-block; float: right">
       Search: <input type="text" class="search-assessment" placeholder="Enter Slot ID, Description">
       Filter
       <select id="filter_form_slots" multiple="multiple">
