@@ -739,7 +739,7 @@ module Api
     def calculate_result(form, competencies, result)
       return false if form.nil? || competencies.empty? || !result
       h_result = calculate_result_by_type(form, competencies, result)
-      h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
+      # h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
       h_result
     end
 
@@ -839,11 +839,18 @@ module Api
         }
       end
 
-      return expected_title if type == :value_cdp
+      title_history_current = TitleHistory.includes(:period).where(user_id: form.user_id).order("periods.to_date").last
+      current = {
+        level: title_history_current&.level || "N/A",
+        rank: title_history_current&.rank || "N/A",
+        title: title_history_current&.title || "N/A",
+      }
+      # return expected_title if type == :value_cdp
       {
         competencies: h_competencies,
-        current_title: current_title,
-        expected_title: expected_title,
+        current_title: current_title,#previous
+        expected_title: current,     #current
+        cdp: expected_title,         #plan
       }
     end
 

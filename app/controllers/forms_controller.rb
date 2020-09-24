@@ -119,7 +119,7 @@ class FormsController < ApplicationController
     else
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
       form_slot = FormSlot.where(form_id: form.id)
-      @form_service.create_form_slot(form) if form_slot.empty?
+      @form_service.create_form_slot(form)
     end
     h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
     @hash[:is_disable_confirm_update] = h_slots.present?
