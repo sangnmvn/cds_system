@@ -2,9 +2,10 @@ table {
     table-layout: fixed;
 }
 
-.red{
+.red {
     color: #ff0000;
 }
+
 #template-index th,
 td {
     border: 1px solid #fff;
@@ -60,15 +61,15 @@ table thead {
 
 .add-template {
     display: inline-block;
-    float: right;
     padding-left: 10px;
-}
 
-.add-template button {
-    height: 100%;
-    border: 0;
-    background-color: #8da8db;
-    padding: 0 5px 0 0;
+    button {
+        float: right;
+        height: 100%;
+        border: 0;
+        background-color: #8da8db;
+        padding: 0 5px 0 0;
+    }
 }
 
 .breadcrumb a,
@@ -82,16 +83,6 @@ table thead {
     font-weight: bold;
 }
 
-#alert-success,
-#alert-danger {
-    position: absolute;
-    z-index: 3400;
-    top: 10%;
-    left: 50%;
-    margin: 0px auto;
-    text-align: center;
-    display: none;
-}
 
 #add_template_button {
     font-size: 80%;

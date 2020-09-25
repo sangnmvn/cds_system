@@ -1,20 +1,22 @@
 Rails.application.routes.draw do
   get "periods/show"
 
-  devise_for :users
+  devise_for :users do
+    get "/users/sign_out" => "devise/sessions#destroy"
+    post "/users/create" => "users#create"
+  end
+
   resources :user_groups do
     collection do
       get :load_user_group
       get :load_user
       get :load_group
-      get :save_user_group
+      post :save_user_group
+      post :load_privileges
+      post :data_assign_user
     end
   end
-  # devise_for :users
-  devise_scope :users do
-    get "/users/sign_out" => "devise/sessions#destroy"
-    post "/users/create" => "users#create"
-  end
+
   resources :users do
     collection do
       get :check_emai_account
@@ -37,6 +39,8 @@ Rails.application.routes.draw do
       post :add_reviewer
       post :add_approver
       post :add_reviewer_to_database
+      post :reset_password
+      post :forgot_password
     end
   end
 
@@ -48,6 +52,7 @@ Rails.application.routes.draw do
     collection do
       get "get_data"
       delete "destroy_multiple"
+      post :load_data_groups
     end
   end
   resources :forms do
@@ -61,7 +66,6 @@ Rails.application.routes.draw do
       post :data_view_result
       post :get_competencies
       post :cancel_request
-      post :get_competencies_reviewer
       get :cdp_assessment
       get :index_cds_cdp
       post :request_update_cds
@@ -88,6 +92,9 @@ Rails.application.routes.draw do
       post :withdraw_cds
       post :export_excel_cds_review
       post :get_line_manager_miss_list
+      post :data_filter_projects
+      post :data_filter_users
+      post :get_is_requested
     end
   end
   resources :templates do
@@ -155,6 +162,7 @@ Rails.application.routes.draw do
       post :export_keep_title
       post :data_latest_baseline
       post :load_form_cds_staff
+      post :data_filter_projects
     end
   end
   get "/user_data/" => "users#get_user_data", defaults: { format: "json" }
@@ -190,7 +198,7 @@ Rails.application.routes.draw do
       delete :delete_role
       delete :delete_title
     end
-  end 
+  end
   resources :help do
     collection do
       get :index

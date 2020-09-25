@@ -1,0 +1,158 @@
+$header-color: #4472c4;
+$even-color: #E9EBF5;
+$odd-color: #CFD5EA;
+
+.error {
+    color: red;
+    font-size: 10px;
+}
+
+.highlight-record {
+    background-color: pink !important;
+}
+
+.modal-form-add-privilege,
+.modal-form-assign-user {
+    .modal-header {
+        background-color: $header-color;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .table-fixed {
+        overflow-y: auto;
+        height: 350px;
+        border: 2px solid #0066CC;
+
+    }
+
+    .table-responsive {
+        display: table;
+        width: 100%;
+        overflow-y: auto;
+
+        thead {
+            th {
+                color: #fff;
+                background-color: $header-color;
+                border-top: 0px;
+                border-right: 1px solid #fff;
+                border-bottom: 1px solid #fff;
+            }
+        }
+
+        tr {
+            &.privilege-name {
+                background-color: #6a92da;
+                color: #fff;
+            }
+
+            &.even {
+                background-color: $even-color;
+            }
+
+            &.odd {
+                background-color: $odd-color;
+            }
+
+            td {
+                border: 1px solid #fff;
+                border-left: 0px;
+            }
+            .no {
+                width: 3%;
+            }
+
+            .c-checkbox {
+                width: 3%;
+            }
+
+            .account {
+                width: 10%;
+            }
+        }
+
+    }
+
+    .to-left {
+        margin-top: 10px;
+    }
+}
+
+.icon-disabled {
+    color: #6c757d !important;
+}
+// css for redraw assign user group
+.modal-form-assign-user  {
+    tbody {
+        td {
+            &:nth-child(1) {
+                text-align: right;
+            }
+            &:nth-child(2) {
+                text-align: center;
+            }
+        }
+    }
+}
+.table-group-wrapper {
+    .btn-group {
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .table-group {
+        border: 2px solid #0066CC;
+
+        tr {
+            &.even {
+                background-color: $even-color;
+            }
+
+            &.odd {
+                background-color: $odd-color;
+            }
+
+            .no {
+                width: 3%;
+            }
+
+            .name {
+                width: 25%;
+            }
+
+            .number-user {
+                width: 16%;
+            }
+
+            .status {
+                width: 7%;
+            }
+
+            .action {
+                width: 7%;
+            }
+
+            th {
+                background-color: $header-color;
+                color: #fff;
+                border-bottom: 1px solid #fff;
+            }
+
+            td {
+                border: 1px solid #fff;
+
+                .action-icon {
+                    text-decoration: none;
+
+                    i {
+                        width: 13px;
+                        height: 15px;
+                        font-size: 19px;
+                    }
+                }
+            }
+
+        }
+    }
+}

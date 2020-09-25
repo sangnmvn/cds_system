@@ -23,6 +23,7 @@ var full_access_on_my_CDS_CDP_assessment = "15";
 var review_CDS_CDP_assessment = "16";
 var approve_CDS_CDP_assessment = "17";
 var view_CDS_CDP_Assessment = "24";
+var high_level_approve_CDS_CDP = "26";
 var full_access_on_level_mapping_management = "18";
 var view_level_mapping_management = "19";
 var full_access_on_all_companies_dashboard = "20";
@@ -41,8 +42,8 @@ String.prototype.formatUnicorn =
       var key;
       var args =
         "string" === t || "number" === t ?
-        Array.prototype.slice.call(arguments) :
-        arguments[0];
+          Array.prototype.slice.call(arguments) :
+          arguments[0];
       for (key in args) {
         str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
       }
@@ -97,6 +98,7 @@ $(document).ready(function () {
 });
 
 function checkPrivilege() {
+  if (!privilege_array) return;
   if (!privilege_array.split(",").includes(organization)) {
     $(".privilate-organization-settings").css("display", "none");
   }
@@ -118,7 +120,7 @@ function checkPrivilege() {
   if (!privilege_array.split(",").includes(full_access_on_all_companies_dashboard) && !privilege_array.split(",").includes(full_access_on_my_company_dashboard) && !privilege_array.split(",").includes(full_access_on_my_project) && !privilege_array.split(",").includes(view_my_dashboard)) {
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment)) {
+  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment) && !privilege_array.split(",").includes(high_level_approve_CDS_CDP)) {
     $(".privilate-cds-cdp-review").css("display", "none");
   }
   if (!privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(view_CDS_CDP_Assessment)) {

@@ -4,13 +4,9 @@
     <title>CompetencySystem</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'tokenize2.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'tokenize2.min', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'jquery.dataTables.min', 'data-turbolinks-track': 'reload' %>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <%= stylesheet_link_tag "application", media: "all", 'data-turbolinks-track': "reload" %>
+    <%= javascript_include_tag "application", 'data-turbolinks-track': "reload" %>
+    <%= javascript_include_tag "jquery.dataTables.min", 'data-turbolinks-track': "reload" %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
@@ -22,7 +18,7 @@
       <div class="collapse navbar-collapse" >
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <%= link_to "Dashboard", root_path, class: "nav-link privilate-cds-dashboard"%>
+            <%= link_to "Dashboard", root_path, class: "nav-link privilate-cds-dashboard" %>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,7 +34,7 @@
               Administration
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item privilate-user-managemen" href="/users">User Management</a>
+              <a class="dropdown-item privilate-user-management" href="/users">User Management</a>
               <a class="dropdown-item privilate-user-group-management" href="/groups">User Group Management</a>
               <a class="dropdown-item privilate-schedule-management" href="/schedules">Schedule Management</a>
               <a class="dropdown-item privilate-template" href="/templates">Template Management</a>

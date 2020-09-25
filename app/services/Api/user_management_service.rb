@@ -58,12 +58,9 @@ module Api
         current_user_data.push(user.company.name)
         # column action
         current_user_data.push("<div style='text-align: center'>
-            <a class='action_icon edit_icon' data-toggle='tooltip' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
+            <a class='action_icon edit_icon' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
               <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
             </a>
-              <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_firstname='#{user.first_name}' data-user_lastname='#{user.last_name}' href='javascript:;'>
-                <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "rgb(77, 79, 78)"}'></i>
-              </a>
               <a class='action_icon add-reviewer-icon'  title='Add Reviewer For User' #{(full_access || is_reviewer) ? "data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"}  href='javascript:;'>
                 <img border='0' src='/assets/add_reviewer.png' class='add-reviewer-icon'>
               </a>
@@ -72,7 +69,14 @@ module Api
               </a>
               <a #{"class='action_icon status_icon'" if full_access} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
                 <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless full_access}'></i>
-              </a></div>")
+              </a>&nbsp;
+              <a class='action_icon reset-password' title='Reset password of user' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_full_name='#{user.format_name_vietnamese}' href='javascript:;'>
+              <img border='0' src='/assets/reset_password.png' class='reset-password-icon'>
+              </a>
+              <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_full_name='#{user.format_name_vietnamese}'  data-user_lastname='#{user.last_name}' href='javascript:;'>
+                <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "rgb(77, 79, 78)"}'></i>
+              </a>
+            </div>")
 
         datas << current_user_data
       end.flatten
@@ -111,7 +115,7 @@ module Api
     end
 
     def data_users_by_gender
-      users = User.left_outer_joins(:project_members).where(filter_users).group(:gender).count
+      users = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).group(:gender).count
 
       h_users = {}
       h_users[:Male] = users[true] if users[true]
@@ -121,9 +125,10 @@ module Api
     end
 
     def data_users_by_role
-      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil).group("roles.name").count
+      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.name").count
+      h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.abbreviation").count
 
-      { data: h_users, total: h_users.values.sum }
+      { data: h_users, data_small: h_users_small, total: h_users.values.sum }
     end
 
     def edit_user_profile
@@ -134,7 +139,7 @@ module Api
     end
 
     def data_users_by_seniority
-      users = User.joins(:project_members).where(filter_users).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
+      users = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).group("TIMESTAMPDIFF(YEAR, users.joined_date, NOW())").count
       h_users = { "<3" => 0, "3-5" => 0, "5-7" => 0, "7-10" => 0, ">10" => 0 }
       users.each do |key, value|
         case key
@@ -169,16 +174,22 @@ module Api
     end
 
     def data_users_by_title
-      if params[:role_id] && params[:role_id].length == 1
-        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.name").count
+      if params[:role_id] && params[:role_id].first != "All" && params[:role_id].length == 1
+        users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(id: 1).group("titles.name").count
         h_users = {}
         users.each do |key, value|
-          h_users[key] = value
+          if key.nil?
+            h_users["No Title"] = value
+          else
+            h_users[key] = value
+          end
         end
         return h_users
       end
-      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(role_id: 6).group("titles.rank").count
-      h_users = { "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
+
+      users = User.left_outer_joins(:project_members, :title).where(filter_users).where.not(id: 1).group("titles.rank").count
+      h_users = { "No Title" => 0, "Associate" => 0, "Middle" => 0, "Senior" => 0, "> Senior" => 0 }
+
       users.each do |key, value|
         case key
         when 1
@@ -188,7 +199,9 @@ module Api
         when 3
           h_users["Senior"] = value
         when 4..20
-          h_users["> Senior"] = value
+          h_users["> Senior"] += value
+        else
+          h_users["No Title"] = value
         end
       end
       h_users.select { |key, value| value > 0 }
@@ -197,14 +210,22 @@ module Api
     def data_career_chart(user_id = nil)
       has_cdp = false
       user_id ||= current_user.id
-      title_histories = TitleHistory.joins(:period).where(user_id: user_id).order("periods.to_date")
+      title_histories = TitleHistory.joins(:period).where(user_id: user_id).where.not(id: 1).order("periods.to_date")
       h_rank_empty = {
         period: "",
-        current_user.role.name => nil,
+        # current_user.role&.name => {
+        #   rank: nil,
+        #   level: nil,
+        #   title: "",
+        # },
       }
       role_names = title_histories.pluck(:role_name).uniq
       role_names.each do |role_name|
-        h_rank_empty[role_name] = nil
+        h_rank_empty[role_name] = {
+          rank: nil,
+          level: nil,
+          title: "",
+        }
       end
 
       arr_result = []
@@ -212,7 +233,11 @@ module Api
         # new hash empty
         h_rank = h_rank_empty.clone
         h_rank[:period] = title_history.period&.format_period_career
-        h_rank[title_history.role_name] = title_history.rank
+        h_rank[title_history.role_name] = {
+          rank: title_history.rank,
+          level: title_history.level,
+          title: title_history.title,
+        }
         arr_result << h_rank
       end
 
@@ -227,7 +252,11 @@ module Api
           h_rank = h_rank_empty.clone
           h_rank[:period] = schedule&.period&.format_period_career
           h_rank[:period] = "Next Period" if form.status == "New" && schedule&.period_id = title_histories.last&.period_id
-          h_rank[form.role.name.to_sym] = data_result[:expected_title][:rank] || 0
+          h_rank[form.role.name.to_sym] = {
+            rank: data_result[:expected_title][:rank] || 0,
+            level: data_result[:expected_title][:level] || 0,
+            title: data_result[:expected_title][:title] || "",
+          }
           arr_result << h_rank
         end
 
@@ -235,7 +264,11 @@ module Api
           has_cdp = true
           h_rank = h_rank_empty.clone
           h_rank[:period] = "Next Period"
-          h_rank[form.role.name.to_sym] = data_result[:cdp][:rank] || 0
+          h_rank[form.role.name.to_sym] = {
+            rank: data_result[:cdp][:rank] || 0,
+            level: data_result[:cdp][:level] || 0,
+            title: data_result[:cdp][:title] || "",
+          }
           arr_result << h_rank
         end
       end
@@ -271,7 +304,7 @@ module Api
     end
 
     def data_users_up_title
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      user_ids = User.joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}
@@ -298,7 +331,7 @@ module Api
       user_ids = []
 
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].present? && h_old[title.user_id][:role] != title.role_name && h_old[title.user_id][:rank] >= title.rank
+        next if h_old[title.user_id].present? && (h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] >= title.rank)
         data = {
           user_id: title.user_id,
           title_history_id: title.id,
@@ -454,14 +487,12 @@ module Api
         is_delete: false,
       }
 
-      filter[:company_id] = params[:company_id].split(",").map(&:to_i) if params[:company_id].present? && params[:company_id] != "All"
-      filter[:role_id] = params[:role_id].split(",").map(&:to_i) if params[:role_id].present? && params[:role_id] != "All"
-      filter[:project_members] = { project_id: params[:project_id].split(",").map(&:to_i) } if params[:project_id].present? && params[:project_id] != "All"
+      filter[:company_id] = params[:company_id].map(&:to_i) if params[:company_id].present? && params[:company_id].first != "All"
+      filter[:role_id] = params[:role_id].map(&:to_i) if params[:role_id].present? && params[:role_id].first != "All"
+      filter[:project_members] = { project_id: params[:project_id].map(&:to_i) } if params[:project_id].present? && params[:project_id].first != "All"
 
       filter
     end
-
-    private
 
     def user_params
       {

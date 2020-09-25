@@ -10,20 +10,27 @@ $odd-color: #CFD5EA;
 .dataTables_info {
     margin-left: 25px !important;
 }
+
 .item-row {
     border: 1px solid;
 }
 
+.tooltip {
+    padding: 5px;
+    border: 1px solid #89bb67;
+    background-color: #e2f0d9;
+}
+
 .aa {
     background-color: #dae7ff;
-    padding-left: 50px;
+    padding-left: 20px;
     border-left: 2px solid white;
     height: 50%;
 }
 
 .bb {
     /* background-color: blue; */
-    padding-left: 50px;
+    padding-left: 20px;
     height: 50%;
     background-color: #dae7ff;
 }
@@ -110,10 +117,10 @@ rect {
     button span {
         color: red;
     }
+}
 
-    .item-filter-dashboard {
-        padding: 5px;
-    }
+.item-filter-dashboard {
+    padding-bottom: 7px;
 }
 
 .title-table {
@@ -230,10 +237,12 @@ rect {
 
         .baseline-cds {
             width: 50%;
+
             // background-color: #dae7ff;
             #table_baseline {
                 // background-color: #dae7ff;
                 width: 98% !important;
+
                 .first-column {
                     width: 10%;
                 }

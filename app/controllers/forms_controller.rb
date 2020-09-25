@@ -9,14 +9,15 @@ class FormsController < ApplicationController
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   FULL_ACCESS = 24
+  HIGH_FULL_ACCESS = 26
 
   def index_cds_cdp
-    form = Form.find_by(user_id: current_user.id)
+    form = Form.find_by(user_id: current_user.id, is_delete: false)
     @check_status = form.nil? || form&.status == "Done"
   end
 
   def get_list_cds_assessment_manager
-    data = if @privilege_array.include?(APPROVE_CDS) || @privilege_array.include?(REVIEW_CDS)
+    data = if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.get_list_cds_review
       else
         redirect_to root_path
@@ -44,7 +45,7 @@ class FormsController < ApplicationController
 
   def export_excel_cds_review
     file_path = ""
-    if @privilege_array.include?(APPROVE_CDS) || @privilege_array.include?(REVIEW_CDS)
+    if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
       data = @form_service.get_list_cds_review_to_export
     end
     file_path = @export_service.export_excel_cds_review(data)
@@ -59,15 +60,11 @@ class FormsController < ApplicationController
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
-  def get_competencies_reviewer
-    render json: @form_service.get_competencies_reviewer(form_params[:form_id])
-  end
-
   def cds_review
     @companies = Company.all
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
-      elsif @privilege_array.include?(APPROVE_CDS)
+      elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -85,13 +82,15 @@ class FormsController < ApplicationController
       else
         current_user
       end
-
+    return redirect_to index_cds_cdp_forms_path if user.nil?
     @user = {
       format_name: user.format_name,
+      account: user.account,
       role_name: user.role&.name || "",
     }
     @hash = {}
-    schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where(status: "In-progress").order("periods.to_date")
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
+
     @period = schedules.map do |schedule|
       {
         id: schedule.period_id,
@@ -99,9 +98,11 @@ class FormsController < ApplicationController
       }
     end
     if params[:title_history_id].present?
+      title_history = TitleHistory.find_by_id(params[:title_history_id])
+      return redirect_to index_cds_cdp_forms_path if title_history.nil?
       @hash[:is_submit_late] = false
       @hash[:status] = "Done"
-      @hash[:title_history_id] = params[:title_history_id]
+      @hash[:title_history_id] = title_history.id
       @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
       return @hash
     end
@@ -118,9 +119,18 @@ class FormsController < ApplicationController
     else
       form.update(status: "New", period_id: nil, is_delete: false) if form.status == "Done"
       form_slot = FormSlot.where(form_id: form.id)
-      @form_service.create_form_slot(form) if form_slot.empty?
+
+      role_id = current_user.role_id
+      template_id = Template.find_by(role_id: role_id, status: true)&.id
+      competency_ids = Competency.where(template_id: template_id).order(:location).pluck(:id)
+      slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
+
+      @form_service.create_form_slot(form) if form_slot.empty? || slot_ids.count > form_slot.count
     end
+    h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
+    @hash[:is_disable_confirm_update] = h_slots.present?
     @hash[:is_submit_late] = form.is_submit_late
+    @hash[:resubmit] = form.period&.status.present? && form.period.status.eql?("In-progress")
     @hash[:form_id] = form.id
     @hash[:status] = form.status
     @hash[:title] = form.period&.format_name.present? ? "CDS/CDP Assessment for " + form.period&.format_name : "New CDS/CDP Assessment"
@@ -143,20 +153,23 @@ class FormsController < ApplicationController
       }
     end
 
-    form = Form.where(id: params[:form_id]).first
+    form = Form.find_by_id(params[:form_id])
     user = User.includes(:role).find_by_id(params[:user_id])
     approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])
 
+    h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
+      user_account: user.account,
       form_id: form.id,
-      status: (!approver.is_approver && approver.is_submit_cds) ? "Submited" : form.status,
+      status: (!approver&.is_approver && approver&.is_submit_cds) ? "Submited" : form.status,
       title: "CDS/CDP of #{user.role.name} - #{user.account}",
-      is_submit: approver.is_submit_cds,
-      is_approver: approver.is_approver,
-      is_reviewer: !approver.is_approver,
+      is_submit: approver&.is_submit_cds || false,
+      is_approver: approver&.is_approver || false,
+      is_reviewer: !approver&.is_approver || false,
       is_submit_late: form.is_submit_late,
+      is_disable_confirm_update: h_slots.present?,
     }
   end
 
@@ -170,6 +183,10 @@ class FormsController < ApplicationController
 
   def get_slot_is_change
     render json: @form_service.get_slot_change
+  end
+
+  def get_is_requested
+    render json: { status: @form_service.get_is_requested }
   end
 
   def confirm_request
@@ -201,7 +218,7 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    if @is_reviewer || @is_approver
+    if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any? && current_user.id != form.user_id
       h_result = @form_service.get_line_manager_miss_list
     end
 
@@ -218,15 +235,18 @@ class FormsController < ApplicationController
   end
 
   def preview_result
-    return redirect_to forms_path if params[:form_id].nil?
+    return if params[:form_id].nil?
     form = Form.includes(:title).find_by_id(params[:form_id])
-    # return redirect_to forms_path if form.nil? || form.user_id != current_user.id && (@privilege_array & [APPROVE_CDS, REVIEW_CDS]).any?
+
     @form_id = form.id
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
+
+    @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
-    @slots = @result.values.map(&:keys).flatten.uniq.sort
+
+    @slots = @form_service.get_location_slot(@competencies.pluck(:id)).values.flatten.uniq.sort
   end
 
   def data_view_result
@@ -260,9 +280,9 @@ class FormsController < ApplicationController
       period = schedules.last.period_id
     end
 
-    render json: { status: "success" } if form.update(period_id: period, status: status, submit_date: DateTime.now)
+    render json: { status: "success", form_status: status } if form.update(period_id: period, status: status, submit_date: DateTime.now)
     user = form.user
-    period = Period.find_by(id: schedules.last.period_id)
+    period = Period.find_by_id(period)
     old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
     old_comment.destroy_all
     Async.await do
@@ -282,7 +302,7 @@ class FormsController < ApplicationController
       user = User.find_by_id(params[:user_id])
       if approvers.where(is_submit_cds: false, is_approver: false).count.zero?
         form = Form.where(id: params[:form_id])
-        return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", review_date: DateTime.now())
+        return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", approved_date: DateTime.now())
         Async.await do
           user_pms.each do |user_pm|
             CdsAssessmentMailer.with(staff: user, pm: user_pm.approver).email_to_pm.deliver_later(wait: 5.seconds)
@@ -348,7 +368,7 @@ class FormsController < ApplicationController
   def get_filter
     data = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
-      elsif @privilege_array.include?(APPROVE_CDS)
+      elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
         @form_service.data_filter_cds_review
@@ -358,20 +378,57 @@ class FormsController < ApplicationController
     render json: data
   end
 
+  def data_filter_projects
+    if params[:company_id].first == "0"
+      projects = Project.select("projects.name as name", :id)
+    else
+      projects = Project.select("projects.name as name", :id).where(company_id: params[:company_id])
+    end
+
+    render json: { projects: projects || [] }
+  end
+
+  def data_filter_users
+    if @privilege_array.include?(FULL_ACCESS)
+      user_ids = User.where(is_delete: false)
+    elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
+      user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+    elsif @privilege_array.include?(REVIEW_CDS)
+      project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
+      user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
+    else
+      redirect_to root_path
+    end
+
+    filter = { id: user_ids }
+    filter[:company_id] = params[:company_id] unless params[:company_id].length == 1 && params[:company_id].first == "0"
+    filter[:role_id] = params[:role_id] unless params[:role_id].length == 1 && params[:role_id].first == "0"
+
+    users = User.includes(:project_members).where(filter)
+    unless params[:project_id].length == 1 && params[:project_id].first == "0"
+      users = users.where(project_members: { project_id: params[:project_id] })
+    end
+
+    results = users.map do |user|
+      {
+        id: user.id,
+        name: user.format_name_vietnamese,
+      }
+    end
+    render json: { users: results || [] }
+  end
+
   private
 
   def get_privilege_assessment
-
     user_id = Form.where(id: params[:form_id]).pluck(:user_id)
     user_id = user_id.present? ? user_id : current_user.id
     project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
     user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-    @is_reviewer = false
     @is_approver = false
-    if @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
-      @is_reviewer = true
-    end
-    if @privilege_array.include?(APPROVE_CDS) && user_ids.include?(current_user.id)
+    @is_reviewer = @privilege_array.include?(REVIEW_CDS) && user_ids.include?(current_user.id)
+
+    if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any? && user_ids.include?(current_user.id)
       @is_reviewer = false
       @is_approver = true
     end
@@ -390,7 +447,7 @@ class FormsController < ApplicationController
   end
 
   def check_line_manager_privilege
-    redirect_to root_path unless (@privilege_array.include?(REVIEW_CDS) || @privilege_array.include?(APPROVE_CDS))
+    redirect_to root_path unless (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
   end
 
   def form_service
@@ -402,17 +459,8 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params[:offset] = params[:iDisplayStart] || "0"
-    params[:user_ids] = params[:user_ids] || "0"
-    params[:company_ids] = params[:company_ids] || "0"
-    params[:project_ids] = params[:project_ids] || "0"
-    params[:period_ids] = params[:period_ids] || "50"
-    params[:role_ids] = params[:role_ids] || "0"
+    params[:offset] = params[:iDisplayStart]
 
-    params.permit(:form_id, :template_id, :competency_id, :level, :user_id, :is_commit,
-                  :point, :evidence, :given_point, :recommend, :search, :filter, :slot_id,
-                  :period_id, :title_history_id, :form_slot_id, :competency_name, :offset,
-                  :user_ids, :company_ids, :project_ids, :period_ids, :role_ids, :type,
-                  :cancel_slots, :summary_id, :comment, :ext)
+    params
   end
 end

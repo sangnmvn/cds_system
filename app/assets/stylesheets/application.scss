@@ -11,16 +11,44 @@ $color-disable: #afaaaa;
 
 @import "bootstrap-datepicker";
 
+.error {
+    color: red;
+    padding-top: 3px;
+    padding-left: 5px;
+    font-size: 10px;
+}
+
+#cdp_container_div {
+    background-color: #8da8db;
+    min-height: 40px;
+    line-height: 40px;
+    margin: 0px 0px 0px 0px;
+    color: white;
+}
+
+#cdp_container_div2 {
+    background-color: #8da8db;
+    min-height: 40px;
+    line-height: 40px;
+    margin: 0px 0px 0px 0px;
+    color: white;
+}
+
 #alert-success,
 #alert-danger,
 #alert-warning {
     position: fixed;
     z-index: 3400;
     top: 10%;
-    left: 40%;
+    left: 35%;
     margin: 0 auto;
     text-align: center;
     display: none;
+}
+
+
+.disabled {
+    cursor: default !important;
 }
 
 .table-mytable tbody tr:nth-of-type(even) {
@@ -149,7 +177,7 @@ $color-disable: #afaaaa;
 }
 
 .navbar-light .navbar-nav .nav-link {
-    background: #4472c4;
+    background-color: #4472c4;
     color: #fff;
     margin-right: 10px;
 }
@@ -174,7 +202,7 @@ $color-disable: #afaaaa;
     color: #fff;
 }
 
-.resource_selection_toggle_cell {
+.resource-selection-toggle-cell {
     text-align: center;
     vertical-align: middle;
 }

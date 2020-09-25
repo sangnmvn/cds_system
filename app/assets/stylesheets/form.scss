@@ -58,17 +58,19 @@ $color-disable: #afaaaa;
     }
 
     #table_summary_comment {
-        td:nth-child(4) {
-            width: 60%;
-            text-align: left;
+        th {
+            vertical-align: middle;
+        }
+        .period {
+            width: 20%;
         }
 
-        td:nth-child(3) {
-            text-align: left;
+        .user-name {
+            width: 15%;
         }
 
-        td:nth-child(2) {
-            text-align: left;
+        .commented-date {
+            width: 18%;
         }
     }
 }
@@ -141,44 +143,64 @@ $color-disable: #afaaaa;
     border: 1px solid white;
 }
 
-.table-cds-assessment-list tr td {
-    padding: 0px 10px 0px 10px;
-    border: 1px solid white;
-    text-align: left;
-}
+.table-cds-assessment-list {
+    border: 2px solid #0066CC;
 
-.table-cds-assessment-list thead tr th {
-    border: 1px solid white;
-}
+    tr {
+        td {
+            padding: 0px 10px 0px 10px;
+            border: 1px solid white;
+            text-align: left;
+        }
+    }
 
-.table-cds-assessment-list tbody tr td:nth-child(1) {
-    width: 4%;
-}
+    thead {
+        tr {
+            th {
+                border: 1px solid white;
+            }
+        }
+    }
 
-.table-cds-assessment-list tbody tr td:nth-child(2) {
-    width: 20%;
-}
+    tbody {
+        tr {
+            td {
+                &:nth-child(1) {
+                    width: 3%;
+                }
 
-.table-cds-assessment-list tbody tr td:nth-child(3) {
-    width: 15%;
-}
+                &:nth-child(2) {
+                    width: 15%;
+                }
 
-.table-cds-assessment-list tbody tr td:nth-child(4){
-    width: 7%;
-    text-align: right !important;
-}
-.table-cds-assessment-list tbody tr td:nth-child(5){
-    width: 7%;
-}
-.table-cds-assessment-list tbody tr td:nth-child(6){
-    width: 20%;
-    text-align: left !important;
-}
-.table-cds-assessment-list tbody tr td:nth-child(7){
-    width: 10%;
-}
-.table-cds-assessment-list tbody tr td:nth-child(8) {
-    width: 7%;
+                &:nth-child(3) {
+                    width: 15%;
+                }
+
+                &:nth-child(4) {
+                    width: 20%;
+                    text-align: right !important;
+                }
+
+                &:nth-child(5) {
+                    width: 5%;
+                }
+
+                &:nth-child(6) {
+                    width: 5%;
+                    text-align: left !important;
+                }
+
+                &:nth-child(7) {
+                    width: 10%;
+                }
+
+                &:nth-child(8) {
+                    width: 10%;
+                }
+            }
+        }
+    }
 }
 
 .button-add-cds-assessment {
@@ -186,6 +208,7 @@ $color-disable: #afaaaa;
         color: #fff;
         background-color: #8da8db;
         border: none;
+
         &.disabled {
             background-color: #afaaaa;
         }
@@ -336,7 +359,7 @@ $color-disable: #afaaaa;
 
 //search
 .search-assessment {
-    height: 85%;
+    height: 30px;
     width: 25%;
 }
 
@@ -361,22 +384,6 @@ $color-disable: #afaaaa;
         background-color: #8da8db;
         font-weight: bold;
     }
-}
-
-.fail-slot {
-    color: red;
-}
-
-.pass-slot {
-    color: yellow;
-}
-
-.pass-slot:hover {
-    color: white;
-}
-
-.fail-slot:hover {
-    color: red;
 }
 
 .illustration .title {
@@ -715,30 +722,6 @@ select:disabled {
                 left: 460px
             }
         }
-    }
-}
-
-.assessed {
-    background-color: #239B56 !important;
-
-    &.btn {
-        border: 1px solid #42719a;
-    }
-}
-
-.re-assessed-slots {
-    background-color: #4daae8 !important;
-
-    &.btn {
-        border: 1px solid #42719a;
-    }
-}
-
-.new {
-    background-color: white !important;
-
-    &.btn {
-        border: 1px solid #42719a;
     }
 }
 

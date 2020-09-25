@@ -1,8 +1,12 @@
+/*jshint esversion: 6 */
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff", "#e34856", "#8a103d", "#255381"]
+var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff",
+  "#e34856", "#8a103d", "#255381", "#8077b6", "#0193cf", "#49176e", "#273691", "#0596d7"
+];
 
 function drawChartGender(data_filter) {
   $.ajax({
@@ -13,7 +17,7 @@ function drawChartGender(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_gender", "Number of Employee(s) by Gender")
+      drawPieChart(response, response.total, "#chart_gender", "Number of Employee(s) by Gender");
     }
   });
 }
@@ -27,7 +31,7 @@ function drawChartRole(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      drawPieChart(response.data, response.total, "#chart_role", "Number of Employee(s) by Role")
+      drawPieChart(response, response.total, "#chart_role", "Number of Employee(s) by Role");
     }
   });
 }
@@ -41,10 +45,10 @@ function drawChartTitle(data_filter) {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      sleep(1000)
+      sleep(1000);
       drawPyramidChart(response.data, response.total, "#chart_title", "Number of Employee(s) by Title", "Rank");
     }
-  })
+  });
 }
 
 function drawChartSeniority(data_filter) {
@@ -70,36 +74,43 @@ function drawChartCareer() {
       "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
     },
     success: function (response) {
-      sleep(1000)
+      sleep(1000);
       if (response.data == "fails" || response.data.length <= 1) {
-        $("#my_career ").html('')
-        $("#my_career").css('height', 'auto')
-      }
-      else
+        $("#my_career ").html('');
+        $("#my_career").css('height', 'auto');
+      } else
         drawLineChart(response.data, response.has_cdp, "#chart_my_career");
     }
-  })
+  });
 }
 
 function drawChart(data_filter = {}) {
   // get data and draw chart gender
-  drawChartGender(data_filter)
+  drawChartGender(data_filter);
   // get data and draw chart role
-  drawChartRole(data_filter)
-  sleep(1000)
+  drawChartRole(data_filter);
+  sleep(1000);
   // get data and draw chart seniority
-  drawChartSeniority(data_filter)
+  drawChartSeniority(data_filter);
   // get data and draw chart title
-  drawChartTitle(data_filter)
+  drawChartTitle(data_filter);
   // get data and draw chart my career
 }
 
 $(document).ready(function () {
-  loadFilterReview();
+  $(".btn-filter-dashboard").click(function () {
+    $(".filter-condition").toggle();
+    $('.btn-filter-dashboard i').toggleClass('fa-chevron-down fa-chevron-up');
+  });
+
   loadDataFilter();
   $(".apply-filter").click(function () {
     data_filter = paramFilter();
+    localStorage.filterDashboard = JSON.stringify(data_filter);
     drawChart(data_filter);
+    loadDataUpTitle(data_filter);
+    loadDataDownTitle(data_filter);
+    loadDataKeepTitle(data_filter);
   });
 
   $('.item-filter-dashboard').change(function () {
@@ -107,6 +118,7 @@ $(document).ready(function () {
   });
 
   $(".reset-filter").click(function () {
+    localStorage.filterDashboard = "";
     $(this).addClass('disabled');
     loadDataFilter();
   });
@@ -116,24 +128,6 @@ $(document).ready(function () {
   $('#select_type_keep').on('change', function () {
     var data_filter = paramFilter();
     data_filter.number_period_keep = $(this).val();
-    $('#layout_table_keep').html(
-      `<table id="table_keep" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th class="th-sm number">No.</th>
-            <th class="th-sm name">Full Name</th>
-            <th class="th-sm email">Email</th>
-            <th class="th-sm role">Role</th>
-            <th class="th-sm title-h">Title</th>
-            <th class="th-sm rank">Rank</th>
-            <th class="th-sm level">Level</th>
-            <th class="th-sm period-keep">Period Keep</th>
-            <th class="th-sm action">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>`)
     loadDataKeepTitle(data_filter);
   });
 
@@ -176,21 +170,11 @@ $(document).ready(function () {
         if (response.data == 'fails')
           fails("This user has not had CDS/CDP on the system");
         else
-          window.location.href = response.data
+          window.location.href = response.data;
       },
     });
-  })
-});
-
-function loadFilterReview() {
-  $(".btn-filter-dashboard").click(function () {
-    $(".filter-condition").toggle();
-    if ($('btn-filter-dashboard i').hasClass('fa-chevron-down'))
-      $('btn-filter-dashboard i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-    else
-      $('btn-filter-dashboard i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
   });
-}
+});
 
 function loadDataFilter() {
   $.ajax({
@@ -202,39 +186,11 @@ function loadDataFilter() {
     data: {},
     dataType: "json",
     success: function (response) {
-      $('.company-filter').html(`<select name="company_filter" id="company_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
-      $('.project-filter').html(`<select name="project_filter" id="project_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
-      $('.role-filter').html(`<select name="role_filter" id="role_filter" class="filter-input" multiple="multiple" style="width: 100%"></select>`)
-      // $("#company_filter, #role_filter, #project_filter").html('');
-      if (response.status == "fails")
-        return;
-      if (response.companies.length > 1)
-        $('<option value="All" selected>All</option>').appendTo("#company_filter");
-      if (response.roles.length > 1)
-        $('<option value="All" selected>All</option>').appendTo("#role_filter");
-      if (response.projects.length > 1)
-        $('<option value="All" selected>All</option>').appendTo("#project_filter");
-
-      $.each(response.companies, function (k, v) {
-        if (k == 0 && response.companies.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#company_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#company_filter");
-      });
-      $.each(response.projects, function (k, v) {
-        if (k == 0 && response.projects.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#project_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#project_filter");
-      });
-      $.each(response.roles, function (k, v) {
-        if (k == 0 && response.roles.length == 1)
-          $('<option value="' + v.id + '" selected>' + v.name + "</option>").appendTo("#role_filter");
-        else
-          $('<option value="' + v.id + '">' + v.name + "</option>").appendTo("#role_filter");
-      });
-      $("#company_filter, #project_filter, #role_filter").bsMultiSelect({});
-      customizeFilter();
+      if (response.status == "fails") return;
+      setupDataFilter("company_filter", '.company-filter', response.companies, "company_id");
+      setupDataFilter("project_filter", '.project-filter', response.projects, "project_id");
+      setupDataFilter("role_filter", '.role-filter', response.roles, "role_id");
+      curr_company_ids = $('#company_filter').val();
       data_filter = paramFilter();
       drawChart(data_filter);
       loadDataUpTitle(data_filter);
@@ -246,143 +202,107 @@ function loadDataFilter() {
 
 function paramFilter() {
   return {
-    company_id: $('#company_filter').val().join(),
-    project_id: $('#project_filter').val().join(),
-    role_id: $('#role_filter').val().join(),
-  }
+    company_id: $('#company_filter').val(),
+    project_id: $('#project_filter').val(),
+    role_id: $('#role_filter').val(),
+  };
 }
 
-function customizeFilter() {
-  $(".company-filter ul.dropdown-menu li").click(function () {
-    max = $('.company-filter ul.dropdown-menu li').length;
-    length = $('.company-filter .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.company-filter .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.company-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.company-filter .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.company-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.company-filter ul.dropdown-menu li:nth-child(1)').click();
+function setupDataFilter(id, class_name, data, data_filter = "") {
+  $(class_name).html(`<select name="${id}" id="${id}" class="filter-input" multiple="multiple" style="width: 100%"></select>`);
+  id = '#' + id;
+  if (data && data.length > 1)
+    $('<option value="All" selected>All</option>').appendTo(id);
+  data.forEach(function (value, index) {
+    if (index == 0 && data.length == 1)
+      $('<option value="' + value.id + '" selected>' + value.name + "</option>").appendTo(id);
+    else
+      $('<option value="' + value.id + '">' + value.name + "</option>").appendTo(id);
+  });
+
+  if (localStorage.filterDashboard && data_filter) {
+    let filter = JSON.parse(localStorage.filterDashboard);
+    $(id).val(filter[data_filter]);
+  }
+
+  $(id).bsMultiSelect({
+    setSelected: (opt, val) => {
+      opt.selected = val;
+      let rs = $(id).val();
+      if (!val)
+        if (opt.innerText == "All") {
+          if (rs.length == 0 || rs[0] == "All") {
+            if (id == "#company_filter")
+              loadProjectFilter();
+          }
+        } else {
+          if (rs[0] != "All") {
+            if (id == "#company_filter")
+              loadProjectFilter();
+          }
+        }
     }
   });
-  $(".role-filter ul.dropdown-menu li").click(function () {
-    max = $('.role-filter ul.dropdown-menu li').length;
-    length = $('.role-filter .form-control li.badge').length;
+
+  if (data.length == 0) {
+    $(class_name + ' input').attr('placeholder', 'No data');
+    return;
+  }
+  $(class_name + " ul.dropdown-menu li").click(function () {
+    max = $(class_name + ' ul.dropdown-menu li').length;
+    length = $(class_name + ' .form-control li.badge').length;
     arr = [];
     locate_all = 0;
     all = false;
     current = $(this).text();
     for (i = 1; i <= length; i++) {
-      text = $('.role-filter .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
+      text = $(class_name + ' .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
       if (text != "All")
-        arr.push(i)
+        arr.push(i);
       else if (text == "All") {
-        all = true
-        locate_all = i
+        all = true;
+        locate_all = i;
       }
     }
     if (current == "All") {
       $.each(arr, function (index, value) {
-        $('.role-filter .form-control li.badge:nth-child(' + value + ') .close').click();
+        $(class_name + ' .form-control li.badge:nth-child(' + value + ') .close').click();
       });
-      return ""
+      if (id == "#company_filter")
+        loadProjectFilter(["All"]);
+      return "";
     } else if (current != "All" && locate_all != 0) {
       $.each(arr, function (index, value) {
-        $('.role-filter .form-control li.badge:nth-child(' + locate_all + ') .close').click();
+        $(class_name + ' .form-control li.badge:nth-child(' + locate_all + ') .close').click();
       });
     }
     if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.role-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.role-filter ul.dropdown-menu li:nth-child(1)').click();
+      $(class_name + ' ul.dropdown-menu li:nth-child(1)').click();
     }
+    if (id == "#company_filter")
+      loadProjectFilter();
   });
-  $(".project-filter ul.dropdown-menu li").click(function () {
-    max = $('.project-filter ul.dropdown-menu li').length;
-    length = $('.project-filter .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.project-filter .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.project-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.project-filter .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.project-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.project-filter ul.dropdown-menu li:nth-child(1)').click();
-    }
-  });
-  $(".user-filter ul.dropdown-menu li").click(function () {
-    max = $('.user-filter ul.dropdown-menu li').length;
-    length = $('.user-filter .form-control li.badge').length;
-    arr = [];
-    locate_all = 0;
-    all = false;
-    current = $(this).text();
-    for (i = 1; i <= length; i++) {
-      text = $('.user-filter .form-control li.badge:nth-child(' + i + ') span').text().slice(0, -1);
-      if (text != "All")
-        arr.push(i)
-      else if (text == "All") {
-        all = true
-        locate_all = i
-      }
-    }
-    if (current == "All") {
-      $.each(arr, function (index, value) {
-        $('.user-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      return ""
-    } else if (current != "All" && locate_all != 0) {
-      $.each(arr, function (index, value) {
-        $('.user-filter .form-control li.badge:nth-child(' + locate_all + ') .close').click();
-      });
-    }
-    if (arr.length == max - 1 && all == false) {
-      $.each(arr, function (index, value) {
-        $('.user-filter .form-control li.badge:nth-child(' + value + ') .close').click();
-      });
-      $('.user-filter ul.dropdown-menu li:nth-child(1)').click();
+
+}
+
+function loadProjectFilter(company_id = []) {
+  var arrCompany = $('#company_filter').val();
+  if (arrCompany.length > 0 && arrCompany[0] == "All")
+    arrCompany.splice(0, 1);
+  if (_.isEmpty(company_id))
+    company_id = _.isEmpty(arrCompany) ? ["All"] : arrCompany;
+
+  $.ajax({
+    url: "/dashboards/data_filter_projects",
+    data: {
+      company_id: company_id
+    },
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function (response) {
+      setupDataFilter("project_filter", '.project-filter', response.projects);
     }
   });
 }

@@ -33,7 +33,7 @@ crumb :cds_review do
 end
 
 crumb :new_cdp do
-  link "CDS & CDP Staff", "/forms/cdp_assessment"
+  link "CDS & CDP Assessment", "/forms/cdp_assessment"
   parent :root
 end
 
@@ -43,7 +43,7 @@ crumb :view_result_assessment do |form_id|
 end
 
 crumb :cds_cdp_review do
-  link "CDS Review", "/forms/cds_cdp_review"
+  link "CDS & CDP Review Details", "/forms/cds_cdp_review"
   parent :cds_review, :root
 end
 

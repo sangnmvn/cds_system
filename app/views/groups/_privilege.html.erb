@@ -1,26 +1,26 @@
 <div class="modal fade modal-form-add-privilege" id="modalPrivilege">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <!-- Modal Header -->
       <div class="modal-header">
-        <p class="modal-title" style="text-align:left;font-size:18px;background-color:">Assign Privileges To Group</p>
+        <p class="modal-title" style="text-align:left; font-size:18px;" id="title_modal_privilege">Assign Privileges To Group</p>
         <button type="button" class="close" style="color:white"data-dismiss="modal">&times;</button>
       </div>
-      <!-- Modal body -->
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-sm-5">
+            <div class="col">
               <div class="header_search">
                 <b>Available Privileges</b>
               </div>
-              <div class="testScroll">
-                <table class="table table-responsive table-popup-privilege table_left" id="table_left">
+              <div class="table-fixed">
+                <table class="table table-responsive table-left" id="table_left">
                   <thead>
                     <tr >
-                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4">No</th>
-                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4"><input type="checkbox" class="selectAll1"></th>
-                      <th scope="col"style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">No</th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">
+                        <input type="checkbox" class="select-all-left" disabled>
+                      </th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -28,21 +28,23 @@
                 </table>
               </div>
             </div>
-            <div class="col-sm-2 button-center privilege"> <!-- change two buttons, Data là .. -->
-              <button class="btn btn-secondary to_right" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
-              <button class="btn btn-secondary to_left" id="to_left"  disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
+            <div class="col-sm-1 button-center privilege"> <!-- change two buttons, Data là .. -->
+              <button class="btn btn-secondary to-right" id="to_right" disabled><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
+              <button class="btn btn-secondary to-left" id="to_left"  disabled><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
             </div>
-            <div class="col-sm-5">
+            <div class="col">
               <div class="header_search">
                 <b>Selected Privileges</b>
               </div>
-              <div class="testScroll">
-                <table class="table table-responsive table-popup-privilege table_right"  id="table_right">
+              <div class="table-fixed">
+                <table class="table table-responsive table-right" id="table_right">
                   <thead>
                     <tr>
-                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4">No</th>
-                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4"><input type="checkbox" class="selectAll2"></th>
-                      <th scope="col" style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">No</th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">
+                        <input type="checkbox" class="select-all-right" disabled>
+                      </th>
+                      <th class="type-icon" scope="col" style="position: sticky; top: 0;background-color:#4472c4">Privilege Name</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -55,7 +57,7 @@
       </div>
       <!-- Modal footer -->
       <div class="modal-footer" style="justify-content: center;">
-        <button type="submit" class="btn btn-secondary save" id="save_group" disabled="disabled">Save</button>
+        <button type="submit" class="btn btn-primary" id="save_group" disabled>Save</button>
         <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
       </div>
     </div>

@@ -1,13 +1,22 @@
 /*jshint esversion: 6 */
 function drawPieChart(data, total, id, name) {
-  if (data.length == 0)
-    return;
-  $(id).html(`<div class="col title">${name}</div>`);
   // set the dimensions and margins of the graph
   var width = $(id).width();
   var height = $(id).height() - 30;
   var legendRectSize = 18;
   var legendSpacing = 4;
+  var fix_width = 110;
+  var is_small_screen = document.body.offsetWidth < 1500;
+  if (is_small_screen) {
+    fix_width = 80;
+    data = data.data_small ||  data.data; // gender's chart hasn't data small
+  } else {
+    data = data.data;
+  }
+
+  if (data.length == 0)
+    return;
+  $(id).html(`<div class="col title">${name}</div>`);
   // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
   var radius = Math.min(width, height) / 2 - 30;
 
@@ -17,7 +26,7 @@ function drawPieChart(data, total, id, name) {
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("transform", "translate(" + width / 4 + "," + height / 2 + ")");
+    .attr("transform", "translate(" + (width / 4 + 60) + "," + height / 2 + ")");
 
   // append text total to avg
   svg.append('text')
@@ -85,7 +94,7 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value +' ('+ (d.data.value/ total * 100).toFixed(2) + '%)'; })
+    .text(function (d) { return d.data.value + ' (' + (d.data.value / total * 100).toFixed(2) + '%)'; })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
@@ -104,13 +113,13 @@ function drawPieChart(data, total, id, name) {
     .append('g')
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
-      var maxItemOneColumn = Math.ceil(color.domain().length / 2)
+      var maxItemOneColumn = Math.ceil(color.domain().length / 2);
       if (maxItemOneColumn < 3)
-        maxItemOneColumn = color.domain().length 
+        maxItemOneColumn = color.domain().length;
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
-      var w = (i < maxItemOneColumn) ? (width / 3) : (width / 3 + 130)
-      var h = vert - height / 4
+      var w = (i < maxItemOneColumn) ? ((width / 3 ) + (is_small_screen ? 15 : -25)) : (width / 3 + fix_width);
+      var h = vert - height / 4;
 
       return 'translate(' + w + ',' + h + ')';
     });

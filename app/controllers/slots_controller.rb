@@ -74,7 +74,8 @@ class SlotsController < ApplicationController
   def update_status_template
     return render json: { status: "fail" } unless @privilege_array.include?(9)
     template = Template.find(params[:template_id])
-    template.update(status: 1)
+    
+    template.update(status: true)
   end
 
   def get_role

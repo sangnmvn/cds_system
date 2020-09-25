@@ -895,7 +895,7 @@ function appendDataToTableCompany(data) {
           <td class="type-text item-row ceo">{ceo}</td>
           <td style="width:12%" class="type-number item-row quantity">{quantity}</td>
           <td style="width:8%" class="type-icon item-row action">
-           <a href="javascript:;" class="edit-company" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-phone="{phone}" data-email="{email}" data-ceo="{ceo}" data-establishment="{establishment}" data-fax="{fax}" data-website="{website}" data-address="{address}" data-desc="{desc}" data-tax_code="{tax_code}" data-note="{note}" data-quantity="{quantity}" data-email_group_staff="{email_group_staff}" data-email_group_hr="{email_group_hr}" data-email_group_fa="{email_group_fa}" data-email_group_it="{email_group_it}" data-email_group_admin="{email_group_admin}"  data-parent_company_id="{parent_company_id}">
+           <a href="javascript:;" class="edit-company" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-phone="{phone}" data-email="{email}" data-ceo="{ceo}" data-establishment="{establishment}" data-fax="{fax}" data-website="{website}" data-address="{address}" data-desc="{desc}" data-tax_code="{tax_code}" data-note="{note}" data-quantity="{quantity}" data-email_group_staff="{email_group_staff}" data-email_group_hr="{email_group_hr}" data-email_group_fa="{email_group_fa}" data-email_group_it="{email_group_it}" data-email_group_admin="{email_group_admin}"  data-parent_company_id="{parent_company_id}" title="Edit company">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
       number: i + 1,
@@ -991,7 +991,7 @@ function appendDataToTableProject(data) {
           <td class="type-text item-row email">{email}</td>
           <td class="type-number item-row quantity">{quantity}</td>
           <td class="type-icon item-row action">
-          <a href="javascript:;" class="edit-project" data-id="{id}" data-company_name="{company_id}" data-name="{name}" data-abbreviation="{abbreviation}" data-establishment="{establishment}" data-closed_date="{closed_date}" data-project_manager="{project_manager}" data-customer="{customer}" data-sponsor="{sponsor}" data-email="{email}"data-quantity="{quantity}" data-desc="{desc}" data-note="{note}">
+          <a href="javascript:;" class="edit-project" data-id="{id}" data-company_name="{company_id}" data-name="{name}" data-abbreviation="{abbreviation}" data-establishment="{establishment}" data-closed_date="{closed_date}" data-project_manager="{project_manager}" data-customer="{customer}" data-sponsor="{sponsor}" data-email="{email}"data-quantity="{quantity}" data-desc="{desc}" data-note="{note}" title="Edit project">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
           </a>`.formatUnicorn({
       number: i + 1,
@@ -1076,7 +1076,7 @@ function appendDataToTableRole(data) {
           <td class="type-text item-row desc">{desc}</td>
           <td class="type-text item-row note">{note}</td>
           <td class="type-icon item-row action">
-            <a href="javascript:;" class="edit-role" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-desc="{desc}" data-note="{note}">
+            <a href="javascript:;" class="edit-role" data-id="{id}" data-name="{name}" data-abbreviation="{abbreviation}" data-desc="{desc}" data-note="{note}" title="Edit role">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
       number: i + 1,
@@ -1157,7 +1157,7 @@ function appendDataToTableTitle(data) {
           <td class="type-text item-row desc">{desc}</td>
           <td class="type-text item-row note">{note}</td>
           <td class="type-icon item-row action">
-            <a href="javascript:;" class="edit-title" data-id="{id}" data-role_id="{role_id}" data-role_name="{role_name}" data-name="{name}" data-abbreviation="{abbreviation}" data-rank="{rank}" data-desc="{desc}" data-note="{note}">
+            <a href="javascript:;" class="edit-title" data-id="{id}" data-role_id="{role_id}" data-role_name="{role_name}" data-name="{name}" data-abbreviation="{abbreviation}" data-rank="{rank}" data-desc="{desc}" data-note="{note}" title="Edit title">
              <i class='fa fa-pencil icon' style='color:#fc9803'></i>
             </a>`.formatUnicorn({
       number: i + 1,

@@ -39,6 +39,19 @@ class DashboardsController < ApplicationController
     }
   end
 
+  def data_filter_projects
+    return render json: { status: "fails" } unless (@privilege_array & [MY_PROJECT, ALL_COMPANY, MY_COMPANY]).any?
+
+    if @privilege_array.include?(ALL_COMPANY)
+      if params[:company_id].first == "All"
+        projects = Project.select("projects.name as name", :id)
+      else
+        projects = Project.select("projects.name as name", :id).where(company_id: params[:company_id])
+      end
+    end
+    render json: { projects: projects || [] }
+  end
+
   def export_up_title
     file_path = @export_services.export_up_title
     render json: { file_path: file_path }
@@ -96,7 +109,7 @@ class DashboardsController < ApplicationController
   def data_latest_baseline
     return render json: { data: "fails" } unless @privilege_array.include?(VIEW) && !(@privilege_array & [ALL_COMPANY, MY_COMPANY, MY_PROJECT]).any?
 
-    form = Form.includes(:title).find_by_user_id(current_user.id)
+    form = Form.includes(:title).find_by(user_id: current_user.id, is_delete: false)
     return render json: { data: "fails" } if form.nil?
     result = @form_services.preview_result(form)
     competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
@@ -113,16 +126,17 @@ class DashboardsController < ApplicationController
   def process_export_params
     out_params = params.clone
     out_params[:ext] ||= "xlsx"
-    if out_params[:company_id] != "All"
-      out_params[:company_id] = out_params[:company_id]&.split(",")&.map(&:to_i)
+
+    if out_params[:company_id].present? && out_params[:company_id].first != "All"
+      out_params[:company_id] = out_params[:company_id].map(&:to_i)
     end
 
-    if out_params[:project_id] != "All"
-      out_params[:project_id] = out_params[:project_id]&.split(",")&.map(&:to_i)
+    if out_params[:project_id].present? && out_params[:project_id].first != "All"
+      out_params[:project_id] = out_params[:project_id].map(&:to_i)
     end
 
-    if out_params[:role_id] != "All"
-      out_params[:role_id] = out_params[:role_id]&.split(",")&.map(&:to_i)
+    if out_params[:role_id].present? && out_params[:role_id].first != "All"
+      out_params[:role_id] = out_params[:role_id].map(&:to_i)
     end
 
     out_params

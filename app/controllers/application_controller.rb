@@ -1,11 +1,8 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
-  before_action :get_privilege_id
   LIMIT = 20
   PASSWORD_DEFAULT = "123QWEasd"
   LETTER_CAP = *("A".."Z")
-
-  public
 
   def get_privilege_from_user_id(user_id)
     groups = Group.joins(:user_group).where(user_groups: { user_id: user_id })

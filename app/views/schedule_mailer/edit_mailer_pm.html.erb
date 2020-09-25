@@ -3,9 +3,9 @@
 <ul>
   <li>Start date (HR): <%= @schedule.start_date.strftime('%b %d, %Y')%></li>
   <li>End date (HR): <%= @schedule.end_date_hr.strftime('%b %d, %Y')%></li>
-  <li>End date for Members: <%= @schedule.end_date_employee.strftime('%b %d, %Y')%></li>
+  <li>End date Members: <%= @schedule.end_date_employee.strftime('%b %d, %Y')%></li>
   <li>Reminder of due date: <%= (@schedule.end_date_employee - @schedule.notify_reviewer.to_i.day).strftime('%b %d, %Y')%></li>
-  <li>End date for Reviewers: <%= @schedule.end_date_reviewer.strftime('%b %d, %Y')%></li>
+  <li>End date Reviewers: <%= @schedule.end_date_reviewer.strftime('%b %d, %Y')%></li>
   <li>Reminder of due date: <%= (@schedule.end_date_reviewer - @schedule.notify_reviewer.to_i.day).strftime('%b %d, %Y')%></li>
 </ul>
 <p>Please complete your assessment on time. For members who are responsible to review assessments, please commit the files on-time, too.

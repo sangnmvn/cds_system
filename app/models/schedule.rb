@@ -57,7 +57,7 @@ class Schedule < ApplicationRecord
       end_date = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
       today = Date.today.midnight
       if start_date <= today && end_date >= today
-        schedule.status = "In-Progress"
+        schedule.status = "In-progress"
       elsif today > start_date
         schedule.status = "New"
       elsif today > end_date
@@ -66,35 +66,48 @@ class Schedule < ApplicationRecord
       schedule.save
     end
   end
+
   def self.deliver_reminder
-    Schedule.find_each do |schedule|
-      current_user = User.find(schedule.user_id)
-      end_date1 = schedule.end_date_employee.midnight unless schedule.end_date_employee.nil?
-      end_date2 = schedule.end_date_reviewer.midnight unless schedule.end_date_reviewer.nil?
-      end_date3 = schedule.end_date_hr.midnight unless schedule.end_date_hr.nil?
+    schedules = Schedule.includes(:user, :period).where.not(status: "Done")
+    schedules.each do |schedule|
+      current_user = schedule.user
+      if schedule.end_date_employee.present? && schedule.notify_employee > 0
+        end_date1 = schedule.end_date_employee.midnight - schedule.notify_employee.days
+      end
+      if schedule.end_date_reviewer.present? && schedule.notify_reviewer > 0
+        end_date2 = schedule.end_date_reviewer.midnight - schedule.notify_reviewer.days
+      end
+      if schedule.end_date_hr.present? && schedule.notify_hr > 0
+        end_date3 = schedule.end_date_hr.midnight - schedule.notify_hr.days
+      end
       # reset hours, minutes, seconds to 00:00 for exact day compare
       today = Date.today.midnight
 
-      period = Period.find(schedule.period_id)
+      period = schedule.period
       sender = current_user
 
       if !end_date3.nil? && today == end_date3 && schedule._type == "HR"
         # Phase 2
-        # * Assumpt: PM chỉ tạo schedule cho 1 company, nên khi tạo sẽ gửi email inform cho tất cả SDD/PM/SM của company đó theo email group
-        # HR to PM
-        user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
-        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase2_mailer.deliver_later(wait: 1.minute)
-      elsif !end_date2.nil? && today == end_date2 && schedule._type == "PM"
+        # * Assumpt: HR chỉ tạo schedule cho 1 company, nên khi tạo sẽ gửi email inform cho tất cả SDD/PM/SM của company đó theo email group
+        emails = User.joins(:role, :company).where("roles.abbreviation": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id).pluck(:email).joins(', ')
+
+        ScheduleMailer.with(emails: emails, schedule: schedule, period: period).phase2_mailer.deliver_later(wait: 1.minute)
+      end
+      if !end_date2.nil? && today == end_date2 && schedule._type == "PM"
         # Phase 3
         # from PM to Reviewer
         user_id = User.joins(:project_members, :company).where("project_members.project_id": schedule.project_id, "project_members.is_managent": 0, is_delete: false, "companies.id": schedule.company_id).pluck(:id)
-        user = Approver.distinct.where(user_id: user_id).pluck(:approver_id)
-        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase3_mailer.deliver_later(wait: 1.minute)
-      elsif !end_date1.nil? && today == end_date1 && schedule._type == "PM"
+        approver_id = Approver.distinct.where(user_id: user_id).pluck(:approver_id)
+        emails = User.where(id: approver_id).pluck(:email).joins(", ")
+
+        ScheduleMailer.with(sender: current_user.format_name_vietnamese, emails: emails, schedule: schedule, period: period).phase3_mailer.deliver_later(wait: 1.minute)
+      end
+      if !end_date1.nil? && today == end_date1 && schedule._type == "PM"
         # Phase 1
         # Assumpt: PM chỉ tạo schedule cho 1 project, nên khi tạo sẽ gửi email inform cho tất cả member của project theo email group
-        user = User.joins(:project_members, :company).where("project_members.project_id": schedule.project_id, "project_members.is_managent": 0, is_delete: false, "companies.id": schedule.company_id)
-        ScheduleMailer.with(sender: current_user, user: user.to_a, schedule: schedule, period: period).phase1_mailer.deliver_later(wait: 1.minute)
+        emails = User.joins(:project_members, :company).where("project_members.project_id": schedule.project_id, "project_members.is_managent": 0, is_delete: false, "companies.id": schedule.company_id).pluck(:email).joins(", ")
+
+        ScheduleMailer.with(sender: current_user.format_name_vietnamese, emails: emails, schedule: schedule, period: period).phase1_mailer.deliver_later(wait: 1.minute)
       end
     end
   end

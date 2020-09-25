@@ -56,13 +56,13 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.status)
       if schedule.status.downcase == "in-progress"
         current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  href='javascript:void(0)' title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
         </td>")
       elsif schedule.status.downcase == "new"
         current_schedule_data.push("<td style='text-align: center;'>      
-          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
-          <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' title='' href='javascript:void(0)' data-original-title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
+          <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
+          <a class='del_btn'  enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Delete schedule'><i class='fa fa-trash icon' style='color:red'></i></a>
         </td>")
       else
         current_schedule_data.push("")
@@ -93,7 +93,7 @@ class SchedulesController < ApplicationController
     else
       @company = Company.where(id: current_user.company_id).pluck(:name, :id)
       @fields = ["No.", "Schedule name", "Company name", "Project Name", "Assessment period", "Start date", "End date", "Status", "Action"]
-      parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-Progress"], company_id: current_user.company_id)
+      parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-progress"], company_id: current_user.company_id)
       @period = parent_schedules.map do |schedule|
         [
           schedule.period.format_long_date,
@@ -115,7 +115,7 @@ class SchedulesController < ApplicationController
     @company = Company.where(filter).order(:name).pluck(:name, :id)
 
     @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
-    @parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-Progress"])
+    @parent_schedules = Schedule.includes(:period).select(:id, :period_id).where(_type: "HR", status: ["New", "In-progress"])
     @schedule = Schedule.new
   end
 
@@ -139,7 +139,7 @@ class SchedulesController < ApplicationController
       temp_params[:_type] = "HR"
       # format date from period
       period_params_temp = period_params
-      period_params_temp[:status] = "New"
+      period_params_temp[:status] = temp_params[:status]
       period_params_temp[:from_date] = helpers.date_format(params[:from_date])
       period_params_temp[:to_date] = helpers.date_format(params[:to_date])
 
@@ -199,7 +199,7 @@ class SchedulesController < ApplicationController
     @is_hr = check_hr?
     project_ids = ProjectMember.where(user_id: current_user.id, is_managent: 1).pluck(:project_id)
 
-    @parent_schedules = Schedule.joins(:period, :company, :project).select(:period_id, :from_date, :to_date).where(_type: "HR", status: ["New", "In-Progress"], end_date_hr: schedule[:end_date_hr], start_date: schedule[:start_date]).limit(1)
+    @parent_schedules = Schedule.joins(:period, :company, :project).select(:period_id, :from_date, :to_date).where(_type: "HR", status: ["New", "In-progress"], end_date_hr: schedule[:end_date_hr], start_date: schedule[:start_date]).limit(1)
     if @is_pm
       render json: {
                schedule_id: schedule.id,

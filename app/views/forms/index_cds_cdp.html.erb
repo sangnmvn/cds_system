@@ -21,9 +21,11 @@
             <th data-orderable="false">No.</th>
             <th>Period</th>
             <th>Role</th>
-            <th>Level</th>
-            <th>Rank</th>
             <th>Title</th>
+            <th>Rank</th>
+            <th>Level</th>
+            <th>Submitted Date</th>
+            <th>Reviewed Date</th>
             <th>Status</th>
             <th data-orderable="false">Action</th>
           </tr>
@@ -34,7 +36,9 @@
     </div>
   </div>
 </div>
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
 <%= render 'modal_delete_cds' %>
 <% breadcrumb :forms %>

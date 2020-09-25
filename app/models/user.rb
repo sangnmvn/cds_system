@@ -36,7 +36,7 @@ class User < ApplicationRecord
   def format_joined_date
     self.joined_date ? self.joined_date.strftime("%b %d, %Y") : ""
   end
-  
+
   def format_birthday
     self.date_of_birth ? self.date_of_birth.strftime("%MMM %DD,%YYYY") : ""
   end

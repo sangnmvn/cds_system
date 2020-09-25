@@ -1,20 +1,80 @@
-<h2>Change your password</h2>
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
-    <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
+<style>
+  body{
+      background:#70b3fb;
+  }
+  .forget-pwd > a{
+      color: #dc3545;
+      font-weight: 500;
+  }
+  .change-password .panel-default{
+      padding: 31%;
+      margin-top: -27%;
+  }
+  .change-password .panel-body{
+      padding: 15%;
+      margin-bottom: -50%;
+      background: #fff;
+      border-radius: 5px;
+      -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  img{
+      width:40%;
+      margin-bottom:10%;
+  }
+  .btn-send{
+      border:none;
+  }
+</style>
+<div class="container change-password">
+  <div class="row">
+    <div class="col-md-12 col-md-offset-4">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="text-center">
+            <img src="/assets/car-key.png" alt="car-key" border="0">
+            <h2 class="text-center">Change your password</h2>
+            <p>You can reset your password here.</p>
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+              <%= f.hidden_field :reset_password_token %>
+              <div class="form-group">
+                <div class="input-group">
+                  <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control", placeholder: "New password" ,tabIndex: 1%>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <%= link_to '<i class="far fa-eye icon-list" style="color: blue"></i>'.html_safe, "javascript:void(0)",class: "show-pass",id: "show_pass", title: "Show password" %>
+                      <%= link_to '<i class="fas fa-eye-slash icon-list" style="color: blue"></i>'.html_safe, "javascript:void(0)",class: "d-none hide-pass", title: "Hide password" %>
+                    </span>
+                  </div>
+                </div>
+              <small id="error_new_pass" class="text-danger"></small>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", placeholder: "Confirm New password",tabIndex: 2 %>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <%= link_to '<i class="far fa-eye icon-list" style="color: blue"></i>'.html_safe, "javascript:void(0)", class: "show-pass",id: "show_pass", title: "Show password" %>
+                      <%= link_to '<i class="fas fa-eye-slash icon-list" style="color: blue"></i>'.html_safe, "javascript:void(0)", class: "d-none hide-pass", title: "Hide password" %>
+                    </span>
+                  </div>
+                </div>
+              <small id="error_confirm" class="text-danger"></small>
+              </div>
+              <div class="form-group">
+                <div class="actions">
+                  <%= f.submit "Change password", class: "btn btn-lg btn-primary btn-block btn-send disabled", id: "confirm_change_password",tabIndex: 3 %>
+                </div>
+              </div>
+            <% end %>
+            <%= render "users/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
-<%= render "users/shared/links" %>
+</div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
+<%= javascript_include_tag 'password', 'data-turbolinks-track': 'reload' %>

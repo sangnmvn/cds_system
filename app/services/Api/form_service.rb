@@ -2,6 +2,7 @@ module Api
   class FormService < BaseService
     REVIEW_CDS = 16
     APPROVE_CDS = 17
+    HIGH_FULL_ACCESS = 26
     Time::DATE_FORMATS[:custom_datetime] = "%d/%m/%Y"
 
     def initialize(params, current_user)
@@ -22,92 +23,45 @@ module Api
       else
         form = Form.find_by(user_id: current_user.id, is_delete: false)
       end
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
+      return false if form.nil?
+      slots = Slot.distinct(:id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id).group(:id)
       slots = slots.where(level: params[:level]) if params[:level].present?
-      hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
       form_slots = get_point_for_result(form_slots)
       result = preview_result(form)
 
-      slots.map do |slot|
-        key = slot.competency.name
-        if hash[key].nil?
-          hash[key] = {
-            type: slot.competency.sort_type,
-            id: slot.competency_id,
-            levels: {},
-            level_point: calculate_level(result[key]) || "N/A",
-          }
-        end
-
-        if hash[key][:levels][slot.level].nil?
-          hash[key][:levels][slot.level] = {
-            total: 0,
-            current: 0,
-          }
-        end
-
-        hash[key][:levels][slot.level][:total] += 1
-        data = form_slots[slot.id]
-        value = data[:final_point] || data[:point]
-        value = data[:point] if data[:is_change]
-        if current_user.id != form.user_id
-          if privilege_array.include?(REVIEW_CDS)
-            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
-            value = data[:final_point] || value
-          end
-        end
-        hash[key][:levels][slot.level][:current] += 1 if value > 2
-      end
-      hash
-    end
-
-    def get_competencies_reviewer(form_id = nil, user_id = nil)
-      return get_old_competencies if params[:title_history_id].present?
-      if form_id.present?
-        form = Form.find_by_id(form_id)
-      else
-        form = Form.find_by(user_id: user_id, is_delete: false)
-      end
-      slots = Slot.select(:id, :desc, :evidence, :level, :competency_id, :slot_id).includes(:competency).joins(:form_slots).where(form_slots: { form_id: form.id }).order(:competency_id, :level, :slot_id)
-      slots = slots.where(level: params[:level]) if params[:level].present?
+      competencies = Competency.includes(:slots).where(template_id: form.template_id)
       hash = {}
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
-      form_slots = get_point_for_result(form_slots)
-      result = preview_result(form)
-
-      slots.map do |slot|
-        key = slot.competency.name
-        if hash[key].nil?
-          hash[key] = {
-            type: slot.competency.sort_type,
-            id: slot.competency_id,
-            levels: {},
-            level_point: calculate_level(result[key]),
-          }
-        end
-
-        if hash[key][:levels][slot.level].nil?
-          hash[key][:levels][slot.level] = {
-            total: 0,
+      competencies.each do |competency|
+        hash[competency.name] = {
+          type: competency.sort_type,
+          id: competency.id,
+          levels: {},
+          level_point: calculate_level(result[competency.name]) || "N/A",
+        }
+        competency.slots.group("slots.level").count.each do |key, value|
+          hash[competency.name][:levels][key] = {
+            total: value,
             current: 0,
           }
         end
+      end
 
-        hash[key][:levels][slot.level][:total] += 1
+      slots.map do |slot|
         data = form_slots[slot.id]
+        next if data.nil?
         value = data[:final_point] || data[:point]
         value = data[:point] if data[:is_change]
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
+          elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
             value = data[:final_point] || value
           end
         end
-        hash[key][:levels][slot.level][:current] += 1 if value > 2
+        hash[slot.competency.name][:levels][slot.level][:current] += 1 if value > 2
       end
+
       hash
     end
 
@@ -123,6 +77,14 @@ module Api
         }
       }
       arr
+    end
+
+    def get_is_requested
+      form_slots = FormSlot.includes(:comments).where(form_id: params[:form_id])
+      form_slots.each do |form_slot|
+        return "success" if form_slot.comments.where(flag: "orange").count > 0
+      end
+      "fail"
     end
 
     def get_summary_comment
@@ -150,8 +112,8 @@ module Api
         return false unless summary_comment.update(comment: params[:comment])
       else
         form = Form.find_by(id: params[:form_id])
-        return false unless SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id,
-                                                   form_id: form.id, comment: params[:comment])
+        return false unless form.present? && SummaryComment.create!(period_id: form.period_id, line_manager_id: current_user.id,
+                                                                    form_id: form.id, comment: params[:comment])
       end
       true
     end
@@ -163,9 +125,9 @@ module Api
       form_slot_ids = {}
       if user_of_form.user.id == current_user.id #check staff or reviewer
         #form slot have comment_flag_yellows
-        form_slot_id_in_comments = Comment.includes(:form_slot).
-          where(form_slots: { form_id: params[:form_id] }, flag: "yellow", is_delete: false).
-          pluck(:form_slot_id).uniq
+        comments = Comment.includes(:form_slot).
+          where(form_slots: { form_id: params[:form_id] }, flag: "yellow", is_delete: false)
+        form_slot_id_in_comments = comments.pluck(:form_slot_id).uniq
         #line manager have orange flag
         form_slot_ids = LineManager.includes(:form_slot).
           where(form_slots: { form_id: params[:form_id] }, flag: "orange", period_id: user_of_form.period_id,
@@ -183,8 +145,9 @@ module Api
         reviewer = User.where(id: approver.approver_id).pluck(:account, :email)
       end
       old_comment = Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] }, is_delete: true)
-      old_comment.destroy_all
+      old_comment.destroy_all if old_comment.present?
       if form_slot_ids.present?
+        comments.update(re_update: false)
         period = Form.includes(:period).find(params[:form_id]).period
         form_slots = FormSlot.includes(slot: [:competency]).
           where(id: form_slot_ids.pluck(:form_slot_id).uniq)
@@ -200,6 +163,7 @@ module Api
         end
         return "success"
       end
+      "fail"
     end
 
     def get_location_slot(competency_ids)
@@ -269,17 +233,35 @@ module Api
       user_ids = User.where(filter[:filter_users]).pluck(:id)
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_approve_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: true).select(:user_id)
-      user_review_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false).select(:user_id)
+      reviewers = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false)
+      h_reviewers = {}
+      reviewers.each do |reviewer|
+        h_reviewers[reviewer.user_id] = reviewer.is_submit_cds
+      end
+      user_review_ids = reviewers.pluck(:user_id)
       forms = []
-      if @privilege_array.include?(APPROVE_CDS)
-        forms += Form.where(user_id: user_approve_ids, period_id: filter[:period_id], status: ["Awaiting Approval", "Done"]).includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+      if (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
+        forms += if (filter[:period_id])
+            Form.includes(:period, :role, :title).where(user_id: user_approve_ids, period_id: filter[:period_id],
+                                                        status: ["Awaiting Approval", "Done"])
+              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          else
+            Form.includes(:period, :role, :title).where(user_id: user_approve_ids, status: ["Awaiting Approval", "Done"])
+              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          end
       end
       if @privilege_array.include?(REVIEW_CDS)
-        forms += Form.where(user_id: user_review_ids, period_id: filter[:period_id]).where.not(status: "New").includes(:period, :role, :title).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+        forms += if (filter[:period_id])
+            Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
+              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          else
+            Form.includes(:period, :role, :title).where(user_id: user_review_ids)
+              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
       forms.map do |form|
-        format_form_cds_review(form, user_approve_ids.pluck(:user_id), periods)
+        format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
     end
 
@@ -289,42 +271,7 @@ module Api
       user_ids = User.where(filter[:filter_users]).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
-      first = {}
-      second = {}
-      # filter 1 period
-      # the latest schedule will be first, second will be previous of the filtered schedule
-      filtered_period = Period.find_by(id: filter[:period_id][0])
-
-      # UNCOMMENT the line below if you don't need dummy data
-      # return {} if filtered_period.nil?
-
-      schedules = Schedule.where(status: "Done").where("start_date <= ?", filtered_period&.to_date).order(end_date_hr: :desc)
-
-      schedules.map do |schedule|
-        if first[schedule.company_id].nil?
-          first[schedule.company_id] = schedule.period_id
-        elsif second[schedule.company_id].nil?
-          second[schedule.company_id] = schedule.period_id
-        end
-      end
-      same_keys = first.keys & second.keys
-      first = first.keep_if { |k, _| same_keys.include? k }
-      second = second.keep_if { |k, _| same_keys.include? k }
-      # UNCOMMENT the line below if you don't need dummy data
-      # return {} if first.empty? || second.empty?
-
-      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values).to_a
-      h_previous_period = {}
-      title_second.map do |title|
-        h_previous_period[title.user_id] = {
-          rank: title.rank,
-          level: title.level,
-          title: title.title,
-          name: title&.period&.format_to_date,
-          role_name: title&.role_name,
-        }
-      end
+      forms = Form.includes([:user, :period]).where(user_id: user_ids, period_id: params[:period_ids])
       results = {}
       companies_id = filter[:filter_users][:company_id]
       h_companies = if companies_id.nil?
@@ -333,52 +280,20 @@ module Api
           Company.where(id: companies_id).pluck([:id, :name]).to_h
         end
 
-      title_first.map do |title|
-        prev_period = h_previous_period[title.user_id] || {}
-
-        company_id = title&.user&.company_id
+      forms.map do |form|
+        company_id = form&.user&.company_id
         if results[company_id].nil?
           results[company_id] = {
             users: [],
             company_name: h_companies[company_id],
-            period: first[company_id],
-            prev_period: second[company_id],
-            period_excel_name: title&.period&.format_excel_name,
-            period_name: title&.period&.format_to_date,
-            period_prev_name: prev_period[:name],
+            period: form.period_id,
+            period_excel_name: form&.period&.format_excel_name,
+            period_name: form&.period&.format_to_date,
           }
         end
-        results[company_id][:users] << {
-          full_name: title&.user&.format_name_vietnamese,
-          email: title&.user&.email,
-          rank: title&.rank,
-          title: title&.title,
-          level: title&.level,
-          rank_prev: prev_period[:rank],
-          level_prev: prev_period[:level],
-          title_prev: prev_period[:title],
-          same_role: prev_period[:role_name]&.downcase&.strip == title&.role_name&.downcase&.strip,
-        }
-      end
-      # results = {}
-      # temp_users = [{ full_name: "Nguyen Van A", email: "nguyenvana@gmail.com", rank: 2, level: 1, title: "Title 2-1", rank_prev: 1, level_prev: 2, title_prev: "Title 1-2" },
-      #               { full_name: "Nguyen Van B", email: "nguyenvanb@gmail.com", rank: 2, level: 2, title: "Title 2-2", rank_prev: 1, level_prev: 1, title_prev: "Title 1-1" },
-      #               { full_name: "Nguyen Van C", email: "nguyenvanc@gmail.com", rank: 3, level: 2, title: "Title 3-2", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1" },
-      #               { full_name: "Nguyen Duc A", email: "nguyenduca@gmail.com", rank_prev: 2, level_prev: 1, title_prev: "Title 2-1", rank: 1, level: 2, title: "Title 1-2" },
-      #               { full_name: "Nguyen Duc B", email: "nguyenducb@gmail.com", rank_prev: 2, level_prev: 2, title_prev: "Title 2-2", rank: 1, level: 1, title: "Title 1-1" },
-      #               { full_name: "Nguyen Duc C", email: "nguyenducc@gmail.com", rank_prev: 3, level_prev: 2, title_prev: "Title 3-2", rank: 2, level: 1, title: "Title 2-1" },
-      #               { full_name: "Le Khac A", email: "lekhaca@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-1", title_prev: "Title 2-1", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac B", email: "lekhacb@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 2-2", title_prev: "Title 2-2", period_from_name: "02/2020" },
-      #               { full_name: "Le Khac C", email: "lekhacc@gmail.com", rank: 2, level: 1, rank_prev: 2, level_prev: 1, title: "Title 3-2", title_prev: "Title 3-2", period_from_name: "08/2019" }]
 
-      # results[3] = {}
-      # results[3][:users] = temp_users
-      # results[3][:company_name] = h_companies[3]
-      # results[3][:period] = 50
-      # results[3][:prev_period] = 40
-      # results[3][:period_excel_name] = "20200901"
-      # results[3][:period_name] = "09/2020"
-      # results[3][:period_prev_name] = "02/2020"
+        results[company_id][:users] << format_form_cds_review(form)
+      end
 
       { data: results }
     end
@@ -397,11 +312,12 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
+      data_filter[:roles].compact!
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
@@ -431,11 +347,12 @@ module Api
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
+      data_filter[:roles].compact!
 
       project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       project_members.each do |project_member|
@@ -454,7 +371,7 @@ module Api
 
     def get_line_manager_miss_list
       form_id = params[:form_id]
-      latest_period = Form.find_by(id: form_id).period_id
+      latest_period = Form.find_by(id: form_id)&.period_id
       staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
       reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck(:slot_id)
       staff_slot_ids = staff_slots.difference(reviewer_slots)
@@ -467,13 +384,13 @@ module Api
         competency_locations[slot.competency.id] ||= get_location_slot(slot.competency.id)
         results[competency_name] << competency_locations[slot.competency.id][slot.id]
       end
+
       results
     end
 
     def data_filter_cds_approve
       project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
       user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq
-
       data_filter = {
         companies: [],
         projects: [],
@@ -481,16 +398,23 @@ module Api
         users: [],
         periods: [],
       }
+
+      users = User.where(id: user_ids).includes(:company, :role)
+      if @privilege_array.include?(HIGH_FULL_ACCESS)
+        user_ids = User.where(company_id: current_user.company_id).where.not(id: current_user.id).pluck(:id).uniq
+        project_members = ProjectMember.where(user_id: users.pluck(:id)).includes(:project)
+      end
+
       users = User.where(id: user_ids).includes(:company, :role)
       users.each do |user|
         company = format_filter(user.company.name, user.company_id)
         user_arr = format_filter(user.format_name_vietnamese, user.id)
-        role = user.role.present? ? format_filter(user.role.name, user.role_id) : nil
+        role = format_filter(user.role.name, user.role_id) if user.role.present?
         data_filter[:companies] << company unless data_filter[:companies].include?(company)
         data_filter[:roles] << role unless data_filter[:roles].include?(role)
         data_filter[:users] << user_arr
       end
-
+      data_filter[:roles].compact!
       project_members.each do |project_member|
         project = format_filter(project_member.project.name, project_member.project_id)
         data_filter[:projects] << project unless data_filter[:projects].include?(project)
@@ -517,13 +441,16 @@ module Api
           role_name: title.role_name,
           level: title.level || "N/A",
           rank: title.rank || "N/A",
+          submit_date: format_long_date(title.submited_date),
+          approved_date: format_long_date(title.approved_date),
           title: title.title || "N/A",
           status: "Done",
         }
       end
       if form
-        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A" })
+        list_form.unshift({ id: form.id, period_name: form.period&.format_name || "New", role_name: form.role&.name, rank: form.rank || "N/A", title: form.title&.name || "N/A", status: form.status, level: form.level || "N/A", submit_date: format_long_date(form&.submit_date), approved_date: format_long_date(form&.approved_date) })
       end
+
       list_form
     end
 
@@ -537,7 +464,7 @@ module Api
         competency_id: param[:competency_id],
       }
       filter[:level] = param[:level] if param[:level].present?
-      slots = Slot.search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id)
+      slots = Slot.distinct(:id).search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id).group(:id)
       hash = {}
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
@@ -546,9 +473,9 @@ module Api
       slots.each do |slot|
         hash[slot.level] = 0 if hash[slot.level].nil?
         s = slot_to_hash(slot, hash[slot.level], form_slots)
-        if filter_slots[:passed] && s[:tracking][:is_passed]
+        if filter_slots[:passed] && s[:tracking][:is_passed_prev]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:failed] && s[:tracking][:recommends].present? && !s[:tracking][:is_passed]
+        elsif filter_slots[:failed] && s[:tracking][:is_failed_prev]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:no_assessment] && s[:tracking][:point].zero? && !s[:tracking][:is_commit]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
@@ -568,7 +495,7 @@ module Api
     end
 
     def format_data_old_slots
-      period = TitleHistory.find(params[:title_history_id]).period_id
+      period = TitleHistory.find_by_id(params[:title_history_id])&.period_id
       slot_histories = FormSlotHistory.includes(:slot).where(title_history_id: params[:title_history_id], competency_id: params[:competency_id])
       line_managers = LineManager.where(period_id: period, form_slot_id: slot_histories.pluck(:form_slot_id))
 
@@ -584,6 +511,7 @@ module Api
             evidence: slot_history.evidence || "",
             point: slot_history.point || 0,
             is_commit: false,
+            re_update: false,
           },
         }
         if form_slots.present?
@@ -600,27 +528,35 @@ module Api
     end
 
     def save_cds_staff
+      form = Form.find_by_id(params[:form_id])
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
-        form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
-        form = Form.find_by(id: params[:form_id])
+        form_slot = FormSlot.find_by(slot_id: params[:slot_id], form_id: params[:form_id])
+        form_slot.update(re_assess: true) if LineManager.where.not(period_id: form.period_id).present?
+        return false if form.nil?
+
         if params[:point].present?
           comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
-          old_comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
+          old_comment = Comment.find_by(form_slot_id: form_slot.id, point: nil)
         else
           old_comment = Comment.where(form_slot_id: form_slot.id).where.not(point: nil).first
-          comment = Comment.where(form_slot_id: form_slot.id, point: nil).first
+          comment = Comment.find_by(form_slot_id: form_slot.id, point: nil)
         end
+
         is_commit = params[:is_commit] == "true"
         line_flag = LineManager.find_by(form_slot_id: form_slot.id, flag: "orange", period_id: form.period_id)
         if comment.present?
-          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: comment.flag.blank? ? "" : "yellow")
+          flag = comment.flag.blank? ? "" : "yellow"
+          re_update = comment.flag.present? ? "" : params[:position]
+          comment.update(evidence: params[:evidence], point: params[:point], is_commit: is_commit, updated_at: Time.now, is_delete: false, flag: flag, re_update: re_update)
         else
-          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: line_flag.blank? ? "" : "yellow")
+          flag = line_flag&.flag.blank? ? "" : "yellow"
+          re_update = line_flag&.flag.present?
+          Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: flag, re_update: re_update)
         end
+
         old_comment.update(is_delete: true) if old_comment.present?
         form_slot.update(is_change: true)
       end
-      form = Form.find_by_id(params[:form_id])
       result = preview_result(form)
       calculate_level(result[form_slot.slot.competency.name])
     end
@@ -630,7 +566,13 @@ module Api
         if params[:type] == "CDS"
           Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          Comment.create!(is_commit: true, form_slot_id: params[:form_slot_id].to_i) if comment.nil?
+        else
+          Comment.where(form_slot_id: params[:form_slot_id].to_i).delete_all
+          form = Form.find_by_id(params[:form_id])
+          LineManager.where(form_slot_id: params[:form_slot_id].to_i, period_id: form.period_id).delete_all if form&.period
+          { status: "Delete" }
         end
       end
     end
@@ -638,6 +580,7 @@ module Api
     def save_add_more_evidence
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.includes(:line_managers, :comments).find_by(slot_id: params[:slot_id], form_id: params[:form_id])
+        return false if form_slot.nil?
         comment = form_slot.comments.where(is_delete: false).first
         line_manager = form_slot.line_managers.find_by_flag("orange")
         return false if line_manager.nil?
@@ -657,7 +600,8 @@ module Api
     end
 
     def request_add_more_evidence
-      form = Form.includes(:period).find(params[:form_id])
+      form = Form.includes(:period).find_by_id(params[:form_id])
+      return false if form.nil?
       line = LineManager.where(form_slot_id: params[:form_slot_id], user_id: current_user.id, period_id: form.period_id).first
       form_slot = FormSlot.includes(:slot).find(params[:form_slot_id])
       competency_name = Competency.find(form_slot.slot.competency_id).name
@@ -691,15 +635,16 @@ module Api
 
     def save_cds_manager
       if params[:recommend] && params[:given_point] && params[:slot_id] && params[:user_id]
-        period_id = Form.find(params[:form_id]).period_id
+        period_id = Form.find_by_id(params[:form_id])&.period_id
         form_slot = FormSlot.where(slot_id: params[:slot_id], form_id: params[:form_id]).first
+        return false if form_slot.nil?
         line_manager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         comment = Comment.where(form_slot_id: form_slot.id, is_delete: false).first
         staff_flag = comment.flag if comment.present?
         approver_ids = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
         is_final = approver_ids.include? current_user.id
         comment_linemanager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
-        flag = comment_linemanager.blank? ? "" : comment_linemanager.flag
+        flag = comment_linemanager&.flag || ""
         flag = "#99FF33" if !is_final && staff_flag == "yellow"
         if line_manager.present?
           line_manager.update(is_commit: params[:is_commit], recommend: params[:recommend], given_point: params[:given_point], period_id: period_id, flag: flag, final: is_final)
@@ -709,14 +654,13 @@ module Api
       end
     end
 
-    def preview_result(form)
-      competencies = Competency.where(template_id: form.template_id).order(:location).pluck(:id)
+    def preview_result(form = nil)
+      competencies = Competency.where(template_id: form&.template_id).order(:location).pluck(:id)
+      return false if competencies.empty?
       filter = {
-        form_slots: { form_id: form.id },
         competency_id: competencies,
       }
-
-      slots = Slot.includes(:competency).joins(:form_slots).where(filter).order(:level, :slot_id)
+      slots = Slot.includes(:competency).left_outer_joins(:form_slots).where(filter).order("competencies.id", :level, :slot_id)
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
       form_slots = get_point_for_result(form_slots)
 
@@ -726,36 +670,41 @@ module Api
         key = slot.competency.name + slot.level.to_s
         h_poisition_level[key] = 0 if h_poisition_level[key].nil?
         h_point[slot.competency.name] = {} if h_point[slot.competency.name].nil?
-        data = form_slots[slot.id]
+        data = form_slots[slot.id] || {
+          id: 0,
+          point: 0,
+          point_cdp: 0,
+          is_commit: false,
+          is_change: false,
+          final_point_cdp: nil,
+          final_point: nil,
+          is_passed: false,
+          recommends: {},
+        }
         value = data[:final_point] || data[:point]
         value_cdp = data[:final_point_cdp] || data[:point_cdp]
         if data[:is_change]
           value = data[:point]
           value_cdp = data[:point_cdp]
         end
+
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
             value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif privilege_array.include?(APPROVE_CDS)
+          elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
             value = data[:final_point] || value
             value_cdp = data[:final_point_cdp] || value_cdp
           end
         end
+
         type = "new"
         class_name = ""
-        if data[:is_change]
-          class_name = if value_cdp && value.zero?
-              "slot-cdp"
-            elsif value > 2
-              type = "assessed"
-              "pass-slot"
-            else
-              type = "assessed"
-              "fail-slot"
-            end
-        end
-
+        type = "assessed" if data[:is_change]
+        type = "re-assessed-slots" if data[:re_assess]
+        class_name = "slot-cdp" if !value_cdp.zero? && value.zero?
+        class_name = "fail-slot" if !value.zero? && value < 3
+        class_name = "pass-slot" if !value.zero? && value > 2
         h_slot = {
           value: value,
           value_cdp: value_cdp,
@@ -780,6 +729,7 @@ module Api
     def data_view_result(form_id = nil)
       form_id ||= params[:form_id]
       form = Form.includes(:title).find_by_id(form_id)
+      return false if form.nil?
       competencies = Competency.where(template_id: form.template_id).select(:name, :id, :_type)
       result = preview_result(form)
 
@@ -787,12 +737,14 @@ module Api
     end
 
     def calculate_result(form, competencies, result)
+      return false if form.nil? || competencies.empty? || !result
       h_result = calculate_result_by_type(form, competencies, result)
-      h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
+      # h_result[:cdp] = calculate_result_by_type(form, competencies, result, :value_cdp)
       h_result
     end
 
     def calculate_result_by_type(form, competencies, result, type = :value)
+      return false if form.nil? || competencies.empty? || !result
       competencies.map do |compentency|
         compentency.level = calculate_level(result[compentency.name], type)
       end
@@ -815,11 +767,12 @@ module Api
       Title.select(:rank, :name).where(role_id: form.role_id).map do |title|
         h_title[title.rank] = title.name
       end
-
+vall=""
       hash_rank = {}
       h_competency_type = { "All" => [] }
       competencies.each do |competency|
         val_cdp = convert_value_title_mapping(competency.level)
+        vall+= competency.level+", "
         h_rank_value = hash[competency.id][:value].count { |x| val_cdp >= x }
         competency.rank = h_rank_value
         competency.title_name = h_title[h_rank_value]
@@ -859,21 +812,25 @@ module Api
         title: "N/A",
         title_id: nil,
       }
-
+vallll = ""
       h_level_mapping.each do |key, value|
         is_pass = true
         value.each do |val|
-          count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
-          is_pass = count >= val.quantity
+          if h_competency_type[val.competency_type]
+            count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
+            vallll += val.rank_number.to_s + ", "
+            is_pass = count >= val.quantity
+          end
         end
 
         if is_pass
           expected_title[:level] = value.first.level
           expected_title[:rank] = value.first.title.rank
-          expected_title[:title] = value.first.title.desc
+          expected_title[:title] = value.first.title.name
           expected_title[:title_id] = value.first.title.id
         end
       end
+
       h_competencies = competencies.map do |com|
         {
           id: com.id,
@@ -884,11 +841,18 @@ module Api
         }
       end
 
-      return expected_title if type == :value_cdp
+      title_history_current = TitleHistory.includes(:period).where(user_id: form.user_id).order("periods.to_date").last
+      current = {
+        level: title_history_current&.level || "N/A",
+        rank: title_history_current&.rank || "N/A",
+        title: title_history_current&.title || "N/A",
+      }
+      # return expected_title if type == :value_cdp
       {
         competencies: h_competencies,
-        current_title: current_title,
-        expected_title: expected_title,
+        current_title: current_title,#previous
+        expected_title: current,     #current
+        cdp: expected_title,         #plan
       }
     end
 
@@ -982,14 +946,20 @@ module Api
         end
       end
       return "fail" unless form.update(is_approved: true, status: "Done")
-      FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
+      FormSlot.where(form_id: form.id, is_change: true, re_assess: true).update(is_change: false, re_assess: false)
 
       "success"
     end
 
     def withdraw_cds
       form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
-      return "fail" if form.nil?
+      if form.nil?
+        form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
+        return "fail" if form.nil?
+        count_approver = Approver.where(user_id: current_user.id).count
+        return "fail" if !count_approver.zero? && count_approver > 1
+      end
+
       return "fail" unless reset_all_approver_submit_status(current_user.id)
       # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
@@ -1036,9 +1006,9 @@ module Api
 
     def get_data_form_slot
       line = LineManager.find_by(form_slot_id: params[:form_slot_id], flag: "orange")
-      return if line.nil?
+      return false if line.nil?
       slot = Slot.includes(:competency).joins(:form_slots).find_by(form_slots: { id: params[:form_slot_id] })
-      reviewer = User.find(line.user_id)
+      reviewer = User.find_by_id(line.user_id)
       comment = Comment.find_by(form_slot_id: params[:form_slot_id], is_delete: false)
 
       {
@@ -1072,35 +1042,21 @@ module Api
       slot_conflicts
     end
 
-    def cancel_update_cds(form_slot_ids)
-      form = Form.joins(:form_slots).where(form_slots: { id: form_slot_ids.first })
-      line_managers = LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: form.period_id)
-      line_managers.each do |line_manager|
-        line_manager.flag = ""
-        return "fails" unless line_manager.save
-      end
-      comments = Comment.where(form_slot_id: form_slot_ids, is_delete: false)
-      comments.each do |comment|
-        comment.flag = ""
-        return "fails" unless comment.save
-      end
-      "success"
-    end
-
     def request_update_cds(form_slot_ids, slot_id)
-      period = Form.includes(:period).find_by_id(params[:form_id]).period
-      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
+      period = Form.includes(:period).find_by_id(params[:form_id])&.period
+      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true)&.approver_id
+      return false if period.nil? || approver_id.nil?
       line_managers = if approver_id == current_user.id
           LineManager.where(form_slot_id: form_slot_ids, period_id: period.id)
         else
-          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: period.id)
+          LineManager.where(form_slot_id: form_slot_ids, user_id: current_user.id, period_id: period&.id)
         end
       line_managers.each do |line_manager|
-        return unless line_manager.update(flag: "orange")
+        return false unless line_manager.update(flag: "orange")
       end
       form_slot_ids.each do |form_slot_id|
         comment = Comment.find_by(form_slot_id: form_slot_id, is_delete: false)
-        comment.nil? ? Comment.create!(form_slot_id: form_slot_id, flag: "orange") : comment.update(flag: "orange")
+        comment.nil? ? Comment.create(form_slot_id: form_slot_id, flag: "orange") : comment.update(flag: "orange")
       end
       user_staff = User.find_by_id(params[:user_id])
       Async.await do
@@ -1110,8 +1066,9 @@ module Api
     end
 
     def cancel_request(form_slot_ids, slot_id)
-      form = Form.joins(:form_slots).where(form_slots: { id: form_slot_ids.first }).first
-      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true).approver_id
+      form = Form.joins(:form_slots).where(form_slots: { id: form_slot_ids.first })&.first
+      approver_id = Approver.find_by(user_id: params[:user_id], is_approver: true)&.approver_id
+      return false if form.nil? || approver_id.nil?
       line_managers = if approver_id == current_user.id
           LineManager.where(form_slot_id: form_slot_ids, period_id: form.period_id).where.not(flag: "")
         else
@@ -1170,9 +1127,7 @@ module Api
       end
       form_slots.map do |form_slot|
         comments = form_slot.comments.where(is_delete: false).first
-        if comments.nil?
-          comment_type = ""
-        else
+        if comments&.is_commit
           comment_type = comments.point.nil? ? "CDP" : "CDS"
         end
         recommends = get_recommend(form_slot)
@@ -1184,11 +1139,12 @@ module Api
           point: comments&.point || 0,
           flag: comments&.flag || "",
           is_commit: comments&.is_commit,
+          re_update: comments&.re_update,
           is_change: form_slot.is_change || false,
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
           recommends: recommends[:recommends],
-          comment_type: comment_type,
+          comment_type: comment_type || recommends[:comment_type],
         }
       end
       hash
@@ -1224,47 +1180,10 @@ module Api
             hash[:is_passed] = true
             hash[:final_point] = line.given_point
           end
-          hash[:recommends] << {
-            given_point: line.given_point || 0,
-            recommends: line.recommend || "",
-            name: User.find(line.user_id).account,
-            flag: line.flag || "",
-            user_id: line.user_id,
-            is_final: line.final,
-            is_commit: line.is_commit,
-            is_pm: approver.is_approver,
-          }
-        end
-      end
-      hash
-    end
+          comment_type = ""
 
-    def get_recommend_appover(hash, form_slot)
-      period_id = 0
-      forms = Form.where(id: form_slot.form_id)
-      user_id = forms.pluck(:user_id)
-      project_ids = ProjectMember.where(user_id: user_id).pluck(:project_id)
-      user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
-      user_groups = UserGroup.where(user_id: user_ids, group_id: 37).includes(:user)
-      user_groups.each do |user|
-        line = LineManager.where(form_slot_id: form_slot, user_id: user.user_id).order(updated_at: :desc).first
-        if (line.blank?)
-          hash[:recommends] << {
-            given_point: "",
-            recommends: "",
-            name: User.find(user.user_id).account,
-            flag: "",
-            user_id: User.find(user.user_id).id,
-            is_final: "",
-            is_commit: "",
-            is_pm: true,
-          }
-        else
-          break if !period_id.zero? && period_id != line.period_id
-          period_id = line.period_id
-          if line.final && (line.given_point || 0) > 2
-            hash[:is_passed] = true
-            hash[:final_point] = line.given_point
+          if line&.is_commit
+            comment_type = line.given_point.nil? ? "CDP" : "CDS"
           end
           hash[:recommends] << {
             given_point: line.given_point || 0,
@@ -1273,8 +1192,9 @@ module Api
             flag: line.flag || "",
             user_id: line.user_id,
             is_final: line.final,
-            is_commit: line.is_commit,
-            is_pm: true,
+            comment_type: comment_type,
+            is_commit: line&.is_commit,
+            is_pm: approver.is_approver,
           }
         end
       end
@@ -1306,22 +1226,22 @@ module Api
       hash
     end
 
-    def format_form_cds_review(form, user_approve_ids, periods)
+    def format_form_cds_review(form, user_approve_ids = [], periods = [], h_reviewers = {})
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
         user_name: form.user&.format_name_vietnamese,
         project: form.user&.get_project,
         email: form.user&.email,
-        role_name: form.role&.desc,
+        role_name: form.role&.name,
         level: form.level || "N/A",
         rank: form.rank || "N/A",
         title: form.title&.name || "N/A",
         submit_date: format_long_date(form.submit_date),
-        review_date: format_long_date(form.review_date),
-        status: form.status,
+        approved_date: format_long_date(form.approved_date),
+        status: h_reviewers[form.user_id] ? "Submitted" : form.status,
         user_id: form.user&.id,
-        is_approver: (user_approve_ids.include? form.user&.id),
+        is_approver: (user_approve_ids.include? form.user_id),
         is_open_period: (periods.include? form.period_id),
       }
     end
@@ -1338,24 +1258,23 @@ module Api
       filter_users = {}
       filter = {}
 
-      unless params[:user_ids] == "0"
-        filter_users[:id] = params[:user_ids].split(",").map(&:to_i)
+      if params[:user_ids] && params[:user_ids].first != "0"
+        filter_users[:id] = params[:user_ids]
+      end
+      if params[:role_ids] && params[:role_ids].first != "0"
+        filter_users[:role_id] = params[:role_ids]
       end
 
-      unless params[:role_ids] == "0"
-        filter_users[:role_id] = params[:role_ids].split(",").map(&:to_i)
+      if params[:company_ids] && params[:company_ids].first != "0"
+        filter_users[:company_id] = params[:company_ids]
       end
 
-      unless params[:company_ids] == "0"
-        filter_users[:company_id] = params[:company_ids].split(",").map(&:to_i)
+      if params[:period_ids] && params[:period_ids].first != "0"
+        filter[:period_id] = params[:period_ids]
       end
 
-      unless params[:period_ids] == "0"
-        filter[:period_id] = params[:period_ids].split(",").map(&:to_i || 0)
-      end
-
-      unless params[:project_ids] == "0"
-        filter[:project_id] = params[:project_ids].split(",").map(&:to_i || 0)
+      if params[:project_ids] && params[:project_ids].first != "0"
+        filter[:project_id] = params[:project_ids]
       end
 
       filter[:filter_users] = filter_users
@@ -1377,6 +1296,7 @@ module Api
           point_cdp: point_cdp || 0,
           is_commit: comments&.is_commit,
           is_change: form_slot.is_change,
+          re_assess: form_slot.re_assess,
           final_point_cdp: recommends[:final_point_cdp],
           final_point: recommends[:final_point],
           is_passed: recommends[:is_passed],
@@ -1390,6 +1310,8 @@ module Api
       line_managers = form_slot.line_managers
       hash = {
         is_passed: false,
+        is_failed_prev: true,
+        is_passed_prev: false,
         recommends: [],
         final_point: 0,
         final_point_cdp: 0,
@@ -1397,7 +1319,12 @@ module Api
       period_id = 0
 
       line_managers.each do |line|
-        break if !period_id.zero? && period_id != line.period_id
+        if !period_id.zero? && period_id != line.period_id
+          check_fail = (line.given_point || 0) < 2
+          hash[:is_failed_prev] = check_fail
+          hash[:is_passed_prev] = !check_fail
+          break
+        end
         period_id = line.period_id
         if line.final
           if (line.given_point || 0) > 2

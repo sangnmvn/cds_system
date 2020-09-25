@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
   layout "system_layout"
   before_action :set_user, only: [:edit, :update, :status, :destroy]
-  before_action :get_privilege_id, :user_management_services
-  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password]
+  before_action :get_privilege_id, :user_management_services, except: [:forgot_password, :change_forgot_password]
+  before_action :redirect_to_index, except: [:index2, :user_profile, :edit_user_profile, :change_password, :forgot_password, :change_forgot_password]
+  skip_before_action :authenticate_user!, :only => [:forgot_password]
+
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   FULL_ACCESS = 1
@@ -10,6 +12,7 @@ class UsersController < ApplicationController
   ADD_APPROVER = 3
   ADD_REVIEWER = 4
   FULL_ACCESS_MY_COMPANY = 5
+  HIGH_FULL_ACCESS = 26
 
   def get_user_data
     filter = {
@@ -65,7 +68,7 @@ class UsersController < ApplicationController
     @user = User.find_by(id: id)
     @is_user = id == current_user.id
     @project = Project.includes(:project_members).where("project_members.user_id": id, is_enabled: true).pluck(:name).join(", ")
-    form = Form.find_by(user_id: id)
+    form = Form.find_by(user_id: id, is_delete: false)
     @form = (form.blank? || form.title.blank?) ? "N/A" : "#{form.title.name} (Rank: #{form.rank}, Level: #{form.level})"
   end
 
@@ -85,7 +88,7 @@ class UsersController < ApplicationController
     project_id = user.map(&:project_id)
 
     current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
-    reviewers = User.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+    reviewers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     h_reviewers = []
     reviewers.each do |reviewer|
@@ -102,6 +105,8 @@ class UsersController < ApplicationController
 
     current_approvers = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
     approvers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+
+    approvers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id])
 
     form = Form.find_by(user_id: params[:user_id])
     is_submit_late = form.present? ? form.is_submit_late : false
@@ -281,6 +286,24 @@ class UsersController < ApplicationController
     else
       return render json: { status: "Uncorrect" }
     end
+  end
+
+  def reset_password
+    user = User.find_for_authentication(id: params[:id])
+    return render json: { status: "success" } unless user.update(password: PASSWORD_DEFAULT)
+    Async.await do
+      UserMailer.with(account: user.account, email: user.email).reset_password_notif.deliver_later(wait: 30.seconds)
+    end
+    render json: { status: "success", account: user.account }
+  end
+
+  def forgot_password
+    user = User.find_for_authentication(email: params[:email])
+    return render json: { status: "fails" } if user.nil?
+    Async.await do
+      user.send_reset_password_instructions
+    end
+    render json: { status: "success" }
   end
 
   private

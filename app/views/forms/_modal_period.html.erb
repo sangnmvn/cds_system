@@ -1,20 +1,20 @@
 <div class="modal fade" id="modal_period" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content"  style="width: 550px;">
       <div class="modal-header head-myheader">
-        <h4 class="modal-title " style="text-align: center">Confirm Submit CDS</h4>
+        <h4 class="modal-title " style="text-align: center">Confirm Submit CDS/CDP Assessment</h4>
         <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="text-align: left;">
-        <% if @period.present? %>
-          <p>Please select period for this CDS assessment.</p>
+      <div class="modal-body" style="text-align: left; padding-left: 15px; width: 550px;">
+        <% if @hash[:is_reviewer] %>
+          <p> Are you sure you want to submit CDS/CDP of user <span id="staff_account"></span>?</p>
+        <% elsif !@hash[:resubmit] && @period.present? %>
+          <p>Please select period for this CDS/CDP Assessment.</p>
           <div class="row">
-            <div class="col-2">
-              Period:
-            </div>
-            <div class="col-10 form-group">
+            <div class="col-2" style="padding-top: 5px">Period:</div>
+            <div class="col-8 form-group">
               <select class="form-control" id="period_id">
                 <% @period.each do |pe| %>
                   <option value="<%= pe[:id] %>"><%= pe[:name] %></option>
@@ -22,17 +22,16 @@
               </select>
             </div>
           </div>
-        </div>
-        <p>Are you sure you want to submit this CDS for review / approval ?</p>
-      <% elsif @hash[:is_submit_late]%>
-        <p>Are you sure you want to submit this CDS for review / approval ?</p>
-      <% else %>
-        <p>There is no period to submit your CDS/CDP. Please contact your Administrator to setup.</p>
-      <% end %>
+          <p>Are you sure you want to submit this CDS/CDP for review/approval?</p>
+        <% elsif @hash[:is_submit_late] || @hash[:resubmit] %>
+          <p>Are you sure you want to submit this CDS/CDP for review/approval?</p>
+        <% else %>
+          <p>There is no period to submit your CDS/CDP. Please contact your Administrator to setup.</p>
+        <% end %>
       </div>
       <div class="modal-footer" style="justify-content: center;">
         <% if @period.present? || @hash[:is_submit_late] %>
-          <button type="button" class="btn btn-primary" id="confirm_submit_cds">Yes</button>
+          <button type="button" class="btn btn-primary confirm-submit-cds">Yes</button>
           <button type="button" class="btn btn-light border-dark" data-dismiss="modal">No</button>
         <% else %>
           <button type="button" class="btn btn-light border-dark" data-dismiss="modal">OK</button>

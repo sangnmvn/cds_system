@@ -1,7 +1,7 @@
 // filter select company
 $(document).ready(function () {
   var end_date = new Date();
-  end_date.setDate(end_date.getDate()-1);
+  end_date.setDate(end_date.getDate() - 1);
   $(".joined-date").datepicker({
     todayBtn: "linked",
     todayHighlight: true,
@@ -80,6 +80,10 @@ $(document).ready(function () {
   });
 
   $(".tokenize-project").tokenize2();
+
+  $('.tokenize-project').on('tokenize:select', function(container){
+    $(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
+  });
 
   $("#btn_modal_add_user").click(function () {
     first_name = $("#first").val();
@@ -246,11 +250,21 @@ $(document).ready(function () {
   });
 
   $("#btn_filter").click(function () {
+    let company = $("#filter_company").val();
+    let project = $("#filter_project").val();
+    let role = $("#filter_role").val();
+
+    localStorage.filterUserMgmt = JSON.stringify({
+      company: company,
+      project: project,
+      role: role,
+    });
     $('#table_user_management').dataTable().fnDraw();
   });
 
   $("#btn_reset").click(function () {
     $('#btn_reset').addClass('disabled');
+    localStorage.filterUserMgmt = ""
     get_filter()
   });
 
@@ -294,6 +308,13 @@ function get_filter() {
       $('#filter_company').html(companies);
       $('#filter_project').html(projects);
       $('#filter_role').html(roles);
+      if (localStorage.filterUserMgmt) {
+        let filter = JSON.parse(localStorage.filterUserMgmt);
+        $('#filter_company').val(filter.company);
+        $('#filter_project').val(filter.project);
+        $('#filter_role').val(filter.role);
+        $('#btn_reset').removeClass('disabled');
+      }
       setup_dataTable();
     }
   })
@@ -358,9 +379,9 @@ function checkName(input) {
 
 $(document).on("click", ".delete_icon", function () {
   var user_id = $(this).data("user_id");
-  var user_account = $(this).data("user_firstname") + " " + $(this).data("user_lastname");
+  var user_full_name = $(this).data("user_full_name");
   $(".delete_id").val(user_id);
-  $(".display_user_account_delete").html(user_account);
+  $(".display_user_account_delete").html(user_full_name);
 });
 
 function colorDisabledRowUser() {
@@ -375,6 +396,7 @@ function setup_dataTable() {
       stripeClasses: ["even", "odd"],
       pagingType: "full_numbers",
       iDisplayLength: 20,
+      stateSave: true,
       fnServerParams: function (aoData) {
         company = $("#filter_company").val();
         project = $("#filter_project").val();
@@ -423,26 +445,26 @@ function setup_dataTable() {
         "infoFiltered": ""
       },
       "columnDefs": [{
-          "orderable": false,
-          "targets": 0
-        },
-        {
-          "orderable": false,
-          "targets": 1
-        },
-        {
-          "orderable": false,
-          "targets": 9
-        },
+        "orderable": false,
+        "targets": 0
+      },
+      {
+        "orderable": false,
+        "targets": 1
+      },
+      {
+        "orderable": false,
+        "targets": 9
+      },
       ],
     });
 
     if (crud_user) {
       content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
       data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-      <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+      <button type="button" class="btn btn-light " title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
     </div>';
 
       $(content).insertAfter(".dataTables_filter");
@@ -450,9 +472,9 @@ function setup_dataTable() {
     } else {
       content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
       data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
-      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" data-toggle="tooltip" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
-      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" data-toggle="tooltip" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
-      <button type="button" class="btn btn-light " data-toggle="tooltip" title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
+      <button type="button" class="btn btn-light " id="btn-enable-multiple-users" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
+      <button type="button" class="btn btn-light" id="btn-disable-multiple-users" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
+      <button type="button" class="btn btn-light " title="Delete User"  id="btn-delete-many-users" style="width:120px;background:#dcdcdc"><i class="fas fa-user-minus"  style="margin:0px 10px 0px 0px;"></i>Delete</button> \
     </div>';
 
       $(content).insertAfter(".dataTables_filter");
@@ -543,6 +565,9 @@ $(document).on("click", ".edit_icon", function () {
           }
         });
         $(".tokenize-project").tokenize2();
+        $('.tokenize-project').on('tokenize:select', function(container){
+          $(this).tokenize2().trigger('tokenize:search', [$(this).tokenize2().input.val()]);
+        });
       });
     },
   });
@@ -677,7 +702,6 @@ $(document).on("click", "#btn_modal_edit_user", function () {
 
 // delete many users
 $(document).on("click", "#btn-delete-many-users", function () {
-
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
   if (number_user_delete != 0) {
     $("#modalDeleteMultipleUsers").modal("show");
@@ -721,7 +745,6 @@ $(document).on("click", ".btn-modal-delele-multiple-users", function () {
     },
   });
 });
-
 
 // status user
 $(document).on("click", ".status_icon", function () {
@@ -768,6 +791,7 @@ $(document).on("click", "#btn-disable-multiple-users", function () {
     $(".display_number_users_disable").html("Please select the user you want disable ?");
   }
 });
+
 $(document).on("click", "#btn-enable-multiple-users", function () {
 
   number_user_delete = $("#table_user_management tbody :checkbox:checked").length;
@@ -812,6 +836,7 @@ $(document).on("click", ".btn-modal-disable-multiple-users", function () {
     },
   });
 });
+
 $(document).on("click", ".btn-modal-enable-multiple-users", function () {
   var arr_id_user = [];
   $("#table_user_management tbody :checkbox:checked").each(function () {
@@ -842,5 +867,32 @@ $(document).on("click", ".btn-modal-enable-multiple-users", function () {
         fails("Disable");
       }
     },
+  });
+});
+
+$(document).on("click", ".reset-password", function () {
+  $('#confirm_reset_password').val($(this).data('user_id'));
+  $('.user-account-confirm-password').text($(this).data('user_account'));
+  $('#modalResetPassword').modal();
+});
+
+$(document).on("click", "#confirm_reset_password", function () {
+  $.ajax({
+    url: "/users/reset_password",
+    type: "POST",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      id: $(this).val()
+    },
+    dataType: "json",
+    success: function (response) {
+      $('#modalResetPassword').modal('hide');
+      if (response.status == 'success')
+        warning(`You have reset password for ${response.account} successfully.`);
+      else
+        fails("Can't reset password.");
+    }
   });
 });

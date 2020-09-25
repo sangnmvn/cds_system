@@ -1,57 +1,58 @@
-<div class="modal fade bs-example-modal-xl myModal" tabindex="-1" role="dialog" id="AssignModal" data-backdrop="static" data-keyboard="false">
+<div class="modal fade bs-example-modal-xl modal-form-assign-user"  id="modalAssign">
   <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content" style="width: 1300px; height: 800px">
       <div class="modal-header head-myheader">
-          <h4 class="modal-title" style="color: white" id="title_group"></h4>
-          <button type="button" class="close close_modal button-header" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" style="color:white">&times;</span>
-          </button>
+        <h4 class="modal-title" style="color: white" id="title_modal_assign">Assign Users to Group </h4>
+        <button type="button" class="close close_modal button-header" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color:white">&times;</span>
+        </button>
       </div>
-      <div class="modal-body">
-				<div class="row">
-				  <div class="col-5 mydiv" style="overflow-x:auto;">
+      <div class="modal-body" style="width: 1300px">
+        <div class="row">
+          <div class="col mydiv" style="overflow-x:auto;">
             <h5>Available Users</h5>
-            <table class="table table-primary table-responsive-sm table-mytable" id="table_left" style="width:100%;border: 3px solid #4882bf;">
-              <thead>
-                <tr>
-                  <td class="no" data-orderable="false">No.</td>
-                  <td class="checkbox" data-orderable="false"><input type="checkbox" id="check_all_choose" value="all" class="mycontrol"/></td>
-                  <td class="first-name">First Name</td>
-                  <td class="last-name">Last Name</td>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-              <p></p>
-            </table>
-				  </div>
-				<div class="col-2 button-center mydiv" style="overflow-x:auto;" >
-            <button type="button" class="btn btn-secondary" id="to_right" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
-            <p></p>
-            <button type="button" class="btn btn-secondary" id="to_left" disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
+            <div id="table_available_user">
+              <table class="table table-primary table-responsive table-available" id="table_available" style="width:100%; border: 3px solid #4882bf;">
+                <thead>
+                  <tr>
+                    <th class="type-icon no" data-orderable="false">No.</th>
+                    <th class="type-icon c-checkbox" data-orderable="false"><input type="checkbox" class="select-all-available"/></th>
+                    <th class="type-icon full-name">Full Name</th>
+                    <th class="type-icon account">Account</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
           </div>
-          
-				<div class="col-5 mydiv"style="overflow-x:auto;" >
-					<h5>Selected Users</h5>
-            <table class="table table-primary table-responsive-sm table-mytable" id="table_right" style="width:100%;border: 3px solid #4882bf;">
-              <thead>
-                <tr>
-                  <td class="no" data-orderable="false">No.</td>
-                  <td class="checkbox" data-orderable="false"><input type="checkbox" id="check_all_remove" value="all" class="mycontrol"/></td>
-                  <td class="first-name">First Name</td>
-                  <td class="last-name">Last Name</td>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
+          <div class="col-1 button-center mydiv" style="overflow-x:auto;" >
+            <button type="button" class="btn btn-secondary to-selected" id="to_selected" disabled="disabled"><%= image_tag("icon_arrow_right_ngoc.png", border: 1) %></button>
             <p></p>
-					</div>
-				</div>
+            <button type="button" class="btn btn-secondary to-available" id="to_available" disabled="disabled"><%= image_tag("icon_arrow_left_ngoc.png", border: 1) %></button>
+          </div>
+          <div class="col mydiv"style="overflow-x:auto;" >
+            <h5>Selected Users</h5>
+            <div id="table_selected_user">
+              <table class="table table-primary table-responsive table-selected" id="table_selected" style="width:100%;border: 3px solid #4882bf;">
+                <thead>
+                  <tr>
+                    <th class="type-icon no" data-orderable="false">No.</th>
+                    <th class="type-icon c-checkbox" data-orderable="false"><input type="checkbox" class="select-all-selected"/></th>
+                    <th class="type-icon full-name">Full Name</th>
+                    <th class="type-icon account">Account</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <div class="col-12 p-3 text-center">
-          <button id="save" type="button" class="btn btn-secondary" disabled="disabled">Save</button>
+          <button id="save_assign_user" type="button" class="btn btn-primary disabled">Save</button>
           <button type="button" class="btn btn-light border-dark close_modal" data-dismiss="modal">Cancel</button>
         </div>
       </div>

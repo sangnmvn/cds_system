@@ -52,8 +52,8 @@
       <div class="icon">
         <%= link_to 'View all CDSs/CDPs', cds_review_forms_path, class:"reject-assessment", title:"View all CDSs/CDPs" %>&nbsp;
         <span>Export</span>&nbsp;
-        <i class="fa fa-file-excel-o icon" id="export_excel_up_title" style="color: green"></i>&nbsp;
-        <i class="fa fa-file-pdf-o" id="export_pdf_up_title" style="color: #a96f6f" aria-hidden="true"></i>
+        <i class="fa fa-file-excel-o icon" id="export_excel_up_title" title="Export Excel" style="color: green"></i>&nbsp;
+        <i class="fa fa-file-pdf-o" id="export_pdf_up_title" title="Export PDF" style="color: #a96f6f" aria-hidden="true"></i>
       </div>
     </div>
     <div id="layout_table_up">
@@ -87,8 +87,8 @@
       <div class="icon">
         <%= link_to 'View all CDSs/CDPs', cds_review_forms_path, class:"reject-assessment", title:"View all CDSs/CDPs" %>&nbsp;
         <span>Export</span>&nbsp;
-        <i class="fa fa-file-excel-o icon" id="export_excel_down_title" style="color: green"></i>&nbsp;
-        <i class="fa fa-file-pdf-o" id="export_pdf_down_title" style="color: #a96f6f" aria-hidden="true"></i>
+        <i class="fa fa-file-excel-o icon" id="export_excel_down_title" title="Export Excel" style="color: green"></i>&nbsp;
+        <i class="fa fa-file-pdf-o" id="export_pdf_down_title" title="Export PDF" style="color: #a96f6f" aria-hidden="true"></i>
       </div>
     </div>
     <div id="layout_table_down">
@@ -129,8 +129,8 @@
         </select>&nbsp;
         <%= link_to 'View all CDSs/CDPs', cds_review_forms_path, class:"reject-assessment", title:"View all CDSs/CDPs" %>&nbsp;
         <span>Export</span>&nbsp;
-        <i class="fa fa-file-excel-o icon" id="export_excel_keep_title" style="color: green"></i>&nbsp;
-        <i class="fa fa-file-pdf-o" id="export_pdf_keep_title" style="color: #a96f6f" aria-hidden="true"></i>
+        <i class="fa fa-file-excel-o icon" id="export_excel_keep_title" title="Export Excel" style="color: green"></i>&nbsp;
+        <i class="fa fa-file-pdf-o" id="export_pdf_keep_title" title="Export PDF" style="color: #a96f6f" aria-hidden="true"></i>
       </div>
     </div>
     <div id="layout_table_keep">
@@ -194,9 +194,14 @@
     </div>
   <% end %>
 </div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+</div>
 <script>
   var is_staff =  <%= !@can_view_chart && @can_view_career %>;
+  var is_change_company = false;
+  var curr_company_ids = [];
 </script>
 <script type="text/javascript" src="https://www.jqueryscript.net/demo/Bootstrap-4-Multi-Select-BsMultiSelect/dist/js/BsMultiSelect.js"></script>
 <script src="https://unpkg.com/arraygeous@0.1.4/build/arraygeous.min.js"></script>

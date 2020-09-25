@@ -5,14 +5,17 @@
 <%= javascript_include_tag 'table_template_excel.js', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'template_index_step1', 'data-turbolinks-track': 'reload' %>
 <% breadcrumb :template_management %>
-
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><div id="content-alert-fail"></div></div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
 <div class="container-fluid">
   <div class="template-header">
-    <span class="title">Template List</span>
-    <div class="add-template title">
-      <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
+    <div class="row">
+      <span class="title col-sm-3">Template List</span>
+      <div class="add-template title col-sm-9">
+        <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
+      </div>
     </div>
   </div>
   <div class="template-table">

@@ -37,9 +37,12 @@
   <div><%= render 'delete_multiple_users' %></div>
   <div><%= render 'status_multiple_users' %></div>
   <div><%= render 'status_enable_users' %></div>
+  <div><%= render 'modal_reset_password' %></div>
 <%end%>
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
 <%= javascript_include_tag 'lodash', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'user_management', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag 'add_reviewer', 'data-turbolinks-track': 'reload' %>

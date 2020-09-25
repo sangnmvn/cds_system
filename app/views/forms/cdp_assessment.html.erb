@@ -5,9 +5,9 @@
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 <% breadcrumb :new_cdp %>
 <div class="container-fluid">
-  <div class="row" id="cdp_container_div2">
-    <div class="col-md-5 div-header" ><%= "CDS & CDP #{@user[:role_name]} - #{@user[:format_name]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>
-    <div class="col-md-7 list-action filter-slots" style="text-align:right;">
+  <div class="row" id="cdp_container_div2" style=" display: inline-block; width: 100%;padding:0 10px">
+    <div class="div-header" style="display: inline-block; float: left"><%= "CDS & CDP #{@user[:role_name]} - #{@user[:account]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>
+    <div class="list-action filter-slots" style="text-align:right; display: inline-block; float: right">
       Search: <input type="text" class="search-assessment" placeholder="Enter Slot ID, Description">
       Filter
       <select id="filter_form_slots" multiple="multiple">
@@ -19,7 +19,9 @@
         <option value="failed" selected>Failed slots in previous periods</option>
       </select>
       <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
-      <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
+      <% if @hash[:status] != "Done" %>
+        <%= link_to '<i class="far fa-eye" style="color: blue"></i> View Result'.html_safe, preview_result_forms_path(form_id: @hash[:form_id]), target: :_blank, "data-placement": "top", title: "Preview Result", class: "preview-result" %>
+      <% end %>
       <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment",class: "", title: "Summary comment" %>
       <% if @hash[:status] == "Awaiting Review" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS-CDP" %>
@@ -27,7 +29,10 @@
       <% elsif @hash[:status] == "Awaiting Approval" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
-      <% else %>
+      <% elsif @hash[:status] == "Done" %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
+        <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
+      <% else%>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
         <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", id: "submit", title: "Submit CDS-CDP" %>
       <% end %>
@@ -51,8 +56,10 @@
 <div><%= render "modal_reject_cds" %></div>
 <div><%= render "modal_confirm_request" %></div>
 <div><%= render "modal_re_assess" %></div>
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+<div class="alert-message">
+  <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+  <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+</div>
 <script>
   var form_id = <%= @hash[:form_id] || 0 %>;
   var title_history_id = <%= @hash[:title_history_id] || 0 %>;
@@ -64,7 +71,7 @@
   var check_5_month = <%= @check_5_month %>;
   var user_current = <%= current_user.id %>;
   var user_name = "<%= @hash[:user_name] %>"
-  var check_request_update = false;
+  var check_request_update = "<%=  @hash[:is_disable_confirm_update] %>";
   var conflict_commits = {}
   loadDataPanel(form_id);
 </script>

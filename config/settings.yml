@@ -83,7 +83,7 @@ privileges:
         id: 15,
         name: "Full Access on my CDS/CDP Assessment",
         title_name: "CDS/CDP Assessment",
-        title_id: 6,
+        title_id: 10,
       },
     16:
       {
@@ -103,6 +103,13 @@ privileges:
     {
       id: 24,
       name: "View CDS/CDP Assessment",
+      title_name: "CDS/CDP Review",
+      title_id: 6,
+    },
+    26: 
+    {
+      id: 26,
+      name: "High level Review/Approve",
       title_name: "CDS/CDP Review",
       title_id: 6,
     },

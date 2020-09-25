@@ -9,7 +9,7 @@ function resetExportIconColor() {
 }
 
 function checkPeriodFilter() {
-  return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.split(",").length > 1)
+  return !(data_filter.period == "" || data_filter.period == "0" || data_filter.period.length > 1)
 }
 
 function callAjaxExport(ext) {
@@ -41,14 +41,12 @@ function callAjaxExport(ext) {
 $(document).ready(function () {
   $("#export_excel_cds_review").on('click', function () {
     // COMMENT the line below if you don't need the data
-    callAjaxExport("xlsx")
     if (checkPeriodFilter()) {
       callAjaxExport("xlsx");
     }
   });
   $("#export_pdf_cds_review").on('click', function () {
     // COMMENT the line below if you don't need the data
-    callAjaxExport("pdf")
 
     if (checkPeriodFilter()) {
       callAjaxExport("pdf");

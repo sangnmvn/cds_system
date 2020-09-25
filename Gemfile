@@ -10,9 +10,9 @@ gem "axlsx", "~> 1.3.4"
 gem "axlsx_rails" # Provide templates for the axlsx gem
 gem "libreconv"
 gem "nokogiri"
-gem 'carrierwave', '~> 0.10.0'
-gem 'rails-controller-testing'
-gem 'async-await', '~> 0.0.0'
+gem "carrierwave", "~> 0.10.0"
+gem "rails-controller-testing"
+gem "async-await", "~> 0.0.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.0.2", ">= 6.0.2.2"
 # Use mysql as the database for Active Record
@@ -64,7 +64,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "rspec-rails", "~> 3.4"
-  gem 'simplecov', '~> 0.18.5'
+  gem "simplecov", "~> 0.18.5"
 end
 
 group :development do
@@ -77,7 +77,7 @@ group :development do
 end
 
 group :test do
-  gem "shoulda-matchers", "~> 3.0", require: false
+  gem "shoulda-matchers", "~> 4.0", require: false
   gem "database_cleaner", "~> 1.5"
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 2.15"

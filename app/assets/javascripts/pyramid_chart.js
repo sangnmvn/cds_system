@@ -1,7 +1,5 @@
 /*jshint esversion: 6 */
 function drawPyramidChart(data, total, id, name, text_legend) {
-  if (data.length == 0)
-    return;
   // remove old chart
   var margin = { top: 10, right: 20, bottom: 10, left: 20, middle: 0 }
   var width = $(id).width() - 50 - margin.left - margin.right
@@ -10,6 +8,8 @@ function drawPyramidChart(data, total, id, name, text_legend) {
   var height = height_root * data.length / 6;
   $(id).html(`<div class="col title">${name} (${total} employees)</div> <div style="height: ${height_root - height}px;"></div>`);
 
+  if (data.length == 0)
+    return;
   var legendRectSize = 18;
   var legendSpacing = 4;
   // the width of each side of the chart

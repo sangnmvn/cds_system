@@ -1,8 +1,6 @@
 <%= stylesheet_link_tag "user_profile", media: "all", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag "user_profile", 'data-turbolinks-track': "reload" %>
 <%= javascript_include_tag "application", 'data-turbolinks-track': "reload" %>
-
-
 <% breadcrumb :user_profile %>
 <div class="user-card">
   <div class="card">
@@ -38,7 +36,7 @@
               </div>
               <div class="text-contact-left" id="p_birthday">
                 <i class="fas fa-birthday-cake" style="color:black" title="Date of Birth"></i>
-                &nbsp; <%= @user.date_of_birth ? @ser.date_of_birth.to_s(:long) : "N/A" %>
+                &nbsp; <%= @user.date_of_birth ? @user.date_of_birth.to_s(:long) : "N/A" %>
               </div>
               <div class="text-contact-left">
                 <% if @is_user %>
@@ -72,16 +70,16 @@
     <hr/>
     <div class="p-title">
       Company
-      <dt class="p-content" id="company"><%= @user.company.name != "" ? @user.company.name : "N/A" %></dt> 
+      <dt class="p-content" id="company"><%= @user.company.name != "" ? @user.company.name : "N/A" %></dt>
     </div>
     <div class="p-title">
       Project
-      <dt class="p-content" id="project"><%= @project != "" ? @project : "N/A" %></dt> 
+      <dt class="p-content" id="project"><%= @project != "" ? @project : "N/A" %></dt>
     </div>
     <div class="p-title">
       Joined Date
-      <dt class="p-content" id="joined_date"><%= @user.joined_date.nil? ? "N/A" : @user.joined_date.to_date.to_s(:long) %></dt> 
-    </div>  
+      <dt class="p-content" id="joined_date"><%= @user.joined_date.nil? ? "N/A" : @user.joined_date.to_date.to_s(:long) %></dt>
+    </div>
   </div>
   <div class="col-6">
     <div class="title-content"> LOCATION 
@@ -95,38 +93,39 @@
     <div class="p-title">Nationality
       <dt class="p-content" id="p_nationality">
         <%= @user.nationality ? @user.nationality : "N/A" %>
-      </dt> 
+      </dt>
     </div>
     <div class="p-title">Permanent Address
       <dt class="p-content" id="p_Permanent_address">
-      <% if @user.permanent_address.present? %>
-            <% if @user.permanent_address.sub(", ", "") != "" %>
-                <% if @user.permanent_address.split(", ")[0] != "" %>
-                  <%= @user.permanent_address %>
-                <% else %>
-                  <%= @user.permanent_address.split(", ")[1] %>
-                <% end
+        <% if @user.permanent_address.present? %>
+          <% if @user.permanent_address.sub(", ", "") != "" %>
+            <% if @user.permanent_address.split(", ")[0] != "" %>
+              <%= @user.permanent_address %>
+            <% else %>
+              <%= @user.permanent_address.split(", ")[1] %>
+            <% end
               else %>
-                <%= "N/A" %>
+              <%= "N/A" %>
             <% end
           else %>
-            <%= "N/A" %>
-        <%end %>
-      </dt> 
+              <%= "N/A" %>
+            <%end %>
+          </dt>
+        </div>
+        <div class="p-title">Current Address
+          <dt class="p-content" id="p_current_address">
+            <%= @user.current_address != "" && !@user.current_address.nil? ? @user.current_address : "N/A" %>
+          </dt>
+        </div>
+      </div>
     </div>
-    <div class="p-title">Current Address
-      <dt class="p-content" id="p_current_address">
-        <%= @user.current_address != "" && !@user.current_address.nil? ? @user.current_address : "N/A" %>
-      </dt> 
-    </div>  
-  </div>
-</div>
-<%= render "modal_edit_contacts" %>
-<%= render "modal_change_password" %>
-<%= render "modal_edit_location" %>
-
-<div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
-<div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span> Fail !</div>
-<%= javascript_include_tag "select_provinces", 'data-turbolinks-track': "reload" %>
-<%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
-<script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'></script>
+    <%= render "modal_edit_contacts" %>
+    <%= render "modal_change_password" %>
+    <%= render "modal_edit_location" %>
+    <div class="alert-message">
+      <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+      <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail">Fails!</span></div>
+    </div>
+    <%= javascript_include_tag "select_provinces", 'data-turbolinks-track': "reload" %>
+    <%= javascript_include_tag "countrypicker", 'data-turbolinks-track': "reload" %>
+    <script src='https://cdn.jsdelivr.net/gh/vietblogdao/js/districts.min.js'></script>
