@@ -767,11 +767,12 @@ module Api
       Title.select(:rank, :name).where(role_id: form.role_id).map do |title|
         h_title[title.rank] = title.name
       end
-
+vall=""
       hash_rank = {}
       h_competency_type = { "All" => [] }
       competencies.each do |competency|
         val_cdp = convert_value_title_mapping(competency.level)
+        vall+= competency.level+", "
         h_rank_value = hash[competency.id][:value].count { |x| val_cdp >= x }
         competency.rank = h_rank_value
         competency.title_name = h_title[h_rank_value]
@@ -811,12 +812,13 @@ module Api
         title: "N/A",
         title_id: nil,
       }
-
+vallll = ""
       h_level_mapping.each do |key, value|
         is_pass = true
         value.each do |val|
           if h_competency_type[val.competency_type]
             count = h_competency_type[val.competency_type].count { |i| i >= val.rank_number }
+            vallll += val.rank_number.to_s + ", "
             is_pass = count >= val.quantity
           end
         end

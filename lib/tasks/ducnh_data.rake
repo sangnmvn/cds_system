@@ -1726,7 +1726,9 @@ namespace :cds_assessment do
         (5656, 42, 81, true, now(), now(), false),
         (5657, 42, 82, true, now(), now(), false),
         (5658, 42, 83, true, now(), now(), false),
-        (5659, 42, 84, true, now(), now(), false);
+        (5659, 42, 84, true, now(), now(), false),
+        (5863, 25, 51, false, now(), now(), false),
+        (5864, 25, 53, false, now(), now(), false);
     SQL
 
     sql_comment = <<-SQL
@@ -3424,7 +3426,9 @@ namespace :cds_assessment do
         (5656, 'Đã passed ở các kỳ trước', 3, true, '', 5656, now(), now(), false),
         (5657, 'Đã passed ở các kỳ trước', 3, true, '', 5657, now(), now(), false),
         (5658, 'Đã passed ở các kỳ trước', 3, true, '', 5658, now(), now(), false),
-        (5659, 'Đã passed ở các kỳ trước', 3, true, '', 5659, now(), now(), false);
+        (5659, 'Đã passed ở các kỳ trước', 3, true, '', 5659, now(), now(), false),
+        (5863, 'Cần improve thêm', 2, true, '', 5863, now(), now(), false),
+        (5864, 'Cần improve thêm', 2, true, '', 5864, now(), now(), false);
     SQL
 
     sql_line_manager = <<-SQL
@@ -5122,7 +5126,9 @@ namespace :cds_assessment do
         (5656, 3, 'Đồng ý', 46, true, '', 1, 5656, now(), now(), true),
         (5657, 3, 'Đồng ý', 46, true, '', 1, 5657, now(), now(), true),
         (5658, 3, 'Đồng ý', 46, true, '', 1, 5658, now(), now(), true),
-        (5659, 3, 'Đồng ý', 46, true, '', 1, 5659, now(), now(), true);
+        (5659, 3, 'Đồng ý', 46, true, '', 1, 5659, now(), now(), true),
+        (5863, 2, 'Cần improve thêm', 46, true, '', 1, 5863, now(), now(), true),
+        (5864, 2, 'Cần improve thêm', 46, true, '', 1, 5864, now(), now(), true);
     SQL
 
     sql_form_slot_history = <<-SQL
@@ -6112,8 +6118,10 @@ namespace :cds_assessment do
         (2784, 3, 'Đã pass ở kỳ trước', 2784, 4, '2d', 25, 48, now(), now()),
         (2785, 3, 'Đã pass ở kỳ trước', 2785, 4, '2e', 25, 49, now(), now()),
         (2786, 3, 'Đã pass ở kỳ trước', 2786, 4, '2f', 25, 50, now(), now()),
-        (2787, 3, 'Đã tham gia làm nhiều proposal với anh vinhtd: boutiqueken, pdl, abtel, alteryx_gallery, pnj, …', 2787, 4, '3b', 25, 52, now(), now()),
-        (2788, 3, 'Đã pass ở kỳ trước', 2788, 4, '3d', 25, 54, now(), now()),
+        (2787, 2, 'Cần improve thêm', 5863, 4, '3a', 25, 51, now(), now()),
+        (2788, 3, 'Đã tham gia làm nhiều proposal với anh vinhtd: boutiqueken, pdl, abtel, alteryx_gallery, pnj, …', 2787, 4, '3b', 25, 52, now(), now()),
+        (5863, 2, 'Cần improve thêm', 5864, 4, '3c', 25, 53, now(), now()),
+        (5864, 3, 'Đã pass ở kỳ trước', 2788, 4, '3d', 25, 54, now(), now()),
         (2789, 3, 'Đã pass ở kỳ trước', 2789, 5, '1a', 25, 58, now(), now()),
         (2790, 3, 'Đã pass ở kỳ trước', 2790, 5, '1b', 25, 59, now(), now()),
         (2791, 3, 'Đã pass ở kỳ trước', 2791, 5, '1c', 25, 60, now(), now()),

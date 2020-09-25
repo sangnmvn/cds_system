@@ -701,9 +701,8 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
-        checkStatusFormStaff(status);
+        // checkStatusFormStaff(status);
         refreshCheckbox();
-
       }
     });
   });

@@ -51,7 +51,7 @@ class LevelMappingsController < ApplicationController
     competencies = Competency.joins(:template).where("templates.role_id": @role.id).order(:location)
     @list_level_mapping = {
       data: level_mappings,
-      rank: title.count,
+      rank: Slot.where(competency_id: competencies.ids).order(:level).pluck(:level).last,
       count_competency: count_competencies,
       competency: competencies,
       title: title,
