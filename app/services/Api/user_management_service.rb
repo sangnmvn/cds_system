@@ -62,16 +62,16 @@ module Api
               <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
             </a>
               <a class='action_icon add-reviewer-icon'  title='Add Reviewer For User' #{(full_access || is_reviewer) ? "data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"}  href='javascript:;'>
-                <img border='0' src='/assets/add_reviewer.png' class='add-reviewer-icon'>
+                <i border='0' style='color:#58c317' class='fas fa-user-check add-reviewer-icon'></i>
               </a>
               <a class='action_icon add-approver-icon' title='Add Approver For User' #{(full_access || is_approver) ? "data-toggle='modal'  data-target='#addApproverModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"} href='javascript:;'>
-                <img border='0' src='/assets/add_approver.png' class='add-approver-icon'>
+                <i border='0' style='color:black' class='fas fa-user-tie add-approver-icon'></i>
               </a>
               <a #{"class='action_icon status_icon'" if full_access} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
                 <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless full_access}'></i>
               </a>&nbsp;
               <a class='action_icon reset-password' title='Reset password of user' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_full_name='#{user.format_name_vietnamese}' href='javascript:;'>
-              <img border='0' src='/assets/reset_password.png' class='reset-password-icon'>
+              <i border='0' style='color:#61066b' class='fas fa-unlock-alt reset-password-icon'></i>
               </a>
               <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_full_name='#{user.format_name_vietnamese}'  data-user_lastname='#{user.last_name}' href='javascript:;'>
                 <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "rgb(77, 79, 78)"}'></i>

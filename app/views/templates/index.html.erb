@@ -14,7 +14,9 @@
     <div class="row">
       <span class="title col-sm-3">Template List</span>
       <div class="add-template title col-sm-9">
-        <%= link_to(('<button><img src="../assets/Add.png"> Add</button>').html_safe, new_template_path, title: "Add a Template", id: "add_template_button") %>
+        <%= link_to new_template_path, title: "Add a Template", id: "add_template_button" do %>
+          <button><%= image_tag("Add.png")%> Add</button>
+        <% end %>
       </div>
     </div>
   </div>

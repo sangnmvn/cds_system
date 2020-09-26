@@ -143,13 +143,13 @@ function addBtnAdd() {
   if (full_access)
     btn_add_delete = `<div class="btn-group">
           <button class="btn btn-light" data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db">
-            <img border="0" style="float:left;margin-top:4px" src="/assets/Add.png">Add
+            <i border="0" style="float:left;margin-top:4px;color:#b5e840;font-size:20px" class="fa fa-plus"></i>Add
           </button>
         </div>`;
   else
     btn_add_delete = `<div class="btn-group">
           <button class="btn btn-light disabled" title="Add Group"style="width:90px; background:#8da8db">
-            <img border="0" style="float:left;margin-top:4px" src="/assets/Add.png">Add
+            <i border="0" style="float:left;margin-top:4px;color:#b5e840;font-size:20px" class="fa fa-plus"></i>Add
           </button>
         </div>`;
   $('#table_group_wrapper').prepend(btn_add_delete);

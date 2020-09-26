@@ -46,7 +46,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="text-center">
-            <img src="/assets/login.png" alt="car-key" border="0">
+            <%= image_tag("login.png", alt: "car-key", style: "border:0") %>
             <h2 class="text-center">Welcome to CDS</h2>
             <form id="register-form" role="form" autocomplete="off" class="form" method="post">
               <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>

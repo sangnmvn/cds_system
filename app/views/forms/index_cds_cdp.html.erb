@@ -9,9 +9,13 @@
     </div>
     <div class="col-2 button-add-cds-assessment background-header" style="text-align: right">
       <% if @check_status %>
-        <%= link_to ('<button><img src="../assets/Add.png"> Add</button>').html_safe, cdp_assessment_forms_path %>
+        <%= link_to cdp_assessment_forms_path do %>
+          <button><%= image_tag("Add.png") %> Add</button>
+        <% end %>
       <% else %>
-        <%= link_to_if false,  ('<button class="disabled"><img src="../assets/Add.png"> Add</button>').html_safe, 'javascript:;' %>
+        <%= link_to_if false ,'javascript:void(0)' do %> 
+          <button class="disabled"><%= image_tag("Add.png") %> Add</button>    
+        <% end %>
       <% end %>
     </div>
     <div class="col-12" style="padding: 0px">
