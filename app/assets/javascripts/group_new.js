@@ -635,7 +635,10 @@ function addAssignUser(group) {
       success: function (response) {
         $('#modalAssign').modal('hide');
         if (response.status == "success")
+        {
           warning(`Assign user to group ${group.name} has been successfully!`);
+          loadDataGroups();
+        }
         else
           fails(`Assign user to group ${group.name} failed!`);
       }

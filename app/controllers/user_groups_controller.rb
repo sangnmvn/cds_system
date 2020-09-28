@@ -22,12 +22,12 @@ class UserGroupsController < ApplicationController
 
   def save_user_group
     status = "success"
-    status = "fails" unless UserGroup.delete_by(group_id: params[:group_id], user_id: params[:user_delete])
-
-    params[:user_add].each do |user_id|
-      status = "fails" unless UserGroup.create(group_id: params[:group_id], user_id: user_id)
+    status = "fails" unless UserGroup.delete_by(group_id: params[:group_id], user_id: params[:user_deletes])
+    if params[:user_add]
+      params[:user_add].each do |user_id|
+        status = "fails" unless UserGroup.create(group_id: params[:group_id], user_id: user_id)
+      end
     end
-
     render json: { status: status }
   end
 

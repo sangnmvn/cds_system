@@ -29,8 +29,8 @@ $(document).ready(function () {
       success: function (response) {
         if (response.status == "success") {
           warning('You have sent a reset password email successfully. Please click the reset password link in your email to set your new password.');
-          sleep(3000);
-          document.location.href = "/";
+          sleep(5000);
+          // document.location.href = "/";
         } else
           fails('Your email address has not existed in CDS System. Please enter another email.')
       }

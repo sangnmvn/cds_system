@@ -446,7 +446,6 @@ function datepicker_setup(arr_date, period_date) {
   $('#end_date_member, #end_date_reviewer').datepicker({
     todayBtn: "linked",
     todayHighlight: true,
-    startDate: toDay,
     autoclose: true,
     format: "M dd, yyyy"
   });
@@ -456,7 +455,6 @@ function datepicker_setup(arr_date, period_date) {
       $(arr_date[i]).datepicker({
         todayBtn: "linked",
         todayHighlight: true,
-        startDate: toDay,
         autoclose: true,
         format: "M dd, yyyy"
       });
@@ -487,7 +485,6 @@ function datepicker_setup(arr_date, period_date) {
       $(period_date[i]).datepicker({
         todayBtn: "linked",
         todayHighlight: true,
-        startDate: toDay,
         autoclose: true,
         format: "M dd, yyyy"
       })
