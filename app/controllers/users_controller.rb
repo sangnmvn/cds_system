@@ -89,6 +89,8 @@ class UsersController < ApplicationController
 
     current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
     reviewers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
+    
+    reviewers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id]).where.not(id: reviewers.ids)
 
     h_reviewers = []
     reviewers.each do |reviewer|
@@ -106,7 +108,7 @@ class UsersController < ApplicationController
     current_approvers = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
     approvers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
-    approvers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id])
+    approvers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id]).where.not(id: approvers.ids)
 
     form = Form.find_by(user_id: params[:user_id])
     is_submit_late = form.present? ? form.is_submit_late : false

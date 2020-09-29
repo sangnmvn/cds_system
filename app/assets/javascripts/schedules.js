@@ -612,11 +612,6 @@ function action_add() {
         $('#to_date').after('<div class="offset-sm-12"><span class="error">Period end date must be greater than Period start date.</span></div>')
       }
 
-      if (mm_start_date.diff(mm_from_date, 'days') > 0) {
-        temp = false;
-        $('#start_date').after('<div class="offset-sm-12"><span class="error">Start Date must be greater than Period from date.</span></div>')
-      }
-
       if (notify_hr == '') {
         temp = false;
         $('#notify_hr').closest('div').children('em').after('<div class="offset-sm-12"><span class="error">Please enter Reminder.</span></div>')

@@ -157,25 +157,25 @@ function addBtnAdd() {
   $('#add_group').off('click').on('click', function (event) {
     event.preventDefault();
     var id = $(this).val();
-    var group_name = $("#edit_group_name").val();
-    var description = $("#edit_group_description").val()
-    var status = $("#modalEdit input[name=status]:checked").val();
+    var group_name = $("#name").val();
+    var description = $("#desc").val()
+    var status = $("#modalAdd input[name=status]:checked").val();
     $(".error").remove();
     if (group_name.length < 1) {
-      $("#edit_group_name").after(
+      $("#name").after(
         '<span class="error">Please enter Group Name</span>'
       );
     } else if (group_name.length < 2 || group_name.length > 100) {
-      $("#edit_group_name").after('<span class="error">The length of Group Name is from 2 to 100 characters.</span>');
+      $("#name").after('<span class="error">The length of Group Name is from 2 to 100 characters.</span>');
     }
     if (description.length > 500) {
-      $("#edit_group_description").after('<span class="error">The maximum length of Group Desctription is 500 characters.</span>');
+      $("#desc").after('<span class="error">The maximum length of Group Desctription is 500 characters.</span>');
     }
     if ($(".error").length == 0) {
-      $("#modalEdit").modal("hide");
+      $("#modalAdd").modal("hide");
       $.ajax({
-        url: id,
-        type: "PUT",
+        url: "/groups/",
+        type: "POST",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
         },
@@ -185,7 +185,7 @@ function addBtnAdd() {
           description: description,
         },
         success: function (response) {
-          warning('The group information has been updated successfully.');
+          warning('The group information has been created successfully.');
           loadDataGroups();
         }
       });
@@ -223,7 +223,7 @@ function actionEdit() {
     if ($(".error").length == 0) {
       $("#modalEdit").modal("hide");
       $.ajax({
-        url: id,
+        url: "/groups/"+id,
         type: "PUT",
         headers: {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),
