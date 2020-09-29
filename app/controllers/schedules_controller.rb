@@ -105,7 +105,7 @@ class SchedulesController < ApplicationController
     @schedules = Schedule.includes(:user, :company).order(id: :DESC).page(params[:page]).per(20)
     @is_pm = check_pm?
     @is_hr = check_hr?
-    @project = Project.joins(:project_members).where(project_members: { user_id: current_user.id })
+    @project = Project.distinct.joins(:project_members).where(company_id: current_user.company_id)
   end
 
   def new

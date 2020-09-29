@@ -211,6 +211,10 @@ function setupDataTable(id) {
   var table = $(id).DataTable({
     "bLengthChange": false,
     "bAutoWidth": false,
+    "bPaginate": false,
+    "scrollY": "500px",
+    "scrollCollapse": true,
+    "paging": false,
     "columnDefs": [
       {
         "searchable": false,
