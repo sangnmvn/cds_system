@@ -126,7 +126,7 @@ $(document).on("click", "#confirm_yes_delete_cds", function () {
           " has been deleted successfully."
         );
       } else {
-        fails("Can't delete CDS/CDP for period " + delete_period_cds + " .");
+        fails("Can't delete CDS/CDP for period " + delete_period_cds + ".");
       }
     },
   });

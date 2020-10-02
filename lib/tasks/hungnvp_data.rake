@@ -633,6 +633,11 @@ namespace :cds_assessment do
         (5431, 26, 448, true, now(), now(), false);
     SQL
 
+    # insert into form_slots (id, form_id, slot_id, is_passed, created_at, updated_at, is_change) values
+    # (38, 160, true, now(), now(), false),
+    # (38, 174, true, now(), now(), false),
+    # (38, 175, true, now(), now(), false);
+
     sql_comment = <<-SQL
       insert into comments (id, evidence, point, is_commit, flag, form_slot_id, created_at, updated_at, is_delete) values
         (3718, 'Đã pass ở kỳ trước', 3, true, '', 3718, now(), now(), false),
@@ -2279,7 +2284,7 @@ namespace :cds_assessment do
         (4022, 3, 'Manage team integration testing trong khi chưa có kinh nghiệm define process, pmp... nhưng cuối cùng cũng giải quyết xong', 4129, 9, '3b', 52, 228, now(), now()),
         (4023, 3, 'Đã pass ở kỳ trước', 4130, 10, '1a', 52, 231, now(), now()),
         (4024, 3, 'Daily scrum, sprint demo, kick off meeting....', 4131, 10, '1b', 52, 232, now(), now()),
-        (4025, 3, 'Review testcase, retro, planning', 4132, 10, '2a', 52, 236, now(), now()),
+        (4025, 3, 'Review testcase, retro, planning', 4132, 10, '2a', 52, 233, now(), now()),
         (4026, 3, '- thuyết phục team sửa testcase trong quá trình review\\n- giải thích, support dev team reproduce liên quan bug, những điểm chưa hợp lý để enhance\\n- thuyết phục qa trong quá trình internal audit', 4133, 10, '3a', 52, 237, now(), now()),
         (4027, 3, 'Làm document và thực hiện present (training, kick-off)\\nthảo luận với rich về defect, test report, automation roadmap qua email, slck chat, meeting (trong phạm vi công việc cần tương tác) \\nevidence: recoding 09/23/2019, 07/25/2019, lawson training\\nslack chat', 4134, 10, '3b', 52, 238, now(), now()),
         (4028, 3, 'Improve domain knowledge, tham gia học agile/scrum, ..', 4135, 11, '1a', 52, 249, now(), now()),
@@ -2449,9 +2454,6 @@ namespace :cds_assessment do
         (5203, 3, 'Đã thực hiện hoạt động này khi thuê ngoài Designer và FrontEnd Dev cho Vendor Portal', 5402, 32, '3b', 33, 420, now(), now()),
         (5204, 3, 'Thuê Designer cho dự án Vendor Portal đã bao gồm các hoạt động này\\n1. Meeting với các candiate để distribute requirements\\n2. Email báo giá của các candidate (có cc cho Hùng)\\n3. DucNH, ChiTL, NhatNTD có 1 buổi meeting nhằm đưa ra 1 số tiêu chí để chọn và chốt designer (meeting nhanh, không có meeting minutes)', 5403, 32, '3c', 33, 421, now(), now()),
         (5205, 3, 'Đã pass ở kỳ trước', 5404, 32, '3d', 33, 422, now(), now()),
-        (5206, 3, 'Đã pass ở kỳ trước', 5405, 32, '3e', 33, 423, now(), now()),
-        (5207, 3, 'Đã pass ở kỳ trước', 5406, 33, '1a', 33, 424, now(), now()),
-        (5208, 3, 'Đã pass ở kỳ trước', 5407, 33, '1b', 33, 425, now(), now()),
         (5209, 3, 'Đã pass ở kỳ trước', 5408, 33, '1c', 33, 426, now(), now()),
         (5210, 3, 'Đã pass ở kỳ trước', 5409, 33, '1d', 33, 427, now(), now()),
         (5211, 3, 'Đã pass ở kỳ trước', 5410, 33, '1e', 33, 428, now(), now()),
@@ -2478,6 +2480,10 @@ namespace :cds_assessment do
         (5232, 3, '[Sep 2019]: tham gia trong việc soạn contract với khách hàng CNY\\n[Mar, 2020]: làm thủ tục closing Meperia Project', 5431,  34, '3b', 26, 448, now(), now());
     SQL
 
+        # (9579, 3, 'Tham gia daily scum với SDDHead, SM....', 9579, 10, '2b', 52, 234, now(), now()),
+        # (9580, 3, 'Communication với team, viết document về testcase....', 9580, 10, '2c', 52, 235, now(), now()),
+        # (9581, 3, 'Support newcomer, làm việc với QA', 9581, 10, '2d', 52, 236, now(), now()),
+        
     ActiveRecord::Base.connection.execute(sql_approver)
     ActiveRecord::Base.connection.execute(sql_form_slot)
     ActiveRecord::Base.connection.execute(sql_comment)

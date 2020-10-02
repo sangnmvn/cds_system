@@ -216,7 +216,6 @@ class UsersController < ApplicationController
     if @user.update(user_param)
       project_user = ProjectMember.joins(:user, :project).select("project_members.id,projects.id").where(user_id: params[:id]).map(&:id)
       management_default = 0
-
       ProjectMember.where(user_id: params[:id]).destroy_all
       if params[:project].present?
         params[:project].each do |pro|
