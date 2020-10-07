@@ -18,7 +18,7 @@ crumb :level_mapping_new do |item|
 end
 
 crumb :forms do
-  link "CDS Assessment", "/forms/"
+  link "CDS Assessment", "/forms/index_cds_cdp"
   parent :root
 end
 
@@ -34,7 +34,7 @@ end
 
 crumb :new_cdp do
   link "CDS & CDP Assessment", "/forms/cdp_assessment"
-  parent :root
+  parent :forms
 end
 
 crumb :view_result_assessment do |form_id|

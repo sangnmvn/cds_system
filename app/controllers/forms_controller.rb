@@ -91,12 +91,18 @@ class FormsController < ApplicationController
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
 
-    @period = schedules.map do |schedule|
+    @period = schedules.map { |schedule|
       {
         id: schedule.period_id,
         name: schedule.period.format_name,
       }
-    end
+    }.uniq
+    #@period = schedules.map do |schedule|
+     # {
+      #  id: schedule.period_id,
+       # name: schedule.period.format_name,
+      #}
+    #end
     if params[:title_history_id].present?
       title_history = TitleHistory.find_by_id(params[:title_history_id])
       return redirect_to index_cds_cdp_forms_path if title_history.nil?
@@ -126,6 +132,7 @@ class FormsController < ApplicationController
       slot_ids = Slot.where(competency_id: competency_ids).order(:level, :slot_id).pluck(:id)
 
       @form_service.create_form_slot(form) if form_slot.empty? || slot_ids.count > form_slot.count
+      form.update(is_delete: false) unless form.nil?
     end
     h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
     @hash[:is_disable_confirm_update] = h_slots.present?
@@ -242,7 +249,7 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-
+    return redirect_to root_path if Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
     @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
 
@@ -255,7 +262,7 @@ class FormsController < ApplicationController
 
   def destroy
     form = Form.find_by_id(params[:id])
-    return render json: { status: "can't delete form" } if current_user.role_id == form.role_id || form.status != "New"
+    return render json: { status: "can't delete form" } if form.status != "New"
     if form.update(is_delete: true)
       render json: { status: "success" }
     else

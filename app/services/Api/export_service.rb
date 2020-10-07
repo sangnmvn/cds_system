@@ -895,7 +895,7 @@ module Api
 
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
-          title_comparison_sheet.add_row [index + 1, result[:period_name], result[:user_name], result[:email], result[:project], result[:role_name], result[:level], result[:rank], result[:title], result[:submit_date], result[:approved_date], result[:status]], height: 20
+          title_comparison_sheet.add_row [index + 1, result[:period_name], result[:user_name], result[:email], result[:project], result[:role_name], result[:title], result[:rank], result[:level], result[:submit_date], result[:approved_date], result[:status]], height: 20
           title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
           title_comparison_sheet.rows[-1].cells[0].style = index_format
           title_comparison_sheet.rows[-1].cells[2].style = email_format

@@ -208,7 +208,7 @@ function actionEdit() {
     var id = $(this).val();
     var group_name = $("#edit_group_name").val();
     var description = $("#edit_group_description").val()
-    var status = $("#modalEdit input[name=status]:checked").val();
+    var status = $("#modalEdit input[name=edit_status]:checked").val();
     $(".error").remove();
     if (group_name.length < 1) {
       $("#edit_group_name").after(
@@ -252,7 +252,7 @@ function actionDelete() {
     event.preventDefault();
     var id = $(this).val();
     $.ajax({
-      url: id,
+      url: "/groups/"+id,
       type: "DELETE",
       headers: {
         "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content"),

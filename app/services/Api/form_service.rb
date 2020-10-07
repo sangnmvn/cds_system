@@ -250,7 +250,7 @@ module Api
               .limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
-      if @privilege_array.include?(REVIEW_CDS)
+      if (@privilege_array & [REVIEW_CDS, HIGH_FULL_ACCESS]).any?
         forms += if (filter[:period_id])
             Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
               .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
@@ -289,6 +289,7 @@ module Api
             period: form.period_id,
             period_excel_name: form&.period&.format_excel_name,
             period_name: form&.period&.format_to_date,
+            period_prev_name: Period.where("to_date<?",Period.find_by_id(forms[0].period.id).to_date).order("to_date ASC").last&.format_to_date || ""
           }
         end
 
@@ -372,7 +373,7 @@ module Api
     def get_line_manager_miss_list
       form_id = params[:form_id]
       latest_period = Form.find_by(id: form_id)&.period_id
-      staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }).pluck("slot_id")
+      staff_slots = FormSlot.distinct.joins(:form, :comments).where(form_id: form_id, comments: { is_commit: true }, is_change: true).pluck("slot_id")
       reviewer_slots = FormSlot.distinct.joins(:form, :line_managers).where(form_id: form_id, "line_managers.user_id": current_user.id, "line_managers.period_id": latest_period).pluck(:slot_id)
       staff_slot_ids = staff_slots.difference(reviewer_slots)
       slots = Slot.includes(:competency).where(id: staff_slot_ids).order("competencies.location", :slot_id, :level)
@@ -401,7 +402,7 @@ module Api
 
       users = User.where(id: user_ids).includes(:company, :role)
       if @privilege_array.include?(HIGH_FULL_ACCESS)
-        user_ids = User.where(company_id: current_user.company_id).where.not(id: current_user.id).pluck(:id).uniq
+        user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id).uniq
         project_members = ProjectMember.where(user_id: users.pluck(:id)).includes(:project)
       end
 
@@ -531,7 +532,7 @@ module Api
       form = Form.find_by_id(params[:form_id])
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.find_by(slot_id: params[:slot_id], form_id: params[:form_id])
-        form_slot.update(re_assess: true) if LineManager.where.not(period_id: form.period_id).present?
+        form_slot.update(re_assess: true) if LineManager.where(form_slot_id: form_slot.id).where.not(period_id: form.period_id).present?
         return false if form.nil?
 
         if params[:point].present?
@@ -1130,7 +1131,7 @@ vallll = ""
         if comments&.is_commit
           comment_type = comments.point.nil? ? "CDP" : "CDS"
         end
-        recommends = get_recommend(form_slot)
+        recommends = get_recommend(form_slot,form_slot.is_change || false)
         next unless hash[form_slot.slot_id].nil?
 
         hash[form_slot.slot_id] = {
@@ -1150,7 +1151,7 @@ vallll = ""
       hash
     end
 
-    def get_recommend(form_slot)
+    def get_recommend(form_slot,is_change)
       line_managers = form_slot.line_managers.order("periods.to_date desc")
       hash = {
         is_passed: false,
@@ -1161,8 +1162,10 @@ vallll = ""
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id)
       approvers.each_with_index do |approver, i|
-        line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
-        if line.blank?
+
+        # line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
+        line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
+        if line.blank? || (is_change && line.user_id != approver.approver_id) || ((line.given_point || 0) <= 2 && line.user_id != approver.approver_id) 
           hash[:recommends] << {
             given_point: "",
             recommends: "",

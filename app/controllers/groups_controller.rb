@@ -75,9 +75,9 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    @group = Group.find_by(params[:id])
+    @group = Group.find_by_id(params[:id])
+    render json: { status: "fail" } unless UserGroup.where(group_id: @group.id).blank?
     if @group.update_attribute(:is_delete, true)
-      UserGroup.delete_by(group_id: @group.id)
       render json: { status: "success" }
     else
       render json: { status: "fail" }

@@ -51,7 +51,8 @@ function loadTitleMappingForEdit() {
       for (var title_name in title_list) {
         current_length = title_list[title_name].length
         if (current_length > max_competency_count) {
-          title_with_most_competency = title_name;
+          if (title_with_most_competency.length==0)
+           title_with_most_competency = title_name;
           max_competency_count = current_length;
         }
       }

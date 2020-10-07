@@ -943,6 +943,7 @@ $(document).ready(function () {
             $("#icon_confirm_update_to_approver").css("color", "#ccc");
             $("#status").html("(Submited)")
             toggleInput(false);
+            window.location.href = "/forms/cds_review"
           } else {
             fails("Can't submit CDS/CDP.");
           }
@@ -1208,7 +1209,7 @@ function autoSaveStaff(row) {
             level = $(this).data("location")[0]
             is_cds = $(this).find(".staff-commit").val() == "commit_cds"
             point = $(this).find(".select-assessment").val()
-            if (level == row.data("location")[0] && is_cds && point >= 3)
+            if (level == row.data("location")[0] && (is_cds && point >= 3 || $(this).find(".approver-assessment").val() >=3))
               current_change += 1;
           });
           if (current_change <= max)

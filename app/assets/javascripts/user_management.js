@@ -581,8 +581,8 @@ $(document).on("click", "#btn_modal_edit_user", function () {
   account = $("#modalEdit #account").val();
   role = $("#modalEdit #role").val();
   company = $("#modalEdit #company").val();
-  project = $("#modalEdit #project").val()
-  joined_date = $("#modalEdit #joined_date").val();;
+  project = $("#modalEdit #project").val();
+  joined_date = $("#modalEdit #joined_date").val();
   id = $("#modalEdit #user_id").val();
   check_email = false;
   check_account = false;

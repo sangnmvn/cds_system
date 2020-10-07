@@ -45,8 +45,8 @@ class SchedulesController < ApplicationController
 
       current_schedule_data.push(schedule.company.name)
       if check_pm?
-        project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
-        project_name = Project.where(id: project_ids).pluck(:name).join(", ")
+        # project_ids = ProjectMember.where(user_id: current_user.id).pluck(:project_id)
+        project_name = Project.where(id: schedule.project_id).pluck(:name).join(", ")
         current_schedule_data.push(project_name)
       end
 
