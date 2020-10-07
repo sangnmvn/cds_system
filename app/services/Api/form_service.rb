@@ -688,7 +688,7 @@ module Api
           value = data[:point]
           value_cdp = data[:point_cdp]
         end
-
+# test
         if current_user.id != form.user_id
           if privilege_array.include?(REVIEW_CDS)
             value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
