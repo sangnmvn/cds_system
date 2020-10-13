@@ -1161,7 +1161,7 @@ vallll = ""
       period_id = 0
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
-      approvers = Approver.includes(:approver).where(user_id: user.id)
+      approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
       approvers.each_with_index do |approver, i|
         if is_change
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
