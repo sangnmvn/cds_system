@@ -1163,8 +1163,11 @@ vallll = ""
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id)
       approvers.each_with_index do |approver, i|
-        # line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
-        line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
+        if is_change
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
+        else
+          line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
+        end
         if line.blank? || (is_change && line.user_id != approver.approver_id) || ((line.given_point || 0) <= 2 && line.user_id != approver.approver_id) 
           hash[:recommends] << {
             given_point: "",
