@@ -1159,7 +1159,7 @@ vallll = ""
         recommends: [],
       }
       period_id = 0
-      new_period_id =Period.order(to_date: :desc).first.id
+      new_period_id =Period.includes(:schedules).where("schedules.company_id": current_user.company_id).order(to_date: :desc).first.id
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
