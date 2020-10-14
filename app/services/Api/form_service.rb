@@ -1159,12 +1159,13 @@ vallll = ""
         recommends: [],
       }
       period_id = 0
+      new_period_id =Period.order(to_date: :desc).first.id
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
       approvers.each_with_index do |approver, i|
         if is_change
-          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: new_period_id).order(updated_at: :desc).first
         else
           line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
