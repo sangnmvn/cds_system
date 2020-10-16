@@ -1156,34 +1156,24 @@ vallll = ""
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
-      
-      # binding.pry
-      flag = 0
-      old_period_id = Period.includes(:schedules).where("schedules.company_id": current_user.company_id).where("to_date >= ?", form_slot.updated_at ).where("from_date <=  ?",form_slot.updated_at ).order(to_date: :desc).first&.id
-      # if is_change
       approvers.each_with_index do |approver, i|
         if is_change
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: new_period_id).order(updated_at: :desc).first
         else
-          flag = 1
-          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: old_period_id).order(updated_at: :desc).first
-          line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first if line.nil?
+          line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
-        
-        if (line.blank? || (is_change && line.user_id != approver.approver_id) || ((line.given_point || 0) <= 2 && line.user_id != approver.approver_id) ) && flag.zero?
-          user = User.find(approver.approver_id)
+        if line.blank? || (is_change && line.user_id != approver.approver_id) || ((line.given_point || 0) <= 2 && line.user_id != approver.approver_id) 
           hash[:recommends] << {
             given_point: "",
             recommends: "",
-            name: user.account,
+            name: User.find(approver.approver_id).account,
             flag: "",
-            user_id: user.id,
+            user_id: User.find(approver.approver_id).id,
             is_final: "",
             is_commit: false,
             is_pm: approver.is_approver,
           }
         else
-          break if line.nil?
           break if !period_id.zero? && period_id != line.period_id
           period_id = line.period_id
           if line.final && (line.given_point || 0) > 2
@@ -1208,31 +1198,6 @@ vallll = ""
           }
         end
       end
-      # else
-      #   lines = LineManager.where(form_slot_id: form_slot.id, period_id: old_period_id)
-      #   lines.each_with_index  do |line, i|
-      #     if line.final && (line.given_point || 0) > 2
-      #       hash[:is_passed] = true
-      #       hash[:final_point] = line.given_point
-      #     end
-      #     comment_type = ""
-
-      #     if line&.is_commit
-      #       comment_type = line.given_point.nil? ? "CDP" : "CDS"
-      #     end
-      #     hash[:recommends] << {
-      #       given_point: line.given_point || 0,
-      #       recommends: line.recommend || "",
-      #       name: User.find(line.user_id).account,
-      #       flag: line.flag || "",
-      #       user_id: line.user_id,
-      #       is_final: line.final,
-      #       comment_type: comment_type,
-      #       is_commit: line&.is_commit,
-      #       is_pm: false,
-      #     }
-      #   end
-      # end
       hash
     end
 
