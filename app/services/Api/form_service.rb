@@ -664,7 +664,7 @@ module Api
       }
       slots = Slot.includes(:competency).left_outer_joins(:form_slots).where(filter).order("competencies.id", :level, :slot_id)
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
-      form_slots = get_point_for_preview_result(form_slots)
+      form_slots = get_point_for_result(form_slots)
 
       h_point = {}
       h_poisition_level = {}
