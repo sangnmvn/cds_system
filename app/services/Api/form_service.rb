@@ -497,11 +497,11 @@ module Api
     end
 
     def format_data_old_slots
-      period = TitleHistory.find_by_id(params[:title_history_id])&.period_id
+      title_history = TitleHistory.find_by_id(params[:title_history_id])
+      period = title_history&.period_id
       slot_histories = FormSlotHistory.includes(:slot).where(title_history_id: params[:title_history_id], competency_id: params[:competency_id])
       line_managers = LineManager.where(period_id: period, form_slot_id: slot_histories.pluck(:form_slot_id))
-
-      form_slots = get_recommend_by_form_slot(line_managers)
+      form_slots = get_recommend_by_form_slot(line_managers, title_history.user_id)
       slot_histories.map do |slot_history|
         h_slot = {
           id: slot_history.slot.id,
@@ -664,7 +664,7 @@ module Api
       }
       slots = Slot.includes(:competency).left_outer_joins(:form_slots).where(filter).order("competencies.id", :level, :slot_id)
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
-      form_slots = get_point_for_result(form_slots)
+      form_slots = get_point_for_preview_result(form_slots)
 
       h_point = {}
       h_poisition_level = {}
@@ -1157,8 +1157,8 @@ vallll = ""
       user = User.find(form.user_id)
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
       approvers.each_with_index do |approver, i|
-        if is_change
-          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: new_period_id).order(updated_at: :desc).first
+        if is_change || form.status == "Done"
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).first
         else
           line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
@@ -1212,7 +1212,7 @@ vallll = ""
       end
     end
 
-    def get_recommend_by_form_slot(line_managers)
+    def get_recommend_by_form_slot(line_managers, user_id)
       hash = {}
       line_managers.map do |line|
         hash[line.form_slot_id] = [] if hash[line.form_slot_id].nil?
@@ -1221,6 +1221,7 @@ vallll = ""
           recommends: line.recommend,
           reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
           name: User.find(line.user_id).account,
+          is_pm: Approver.where(approver_id: line.user_id, user_id: user_id).first.is_approver,
         }
       end
       hash
