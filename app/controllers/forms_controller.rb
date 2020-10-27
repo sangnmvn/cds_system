@@ -347,9 +347,6 @@ class FormsController < ApplicationController
   end
 
   def review_cds_assessment
-    
-    binding.pry
-    
     params = form_params
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order("periods.to_date")
