@@ -164,7 +164,8 @@ class FormsController < ApplicationController
     user = User.includes(:role).find_by_id(params[:user_id])
     approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])
 
-    h_slots = FormSlot.joins(:comments).where(form_id: form.id, comments: { re_update: true })
+    form_slot = FormSlot.joins(:comments).where(form_id: form.id)
+    h_slots =  form_slot.where(comments: { re_update: true })
     @hash = {
       user_id: params[:user_id],
       user_name: user.format_name,
@@ -177,6 +178,7 @@ class FormsController < ApplicationController
       is_reviewer: !approver&.is_approver || false,
       is_submit_late: form.is_submit_late,
       is_disable_confirm_update: h_slots.present?,
+      is_flag_yellow: form_slot.where(comments: { flag: "yellow" }).count >= 1,
     }
   end
 
@@ -345,6 +347,9 @@ class FormsController < ApplicationController
   end
 
   def review_cds_assessment
+    
+    binding.pry
+    
     params = form_params
     @hash = {}
     schedules = Schedule.includes(:period).where(company_id: 1).where.not(status: "Done").order("periods.to_date")

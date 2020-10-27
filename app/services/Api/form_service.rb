@@ -269,7 +269,7 @@ module Api
       filter = filter_cds_review_list
 
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
-      user_ids = User.where(filter[:filter_users],id: user_ids).pluck(:id).uniq
+      user_ids = User.where(filter[:filter_users]).where(id: user_ids).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
       forms = Form.includes([:user, :period]).where(user_id: user_ids, period_id: params[:period_ids])

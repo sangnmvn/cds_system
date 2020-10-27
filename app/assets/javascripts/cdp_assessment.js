@@ -284,7 +284,8 @@ function loadDataSlots(response) {
   $('#content_slot').html(temp);
   checkChangeSlot();
   checkIsRequested();
-  setTimeout(function(){  if (is_submit) {
+  setTimeout(function(){ 
+    if (is_submit && !is_flag_yellow) {
     toggleInput(false);
   } }, 3000);
 }
@@ -701,7 +702,29 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
-        // checkStatusFormStaff(status);
+        // init page at start
+        if (is_submit) {
+          toggleInput(false);
+        }
+        if (status == "Done") {
+          toggleInput(false);
+        }
+        $(".select-commit").each(function () {
+          is_commit = $(this).val();
+          if (is_commit == "commit_cdp") {
+            $(this).closest("tr").find(".reviewer-assessment").addClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").addClass("d-none");
+          } else if (is_commit == "commit_cds") {
+            $(this).closest("tr").find(".reviewer-assessment").removeClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").removeClass("d-none");
+          }
+        });
+        $(".cdp-slot-wrapper").each(function () {
+          if ($(this).find(".icon-flag").css("color") != "rgb(255, 255, 255)") {
+            $(this).find(".reviewer-self").removeAttr("disabled");
+            $(this).find(".approver-self").removeAttr("disabled");
+          }
+        });
         refreshCheckbox();
       }
     });
