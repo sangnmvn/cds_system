@@ -21,6 +21,8 @@ module Api
 
     HEADER_CDS_REVIEW_LIST = ["No.", "Period", "User Name", "Email", "Project", "Role", "Title", "Rank", "Level", "Submitted Date", "Reviewed Date", "Status"]
 
+    HEADER_CDS_REVIEW_LIST_FIRST = ["No.", "P eriod", "User Name", "Email", "Project", "N/A", "", "", "", "N/A", "", "", "","Submitted Date", "Reviewed Date", "Status"]
+    HEADER_CDS_REVIEW_LIST_LAST = ["", "", "", "", "", "Role", "Title", "Rank", "Level", "Role", "Title", "Rank", "Level"]
     # for string operation
     NEVER_USE_CHARACTER = "Ω"
 
@@ -888,15 +890,30 @@ module Api
         title_comparison_sheet.page_setup.set(fit_to_width: 1)
         title_comparison_sheet.add_row ["Title/Rank/Level Comparison between period #{h_data[:period_prev_name]} and period #{h_data[:period_name]}", "", "", "", "", "", "", "", "", ""], style: title_format, height: 30
 
-        final_column = ("A".."Z").to_a[HEADER_CDS_REVIEW_LIST.length - 1]
+        final_column = ("A".."Z").to_a[HEADER_CDS_REVIEW_LIST_FIRST.length - 1]
         title_comparison_sheet.merge_cells "A1:#{final_column}1"
 
-        title_comparison_sheet.add_row HEADER_CDS_REVIEW_LIST, style: table_header_format, height: 20
+        title_comparison_sheet.merge_cells "A2:A3"
+        title_comparison_sheet.merge_cells "B2:B3"
+        title_comparison_sheet.merge_cells "C2:C3"
+        title_comparison_sheet.merge_cells "D2:D3"
+        title_comparison_sheet.merge_cells "E2:E3"
+        title_comparison_sheet.merge_cells "N2:N3"
+        title_comparison_sheet.merge_cells "O2:O3"
+        title_comparison_sheet.merge_cells "P2:P3"
 
+        title_comparison_sheet.merge_cells "F2:I2"
+        title_comparison_sheet.merge_cells "J2:M2"
+        
+        HEADER_CDS_REVIEW_LIST_FIRST[5] = h_data[:title_period_prev]
+        HEADER_CDS_REVIEW_LIST_FIRST[9] = h_data[:title_period]
+
+        title_comparison_sheet.add_row HEADER_CDS_REVIEW_LIST_FIRST, style: table_header_format, height: 20
+        title_comparison_sheet.add_row HEADER_CDS_REVIEW_LIST_LAST, style: table_header_format, height: 20
         filtered_data_arr = h_data[:users]
         filtered_data_arr.each_with_index do |result, index|
-          title_comparison_sheet.add_row [index + 1, result[:period_name], result[:user_name], result[:email], result[:project], result[:role_name], result[:title], result[:rank], result[:level], result[:submit_date], result[:approved_date], result[:status]], height: 20
-          title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8].include?(index) }.each { |element| element.style = normal_format }
+          title_comparison_sheet.add_row [index + 1, result[:period_name], result[:user_name], result[:email], result[:project], result[:prev_role_name], result[:prev_title], result[:prev_rank], result[:prev_level], result[:role_name], result[:title], result[:rank], result[:level], result[:submit_date], result[:approved_date], result[:status]], height: 20
+          title_comparison_sheet.rows[-1].cells.reject.with_index { |element, index| [0, 2, 4, 5, 6, 7, 8, 11, 12].include?(index) }.each { |element| element.style = normal_format }
           title_comparison_sheet.rows[-1].cells[0].style = index_format
           title_comparison_sheet.rows[-1].cells[2].style = email_format
           title_comparison_sheet.rows[-1].cells[4].style = normal_format
@@ -905,8 +922,10 @@ module Api
           title_comparison_sheet.rows[-1].cells[6].style = normal_format
           title_comparison_sheet.rows[-1].cells[7].style = number_format
           title_comparison_sheet.rows[-1].cells[8].style = number_format
+          title_comparison_sheet.rows[-1].cells[11].style = number_format
+          title_comparison_sheet.rows[-1].cells[12].style = number_format
         end
-        title_comparison_sheet.column_widths 5, 30, 30, 30, 20, 20, 40, 10, 10, 20, 20, 20 # run at last
+        title_comparison_sheet.column_widths 5, 30, 30, 30, 20, 20, 40, 10, 10, 20, 40, 10, 10, 20, 20, 20 # run at last
         # getting output file to public/
         extension = @params[:ext]
         if extension.downcase == "xlsx"

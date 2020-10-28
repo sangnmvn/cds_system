@@ -283,6 +283,7 @@ module Api
 
       forms.map do |form|
         company_id = form&.user&.company_id
+        period_prev = Period.where("to_date<?",Period.find_by_id(form.period.id).to_date).order("to_date ASC").last
         if results[company_id].nil?
           results[company_id] = {
             users: [],
@@ -290,11 +291,13 @@ module Api
             period: form.period_id,
             period_excel_name: form&.period&.format_excel_name,
             period_name: form&.period&.format_to_date,
-            period_prev_name: Period.where("to_date<?",Period.find_by_id(forms[0].period.id).to_date).order("to_date ASC").last&.format_to_date || ""
+            period_prev_name: period_prev&.format_to_date || "",
+            title_period: form&.period&.format_name,
+            title_period_prev: period_prev&.format_name
           }
         end
 
-        results[company_id][:users] << format_form_cds_review(form)
+        results[company_id][:users] << format_form_cds_review_export(form, period_prev.id)
       end
 
       { data: results }
@@ -1221,7 +1224,7 @@ vallll = ""
           recommends: line.recommend,
           reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
           name: User.find(line.user_id).account,
-          is_pm: Approver.where(approver_id: line.user_id, user_id: user_id).first.is_approver,
+          is_pm: Approver.where(approver_id: line.user_id, user_id: user_id).first&.is_approver,
         }
       end
       hash
@@ -1244,6 +1247,31 @@ vallll = ""
         user_id: form.user&.id,
         is_approver: (user_approve_ids.include? form.user_id),
         is_open_period: (periods.include? form.period_id),
+      }
+    end
+
+    def format_form_cds_review_export(form, period_prev_id, user_approve_ids = [], periods = [], h_reviewers = {})
+      title_history = TitleHistory.includes(:period).where(user_id: form.user&.id,"periods.id": period_prev_id).last
+      {
+        id: form.id,
+        period_name: form.period&.format_name || "New",
+        user_name: form.user&.format_name_vietnamese,
+        project: form.user&.get_project,
+        email: form.user&.email,
+        role_name: form.role&.name,
+        level: form.level || "N/A",
+        rank: form.rank || "N/A",
+        title: form.title&.name || "N/A",
+        submit_date: format_long_date(form.submit_date),
+        approved_date: format_long_date(form.approved_date),
+        status: h_reviewers[form.user_id] ? "Submitted" : form.status,
+        user_id: form.user&.id,
+        is_approver: (user_approve_ids.include? form.user_id),
+        is_open_period: (periods.include? form.period_id),
+        prev_role_name: title_history&.role_name || "N/A",
+        prev_level: title_history&.level || "N/A",
+        prev_rank: title_history&.rank || "N/A",
+        prev_title: title_history&.title || "N/A",
       }
     end
 
