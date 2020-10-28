@@ -283,7 +283,7 @@ function loadDataSlots(response) {
   })
   $('#content_slot').html(temp);
   checkChangeSlot();
-  checkIsRequested();
+  // checkIsRequested();
   setTimeout(function(){ 
     if (is_submit && !is_flag_yellow) {
     toggleInput(false);
