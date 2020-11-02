@@ -260,7 +260,7 @@ module Api
           end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
-      forms.map do |form|
+      forms.uniq.map do |form|
         format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
     end
@@ -688,18 +688,21 @@ module Api
         }
         value = data[:final_point] || data[:point]
         value_cdp = data[:final_point_cdp] || data[:point_cdp]
-        if data[:is_change]
-          value = data[:point]
-          value_cdp = data[:point_cdp]
-        end
-# test
-        if current_user.id != form.user_id
-          if privilege_array.include?(REVIEW_CDS)
-            value_cdp = data[:recommends][current_user.id][:given_point_cdp] unless data[:recommends] || data[:recommends][current_user.id]
-            value = data[:recommends][current_user.id][:given_point] unless data[:recommends] || data[:recommends][current_user.id]
-          elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
-            value = data[:final_point] || value
-            value_cdp = data[:final_point_cdp] || value_cdp
+        
+        if form.status != "Done"
+          if data[:is_change]
+            value = data[:point]
+            value_cdp = data[:point_cdp]
+          end
+
+          if current_user.id != form.user_id
+            # if privilege_array.include?(REVIEW_CDS)
+              value_cdp = data[:recommends].find{|item| item[current_user.id]}[current_user.id][:given_point_cdp] if data[:recommends].find{|item| item[current_user.id]}
+              value = data[:recommends].find{|item| item[current_user.id]}[current_user.id][:given_point] if data[:recommends].find{|item| item[current_user.id]}
+            # elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
+            #   value = data[:final_point] || value
+            #   value_cdp = data[:final_point_cdp] || value_cdp
+            # end
           end
         end
 

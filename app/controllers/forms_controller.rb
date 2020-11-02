@@ -110,6 +110,7 @@ class FormsController < ApplicationController
       @hash[:status] = "Done"
       @hash[:title_history_id] = title_history.id
       @hash[:title] = "CDS/CDP Assessment for " + TitleHistory.find_by_id(params[:title_history_id]).period.format_name
+      @hash[:form_id] = Form.includes(:template).where(user_id: current_user.id).order(created_at: :desc).first&.id
       return @hash
     end
     if params.include?(:form_id)
