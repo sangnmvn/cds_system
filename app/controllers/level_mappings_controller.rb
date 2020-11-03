@@ -55,6 +55,7 @@ class LevelMappingsController < ApplicationController
       count_competency: count_competencies,
       competency: competencies,
       title: title,
+      count_title: title.count,
     }
   end
 

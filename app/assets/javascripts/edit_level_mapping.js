@@ -1,6 +1,6 @@
 $(document).ready(function () {
   var list_del = []
-  loadLevelMapping(count)
+  loadLevelMapping(count_title)
   changeBtnSave(false)
   checkPrivilege($("#can_edit_level_mapping").val(), global_can_view)
   $('#table_edit_level_mapping').on('click', '#btn_add_required', function () {
@@ -231,14 +231,14 @@ function checkRow(row) {
   }
 }
 function checkData() {
-  var row = $("#table_edit_level_mapping").find('.row').children()
-  var count = row.length
-  for (var i = 0; i < count; i++) {
-    if (row[i].children[0].value == "" || row[i].children[0].value == "-1") {
-      changeBtnSave(false)
-      return
-    }
-  }
+  // var row = $("#table_edit_level_mapping").find('.row').children()
+  // var count = row.length
+  // for (var i = 0; i < count; i++) {  
+  //   if (row[i].children[0].value == "" || row[i].children[0].value == "-1") {
+  //     changeBtnSave(false)
+  //     return
+  //   }
+  // }
   changeBtnSave(true)
 }
 
