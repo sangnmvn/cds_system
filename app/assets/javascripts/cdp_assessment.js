@@ -196,7 +196,7 @@ function loadDataSlots(response) {
                     <b>Reviewer Feedbacks</b>
                   </div>
                 </div>
-                <div id="reviewer_${e.id}" class="collapse padding-collapse-children">
+                <div id="reviewer_${e.id}" class="collapse padding-collapse-children show">
                   <div class="row div-content">
                     <table class="table table-review" id="table-reviewer">`
       for (i = 0; i < length; i++) {
@@ -243,7 +243,7 @@ function loadDataSlots(response) {
               <b>Approver Feedbacks</b>
             </div>
           </div>
-          <div id="approver_${e.id}" class="collapse padding-collapse-children">
+          <div id="approver_${e.id}" class="collapse padding-collapse-children show">
             <div class="row div-content">
                 <table class="table table-review" id="table-approver" >
                   <tr class='tr-approver'>
@@ -656,6 +656,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkHideShowSlot();
         // init page at start
         if (is_submit) {
           toggleInput(false);
@@ -702,6 +703,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkHideShowSlot();
         // init page at start
         if (is_submit) {
           toggleInput(false);
@@ -793,6 +795,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkHideShowSlot();
         refreshCheckbox();
       }
 
@@ -817,6 +820,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         loadDataSlots(response);
+        checkHideShowSlot();
         refreshCheckbox();
 
       }
@@ -1155,8 +1159,45 @@ $(document).ready(function () {
       });
     }
   });
+
+  $(".btn-show-hide-slot").on("click", function () {
+    if(window.flag_hide_show_slot == 1)
+      window.flag_hide_show_slot = 0;
+    else
+      window.flag_hide_show_slot = 1;
+    checkHideShowSlot();
+  });
+
+  $(".btn-up").on("click", function () {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+  $(".btn-down").on("click", function () {
+    $('html,body').animate({scrollTop: document.body.scrollHeight}, "smooth");
+    // window.scrollTo({top: (document.scrollingElement || document.body), behavior: 'smooth'});
+  });
+
+  window.flag_hide_show_slot = 0;
+
+  $(window).scroll(function(e){ 
+    var navbar = 888;
+    var st = $(window).scrollTop();
+    if (st >= navbar) {
+      $(".btn-up").css("display", "block");
+      $(".btn-down").css("display", "none");
+    } else {
+      $(".btn-up").css("display", "none");
+      $(".btn-down").css("display", "block");
+    }
+  });
 })
 
+function checkHideShowSlot() {
+  if(window.flag_hide_show_slot == 1)
+    $(".content-staff").addClass("show");
+  else
+    $(".content-staff").removeClass("show");
+}
 function getValueStringPoint(point) {
   switch (point) {
     case 1:

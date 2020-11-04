@@ -31,11 +31,12 @@
 
   .div-slot {
     background-color: #4472c4;
-    height: 40px;
-    line-height: 40px;
+    line-height: 35px;
     margin: 0px 0px 0px 0px;
     color: white;
     border: 1px #0000 solid;
+    height: auto;
+    vertical-align: middle;
   }
 
   .div-child-slot {

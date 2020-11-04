@@ -39,11 +39,20 @@
     </div>
   </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" style= "position: relative;">
   <div class="row" id="body-row">
     <%= render "left_panel" %>
     <div class="col" id="content_slot">
     </div>
+  </div>
+  <div class="btn-show-hide-slot" title="Hide/Show">
+    <i class="fa fa-book" style="font-size: 25px"></i>
+  </div>
+  <div class="btn-up" title="Go to Top" style="display: none">
+    <i class="fas fa-arrow-up" style="font-size: 25px"></i>
+  </div>
+  <div class="btn-down" title="Go to Bottom">
+    <i class="fas fa-arrow-down" style="font-size: 25px"></i>
   </div>
 </div>
 <div><%= render "modal_withdraw" %></div>

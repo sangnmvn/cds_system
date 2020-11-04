@@ -821,11 +821,11 @@ module Api
         email_format = workbook.styles.add_style(:sz => 11, :bg_color => "C0C0C0", :fg_color => "017EAF", :font_name => "Calibri", :border => { :style => :thin, :color => "000000", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
 
         no_change_sheet = set_up_sheet_view(workbook, "No Change List")
-        no_change_sheet.add_row ["", "", "", "", "", "", "", "", "", ""], :style => title_format
-        no_change_sheet.add_row ["List of Employees Has No Change Level", "", "", "", "", "", "", "", "", ""], :style => title_format
+        no_change_sheet.add_row ["", "", "", "", "", "", "", ""], :style => title_format
+        no_change_sheet.add_row ["List of Employees Has No Change Level in the Lastes Period [#{h_data[:period_name]}]", "", "", "", "", "", "", ""], :style => title_format
         no_change_sheet.rows[1].cells[0].style = title_format
-        no_change_sheet.merge_cells "A1:J1"
-        no_change_sheet.merge_cells "A2:J2"
+        no_change_sheet.merge_cells "A1:H1"
+        no_change_sheet.merge_cells "A2:H2"
         no_change_sheet.add_row ["No.", "Employee Name", "Email", "From Period", "Title", "Rank", "Level", "Notes"], :style => table_header_format
 
         filtered_data_arr = h_data[:users]

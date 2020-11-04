@@ -307,11 +307,11 @@ module Api
 
     def data_users_up_title
       if privilege_array.include? DASHBOARD_FULL_ACCESS
-        user_ids = User.joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
-        user_ids = User.joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
-        user_ids = User.joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
@@ -381,7 +381,7 @@ module Api
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
         user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
       schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
 
@@ -454,7 +454,7 @@ module Api
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
         user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
  
       titles = case number_keep
