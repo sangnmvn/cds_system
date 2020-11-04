@@ -12,7 +12,7 @@ $(document).ready(function () {
     if (quantity == "" || type == "-1" || rank == "-1") {
       fails("Has a blank field")
     } else {
-      $(this).closest('td').append(createNewRowRequire(count))
+      $(this).closest('td').append(createNewRowRequire(count_title))
       $(this).parent().children()[1].classList.remove('invisible')
       $(this).addClass("invisible")
     }
@@ -37,7 +37,7 @@ $(document).ready(function () {
     var title = tr.children()[0].textContent
     var rank = tr.children()[1].textContent
     var level = parseInt(tr.children()[2].textContent) + 1
-    var row = createNewRowLevel(count)
+    var row = createNewRowLevel(count_title)
     var title_id = tr.data('title-id')
     $(this).addClass("invisible").removeClass("visible")
     var newRow = document.getElementById("table_edit_level_mapping").insertRow(tr.index() + 2);

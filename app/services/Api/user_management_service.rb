@@ -5,7 +5,9 @@ module Api
     ADD_APPROVER = 3
     ADD_REVIEWER = 4
     FULL_ACCESS_MY_COMPANY = 5
-
+    DASHBOARD_FULL_ACCESS = 20
+    DASHBOARD_FULL_ACCESS_MY_COMPANY = 21
+    DASHBOARD_FULL_ACCESS_MY_PROJECT = 23
     def initialize(params, current_user)
       groups = Group.joins(:user_group).where(user_groups: { user_id: current_user.id })
       privilege_array = []
@@ -304,7 +306,13 @@ module Api
     end
 
     def data_users_up_title
-      user_ids = User.joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id)
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+      end
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}
@@ -368,7 +376,13 @@ module Api
     end
 
     def data_users_down_title
-      user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+      end
       schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
 
       first = {}
@@ -434,8 +448,15 @@ module Api
 
     def data_users_keep_title
       number_keep = params[:number_period_keep].to_i
-      user_ids = User.left_outer_joins(:project_members).where(filter_users).pluck(:id)
-
+      
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id)).where.not(id: 1).pluck(:id).uniq
+      end
+ 
       titles = case number_keep
         when 0
           Form.includes(:user, :period_keep, :role).where(user_id: user_ids).where("number_keep >= 1")
@@ -450,13 +471,13 @@ module Api
         {
           user_id: title.user_id,
           title_history_id: title.id,
-          full_name: title.user.format_name_vietnamese,
-          email: title.user.email,
+          full_name: title.user&.format_name_vietnamese,
+          email: title.user&.email,
           role: title.role&.name || "N/A",
           rank: title.rank,
           title: title.title&.name || "N/A",
           level: title.level,
-          period_keep: title.period_keep.format_name,
+          period_keep: title.period_keep&.format_name,
         }
       end
 

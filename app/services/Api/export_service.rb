@@ -739,7 +739,7 @@ module Api
         period_prev = h_data[:prev_period]
         period_excel_name = h_data[:period_excel_name]
         # making file
-        company_name = h_data[:company_name].gsub(/ /, "")
+        company_name = h_data[:company_name]&.gsub(/ /, "")
         out_file_name = "CDS_#{company_name}_Demotion_Employee_List_in_Period_#{period_excel_name}"
         # formatting Excel
         title_format = workbook.styles.add_style(:sz => 18, :b => true, :bg_color => "FFFFFF", :fg_color => "2E75B8", :font_name => "Calibri", :border => { :style => :thin, :color => "FFFFFF", :edges => [:top, :bottom, :left, :right] }, :alignment => { :horizontal => :left, :vertical => :top, :wrap_text => :true })
