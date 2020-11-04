@@ -1161,10 +1161,16 @@ $(document).ready(function () {
   });
 
   $(".btn-show-hide-slot").on("click", function () {
-    if(window.flag_hide_show_slot == 1)
+    if(window.flag_hide_show_slot == 1){
+      $('.ic-book-slot').addClass("fas fa-book-open");
+      $('.ic-book-slot').removeClass("fa fa-book");
       window.flag_hide_show_slot = 0;
-    else
+    }
+    else{
+      $('.ic-book-slot').removeClass("fas fa-book-open");
+      $('.ic-book-slot').addClass("fa fa-book")
       window.flag_hide_show_slot = 1;
+    }
     checkHideShowSlot();
   });
 
