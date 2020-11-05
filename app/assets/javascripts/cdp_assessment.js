@@ -140,7 +140,7 @@ function loadDataSlots(response) {
       </div>
       <div class="col-2 div-slot div-icon">
         <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed, e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
-        <i class="fas ${chooseClassIconBatery(e.tracking.final_point, e.tracking.point)} ${checkColorbatery(e.tracking.is_passed, e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point, e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit, false)}"></i>
+        <i class="fas ${chooseClassIconBatery(e.tracking.final_point, e.tracking.point)} ${checkColorbatery(e.tracking.is_passed, e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point, e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit, false, e.tracking.is_passed)}"></i>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-yellow"></i></a>
         <a type='button' class='btn-action' style="${checkFlag(flag)}" title="${title_flag}"><i style="color: ${flag};" class="fas fa-flag icon-default icon-flag"></i></a>
       </div>
@@ -320,8 +320,8 @@ function checkDataPoint(point) {
   return ""
 }
 
-function checkPassSlot(is_passed, is_change) {
-  if (!is_change && is_passed)
+function checkPassSlot(is_passed, is_change, un_commit_but_passed) {
+  if ((!is_change && is_passed)||un_commit_but_passed)
     return ""
   return "visibility: hidden"
 }

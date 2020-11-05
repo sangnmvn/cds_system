@@ -558,9 +558,8 @@ module Api
           re_update = line_flag&.flag.present?
           Comment.create!(evidence: params[:evidence], point: params[:point], is_commit: is_commit, form_slot_id: form_slot.id, is_delete: false, flag: flag, re_update: re_update)
         end
-
-        old_comment.update(is_delete: true) if old_comment.present?
         form_slot.update(is_change: true)
+        old_comment.update(is_delete: true) if old_comment.present?
       end
       result = preview_result(form)
       calculate_level(result[form_slot.slot.competency.name])
@@ -944,7 +943,8 @@ module Api
         end
       end
       return "fail" unless form.update(is_approved: true, status: "Done")
-      FormSlot.where(form_id: form.id, is_change: true, re_assess: true).update(is_change: false, re_assess: false)
+      FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
+      FormSlot.where(form_id: form.id, re_assess: true).update(re_assess: false)
 
       form_slots_cdp = FormSlot.includes(:comments).where(form_id: form.id,"comments.is_commit": true,"comments.point": nil)
       form_slots_cdp.each do |form_slot_cdp|
