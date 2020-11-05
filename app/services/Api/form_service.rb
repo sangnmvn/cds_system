@@ -713,6 +713,7 @@ module Api
         class_name = "slot-cdp" if !value_cdp.zero? && value.zero?
         class_name = "fail-slot" if !value.zero? && value < 3
         class_name = "pass-slot" if !value.zero? && value > 2
+        
         h_slot = {
           value: value,
           value_cdp: value_cdp,
@@ -944,6 +945,11 @@ module Api
       end
       return "fail" unless form.update(is_approved: true, status: "Done")
       FormSlot.where(form_id: form.id, is_change: true, re_assess: true).update(is_change: false, re_assess: false)
+
+      form_slots_cdp = FormSlot.includes(:comments).where(form_id: form.id,"comments.is_commit": true,"comments.point": nil)
+      form_slots_cdp.each do |form_slot_cdp|
+        LineManager.create!(recommend: "", user_id: current_user.id, final: true, flag: "",period_id: form.period_id, form_slot_id: form_slot_cdp.id, is_commit: true) if form_slot_cdp.line_managers.where(final: true).blank?
+      end
 
       "success"
     end
