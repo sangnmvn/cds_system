@@ -397,7 +397,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
 }
 
 function checkDisableFormSlotsReviewer(tracking) {
-  if (is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange"))
+  if ((is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange")) || status == "Done")
     return "disabled"
   return ""
 }
@@ -642,10 +642,10 @@ $(document).ready(function () {
 
   $(document).on("click", ".card table thead tr", function () {
     var data = getParams();
-    if (form_id)
-      data.form_id = form_id;
-    else if (title_history_id)
+    if (title_history_id)
       data.title_history_id = title_history_id;
+    else if (form_id)
+      data.form_id = form_id;
     $.ajax({
       type: "POST",
       url: "/forms/get_cds_assessment",

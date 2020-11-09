@@ -260,7 +260,7 @@ module Api
           end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
-      forms.uniq.map do |form|
+      forms.sort_by(&:status).uniq.map do |form|
         format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
     end
@@ -515,7 +515,7 @@ module Api
             id: slot_history.form_slot_id,
             evidence: slot_history.evidence || "",
             point: slot_history.point || 0,
-            is_commit: false,
+            is_commit: slot_history.point > 0 || false,
             re_update: false,
           },
         }
@@ -1167,6 +1167,7 @@ module Api
       approvers.each_with_index do |approver, i|
         if is_change || form.status == "Done"
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).first
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first if form.status == "Done" && line.nil?
         else
           line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
@@ -1227,8 +1228,9 @@ module Api
         hash[line.form_slot_id] << {
           given_point: line.given_point,
           recommends: line.recommend,
-          reviewed_date: line.updated_at.strftime("%d-%m-%Y %H:%M:%S"),
+          reviewed_date: line.updated_at&.strftime("%d-%m-%Y %H:%M:%S"),
           name: User.find(line.user_id).account,
+          is_commit: line.is_commit || false,
           is_pm: Approver.where(approver_id: line.user_id, user_id: user_id).first&.is_approver,
         }
       end
