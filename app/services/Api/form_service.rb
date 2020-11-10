@@ -709,7 +709,7 @@ module Api
         class_name = ""
         type = "assessed" if data[:is_change]
         type = "re-assessed-slots" if data[:re_assess]
-        class_name = "slot-cdp" if !value_cdp.zero? && value.zero?
+        class_name = "slot-cdp" if !value_cdp&.zero? && value&.zero?
         class_name = "fail-slot" if !value.zero? && value < 3
         class_name = "pass-slot" if !value.zero? && value > 2
         
@@ -780,7 +780,7 @@ module Api
       h_competency_type = { "All" => [] }
       competencies.each do |competency|
         val_cdp = convert_value_title_mapping(competency.level)
-        h_rank_value = hash[competency.id][:value].count { |x| val_cdp >= x }
+        h_rank_value = hash[competency.id][:value].count { |x| val_cdp >= x || x == 99999 }
         competency.rank = h_rank_value
         competency.title_name = h_title[h_rank_value]
 
