@@ -106,6 +106,13 @@ privileges:
       title_name: "CDS/CDP Review",
       title_id: 6,
     },
+    27: 
+    {
+      id: 27,
+      name: "View CDS/CDP Assessments of my Company",
+      title_name: "CDS/CDP Review",
+      title_id: 6,
+    },
     26: 
     {
       id: 26,

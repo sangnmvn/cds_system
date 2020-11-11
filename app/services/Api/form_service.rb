@@ -3,6 +3,7 @@ module Api
     REVIEW_CDS = 16
     APPROVE_CDS = 17
     FULL_ACCESS = 24
+    FULL_ACCESS_MY_COMPANY = 27
     HIGH_FULL_ACCESS = 26
     Time::DATE_FORMATS[:custom_datetime] = "%d/%m/%Y"
 
@@ -232,6 +233,7 @@ module Api
     def get_list_cds_review
       filter = filter_cds_review_list
       user_ids = User.where(filter[:filter_users]).pluck(:id)
+      user_ids = User.where(filter[:filter_users]).where(company_id: current_user.company_id).pluck(:id) if (@privilege_array.include? FULL_ACCESS_MY_COMPANY) && !(@privilege_array.include? FULL_ACCESS)
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_approve_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: true).select(:user_id)
       reviewers = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false)
@@ -260,11 +262,13 @@ module Api
               .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
       end
-      if @privilege_array.include? FULL_ACCESS
+      if (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any?
         forms += if (filter[:period_id])
-          Form.includes(:period, :role, :title).where(user_id: user_ids, period_id: filter[:period_id]).where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          Form.includes(:period, :role, :title).where(user_id: user_ids, period_id: filter[:period_id])
+            .where.not(status: ["New"]).offset(params[:offset]).order(id: :desc)
         else
-          Form.includes(:period, :role, :title).where(user_id: user_ids).where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+          Form.includes(:period, :role, :title).where(user_id: user_ids)
+            .where.not(status: ["New"]).offset(params[:offset]).order(id: :desc)
         end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
@@ -277,10 +281,15 @@ module Api
       filter = filter_cds_review_list
 
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+      if @privilege_array.include? FULL_ACCESS
+        user_ids = User.where(is_delete: false).pluck(:id)
+      elsif @privilege_array.include? FULL_ACCESS_MY_COMPANY
+        user_ids = User.where(company_id: current_user.company_id, is_delete: false).pluck(:id)
+      end
       user_ids = User.where(filter[:filter_users]).where(id: user_ids).pluck(:id).uniq
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
 
-      forms = Form.includes([:user, :period]).where(user_id: user_ids, period_id: params[:period_ids])
+      forms = Form.includes([:user, :period]).where(user_id: user_ids, period_id: params[:period_ids]).where.not(status: "New")
       results = {}
       companies_id = filter[:filter_users][:company_id]
       h_companies = if companies_id.nil?
@@ -311,8 +320,12 @@ module Api
       { data: results }
     end
 
-    def data_filter_cds_view_others
-      user_ids = User.where(is_delete: false)
+    def data_filter_cds_view_others(company_id = nil)
+      if company_id.nil?
+        user_ids = User.where(is_delete: false)
+      else
+        user_ids = User.where(company_id: company_id, is_delete: false)
+      end
       data_filter = {
         companies: [],
         projects: [],

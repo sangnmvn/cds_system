@@ -9,6 +9,7 @@ class FormsController < ApplicationController
   REVIEW_CDS = 16
   APPROVE_CDS = 17
   FULL_ACCESS = 24
+  FULL_ACCESS_MY_COMPANY = 27
   HIGH_FULL_ACCESS = 26
 
   def index_cds_cdp
@@ -17,7 +18,7 @@ class FormsController < ApplicationController
   end
 
   def get_list_cds_assessment_manager
-    data = if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    data = if (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.get_list_cds_review
       else
         redirect_to root_path
@@ -45,7 +46,7 @@ class FormsController < ApplicationController
 
   def export_excel_cds_review
     file_path = ""
-    if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    if (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
       data = @form_service.get_list_cds_review_to_export
     end
     file_path = @export_service.export_excel_cds_review(data)
@@ -64,6 +65,8 @@ class FormsController < ApplicationController
     @companies = Company.all
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
+      elsif @privilege_array.include?(FULL_ACCESS_MY_COMPANY)
+        @form_service.data_filter_cds_view_others(current_user.company_id)
       elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
@@ -151,9 +154,9 @@ class FormsController < ApplicationController
   end
 
   def cds_cdp_review
-    return redirect_to root_path unless (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    return redirect_to root_path unless (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
     return if params[:user_id].nil?
-    return redirect_to root_path if (!@privilege_array.include? FULL_ACCESS) && Approver.where(user_id: params[:user_id], approver_id: current_user.id).blank? && params[:user_id] != current_user.id
+    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: params[:user_id], approver_id: current_user.id).blank? && params[:user_id] != current_user.id
     reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
@@ -230,7 +233,7 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any? && current_user.id != form.user_id
+    if (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any? && current_user.id != form.user_id
       h_result = @form_service.get_line_manager_miss_list
     end
 
@@ -254,7 +257,7 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-    return redirect_to root_path if (!@privilege_array.include? FULL_ACCESS) && Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
+    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
     @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
 
@@ -380,6 +383,8 @@ class FormsController < ApplicationController
   def get_filter
     data = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
+      elsif @privilege_array.include?(FULL_ACCESS_MY_COMPANY)
+          @form_service.data_filter_cds_view_others(current_user.company_id)
       elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
@@ -403,6 +408,8 @@ class FormsController < ApplicationController
   def data_filter_users
     if @privilege_array.include?(FULL_ACCESS)
       user_ids = User.where(is_delete: false)
+    elsif @privilege_array.include?(FULL_ACCESS_MY_COMPANY)
+      user_ids = User.where(company_id: current_user.company_id, is_delete: false)
     elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
       user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
     elsif @privilege_array.include?(REVIEW_CDS)
@@ -459,7 +466,7 @@ class FormsController < ApplicationController
   end
 
   def check_line_manager_privilege
-    redirect_to root_path unless (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    redirect_to root_path unless (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
   end
 
   def form_service

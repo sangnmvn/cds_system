@@ -79,6 +79,7 @@ function loadDataAssessment(data_filter) {
           "bLengthChange": false,
           "bFilter": false,
           "bAutoWidth": false,
+          "bDestroy": true,
           "columnDefs": [
             {
               "searchable": false,
@@ -93,6 +94,7 @@ function loadDataAssessment(data_filter) {
       $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>');
     }
   })
+  $.fn.dataTable.ext.errMode = 'none';
 }
 
 function loadDataFilter() {
