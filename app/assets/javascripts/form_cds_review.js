@@ -73,6 +73,8 @@ function loadDataAssessment(data_filter) {
         }
         temp += this_element;
       };
+      if (response.length > 0)
+        $(".table-cds-assessment-manager-list").DataTable().destroy();
       $(".table-cds-assessment-manager-list tbody").html(temp);
       if (response.length > 0)
         $(".table-cds-assessment-manager-list").DataTable({
