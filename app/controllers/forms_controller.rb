@@ -17,7 +17,7 @@ class FormsController < ApplicationController
   end
 
   def get_list_cds_assessment_manager
-    data = if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    data = if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.get_list_cds_review
       else
         redirect_to root_path
@@ -45,7 +45,7 @@ class FormsController < ApplicationController
 
   def export_excel_cds_review
     file_path = ""
-    if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
       data = @form_service.get_list_cds_review_to_export
     end
     file_path = @export_service.export_excel_cds_review(data)
@@ -230,7 +230,7 @@ class FormsController < ApplicationController
 
   def check_status_form
     form = Form.find_by(id: params[:form_id])
-    if (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any? && current_user.id != form.user_id
+    if (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any? && current_user.id != form.user_id
       h_result = @form_service.get_line_manager_miss_list
     end
 
@@ -459,7 +459,7 @@ class FormsController < ApplicationController
   end
 
   def check_line_manager_privilege
-    redirect_to root_path unless (@privilege_array & [APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
+    redirect_to root_path unless (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
   end
 
   def form_service

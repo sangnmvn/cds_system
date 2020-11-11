@@ -2,6 +2,7 @@ module Api
   class FormService < BaseService
     REVIEW_CDS = 16
     APPROVE_CDS = 17
+    FULL_ACCESS = 24
     HIGH_FULL_ACCESS = 26
     Time::DATE_FORMATS[:custom_datetime] = "%d/%m/%Y"
 
@@ -258,6 +259,13 @@ module Api
             Form.includes(:period, :role, :title).where(user_id: user_review_ids)
               .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
           end
+      end
+      if @privilege_array.include? FULL_ACCESS
+        forms += if (filter[:period_id])
+          Form.includes(:period, :role, :title).where(user_id: user_ids, period_id: filter[:period_id]).where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+        else
+          Form.includes(:period, :role, :title).where(user_id: user_ids).where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+        end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
       forms.sort_by(&:status).uniq.map do |form|
@@ -1160,12 +1168,12 @@ module Api
         recommends: [],
       }
       period_id = 0
-      new_period_id =Period.includes(:schedules).where("schedules.company_id": current_user.company_id).order(to_date: :desc).first.id
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
+      is_line_new = LineManager.where(form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).blank?
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
       approvers.each_with_index do |approver, i|
-        if is_change || form.status == "Done"
+        if is_change || form.status == "Done" || !is_line_new
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).first
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first if form.status == "Done" && line.nil?
         else

@@ -22,7 +22,7 @@ var full_access_on_schedule_project = "14";
 var full_access_on_my_CDS_CDP_assessment = "15";
 var review_CDS_CDP_assessment = "16";
 var approve_CDS_CDP_assessment = "17";
-var view_CDS_CDP_Assessment = "24";
+var view_all_CDS_CDP_Assessment = "24";
 var high_level_approve_CDS_CDP = "26";
 var full_access_on_level_mapping_management = "18";
 var view_level_mapping_management = "19";
@@ -120,10 +120,10 @@ function checkPrivilege() {
   if (!privilege_array.split(",").includes(full_access_on_all_companies_dashboard) && !privilege_array.split(",").includes(full_access_on_my_company_dashboard) && !privilege_array.split(",").includes(full_access_on_my_project) && !privilege_array.split(",").includes(view_my_dashboard)) {
     $(".privilate-cds-dashboard").css("display", "none");
   }
-  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment) && !privilege_array.split(",").includes(high_level_approve_CDS_CDP)) {
+  if (!privilege_array.split(",").includes(review_CDS_CDP_assessment) && !privilege_array.split(",").includes(approve_CDS_CDP_assessment) && !privilege_array.split(",").includes(high_level_approve_CDS_CDP) && !privilege_array.split(",").includes(view_all_CDS_CDP_Assessment)) {
     $(".privilate-cds-cdp-review").css("display", "none");
   }
-  if (!privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment) && !privilege_array.split(",").includes(view_CDS_CDP_Assessment)) {
+  if (!privilege_array.split(",").includes(full_access_on_my_CDS_CDP_assessment)) {
     $(".privilate-cds-cdp-assessment").css("display", "none");
   }
 }
