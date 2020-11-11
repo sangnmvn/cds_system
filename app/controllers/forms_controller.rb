@@ -151,7 +151,9 @@ class FormsController < ApplicationController
   end
 
   def cds_cdp_review
+    return redirect_to root_path unless (@privilege_array & [FULL_ACCESS, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
     return if params[:user_id].nil?
+    return redirect_to root_path if (!@privilege_array.include? FULL_ACCESS) && Approver.where(user_id: params[:user_id], approver_id: current_user.id).blank? && params[:user_id] != current_user.id
     reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
@@ -252,7 +254,7 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-    return redirect_to root_path if Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
+    return redirect_to root_path if (!@privilege_array.include? FULL_ACCESS) && Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
     @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
 

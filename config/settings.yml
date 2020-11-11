@@ -102,7 +102,7 @@ privileges:
     24: 
     {
       id: 24,
-      name: "View CDS/CDP Assessment",
+      name: "View All CDS/CDP Assessment",
       title_name: "CDS/CDP Review",
       title_id: 6,
     },
