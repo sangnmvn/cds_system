@@ -25,6 +25,10 @@ module Api
     HEADER_CDS_REVIEW_LIST_LAST = ["", "", "", "", "", "Role", "Title", "Rank", "Level", "Role", "Title", "Rank", "Level"]
     # for string operation
     NEVER_USE_CHARACTER = "Ω"
+    
+    DASHBOARD_FULL_ACCESS = 20
+    DASHBOARD_FULL_ACCESS_MY_COMPANY = 21
+    DASHBOARD_FULL_ACCESS_MY_PROJECT = 23
 
     def squish_keep_newline(s)
       # convert new line to an unused character and restore it back
@@ -158,7 +162,14 @@ module Api
     end
 
     def data_users_up_title_export
-      user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
+      if @privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif @privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif @privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
+      end
+      # user_ids = User.joins(:project_members).where(filter_users).pluck(:id)
       schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
       first = {}
       second = {}

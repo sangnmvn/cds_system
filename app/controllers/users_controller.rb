@@ -125,7 +125,11 @@ class UsersController < ApplicationController
     begin
       form = Form.find_by(user_id: params[:user_id])
       form.update(is_submit_late: params[:is_submit_late]) if form.present?
-      Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
+      if params[:is_approver].nil?
+        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
+      else
+        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id], is_approver: params[:is_approver]).destroy_all
+      end
       if params[:add_approver_ids].present? && params[:add_approver_ids] != "0" && (@privilege_array & [ADD_APPROVER, FULL_ACCESS]).any?
         Approver.create(approver_id: params[:add_approver_ids].to_i, user_id: params[:user_id], is_approver: true)
       end

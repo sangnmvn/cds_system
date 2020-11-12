@@ -324,8 +324,8 @@ module Api
         end
       end
 
-      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
+      title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
+      title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values)
 
       h_old = {}
       title_second.map do |title|
@@ -333,13 +333,16 @@ module Api
           rank: title.rank,
           level: title.level,
           title: title.title,
+          name: title&.period&.format_to_date,
+          role_name: title&.role_name,
         }
       end
       results = []
       user_ids = []
 
       title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].present? && (h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] >= title.rank)
+        prev_period = h_old[title.user_id]
+        next if prev_period.present?  && (title.rank <= prev_period[:rank] || title&.role_name != prev_period[:role_name])
         data = {
           user_id: title.user_id,
           title_history_id: title.id,
@@ -357,21 +360,6 @@ module Api
         user_ids << title.user_id
       end
 
-      # 20.times do |i|
-      #   results << {
-      #     class: (i.even? ? "even" : "odd"),
-      #     title_history_id: rand(i + 100),
-      #     full_name: "#{rand(i + 100)} name name",
-      #     email: "#{rand(i + 100)}aaa.@gmail.com",
-      #     role: "#{rand(i + 100)} role role",
-      #     rank: rand(i + 100),
-      #     title: "#{rand(i + 100)} title tile",
-      #     level: rand(i + 100),
-      #     old_rank: rand(i + 100),
-      #     old_title: "#{rand(i + 100)} title tile",
-      #     old_level: rand(i + 100),
-      #   }
-      # end
       { data: results, user_ids: user_ids, period_id: first.values }
     end
 

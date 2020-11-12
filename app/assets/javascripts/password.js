@@ -40,7 +40,7 @@ $(document).ready(function () {
   $('#confirm_change_password').on('click', function (e) {
     var new_pass = $("#user_password").val();
     var confirm_pass = $("#user_password_confirmation").val();
-    if ($(this).hasClass('disabled') || new_pass && confirm_pass && (new_pass == confirm_pass) && !$("#user_password").hasClass("is-invalid"))
+    if ($(this).hasClass('disabled') || new_pass && confirm_pass && (new_pass != confirm_pass) && !$("#user_password").hasClass("is-invalid"))
       e.preventDefault();
   })
 

@@ -76,8 +76,8 @@ function loadDataAssessment(data_filter) {
       if (response.length > 0)
         $(".table-cds-assessment-manager-list").DataTable().destroy();
       $(".table-cds-assessment-manager-list tbody").html(temp);
-      if (response.length > 0)
-        $(".table-cds-assessment-manager-list").DataTable({
+      if (response.length > 0){
+        var table = $(".table-cds-assessment-manager-list").DataTable({
           "bLengthChange": false,
           "bFilter": false,
           "bAutoWidth": false,
@@ -91,6 +91,13 @@ function loadDataAssessment(data_filter) {
           ],
           "order": [[1, "desc"]],
         });
+        table.on("order.dt search.dt", function () {
+          table.column(0, { search: "applied", order: "applied" })
+            .nodes().each(function (cell, i) {
+              cell.innerHTML = i + 1;
+            });
+        }).draw();
+      }
     },
     error: function () {
       $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>');

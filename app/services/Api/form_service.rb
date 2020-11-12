@@ -963,7 +963,7 @@ module Api
           CdsAssessmentMailer.with(staff: user, rank_number: form.rank, level_number: form.level, title_number: form.title&.name, from_date: period.from_date, to_date: period.to_date).pm_approve_cds.deliver_later(wait: 3.seconds)
         end
       end
-      return "fail" unless form.update(is_approved: true, status: "Done")
+      return "fail" unless form.update(is_approved: true, status: "Done", approved_date: DateTime.now())
       FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
       FormSlot.where(form_id: form.id, re_assess: true).update(re_assess: false)
 

@@ -177,6 +177,7 @@ function ajaxAddReviewerApprover(params, btn_save_id) {
       add_reviewer_ids: params.add_reviewer_ids,
       remove_ids: params.remove_ids,
       is_submit_late: params.is_submit_late,
+      is_approver: btn_save_id == "#save_add_approver" ? true : false
     },
     dataType: "json",
     success: function (response) {
