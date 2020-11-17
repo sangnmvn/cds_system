@@ -495,19 +495,19 @@ module Api
       form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: param[:form_id], slot_id: slots.pluck(:id))
       form_slots = format_form_slot(form_slots)
       arr = []
-
+      current_period = Form.find(param[:form_id])&.period_id
       slots.each do |slot|
         hash[slot.level] = 0 if hash[slot.level].nil?
         s = slot_to_hash(slot, hash[slot.level], form_slots)
         if filter_slots[:passed] && s[:tracking][:is_passed_prev]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:failed] && s[:tracking][:is_failed_prev]
+        elsif filter_slots[:failed] && !s[:tracking][:is_passed]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:no_assessment] && s[:tracking][:point].zero? && !s[:tracking][:is_commit]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:cdp_assessment] && s[:tracking][:point].zero? && s[:tracking][:is_commit]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:cds_assessment] && !s[:tracking][:point].zero?
+        elsif filter_slots[:cds_assessment] && !s[:tracking][:point].zero? && ( s[:tracking][:recommends].nil? || ( s[:tracking][:recommends].present? &&  s[:tracking][:recommends].select{ |line| line[:period_id].present? && line[:period_id] == current_period }.present? ))
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:need_to_update] && s[:tracking][:flag] == "orange"
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
@@ -1135,7 +1135,11 @@ module Api
         desc: slot.desc,
         evidence: slot.evidence,
       }
-      h_slot[:tracking] = form_slots[slot.id] if form_slots.present?
+      if form_slots.present?
+        h_slot[:tracking] = form_slots[slot.id]
+        h_slot[:tracking][:is_passed_prev] = true if h_slot[:tracking] && h_slot[:tracking][:recommends] && h_slot[:tracking][:recommends].select{ |line| line[:is_pm] == true && line[:given_point].present? && line[:given_point] >= 3 }.present?
+      end
+
       h_slot
     end
 
@@ -1183,11 +1187,11 @@ module Api
       period_id = 0
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
-      is_line_new = LineManager.where(form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).blank?
+      is_line_new = LineManager.where(form_slot_id: form_slot.id, period_id: form.period&.id).order(updated_at: :desc).blank?
       approvers = Approver.includes(:approver).where(user_id: user.id).order(is_approver: :asc)
       approvers.each_with_index do |approver, i|
         if is_change || form.status == "Done" || !is_line_new
-          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period).order(updated_at: :desc).first
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period&.id).order(updated_at: :desc).first
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first if form.status == "Done" && line.nil?
         else
           line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
@@ -1202,6 +1206,7 @@ module Api
             is_final: "",
             is_commit: false,
             is_pm: approver.is_approver,
+            period_id: form.period&.id
           }
         else
           break if !period_id.zero? && period_id != line.period_id
@@ -1225,6 +1230,7 @@ module Api
             comment_type: comment_type,
             is_commit: line&.is_commit,
             is_pm: approver.is_approver,
+            period_id: line.period_id
           }
         end
       end

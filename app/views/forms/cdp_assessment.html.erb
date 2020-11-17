@@ -11,11 +11,11 @@
       Search: <input type="text" class="search-assessment" placeholder="Enter Slot ID, Description">
       Filter
       <select id="filter_form_slots" multiple="multiple">
-        <option value="cds_assessment" selected>Assessing CDS</option>
+        <option value="cds_assessment" selected>Assessing CDS in current period</option>
         <option value="cdp_assessment" selected>Assessing CDP</option>
         <option value="need_to_update" selected>Request Update</option>
         <option value="no_assessment" selected>No Assessments</option>
-        <option value="passed">Passed slots in previous periods</option>
+        <option value="passed" selected>Passed slots in previous periods</option>
         <option value="failed" selected>Failed slots in previous periods</option>
       </select>
       <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
