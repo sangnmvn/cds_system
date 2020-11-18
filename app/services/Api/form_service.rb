@@ -315,6 +315,7 @@ module Api
         end
 
         results[company_id][:users] << format_form_cds_review_export(form, period_prev.id)
+        results[company_id][:users].sort_by!{|item| item[:email]}
       end
 
       { data: results }
