@@ -14,8 +14,10 @@
         <textarea class="form-control" id="input_summary_comment" maxlength="1000" style="height:160px" placeholder="Please enter staff’s strengths / weaknesses / contribution / etc."></textarea>
         <div class="row" >
           <div class="col-12 divButton" style="justify-content: center;">
+          <% unless @hash[:is_hr] %>
             <button type="button" class="btn btn-primary" id="btn_save_summary_assessment">Save</button>
             <button type="button" class="btn btn-light border-dark" data-dismiss="modal">Cancel</button>
+          <% end %>
           </div>
         </div>
         <br/>

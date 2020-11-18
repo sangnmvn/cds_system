@@ -34,6 +34,8 @@
           <%= link_to '<i class="fas fa-bell-slash" id="icon_cancel_request" style="color: green"></i> Cancel'.html_safe, "javascript:void(0)", class: "disabled", id: "button_cancel_request", title: "Cancel Request" %>
           <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)",id: "approve_cds", class: "approval-assessment", title: "Approve CDS/CDP" %>
         <% end %>
+      <% elsif @hash[:is_hr] %>
+         <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
       <% elsif @hash[:is_reviewer] %>
         <% if @hash[:is_submit] %>
           <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>

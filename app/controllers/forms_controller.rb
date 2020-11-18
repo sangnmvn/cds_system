@@ -182,6 +182,7 @@ class FormsController < ApplicationController
       is_submit: approver&.is_submit_cds || false,
       is_approver: approver&.is_approver || false,
       is_reviewer: !approver&.is_approver || false,
+      is_hr: approver.nil? || false,
       is_submit_late: form.is_submit_late,
       is_disable_confirm_update: h_slots.present?,
       is_flag_yellow: form_slot.where(comments: { flag: "yellow" }).count >= 1,
@@ -308,6 +309,7 @@ class FormsController < ApplicationController
 
   def reviewer_submit
     reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    return render json: { status: "fail" } if reviewer.blank?
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
     # user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     # get PM from same project user list
