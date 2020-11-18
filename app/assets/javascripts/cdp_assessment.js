@@ -688,10 +688,10 @@ $(document).ready(function () {
 
   $(document).on("click", ".level-competency", function () {
     var data = getParams();
-    if (form_id)
-      data.form_id = form_id;
-    else if (title_history_id)
+    if (title_history_id)
       data.title_history_id = title_history_id;
+    else if (form_id)
+      data.form_id = form_id;
     data.level = $(this).data('level')
     $.ajax({
       type: "POST",
@@ -781,10 +781,10 @@ $(document).ready(function () {
 
   $(document).on("change", ".search-assessment", function () {
     var data = getParams();
-    if (form_id)
-      data.form_id = form_id;
-    else if (title_history_id)
+    if (title_history_id)
       data.title_history_id = title_history_id;
+    else if (form_id)
+      data.form_id = form_id;
     $.ajax({
       type: "POST",
       url: "/forms/get_cds_assessment",
@@ -798,17 +798,16 @@ $(document).ready(function () {
         checkHideShowSlot();
         refreshCheckbox();
       }
-
     });
   });
 
 
   $(document).on("change", "#filter_form_slots", function () {
     var data = getParams();
-    if (form_id)
-      data.form_id = form_id;
-    else if (title_history_id)
+    if (title_history_id)
       data.title_history_id = title_history_id;
+    else if (form_id)
+      data.form_id = form_id;
 
     $.ajax({
       type: "POST",
@@ -822,7 +821,6 @@ $(document).ready(function () {
         loadDataSlots(response);
         checkHideShowSlot();
         refreshCheckbox();
-
       }
     });
   });

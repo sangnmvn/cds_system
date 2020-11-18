@@ -521,9 +521,16 @@ module Api
     end
 
     def format_data_old_slots
+      param ||= params
       title_history = TitleHistory.find_by_id(params[:title_history_id])
       period = title_history&.period_id
-      slot_histories = FormSlotHistory.includes(:slot).where(title_history_id: params[:title_history_id], competency_id: params[:competency_id])
+      filter_slots = filter_cds
+      filter = {
+        competency_id: param[:competency_id],
+      }
+      filter[:level] = param[:level] if param[:level].present?
+      slots = Slot.distinct(:id).search_slots(params[:search]).joins(:form_slots).where(filter).order(:level, :slot_id).group(:id)
+      slot_histories = FormSlotHistory.includes(:slot).where(title_history_id: params[:title_history_id], competency_id: params[:competency_id], slot_id: slots.pluck(:id))
       line_managers = LineManager.where(period_id: period, form_slot_id: slot_histories.pluck(:form_slot_id))
       form_slots = get_recommend_by_form_slot(line_managers, title_history.user_id)
       slot_histories.map do |slot_history|
