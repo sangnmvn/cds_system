@@ -385,8 +385,8 @@ $(document).on("click", ".delete_icon", function () {
 });
 
 function colorDisabledRowUser() {
-  $(".fa-toggle-off").closest("tr").addClass("row-user-disabled");
-  $(".fa-toggle-on").closest("tr").removeClass("row-user-disabled");
+  // $(".fa-toggle-off").closest("tr").addClass("row-user-disabled");
+  // $(".fa-toggle-on").closest("tr").removeClass("row-user-disabled");
 }
 
 function setup_dataTable() {
@@ -763,11 +763,11 @@ $(document).on("click", ".status_icon", function () {
       if (response.status == "success") {
         if (response.change == false) {
           $('a.status_icon[data-user_id="' + user_id + '"]').html(
-            '<i class="fa fa-toggle-off"></i>'
+            '<i class="fa fa-toggle-off"></i>&nbsp'
           );
         } else {
           $('a.status_icon[data-user_id="' + user_id + '"]').html(
-            '<i class="fa fa-toggle-on"></i>'
+            '<i class="fa fa-toggle-on"></i>&nbsp'
           );
         }
         colorDisabledRowUser();

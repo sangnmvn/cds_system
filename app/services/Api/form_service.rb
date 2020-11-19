@@ -247,19 +247,19 @@ module Api
         forms += if (filter[:period_id])
             Form.includes(:period, :role, :title).where(user_id: user_approve_ids, period_id: filter[:period_id],
                                                         status: ["Awaiting Approval", "Done"])
-              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .offset(params[:offset]).order(id: :desc)
           else
             Form.includes(:period, :role, :title).where(user_id: user_approve_ids, status: ["Awaiting Approval", "Done"])
-              .limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .offset(params[:offset]).order(id: :desc)
           end
       end
       if (@privilege_array & [REVIEW_CDS, HIGH_FULL_ACCESS]).any?
         forms += if (filter[:period_id])
             Form.includes(:period, :role, :title).where(user_id: user_review_ids, period_id: filter[:period_id])
-              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .where.not(status: ["New"]).offset(params[:offset]).order(id: :desc)
           else
             Form.includes(:period, :role, :title).where(user_id: user_review_ids)
-              .where.not(status: ["New"]).limit(LIMIT).offset(params[:offset]).order(id: :desc)
+              .where.not(status: ["New"]).offset(params[:offset]).order(id: :desc)
           end
       end
       if (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any?
@@ -1058,7 +1058,7 @@ module Api
     end
 
     def get_conflict_assessment
-      form_slots = FormSlot.includes(slot: [:competency]).includes(:comments, :line_managers).where(form_id: params[:form_id], line_managers: { user_id: current_user.id })
+      form_slots = FormSlot.includes(slot: [:competency]).includes(:comments, :line_managers).where(form_id: params[:form_id], line_managers: { user_id: current_user.id }).where.not(comments: { point: nil})
       return if form_slots.nil?
       location_slots = get_location_slot(form_slots.pluck("competencies.id").uniq)
       slot_conflicts = {}

@@ -313,7 +313,7 @@ module Api
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
         user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
-      schedules = Schedule.where(status: "Done").order(end_date_hr: :desc)
+      schedules = Schedule.where(status: "Done").where(_type: "HR").order(end_date_hr: :desc)
       first = {}
       second = {}
       schedules.map do |schedule|

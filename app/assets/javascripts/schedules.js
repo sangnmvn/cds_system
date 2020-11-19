@@ -363,6 +363,7 @@ function on_click_btn() {
 
         $("#notify_member").val(result.notify_employee);
         $("#status").val(result.status);
+        $("#status").removeAttr("disabled");
 
         attr_start_date_id = "#start_date";
         attr_end_date_id = "#end_date";
@@ -517,6 +518,7 @@ function action_add() {
     var schedule_hr_parent = $("#schedule_hr_parent").val()
     var project = $("#project").val();
     var schedule_task = $("#schedule_task").val();
+    var status =  $("#status").val();
     var temp = true;
     $(".error").parent().remove();
 
@@ -702,12 +704,14 @@ function action_add() {
             desc: schedule_name,
             end_date_hr: end_date,
             notify_hr: notify_hr,
+            status: status,
           };
         } else if (user_role == "PM") {
           params = {
             end_date_member: end_date_member,
             end_date_reviewer: end_date_reviewer,
             notify_member: notify_member,
+            status: status,
           };
         }
 

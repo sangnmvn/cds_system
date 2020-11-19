@@ -54,7 +54,7 @@ class SchedulesController < ApplicationController
       current_schedule_data.push(schedule.start_date.strftime("%b %d, %Y"))
       current_schedule_data.push(schedule.end_date_hr.strftime("%b %d, %Y"))
       current_schedule_data.push(schedule.status)
-      if schedule.status.downcase == "in-progress"
+      if schedule.status.downcase == "in-progress" || schedule.status.downcase == "done"
         current_schedule_data.push("<td style='text-align: center;'>      
           <a class='edit_btn' enable='true' data-schedule='#{schedule.id}' data-tooltip='true' data-placement='top' href='javascript:void(0)' title='Edit schedule'><i class='fa fa-pencil icon' style='color:#fc9803'></i></a>
           <a class='del_btn'  href='javascript:void(0)' title='Delete schedule'><i class='fa fa-trash icon' style='color:#a9a6a6'></i></a>
@@ -271,6 +271,7 @@ class SchedulesController < ApplicationController
     if check_hr?
       temp_params = schedule_params
       temp_params[:end_date_hr] = helpers.date_format(params[:end_date_hr])
+      temp_params[:status] = params[:status] if params[:status].present? && ["Done","In-progress"].include?(params[:status])
     elsif check_pm?
       temp_params = pm_update_schedules_param
       temp_params[:end_date_employee] = helpers.date_format(params[:end_date_member])
@@ -279,6 +280,7 @@ class SchedulesController < ApplicationController
       temp_params[:notify_employee] = temp_params[:notify_member]
       temp_params[:notify_reviewer] = temp_params[:notify_member]
       temp_params.delete(:notify_member)
+      temp_params[:status] = params[:status] if params[:status].present? && ["Done","In-progress"].include?(params[:status])
     end
 
     if @schedule.update(temp_params)
