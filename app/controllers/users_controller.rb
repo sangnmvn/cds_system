@@ -31,7 +31,7 @@ class UsersController < ApplicationController
       user_project_ids = ProjectMember.pluck(:user_id).uniq # user have project
       users = users.where.not(id: user_project_ids)
     end
-    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_services.format_user_data(users) }
+    render json: { iTotalRecords: users.count, iTotalDisplayRecords: users.unscope([:limit, :offset]).count, aaData: @user_management_services.format_user_data(users.sort_by(&:email)) }
   end
 
   def index
@@ -54,7 +54,7 @@ class UsersController < ApplicationController
         Company.where(is_enabled: true).order(:name).pluck(:name, :id)
       end
     h_filter[:projects] = Project.where(company_id: h_filter[:companies].map(&:last), is_enabled: true).order(:name).pluck(:name, :id)
-    h_filter[:roles] = Project.where(is_enabled: true).order(:name).pluck(:name, :id)
+    h_filter[:roles] = Role.where(is_enabled: true).order(:name).pluck(:name, :id)
 
     render json: h_filter
   end
