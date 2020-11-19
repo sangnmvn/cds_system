@@ -980,6 +980,12 @@ module Api
         LineManager.create!(recommend: "", user_id: current_user.id, final: true, flag: "",period_id: form.period_id, form_slot_id: form_slot_cdp.id, is_commit: true) if form_slot_cdp.line_managers.where(final: true).blank?
       end
 
+      have_flag_comment = Comment.includes(:form_slot).where(form_slots: { form_id: form.id }).where.not(flag: "")
+      have_flag_comment.update(flag: "")
+      
+      have_flag_lineManager = LineManager.includes(:form_slot).where(form_slots: { form_id: form.id }).where.not(flag: "")
+      have_flag_lineManager.update(flag: "")
+      
       "success"
     end
 

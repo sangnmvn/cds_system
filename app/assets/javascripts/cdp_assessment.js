@@ -999,6 +999,8 @@ $(document).ready(function () {
             status = response.form_status
             checkStatusFormStaff(status)
             $("#status").html(`(${status})`)
+          } else if (response.status == "fail_cdp"){
+            fails("Please commit CDP for at least one slot before submit this form.");
           } else {
             fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
           }
@@ -1186,7 +1188,7 @@ $(document).ready(function () {
   $(window).scroll(function(e){ 
     var navbar = 888;
     var st = $(window).scrollTop();
-    if (st >= navbar) {
+    if (st >= navbar || $(window).scrollTop() + $(window).height() == $(document).height()) {
       $(".btn-up").css("display", "block");
       $(".btn-down").css("display", "none");
     } else {

@@ -313,7 +313,7 @@ module Api
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
         user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
-      schedules = Schedule.where(status: "Done").where(_type: "HR").order(end_date_hr: :desc)
+      schedules = Schedule.where(status: "Done",_type: "HR").or(Schedule.where(status: "Done",_type: nil)).order(end_date_hr: :desc)
       first = {}
       second = {}
       schedules.map do |schedule|
@@ -371,7 +371,7 @@ module Api
       elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
         user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
-      schedules = Schedule.includes(:period).where(status: "Done").order("periods.to_date desc")
+      schedules = Schedule.includes(:period).where(status: "Done",_type: "HR").or(Schedule.includes(:period).where(status: "Done",_type: nil)).order("periods.to_date desc")
 
       first = {}
       second = {}
@@ -468,22 +468,6 @@ module Api
           period_keep: title.period_keep&.format_name,
         }
       end
-
-      # results = []
-      # 20.times do |i|
-      #   results << {
-      #     class: (i.even? ? "even" : "odd"),
-      #     title_history_id: rand(i + 100),
-      #     full_name: "#{rand(i + 100)} name name",
-      #     email: "#{rand(i + 100)}aaa.@gmail.com",
-      #     role: "#{rand(i + 100)} role role",
-      #     rank: rand(i + 100),
-      #     title: "#{rand(i + 100)} title tile",
-      #     level: rand(i + 100),
-      #     period_keep: "#{rand(i + 100)} period period",
-      #   }
-      # end
-      # results
     end
 
     private

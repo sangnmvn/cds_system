@@ -281,6 +281,7 @@ class FormsController < ApplicationController
 
   def submit
     form = Form.find_by_id(params[:form_id])
+    return render json: { status: "fail_cdp" } if Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] },is_commit: true, point: nil).blank?
     users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false)
     status, action, users = if users.empty?
         ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id)]
