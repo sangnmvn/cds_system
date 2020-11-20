@@ -62,6 +62,10 @@ class FormsController < ApplicationController
   end
 
   def cds_review
+    period = Period.order("to_date ASC").last
+    @period_prev = Period.where("to_date<?",Period.find_by_id(period.id).to_date).order("to_date ASC").last&.format_name
+    @period = period&.format_name
+    
     @companies = Company.all
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
