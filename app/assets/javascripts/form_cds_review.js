@@ -12,11 +12,12 @@ function loadDataAssessment(data_filter) {
       role_ids: data_filter.role,
       user_ids: data_filter.user,
       period_ids: data_filter.period,
+      status: data_filter.status,
     },
     dataType: "json",
     success: function (response) {
       if (response.length == 0) {
-        temp = '<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>'
+        temp = '<tr><td colspan="16" class="type-icon">No data available in this table</td></tr>'
         $('.paginate_button').addClass('disabled')
       }
       for (var i = 0; i < response.length; i++) {
@@ -31,6 +32,9 @@ function loadDataAssessment(data_filter) {
             <td class="type-text">{title}</td> 
             <td class="type-number">{rank}</td> 
             <td class="type-number">{level}</td> 
+            <td class="type-text">{caculate_title}</td>
+            <td class="type-number">{caculate_rank}</td> 
+            <td class="type-number">{caculate_level}</td> 
             <td class="type-text">{submit_date}</td>
             <td class="type-text">{approved_date}</td>
             <td class="type-text" id="status">{status}</td> 
@@ -52,7 +56,10 @@ function loadDataAssessment(data_filter) {
           rank: form.rank,
           title: form.title,
           status: form.status,
-          user_id: form.user_id
+          user_id: form.user_id,
+          caculate_level: form.caculate_level,
+          caculate_rank: form.caculate_rank,
+          caculate_title: form.caculate_title,
         });
         if (form.is_approver) {
           if (form.status == "Done" && form.is_open_period) {
@@ -100,7 +107,7 @@ function loadDataAssessment(data_filter) {
       }
     },
     error: function () {
-      $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="13" class="type-icon">No data available in this table</td></tr>');
+      $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="16" class="type-icon">No data available in this table</td></tr>');
     }
   })
   $.fn.dataTable.ext.errMode = 'none';
@@ -121,6 +128,7 @@ function loadDataFilter() {
       setupDataFilter('role_filter', '.role-filter', response.roles);
       setupDataFilter('user_filter', '.user-filter', response.users);
       setupDataFilter('period_filter', '.period-filter', response.periods);
+      setupDataFilter('status_filter', '.status-filter', [{id: "Done", name: "Done"},{id: "Awaiting Review", name: "Awaiting Review"},{id: "Awaiting Approval", name: "Awaiting Approval"}]);
       data_filter = apllyFilter();
       loadDataAssessment(data_filter)
     }
@@ -134,6 +142,7 @@ function apllyFilter() {
     role: $('#role_filter').val(),
     user: $('#user_filter').val(),
     period: $('#period_filter').val(),
+    status: $('#status_filter').val(),
   }
   return data
 }
@@ -206,7 +215,7 @@ function setupDataFilter(id, class_name, data) {
     else
       $('<option value="' + v.id + '">' + v.name + "</option>").appendTo(id);
   });
-  if (localStorage.filterReviewList) {
+  if (localStorage.filterReviewList && id != "#status_filter"){
     $('.reset-filter').removeClass('disabled');
     let filter = JSON.parse(localStorage.filterReviewList);
     $(id).val(filter[key_filter]);

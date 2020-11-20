@@ -233,7 +233,7 @@ module Api
     def get_list_cds_review
       filter = filter_cds_review_list
       user_ids = User.where(filter[:filter_users]).pluck(:id)
-      user_ids = User.where(filter[:filter_users]).where(company_id: current_user.company_id).pluck(:id) if (@privilege_array.include? FULL_ACCESS_MY_COMPANY) && !(@privilege_array.include? FULL_ACCESS)
+      user_ids = User.where(id: user_ids, company_id: current_user.company_id).pluck(:id) if (@privilege_array.include? FULL_ACCESS_MY_COMPANY) && !(@privilege_array.include? FULL_ACCESS)
       user_ids = ProjectMember.where(project_id: filter[:project_id], user_id: user_ids).pluck(:user_id).uniq if filter[:project_id].present?
       user_approve_ids = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: true).select(:user_id)
       reviewers = Approver.where(approver_id: current_user.id, user_id: user_ids, is_approver: false)
@@ -272,6 +272,7 @@ module Api
         end
       end
       periods = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").pluck(:period_id)
+      forms = forms&.select {|item| filter[:status].include?(item[:status])} unless filter[:status].nil?
       forms.sort_by(&:status).uniq.map do |form|
         format_form_cds_review(form, user_approve_ids, periods, h_reviewers)
       end
@@ -895,8 +896,8 @@ module Api
           }
         end
         hash[key.to_i][:count] += 1
-        hash[key.to_i][:sum] += value[type]
-        hash[key.to_i][:fail] += 1 if value[type] < 3
+        hash[key.to_i][:sum] += value[type] unless value[type].nil?
+        hash[key.to_i][:fail] += 1 if value[type].present? && value[type] < 3
       end
 
       hash.each do |k, v|
@@ -974,6 +975,9 @@ module Api
       return "fail" unless form.update(is_approved: true, status: "Done", approved_date: DateTime.now())
       FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
       FormSlot.where(form_id: form.id, re_assess: true).update(re_assess: false)
+
+      line_not_final = LineManager.includes(:form_slot).where(form_slots: { form_id: form.id }, user_id: current_user.id, final: false)
+      line_not_final.update(final: true)
 
       form_slots_cdp = FormSlot.includes(:comments).where(form_id: form.id,"comments.is_commit": true,"comments.point": nil)
       form_slots_cdp.each do |form_slot_cdp|
@@ -1279,6 +1283,29 @@ module Api
     end
 
     def format_form_cds_review(form, user_approve_ids = [], periods = [], h_reviewers = {})
+      if form.status == "Done"
+        title_history = TitleHistory.includes(:period).where(user_id: form.user_id).where.not(period_id: form.period_id).order("periods.to_date").last
+        return {
+          id: form.id,
+          period_name: form.period&.format_name || "New",
+          user_name: form.user&.format_name_vietnamese,
+          project: form.user&.get_project,
+          email: form.user&.email,
+          role_name: form.role&.name,
+          level: title_history&.level || "N/A",
+          rank: title_history&.rank || "N/A",
+          title: title_history&.title || "N/A",
+          submit_date: format_long_date(form.submit_date),
+          approved_date: format_long_date(form.approved_date),
+          status: form.status,
+          user_id: form.user&.id,
+          is_approver: (user_approve_ids.include? form.user_id),
+          is_open_period: (periods.include? form.period_id),
+          caculate_rank: form.level || "N/A",
+          caculate_level: form.rank || "N/A",
+          caculate_title: form.title&.name || "N/A",
+        } 
+      end
       {
         id: form.id,
         period_name: form.period&.format_name || "New",
@@ -1295,6 +1322,9 @@ module Api
         user_id: form.user&.id,
         is_approver: (user_approve_ids.include? form.user_id),
         is_open_period: (periods.include? form.period_id),
+        caculate_rank: "N/A",
+        caculate_level: "N/A",
+        caculate_title: "N/A",
       }
     end
 
@@ -1352,6 +1382,10 @@ module Api
 
       if params[:project_ids] && params[:project_ids].first != "0"
         filter[:project_id] = params[:project_ids]
+      end
+
+      if params[:status] && params[:status].first != "0"
+        filter[:status] = params[:status]
       end
 
       filter[:filter_users] = filter_users
