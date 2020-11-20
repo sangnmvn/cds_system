@@ -976,7 +976,7 @@ module Api
       FormSlot.where(form_id: form.id, is_change: true).update(is_change: false)
       FormSlot.where(form_id: form.id, re_assess: true).update(re_assess: false)
 
-      line_not_final = LineManager.includes(:form_slot).where(form_slots: { form_id: form.id }, user_id: current_user.id, final: false)
+      line_not_final = LineManager.includes(:form_slot).where(form_slots: { form_id: form.id }, user_id: current_user.id, final: false, period_id: form.period_id)
       line_not_final.update(final: true)
 
       form_slots_cdp = FormSlot.includes(:comments).where(form_id: form.id,"comments.is_commit": true,"comments.point": nil)
