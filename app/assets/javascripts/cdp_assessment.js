@@ -397,7 +397,7 @@ function checkDisableFormSlotsStaff(is_reviewer, user_id) {
 }
 
 function checkDisableFormSlotsReviewer(tracking) {
-  if ((is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange")) || status == "Done")
+  if ((is_reviewer || is_approver || (tracking.is_passed && !tracking.is_change) || ((status == "Awaiting Review" || status == "Awaiting Approval") && tracking.flag != "orange" && tracking.flag != "yellow")) || status == "Done")
     return "disabled"
   return ""
 }

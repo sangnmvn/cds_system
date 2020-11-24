@@ -301,7 +301,7 @@ module Api
 
       forms.map do |form|
         company_id = form&.user&.company_id
-        period_prev = Period.where("to_date<?",Period.find_by_id(form.period.id).to_date).order("to_date ASC").last
+        period_prev = Period.where("to_date<?",Period.find_by_id(form.period.id)&.to_date).order("to_date ASC").last
         if results[company_id].nil?
           results[company_id] = {
             users: [],
@@ -704,6 +704,9 @@ module Api
         key = slot.competency.name + slot.level.to_s
         h_poisition_level[key] = 0 if h_poisition_level[key].nil?
         h_point[slot.competency.name] = {} if h_point[slot.competency.name].nil?
+        
+        binding.pry if slot.id == 84
+        
         data = form_slots[slot.id] || {
           id: 0,
           point: 0,
@@ -1284,7 +1287,8 @@ module Api
 
     def format_form_cds_review(form, user_approve_ids = [], periods = [], h_reviewers = {})
       if form.status == "Done"
-        title_history = TitleHistory.includes(:period).where(user_id: form.user_id).where.not(period_id: form.period_id).order("periods.to_date").last
+        period_prev = Period.where("to_date>=?",Period.find_by_id(form.period_id)&.to_date).order("to_date ASC")
+        title_history = TitleHistory.includes(:period).where(user_id: form.user_id).where.not(period_id: period_prev&.ids).order("periods.to_date").last
         return {
           id: form.id,
           period_name: form.period&.format_name || "New",

@@ -63,7 +63,7 @@ class FormsController < ApplicationController
 
   def cds_review
     period = Period.order("to_date ASC").last
-    @period_prev = Period.where("to_date<?",Period.find_by_id(period.id).to_date).order("to_date ASC").last&.format_name
+    @period_prev = Period.where("to_date<?",Period.find_by_id(period.id)&.to_date).order("to_date ASC").last&.format_name
     @period = period&.format_name
     
     @companies = Company.all
