@@ -704,9 +704,6 @@ module Api
         key = slot.competency.name + slot.level.to_s
         h_poisition_level[key] = 0 if h_poisition_level[key].nil?
         h_point[slot.competency.name] = {} if h_point[slot.competency.name].nil?
-        
-        binding.pry if slot.id == 84
-        
         data = form_slots[slot.id] || {
           id: 0,
           point: 0,
