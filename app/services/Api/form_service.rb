@@ -600,7 +600,7 @@ module Api
         if params[:type] == "CDS"
           Comment.where(form_slot_id: params[:form_slot_id].to_i).where.not(point: nil).first
         elsif params[:type] == "CDP"
-          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil).first
+          comment = Comment.where(form_slot_id: params[:form_slot_id].to_i, point: nil, is_commit: true).first
           Comment.create!(is_commit: true, form_slot_id: params[:form_slot_id].to_i) if comment.nil?
         else
           Comment.where(form_slot_id: params[:form_slot_id].to_i).delete_all
