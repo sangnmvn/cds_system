@@ -1283,6 +1283,10 @@ module Api
     end
 
     def format_form_cds_review(form, user_approve_ids = [], periods = [], h_reviewers = {})
+
+      comments = Comment.includes(:form_slot).where(form_slots: { form_id: form.id, is_change: true}, is_commit: true).where.not(point: nil)
+      form_slot_ids = comments.map{|comment| comment.form_slot&.id}
+      line = LineManager.includes(:form_slot).where(form_slots: { id: form_slot_ids, is_change: true}, user_id: current_user.id, period_id: form.period_id)
       if form.status == "Done"
         period_prev = Period.where("to_date>=?",Period.find_by_id(form.period_id)&.to_date).order("to_date ASC")
         title_history = TitleHistory.includes(:period).where(user_id: form.user_id).where.not(period_id: period_prev&.ids).order("periods.to_date").last
@@ -1305,6 +1309,7 @@ module Api
           caculate_rank: form.level || "N/A",
           caculate_level: form.rank || "N/A",
           caculate_title: form.title&.name || "N/A",
+          count_cds: "#{line.count}/#{comments.count}",
         } 
       end
       {
@@ -1326,6 +1331,7 @@ module Api
         caculate_rank: "N/A",
         caculate_level: "N/A",
         caculate_title: "N/A",
+        count_cds: "#{line.count}/#{comments.count}",
       }
     end
 

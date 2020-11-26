@@ -37,6 +37,7 @@ function loadDataAssessment(data_filter) {
             <td class="type-number">{caculate_level}</td> 
             <td class="type-text">{submit_date}</td>
             <td class="type-text">{approved_date}</td>
+            <td class="type-text">{count_cds}</td>
             <td class="type-text" id="status">{status}</td> 
             <td class="type-icon"> 
               <a href='/forms/preview_result?form_id={id}' title="View result">
@@ -60,6 +61,7 @@ function loadDataAssessment(data_filter) {
           caculate_level: form.caculate_level,
           caculate_rank: form.caculate_rank,
           caculate_title: form.caculate_title,
+          count_cds: form.count_cds,
         });
         if (form.is_approver) {
           if (form.status == "Done" && form.is_open_period) {
