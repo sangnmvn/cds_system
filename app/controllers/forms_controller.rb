@@ -194,6 +194,11 @@ class FormsController < ApplicationController
   end
 
   def get_assessment_staff
+    form = Form.find_by_id(params[:form_id])
+    form_slot = FormSlot.includes(:comments).where(id: params[:form_slot_id]).first
+    comment = form_slot.comments.where(comments: {is_delete: false}).first if form_slot&.comments.present?
+    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).present?
+    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot&.is_passed && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && comment&.flag != "orange" && comment&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
     render json: @form_service.get_assessment_staff
   end
 
@@ -215,6 +220,10 @@ class FormsController < ApplicationController
   end
 
   def save_cds_assessment_staff
+    form = Form.find_by_id(params[:form_id])
+    form_slot = FormSlot.includes(:comments).where(form_id: params[:form_id], slot_id: params[:slot_id], comments: {is_delete: false}).first
+    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).present?
+    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot.is_passed && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
     data = @form_service.save_cds_staff
     return render json: { status: "success", data: data } if data.present?
     render json: { status: "fail" }
@@ -232,6 +241,10 @@ class FormsController < ApplicationController
   end
 
   def save_cds_assessment_manager
+    form = Form.find_by_id(params[:form_id])
+    form_slot = FormSlot.includes(:comments).where(form_id: params[:form_id], slot_id: params[:slot_id], comments: {is_delete: false}).first
+    approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).first
+    return render json: { status: "fail_devtools" } if (approver.nil? || (approver&.is_submit_cds && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow") || form.status == "Done")
     return render json: { status: "success" } if @form_service.save_cds_manager
     render json: { status: "fail" }
   end

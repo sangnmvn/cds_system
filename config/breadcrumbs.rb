@@ -38,8 +38,13 @@ crumb :new_cdp do
 end
 
 crumb :view_result_assessment do |form_id|
+  user_id = Form.find_by_id(form_id)&.user_id
   link "View Result", "/forms/preview_result_new?form_id=#{form_id}"
-  parent :new_cdp
+  if user_id == current_user.id
+    parent :new_cdp
+  else
+    parent :cds_review
+  end
 end
 
 crumb :cds_cdp_review do

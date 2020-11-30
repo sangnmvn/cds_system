@@ -677,6 +677,7 @@ module Api
         staff_flag = comment.flag if comment.present?
         approver_ids = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
         is_final = approver_ids.include? current_user.id
+        return false if is_final && (comment&.is_commit&.to_s != params[:is_commit] || comment&.point.present? != params[:given_point].present?)
         comment_linemanager = LineManager.where(user_id: current_user.id, form_slot_id: form_slot.id, period_id: period_id).first
         flag = comment_linemanager&.flag || ""
         flag = "#99FF33" if !is_final && staff_flag == "yellow"

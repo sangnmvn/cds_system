@@ -768,7 +768,12 @@ $(document).ready(function () {
         if (response) {
           if (response.status == 'Delete') {
             row.closest(".row-slot").find('.icon-cdp').prop("style", "visibility: hidden")
+            row.find(".staff-commit").attr("disabled", true);
+            row.find(".comment").attr("disabled", true);
             return
+          }
+          if (response.status == "fail_devtools") {
+            return fails("This slot hasn't been save. Please do not use DevTools")
           }
           row.closest(".row-slot").find('.icon-cdp').prop("style", "visibility: hidden")
           row.find(".comment").val(response.evidence)
@@ -1149,12 +1154,18 @@ $(document).ready(function () {
           "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
         },
         success: function (response) {
-          $("#confirm_request").removeClass("disabled")
-          $("#icon_confirm_request").prop("style", "color:green")
-          flag = row.closest(".row-slot").find('.icon-flag')
-          if (flag.css('color') == "rgb(255, 255, 0)" && is_reviewer)
-            flag.prop("style", "color: #99FF33")
-          changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
+          if (response.status == "success") {
+            $("#confirm_request").removeClass("disabled")
+            $("#icon_confirm_request").prop("style", "color:green")
+            flag = row.closest(".row-slot").find('.icon-flag')
+            if (flag.css('color') == "rgb(255, 255, 0)" && is_reviewer)
+              flag.prop("style", "color: #99FF33")
+            changeListSlotAssessing(row.closest(".cdp-slot-wrapper"), "remove")
+          } else if (response.status == "fail_devtools") {
+            fails("This slot hasn't been save. Please do not use DevTools")
+          } else {
+            fails("Fails.");
+          }
         }
       });
     }
@@ -1289,7 +1300,9 @@ function autoSaveStaff(row) {
           var competency_id = $('div.show').data("competency-id")
           $('div.show .card-body table tr:nth-child(' + row.data("location")[0] + ') td:nth-child(3)').text(current_change + '/' + max);
           $("tr[data-id-competency=" + competency_id + "]").children()[2].innerText = response.data
-        } else
+        } else if (response.status == "fail_devtools") {
+          fails("This slot hasn't been save. Please do not use DevTools")
+         } else
           fails("This slot hasn't been save.")
       }
     });
