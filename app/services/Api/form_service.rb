@@ -1307,8 +1307,8 @@ module Api
           user_id: form.user&.id,
           is_approver: (user_approve_ids.include? form.user_id),
           is_open_period: (periods.include? form.period_id),
-          caculate_rank: form.level || "N/A",
-          caculate_level: form.rank || "N/A",
+          caculate_rank: form.rank || "N/A",
+          caculate_level: form.level || "N/A",
           caculate_title: form.title&.name || "N/A",
           count_cds: "#{line.count}/#{comments.count}",
         } 
