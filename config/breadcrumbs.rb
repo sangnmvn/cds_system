@@ -43,12 +43,12 @@ crumb :view_result_assessment do |form_id|
   if user_id == current_user.id
     parent :new_cdp
   else
-    parent :cds_review
+    parent :cds_cdp_review, form_id, user_id
   end
 end
 
-crumb :cds_cdp_review do
-  link "CDS & CDP Review Details", "/forms/cds_cdp_review"
+crumb :cds_cdp_review do |form_id, user_id|
+  link "CDS & CDP Review Details", "/forms/cds_cdp_review?form_id=#{form_id}&user_id=#{user_id}"
   parent :cds_review, :root
 end
 

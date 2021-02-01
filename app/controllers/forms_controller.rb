@@ -61,11 +61,18 @@ class FormsController < ApplicationController
     render json: @form_service.get_competencies(form_params[:form_id])
   end
 
+  def get_period_table_header
+    if params[:period_ids].count == 1 && params[:company_ids].count == 1 && params[:company_ids] != ["0"]
+      schedule = Schedule.includes(:period).where(company_id: params[:company_ids], "periods.id": params[:period_ids]).order("periods.to_date ASC").last    
+      period_prev = Schedule.includes(:period).where(company_id: params[:company_ids]).where("periods.to_date<?", schedule.period&.to_date).order("periods.to_date ASC").last&.period&.format_name
+      period = schedule.period&.format_name
+      return render json: {period_prev: period_prev, period: period}
+    else
+      return render json: {period_prev: "", period: ""}
+    end
+  end
+
   def cds_review
-    period = Period.order("to_date ASC").last
-    @period_prev = Period.where("to_date<?",Period.find_by_id(period.id)&.to_date).order("to_date ASC").last&.format_name
-    @period = period&.format_name
-    
     @companies = Company.all
     @data_filter = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
@@ -160,8 +167,12 @@ class FormsController < ApplicationController
   def cds_cdp_review
     return redirect_to root_path unless (@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY, APPROVE_CDS, REVIEW_CDS, HIGH_FULL_ACCESS]).any?
     return if params[:user_id].nil?
-    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: params[:user_id], approver_id: current_user.id).blank? && params[:user_id] != current_user.id
-    reviewer = Approver.find_by(user_id: params[:user_id], approver_id: current_user.id)
+
+    form = Form.find_by_id(params[:form_id])
+    @form_id = params[:form_id]
+    @user_id = params[:user_id]
+    return redirect_to root_path if form.nil?
+    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: params[:user_id], approver_id: current_user.id, period_id: form.period_id).blank? && params[:user_id] != current_user.id
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
@@ -170,9 +181,8 @@ class FormsController < ApplicationController
       }
     end
 
-    form = Form.find_by_id(params[:form_id])
     user = User.includes(:role).find_by_id(params[:user_id])
-    approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id])
+    approver = Approver.find_by(approver_id: current_user.id, user_id: params[:user_id], period_id: form.period_id)
 
     form_slot = FormSlot.joins(:comments).where(form_id: form.id)
     h_slots =  form_slot.where(comments: { re_update: true })
@@ -197,8 +207,8 @@ class FormsController < ApplicationController
     form = Form.find_by_id(params[:form_id])
     form_slot = FormSlot.includes(:comments).where(id: params[:form_slot_id]).first
     comment = form_slot.comments.where(comments: {is_delete: false}).first if form_slot&.comments.present?
-    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).present?
-    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot&.is_passed && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && comment&.flag != "orange" && comment&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
+    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id, period_id: form.period_id).present?
+    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot&.is_passed == 1 && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && comment&.flag != "orange" && comment&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
     render json: @form_service.get_assessment_staff
   end
 
@@ -222,8 +232,8 @@ class FormsController < ApplicationController
   def save_cds_assessment_staff
     form = Form.find_by_id(params[:form_id])
     form_slot = FormSlot.includes(:comments).where(form_id: params[:form_id], slot_id: params[:slot_id], comments: {is_delete: false}).first
-    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).present?
-    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot.is_passed && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
+    is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id, period_id: form.period_id).present?
+    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot.is_passed == 1 && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
     data = @form_service.save_cds_staff
     return render json: { status: "success", data: data } if data.present?
     render json: { status: "fail" }
@@ -243,7 +253,7 @@ class FormsController < ApplicationController
   def save_cds_assessment_manager
     form = Form.find_by_id(params[:form_id])
     form_slot = FormSlot.includes(:comments).where(form_id: params[:form_id], slot_id: params[:slot_id], comments: {is_delete: false}).first
-    approver = Approver.where(user_id: form.user_id, approver_id: current_user.id).first
+    approver = Approver.where(user_id: form.user_id, approver_id: current_user.id, period_id: form.period_id).first
     return render json: { status: "fail_devtools" } if (approver.nil? || (approver&.is_submit_cds && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow") || form.status == "Done")
     return render json: { status: "success" } if @form_service.save_cds_manager
     render json: { status: "fail" }
@@ -275,11 +285,37 @@ class FormsController < ApplicationController
     @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
     @result = @form_service.preview_result(form)
     user = User.includes(:role).find_by_id(form.user_id)
-    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: user.id, approver_id: current_user.id).blank? && user.id != current_user.id
+    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: user.id, approver_id: current_user.id, period_id: form.period_id).blank? && user.id != current_user.id
     @form_service.get_location_slot(@competencies.pluck(:id))
     @title = "View CDS/CDP Result For #{user.role.name} - #{user.format_name}"
 
     @slots = @form_service.get_location_slot(@competencies.pluck(:id)).values.flatten.uniq.sort
+
+    schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
+    @period = schedules.map { |schedule|
+      {
+        id: schedule.period_id,
+        name: schedule.period.format_name,
+      }
+    }.uniq
+    approver = Approver.find_by(approver_id: current_user.id, user_id: user.id, period_id: form.period_id)
+    @hash = {
+      user_id: user.id,
+      user_name: user.format_name,
+      # user_account: user.account,
+      # form_id: form.id,
+      status: (!approver&.is_approver && approver&.is_submit_cds) ? "Submited" : form.status,
+      # title: "CDS/CDP of #{user.role.name} - #{user.account}",
+      is_submit: approver&.is_submit_cds || false,
+      is_approver: approver&.is_approver || false,
+      is_reviewer: (!approver&.is_approver && !approver.nil?) || false,
+      is_hr: approver.nil? || false,
+      is_submit_late: form.is_submit_late,
+      # is_disable_confirm_update: h_slots.present?,
+      # is_flag_yellow: form_slot.where(comments: { flag: "yellow" }).count >= 1,
+      is_staff: approver.nil? && (current_user.id == user.id) || false,
+      resubmit: form.period&.status.present? && form.period.status.eql?("In-progress")
+    }
   end
 
   def data_view_result
@@ -297,22 +333,37 @@ class FormsController < ApplicationController
   end
 
   def submit
-    form = Form.find_by_id(params[:form_id])
+    form = Form.where(id: params[:form_id], user_id: current_user.id).last
+    return render json: { status: "fail_form" } if form.nil?
     return render json: { status: "fail_cdp" } if Comment.includes(:form_slot).where(form_slots: { form_id: params[:form_id] },is_commit: true, point: nil).blank?
-    users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false)
+
+    if params[:period_id].to_i > 0
+      period = params[:period_id].to_i
+      schedules = Schedule.includes(:period).where(company_id: current_user.company_id, period_id: period, status: "In-progress").order("periods.to_date")
+      return render json: { status: "fails" } if schedules.blank?
+    else
+      schedules = Schedule.includes(:period).where(company_id: current_user.company_id, status: "In-progress").order("periods.to_date")
+      return render json: { status: "fails" } if schedules.blank?
+      period = schedules.last.period_id
+    end
+    if Approver.where(user_id: form.user_id, period_id: period, is_approver: false).empty?
+      approver_prev_period = Approver.includes(:period).where(user_id: current_user.id, is_approver: false).order("periods.to_date").last&.period_id
+      approver_prevs = Approver.where(user_id: current_user.id, is_approver: false, period_id: approver_prev_period)
+      approver_prevs.each do |approver_prev|
+        Approver.create(approver_id: approver_prev.approver_id, user_id: current_user.id, is_approver: false, period_id: period)
+      end
+    end
+    if Approver.where(user_id: form.user_id, period_id: period, is_approver: true).empty?
+      approver_prev = Approver.includes(:period).where(user_id: current_user.id, is_approver: true).order("periods.to_date").last
+      Approver.create(approver_id: approver_prev.approver_id, user_id: current_user.id, is_approver: true, period_id: period) unless approver_prev.nil?
+    end
+    users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false, "approvers.period_id": period)
     status, action, users = if users.empty?
-        ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id)]
+        ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.period_id": period)]
       else
         ["Awaiting Review", "review", users]
       end
     return render json: { status: "fail" } if users.empty?
-    if params[:period_id].to_i > 0
-      period = params[:period_id].to_i
-    else
-      schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "New").order("periods.to_date")
-      render json: { status: "fails" } if schedules.blank?
-      period = schedules.last.period_id
-    end
 
     render json: { status: "success", form_status: status } if form.update(period_id: period, status: status, submit_date: DateTime.now)
     user = form.user
@@ -326,17 +377,17 @@ class FormsController < ApplicationController
   end
 
   def reviewer_submit
-    reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id)
+    form = Form.where(id: params[:form_id])
+    reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id, period_id: form.period_id)
     return render json: { status: "fail" } if reviewer.blank?
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
     # user_ids = ProjectMember.where(project_id: project_ids).pluck(:user_id)
     # get PM from same project user list
-    user_pms = Approver.where(user_id: params[:user_id], is_approver: true).includes(:approver)
+    user_pms = Approver.where(user_id: params[:user_id], is_approver: true, period_id: form.period_id)
     if reviewer.update(is_submit_cds: true)
-      approvers = Approver.where(user_id: params[:user_id]).includes(:approver)
+      approvers = Approver.where(user_id: params[:user_id], period_id: form.period_id)
       user = User.find_by_id(params[:user_id])
       if approvers.where(is_submit_cds: false, is_approver: false).count.zero?
-        form = Form.where(id: params[:form_id])
         return render json: { status: "fail" } unless form.update(status: "Awaiting Approval", approved_date: DateTime.now())
         Async.await do
           user_pms.each do |user_pm|
@@ -404,7 +455,7 @@ class FormsController < ApplicationController
     data = if @privilege_array.include?(FULL_ACCESS)
         @form_service.data_filter_cds_view_others
       elsif @privilege_array.include?(FULL_ACCESS_MY_COMPANY)
-          @form_service.data_filter_cds_view_others(current_user.company_id)
+        @form_service.data_filter_cds_view_others(current_user.company_id)
       elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
         @form_service.data_filter_cds_approve
       elsif @privilege_array.include?(REVIEW_CDS)
@@ -430,8 +481,12 @@ class FormsController < ApplicationController
       user_ids = User.where(is_delete: false)
     elsif @privilege_array.include?(FULL_ACCESS_MY_COMPANY)
       user_ids = User.where(company_id: current_user.company_id, is_delete: false)
-    elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?
-      user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+    elsif (@privilege_array & [APPROVE_CDS, HIGH_FULL_ACCESS]).any?     
+      if params[:period].include?("0") || params[:period].nil?
+        user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id)
+      else
+        user_ids = Approver.where(approver_id: current_user.id, period_id: params[:period]).pluck(:user_id)
+      end
     elsif @privilege_array.include?(REVIEW_CDS)
       project_members = ProjectMember.where(user_id: current_user.id).includes(:project)
       user_ids = ProjectMember.where(project_id: project_members.pluck(:project_id)).pluck(:user_id).uniq

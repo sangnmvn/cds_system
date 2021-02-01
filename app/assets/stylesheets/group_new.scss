@@ -22,7 +22,7 @@ $odd-color: #CFD5EA;
     .table-fixed {
         overflow-y: auto;
         height: 350px;
-        border: 2px solid #0066CC;
+        border: 2px solid #4472c4;
 
     }
 
@@ -98,11 +98,11 @@ $odd-color: #CFD5EA;
 .table-group-wrapper {
     .btn-group {
         float: right;
-        margin-bottom: 10px;
+        // margin-bottom: 10px;
     }
 
     .table-group {
-        border: 2px solid #0066CC;
+        border: 2px solid #4472c4;
 
         tr {
             &.even {
@@ -155,4 +155,29 @@ $odd-color: #CFD5EA;
 
         }
     }
+}
+
+#table_group_wrapper {
+    top: -36px;
+    width: 100%;
+}
+  
+#table_group_filter {
+    position: absolute;
+    right: 120px;
+    top: 3px;
+
+    input[type=search] {
+        border: 0;
+    }
+
+    label {
+        color:#fff;
+    }
+}
+
+.title {
+    display: inline-block;
+    font-size: 150%;
+    padding-left: 15px !important;
 }

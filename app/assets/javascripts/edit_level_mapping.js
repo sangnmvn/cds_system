@@ -175,7 +175,7 @@ function createNewRowRequire(count) {
         <option value='Specialized'>Special</option>
       </select>
     </div>
-    <div class='col-2'>
+    <div class='col-3'>
       <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
   for (var i = 1; i <= count; i++) {
@@ -184,7 +184,7 @@ function createNewRowRequire(count) {
   temp += `
       </select>
       </div>
-      <div class='col-2 divIcon'>
+      <div class='col-1 divIcon'>
         <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
@@ -206,7 +206,7 @@ function createNewRowLevel(count) {
         <option value='Specialized'>Special</option>
       </select>
     </div>
-    <div class='col-2'>
+    <div class='col-3'>
       <select class="form-control" id="select_rank">
         <option value='-1' disabled selected>Rank</option>`
   for (var i = 1; i <= count; i++) {
@@ -215,7 +215,7 @@ function createNewRowLevel(count) {
   temp += `
       </select>
       </div>
-      <div class='col-2 divIcon'>
+      <div class='col-1 divIcon'>
         <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>

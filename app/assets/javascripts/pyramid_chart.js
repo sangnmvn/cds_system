@@ -25,7 +25,7 @@ function drawPyramidChart(data, total, id, name, text_legend) {
 
   var color = d3.scaleOrdinal()
     .domain(data.map(function (d) { return d.group; }))
-    .range(arrColor)
+    .range(arrColor2)
 
   // CREATE SVG
   var svg = d3.select(id).append('svg')

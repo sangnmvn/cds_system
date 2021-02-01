@@ -134,11 +134,11 @@ function loadDataSlots(response) {
     lst_slot[e.id] = flag
     temp += `<div id="${e.id}" class="container-fluid cdp-slot-wrapper row-slot" data-location="${e.slot_id}" data-slot-id="${e.id}" data-form-slot-id="${e.tracking.id}">
     <div class="row">
-      <div class="col-10 div-slot" data-toggle="collapse" data-target="#content_${e.id}">
+      <div class="col-10 div-slot" ${checkSlotIsChange(e.tracking.is_change)} data-toggle="collapse" data-target="#content_${e.id}">
         <i class="fas fa-caret-down icon"></i>&nbsp
         <b class="description-slot">${e.slot_id} - ${e.desc}</b>
       </div>
-      <div class="col-2 div-slot div-icon">
+      <div class="col-2 div-slot div-icon" ${checkSlotIsChange(e.tracking.is_change)}>
         <a type='button' class='btn-action re-assessment' title="Re-assessment this slot" style="${checkPassSlot(e.tracking.is_passed, e.tracking.is_change)}"><i class="fas fa-marker icon-yellow"></i></a>
         <i class="fas ${chooseClassIconBatery(e.tracking.final_point, e.tracking.point)} ${checkColorbatery(e.tracking.is_passed, e.tracking.is_change)} icon-cdp" title="${checkTitleFlag(e.tracking.final_point, e.tracking.point)}" style="${checkPassSlot(e.tracking.is_commit, false, e.tracking.is_passed)}"></i>
         <a type='button' class='btn-action' title="View slot's history" id="btn_view_history"><i class="fas fa-history icon-yellow"></i></a>
@@ -212,8 +212,8 @@ function loadDataSlots(response) {
                 <td>
                   <select class="form-control select-commit reviewer-commit ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id) == "disabled" ? "" : "reviewer-self"}" ${checkDisableFormSlotsStaff(is_reviewer, e.tracking.recommends[i].user_id)} ${e.tracking.comment_type == "CDS" ? "disabled" : ""}>
                   <option value="uncommit" ${checkCommmit(!e.tracking.recommends[i].is_commit)}> Un-commit </option>
-                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDS")}> Commit CDS</option>
-                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""} ${checkData(e.tracking.recommends[i].given_point, e.tracking.recommends[i].is_commit, "CDP")}> Commit CDP</option>
+                  <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""}> Commit CDS</option>
+                  <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""}> Commit CDP</option>
                   </select>
                 </td>
                 <td>
@@ -251,8 +251,8 @@ function loadDataSlots(response) {
                     <td>
                       <select class="form-control select-commit approver-commit ${checkDisableFormSlotsStaff(is_approver, lst_approver[0]) == "disabled" ? "" : "approver-self"}" ${checkDisableFormSlotsStaff(is_approver, lst_approver[0])} ${e.tracking.comment_type == "CDS" ? "disabled" : ""} >
                       <option value="uncommit" ${checkCommmit(!lst_approver[4])}> Un-commit </option>
-                      <option value="commit_cds" ${e.tracking.comment_type == "CDS" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1], lst_approver[4], "CDS")}> Commit CDS</option>
-                      <option value="commit_cdp" ${e.tracking.comment_type == "CDP" && !lst_approver[4] ? "selected" : ""} ${checkData(lst_approver[1], lst_approver[4], "CDP")}> Commit CDP</option>
+                      <option value="commit_cds" ${e.tracking.comment_type == "CDS" ? "selected" : ""}> Commit CDS</option>
+                      <option value="commit_cdp" ${e.tracking.comment_type == "CDP" ? "selected" : ""}> Commit CDP</option>
                       </select>
                     </td>
                     <td>
@@ -355,6 +355,12 @@ function checkTitleFlag(final_point, point) {
 function checkFlag(flag) {
   if (flag == "")
     return "display:none"
+  return ""
+}
+
+function checkSlotIsChange(is_change) {
+  // if (is_change)
+  //   return 'style="background-color: #dd9f72;"'
   return ""
 }
 
@@ -481,6 +487,173 @@ $(document).ready(function () {
       }
     })
   })
+
+  $(document).on("click", ".submit-assessment", function () {
+    $.ajax({
+      type: "GET",
+      url: "/forms/check_status_form",
+      data: {
+        form_id: form_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        debugger
+        if (response.status == "New" && is_reviewer) {
+          $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
+          $('#modal_conflict').modal('show');
+          $(document).on("click", "#btn_check_status", function () {
+            window.location.href = "/forms/index_cds_cdp"
+          });
+        } else {
+          h_data = response.data;
+          if (jQuery.isEmptyObject(h_data)) {
+            var data_conflict = findConflictinArr(conflict_commits)
+            var str = ""
+            if (data_conflict && (is_reviewer || is_approver)) {
+              str = "<p>The following slots have been conflicted on commitment between you and staff:</p><p>Slot: <b>" +
+                data_conflict + "</b></p><p>Please review it or request update from staff before doing this action.</p>"
+            } else {
+              data_conflict = findConflictinArr(slot_assessing)
+              if (data_conflict) {
+                str = "<p>The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.</p><p>" +
+                  data_conflict + " </p>"
+              }
+            }
+            if (str != "") {
+              $("#content_modal_conflict").html(str);
+              $('#modal_conflict').modal('show');
+            } else if (is_reviewer) {
+              $('#staff_account').html()
+              $('#modal_period').modal('show');
+            } else {
+              $('#modal_period').modal('show');
+            }
+          } else {
+            str = ""
+            for (var competency_name in h_data) {
+              str += "<p>\u2022 " + competency_name + ": ";
+              slots = h_data[competency_name];
+              str += slots.join(", ");
+              str += "</p>";
+            }
+
+            $("#modal_reviewer_content").html(str);
+            $("#modal_reviewer_submit").modal('show');
+          }
+        }
+      }
+    });
+  });
+
+  $(document).on("click", ".confirm-submit-cds", function () {
+    if (is_reviewer) {
+      $.ajax({
+        type: "POST",
+        url: "/forms/reviewer_submit",
+        data: {
+          form_id: form_id,
+          user_id: user_to_be_reviewed,
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.status == "success") {
+            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
+            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
+            $('a.submit-assessment').addClass('d-none');
+            $('#modal_period').modal('hide');
+            $("#button_request_update").addClass("d-none")
+            $("#button_cancel_request").addClass("d-none")
+            $("#summary_comment").addClass("d-none")
+            $("#confirm_update_to_approver").removeClass("d-none")
+            $("#icon_confirm_update_to_approver").css("color", "#ccc");
+            $("#status").html("(Submited)")
+            toggleInput(false);
+            window.location.href = "/forms/cds_review"
+          } else {
+            fails("Can't submit CDS/CDP.");
+          }
+          $("#modal_reviewer_submit").modal('hide');
+        }
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        url: "/forms/submit",
+        data: {
+          form_id: form_id,
+          period_id: parseInt($('#modal_period #period_id').val())
+        },
+        headers: {
+          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+        },
+        dataType: "json",
+        success: function (response) {
+          if (response.status == "success") {
+            $('#modal_period').modal('hide');
+            // staff submit
+            warning("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
+            $('a.submit-assessment').addClass('d-none');
+            $('a.submit-assessment').addClass('disabled');
+            $('a.withdraw-assessment').removeClass('d-none');
+            $('a.withdraw-assessment').removeClass('disabled');
+            status = response.form_status
+            checkStatusFormStaff(status)
+            $("#status").html(`(${status})`)
+          } else if (response.status == "fail_cdp"){
+            fails("Please commit CDP for at least one slot before submit this form.");
+          } else if (response.status == "fail_form"){
+            fails("Can't find your form. Please check again");
+          } else if (response.status == "fails"){
+            fails("Please make sure the schedule is In-progress.");
+          } else {
+            fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
+          }
+        }
+      })
+    };
+  });
+
+  $(document).on("click", ".withdraw-assessment", function () {
+    $('#modal_withdraw').modal('show');
+  });
+
+  $(document).on("click", "#confirm_withdraw_cds", function () {
+    $('#modal_withdraw').modal('hide');
+    $.ajax({
+      type: "POST",
+      url: "/forms/withdraw_cds",
+      data: {
+        form_id: form_id,
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "success") {
+          warning(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
+          $('a.withdraw-assessment').addClass('d-none');
+          $('a.withdraw-assessment').addClass('disabled');
+          $('a.submit-assessment').removeClass('d-none');
+          $('a.submit-assessment').removeClass('disabled');
+          checkStatusFormStaff("New")
+          status = "New"
+          $("#status").html("(New)")
+          $(".icon-flag").each(function (i, e) {
+            e.setAttribute('style', 'display:none')
+          })
+        } else {
+          fails("Can't withdraw CDS/CDP.");
+        }
+      }
+    });
+  });
 
   $(document).on("click", "#btn_save_summary_assessment", function () {
     $.ajax({
@@ -898,42 +1071,6 @@ $(document).ready(function () {
     });
   });
 
-  $(document).on("click", ".withdraw-assessment", function () {
-    $('#modal_withdraw').modal('show');
-  });
-
-  $(document).on("click", "#confirm_withdraw_cds", function () {
-    $('#modal_withdraw').modal('hide');
-    $.ajax({
-      type: "POST",
-      url: "/forms/withdraw_cds",
-      data: {
-        form_id: form_id,
-      },
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      dataType: "json",
-      success: function (response) {
-        if (response.status == "success") {
-          warning(`The CDS/CDP assessment of ${response.user_name} has been withdrawn successfully.`);
-          $('a.withdraw-assessment').addClass('d-none');
-          $('a.withdraw-assessment').addClass('disabled');
-          $('a.submit-assessment').removeClass('d-none');
-          $('a.submit-assessment').removeClass('disabled');
-          checkStatusFormStaff("New")
-          status = "New"
-          $("#status").html("(New)")
-          $(".icon-flag").each(function (i, e) {
-            e.setAttribute('style', 'display:none')
-          })
-        } else {
-          fails("Can't withdraw CDS/CDP.");
-        }
-      }
-    });
-  });
-
   function findConflictinArr(arr) {
     var str = "</p>"
     var keys = Object.keys(arr)
@@ -946,131 +1083,7 @@ $(document).ready(function () {
       str = str.replace("<p>", "").replace("</p>", "");
     return str
   }
-
-  $(document).on("click", ".confirm-submit-cds", function () {
-    if (is_reviewer) {
-      $.ajax({
-        type: "POST",
-        url: "/forms/reviewer_submit",
-        data: {
-          form_id: form_id,
-          user_id: user_to_be_reviewed,
-        },
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-        },
-        dataType: "json",
-        success: function (response) {
-          if (response.status == "success") {
-            warning(`The CDS/CDP assessment of ${response.user_name} has been submitted successfully.`);
-            $("a.submit-assessment .fa-file-import").css("color", "#ccc");
-            $('a.submit-assessment').addClass('d-none');
-            $('#modal_period').modal('hide');
-            $("#button_request_update").addClass("d-none")
-            $("#button_cancel_request").addClass("d-none")
-            $("#summary_comment").addClass("d-none")
-            $("#confirm_update_to_approver").removeClass("d-none")
-            $("#icon_confirm_update_to_approver").css("color", "#ccc");
-            $("#status").html("(Submited)")
-            toggleInput(false);
-            window.location.href = "/forms/cds_review"
-          } else {
-            fails("Can't submit CDS/CDP.");
-          }
-          $("#modal_reviewer_submit").modal('hide');
-        }
-      });
-    } else {
-      $.ajax({
-        type: "POST",
-        url: "/forms/submit",
-        data: {
-          form_id: form_id,
-          period_id: parseInt($('#modal_period #period_id').val())
-        },
-        headers: {
-          "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-        },
-        dataType: "json",
-        success: function (response) {
-          if (response.status == "success") {
-            $('#modal_period').modal('hide');
-            // staff submit
-            warning("This CDS/CDP for " + $("#modal_period #period_id option:selected").text() + " has been submitted successfully.");
-            $('a.submit-assessment').addClass('d-none');
-            $('a.submit-assessment').addClass('disabled');
-            $('a.withdraw-assessment').removeClass('d-none');
-            $('a.withdraw-assessment').removeClass('disabled');
-            status = response.form_status
-            checkStatusFormStaff(status)
-            $("#status").html(`(${status})`)
-          } else if (response.status == "fail_cdp"){
-            fails("Please commit CDP for at least one slot before submit this form.");
-          } else {
-            fails("You have not had reviewer / approver yet. Therefore, you cannot submit this CDS/CDP. Please contact your Line Manager to setup.");
-          }
-        }
-      })
-    };
-  });
-  $(document).on("click", ".submit-assessment", function () {
-    $.ajax({
-      type: "GET",
-      url: "/forms/check_status_form",
-      data: {
-        form_id: form_id
-      },
-      headers: {
-        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
-      },
-      dataType: "json",
-      success: function (response) {
-        if (response.status == "New" && is_reviewer) {
-          $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
-          $('#modal_conflict').modal('show');
-          $(document).on("click", "#btn_check_status", function () {
-            window.location.href = "/forms/index_cds_cdp"
-          });
-        } else {
-          h_data = response.data;
-          if (jQuery.isEmptyObject(h_data)) {
-            var data_conflict = findConflictinArr(conflict_commits)
-            var str = ""
-            if (data_conflict && (is_reviewer || is_approver)) {
-              str = "<p>The following slots have been conflicted on commitment between you and staff:</p><p>Slot: <b>" +
-                data_conflict + "</b></p><p>Please review it or request update from staff before doing this action.</p>"
-            } else {
-              data_conflict = findConflictinArr(slot_assessing)
-              if (data_conflict) {
-                str = "<p>The following slots have not filled all required fields fully yet. Therefore, you cannot do this action.</p><p>" +
-                  data_conflict + " </p>"
-              }
-            }
-            if (str != "") {
-              $("#content_modal_conflict").html(str);
-              $('#modal_conflict').modal('show');
-            } else if (is_reviewer) {
-              $('#staff_account').html()
-              $('#modal_period').modal('show');
-            } else {
-              $('#modal_period').modal('show');
-            }
-          } else {
-            str = ""
-            for (var competency_name in h_data) {
-              str += "<p>\u2022 " + competency_name + ": ";
-              slots = h_data[competency_name];
-              str += slots.join(", ");
-              str += "</p>";
-            }
-
-            $("#modal_reviewer_content").html(str);
-            $("#modal_reviewer_submit").modal('show');
-          }
-        }
-      }
-    });
-  });
+ 
   $("#content_slot").on("change", ".tr-reviewer, .tr-approver", function () {
     var row = $(this)
     var slot_id = row.closest('.row-slot').data("slot-id");
@@ -1317,10 +1330,10 @@ function loadDataPanel(form_id) {
       window.location.href = "/forms/index_cds_cdp"
     }, 3000);
   } else {
-    if (form_id)
-      data.form_id = form_id;
-    else if (title_history_id)
+    if (title_history_id)
       data.title_history_id = title_history_id;
+    else if (form_id)
+      data.form_id = form_id;
     $.ajax({
       type: "POST",
       url: "/forms/get_competencies/",
@@ -1421,6 +1434,8 @@ function checkTitle(flag) {
 }
 
 function hightlightChangeCompetency(id, level) {
+  if (title_history_id)
+    return ;
   var list_competency = $('#competency_panel').find('.card');
   for (var i = 0; i < list_competency.length; i++) {
     if ($("#card" + i).attr("data-id-competency") == id) {

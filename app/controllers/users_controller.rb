@@ -87,7 +87,8 @@ class UsersController < ApplicationController
     company_id = user.first.company_id
     project_id = user.map(&:project_id)
 
-    current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false).pluck(:approver_id)
+    period_id = Approver.includes(:period).where(user_id: params[:user_id], is_approver: false).order("periods.to_date").pluck(:period_id).last
+    current_reviewers = Approver.where(user_id: params[:user_id], is_approver: false, period_id: period_id).pluck(:approver_id)
     reviewers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{REVIEW_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
     
     reviewers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id]).where.not(id: reviewers.ids)
@@ -105,7 +106,7 @@ class UsersController < ApplicationController
     company_id = user.first.company_id
     project_id = user.map(&:project_id)
 
-    current_approvers = Approver.where(user_id: params[:user_id], is_approver: true).pluck(:approver_id)
+    current_approvers = Approver.includes(:period).where(user_id: params[:user_id], is_approver: true).order("periods.to_date DESC").pluck(:approver_id)
     approvers = User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{APPROVE_CDS}%'").where(project_members: { project_id: project_id }, company_id: company_id).where.not(id: params[:user_id])
 
     approvers += User.distinct.left_outer_joins(:project_members, user_group: :group).where("groups.privileges LIKE '%#{HIGH_FULL_ACCESS}%'").where(company_id: company_id).where.not(id: params[:user_id]).where.not(id: approvers.ids)
@@ -124,19 +125,22 @@ class UsersController < ApplicationController
   def add_reviewer_to_database
     begin
       form = Form.find_by(user_id: params[:user_id])
+      user = User.find_by_id(params[:user_id])
+      schedules = Schedule.includes(:period).where(company_id: user.company_id, _type: "HR", status: ["New", "In-progress"]).order("periods.to_date")&.last
+      return render json: { status: "fails" } if schedules.nil?
       form.update(is_submit_late: params[:is_submit_late]) if form.present?
       if params[:is_approver].nil?
-        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id]).destroy_all
+        Approver.where(user_id: params[:user_id], period_id: schedules&.period_id).destroy_all
       else
-        Approver.where(approver_id: params[:remove_ids], user_id: params[:user_id], is_approver: params[:is_approver]).destroy_all
+        Approver.where(user_id: params[:user_id], period_id: schedules&.period_id, is_approver: params[:is_approver]).destroy_all
       end
       if params[:add_approver_ids].present? && params[:add_approver_ids] != "0" && (@privilege_array & [ADD_APPROVER, FULL_ACCESS]).any?
-        Approver.create(approver_id: params[:add_approver_ids].to_i, user_id: params[:user_id], is_approver: true)
+        Approver.create(approver_id: params[:add_approver_ids].to_i, user_id: params[:user_id], is_approver: true, period_id: schedules&.period_id)
       end
 
       if params[:add_reviewer_ids].present? && (@privilege_array & [ADD_REVIEWER, FULL_ACCESS]).any?
         params[:add_reviewer_ids].each do |approver_id|
-          Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: false)
+          Approver.create(approver_id: approver_id.to_i, user_id: params[:user_id], is_approver: false, period_id: schedules&.period_id)
         end
       end
       render json: { status: "success" }

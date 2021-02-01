@@ -1,13 +1,55 @@
 <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'preview_result', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag "cdp_assessment", 'data-turbolinks-track': "reload" %>
+<%= javascript_include_tag "cdp_event", 'data-turbolinks-track': "reload" %>
 <% breadcrumb :view_result_assessment, @form_id %>
 <% if @form_id.nil? %>
   <%= render 'no_data_view_result'%>
 <% else %>
 <div class="container-fluid" style="padding:0">
-  <div class="row" id="cdp_container_div2">
-    <div class="col-10" style="font-size: 150%;">
+  <div id="cdp_container_div2" style="display: inline-block; width: 100%;">
+    <div style="font-size: 150%;display: inline-block; float: left; padding-left:15px">
       <%= @title %>
+    </div> 
+    <div style="display: inline-block; float: right;padding-right:15px">
+      <% if @hash[:is_approver] %>
+        <% if @hash[:status] == "Done" %>
+          <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment",class: "d-none", title: "Summary comment" %>
+          <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)",id: "reject_cds", class: "reject-assessment", title: "Reject CDS/CDP" %>
+          <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)",id: "approve_cds", class: "d-none", title: "Approve CDS/CDP" %>
+        <% else  %>
+          <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
+          <%= link_to '<i class="fas fa-thumbs-down" style="color: blue"></i> Reject'.html_safe, "javascript:void(0)",id: "reject_cds", class: "d-none", title: "Reject CDS/CDP" %>
+          <%= link_to '<i class="fas fa-thumbs-up" style="color: blue"></i> Approve'.html_safe, "javascript:void(0)",id: "approve_cds", class: "approval-assessment", title: "Approve CDS/CDP" %>
+        <% end %>   
+      <% elsif @hash[:is_staff] %>  
+        <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
+        <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment",class: "", title: "Summary comment" %>
+        <% if @hash[:status] == "Awaiting Review" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment", title: "Withdraw CDS-CDP" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
+        <% elsif @hash[:status] == "Awaiting Approval" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
+        <% elsif @hash[:status] == "Done" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment d-none", id: "submit", title: "Submit CDS-CDP" %>
+        <% else%>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i>Withdraw'.html_safe, "javascript:void(0)", class: "withdraw-assessment d-none", title: "Withdraw CDS-CDP" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", id: "submit", title: "Submit CDS-CDP" %>
+        <% end %>
+      <% elsif @hash[:is_hr] %>
+         <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
+      <% elsif @hash[:is_reviewer] %>
+        <% if @hash[:is_submit] %>
+          <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
+          <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm Update'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request", title: "Confirm request" %>
+        <% else %>
+          <%= link_to '<i class="fas fa-comment-alt" style="color: blue"></i> Comment'.html_safe, "javascript:void(0)",id: "summary_comment", title: "Summary comment" %>
+          <%= link_to '<i class="fas fa-bell" id="icon_confirm_request" style="color: green"></i> Confirm'.html_safe, "javascript:void(0)", id: "confirm_request", class: "confirm-request d-none", title: "Confirm request" %>
+          <%= link_to '<i class="fas fa-file-import" style="color: green"></i> Submit'.html_safe, "javascript:void(0)", class: "submit-assessment", title: "Submit CDS/CDP" %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
@@ -45,8 +87,40 @@
       </div>
     </div>
   </div>
+  <div><%= render "modal_history" %></div>
+  <div><%= render "modal_warning_reviewer_submit" %></div>
+  <div><%= render "modal_warning_approver_submit" %></div>
+  <div><%= render "modal_period" %></div>
+  <div><%= render "modal_summary_assessment" %></div>
+  <div><%= render "modal_request_update_prevent"%></div>
+  <div><%= render "modal_cancel_request_update"%></div>
+  <div><%= render "modal_request_add_more_evidence" %></div>
+  <div><%= render "modal_approve_cds" %></div>
+  <div><%= render "modal_confirm_request" %></div>
+  <div><%= render "modal_conflict" %></div>
+  <div><%= render "modal_reject_cds" %></div>
+  <div><%= render "modal_withdraw" %></div>
+  <div><%= render "modal_re_assess" %></div>
+  <div class="alert-message">
+    <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+    <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+  </div>
   <script>
     var form_id = <%= @form_id %>;
+    // var title_history_id = <%= @hash[:title_history_id] || 0 %>;
+    var status = "<%= @hash[:status].to_s %>";
+    var is_reviewer = <%= @hash[:is_reviewer] %>;
+    var is_submit = <%= @hash[:is_submit] %>
+    var is_approver = <%= @hash[:is_approver] %>;
+    var user_current = <%= current_user.id %>;
+    var user_to_be_reviewed = <%= @hash[:user_id] %>;
+    // var lst_slot = {};
+    // var check_5_month = true
+    // var conflict_commits = {}
+    // var check_request_update = <%=  @hash[:is_disable_confirm_update] %>;
+    var user_name = "<%= @hash[:user_name] %>"
+    // var user_account = "<%= @hash[:user_account] %>"
+    // var is_flag_yellow = "<%= @hash[:is_flag_yellow] %>"
   </script>
   <%= javascript_include_tag 'preview_result', 'data-turbolinks-track': 'reload' %>
 <% end %>

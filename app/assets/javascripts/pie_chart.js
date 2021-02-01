@@ -26,6 +26,7 @@ function drawPieChart(data, total, id, name) {
     .attr("width", width)
     .attr("height", height)
     .append("g")
+    .attr("class", "root")
     .attr("transform", "translate(" + (width / 4 + 60) + "," + height / 2 + ")");
 
   // append text total to avg
@@ -66,9 +67,38 @@ function drawPieChart(data, total, id, name) {
     .enter()
     .append('path')
     .attr('d', arc)
-    .attr('fill', function (d) { return (color(d.data.key)); })
+    .attr('fill', function (d,i) {
+      d3.select(this).attr('class','path ' + "a"+ i)
+      return (color(d.data.key)); 
+    })
     .attr("stroke", "white")
-    .style("stroke-width", "1px");
+    .style("stroke-width", "1px") .on("mouseover", function (d) {
+      d3.select(this).attr('transform', 'scale(1.20)')
+
+      chart = svg.selectAll(".legend").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart.attr('transform', chart.attr("transform").split(" ")[0] + ' scale(1.20)').attr("font-weight","bold").attr("fill", "rgb(19, 103, 0)").raise()
+
+      chart_text = svg.selectAll(".text").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart_text.attr('transform', chart_text.attr("transform").split(" ")[0] + ' scale(1.52)').attr("font-weight","bold").attr("fill", "rgb(19, 103, 0)")
+      this_svg = svg.append("rect").attr("class","rect-hover").attr('transform', chart_text.attr("transform")).style("fill","#dae7ff").style("width","64px").style("height","20px").style("y","-10").style("text-anchor","start")
+      if(chart_text.attr("transform").split(",")[0].split("(")[1] < 0)
+      {
+        let x = chart_text.attr("transform").split(",")[0].split("(")[1] - 96
+        let y = chart_text.attr("transform").split(",")[1].split(" ")[0].split(")")[0]
+        this_svg.attr('transform', "translate(" + x + "," + y + ")").style("width","94px").style("height","30px").style("y","-18")
+      }
+      chart_text.raise()
+    })
+    .on("mouseout", function (d) {
+      d3.select(this).attr('transform', 'scale(1)')
+
+      chart = svg.selectAll(".legend").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart.attr('transform', chart.attr("transform").split(" ")[0] + ' scale(1)').attr("font-weight","none").attr("fill", "#000").lower()
+
+      chart_text = svg.selectAll(".text").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart_text.attr('transform', chart_text.attr("transform").split(" ")[0] + ' scale(1)').attr("font-weight","none").attr("fill", "#000")
+      d3.select(".rect-hover").remove(0)
+    });
 
   // Add the polylines between chart and labels:
   svg
@@ -94,7 +124,10 @@ function drawPieChart(data, total, id, name) {
     .data(data_ready)
     .enter()
     .append('text')
-    .text(function (d) { return d.data.value + ' (' + (d.data.value / total * 100).toFixed(2) + '%)'; })
+    .text(function (d,i) { 
+      d3.select(this).attr('class','text ' + "a"+ i)
+      return d.data.value + ' (' + (d.data.value / total * 100).toFixed(2) + '%)'; 
+    })
     .attr('transform', function (d) {
       var pos = outerArc.centroid(d);
       var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
@@ -113,15 +146,41 @@ function drawPieChart(data, total, id, name) {
     .append('g')
     .attr('class', 'legend')
     .attr('transform', function (d, i) {
+      d3.select(this).attr('class','legend ' + "a" + i)
       var maxItemOneColumn = Math.ceil(color.domain().length / 2);
       if (maxItemOneColumn < 3)
         maxItemOneColumn = color.domain().length;
       var vert = ((i < maxItemOneColumn) ? i : (i - maxItemOneColumn)) * (legendRectSize + legendSpacing + 5);
 
-      var w = (i < maxItemOneColumn) ? ((width / 3 ) + (is_small_screen ? 15 : -25)) : (width / 3 + fix_width);
-      var h = vert - height / 4;
+      var w = (i < maxItemOneColumn) ? ((width / 3 ) + (is_small_screen ? 15 : -55)) : (width / 3 + fix_width);
+      var h = vert - height / 4 - 40;
 
       return 'translate(' + w + ',' + h + ')';
+    })
+    .on("mouseover", function (d) {
+      d3.select(this).attr('transform',  d3.select(this).attr("transform").split(" ")[0] + ' scale(1.20)').attr("font-weight","bold").attr("fill", "rgb(19, 103, 0)").raise()
+      
+      svg.selectAll(".path").filter("." + d3.select(this).attr("class").split(" ")[1]).attr('transform', 'scale(1.20)')
+
+      chart_text = svg.selectAll(".text").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart_text.attr('transform', chart_text.attr("transform").split(" ")[0] + ' scale(1.52)').attr("font-weight","bold").attr("fill", "rgb(19, 103, 0)").raise()
+      this_svg = svg.append("rect").attr("class","rect-hover").attr('transform', chart_text.attr("transform")).style("fill","#dae7ff").style("width","64px").style("height","20px").style("y","-14").style("text-anchor","start")
+      if(chart_text.attr("transform").split(",")[0].split("(")[1] < 0)
+      {
+        let x = chart_text.attr("transform").split(",")[0].split("(")[1] - 96
+        let y = chart_text.attr("transform").split(",")[1].split(" ")[0].split(")")[0]
+        this_svg.attr('transform', "translate(" + x + "," + y + ")").style("width","94px").style("height","30px").style("y","-20")
+      }
+      chart_text.raise()
+    })
+    .on("mouseout", function (d) {
+      d3.select(this).attr('transform',  d3.select(this).attr("transform").split(" ")[0] + ' scale(1)').attr("font-weight","none").attr("fill", "#000").lower()
+      
+      svg.selectAll(".path").filter("." + d3.select(this).attr("class").split(" ")[1]).attr('transform', 'scale(1)')
+
+      chart_text = svg.selectAll(".text").filter("." + d3.select(this).attr("class").split(" ")[1])
+      chart_text.attr('transform', chart_text.attr("transform").split(" ")[0] + ' scale(1)').attr("font-weight","none").attr("fill", "#000")
+      d3.select(".rect-hover").remove(0)
     });
 
   var title = svg.selectAll('.total')

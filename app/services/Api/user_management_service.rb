@@ -61,22 +61,22 @@ module Api
         # column action
         current_user_data.push("<div style='text-align: center'>
             <a class='action_icon edit_icon' title='Edit user information' data-user_id='#{user.id}' href='javascript:;'>
-              <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "rgb(77, 79, 78)"}'></i>
+              <i class='fa fa-pencil icon' style='color: #{full_access ? "#fc9803" : "grey"}'></i>
             </a>
-              <a class='action_icon add-reviewer-icon'  title='Add Reviewer For User' #{(full_access || is_reviewer) ? "data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"}  href='javascript:;'>
-                <i border='0' style='color:#58c317' class='fas fa-user-check add-reviewer-icon'></i>
+              <a class='action_icon add-reviewer-icon'  title='Add Reviewer For User' #{(full_access || is_reviewer) ? "data-toggle='modal' data-target='#addReviewerModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : ""}  href='javascript:;'>
+                <i border='0' class='fas fa-user-check add-reviewer-icon' style='color: #{full_access ? "#58c317" : "grey"}'></i>
               </a>
-              <a class='action_icon add-approver-icon' title='Add Approver For User' #{(full_access || is_approver) ? "data-toggle='modal'  data-target='#addApproverModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : "style='filter: grayscale(100%)'"} href='javascript:;'>
-                <i border='0' style='color:black' class='fas fa-user-tie add-approver-icon'></i>
+              <a class='action_icon add-approver-icon' title='Add Approver For User' #{(full_access || is_approver) ? "data-toggle='modal'  data-target='#addApproverModal' data-user_id='#{user.id}' data-user_account='#{user.format_name_vietnamese}'" : ""} href='javascript:;'>
+                <i border='0' class='fas fa-user-tie add-approver-icon' style='color: #{full_access ? "black" : "grey"}'></i>
               </a>
               <a #{"class='action_icon status_icon'" if full_access} title='Disable/Enable User' data-user_id='#{user.id}' data-user_account='#{user.account}' href='javascript:;'>
-                <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:rgb(77, 79, 78)" unless full_access}'></i>
+                <i class='fa fa-toggle-#{user.status ? "on" : "off"}' style='margin-bottom: 0px; #{"color:grey" unless full_access}'></i>
               </a>&nbsp;
               <a class='action_icon reset-password' title='Reset password of user' data-user_id='#{user.id}' data-user_account='#{user.account}' data-user_full_name='#{user.format_name_vietnamese}' href='javascript:;'>
-              <i border='0' style='color:#61066b' class='fas fa-unlock-alt reset-password-icon'></i>
+              <i border='0'  class='fas fa-unlock-alt reset-password-icon' style='color: #{full_access ? "#61066b" : "grey"}'></i>
               </a>
               <a class='action_icon delete_icon' title='Delete the user' data-toggle='modal' data-target='#deleteModal' data-user_id='#{user.id}' data-user_full_name='#{user.format_name_vietnamese}'  data-user_lastname='#{user.last_name}' href='javascript:;'>
-                <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "rgb(77, 79, 78)"}'></i>
+                <i class='fa fa-trash icon' style='color: #{full_access ? "red" : "grey"}'></i>
               </a>
             </div>")
 
@@ -127,8 +127,22 @@ module Api
     end
 
     def data_users_by_role
-      h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.name").count
-      h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.abbreviation").count
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(id: 1).group("roles.name").count
+        h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where.not(role_id: nil, id: 1).group("roles.abbreviation").count    
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        filter_users2 = {}
+        filter_users2[:company_id] = current_user.company_id if filter_users[:company_id].nil?
+        h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where(filter_users2).where.not(id: 1).group("roles.name").count
+        h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where(filter_users2).where.not(role_id: nil, id: 1).group("roles.abbreviation").count
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT        
+        filter_users2 = {}
+        filter_users2[:company_id] = current_user.company_id if filter_users[:company_id].nil?
+        filter_users2[:project_members] = {} if filter_users[:project_members].nil?
+        filter_users2[:project_members][:project_id] = ProjectMember.where(user_id: current_user.id).includes(:project).pluck(:project_id).uniq if filter_users[:project_members].nil? || filter_users[:project_members][:project_id].nil?
+        h_users = User.left_outer_joins(:project_members, :role).where(filter_users).where(filter_users2).where.not(id: 1).group("roles.name").count
+        h_users_small = User.left_outer_joins(:project_members, :role).where(filter_users).where(filter_users2).where.not(role_id: nil, id: 1).group("roles.abbreviation").count    
+      end
 
       { data: h_users, data_small: h_users_small, total: h_users.values.sum }
     end
@@ -275,24 +289,20 @@ module Api
         end
       end
 
-      # arr_result = []
-      # 20.times do |i|
-      #   date = "#{2000 + rand(10)}/0#{rand(1..9)}/0#{rand(1..9)}"
-      #   if i == 19
-      #     arr_result << {
-      #       period: date,
-      #       "Quality Control": [1, 2, 3, 4, 5, 6, 7][rand(7)],
-      #       "Business Analyst": nil,
-      #     }
-      #   else
-      #     arr_result << {
-      #       period: date,
-      #       "Quality Control": [nil, 1, 2, 3, 4, 5, 6, 7][rand(7)],
-      #       "Business Analyst": [nil, nil, nil, 4, 5, 6, 7][rand(7)],
-      #     }
-      #   end
-      # end
-      { data: arr_result, has_cdp: has_cdp }
+      role_name_histories = title_histories.pluck(:role_name).uniq
+      titles = Title.includes(:role,:level_mappings).where("roles.name": role_name_histories)
+      hash = {}
+      titles.group_by{|h| h[:rank]}.each{|_, v|
+        v.each{|v1|
+          lv = v1.level_mappings.max_by{|el| el[:level]}&.level
+          hash[v1.rank] = lv if hash[v1.rank].nil? || hash[v1.rank] < lv
+        }
+      }
+      
+      title_histories.each{|title_history|
+        hash[title_history.rank] = title_history.level if(hash[title_history.rank].nil? || hash[title_history.rank] < title_history.level)
+      }
+      { data: arr_result, has_cdp: has_cdp, level_mapping: hash }
     end
 
     def calulate_data_user_by_title
@@ -306,13 +316,6 @@ module Api
     end
 
     def data_users_up_title
-      if privilege_array.include? DASHBOARD_FULL_ACCESS
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
-      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
-      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
-        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
-      end
       schedules = Schedule.where(status: "Done",_type: "HR").or(Schedule.where(status: "Done",_type: nil)).order(end_date_hr: :desc)
       first = {}
       second = {}
@@ -324,6 +327,14 @@ module Api
         end
       end
 
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id, period_id: first[current_user.company_id]).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
+      end
+  
       title_first = TitleHistory.includes([:user, :period]).where(user_id: user_ids, period_id: first.values)
       title_second = TitleHistory.includes(:period).where(user_id: user_ids, period_id: second.values)
 
@@ -364,13 +375,6 @@ module Api
     end
 
     def data_users_down_title
-      if privilege_array.include? DASHBOARD_FULL_ACCESS
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
-      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
-        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
-      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
-        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
-      end
       schedules = Schedule.includes(:period).where(status: "Done",_type: "HR").or(Schedule.includes(:period).where(status: "Done",_type: nil)).order("periods.to_date desc")
 
       first = {}
@@ -381,6 +385,14 @@ module Api
         elsif second[schedule.company_id].nil?
           second[schedule.company_id] = schedule.period_id
         end
+      end
+
+      if privilege_array.include? DASHBOARD_FULL_ACCESS
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_COMPANY
+        user_ids = User.left_outer_joins(:project_members).where(filter_users).where(company_id: current_user.company_id).where.not(id: 1).pluck(:id).uniq
+      elsif privilege_array.include? DASHBOARD_FULL_ACCESS_MY_PROJECT
+        user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id, period_id: first[current_user.company_id]).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
 
       title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)

@@ -88,12 +88,14 @@ function warning(content) {
 
 $(document).ready(function () {
   if (location.pathname == '/') {
-    $('li.active').find("a").css('background-color', '#CFD5eA');
+    $('li.active').find("a").css('background-color', '#4472c4').css('color', '#fff');
   } else {
     $('li.active').removeClass('active');
 
     $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-    $('li.active').find("a").css('background-color', '#CFD5eA');
+    $('a[href="' + location.pathname + '"]').addClass('active');
+    $('li.active').find(".dropdown-toggle").css('background-color', '#4472c4').css('color', '#fff');
+    $('li.active').find("a.active").css('background-color', '#4472c4').css('color', '#fff');
   }
   checkPrivilege();
 });

@@ -460,7 +460,7 @@ function setup_dataTable() {
     });
 
     if (crud_user) {
-      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+      content = '<div style="float:right;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
       data-backdrop="true" data-keyboard="true" style="width:120px;background:#8da8db"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
       <button type="button" class="btn btn-light " id="btn-enable-multiple-users" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
       <button type="button" class="btn btn-light" id="btn-disable-multiple-users" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\
@@ -470,7 +470,7 @@ function setup_dataTable() {
       $(content).insertAfter(".dataTables_filter");
       $(".hidden").attr("placeholder", "Type here to search");
     } else {
-      content = '<div style="float:right; margin-bottom:10px;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
+      content = '<div style="float:right;"> <button type="button" class="btn btn-light" title="Add a New User" data-toggle="modal" data-target="#modalAdd" \
       data-backdrop="true" data-keyboard="true" style="width:120px;background:#dcdcdc"><i class="fas fa-user-plus" style="margin:0px 10px 0px 0px;"></i>Add</button> \
       <button type="button" class="btn btn-light " id="btn-enable-multiple-users" title="Enable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-on" style="margin:0px 10px 0px 0px;"></i>Enable</button>\
       <button type="button" class="btn btn-light" id="btn-disable-multiple-users" title="Disable User" style="width:120px;background:#dcdcdc"><i class="fas fa-toggle-off" style="margin:0px 10px 0px 0px;padding:0px 0px 0px 0px"></i>Disable</button>\

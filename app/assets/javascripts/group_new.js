@@ -142,8 +142,8 @@ function addBtnAdd() {
   var btn_add_delete = '';
   if (full_access)
     btn_add_delete = `<div class="btn-group">
-          <button class="btn btn-light" data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:90px;background:#8da8db">
-            <i border="0" style="float:left;margin-top:4px;color:#b5e840;font-size:20px" class="fa fa-plus"></i>Add
+          <button class="btn btn-light" data-toggle="modal" data-target="#modalAdd" title="Add Group"style="width:110px;background:none;border:0;">
+            <i border="0" style="float:left;margin-top:4px;color:#b5e840;font-size:15px; padding-right:2px" class="fa fa-plus"></i><i border="0" style="float:left;margin-top:2px;color:#b5e840;font-size:20px" class="fa fa-group"></i>Add
           </button>
         </div>`;
   else

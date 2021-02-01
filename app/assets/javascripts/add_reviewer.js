@@ -23,6 +23,8 @@ $(document).on("click", ".add-reviewer-icon[data-toggle=modal]", function () {
         setupDataTable('#table_add_reviewer');
       current_reviewers.forEach(function (id) {
         $('.checkbox-reviewer.checkbox-' + id).click();
+        $(this).removeClass('check-checkbox-reviewer');
+        reviewers.add(id);
       })
     }
   });
@@ -145,7 +147,7 @@ $(document).on('click', '#save_add_reviewer', function () {
     user_id: $(this).data("user_id"),
     user_account: $(this).data("user_account"),
     reviewer_remove_ids: _.difference([...current_reviewers], [...reviewers]),
-    add_reviewer_ids: _.difference([...reviewers], [...current_reviewers]),
+    add_reviewer_ids: [...reviewers],
     remove_ids: _.difference([...current_reviewers], [...reviewers]),
     add_reviewer: true,
   }

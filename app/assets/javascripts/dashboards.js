@@ -4,9 +4,83 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-var arrColor = ["#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff",
-  "#e34856", "#8a103d", "#255381", "#8077b6", "#0193cf", "#49176e", "#273691", "#0596d7"
+var arrColor = [
+  "#D78D04", "rgb(255 215 45)", "#FFFC00", "#CCD704", "#A6D704", "#7FD704", "rgb(19 103 0)", 
+  "rgb(8 173 41)", "rgb(4 215 171)", "rgb(1 255 249)", "#04ADD7", "#0478D7", "#0439D7", "#3C04D7", 
+  "#8D04D7", "#BB04D7", "#D704C2", "#D70486", "#D70435", "#D73C04", "#D71904",
 ];
+
+var arrColor2 = [
+  "#5ddd92", "#e3c334", "#4ca8e0", "#628fe2", "#4cb9ab", "#73a2b9", "#028090", "#00f5ff", "#e34856", 
+  "#8a103d", "#255381", "#8077b6", "#0193cf", "#49176e", "#273691", "rgb(163 255 0)", "rgb(234 0 255)", 
+  "rgb(0 255 49)", "rgb(0 49 255)", "rgb(255 208 0)", "#0596d7"
+];
+
+// [
+  // "#C50023"
+  // ,"#DF0029"
+  // ,"#E54646"
+  // ,"#EE7C6B"
+  // ,"#F5A89A"
+  // ,"#FCDAD5"
+
+  // "#B6292B"
+  // ,"#C82E31"
+  // ,"#E33539"
+  // ,"#EB7153"
+  // ,"#F19373"
+  // ,"#F6B297"
+
+  // "#945305"
+  // ,"#BD6B09"
+  // ,"#D0770B"
+  // ,"#EC870E"
+  // ,"#F09C42"
+  // ,"#F5B16D"
+
+  // "#007F54"
+  // ,"#008C5E"
+  // ,"#00A06B"
+  // ,"#00AE72"
+  // ,"#67BF7F"
+  // ,"#98D0B9"
+
+
+  // 	"#00FF00"
+  // ,	"#00EE00"
+  // ,	"#00CD00"
+  // ,	"#008B00"
+  // ,	"#006400"
+
+//  "#CCFFCC"
+//  ,"#99FFCC"
+//  ,"#66FFCC"
+//  ,"#33FFCC"
+//  ,"#00FFCC"
+
+// "#CCFFFF"
+// ,"#99FFFF"
+// ,"#66FFFF"
+// ,"#33FFFF"
+// ,"#00FFFF"
+
+  //  "#9900FF"
+  // ,"#9933FF"
+  // ,"#9966FF"
+  // ,"#9999FF"
+  // ,"#99CCFF"
+  // ,"#99FFFF"
+
+//    "#0000FF"
+//  , "#0033FF"
+//  , "#0066FF"
+//  , "#0099FF"
+//  , "#00CCFF"
+//  , "#00FFFF"
+
+//   "#D78D04","#F5E356","rgb(42 174 40)","rgb(77 252 249)","rgb(45 120 214)","#3D85BD","#a260e4"
+// ];
+
 
 function drawChartGender(data_filter) {
   $.ajax({
@@ -78,8 +152,10 @@ function drawChartCareer() {
       if (response.data == "fails" || response.data.length <= 1) {
         $("#my_career ").html('');
         $("#my_career").css('height', 'auto');
-      } else
-        drawLineChart(response.data, response.has_cdp, "#chart_my_career");
+      } else{
+        $("#my_career").css('height', 550 );
+        drawLineChart(response.data, response.has_cdp, "#chart_my_career", response.level_mapping);
+      }
     }
   });
 }

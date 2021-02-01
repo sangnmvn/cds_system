@@ -63,8 +63,8 @@ function loadDataLevelMapping() {
         edit_button_color = '#F99D45';
         delete_button_color = '#E84415';
       } else {
-        edit_button_color = '#a9a6a6';
-        delete_button_color = '#a9a6a6';
+        edit_button_color = 'grey';
+        delete_button_color = 'grey';
         role_id = '';
       }
       for (var i = 0; i < response.length; i++) {

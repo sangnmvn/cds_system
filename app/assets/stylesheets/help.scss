@@ -12,6 +12,15 @@ ul {
 
     .left-panel {
         padding: 0;
+        
+        .card {
+            ul{
+                padding-right: 10px;
+                a {
+                   color: #4472c4
+                }
+            }
+        }
     }
 }
 
@@ -46,12 +55,12 @@ img {
     height: 100%;
     overflow-y: auto;
     padding-top: 10px;
-    background-color: #e4e4e4;
-    border: 2px solid #fff;
+    background-color: #fff;
+    border-right: 1px solid #000;
 }
 
 .right-panel {
     line-height: 35px;
     padding-top: 18px;
-    background-color: #cce1f3;
+    background-color: #E9ebf5;
 }

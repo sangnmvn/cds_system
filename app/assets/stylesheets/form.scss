@@ -1,7 +1,7 @@
 // Place all the styles related to the LevelMappings controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
-$color-disable: #afaaaa;
+$color-disable: grey;
 
 .filter-title {
     margin-left: 20px;
@@ -82,6 +82,7 @@ $color-disable: #afaaaa;
 .table-cds-assessment-manager-list {
     margin: 0 auto;
     display: table;
+    border: 2px solid #4472c4 !important;
 }
 
 .table-cds-assessment-manager-list thead tr th {
@@ -162,9 +163,11 @@ $color-disable: #afaaaa;
 }
 
 .table-cds-assessment-list {
-    border: 2px solid #0066CC;
+    border: 2px solid #4472c4 !important;
+    // border-top: 3px solid white;
 
     tr {
+        border: 0px;
         td {
             padding: 0px 10px 0px 10px;
             border: 1px solid white;
@@ -228,7 +231,8 @@ $color-disable: #afaaaa;
         border: none;
 
         &.disabled {
-            background-color: #afaaaa;
+            color: #212529;
+            opacity: 0.65;
         }
     }
 }
@@ -241,13 +245,13 @@ $color-disable: #afaaaa;
 .icon {
     width: 13px;
     height: 13px;
-    font-size: 19px;
+    font-size: 22px;
 }
 
-.icon-export-cds-review {
-    margin-top: 8px;
-    margin-left: 9px;
-}
+// .icon-export-cds-review {
+//     margin-top: 8px;
+//     margin-left: 9px;
+// }
 
 // form cds assessment
 #body-row {
@@ -329,7 +333,7 @@ $color-disable: #afaaaa;
 }
 
 .container-fluid {
-    padding: 2px;
+    padding: 0px;
 }
 
 .left_panel .table-mytable td {
@@ -378,7 +382,7 @@ $color-disable: #afaaaa;
 //search
 .search-assessment {
     height: 30px;
-    width: 25%;
+    width: 200px;
 }
 
 // action
@@ -478,9 +482,9 @@ $color-disable: #afaaaa;
     color: red !important;
 }
 
-.icon {
-    font-size: 25px;
-}
+// .icon {
+//     font-size: 25px;
+// }
 
 .icon-list {
     font-size: 100%;

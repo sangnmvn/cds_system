@@ -321,7 +321,7 @@ function checkPrivileges_step1() {
     })
     $('#add_template_button').remove()
     $('.delete_icon').removeAttr("data-target");
-    $('.delete_icon i').css("color", "#a9a6a6");
+    $('.delete_icon i').css("color", "grey");
     $('#step1 #template').prop("disabled", true)
     $('#step1 #role').prop("disabled", true)
     $('#step1 #description').prop("disabled", true)

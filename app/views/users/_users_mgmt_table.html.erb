@@ -2,20 +2,20 @@
   <thead>
     <% even_odd_classname = cycle("odd", "even") %>
     <tr class="<%= even_odd_classname %>">
-      <th style="background-image:none">
+      <th style="width:5px;padding-left:6px;padding-right:6px;background-image:none">
         <div class="resource-selection-toggle-cell">
-          <label>
+          <label style="margin:2px;">
             <input type="checkbox" id="collection_selection_toggle_all" name="collection_selection_toggle_all" class="toggle-all">
           </label>
         </div>
       </th>
-      <th scope="col" class="id" class="number" style="width:10px;text-align:center">No.</th>
+      <th scope="col" class="id" class="number" style="width:5px;padding-left:6px;padding-right:6px;text-align:center">No.</th>
       <th scope="col" class="first_name" style="text-align:center">Full Name</th>
       <th scope="col" class="email" style="text-align:center">Email</th>
       <th scope="col" class="account"style="text-align:center">Account</th>
       <th scope="col" class="role" style="text-align:center">Role</th>
       <th scope="col" class="title"style="text-align:center">Title</th>
-      <th scope="col" class="project"style="text-align:center">Project</th>
+      <th scope="col" class="project"style="text-align:center;width:40px;">Project</th>
       <th scope="col" class="company"style="text-align:center">Company</th>
       <th scope="col" class="action" style="background-image:none;text-align:center">Action</th>
     </tr>

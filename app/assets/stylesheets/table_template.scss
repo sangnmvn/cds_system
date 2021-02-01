@@ -15,11 +15,11 @@
         font-size: large;
         font-weight: bold;
         background-color: #3A5FCD;
-        border: 2px solid #0066CC;
+        border: 2px solid #4472c4;
     }
 
     table {
-        border: 2px solid #0066CC;
+        border: 2px solid #4472c4;
     }
 
     th,
@@ -150,15 +150,13 @@ a.disabled {
     align-items: center;
     background-color: #8da8db;
     color: #fff;
-    font-weight: bold;
     padding-left: 10px;
-    border: 3px solid #4882bf;
 }
 
 .title {
     display: inline-block;
-    font-weight: bold;
     font-size: 150%;
+    padding-left: 5px !important;
 }
 
 input.empty {

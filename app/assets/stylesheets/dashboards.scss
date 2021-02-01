@@ -54,7 +54,11 @@ $odd-color: #CFD5EA;
     background-color: #dae7ff;
     display: flex;
     flex-wrap: wrap;
-    height: 750px;
+    height: 100%;
+
+    #chart_role, #chart_gender, #chart_title, #chart_seniority{
+        height: 375px;
+    }
 }
 
 .row2 {
@@ -89,11 +93,13 @@ rect {
     text-align: center;
     font-size: 30px;
     font-weight: bold;
-    width: calc(100vw - 150px)
+    width: 100%;
+    color: #fff;
 }
 
 .header-panel {
     display: flex;
+    background-color: #8da9db;
 }
 
 .btn-filter-dashboard {

@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-function drawLineChart(data, has_cdp, id) {
+function drawLineChart(data, has_cdp, id, level_mapping) {
   var margin = { top: 20, right: 20, bottom: 100, left: 50 },
     width = $(id).width() - margin.left - margin.right,
     height = $(id).height() - margin.top - margin.bottom;
@@ -62,8 +62,7 @@ function drawLineChart(data, has_cdp, id) {
     return d3.max(c.values, function (v) {
       return v.rank;
     });
-  })
-
+  }) + 1
   y.domain([0, max]);
 
   function getDashArray(data, dashedRanges, path) {
@@ -149,22 +148,58 @@ function drawLineChart(data, has_cdp, id) {
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-  // svg.select('.x.axis')
-  // .selectAll('text')
-  // .attr('transform', 'translate(0,10)')
-  // .attr('font-size', '1.5rem');
 
   svg.append("g")
-    .attr("class", "y axis")
+    .attr("class", "y axis temp")
     .call(yAxis.ticks(max))
-    .append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", ".71em")
-    .style("text-anchor", "end")
+    // .attr("transform", "translate(800,0)")
+
+  svg.selectAll(".y.axis.temp .tick").each(function(d,i) {
+    if( i==0 || i == 1 ) return;
+    i -=1
+    level = level_mapping[i]
+
+    var y2 = d3.scaleLinear()
+               .range([height/(max) , (height/(max))/level+1]);
+    y2.domain([1, level])
+    var yAxis2 = d3.axisLeft(y2)
+
+    d3.select(this).append("g")
+      .attr("class", "child")
+      .call(yAxis2.ticks(level).tickFormat((data)=>{if(!Number.isInteger(data))return;
+      return data;}))
+
+    d3.select(this).attr("class", "child").selectAll(".tick text").attr("transform", "translate(40,0)")
+    d3.select(this).attr("class", "child").selectAll(".tick line").attr("transform", "translate(7,0)")
+    d3.select(this).attr("class", "child").selectAll("path").remove()
+
+    d3.select(this).attr("class", "child").selectAll(".tick").each(function(k,j) {
+      if(d3.select(this).select(".tick text").text() == "")
+        d3.select(this).remove()
+    }); 
+    d3.select(this).attr("class", "child").selectAll(".tick").each(function(k,j) {
+      d3.select(this)
+      .selectAll(".tick text").text(i + "." + (j+1))
+    }); 
+  }); 
+
   var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
+
+  var roles = color.domain().map(function (name) {
+    return {
+      name: name,
+      values: data.map(function (d) {
+        return {
+          period: d.period,
+          rank: +(d[name].rank + ( (d[name].level-1) / level_mapping[d[name].rank] )) || -0.1,
+          level: +d[name].level,
+          title: d[name].title
+        };
+      })
+    };
+  });
   var role = svg.selectAll(".role")
     .data(roles)
     .enter().append("g")
@@ -174,6 +209,10 @@ function drawLineChart(data, has_cdp, id) {
     .attr("class", "line")
     .attr("d", function (dx) {
       return line(dx.values.filter(function (d) {
+        if(parseFloat(d.rank) < 0) {
+          d3.select(this).remove()
+          return;
+        }
         return d.rank != 0;
       }));
     })
@@ -202,7 +241,11 @@ function drawLineChart(data, has_cdp, id) {
       return x(d.period) + x.bandwidth() / 2;
     })
     .attr("cy", function (d) {
-      return y(d.rank)
+      if(y(d.rank) >= height) {
+        d3.select(this).remove()
+        return ;
+      }
+      return y(d.rank) || height
     })
     .attr("r", 5)
     .style("fill", function (d) {
@@ -215,7 +258,7 @@ function drawLineChart(data, has_cdp, id) {
         .style("opacity", 0.9);
       div.html(`
         <span>Title: ${d.title}</span></br>
-        <span>Rank: ${d.rank}</span></br>
+        <span>Rank: ${(d.rank - ( (d.level-1) / level_mapping[d.rank] ) || parseInt(d.rank) || 0)}</span></br>
         <span>Level: ${d.level}</span></br>
       `)
         .style("left", (d3.event.pageX + 10) + "px")

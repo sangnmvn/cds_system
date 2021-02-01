@@ -9,9 +9,9 @@
   <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
   <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" style="padding: 0;">
   <div class="template-header">
-    <div class="row">
+    <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
       <span class="title col-sm-3">Template List</span>
       <div class="add-template title col-sm-9">
         <%= link_to new_template_path, title: "Add a Template", id: "add_template_button" do %>
@@ -25,13 +25,13 @@
       <thead>
         <tr >
           <th scope="col" style="width:3%">No.</th>
-          <th scope="col" style="width:20%">Template Name</th>
-          <th scope="col" style="width:27%">Description</th>
+          <th scope="col" style="width:15%">Template Name</th>
+          <th scope="col" style="width:39%">Description</th>
           <th scope="col" style="width:12%">Role</th>
-          <th scope="col" style="width:10%" >Latest Update</th>
-          <th scope="col" style="width:10%">Updated by</th>
-          <th scope="col" style="width:8%">Status</th>
-          <th scope="col" style="width:10%;">Action</th>
+          <th scope="col" style="width:8%">Latest Update</th>
+          <th scope="col" style="width:8%">Updated by</th>
+          <th scope="col" style="width:5%">Status</th>
+          <th scope="col" style="width:8%;">Action</th>
         </tr>
       </thead>
       <tbody>

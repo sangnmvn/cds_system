@@ -89,7 +89,6 @@
     color: blue;
 }
 
-
 .competency-value > option
 {
     text-align: right;
@@ -99,8 +98,7 @@ a.disabled {
     pointer-events: none;
     cursor: default;
 }
-
-      
+   
 .dynamic-title-header-col
 {
     background-color: #FFFF00;
@@ -112,6 +110,7 @@ a.disabled {
 {
     min-width: 90px;
 }
+
 .table-cds-assessment-manager-list {
     margin: 0 auto;
 }
@@ -123,10 +122,15 @@ table tr td {
     padding: 0px 10px 0px 10px;    
 }
 
+#edit_title_mapping_table {
+    border: 0;
+}
+
 #edit_title_mapping_table > * > tr:nth-child(2n+1)
 {
     background-color: #CFD5EA;
 }
+
 .table-level-mapping_list tbody tr td:nth-child(1) {
     text-align: right;    
     width: 50px;
@@ -163,7 +167,7 @@ table tr td {
 }
 
 .button-level-mapping button {
-    font-size: 90%;
+    font-size: 120%;
     background-color: #8da8db;
     border: none;
 }

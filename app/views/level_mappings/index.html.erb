@@ -2,18 +2,18 @@
 <%= javascript_include_tag 'level_mappings_list.js', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
 <input class="d-none" id="can_view_level_mapping" value=<%= can_view? %>>
-<div class="container-fluid">
+<div class="container-fluid" style="padding: 0;">
   <div class="row">
     <div class="alert-message">
       <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
       <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
     </div>
   </div>
-  <div class="row" style="background-color: #8da8db; height: 60px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
-    <div class="col-10" style="font-size: 150%;">
+  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0px 0px 0px 0px; color: white; font-weight">
+    <div class="col-10" style="font-size: 150%;height: inherit;">
       Level Mapping List
     </div>
-    <div class="col-2 button-level-mapping" style="text-align: right">
+    <div class="col-2 button-level-mapping" style="text-align: right;height: inherit;">
       <%= link_to 'javascript:void(0)' do %>
         <button id="add_new_level_mapping" data-toggle="modal" data-target="#addModal" ><%= image_tag("Add.png") %> Add</button>
       <% end %>
@@ -22,12 +22,12 @@
       <table class="table table-primary table-responsive-sm table-mytable border-table table-level-mapping_list" id="level_mapping_list">
         <thead>
           <tr>
-            <td>No.</td>
-            <td>Role</td>
-            <td>No. Rank</td>
-            <td>Latest Update</td>
-            <td>Updated by</td>
-            <td>Action</td>
+            <td scope="col" style="width:3%">No.</td>
+            <td scope="col" style="width:42%">Role</td>
+            <td scope="col" style="width:10%">No. Rank</td>
+            <td scope="col" style="width:10%">Latest Update</td>
+            <td scope="col" style="width:25%">Updated by</td>
+            <td scope="col" style="width:10%">Action</td>
           </tr>
         </thead>
         <tbody>

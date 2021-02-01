@@ -17,10 +17,13 @@
   .background-header{
     background-color: #8da8db;
   }
-  height: 30%;
+  height: 40px;
   line-height: 40px;
   margin: 0px 0px 0px 0px;
   color: white;
+  .col-2, .col-10 {
+    height: inherit;
+  }
 }
 
 .cdp-slot-wrapper {
@@ -181,4 +184,8 @@
 
 .description-slot {
   width: inherit;
+}
+
+th {
+  border-bottom: 1px solid #fff !important;
 }

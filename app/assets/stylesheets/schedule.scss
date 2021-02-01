@@ -12,12 +12,12 @@
 }
 
 #schedule_table td {
-  border: 2px solid white;
+  border: 1px solid white;
 }
 
 #schedule_table {
-  width: 100%;
-  border: 3px solid #4882bf;
+  width: 100% !important;
+  border: 2px solid #4882bf;
 }
 
 #schedule_table thead {
@@ -40,6 +40,10 @@
 
 #schedule_table tbody tr:nth-of-type(even) {
   background-color: #E9EBF5;
+}
+
+#schedule_table tbody tr td:nth-last-child(1){
+  text-align: center;
 }
 
 .error {
@@ -160,4 +164,30 @@
   100% {
     -webkit-transform: rotate(360deg);
   }
+}
+
+#schedule_table_wrapper {
+  top: 101px;
+  position: absolute;
+  width: 100%;
+}
+
+#schedule_table_filter {
+  position: absolute;
+  right: 180px;
+  top: 12px;
+
+  input[type=search] {
+    border: 0;
+  }
+
+  label {
+    color:#fff;
+  }
+}
+
+.title {
+  display: inline-block;
+  font-size: 150%;
+  padding-left: 15px !important;
 }

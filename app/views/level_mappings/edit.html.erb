@@ -2,7 +2,7 @@
 <%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
 <input class="d-none" id="role_name" value=<%= @role.name %>>
-<div class="container-fluid">
+<div class="container-fluid" style="padding:0;">
   <div class="row row-header">
     <div class="col-12 " style="font-size: 150%;">
       <% if can_edit? %>

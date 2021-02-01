@@ -78,6 +78,7 @@ $(document).ready(function () {
           tpl += `<option value="${res[i][1]}">${res[i][0]}</option>`
         }
         $("#company").html(tpl);
+        $("#status").html('<option value="New">New</option><option value="In-progress">In-progress</option><option value="Done">Done</option>');
       }
     });
     $("#schedule_task").val("add");
@@ -273,6 +274,7 @@ function on_click_btn() {
       },
       success: function (result) {
         $("#modalAdd").modal("show");
+        $("#status").html('<option value="In-progress">In-progress</option><option value="Done">Done</option>');
         var user_role = $("#user_role").val();
 
         $("#schedule_task").val("edit");

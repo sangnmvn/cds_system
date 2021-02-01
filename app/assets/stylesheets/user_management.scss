@@ -4,6 +4,16 @@
 
 #table_user_management {
     border: 2px solid #4882bf;
+    width: 100% !important;
+    td {
+        vertical-align: middle;
+        p {
+            margin: 0;
+        }
+    }
+    tbody tr {
+        height: 49px;
+    }
 }
 
 table.dataTable {
@@ -116,8 +126,34 @@ table.dataTable tbody td {
 }
 
 #table_user_management_wrapper {
+    position: absolute;
+    top: -36px;
+    width: 100%;
+    button {
+        background: none !important;
+        border: 0;
+        padding-left: 0;
+        padding-right: 0;
+        width: 80px;
+        
+    }
+
     .action_icon {
         text-decoration: none;
+    }
+}
+
+#table_user_management_filter {
+    position: absolute;
+    right: 502px;
+    top: 3px;
+  
+      input[type=search] {
+        border: 0;
+      }
+  
+      label {
+        color:#fff;
     }
 }
 
@@ -214,14 +250,15 @@ tr {
     font-size: 18px;
     color: #fff;
     text-align: center;
-    margin-top: 0px;
+    margin-bottom: 15px;
     background-color: #4472c4;
+    padding: 6px;
 }
 
 .filter-page-user {
     padding: 10px;
-    border: 1px solid #a9a6a6;
-    ;
+    border: 1px solid grey;
+    border-top: 1px solid #fff;
 }
 
 .btn-light,
@@ -321,3 +358,4 @@ table.dataTable tbody td {
         width: 10%;
     }
 }
+

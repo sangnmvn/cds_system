@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       post :data_filter_projects
       post :data_filter_users
       post :get_is_requested
+      post :get_period_table_header
     end
   end
   resources :templates do

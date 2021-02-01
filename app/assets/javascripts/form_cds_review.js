@@ -17,7 +17,7 @@ function loadDataAssessment(data_filter) {
     dataType: "json",
     success: function (response) {
       if (response.length == 0) {
-        temp = '<tr><td colspan="16" class="type-icon">No data available in this table</td></tr>'
+        temp = '<tr><td colspan="17" class="type-icon">No data available in this table</td></tr>'
         $('.paginate_button').addClass('disabled')
       }
       for (var i = 0; i < response.length; i++) {
@@ -107,9 +107,10 @@ function loadDataAssessment(data_filter) {
             });
         }).draw();
       }
+      resetExportIconColor();
     },
     error: function () {
-      $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="16" class="type-icon">No data available in this table</td></tr>');
+      $(".table-cds-assessment-manager-list tbody").html('<tr><td colspan="17" class="type-icon">No data available in this table</td></tr>');
     }
   })
   $.fn.dataTable.ext.errMode = 'none';
@@ -341,7 +342,8 @@ function loadUserFilter() {
       company_id: company_id,
       project_id: project_id,
       user_id: user_id,
-      role_id: role_id
+      role_id: role_id,
+      period: $('#period_filter').val(),
     },
     type: "POST",
     headers: {

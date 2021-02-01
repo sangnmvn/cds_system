@@ -7,7 +7,7 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-$color-disable: #afaaaa;
+$color-disable: grey;
 
 @import "bootstrap-datepicker";
 
@@ -173,13 +173,18 @@ $color-disable: #afaaaa;
 
 .dropdown-item:hover {
     color: #fff;
-    background-color: #4472c4;
+    background-color: #8da9db;
 }
 
 .navbar-light .navbar-nav .nav-link {
-    background-color: #4472c4;
-    color: #fff;
+    background-color: #fff;
+    color: #1e4b99;
     margin-right: 10px;
+    font-weight: bold;
+}
+
+#navbar_menu {
+    padding: 0 1rem;
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
@@ -241,7 +246,7 @@ h2,
 }
 
 .navbar-expand-lg .navbar-nav {
-    padding-left: 10%;
+    padding-left: 11%;
 }
 
 .fa-trash {
@@ -259,7 +264,7 @@ h2,
 }
 
 .border-table {
-    border: 0.13em solid #0066CC;
+    border: 0.13em solid #4472c4;
 }
 
 .type-text {
@@ -267,12 +272,13 @@ h2,
 }
 
 .header-breadcrumb {
-    background-color: #DDDDDD;
-    color: white !important;
-    padding-left: 2%;
+    padding-left: 18px;
     height: 40px;
     padding-top: 10px;
-    ;
+    background-color: #fff;
+}
+.bg-light{
+    background-color: #fff !important;
 }
 
 .header {
@@ -340,4 +346,9 @@ h2,
 .btn-show-hide-slot:hover {
     background-color:#4472c4 !important;
     color: white;
+}
+
+.modal-header .close {
+    padding: 0.8rem 0.8rem !important;
+    margin: -0.5rem -0.5rem -1rem auto !important;
 }

@@ -1,4 +1,5 @@
-$color-disable: #afaaaa;
+$color-disable: grey;
+$color-background: #afaaaa;
 
 .table-review-result {
     border: 3px solid #42719a;
@@ -166,7 +167,8 @@ $color-disable: #afaaaa;
 
         &.column-1 {
             left: 0;
-            background-color: $color-disable;
+            background-color: $color-background;
+            min-width: 350px;
         }
 
         &.column-2 {
@@ -181,10 +183,9 @@ $color-disable: #afaaaa;
     td {
         padding: 10px;
         text-align: center;
-        border-bottom: 1px solid #42719a;
-        border-left: 1px solid #42719a;
+        border:  1px solid #42719a !important;
         vertical-align: middle;
-        background-color: $color-disable;
+        background-color: $color-background;
 
         &.fixed-column {
             position: sticky;
@@ -247,4 +248,18 @@ $color-disable: #afaaaa;
 
 .pass-slot {
     color: blue;
+}
+
+#cdp_container_div2 div a {
+    color: #fff;
+    padding-left: 10px;
+}
+
+.container-fluid{
+    padding-right: 0;
+}
+
+.divButton {
+    padding-top: 25px;
+    text-align: center;
 }

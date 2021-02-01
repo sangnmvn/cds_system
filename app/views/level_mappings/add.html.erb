@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'table_level_mapping', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= stylesheet_link_tag 'level_mappings', media: 'all', 'data-turbolinks-track': 'reload' %>
 <input class="d-none" id="can_edit_level_mapping" value=<%= can_edit? %>>
-<div class="container-fluid">
+<div class="container-fluid" style="padding:0;">
   <div class="row row-header">
     <div class="col-12" style="font-size: 150%;">
       New Level Mapping for Role <%= @role.name %>

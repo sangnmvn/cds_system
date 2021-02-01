@@ -1,4 +1,4 @@
-<button type="button" id="add_schedule_button" class="btn btn-light float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin: 5px;background:#8da8db"><%= image_tag("Add.png") %> Add</button>
+<button type="button" id="add_schedule_button" class="btn btn-light float-right" data-tooltip="true" data-placement="top" title="Add a new schedule" data-toggle="modal" data-target="#modalAdd" style="margin-top: 8px;background:none;border:0"><%= image_tag("Add.png") %> Add</button>
 <div class="modal fade modal-form-add" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -145,6 +145,7 @@
                   </div>
                   <div class="col-sm-8" >
                     <select type="text" class="form-control" id="status" disabled>
+                      <option value="New">New</option>
                       <option value="In-progress">In-progress</option>
                       <option value="Done">Done</option>
                     </select>

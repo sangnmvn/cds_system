@@ -16,6 +16,11 @@
     </div>
   </div>
 </div>
+<div class="template-header">
+  <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0; color: white; font-weight">
+    <span class="title col-sm-12">Schedule Management</span>
+  </div>
+</div>
 <div class="lmask">
 </div>
 <!-- end modal -->
@@ -25,9 +30,9 @@
       <th class="sorting_disabled" style="width:1%;"><input type="checkbox"  id="selectAll"></th>
       <% @fields.each do |field| %>
         <% if field == "No." %>
-          <th style="width:1%;text-align:right"><%= field %></th>
+          <th style="width:3%;text-align:right"><%= field %></th>
         <% elsif field == "Action" %>
-          <th style="width:4%;"><%= field %></th>
+          <th style="width:8%;"><%= field %></th>
         <% else %>
           <th><%= field %></th>
         <% end %>

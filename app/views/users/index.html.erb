@@ -9,10 +9,15 @@
   var crud_user = <%= @crud_user %>;
 </script>
 <% breadcrumb :users %>
-<div class="container-fluid" style="margin-bottom: 40px;">
-  <div class="container-fluid">
+<div class="container-fluid" style="margin-bottom: 40px;padding:0;">
+  <div class="container-fluid" style="padding:0;">
     <!-- Control the column width, and how they should appear on different devices -->
-    <div class="row">
+    <div class="template-header">
+      <div class="row" style="background-color: #8da8db; height: 40px; line-height: 40px; margin: 0; color: white; font-weight">
+        <span class="title col-sm-12" style="display: inline-block; font-size: 150%; padding-left: 15px !important;">User Management</span>
+      </div>
+    </div>
+    <div class="row" style="width:100%">
       <div class="col-sm-2" style="padding-right:0px;margin-right:0px">
         <%= render('new_user', companies: @companies, projects: @projects, roles: @roles) if @crud_user %>
         <%= render 'filter' %>

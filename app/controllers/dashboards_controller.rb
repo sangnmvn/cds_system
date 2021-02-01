@@ -48,6 +48,10 @@ class DashboardsController < ApplicationController
       else
         projects = Project.select("projects.name as name", :id).where(company_id: params[:company_id])
       end
+    elsif @privilege_array.include?(MY_COMPANY)
+      projects = Project.select("projects.name as name", :id).where(company_id: current_user.company_id)
+    elsif @privilege_array.include?(MY_PROJECT)
+      projects = Project.select("projects.name as name", :id).where(id: ProjectMember.includes(:project).where(user_id: current_user.id).pluck(:project_id).uniq)
     end
     render json: { projects: projects || [] }
   end

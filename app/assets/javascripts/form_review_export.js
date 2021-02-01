@@ -6,6 +6,26 @@ function resetExportIconColor() {
     $("#export_excel_cds_review i").prop("style", "color: #404040; opacity: 0.5;");
     $("#export_pdf_cds_review i").prop("style", "color: #404040; opacity: 0.5;");
   }
+  changePeriodTableHeader()
+}
+
+function changePeriodTableHeader() {
+  $.ajax({
+    type: "POST",
+    url: "/forms/get_period_table_header",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      company_ids:  $('#company_filter').val(),
+      period_ids: $('#period_filter').val(),
+    },
+    dataType: "json",
+    success: function (response) {
+      $('.table_header_period_prev').text("Period " + response.period_prev)
+      $('.table_header_period').text("Period " + response.period)
+    }
+  });
 }
 
 function checkPeriodFilter() {
