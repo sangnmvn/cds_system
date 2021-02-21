@@ -60,6 +60,9 @@ Rails.application.routes.draw do
       get :get_list_cds_assessment
       post :get_list_cds_assessment_manager
       get :preview_result
+      get :suggest_cds_cdp
+      get :get_data_suggest
+      get :get_suggest_level
       get :get_summary_comment
       get :check_status_form
       post :save_summary_comment

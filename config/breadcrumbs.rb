@@ -47,6 +47,16 @@ crumb :view_result_assessment do |form_id|
   end
 end
 
+crumb :view_suggest_cds_cdp do |form_id|
+  user_id = Form.find_by_id(form_id)&.user_id
+  link "View Suggest CDS/CDP", "/forms/suggest_cds_cdp?form_id=#{form_id}"
+  if user_id == current_user.id
+    parent :new_cdp
+  else
+    parent :cds_cdp_review, form_id, user_id
+  end
+end
+
 crumb :cds_cdp_review do |form_id, user_id|
   link "CDS & CDP Review Details", "/forms/cds_cdp_review?form_id=#{form_id}&user_id=#{user_id}"
   parent :cds_review, :root

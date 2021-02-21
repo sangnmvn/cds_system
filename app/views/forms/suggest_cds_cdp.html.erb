@@ -1,0 +1,52 @@
+<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'suggest_cds_cdp', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= stylesheet_link_tag 'preview_result', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag "cdp_event", 'data-turbolinks-track': "reload" %>
+<% breadcrumb :view_suggest_cds_cdp, @form_id %>
+<% if @form_id.nil? %>
+  <%= render 'no_data_view_result'%>
+<% else %>
+  <div class="container-fluid" style="padding:0">
+    <div id="cdp_container_div2"  style="display: inline-block; width: 100%;">
+      <div style="font-size: 150%; display: inline-block; float: left; padding-left: 15px">
+        <%= @title %>
+      </div>
+    </div> 
+    <div style="display: inline-block; width: 100%;">
+       <div style="font-size: 150%; display: inline-block; float: left; padding-left: 15px">
+        What title / rank / level do you want in the next period?
+      </div>
+      <div style="display: inline-block; float: right; padding-right: 15px">
+        Title:
+        <%= select_tag "suggest_name", options_from_collection_for_select(@hash[:name], "id", "name", "1"), { :class => 'form-control-suggest' } %>
+        Rank:
+        <%= select_tag "suggest_rank", options_from_collection_for_select(@hash[:name], "id", "rank", "1"), { :class => 'form-control-suggest' } %>
+        Level:
+        <select id="suggest_level" class='form-control-suggest'></select>
+        <button id="btn_find_suggest" class='form-control-suggest' style="background-color: green; color: #fff; padding: 5px 25px;">Suggest</button>
+      </div>
+    </div> 
+    <div class="container-fluid illustration">
+        <div class="row" style="margin-right: 0px;">
+          <div class="col-12" style="padding-right: 0px">
+            <%= render 'form_suggest_cds_cdp'%>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="alert-message">
+    <div id="alert-warning" class="alert alert-warning" data-alert="alert"><span id="content-alert-warning"></span></div>
+    <div id="alert-danger" class="alert alert-danger" data-alert="alert"><span id="content-alert-fail"></span></div>
+  </div>
+  <script>
+    var form_id = <%= @form_id %>;
+    // var status = "<%= @hash[:status].to_s %>";
+    // var is_reviewer = <%= @hash[:is_reviewer] %>;
+    // var is_submit = <%= @hash[:is_submit] %>;
+    // var is_approver = <%= @hash[:is_approver] %>;
+    // var user_current = <%= current_user.id %>;
+    // var user_to_be_reviewed = <%= @hash[:user_id] %>;
+    // var user_name = "<%= @hash[:user_name] %>"
+  </script>
+  <%= javascript_include_tag 'suggest_cds_cdp', 'data-turbolinks-track': 'reload' %>
+<% end %>

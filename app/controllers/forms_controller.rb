@@ -318,6 +318,32 @@ class FormsController < ApplicationController
     }
   end
 
+  def suggest_cds_cdp
+    return if params[:form_id].nil?
+    form = Form.includes(:title).find_by_id(params[:form_id])
+
+    @form_id = form.id
+    @competencies = Competency.where(template_id: form.template_id).select(:name, :id)
+    @result = @form_service.preview_result(form)
+    user = User.includes(:role).find_by_id(form.user_id)
+    return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: user.id, approver_id: current_user.id, period_id: form.period_id).blank? && user.id != current_user.id
+    @form_service.get_location_slot(@competencies.pluck(:id))
+    @title = "View Suggest CDS/CDP For #{user.role.name} - #{user.format_name}"
+    title = Title.where(role_id: user.role.id).where("rank >= ?", form.rank).order(:rank)
+    @slots = @form_service.get_location_slot(@competencies.pluck(:id)).values.flatten.uniq.sort
+    @hash = {
+      name: title,
+    }
+  end
+
+  def get_suggest_level
+    return render json: { data: @form_service.get_suggest_level }
+  end
+  
+  def get_data_suggest
+    return render json: { data: @form_service.get_data_suggest }
+  end
+
   def data_view_result
     render json: { data: @form_service.data_view_result }
   end

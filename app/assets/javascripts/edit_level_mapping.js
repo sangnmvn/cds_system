@@ -122,7 +122,7 @@ $(document).ready(function () {
     var list_new = []
     var tr = $("#table_edit_level_mapping").find("tr")
     var lenght = tr.length
-    for (var i = 1; i < lenght; i++) {
+    for (var i = 2; i < lenght; i++) { // except 2 row title first exp: Title|Rank|Level|Required Competencies (*)|Action and row Quantity|Competency|Type|Rank
       var listLevelMapping = tr[i].children[3].children
       var lenghtRow = listLevelMapping.length
       for (var j = 0; j < lenghtRow; j++) {
@@ -231,14 +231,6 @@ function checkRow(row) {
   }
 }
 function checkData() {
-  // var row = $("#table_edit_level_mapping").find('.row').children()
-  // var count = row.length
-  // for (var i = 0; i < count; i++) {  
-  //   if (row[i].children[0].value == "" || row[i].children[0].value == "-1") {
-  //     changeBtnSave(false)
-  //     return
-  //   }
-  // }
   changeBtnSave(true)
 }
 
