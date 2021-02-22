@@ -737,6 +737,7 @@ $(document).on("click", ".delete-role", function () {
 });
 $(document).on("click", ".delete-title", function () {
   $("#data_confirm_title").val($(this).data("title_id"));
+  $("#data_confirm_title_is_not_used").text($(this).data("title_is_not_used"));
   $("#modal_delete_title").modal("show");
 });
 
@@ -943,7 +944,7 @@ function appendDataToTableCompany(data) {
       });
       else
       tpl += `
-            <a class="delete-company disabled" title="Delete company" data-company_id="{id}" href="javascript:;" >
+            <a class="disabled" title="Delete company" data-company_id="{id}" href="javascript:;" >
             <i class="fa fa-trash"></i>
             </a>`.formatUnicorn({
         id: user.id
@@ -1033,7 +1034,7 @@ function appendDataToTableProject(data) {
       });
     else
       tpl += `
-            <a class="delete-project disabled" title="Delete project" data-project_id="{id}" href="javascript:;" >
+            <a class="disabled" title="Delete project" data-project_id="{id}" href="javascript:;" >
             <i class="fa fa-trash"></i>
             </a>`.formatUnicorn({
         id: user.id
@@ -1109,7 +1110,7 @@ function appendDataToTableRole(data) {
       });
     else
       tpl += `
-            <a class="delete-role disabled" title="Delete role" data-role_id="{id}" href="javascript:;" >
+            <a class="disabled" title="Delete role" data-role_id="{id}" href="javascript:;" >
             <i class="fa fa-trash"></i>
             </a>`.formatUnicorn({
         id: user.id
@@ -1184,20 +1185,13 @@ function appendDataToTableTitle(data) {
              </a>`.formatUnicorn({
         id: user.id
       });
-    if (user.is_not_used)
-      tpl += `
-            <a class="delete-title" title="Delete title" data-title_id="{id}" href="javascript:;">
-            <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({
-        id: user.id
-      });
-    else
-      tpl += `
-            <a class="delete-title disabled" title="Delete title" data-title_id="{id}" href="javascript:;" >
-            <i class="fa fa-trash"></i>
-            </a>`.formatUnicorn({
-        id: user.id
-      });
+    tpl += `
+          <a class="delete-title" title="Delete title" data-title_id="{id}" data-title_is_not_used="{is_not_used}" href="javascript:;">
+          <i class="fa fa-trash"></i>
+          </a>`.formatUnicorn({
+      id: user.id,
+      is_not_used: user.is_not_used ? '' : 'The title has been removed from Title Mapping and Level Mapping automatically if you delete it.'
+    });
     tpl += `</td></tr>`;
   });
   return tpl;
