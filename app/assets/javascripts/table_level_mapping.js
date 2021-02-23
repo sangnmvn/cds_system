@@ -10,7 +10,7 @@ $(document).ready(function () {
     if (quantity == "" || type == "-1" || rank == "-1") {
       fails("Has a blank field")
     } else {
-      $(this).closest('td').append(createNewRowRequire(count_title))
+      $(this).closest('td').append(createNewRowRequire(count))
       $(this).parent().children()[1].classList.remove('invisible')
       $(this).addClass("invisible")
     }
@@ -30,7 +30,7 @@ $(document).ready(function () {
     var title = tr.children()[0].textContent
     var rank = tr.children()[1].textContent
     var level = parseInt(tr.children()[2].textContent) + 1
-    var row = createNewRowLevel(count_title)
+    var row = createNewRowLevel(count)
     var title_id = tr.data('title-id')
     $(this).addClass("invisible").removeClass("visible")
     var newRow = document.getElementById("table_level_mapping").insertRow(tr.index() + 2);
@@ -195,18 +195,18 @@ function checkRow (row)
 }
 
 function checkData() {
-  var row = $("#table_level_mapping").find('.row').children()
-  var count = row.length
-  if (max_quantity < 1) {
-    changeBtnSave(false)
-    return
-  }
-  for (var i = 0; i < count; i++) {
-    if (row[i].children[0].value == "" || row[i].children[0].value == "-1") {
-      changeBtnSave(false)
-      return
-    }
-  }
+  // var row = $("#table_level_mapping").find('.row').children()
+  // var count = row.length
+  // if (max_quantity < 1) {
+  //   changeBtnSave(false)
+  //   return
+  // }
+  // for (var i = 0; i < count; i++) {
+  //   if (row[i].children[0].value == "" || row[i].children[0].value == "-1") {
+  //     changeBtnSave(false)
+  //     return
+  //   }
+  // }
   changeBtnSave(true)
 }
 
