@@ -122,7 +122,15 @@ class OrganizationSettingsController < ApplicationController
     if title.nil?
       render json: { status: "fail" }
     else
-      return render json: { status: "success" } if Title.destroy(params[:title_id])
+      begin
+        return if !Title.destroy(params[:title_id])
+        LevelMapping.where(title_id: params[:title_id]).destroy_all
+        TitleMapping.where(title_id: params[:title_id]).destroy_all
+        return render json: { status: "success" }
+      rescue => exception
+        return render json: { status: "fail" }
+      end
+      # return render json: { status: "success" } if Title.destroy(params[:title_id])
     end
   end
 
