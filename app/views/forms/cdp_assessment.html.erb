@@ -3,7 +3,7 @@
 <%= javascript_include_tag "cdp_assessment", 'data-turbolinks-track': "reload" %>
 <link rel="stylesheet" href="https://www.jquery-az.com/boots/css/bootstrap-multiselect/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="https://www.jquery-az.com/boots/js/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-<% breadcrumb :new_cdp %>
+<% breadcrumb :new_cdp, @title_history_id %>
 <div class="container-fluid">
   <div class="row" id="cdp_container_div2" style=" display: inline-block; width: 100%;padding:0 15px">
     <div class="div-header" style="display: inline-block; float: left"><%= "CDS & CDP #{@user[:role_name]} - #{@user[:account]}" %><span id="status"><%= " (#{@hash[:status]})" %></span></div>

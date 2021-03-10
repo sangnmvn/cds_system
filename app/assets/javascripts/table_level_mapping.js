@@ -33,7 +33,7 @@ $(document).ready(function () {
     var row = createNewRowLevel(count)
     var title_id = tr.data('title-id')
     $(this).addClass("invisible").removeClass("visible")
-    var newRow = document.getElementById("table_level_mapping").insertRow(tr.index() + 2);
+    var newRow = document.getElementById("table_level_mapping").insertRow(tr.index() + 3);
     newRow.setAttribute("data-title-id", title_id)
     newRow.insertCell(0);
     newRow.cells[0].innerHTML = title;
@@ -42,6 +42,7 @@ $(document).ready(function () {
     newRow.insertCell(2);
     newRow.cells[2].innerHTML = level;
     newRow.insertCell(3);
+    newRow.cells[3].setAttribute("colspan","3")
     newRow.cells[3].innerHTML = row;
     newRow.insertCell(4);
     newRow.cells[4].innerHTML =
@@ -103,7 +104,7 @@ $(document).ready(function () {
     var tr = $("#table_level_mapping").find("tr")
     var lenght = tr.length
     var list_new = []
-    for (var i = 1; i < lenght; i++) {
+    for (var i = 2; i < lenght; i++) { // except 2 row title first exp: Title|Rank|Level|Required Competencies (*)|Action and row Quantity|Competency|Type|Rank
       var listLevelMapping = tr[i].children[3].children
       var lenghtRow = listLevelMapping.length
       for (var j = 0; j < lenghtRow; j++) {
@@ -127,7 +128,7 @@ function createNewRowRequire(count) {
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
+      <input type="number" class="form-control input-quantity" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">
@@ -146,7 +147,7 @@ function createNewRowRequire(count) {
   temp += `
       </select>
       </div>
-      <div class='col-1 divIcon'  style='padding-top:7px'>
+      <div class='col-1 divIcon'>
         <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>
@@ -158,7 +159,7 @@ function createNewRowLevel(count) {
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="` + max_quantity + `" placeholder='Quantity'>
+      <input type="number" class="form-control input-quantity" min="1" max="` + max_quantity + `" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">
@@ -177,7 +178,7 @@ function createNewRowLevel(count) {
   temp += `
       </select>
       </div>
-      <div class='col-1 divIcon' style='padding-top:7px'>
+      <div class='col-1 divIcon'>
         <a type='button' class='btnAction disabled' title='Add a required competency' id="btn_add_required"><i class='fas fa-plus-circle btnAdd'></i></a>
         <a type='button' class='btnAction invisible' title='Delete a required competency' id="btn_remove_required"><i class='fas fa-times btnDel'></i></a>
       </div>

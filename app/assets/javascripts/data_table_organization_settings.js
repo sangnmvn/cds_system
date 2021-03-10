@@ -1190,7 +1190,7 @@ function appendDataToTableTitle(data) {
           <i class="fa fa-trash"></i>
           </a>`.formatUnicorn({
       id: user.id,
-      is_not_used: user.is_not_used ? '' : 'The title has been removed from Title Mapping and Level Mapping automatically if you delete it.'
+      is_not_used: user.is_not_used ? '' : 'The title will be removed from Title Mapping and Level Mapping automatically if you delete it.'
     });
     tpl += `</td></tr>`;
   });

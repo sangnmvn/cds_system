@@ -40,7 +40,7 @@ $(document).ready(function () {
     var row = createNewRowLevel(count_title)
     var title_id = tr.data('title-id')
     $(this).addClass("invisible").removeClass("visible")
-    var newRow = document.getElementById("table_edit_level_mapping").insertRow(tr.index() + 2);
+    var newRow = document.getElementById("table_edit_level_mapping").insertRow(tr.index() + 3);
     newRow.setAttribute("data-title-id", title_id)
     newRow.insertCell(0);
     newRow.cells[0].innerHTML = title;
@@ -49,6 +49,7 @@ $(document).ready(function () {
     newRow.insertCell(2);
     newRow.cells[2].innerHTML = level;
     newRow.insertCell(3);
+    newRow.cells[3].setAttribute("colspan","3")
     newRow.cells[3].innerHTML = row;
     newRow.insertCell(4);
     newRow.cells[4].innerHTML =
@@ -165,7 +166,7 @@ function createNewRowRequire(count) {
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control input-quantity" min="1" max="10" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">
@@ -196,7 +197,7 @@ function createNewRowLevel(count) {
   var temp = "";
   temp += `<div class="row">
     <div class='col-3'>
-      <input type="number" class="form-control" min="1" max="10" placeholder='Quantity'>
+      <input type="number" class="form-control input-quantity" min="1" max="10" placeholder='Quantity'>
     </div>
     <div class='col-5'>
       <select class="form-control" id="select_type">

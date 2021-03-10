@@ -32,9 +32,14 @@ crumb :cds_review do
   parent :root
 end
 
-crumb :new_cdp do
+crumb :new_cdp do |title_history_id|
   link "CDS & CDP Assessment", "/forms/cdp_assessment"
-  parent :forms
+  user_id = TitleHistory.find_by_id(title_history_id)&.user_id
+  if user_id == current_user.id
+    parent :forms
+  else
+    parent :cds_review, :root
+  end
 end
 
 crumb :view_result_assessment do |form_id|

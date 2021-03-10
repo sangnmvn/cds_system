@@ -25,8 +25,29 @@ function loadDataAssessment(data_filter) {
         var this_element = `<tr id='period_id_{id}'> 
             <td class="type-number">{no}</td> 
             <td class="type-text">{period}</td> 
-            <td class="type-text"><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}' id='user_name'>{user_name}</a></td>
-            <td class="type-text">{project}</td>
+            `.formatUnicorn({
+              id: form.id,
+              no: i + 1,
+              period: form.period_name,
+            });
+            if (form.title_history_id) {
+              this_element += `
+              <td class="type-text"><a href='/forms/cdp_assessment?title_history_id={title_history_id}' id='user_name'>{user_name}</a></td>
+              `.formatUnicorn({
+                title_history_id: form.title_history_id,
+                user_name: form.user_name,
+              });
+            }
+            else  {
+              this_element += `
+              <td class="type-text"><a href='/forms/cds_cdp_review?form_id={id}&user_id={user_id}' id='user_name'>{user_name}</a></td>
+              `.formatUnicorn({
+                id: form.id,
+                user_id: form.user_id,
+                user_name: form.user_name,
+              });
+            }
+            this_element += `<td class="type-text">{project}</td>
             <td class="type-text">{email}</td>
             <td class="type-text">{role}</td> 
             <td class="type-text">{title}</td> 
@@ -46,6 +67,7 @@ function loadDataAssessment(data_filter) {
               &nbsp;`.formatUnicorn({
           no: i + 1,
           id: form.id,
+          title_history_id: form.title_history_id,
           email: form.email,
           user_name: form.user_name,
           project: form.project,

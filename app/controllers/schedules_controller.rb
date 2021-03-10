@@ -291,6 +291,10 @@ class SchedulesController < ApplicationController
         ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @schedule.period).edit_mailer_pm.deliver_later(wait: 1.minute)
       end
       @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
+      if temp_params[:status] == "Done"
+        schedule_pm = Schedule.where(company_id: @schedule.company_id, period_id: @schedule.period_id, _type: "PM")
+        schedule_pm.update(status: "Done")
+      end
       render json: { status: true }
     else
       render json: { status: false }

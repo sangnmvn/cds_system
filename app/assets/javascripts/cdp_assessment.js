@@ -500,7 +500,6 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        debugger
         if (response.status == "New" && is_reviewer) {
           $("#content_modal_conflict").html("The CDS/CDP of " + user_name + " has been withdraw. Therefore, you cannot do this action.")
           $('#modal_conflict').modal('show');
@@ -974,6 +973,29 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         checkHideShowSlot();
+        // init page at start
+        if (is_submit) {
+          toggleInput(false);
+        }
+        if (status == "Done") {
+          toggleInput(false);
+        }
+        $(".select-commit").each(function () {
+          is_commit = $(this).val();
+          if (is_commit == "commit_cdp") {
+            $(this).closest("tr").find(".reviewer-assessment").addClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").addClass("d-none");
+          } else if (is_commit == "commit_cds") {
+            $(this).closest("tr").find(".reviewer-assessment").removeClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").removeClass("d-none");
+          }
+        });
+        $(".cdp-slot-wrapper").each(function () {
+          if ($(this).find(".icon-flag").css("color") != "rgb(255, 255, 255)") {
+            $(this).find(".reviewer-self").removeAttr("disabled");
+            $(this).find(".approver-self").removeAttr("disabled");
+          }
+        });
         refreshCheckbox();
       }
     });
@@ -998,6 +1020,29 @@ $(document).ready(function () {
       success: function (response) {
         loadDataSlots(response);
         checkHideShowSlot();
+        // init page at start
+        if (is_submit) {
+          toggleInput(false);
+        }
+        if (status == "Done") {
+          toggleInput(false);
+        }
+        $(".select-commit").each(function () {
+          is_commit = $(this).val();
+          if (is_commit == "commit_cdp") {
+            $(this).closest("tr").find(".reviewer-assessment").addClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").addClass("d-none");
+          } else if (is_commit == "commit_cds") {
+            $(this).closest("tr").find(".reviewer-assessment").removeClass("d-none");
+            $(this).closest("tr").find(".approver-assessment").removeClass("d-none");
+          }
+        });
+        $(".cdp-slot-wrapper").each(function () {
+          if ($(this).find(".icon-flag").css("color") != "rgb(255, 255, 255)") {
+            $(this).find(".reviewer-self").removeAttr("disabled");
+            $(this).find(".approver-self").removeAttr("disabled");
+          }
+        });
         refreshCheckbox();
       }
     });

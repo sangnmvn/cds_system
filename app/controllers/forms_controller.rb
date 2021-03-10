@@ -14,7 +14,9 @@ class FormsController < ApplicationController
 
   def index_cds_cdp
     form = Form.find_by(user_id: current_user.id, is_delete: false)
-    @check_status = form.nil? || form&.status == "Done"
+    periods = Schedule.includes(:period).where(company_id: current_user.company_id, period_id: form.period_id, _type: "HR")
+                                        .where.not(status: "Done")
+    @check_status = form.nil? || (form&.status == "Done" && periods.blank?)
   end
 
   def get_list_cds_assessment_manager
@@ -93,6 +95,9 @@ class FormsController < ApplicationController
     params = form_params
     user = if params[:form_id].present?
         Form.includes(:user).find_by_id(params[:form_id])&.user
+      elsif params[:title_history_id].present?
+        @title_history_id = params[:title_history_id]
+        TitleHistory.find_by_id(params[:title_history_id])&.user
       else
         current_user
       end
@@ -173,6 +178,7 @@ class FormsController < ApplicationController
     @user_id = params[:user_id]
     return redirect_to root_path if form.nil?
     return redirect_to root_path if !(@privilege_array & [FULL_ACCESS, FULL_ACCESS_MY_COMPANY]).any? && Approver.where(user_id: params[:user_id], approver_id: current_user.id, period_id: form.period_id).blank? && params[:user_id] != current_user.id
+    @status = form.status || ""
     schedules = Schedule.includes(:period).where(company_id: current_user.company_id).where.not(status: "Done").order("periods.to_date")
     @period = schedules.map do |schedule|
       {
@@ -233,7 +239,7 @@ class FormsController < ApplicationController
     form = Form.find_by_id(params[:form_id])
     form_slot = FormSlot.includes(:comments).where(form_id: params[:form_id], slot_id: params[:slot_id], comments: {is_delete: false}).first
     is_approver = Approver.where(user_id: form.user_id, approver_id: current_user.id, period_id: form.period_id).present?
-    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot.is_passed == 1 && !form_slot.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && form_slot.comments&.first&.flag != "orange" && form_slot.comments&.first&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
+    return render json: { status: "fail_devtools" } if ((is_approver || (form_slot&.is_passed == 1 && !form_slot&.is_change) || ((form.status == "Awaiting Review" || form.status == "Awaiting Approval") && form_slot&.comments&.first&.flag != "orange" && form_slot&.comments&.first&.flag != "yellow")) || form.status == "Done" || form.user_id != current_user.id)
     data = @form_service.save_cds_staff
     return render json: { status: "success", data: data } if data.present?
     render json: { status: "fail" }
