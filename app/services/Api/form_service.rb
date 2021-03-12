@@ -1298,7 +1298,9 @@ module Api
       period_id = 0
       form = Form.find(form_slot.form_id)
       user = User.find(form.user_id)
-      is_line_new = LineManager.where(form_slot_id: form_slot.id, period_id: form.period&.id).order(updated_at: :desc).blank?
+      is_line_new = LineManager.where(form_slot_id: form_slot.id, period_id: form.period_id).order(updated_at: :desc).blank?
+      is_line_new = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).blank? if form.period_id.nil?
+        
       approver_prevs_period = Approver.includes(:period).where(user_id: form.user_id).order("periods.to_date DESC").pluck(:period_id)
       line_latest = LineManager.where(form_slot_id: form_slot.id, period_id: approver_prevs_period).pluck(:period_id).first
       approvers = Approver.where(user_id: form.user_id, period_id: line_latest).order(is_approver: :asc)
