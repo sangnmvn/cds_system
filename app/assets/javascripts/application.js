@@ -97,10 +97,10 @@ $(document).ready(function () {
     $('li.active').find(".dropdown-toggle").css('background-color', '#4472c4').css('color', '#fff');
     $('li.active').find("a.active").css('background-color', '#4472c4').css('color', '#fff');
   }
-  checkPrivilege();
+  checkPrivilegeMenuBar();
 });
 
-function checkPrivilege() {
+function checkPrivilegeMenuBar() {
   if (!privilege_array) return;
   if (!privilege_array.split(",").includes(organization)) {
     $(".privilate-organization-settings").css("display", "none");
