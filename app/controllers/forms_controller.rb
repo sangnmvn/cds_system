@@ -14,7 +14,7 @@ class FormsController < ApplicationController
 
   def index_cds_cdp
     form = Form.find_by(user_id: current_user.id, is_delete: false)
-    periods = Schedule.includes(:period).where(company_id: current_user.company_id, period_id: form.period_id, _type: "HR")
+    periods = Schedule.includes(:period).where(company_id: current_user.company_id, period_id: form&.period_id, _type: "HR")
                                         .where.not(status: "Done")
     @check_status = form.nil? || (form&.status == "Done" && periods.blank?)
   end
