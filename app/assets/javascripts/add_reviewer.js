@@ -26,6 +26,8 @@ $(document).on("click", ".add-reviewer-icon[data-toggle=modal]", function () {
         $(this).removeClass('check-checkbox-reviewer');
         reviewers.add(id);
       })
+      if(response.allow_null_reviewer == true)
+        $("#allow_null_reviewer").prop('checked', response.allow_null_reviewer);
     }
   });
 })
@@ -150,6 +152,7 @@ $(document).on('click', '#save_add_reviewer', function () {
     add_reviewer_ids: [...reviewers],
     remove_ids: _.difference([...current_reviewers], [...reviewers]),
     add_reviewer: true,
+    allow_null_reviewer: $("#allow_null_reviewer").is(":checked")
   }
   ajaxAddReviewerApprover(params, '#save_add_reviewer')
 });
@@ -179,7 +182,8 @@ function ajaxAddReviewerApprover(params, btn_save_id) {
       add_reviewer_ids: params.add_reviewer_ids,
       remove_ids: params.remove_ids,
       is_submit_late: params.is_submit_late,
-      is_approver: btn_save_id == "#save_add_approver" ? true : false
+      is_approver: btn_save_id == "#save_add_approver" ? true : false,
+      allow_null_reviewer: params.allow_null_reviewer,
     },
     dataType: "json",
     success: function (response) {

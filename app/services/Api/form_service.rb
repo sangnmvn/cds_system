@@ -1310,7 +1310,7 @@ module Api
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: line_latest).order(updated_at: :desc).first
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first if form.status == "Done" && line.nil?
         else
-          line = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).first
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
         if line.blank? || (is_change && line.user_id != approver.approver_id) || ((line.given_point || 0) <= 2 && line.user_id != approver.approver_id)
           hash[:recommends] << {

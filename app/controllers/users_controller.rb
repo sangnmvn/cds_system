@@ -97,7 +97,10 @@ class UsersController < ApplicationController
     reviewers.each do |reviewer|
       h_reviewers << format_data_load_add_reviewer(reviewer, current_reviewers, false)
     end
-    render json: { reviewers: h_reviewers, current_reviewers: current_reviewers }
+
+    allow_null_reviewer = User.find_by_id(params[:user_id]).allow_null_reviewer
+
+    render json: { reviewers: h_reviewers, current_reviewers: current_reviewers , allow_null_reviewer: allow_null_reviewer}
   end
 
   def add_approver
@@ -123,6 +126,10 @@ class UsersController < ApplicationController
   end
 
   def add_reviewer_to_database
+    if params[:allow_null_reviewer] && params[:user_id]
+      User.find_by_id(params[:user_id]).update(allow_null_reviewer: params[:allow_null_reviewer])
+      return render json: { status: "success" } if params[:allow_null_reviewer] == "true"
+    end
     begin
       form = Form.find_by(user_id: params[:user_id])
       user = User.find_by_id(params[:user_id])

@@ -378,7 +378,7 @@ class FormsController < ApplicationController
       return render json: { status: "fails" } if schedules.blank?
       period = schedules.last.period_id
     end
-    if Approver.where(user_id: form.user_id, period_id: period, is_approver: false).empty?
+    if Approver.where(user_id: form.user_id, period_id: period, is_approver: false).empty? && !User.find_by_id(form.user_id).allow_null_reviewer
       approver_prev_period = Approver.includes(:period).where(user_id: current_user.id, is_approver: false).order("periods.to_date").last&.period_id
       approver_prevs = Approver.where(user_id: current_user.id, is_approver: false, period_id: approver_prev_period)
       approver_prevs.each do |approver_prev|
