@@ -26,8 +26,7 @@ $(document).on("click", ".add-reviewer-icon[data-toggle=modal]", function () {
         $(this).removeClass('check-checkbox-reviewer');
         reviewers.add(id);
       })
-      if(response.allow_null_reviewer == true)
-        $("#allow_null_reviewer").prop('checked', response.allow_null_reviewer);
+      $("#allow_null_reviewer").prop('checked', response.allow_null_reviewer);
     }
   });
 })
