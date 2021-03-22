@@ -577,7 +577,9 @@ module Api
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         elsif filter_slots[:need_to_update] && s[:tracking][:flag] == "orange"
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
-        elsif filter_slots[:cds_need_to_be_reviewed] && !s[:tracking][:point].zero? && ( s[:tracking][:is_change] && ( s[:tracking][:recommends].nil? || ( s[:tracking][:recommends].present? && ( !s[:tracking][:recommends].select{ |line| line[:period_id].present? && line[:user_id] == current_user.id && !line[:given_point].blank? }.present? || s[:tracking][:recommends].select{ |line| line[:period_id].present? && line[:flag] == "orange"}.present? ) )))
+        elsif filter_slots[:cds_need_to_be_reviewed_cds] && !s[:tracking][:point].zero? && s[:tracking][:is_change]
+          arr << slot_to_hash(slot, hash[slot.level], form_slots)
+        elsif filter_slots[:cds_need_to_be_reviewed_cdp] && s[:tracking][:point].zero? && s[:tracking][:is_change]
           arr << slot_to_hash(slot, hash[slot.level], form_slots)
         end
         hash[slot.level] += 1
