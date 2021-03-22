@@ -1304,7 +1304,7 @@ module Api
       is_line_new = LineManager.where(form_slot_id: form_slot.id).order(updated_at: :desc).blank? if form.period_id.nil?
         
       approver_prevs_period = Approver.includes(:period).where(user_id: form.user_id).order("periods.to_date DESC").pluck(:period_id)
-      line_latest = LineManager.where(form_slot_id: form_slot.id, period_id: approver_prevs_period).pluck(:period_id).first
+      line_latest = LineManager.where(form_slot_id: form_slot.id, period_id: approver_prevs_period).order(updated_at: :desc).pluck(:period_id).first
       approvers = Approver.where(user_id: form.user_id, period_id: line_latest).order(is_approver: :asc)
       approvers = Approver.where(user_id: user.id, period_id: form.period_id).order(is_approver: :asc) if is_change
       approvers.each_with_index do |approver, i|
