@@ -409,7 +409,7 @@ class FormsController < ApplicationController
   end
 
   def reviewer_submit
-    form = Form.where(id: params[:form_id])
+    form = Form.find_by_id(params[:form_id])
     reviewer = Approver.where(user_id: params[:user_id], approver_id: current_user.id, period_id: form.period_id)
     return render json: { status: "fail" } if reviewer.blank?
     project_ids = ProjectMember.where(user_id: params[:user_id]).pluck(:project_id)
