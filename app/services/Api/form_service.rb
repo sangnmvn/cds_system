@@ -1317,7 +1317,7 @@ module Api
         if is_change || form.status == "Done" || !is_line_new
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: line_latest).order(updated_at: :desc).first
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: form.period_id).order(updated_at: :desc).first if is_change
-          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first if form.status == "Done" && line.nil?
+          line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id, period_id: line_latest).order(updated_at: :desc).first if form.status == "Done" && line.nil?
         else
           line = LineManager.where(user_id: approver.approver_id, form_slot_id: form_slot.id).order(updated_at: :desc).first
         end
