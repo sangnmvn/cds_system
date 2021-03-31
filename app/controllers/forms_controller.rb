@@ -234,6 +234,10 @@ class FormsController < ApplicationController
     return render json: { status: "success" } if @form_service.confirm_request
     render json: { status: "fail" }
   end
+  def re_assessment_passed_slot
+    return render json: { status: "success" } if @form_service.re_assessment_passed_slot
+    render json: { status: "fail" }
+  end
 
   def save_cds_assessment_staff
     form = Form.find_by_id(params[:form_id])

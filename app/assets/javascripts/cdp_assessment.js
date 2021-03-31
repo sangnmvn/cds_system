@@ -753,8 +753,25 @@ $(document).ready(function () {
   $(document).on("click", "#confirm_yes_re_assess_slot", function () {
     $('#modal_re_assess_slots').modal('hide');
     slot_id = $(this).val();
-    $('#' + slot_id).find('.re-assessment').prop("style", "visibility: hidden")
-    $('#' + slot_id).find('.input-staff').prop("disabled", false)
+    $.ajax({
+      type: "POST",
+      url: "/forms/re_assessment_passed_slot",
+      data: {
+        form_id: form_id,
+        slot_id: slot_id
+      },
+      headers: {
+        "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.status == "success"){
+          $('#' + slot_id).find('.re-assessment').prop("style", "visibility: hidden")
+          $('#' + slot_id).find('.input-staff').prop("disabled", false)
+          warning("These slots can be update now.")
+        }
+      }
+    })
   });
 
   $(document).on("click", "#confirm_request", function () {

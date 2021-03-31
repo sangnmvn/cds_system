@@ -168,6 +168,12 @@ module Api
       "fail"
     end
 
+    def re_assessment_passed_slot
+      formslot = FormSlot.where(form_id: params[:form_id], slot_id: params[:slot_id]).first
+      return "success" if formslot.update(is_change: true)
+      "fail"
+    end
+
     def get_location_slot(competency_ids)
       hash_position = {}
       h_competency = {}

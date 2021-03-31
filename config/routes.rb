@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       get :review_cds_assessment
       post :get_cds_assessment
       post :confirm_request
+      post :re_assessment_passed_slot
       post :save_cds_assessment_staff
       post :save_add_more_evidence
       post :request_add_more_evidence
