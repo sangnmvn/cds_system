@@ -701,7 +701,7 @@ module Api
       if params[:is_commit].present? && params[:point] && params[:evidence] && params[:slot_id]
         form_slot = FormSlot.includes(:line_managers, :comments).find_by(slot_id: params[:slot_id], form_id: params[:form_id])
         return false if form_slot.nil?
-        comment = form_slot.comments.where(is_delete: false).first
+        comment = form_slot.comments.where(is_delete: false).order(updated_at: :DESC).first
         line_manager = form_slot.line_managers.find_by_flag("orange")
         return false if line_manager.nil?
         approver = User.find(line_manager.user_id)
@@ -782,7 +782,7 @@ module Api
         competency_id: competencies,
       }
       slots = Slot.includes(:competency).left_outer_joins(:form_slots).where(filter).order("competencies.id", :level, :slot_id)
-      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.id desc")
+      form_slots = FormSlot.includes(:comments, :line_managers).where(form_id: form.id, slot_id: slots.pluck(:id)).order("line_managers.id desc", "comments.updated_at desc")
       form_slots = get_point_for_result(form_slots)
 
       h_point = {}
@@ -1160,7 +1160,7 @@ module Api
       location_slots = get_location_slot(form_slots.pluck("competencies.id").uniq)
       slot_conflicts = {}
       form_slots.each do |form_slot|
-        comment = form_slot.comments.where(is_delete: false).first
+        comment = form_slot.comments.where(is_delete: false).order(updated_at: :DESC).first
         line_manager = form_slot.line_managers.first
         competency_name = form_slot.slot.competency.name
         if (comment.nil? && line_manager.is_commit) || (comment.present? && comment.point.nil? && !line_manager.given_point.nil?)
@@ -1273,7 +1273,7 @@ module Api
         return hash
       end
       form_slots.map do |form_slot|
-        comments = form_slot.comments.where(is_delete: false).first
+        comments = form_slot.comments.where(is_delete: false).order(updated_at: :DESC).first
         if comments&.is_commit
           comment_type = comments.point.nil? ? "CDP" : "CDS"
         end
@@ -1530,7 +1530,7 @@ module Api
       form_slots.map do |form_slot|
         next unless hash[form_slot.slot_id].nil?
         recommends = get_point_manager(form_slot)
-        comments = form_slot.comments.where(is_delete: false).first
+        comments = form_slot.comments.where(is_delete: false).order(updated_at: :DESC).first
         point_cdp = comments&.is_commit && comments&.point.nil? ? 3 : comments&.point
 
         hash[form_slot.slot_id] = {
