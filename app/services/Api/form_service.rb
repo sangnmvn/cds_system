@@ -610,10 +610,12 @@ module Api
       line_managers = LineManager.where(period_id: period, form_slot_id: slot_histories.pluck(:form_slot_id))
       
       approver_prevs_period = Approver.includes(:period).where("periods.to_date<=?", Period.find_by_id(period)&.to_date).where(user_id: title_history.user_id).order("periods.to_date DESC").pluck(:period_id)
-      line_latest = LineManager.distinct(:form_slot_id).where(period_id: approver_prevs_period, form_slot_id: slot_histories.pluck(:form_slot_id))
+      line_latest = LineManager.distinct(:form_slot_id).includes(:period).where(period_id: approver_prevs_period, form_slot_id: slot_histories.pluck(:form_slot_id)).order("periods.to_date DESC")
       form_slots = get_recommend_by_form_slot(line_latest, title_history.user_id)
 
       slot_histories.map do |slot_history|
+        final = form_slots[slot_history.form_slot_id].select { |line| line[:final_point].present? }.first if form_slots.present?
+        final_point = final[:final_point] if final.present?
         h_slot = {
           id: slot_history.slot.id,
           slot_id: slot_history.slot_position,
@@ -626,6 +628,7 @@ module Api
             point: slot_history.point || 0,
             is_commit: slot_history.point.present? || false,
             re_update: false,
+            final_point: final_point,
           },
         }
         if form_slots.present?
@@ -1396,14 +1399,20 @@ module Api
       hash = {}
       line_managers.map do |line|
         hash[line.form_slot_id] = [] if hash[line.form_slot_id].nil?
-        hash[line.form_slot_id] << {
-          given_point: line.given_point || 0,
-          recommends: line.recommend,
-          reviewed_date: line.updated_at&.strftime("%d-%m-%Y %H:%M:%S"),
-          name: User.find(line.user_id).account,
-          is_commit: line.is_commit || false,
-          is_pm: Approver.where(approver_id: line.user_id, user_id: user_id, period_id: line.period_id).first&.is_approver,
-        }
+        if (hash[line.form_slot_id].present? && hash[line.form_slot_id].first[:period_id] == line.period_id) || hash[line.form_slot_id].blank?
+          is_pm = Approver.where(approver_id: line.user_id, user_id: user_id, period_id: line.period_id).first&.is_approver
+          final_point = line.given_point if is_pm  
+          hash[line.form_slot_id] << {
+            given_point: line.given_point || 0,
+            recommends: line.recommend,
+            reviewed_date: line.updated_at&.strftime("%d-%m-%Y %H:%M:%S"),
+            name: User.find(line.user_id).account,
+            is_commit: line.is_commit || false,
+            is_pm: is_pm,
+            period_id: line.period_id,
+            final_point: final_point,
+          }
+        end
       end
       hash
     end

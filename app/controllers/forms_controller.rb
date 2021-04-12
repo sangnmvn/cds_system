@@ -90,6 +90,12 @@ class FormsController < ApplicationController
   end
 
   def cdp_assessment
+    form = Form.find_by(user_id: current_user.id, is_delete: false)
+    periods = Schedule.includes(:period).where(company_id: current_user.company_id, period_id: form&.period_id, _type: "HR")
+                                        .where.not(status: "Done")
+    check_status = form.nil? || (form&.status == "Done" && periods.blank?) || form&.status != "Done" || params[:title_history_id].present?
+    return redirect_to index_cds_cdp_forms_path if !check_status
+    
     @check_5_month = true
     @check_5_month = current_user.joined_date.to_i < 5.months.ago.to_i if current_user.joined_date
     params = form_params
@@ -116,12 +122,6 @@ class FormsController < ApplicationController
         name: schedule.period.format_name,
       }
     }.uniq
-    #@period = schedules.map do |schedule|
-     # {
-      #  id: schedule.period_id,
-       # name: schedule.period.format_name,
-      #}
-    #end
     if params[:title_history_id].present?
       title_history = TitleHistory.find_by_id(params[:title_history_id])
       return redirect_to index_cds_cdp_forms_path if title_history.nil?
