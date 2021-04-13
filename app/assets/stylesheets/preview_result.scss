@@ -263,3 +263,15 @@ $color-background: #afaaaa;
     padding-top: 25px;
     text-align: center;
 }
+
+.table-wrapper .table-basic {
+    text-align: left;
+    overflow: scroll;
+}
+
+.table-wrapper {
+    max-height: 420px;
+    max-width: 1800px;
+    overflow: auto;
+    overflow-x: auto;
+}
