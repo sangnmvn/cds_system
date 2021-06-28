@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       post :add_reviewer_to_database
       post :reset_password
       post :forgot_password
+      post 'create'
     end
   end
 
