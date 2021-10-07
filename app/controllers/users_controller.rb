@@ -174,9 +174,9 @@ class UsersController < ApplicationController
     management_default = 0
     params[:email] = params[:email].strip
     params[:account] = params[:account].strip
-    email_exist = User.find_by_email(params[:email]).present?
-    account_exist = User.find_by_account(params[:account]).present?
-    return render json: { status: "exist", email: email_exist, account: email_exist } if email_exist || account_exist
+    email_exist = User.where(email: params[:email], is_delete: false).where.not(company_id: params[:company]).present?
+    account_exist = User.where(account: params[:account], is_delete: false).where.not(company_id: params[:company]).present?
+    return render json: { status: "exist", email: email_exist, account: account_exist } if email_exist || account_exist
 
     use_new = User.new(email: params[:email], password: PASSWORD_DEFAULT, first_name: params[:first],
                        last_name: params[:last], account: params[:account],
