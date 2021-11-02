@@ -500,7 +500,7 @@ module Api
       users = User.where(id: user_ids).includes(:company, :role)
       if @privilege_array.include?(HIGH_FULL_ACCESS)
         user_ids = Approver.where(approver_id: current_user.id).pluck(:user_id).uniq
-        project_members = ProjectMember.where(user_id: users.pluck(:id)).includes(:project)
+        project_members = ProjectMember.where(user_id: user_ids).includes(:project)
       end
 
       users = User.where(id: user_ids).includes(:company, :role)
