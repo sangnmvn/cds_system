@@ -37,7 +37,7 @@ class LevelMappingsController < ApplicationController
     @list_title = {
       data: title.where(status: true),
       data_real: title,
-      no_rank: title.count,
+      no_rank: Slot.where(competency_id: competencies.ids).order(:level).pluck(:level).last.to_i,
       count_competency: count_competencies,
       competency: competencies,
     }
