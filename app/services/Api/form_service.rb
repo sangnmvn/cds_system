@@ -1084,16 +1084,9 @@ module Api
     end
 
     def withdraw_cds
-      form = Form.where(id: params[:form_id], status: "Awaiting Review").where.not(period: nil).first
-      if form.nil?
-        form = Form.where(id: params[:form_id], status: "Awaiting Approval").where.not(period: nil).first
-        return "fail" if form.nil?
-        count_approver = Approver.where(user_id: current_user.id, period_id: form.period_id).count
-        return "fail" if !count_approver.zero? && count_approver > 1
-      end
-
+      form = Form.where(id: params[:form_id], status: ["Awaiting Review", "Awaiting Approval"]).where.not(period: nil).first
+      return "fail" if form.nil?
       return "fail" unless reset_all_approver_submit_status(current_user.id)
-      # can't withdraw other people's form
       return "fail" if (current_user.id != form.user_id)
       return "fail" unless form.update(status: "New")
       period = form.period

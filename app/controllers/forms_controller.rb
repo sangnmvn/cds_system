@@ -382,17 +382,6 @@ class FormsController < ApplicationController
       return render json: { status: "fails" } if schedules.blank?
       period = schedules.last.period_id
     end
-    if Approver.where(user_id: form.user_id, period_id: period, is_approver: false).empty? && !User.find_by_id(form.user_id).allow_null_reviewer
-      approver_prev_period = Approver.includes(:period).where(user_id: current_user.id, is_approver: false).order("periods.to_date").last&.period_id
-      approver_prevs = Approver.where(user_id: current_user.id, is_approver: false, period_id: approver_prev_period)
-      approver_prevs.each do |approver_prev|
-        Approver.create(approver_id: approver_prev.approver_id, user_id: current_user.id, is_approver: false, period_id: period)
-      end
-    end
-    if Approver.where(user_id: form.user_id, period_id: period, is_approver: true).empty?
-      approver_prev = Approver.includes(:period).where(user_id: current_user.id, is_approver: true).order("periods.to_date").last
-      Approver.create(approver_id: approver_prev.approver_id, user_id: current_user.id, is_approver: true, period_id: period) unless approver_prev.nil?
-    end
     users = User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.is_approver": false, "approvers.period_id": period)
     status, action, users = if users.empty?
         ["Awaiting Approval", "approve", User.joins(:approvers).where("approvers.user_id": form.user_id, "approvers.period_id": period)]

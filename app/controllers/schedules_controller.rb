@@ -150,6 +150,7 @@ class SchedulesController < ApplicationController
         if @schedule.save
           @schedules = Schedule.order(id: :desc).page(params[:page]).per(20)
           user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": params[:company_id])
+          cp_reviewer_approver_to_new_period(@period.id, @schedule.company_id)
           # send mail
           ScheduleMailer.with(user: user.to_a, schedule: @schedule, period: @period).notice_mailer.deliver_later(wait: 1.minute)
 
@@ -241,15 +242,13 @@ class SchedulesController < ApplicationController
   def destroy
     schedule = Schedule.find_by(id: params[:id], status: "New")
     return render json: { status: false } if schedule.nil?
-    period = Period.find_by_id(schedule.period_id)
+    period_id = schedule.period_id
+    period = Period.find_by_id(period_id)
     user = User.joins(:role, :company).where("roles.name": ROLE_NAME, is_delete: false, "companies.id": schedule.company_id)
     ScheduleMailer.with(user: user.to_a, period: period).del_mailer.deliver_later(wait: 1.minute)
-    if period.destroy && schedule.destroy
-      #@schedules = Schedule.order(id: :DESC).page(params[:page]).per(20)
-      render json: { status: true }
-    else
-      render json: { status: false }
-    end
+    approvers = Approver.where(period_id: period_id)
+    return render json: { status: true } if approvers.destroy_all && period.destroy && schedule.destroy
+    render json: { status: false }
   end
 
   def destroy_multiple
@@ -302,6 +301,17 @@ class SchedulesController < ApplicationController
   end
 
   private
+
+  def cp_reviewer_approver_to_new_period(period_id, company_id)
+    prev_period_id = Schedule.includes(:period).where(company_id: company_id).where.not(period_id: period_id).order("periods.to_date").pluck(:period_id).last
+    approver_prevs = Approver.where(period_id: prev_period_id)
+
+    approver_prevs.each do |approver_prev|
+      new_apporver = approver_prev.dup
+      new_apporver.period_id = period_id
+      new_apporver.save
+    end
+  end
 
   def check_pm?
     permission_pm = @privilege_array.include?(FULL_ACCESS_SCHEDULE_PROJECT) && !@privilege_array.include?(FULL_ACCESS_SCHEDULE_COMPANY)

@@ -26,7 +26,6 @@ $(document).on("click", ".add-reviewer-icon[data-toggle=modal]", function () {
         $(this).removeClass('check-checkbox-reviewer');
         reviewers.add(id);
       })
-      $("#allow_null_reviewer").prop('checked', response.allow_null_reviewer);
     }
   });
 })
@@ -150,8 +149,7 @@ $(document).on('click', '#save_add_reviewer', function () {
     reviewer_remove_ids: _.difference([...current_reviewers], [...reviewers]),
     add_reviewer_ids: [...reviewers],
     remove_ids: _.difference([...current_reviewers], [...reviewers]),
-    add_reviewer: true,
-    allow_null_reviewer: $("#allow_null_reviewer").is(":checked")
+    add_reviewer: true
   }
   ajaxAddReviewerApprover(params, '#save_add_reviewer')
 });
@@ -181,8 +179,7 @@ function ajaxAddReviewerApprover(params, btn_save_id) {
       add_reviewer_ids: params.add_reviewer_ids,
       remove_ids: params.remove_ids,
       is_submit_late: params.is_submit_late,
-      is_approver: btn_save_id == "#save_add_approver" ? true : false,
-      allow_null_reviewer: params.allow_null_reviewer,
+      is_approver: btn_save_id == "#save_add_approver" ? true : false
     },
     dataType: "json",
     success: function (response) {
@@ -190,7 +187,11 @@ function ajaxAddReviewerApprover(params, btn_save_id) {
       if (response.status == "success")
         warning(`Add ${params.add_reviewer ? "reviewer" : "approver"} for <b>${params.user_account}</b> has been successfully!`);
       else if (response.status == "fails")
-        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} for <b>${params.user_account}</b>!`)
+        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} for <b>${params.user_account}</b>!`);
+      else if (response.status == "duplicate")
+        fails(`Couldn't add ${params.add_reviewer ? "reviewer" : "approver"} because It already in a ${params.add_reviewer ? "approver" : "reviewer" } group!`);
+      else if (response.status == "empty_schedules")
+        fails(`No any schedule open. Please contact your administrator to setup!`);
     }
   })
 }
