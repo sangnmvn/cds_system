@@ -395,36 +395,45 @@ module Api
         user_ids = User.left_outer_joins(:project_members).left_outer_joins(:approvers).where(filter_users).where(company_id: current_user.company_id,"project_members.project_id": ProjectMember.where(user_id: current_user.id).pluck(:project_id), id: Approver.where(approver_id: current_user.id, period_id: first[current_user.company_id]).pluck(:user_id)).where.not(id: 1).pluck(:id).uniq
       end
 
-      title_first = TitleHistory.includes(:user).where(user_id: user_ids, period_id: first.values)
-      title_second = TitleHistory.where(user_id: user_ids, period_id: second.values)
+      title_first = {}
+      title_second = {}
+      first.each { |company_id, period_id| title_first[company_id] = TitleHistory.includes(:user).where(user_id: user_ids, period_id: period_id) }
+      second.each { |company_id, period_id| title_second[company_id] = TitleHistory.where(user_id: user_ids, period_id: period_id) }
+
 
       h_old = {}
-      title_second.map do |title|
-        h_old[title.user_id] = {
-          rank: title.rank,
-          level: title.level,
-          title: title.title,
-          role: title.role_name,
-        }
+      title_second.each do |company, titles|
+        titles.map do |title|
+          h_old[title.user_id] = {
+            company: company,
+            rank: title.rank,
+            level: title.level,
+            title: title.title,
+            role: title.role_name,
+          }
+        end
       end
+
       results = []
       user_ids = []
-      title_first.each_with_index do |title, i|
-        next if h_old[title.user_id].nil? || h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] <= title.rank
-        results << {
-          user_id: title.user_id,
-          title_history_id: title.id,
-          full_name: title.user.format_name_vietnamese,
-          email: title.user.email,
-          role: title.role_name,
-          rank: title.rank,
-          title: title.title,
-          level: title.level,
-          old_rank: h_old[title.user_id][:rank],
-          old_title: h_old[title.user_id][:title],
-          old_level: h_old[title.user_id][:level],
-        }
-        user_ids << title.user_id
+      title_first.each do |company, titles|
+        titles.each do |title|
+          next if h_old[title.user_id].nil? || h_old[title.user_id][:role] != title.role_name || h_old[title.user_id][:rank] <= title.rank || h_old[title.user_id][:company] != company
+          results << {
+            user_id: title.user_id,
+            title_history_id: title.id,
+            full_name: title.user.format_name_vietnamese,
+            email: title.user.email,
+            role: title.role_name,
+            rank: title.rank,
+            title: title.title,
+            level: title.level,
+            old_rank: h_old[title.user_id][:rank],
+            old_title: h_old[title.user_id][:title],
+            old_level: h_old[title.user_id][:level],
+          }
+          user_ids << title.user_id
+        end
       end
 
       # 20.times do |i|
