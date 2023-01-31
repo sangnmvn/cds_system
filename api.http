@@ -1,0 +1,8 @@
+post http://localhost:3000/sync/login
+Content-Type: Application/json
+
+{
+    "email": "admin@bestarion.com",
+    "password": "123QWEasd",
+    "remember_me": true
+}

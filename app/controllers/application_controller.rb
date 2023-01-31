@@ -24,4 +24,15 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+    # # Override a Devise method
+    # def after_sign_in_path_for(resource)
+    #   if params[:redirect].present?
+    #     params[:redirect]
+    #   elsif request.referer == new_session_url
+    #     super
+    #   else
+    #     stored_location_for(resource) || request.referer || root_path
+    #   end
+    # end
 end

@@ -6,6 +6,18 @@ Rails.application.routes.draw do
     post "/users/create" => "users#create"
   end
 
+  devise_scope :user do
+    get "/users/login" => "api/sessions#new", :as => :api_session
+    post '/users/login' => 'api/sessions#create', :as => :post_api_session
+  end
+
+
+  # devise_scope :user do
+  #   get 'profile/edit'    => 'devise/registrations#edit',   :as => :edit_user_registration
+  #   get 'profile/cancel'  => 'devise/registrations#cancel', :as => :cancel_user_registration
+  # end
+
+
   resources :user_groups do
     collection do
       get :load_user_group

@@ -25,7 +25,7 @@
       margin-bottom:10%;
   }
   .btnForget{
-  
+
       border:none;
   }
   .forget-password .dropdown{
@@ -49,7 +49,11 @@
             <%= image_tag("login.png", alt: "car-key", style: "border:0") %>
             <h2 class="text-center">Welcome to CDS</h2>
             <form id="register-form" role="form" autocomplete="off" class="form" method="post">
-              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <%= form_for(resource, as: resource_name, url: @redirect ? session_path(resource_name) : post_api_session_path) do |f| %>
+                <% if @redirect%>
+                  <%= hidden_field_tag 'redirect', @redirect  %>
+                  <%# <input id="redirect" name="redirect" type="hidden" value=<%= @redirect/> %>
+                <% end %>
                 <div class="form-group">
                   <div class="input-group">
                     <%= f.email_field :email, autofocus: true, autocomplete: "email",class:"form-control",placeholder:"Email"  %>
