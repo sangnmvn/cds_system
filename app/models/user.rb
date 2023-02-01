@@ -25,6 +25,11 @@ class User < ApplicationRecord
 
   has_many :roles, :class_name => "Role", :foreign_key => "updated_by", :dependent => :destroy
 
+  # write logs for sync_logs_table
+  after_commit on: [:create, :update] do |user|
+    write_log('users', user.id)
+  end
+
   def format_name
     first_name + " " + last_name
   end
