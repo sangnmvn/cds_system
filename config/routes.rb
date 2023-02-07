@@ -1,9 +1,16 @@
 Rails.application.routes.draw do
   get "periods/show"
 
-  devise_for :users do
-    get "/users/sign_out" => "devise/sessions#destroy"
+  devise_for :users, controllers: { sessions: 'user_devise/sessions' } do
+    get "/users/sign_out" => "user_devise/sessions#destroy"
     post "/users/create" => "users#create"
+  end
+
+  devise_scope :users do
+    get "/users/verify" => "user_devise/auth#index"
+    get "/users/redirect" => "user_devise/auth#redirect"
+    get "/users/logout" => "user_devise/auth#logout_to"
+
   end
 
   resources :user_groups do
