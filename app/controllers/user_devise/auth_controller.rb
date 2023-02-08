@@ -1,10 +1,12 @@
 class UserDevise::AuthController < ApplicationController
   # * verify token
-  skip_before_action :authenticate_user!, only: [:index]
+  skip_before_action :authenticate_user!, only: [:index, :refresh_token]
+  protect_from_forgery unless: -> { request.format.json? }
 
   rescue_from 'StandardError' do |err|
     render json: {
-      error: err.to_s
+      error: err.to_s,
+      backtrace: err.backtrace
     }, status: 500
   end
   rescue_from 'ActionController::ParameterMissing' do |err|
@@ -15,25 +17,28 @@ class UserDevise::AuthController < ApplicationController
 
   # * verify token
   def index
-    token = index_params['access_token']
-    payload = Api::AuthService.new.decoded_token(token)[0]
+    token = token_params['token']
+    payload = Api::AuthService.new.decode_access_token(token)[0]
     render json: payload
   end
 
-  # * redirect with?token=<token>
-  def redirect
-    session[:access_token] = Api::AuthService.new.
-        valid_or_generate_token(session[:access_token], current_user)
-    redirect_to "#{redirect_params[:to]}?token=#{session[:access_token]}"
+  # * return new token
+  def refresh_token
+    access_token = Api::AuthService.new.refresh_access_token(token_params['token'])
+    render json: {
+      access_token: access_token
+    }
   end
 
-  # * logout and redirect
-  def logout_to
-    sign_out(:user)
-    Api::AuthService.new.add_deny_list(session[:access_token])
-    reset_session
-    redirect_to "#{redirect_params[:to]}"
+  # * redirect with?access=<token>&refresg=<token>
+  def redirect
+    auth_service = Api::AuthService.new
+    refresh_token = auth_service.generate_refresh_token({id: current_user.id})
+    access_token = auth_service.refresh_access_token(refresh_token)
+    redirect_to "#{redirect_params[:to]}?access=#{access_token}&refresh=#{refresh_token}"
   end
+
+
 
   private
 
@@ -44,8 +49,9 @@ class UserDevise::AuthController < ApplicationController
     para
   end
 
-  def index_params
-    params.require(:access_token)
-    params.permit(:access_token)
+  def token_params
+    params.require(:token)
+    params.permit(:token)
   end
+
 end
