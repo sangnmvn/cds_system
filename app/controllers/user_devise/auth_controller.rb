@@ -1,5 +1,4 @@
 class UserDevise::AuthController < ApplicationController
-  # * verify token
   skip_before_action :authenticate_user!, only: [:index, :refresh_token]
   protect_from_forgery unless: -> { request.format.json? }
 
@@ -30,7 +29,7 @@ class UserDevise::AuthController < ApplicationController
     }
   end
 
-  # * redirect with?access=<token>&refresg=<token>
+  # * redirect with url?access=<token>&refresh=<token>
   def redirect
     auth_service = Api::AuthService.new
     refresh_token = auth_service.generate_refresh_token({id: current_user.id})
