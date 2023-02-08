@@ -399,11 +399,9 @@ ActiveRecord::Schema.define(version: 2022_12_26_070710) do
     t.index ["period_id"], name: "index_summary_comments_on_period_id"
   end
 
-  create_table "sync_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci", force: :cascade do |t|
+  create_table "sync_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "table_name"
     t.integer "id_row"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "templates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
@@ -498,6 +496,7 @@ ActiveRecord::Schema.define(version: 2022_12_26_070710) do
     t.text "current_address"
     t.string "identity_card_no"
     t.string "image"
+    t.boolean "allow_null_reviewer", default: false
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
