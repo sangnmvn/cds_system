@@ -90,4 +90,4 @@ end
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'jwt', '~> 2.5'
-gem 'rufus-scheduler', '~> 3.7'
+# gem 'rufus-scheduler', '~> 3.7'
